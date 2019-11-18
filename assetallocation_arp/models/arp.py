@@ -10,7 +10,7 @@ import numpy as np
 import data_etl.data_manipulation as dm
 
 
-def momentum(index_data, inputs):
+def momentum(index_data, inputs, week_day):
     sig = pd.DataFrame()
     for column in index_data:
         sig1 = index_data[column].ewm(alpha=2 / inputs['sig1_short'].item()).mean() / index_data[column].ewm(alpha=2 / inputs['sig1_long'].item()).mean() - 1
@@ -23,6 +23,6 @@ def momentum(index_data, inputs):
     # S-curve cut out for large movement, alternative curve without cutoff: sig[column]=2/(1+math.exp(-2*sig[column]))-1
         sig[column] = sig[column] * np.exp(-1 * sig[column].pow(2) / 6) / (math.sqrt(3) * math.exp(-0.5))
 
-    sig = dm.set_data_frequency(sig, inputs['frequency'].item())
+    sig = dm.set_data_frequency(sig, inputs['frequency'].item(), week_day)
     sig = sig.shift(inputs['time_lag'].item(), freq="D")
     return sig
