@@ -7,7 +7,7 @@ DATA MANIPULATION
 import pandas as pd
 
 
-def set_data_frequency(data, freq):
+def set_data_frequency(data, freq, week_day='SUN'):
     # Reduce frequency of a series, used to reflect weekly implementation of a strategy
     if freq == "monthly":
         data = data.reindex()
@@ -15,7 +15,7 @@ def set_data_frequency(data, freq):
         sig = data.reindex(rng, method='pad')
     elif freq == "weekly":
         data = data.reindex()
-        rng = pd.date_range(start=data.index[0], end=data.index[-1], freq='W-MON')
+        rng = pd.date_range(start=data.index[0], end=data.index[-1], freq='W-' + week_day)
         sig = data.reindex(rng, method='pad')
     elif freq == "daily":
         sig = data
