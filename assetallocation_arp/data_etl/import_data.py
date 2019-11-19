@@ -70,3 +70,23 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
         df = df.drop([0], axis=0)
     wb.close()
     return df
+
+
+def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None):
+
+    if mat_file is None:
+        file_path = r'H:\assetallocation_arp\data\raw\matlabData.mat'
+    else:
+        file_path = mat_file
+
+    if input_file is None:
+        input_path = r'H:\assetallocation_arp\data\raw\ARP_Model_Inputs.xlsx'
+    else:
+        input_path = input_file
+
+    # load data and inputs
+    strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
+    asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
+    all_data = matfile_to_dataframe(file_path)
+    return strategy_inputs, asset_inputs, all_data
+
