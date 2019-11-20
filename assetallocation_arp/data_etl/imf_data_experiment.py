@@ -5,7 +5,7 @@ import chardet
 
 BASE_IMF_URL= "'http://www.imf.org/external/pubs/ft/weo/"
 
-data_needed_years = []
+data_needed_years = ['2014']
 data_needed_months = []
 url_2014 = 'http://www.imf.org/external/pubs/ft/weo/2014/01/weodata/WEOApr2014all.xls'
 url_2015 = 'http://www.imf.org/external/pubs/ft/weo/2015/01/weodata/WEOApr2015all.xls'
