@@ -43,4 +43,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
         (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
     return signals, returns, r, positioning
 
+    # write results to output sheet
+
+
 
