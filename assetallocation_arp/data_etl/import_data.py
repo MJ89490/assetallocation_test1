@@ -26,7 +26,7 @@ def matfile_to_dataframe(file_path):
 
     mat_data = pd.DataFrame(mat_file_data['dataTable'])
     mat_data.columns = mat_series_names
-    mat_dataframe = pd.concat([mat_data, mat_dates], axis=1)
+    mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
     mat_dataframe.set_index('Date', inplace=True)
     return mat_dataframe
 

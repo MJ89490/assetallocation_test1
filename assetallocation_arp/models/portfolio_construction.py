@@ -5,6 +5,7 @@ PORTFOLIO CONSTRUCTION
 """
 import math
 import pandas as pd
+from pandas.tseries.offsets import BDay
 
 
 def apply_leverage(futures_data, leverage_type, leverage):
@@ -35,7 +36,7 @@ def return_ts(sig, future, leverage, costs, cummul):
     # Implement trading signal in a time-series context and as standalone for every series
     returns = pd.DataFrame()
     r = pd.DataFrame()
-    sig = sig.reindex(future.index, method='pad').append(sig.iloc[-1]) # not clean, assumes last data point isn't captured by the reindex
+    sig = sig.reindex(future.append(pd.DataFrame(index=future.iloc[[-1]].index + BDay(2)), sort=True).index, method='pad')
     if cummul == 1:
         positioning = sig.divide(future.multiply(leverage).count(axis=1), axis=0)
         positioning.iloc[-1:] = sig.iloc[-1:]/sig.iloc[-1].multiply(leverage.iloc[-1]).count()

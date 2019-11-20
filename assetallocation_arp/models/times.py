@@ -8,6 +8,8 @@ import numpy as np
 
 import models.portfolio_construction as pc
 import models.arp_signals as arp
+import pandas as pd
+from pandas.tseries.offsets import BDay
 
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
@@ -30,7 +32,8 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     # apply leverage
     leverage_data = pc.apply_leverage(futures_data, leverage_type, leverage)
     leverage_data[leverage.index[leverage.isnull()]] = np.nan
-    leverage_data = leverage_data.shift(periods=times_inputs['time_lag'].item(), freq='D', axis=0).reindex(futures_data.append(signals.iloc[-1]).index, method='pad')
+    leverage_data = leverage_data.shift(periods=times_inputs['time_lag'].item(), freq='D', axis=0).reindex(
+        futures_data.append(pd.DataFrame(index=futures_data.iloc[[-1]].index + BDay(2)), sort=True).index, method='pad')
 
     # calculate leveraged positions and returns
     if leverage_type == 's':
