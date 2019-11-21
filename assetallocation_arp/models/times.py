@@ -23,7 +23,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     futures_data.columns = asset_inputs.asset
     #
     costs = asset_inputs_t.loc['costs']
-    leverage = asset_inputs_t.loc['leverage']
+    leverage = asset_inputs_t.loc['s_leverage']
     leverage_type = times_inputs['leverage_type'].item()
 
     # calculate signals
