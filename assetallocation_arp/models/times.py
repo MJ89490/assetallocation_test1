@@ -32,8 +32,9 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     # apply leverage
     leverage_data = pc.apply_leverage(futures_data, leverage_type, leverage)
     leverage_data[leverage.index[leverage.isnull()]] = np.nan
+    index_df = futures_data.append(pd.DataFrame(index=futures_data.iloc[[-1]].index + BDay(2)), sort=True).index
     leverage_data = leverage_data.shift(periods=times_inputs['time_lag'].item(), freq='D', axis=0).reindex(
-        futures_data.append(pd.DataFrame(index=futures_data.iloc[[-1]].index + BDay(2)), sort=True).index, method='pad')
+        index_df, method='pad')
 
     # calculate leveraged positions and returns
     if leverage_type == 's':
@@ -43,7 +44,6 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
         (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
     return signals, returns, r, positioning
 
-    # write results to output sheet
 
 
 
