@@ -10,7 +10,7 @@ import openpyxl
 from datetime import datetime
 
 
-def matfile_to_dataframe(file_path):
+def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
     mat_file_data = spio.loadmat(file_path)
 
@@ -28,6 +28,9 @@ def matfile_to_dataframe(file_path):
     mat_data.columns = mat_series_names
     mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
     mat_dataframe.set_index('Date', inplace=True)
+
+    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]  # remove weekends
+    mat_dataframe = mat_dataframe[mat_dataframe.index.value < model_date] # remove data after selected date
     return mat_dataframe
 
 
@@ -72,7 +75,7 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
     return df
 
 
-def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None):
+def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
         file_path = r'H:\assetallocation_arp\data\raw\matlabData.mat'
@@ -80,13 +83,18 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None):
         file_path = mat_file
 
     if input_file is None:
-        input_path = r'H:\assetallocation_arp\data\raw\ARP_Model_Inputs.xlsx'
+        input_path = r'H:\assetallocation_arp\assetallocation_arp\arp_dashboard.xlsm'
     else:
         input_path = input_file
+
+    if model_date is None:
+        model_date = datetime.today()
+    else:
+        model_date = model_date
 
     # load data and inputs
     strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
     asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
-    all_data = matfile_to_dataframe(file_path)
+    all_data = matfile_to_dataframe(file_path, model_date)
     return strategy_inputs, asset_inputs, all_data
 

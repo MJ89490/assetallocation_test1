@@ -9,12 +9,10 @@ def run_model(model_type, mat_file=None, input_file=None):
 	if model_type == "times":
 		# get inputs from excel and matlab data
 		times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
-
 		# run strategy
 		signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
-		
 		# write results to output sheet
-		write_output_to_excel({'times': (asset_inputs, positioning, returns, signals, times_inputs)})
+		write_output_to_excel({'times': (asset_inputs, positioning, r, signals, times_inputs)})
 
 	if model_type == "maven":
 		print(model_type)
@@ -47,9 +45,6 @@ def write_output_to_excel(model_outputs):
 		xw.Range('rng_inputs_used').value = times_inputs
 		xw.Range('rng_inputs_used').offset(3, 0).value = asset_inputs
 
-	else:
-		raise ValueError('Unknown model type')
-
 
 def get_inputs_from_excel():
 	# select data from excel
@@ -60,5 +55,4 @@ def get_inputs_from_excel():
 
 
 if __name__ == "__main__":
-	caller = xw.Book(r'H:\assetallocation_arp\assetallocation_arp\arp_dashboard.xlsm').set_mock_caller()
 	get_inputs_from_excel()
