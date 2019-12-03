@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--- Get the Chart.JS library. --->
+
+<head>
+  <meta charset="utf-8" />
+  <title>Chart.js Example</title>
+  <!-- import plugin script -->
+  <script src='static/Chart.min.js'></script>
+</head>
+
+{% extends "basePage.html" %}
+
+{% block app_content %}
+    <canvas id="line-chart" width="400" height="400"></canvas>
+
+ 	<script>
+   // load the objects like you would with a normal jinja template i.e. {{ object }}, but add | tojson
+   // pass it into the parse function
+ 	labels = JSON.parse({{ labels | tojson }})
+ 	data = JSON.parse({{ data | tojson }})
+ 	new Chart(document.getElementById("line-chart"),{
+ 		"type":"line",
+ 		"data":
+ 			//using the labels here.
+ 			{"labels":labels,
+ 			"datasets":[{"label":"Sentiment Over Time",
+       			//using data here
+ 			"data":	data,
+ 			"fill":false,
+ 			"borderColor":"rgb(75, 192, 192)",
+            "borderWidth": 1,
+ 			"lineTension":0.1}]},
+ 		"options":{}});
+     </script>
+
+
+ {% endblock %}

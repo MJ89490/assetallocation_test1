@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--- Used to import a style sheet, but now uses bootstrap.> --->
+ <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cssBase.css') }}">
+
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+
+{% endblock %}
+
+    <head>
+      {% if title %}
+      <title>{{ title }} - Liability Hub</title>
+      {% else %}
+      <title>Welcome to Liability Hub</title>
+      {% endif %}
+    </head>
+    <body>
+
+    {% block navbar %}  <!––This is the Navigation Bar which sticks at the top of all pages. ––>
+    <nav class="navbar navbar-default navbar-fixed-top">.
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">LiabilityHub</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/index">Home</a></li>
+                <li><a class = navbar-btn href="/login">Login</a></li>
+                <li><a class = navbar-btn href="/mainPage">Analytics</a></li>
+                <li><a class = navbar-btn href="/mainPage2">Help</a></li>
+                <li><a class = navbar-btn href="/mainPage2">NewButton</a></li>
+            </ul>
+        </div>
+    </nav>
+    {% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+
+.parent {
+  padding: 1rem;
+}
+.child {
+  border: 1px;
+  padding: 1rem;
+}
+.inline-block-child {
+  display: inline-block;
+}
+
+body {
+    padding-top: 75px;
+}
