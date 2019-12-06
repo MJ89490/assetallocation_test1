@@ -13,7 +13,6 @@ import chardet
 from datetime import date
 from pathlib import Path
 
-
 IMF_API_BASE_URL = "http://dataservices.imf.org/REST/SDMX_JSON.svc"
 local_proxy = 'http://zsvzen:80'
 os.environ['http_proxy'] = local_proxy
@@ -35,9 +34,7 @@ root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", 
 import locale
 
 locale.setlocale(locale.LC_NUMERIC, 'English')  # 'English_United States.1252'
-
-
-
+#region build the weo data
 def build_weo_data(date):
     """WEO is a particular case of 2 datasets provided as Excel files.
     Its URL change according to the release date.
@@ -56,8 +53,9 @@ def build_weo_data(date):
         release_number = "02"
         file_base_name = "WEO{month_name}{year}all".format(month_name="Oct", year=year)
     return (year, release_number, file_base_name)
+#endregion
 
-
+#region build the weo url by the dataset code
 def build_weo_url_by_dataset_code(date):
     """WEO is a particular case of 2 datasets provided as Excel files.
     Its URL change according to the release date.
@@ -69,13 +67,16 @@ def build_weo_url_by_dataset_code(date):
         "WEO": "{base_url}{file_base_name}.xls".format(base_url=base_url, file_base_name=file_base_name),
         "WEOAGG": "{base_url}{file_base_name}a.xls".format(base_url=base_url, file_base_name=file_base_name),
     }
+#endregion
 
+#region get the encoding
 def get_encoding(file_path):
     with open(file_path, 'rb') as f:
         result = chardet.detect(f.read())
     return (result)
+#endregion
 
-
+#region get the footer of the csv file
 def get_footer_of_csv_file(file_path):
     """
     IMF weo data file contains a fppter with name of the dataset and year month
@@ -88,7 +89,9 @@ def get_footer_of_csv_file(file_path):
             f.seek(-2, os.SEEK_CUR)
         footer = f.readline().decode()
     return (footer)
+#endregion
 
+#region print all the columns in the dataframe
 def print_all_columns_in_dataframe(df, number_of_rows=3):
     """
     print all the columns in the dataframe
@@ -98,7 +101,9 @@ def print_all_columns_in_dataframe(df, number_of_rows=3):
     """
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified
         log.info(df.tail(number_of_rows))
+#endregion
 
+#region extract the required fields
 def extract_required_fields(downloaded_file, target_dir):
     """
     Extract only those fields required for asset allocation project
@@ -108,6 +113,7 @@ def extract_required_fields(downloaded_file, target_dir):
     """
     file_path = os.path.abspath(os.path.join(target_dir, downloaded_file))
     data_path = os.path.dirname(file_path)
+
     aa_required_fields = ['Country', 'Subject Descriptor', 'Subject Notes', 'Units', 'Scale', 'Country/Series-specific Notes', 'Estimates Start After']
     available_columns = pd.read_csv(file_path, sep="\t", nrows=1).columns.tolist()
     # get last 8 years only
@@ -134,24 +140,20 @@ def extract_required_fields(downloaded_file, target_dir):
         wp.write("\n")
 
     return True
+#endregion
 
-
+#region download weo data from the imf website
 def download_weo_data_from_imf_website(date_arg):
     """
     downloads the data from imf weo website
     :param date_arg: date argument in string format, if not given, today's date is taken as input by default
     :return: name of the dataset downloaded
     """
-    # if date is none get the recent data from today
-    if date_arg is None:
-        date_val = date_arg.today()
-
-    date_list = date_arg.split("-")
-    print(date_list)
-    if not type(date_arg) is str or len(date_list) < 3:
-        raise("Invalid Input type")
-    else:
-        date_val = date(year = int(date_list[2]), month = int(date_list[1]), day = int(date_list[0]))
+    try:
+        date_list = date_arg.split("-")
+        date_val = date(year=int(date_list[2]), month=int(date_list[1]), day=int(date_list[0]))
+    except IndexError:
+        raise Exception("Invalid Input type")
 
     # get WEO datasets
     weo_url_by_dataset_code = build_weo_url_by_dataset_code(date_val)
@@ -163,10 +165,15 @@ def download_weo_data_from_imf_website(date_arg):
         file_name = args.target_dir / dataset_name
         with (file_name).open("w") as f:
             f.write(weo_response.content.decode('latin1'))
-
         return(dataset_name)
+#endregion
 
-def scrape_imf_data():
+#region parse the data from the command line
+def parser_data():
+    """
+    set the arguments for the parser
+    :return: tuple of arguments (target_dir, date, log)
+    """
     global args
     parser = argparse.ArgumentParser()
     parser.add_argument('target_dir', type=Path, help='path of target directory containing data as provided by IMF')
@@ -175,31 +182,34 @@ def scrape_imf_data():
     parser.add_argument('--log', default='INFO', help='level of logging messages')
     args = parser.parse_args()
 
+    if args.date is None:
+        today = date.today()
+        args.date = today.strftime("%d-%m-%Y")
 
-    if not args.target_dir.is_dir():
-        parser.error("Could not find directory {!r}".format(str(args.target_dir)))
+    return args.target_dir, args.date, args.log
+#endregion
 
-    numeric_level = getattr(logging, args.log.upper(), None)
+#region scrape the imf data
+def scrape_imf_data():
+    args_target, args_date, args_log = parser_data()
+    numeric_level = getattr(logging, args_log.upper(), None)
     if not isinstance(numeric_level, int):
-        raise ValueError('Invalid log level: {}'.format(args.log))
+        raise ValueError('Invalid log level: {}'.format(args_log))
     logging.basicConfig(
         format="%(levelname)s:%(name)s:%(asctime)s:%(message)s",
         level=numeric_level,
         stream=sys.stdout,
     )
     logging.getLogger("urllib3").setLevel(logging.INFO)
-
     # Download IMF WEO datasets.
     log.info("Download IMF WEO Dataset")
-    print("date=",args.date)
-    downloaded_file = download_weo_data_from_imf_website(args.date)
-
+    downloaded_file = download_weo_data_from_imf_website(args_date)
     # extract only those fields required for Asset allocation.
     log.info("Extract only those fields required for Assect allocation")
-    extract_required_fields(downloaded_file, args.target_dir)
+    extract_required_fields(downloaded_file, args_target)
 
     return 0
-
+#endregion
 
 if __name__ == '__main__':
     sys.exit(scrape_imf_data())
