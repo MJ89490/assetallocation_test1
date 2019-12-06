@@ -25,7 +25,7 @@ def test_build_weo_data(date_user, expected_year, expected_release_number, expec
      :param expected_year: int
      :param expected_release_number: str
      :param expected_file_name: str
-     :return: tuple of year, relaease number, file name
+     :return: tuple of year, release number, file name
      """
      weo_data = imf_data.build_weo_data(date_user)
      data_tuple = (expected_year, expected_release_number, expected_file_name)
@@ -63,9 +63,9 @@ def test_build_weo_url_by_dataset_code(date_user, expected_weo_url_dict):
     assert weo_url == expected_weo_url_dict
 
 @pytest.mark.parametrize("test_args, expected_date",
-                         [(["prog", r"C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data\raw"
+                         [(["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw"))
                             , "--date", "17-11-2019"], "17-11-2019"),
-                          (["prog", r"C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data\raw"
+                          (["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw"))
                            ], date.today().strftime("%d-%m-%Y"))
                           ])
 def test_parser_data(test_args, expected_date):
@@ -86,7 +86,10 @@ def test_parser_data(test_args, expected_date):
 @pytest.mark.parametrize("test_args",
                          [["prog", "--date", "17-11-2019"]])
 def test_parse_data_exception(test_args):
-    #target_director = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw"))
+    """
+    :param test_args: list of arguments for the parser
+    :return: an exception is raised because the target directory has not been specified in the arguments
+    """
     with patch.object(sys, 'argv', test_args):
         with pytest.raises(SystemExit) as e:
             assert imf_data.parser_data()
@@ -131,7 +134,7 @@ def test_download_weo_data_from_imf_website_exception(date_user):
     :return: exception raises
     """
 
-    test_args = ["prog", r"C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data\raw",
+    test_args = ["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw")),
                  "--date", date_user]
 
     with patch.object(sys, 'argv', test_args):
