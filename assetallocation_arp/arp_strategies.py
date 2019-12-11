@@ -59,7 +59,7 @@ def write_output_to_excel(model_outputs):
 		sheet_times_input.range('rng_inputs_used').value = asset_inputs
 		sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
 
-def get_inputs_from_excel():
+def get_inputs_from_excel(model):
 	# select data from excel
 	# mat_file = xw.Range('rng_mat_file_path').value
 	# model_type = xw.Range('rng_model_type').value
@@ -73,12 +73,15 @@ def get_inputs_from_excel():
 	modelsList = [Models.times.name, Models.maven.name, Models.effect.name, Models.curp.name,
 				  Models.fica.name, Models.factor.name, Models.comca.name]
 
-	modelsStr = input("Choose a Model: ")
-	if modelsStr in modelsList:
-		model_type = modelsStr
+	if model in modelsList:
+		model_type = model
 		run_model(model_type, mat_file, input_file)
 	else:
 		raise NameError("Your input is incorrect.")
 
+def get_input_user():
+	model_str = input("Choose a Model: ")
+	return model_str
+
 if __name__ == "__main__":
-	sys.exit(get_inputs_from_excel())
+	sys.exit(get_inputs_from_excel(get_input_user()))

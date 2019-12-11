@@ -14,19 +14,19 @@ from pandas.tseries.offsets import BDay
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
     # format data and inputs
-    asset_inputs_t = asset_inputs.set_index('asset').T
+    asset_inputs_t = asset_inputs.set_index('asset').T                              #True: from the data
     #
-    times_data = all_data[asset_inputs.signal_ticker]
-    futures_data = all_data[asset_inputs.future_ticker].pct_change()
-    times_data.columns = asset_inputs.asset
-    futures_data.columns = asset_inputs.asset
+    times_data = all_data[asset_inputs.signal_ticker]                               #True: from the data
+    futures_data = all_data[asset_inputs.future_ticker].pct_change()                #True: from the data
+    times_data.columns = asset_inputs.asset                                         #True: from the data
+    futures_data.columns = asset_inputs.asset                                       #True: from the data
     #
-    costs = asset_inputs_t.loc['costs']
-    leverage = asset_inputs_t.loc['s_leverage']
-    leverage_type = times_inputs['leverage_type'].item()
+    costs = asset_inputs_t.loc['costs']                                             #True: from the data
+    leverage = asset_inputs_t.loc['s_leverage']                                     #True: from the data
+    leverage_type = times_inputs['leverage_type'].item()                            #True: from the data
 
     # calculate signals
-    signals = arp.momentum(times_data, times_inputs, times_inputs['week_day'].item())
+    signals = arp.momentum(times_data, times_inputs, times_inputs['week_day'].item()) #False
 
     # apply leverage
     leverage_data = pc.apply_leverage(futures_data, leverage_type, leverage)
@@ -37,10 +37,10 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
     # calculate leveraged positions and returns
     if leverage_type == 's':
-        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 0)
+        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 0)    #False
     else:
-        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
-        (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
+        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)    #False
+        (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)              #False
     return signals, returns, r, positioning
 
 
