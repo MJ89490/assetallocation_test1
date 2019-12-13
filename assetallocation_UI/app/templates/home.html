@@ -1,21 +1,93 @@
 {% extends "basePage.html" %}
 
+{% block mainhome %}
+        <style type="text/css">
+            .jumbotron{margin-bottom:0;}
+        </style>
 
-<head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-</head>
-{% block content %}
+        <body>
+            <div class="main-home">
+                <!-- Main jumbotro for a primary introduction message -->
+                <div class="jumbotron">
+                    <div class="container">
+                        <div class="text">
+                            <h1>Asset Allocation Models Database</h1>
+                        </div>
+                        <p><p>{{  content.description  }}</p></p>
 
+                    <p><a class="btn btn-primary btn-lg" role="button" href="#">Learn more</a></p>
 
-        <div class="container">
-            <div class="jumbotron d-flex align-items-center">
-                <div class="container text-center">
-                    <h2 class="display-4">Asset Allocation Models Database</h2>
-                    <p class="lead"><p>{{  content.description  }}</p></p>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h3><strong>Times</strong></h3>
+                        <p>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                        </p>
+                    </div>
 
+                    <div class="col-sm-4">
+                        <h3><strong>Maven</strong></h3>
+                        <p>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                        </p>
+                    </div>
 
+                    <div class="col-sm-4">
+                        <h3><strong>Effect</strong></h3>
+                        <p>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <h3><strong>Curp</strong></h3>
+                        <p>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <h3><strong>Fica</strong></h3>
+                        <p>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <h3><strong>Factor</strong></h3>
+                        <p>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <h3><strong>Comca</strong></h3>
+                        <p>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                            blablablablablabla <br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </body>
 {% endblock %}
+
+
+
+

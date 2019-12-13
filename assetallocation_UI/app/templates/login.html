@@ -1,32 +1,40 @@
 {% extends "basePage.html" %}
+
 {% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
-    <h1>Sign In</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-            <div class="row">
-                {% for error in form.username.errors %}
-                    <div class="alert alert-danger col-md-2" role="alert">
-                        {{ error }}
-                    </div>
-                {% endfor %}
+{% block mainloginwtf %}
+<body>
+    <div class="container">
+        <div class="row" style="height: 100px;">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4 my-1">
+                <div class="text-center">
+                    <form class="center" action="/login" method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        <img width="100" height="100" class="mb-4" alt="" src="\static\people-fill.svg" >
+                        <div class="text"> <h2>Sign In</h2></div>
+                        <div class="form-group">
+                            <p>
+                                {{ form.username(class="form-control", placeholder="UserName") }}<br>
+                            </p>
+                            <p>
+                                {{ form.password(class="form-control", placeholder="Password") }}<br>
+                            </p>
+                            <div class="button-submit">
+                                <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button><br>
+                            </div>
+                            <div class="text">
+                                <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            <div class="row">
-                {% for error in form.password.errors %}
-                    <div class="alert alert-danger col-md-2" role="alert">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            </div>
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+<body>
 {% endblock %}
+
+
+
