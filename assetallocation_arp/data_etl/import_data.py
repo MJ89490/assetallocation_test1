@@ -30,7 +30,7 @@ def matfile_to_dataframe(file_path, model_date):
     mat_dataframe.set_index('Date', inplace=True)
 
     mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]  # remove weekends
-    mat_dataframe = mat_dataframe[mat_dataframe.index.value < model_date] # remove data after selected date
+    mat_dataframe = mat_dataframe[mat_dataframe.index < model_date]  # remove data after selected date
     return mat_dataframe
 
 
@@ -78,7 +78,7 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        file_path = r'H:\assetallocation_arp\data\raw\matlabData.mat'
+        file_path = r'\\Inv\lgim\FrontOffice\Structured Products\Solutions Group\SIRM\Shared\Simone\Python\Data\matlabData.mat'
     else:
         file_path = mat_file
 
