@@ -83,20 +83,17 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        #file_path = r'H:\assetallocation_arp\data\raw\matlabData.mat'
         file_path = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
     else:
         file_path = mat_file
 
     if input_file is None:
-        #input_path = r'H:\assetallocation_arp\assetallocation_arp\arp_dashboard.xlsm'
         input_path = os.path.abspath(os.path.join(os.path.dirname(__file__),"..", "arp_dashboard.xlsm"))
     else:
         input_path = input_file
 
     if model_date is None:
         model_date = np.datetime64(datetime.today())
-        #model_date = datetime(2019, 12, 10)
     else:
         model_date = model_date
 

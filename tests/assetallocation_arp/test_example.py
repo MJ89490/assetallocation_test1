@@ -7,7 +7,7 @@ import pytest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))  # noqa
 
 # from pandas.util.testing import assert_frame_equal
-from assetallocation_arp.data_etl.import_data import dataimport_future
+from assetallocation_arp.data_etl.import_data import data import_future
 
 @pytest.mark.parametrize("H:\\assetallocation_arp\\data\\raw\\Future data"
                           ('', '','')

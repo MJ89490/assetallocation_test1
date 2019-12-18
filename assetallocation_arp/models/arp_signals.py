@@ -11,6 +11,9 @@ import data_etl.data_manipulation as dm
 
 
 def momentum(index_data, inputs, week_day):
+
+
+    index_data.to_csv("index", sep='\t', encoding='utf-8')
     sig = pd.DataFrame()
     for column in index_data:
         # Calculate intermediate signals
