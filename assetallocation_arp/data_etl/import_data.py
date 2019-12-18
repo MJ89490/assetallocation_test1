@@ -7,13 +7,8 @@ DATA IMPORT
 import scipy.io as spio
 import pandas as pd
 import openpyxl
-import os
-import numpy as np
 from datetime import datetime
 
-#Comments: may be we should the structure of the import data when we will have the database
-#          we are not going to use the matlab file but grab the data from the database directly
-#          it might be a good idea to create classes?
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
@@ -35,7 +30,7 @@ def matfile_to_dataframe(file_path, model_date):
     mat_dataframe.set_index('Date', inplace=True)
 
     mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]  # remove weekends
-    mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date] # remove data after selected date
+    mat_dataframe = mat_dataframe[mat_dataframe.index.value < model_date] # remove data after selected date
     return mat_dataframe
 
 
@@ -83,20 +78,17 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        #file_path = r'H:\assetallocation_arp\data\raw\matlabData.mat'
-        file_path = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
+        file_path = r'H:\assetallocation_arp\data\raw\matlabData.mat'
     else:
         file_path = mat_file
 
     if input_file is None:
-        #input_path = r'H:\assetallocation_arp\assetallocation_arp\arp_dashboard.xlsm'
-        input_path = os.path.abspath(os.path.join(os.path.dirname(__file__),"..", "arp_dashboard.xlsm"))
+        input_path = r'H:\assetallocation_arp\assetallocation_arp\arp_dashboard.xlsm'
     else:
         input_path = input_file
 
     if model_date is None:
-        model_date = np.datetime64(datetime.today())
-        #model_date = datetime(2019, 12, 10)
+        model_date = datetime.today()
     else:
         model_date = model_date
 
