@@ -6,15 +6,15 @@ email: Anais.Jeremie@lgim.com
 
 import pytest
 import os
-import mock
 from assetallocation_arp.models import times
 from assetallocation_arp.data_etl import import_data as gd
 import pandas as pd
+import xlwings as xw
 CURRENT_PATH = os.path.dirname(__file__)
 
 class Data:
     def __init__(self, leverage, times_inputs, asset_inputs, all_data, signals, returns, r, positioning):
-        self.leverage = leverage # to modify in excel
+        self.leverage = leverage
         self.times_inputs = times_inputs
         self.asset_inputs = asset_inputs
         self.all_data = all_data
@@ -22,6 +22,44 @@ class Data:
         self.returns = returns
         self.r = r
         self.positioning = positioning
+
+    def set_leverage_from_excel(self):
+        wb_dashboard = openpyxl.load_workbook(
+            r"C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\arp_dashboard _test_copy.xlsm")
+        print(wb_dashboard.get_sheet_names())
+
+        sheet = wb_dashboard.get_sheet_by_name('times_input')
+        print(sheet.title)
+
+        print(sheet['C9'].value)
+
+        sheet['C9'].value = "helloooo"
+
+        print(sheet['C9'].value)
+
+        # save the workbook
+        wb_dashboard.save(
+            r"C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\arp_dashboard _test_copy.xlsx")
+
+        # load the newly created workbook
+        xlsmFile = openpyxl.load_workbook(
+            r"C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\arp_dashboard _test_copy.xlsx",
+            keep_vba=True)
+
+        # save your xlsm file
+        xlsmFile.save(
+            r"C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\arp_dashboard _test_copy.xlsm")
+
+
+
+
+
+
+        # sht_dashboard.Range("rng_times_inputs").value = self.leverage
+        # t = wb_dashboard.range("rng_times_inputs").value
+
+        # df = wb_dashboard.range("C9").value
+        # t = "boubou"
 
     def get_data(self):
         self.times_inputs, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data("times", None, None)
@@ -44,7 +82,15 @@ class Data:
                          ])
 def test_format_data_and_calc(data_object, signals_path, returns_path, r_path, positioning_path):
 
+        data_object.set_leverage_from_excel()
+        data_object.get_data()
         signals_origin, returns_origin, r_origin, positioning_origin = data_object.get_times_data()
+
+
+
+
+
+
 
         expected_signals = signals_path
         expected_returns = returns_path
