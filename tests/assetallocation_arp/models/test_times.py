@@ -75,7 +75,15 @@ class Data:
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "signals_v_to_test")),
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "returns_v_to_test")),
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "r_v_to_test")),
-                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_v_to_test")))
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_v_to_test"))),
+
+                          (Data(leverage="s", times_inputs=pd.DataFrame, asset_inputs=pd.DataFrame, all_data=pd.DataFrame,
+                                signals=pd.DataFrame, returns=pd.DataFrame, r=pd.DataFrame, positioning=pd.DataFrame),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "signals_s_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "returns_s_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "r_s_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_s_to_test")))
+
                          ])
 def test_format_data_and_calc(data_object, signals_path, returns_path, r_path, positioning_path):
 
