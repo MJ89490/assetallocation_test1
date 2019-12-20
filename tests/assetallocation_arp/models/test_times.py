@@ -15,6 +15,7 @@ from assetallocation_arp.data_etl import import_data as gd
 CURRENT_PATH = os.path.dirname(__file__)
 INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm"))
 
+# Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
 
 class Models(enum.Enum):
     times = 0
@@ -82,7 +83,16 @@ class Data:
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "signals_s_to_test")),
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "returns_s_to_test")),
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "r_s_to_test")),
-                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_s_to_test")))
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_s_to_test"))),
+
+                          (Data(leverage="e", times_inputs=pd.DataFrame, asset_inputs=pd.DataFrame,
+                                all_data=pd.DataFrame,
+                                signals=pd.DataFrame, returns=pd.DataFrame, r=pd.DataFrame, positioning=pd.DataFrame),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "signals_e_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "returns_e_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "r_e_to_test")),
+                           os.path.abspath(
+                               os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_e_to_test")))
 
                          ])
 def test_format_data_and_calc(data_object, signals_path, returns_path, r_path, positioning_path):
