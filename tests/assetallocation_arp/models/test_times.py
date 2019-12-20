@@ -8,11 +8,22 @@ import pytest
 import os
 import pandas as pd
 import openpyxl as op
+import enum
 from assetallocation_arp.models import times
 from assetallocation_arp.data_etl import import_data as gd
 
 CURRENT_PATH = os.path.dirname(__file__)
 INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm"))
+
+
+class Models(enum.Enum):
+    times = 0
+    maven = 1
+    effect = 2
+    curp = 3
+    fica = 4
+    factor = 5
+    comca = 6
 
 class Data:
     def __init__(self, leverage, times_inputs, asset_inputs, all_data, signals, returns, r, positioning):
@@ -41,7 +52,7 @@ class Data:
         xlsm_file.save(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm")))
 
     def get_data(self):
-        self.times_inputs, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type="times",
+        self.times_inputs, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type=Models.times.name,
                                                                                              mat_file=None,
                                                                                              input_file=INPUT_FILE,
                                                                                              model_date=None)
