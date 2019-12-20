@@ -92,9 +92,17 @@ class Data:
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "returns_e_to_test")),
                            os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "r_e_to_test")),
                            os.path.abspath(
-                               os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_e_to_test")))
+                               os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_e_to_test"))),
 
+                          (Data(leverage="n", times_inputs=pd.DataFrame, asset_inputs=pd.DataFrame,
+                                    all_data=pd.DataFrame,
+                                    signals=pd.DataFrame, returns=pd.DataFrame, r=pd.DataFrame, positioning=pd.DataFrame),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "signals_n_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "returns_n_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "r_n_to_test")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", "positioning_n_to_test")))
                          ])
+
 def test_format_data_and_calc(data_object, signals_path, returns_path, r_path, positioning_path):
 
         data_object.set_leverage_from_excel()
