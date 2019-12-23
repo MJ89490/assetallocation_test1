@@ -1,6 +1,21 @@
 import openpyxl as op
+import os
+import enum
+
 from assetallocation_arp.models import times
 from assetallocation_arp.data_etl import import_data as gd
+
+CURRENT_PATH = os.path.dirname(__file__)
+INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm"))
+
+class Models(enum.Enum):
+    times = 0
+    maven = 1
+    effect = 2
+    curp = 3
+    fica = 4
+    factor = 5
+    comca = 6
 
 class DataTest:
     """

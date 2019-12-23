@@ -8,36 +8,12 @@ import pytest
 import os
 import pandas as pd
 import enum
-
+from tests.assetallocation_arp.models import DataTest as data_test
 
 CURRENT_PATH = os.path.dirname(__file__)
-INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm"))
 
 # Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
 
-class Models(enum.Enum):
-    times = 0
-    maven = 1
-    effect = 2
-    curp = 3
-    fica = 4
-    factor = 5
-    comca = 6
-
-class LeverageType(enum.Enum):
-    e = 0
-    n = 1
-    v = 2
-    s = 3
-
-
-
-#A TRANSFORMER EN FIXTURE?????? TROP DE PARAMETRES DANS PARAMETRIZE NON LISBLE APRES
-# @pytest.fixture()
-# def expected_signal():
-#     df = pd.read_csv
-#     df.colu
-#     return df
 
 
 
@@ -62,9 +38,9 @@ def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path,
     :param positioning_path: 
     :return: assertion error if the two compared dataframes are not equal
     """
-    data_object = DataTest(leverage=leverage_type, times_inputs=pd.DataFrame, asset_inputs=pd.DataFrame,
-                       all_data=pd.DataFrame, signals=pd.DataFrame, returns=pd.DataFrame, r=pd.DataFrame,
-                       positioning=pd.DataFrame)
+    data_object = data_test.DataTest(leverage=leverage_type, times_inputs=pd.DataFrame, asset_inputs=pd.DataFrame,
+                                     all_data=pd.DataFrame, signals=pd.DataFrame, returns=pd.DataFrame, r=pd.DataFrame,
+                                     positioning=pd.DataFrame)
     data_object.set_leverage_from_excel()
     data_object.get_data()
     signals_origin, returns_origin, r_origin, positioning_origin = data_object.get_times_data()
@@ -73,8 +49,7 @@ def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path,
     expected_returns = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", returns_path))
     expected_r = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", r_path))
     expected_positioning = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", positioning_path))
-  
-    #expected_output = anais_function()
+
     dataframe_signals = pd.read_csv(expected_signals, index_col=0, sep='\t')
     dataframe_returns = pd.read_csv(expected_returns, index_col=0, sep='\t')
     dataframe_r = pd.read_csv(expected_r, index_col=0, sep='\t')
