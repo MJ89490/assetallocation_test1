@@ -8,12 +8,11 @@ import pytest
 import os
 import pandas as pd
 
-from tests.assetallocation_arp.models import DataTest as data_test
+from tests.assetallocation_arp.models import DataTestClass as data_test
 from assetallocation_arp.enum import LeverageTypes as leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 
-# Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
 
 @pytest.mark.parametrize("leverage_type, signals_path, returns_path, r_path, positioning_path",
                          [(leverage.Leverage.v.name, "signals_v_to_test", "returns_v_to_test", "r_v_to_test",

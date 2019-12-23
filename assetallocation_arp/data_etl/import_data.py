@@ -17,6 +17,7 @@ from datetime import datetime
 
 FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
 
+
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
     mat_file_data = spio.loadmat(file_path)
@@ -36,8 +37,8 @@ def matfile_to_dataframe(file_path, model_date):
     mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
     mat_dataframe.set_index('Date', inplace=True)
 
-    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]  # remove weekends
-    mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date] # remove data after selected date
+    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
+    mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date]  # remove data after selected date
     return mat_dataframe
 
 
@@ -104,4 +105,3 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
     all_data = matfile_to_dataframe(file_path, model_date)
     return strategy_inputs, asset_inputs, all_data
-
