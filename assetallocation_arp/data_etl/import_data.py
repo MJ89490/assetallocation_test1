@@ -15,6 +15,8 @@ from datetime import datetime
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
+FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
+
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
     mat_file_data = spio.loadmat(file_path)
@@ -83,12 +85,12 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        file_path = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
+        file_path = FILE_PATH
     else:
         file_path = mat_file
 
     if input_file is None:
-        input_path = os.path.abspath(os.path.join(os.path.dirname(__file__),"..", "arp_dashboard.xlsm"))
+        input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
     else:
         input_path = input_file
 

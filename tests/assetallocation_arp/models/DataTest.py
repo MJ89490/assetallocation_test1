@@ -1,21 +1,13 @@
 import openpyxl as op
 import os
-import enum
 
 from assetallocation_arp.models import times
 from assetallocation_arp.data_etl import import_data as gd
+from assetallocation_arp.enum import ModelsNames as models
 
 CURRENT_PATH = os.path.dirname(__file__)
 INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm"))
 
-class Models(enum.Enum):
-    times = 0
-    maven = 1
-    effect = 2
-    curp = 3
-    fica = 4
-    factor = 5
-    comca = 6
 
 class DataTest:
     """
@@ -64,7 +56,7 @@ class DataTest:
         """
         The function gets the different required data for the times model by using the extract_inputs_and_mat_data
         """
-        self.times_inputs, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type=Models.times.name,
+        self.times_inputs, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type=models.Models.times.name,
                                                                                              mat_file=None,
                                                                                              input_file=INPUT_FILE,
                                                                                              model_date=None)

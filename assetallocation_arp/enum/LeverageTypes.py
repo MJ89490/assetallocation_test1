@@ -1,7 +1,8 @@
 import enum
 
-class LeverageType(enum.Enum):
-    e = 0
-    n = 1
-    v = 2
-    s = 3
+class Leverage(enum.Enum):
+    e = 0   #Equal(e)
+    n = 1   #Normative(n)
+    v = 2   #Volatility(v)
+    s = 3   #Standalone(s)
+

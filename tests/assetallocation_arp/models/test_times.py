@@ -7,35 +7,33 @@ email: Anais.Jeremie@lgim.com
 import pytest
 import os
 import pandas as pd
-import enum
+
 from tests.assetallocation_arp.models import DataTest as data_test
+from assetallocation_arp.enum import LeverageTypes as leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 
 # Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
 
-
-
-
 @pytest.mark.parametrize("leverage_type, signals_path, returns_path, r_path, positioning_path",
-                         [(LeverageType.v.name, "signals_v_to_test", "returns_v_to_test", "r_v_to_test",
+                         [(leverage.Leverage.v.name, "signals_v_to_test", "returns_v_to_test", "r_v_to_test",
                            "positioning_v_to_test"),
-                          (LeverageType.s.name, "signals_s_to_test", "returns_s_to_test", "r_s_to_test",
+                          (leverage.Leverage.s.name, "signals_s_to_test", "returns_s_to_test", "r_s_to_test",
                            "positioning_s_to_test"),
-                          (LeverageType.e.name, "signals_e_to_test", "returns_e_to_test", "r_e_to_test",
+                          (leverage.Leverage.e.name, "signals_e_to_test", "returns_e_to_test", "r_e_to_test",
                            "positioning_e_to_test"),
-                          (LeverageType.n.name, "signals_n_to_test", "returns_n_to_test", "r_n_to_test",
+                          (leverage.Leverage.n.name, "signals_n_to_test", "returns_n_to_test", "r_n_to_test",
                            "positioning_n_to_test")]
                          )
 def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path, positioning_path):
     """
     Function which tests the format_data_and_calc function in order to know if it returns th correct results
     (e.g signals, r, returns, positioning)
-    :param data_object: 
-    :param signals_path: 
-    :param returns_path: 
-    :param r_path: 
-    :param positioning_path: 
+    :param leverage_type: types of leverage available: Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
+    :param signals_path: name of the file signals for the signals path
+    :param returns_path: name of the file returns for the returns path
+    :param r_path: name of the file r for the r path
+    :param positioning_path: name of the file positioning for the positioning path
     :return: assertion error if the two compared dataframes are not equal
     """
     data_object = data_test.DataTest(leverage=leverage_type, times_inputs=pd.DataFrame, asset_inputs=pd.DataFrame,

@@ -5,14 +5,12 @@ TIMES
 """
 
 import numpy as np
+import pandas as pd
 
-#import models.portfolio_construction as pc
 from assetallocation_arp.models import portfolio_construction as pc
 from assetallocation_arp.models import arp_signals as arp
-#import models.arp_signals as arp
-import pandas as pd
 from pandas.tseries.offsets import BDay
-
+from assetallocation_arp.enum import LeverageTypes as leverage_name
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
     # format data and inputs
@@ -34,7 +32,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     leverage_data = leverage_data.shift(periods=times_inputs['time_lag'].item(), freq='D', axis=0).reindex(
         index_df, method='pad')
     # calculate leveraged positions and returns
-    if leverage_type == 's':
+    if leverage_type == leverage_name.Leverage.s.name:
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 0)
     else:
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
