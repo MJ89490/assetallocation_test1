@@ -24,11 +24,9 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     #
     costs = asset_inputs_t.loc['costs']
     leverage = asset_inputs_t.loc['s_leverage']
-
     leverage_type = times_inputs['leverage_type'].item()
     # calculate signals
     signals = arp.momentum(times_data, times_inputs, times_inputs['week_day'].item())
-
     # apply leverage
     leverage_data = pc.apply_leverage(futures_data, leverage_type, leverage)
     leverage_data[leverage.index[leverage.isnull()]] = np.nan
