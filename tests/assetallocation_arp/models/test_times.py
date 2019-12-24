@@ -13,7 +13,13 @@ from assetallocation_arp.enum import LeverageTypes as leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 
-
+"""
+Module test_times.py: tests the Times model (times.py) in order to know if it returns the correct following outputs:
+    - signals
+    - returns
+    - r
+    - positioning
+"""
 @pytest.mark.parametrize("leverage_type, signals_path, returns_path, r_path, positioning_path",
                          [(leverage.Leverage.v.name, "signals_v_to_test", "returns_v_to_test", "r_v_to_test",
                            "positioning_v_to_test"),
@@ -35,12 +41,16 @@ def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path,
     :param positioning_path: name of the file positioning for the positioning path
     :return: assertion error if the two compared dataframes are not equal
     """
-    data_object = data_test.DataTest(leverage=leverage_type, times_inputs=pd.DataFrame, asset_inputs=pd.DataFrame,
-                                     all_data=pd.DataFrame, signals=pd.DataFrame, returns=pd.DataFrame, r=pd.DataFrame,
-                                     positioning=pd.DataFrame)
+
+    data_object = data_test.DataTest(leverage=leverage_type)
     data_object.set_leverage_from_excel()
     data_object.get_data()
-    signals_origin, returns_origin, r_origin, positioning_origin = data_object.get_times_data()
+    data_object.get_times_model_data()
+
+    signals_origin = data_object.getter_signals
+    returns_origin = data_object.getter_returns
+    r_origin = data_object.getter_r
+    positioning_origin = data_object.getter_positioning
 
     expected_signals = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", signals_path))
     expected_returns = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", returns_path))
