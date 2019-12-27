@@ -2,30 +2,31 @@
 
 {% block navbar %}
     <style type="text/css">
-        body{font-size: 4.5 rem; font-weight:300; font-family: system-ui, serif}
-        .navbar{margin-bottom:0; background-color:#343a40; border-color:#343a40;}
+        body{font-size: 4.5 rem; font-weight:300; font-family: arial,Sans-Serif}
+        .navbar{margin-bottom:0; background-color:#007faa; border-color:#007faa;}
         .navbar-inverse .navbar-brand{color:#fff}
         .navbar-inverse .navbar-toggle collapsed .navbar-right{float:right;}
-        #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#343a40;}
+        #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa;}
         #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16 px; text-decoration:none; border-bottom:3px solid transparent;}
-        #navbar1 .navbar-nav a.nav-link:hover{color:#D3D3D3; font-weight:bold; border-bottom:3px solid #fff;}
+        #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:3px solid #fff;}
+        <!--#navbar1 .logo .navbar-left img, #navbar1 .logo .navbar-left img svg {width="62";height="auto"}-->
+        <!--img{max-width:100%;}-->
     </style>
 
     <body>
         <nav class="navbar navbar-inverse navbar-static-top" role="navigation" id="navbar1">
-
-
-            <a class="navbar-brand">Asset Allocation</a>
-            <a class="navbar-left"><img width="40" height="40" src="\static\people-fill.svg"></a>
-
                 <div class="container-fluid">
                     <div class="navbar-header" style="padding-left: 10px">
-                        <!--<span class="navbar-brand">Asset Allocation</span>-->
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                     </button>
+                    </div>
+                    <div class="collapse navbar-collapse pull-left">
+                        <a href="{{ url_for('home') }}">
+                            <img width="62" height="auto"  alt="Legal and General" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+                        </a>
                     </div>
                     <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
@@ -33,7 +34,6 @@
                             <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
                             <li class="nav-link"><a class="nav-link" href="#">Login Out</a></li>
                         </ul>
-
                     </div>
                 </div>
             </nav>
@@ -44,12 +44,12 @@
         {% block content %}
             <style type="text/css">
                 .text p {text-align: center; }
-                .btn-primary {background-color:#343a40; border-color:#343a40; color:#D3D3D3}
+                .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff}
                 .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
                 {
-                    background-color:#696969; border-color:#696969; color:#D3D3D3;
+                    background-color:#869ab8 ; border-color:#869ab8 ; color:#fff;
                 }
-                body{font-size: 4.5 rem; font-weight:300; font-family: system-ui, serif }
+                body{font-size: 4.5 rem; font-weight:300; font-family:arial,Sans-Serif}
             </style>
 
             <div class="main-login">
