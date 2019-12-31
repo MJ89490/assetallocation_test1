@@ -10,9 +10,11 @@ CURRENT_PATH = os.path.dirname(__file__)
 
 # Set the origin template (templates) of Flask and add subfolders
 origin_path = "templates"
-modals_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modals"))
+modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsIcons"))
+modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
+
 app = Flask(__name__)
-template_folders = [origin_path, modals_path]
+template_folders = [origin_path, modals_icons_path, modals_models_path]
 
 # Change the original folder of Flask by adding subfolders
 app.jinja_loader = jinja2.ChoiceLoader([
