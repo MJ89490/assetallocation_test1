@@ -1,248 +1,211 @@
 {% extends "basePage.html" %}
 
 {% block mainhome %}
-        <style type="text/css">
-            .jumbotron{margin-bottom:0;}
-            .text-database {color: #007faa}
-        </style>
-<body data-aos-easing="ease-out-quad" data-aos-duration="700" data-aos-delay="0">
-    <!-- Asset Allocation Home Page
-    ================================================== -->
-    <section class="pt-4 pt-md-11">
-      <div class="container">
-        <div class="row align-items-center" id="items-center">
-            <div class="col-12 col-md-8 col-lg-8 order-md-1 aos-init aos-animate" data-aos="fade-up" id="text-home">
-            <!-- Heading -->
-            <h1 class="display-3 text-center text-md-left">
-              Asset Allocation Models <span class="text-database"> Database</span>.
-            </h1>
-            <!-- Text -->
-            <p class="lead text-center text-md-left text-muted mb-6 mb-lg-8">
-              Build a beautiful, modern website with flexible Bootstrap components built from scratch.
-            </p>
-            <!-- Buttons -->
-            <div class="text-center text-md-left">
-              <a href="#" class="btn btn-primary btn-lg" role="button">
-                Learn More <i class="fe fe-arrow-right d-none d-md-inline ml-3"></i>
-              </a>
+    <!-- Style of the Home Page -->
+    <style type="text/css">
+            .text-database { color: #007faa; }
+            .link-model {color: #333;}
+            .link-model:visited {color: #333; text-decoration: none; outline: none;}
+            .link-model:hover {color: #333;}
+            .link-model:active {color: #333; text-decoration: none; outline: none;}
+            .link-model:focus {color: #333; text-decoration: none; outline: none;}
+    </style>
+
+    <!-- Body of the Home Page -->
+    <body data-aos-easing="ease-out-quad" data-aos-duration="700" data-aos-delay="0">
+
+    <!--#region Main Home Text  -->
+        <!-- ASSET ALLOCATION HOME PAGE
+        ================================================== -->
+        <section class="pt-4 pt-md-11">
+          <div class="container">
+            <div class="row align-items-center" id="items-center">
+                <div class="col-12 col-md-8 col-lg-8 order-md-1 aos-init aos-animate" data-aos="fade-up" id="text-home">
+                    <!-- Heading -->
+                    <h1 class="display-3 text-center text-md-left">
+                        Asset Allocation Models <span class="text-database">Database</span>.
+                    </h1>
+                    <!-- Text -->
+                    <p class="lead text-center text-md-left text-muted mb-6 mb-lg-8">
+                        Build a beautiful, modern website with flexible Bootstrap components built from scratch.
+                    </p>
+                    <!-- Modal Learn More -->
+                    <div class="text-center text-md-left">
+                        <button type="button" class="btn btn-primary btn-lg" role="button" data-toggle="modal" data-target="#exampleModalLong">
+                            Learn More <i class="fe fe-arrow-right d-none d-md-inline ml-3"></i>
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>
+                              </div>
+                              <div class="modal-body">
+                                       <p>
+                                           Cras mattis consectetur purus sit amet fermentum.Cras justo<br>
+                                           odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>
+                                           porta ac consectetur ac, vestibulum at eros.
+                                       </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-4 order-md-1">
+                    <!-- Image of LGIM -->
+                    <img width="400" height="auto" src="\static\world.png" class="img-fluid mw-md-150 mw-lg-100 mb-6 mb-md-0 aos-init aos-animate" alt="..." data-aos="fade-up" data-aos-delay="100">
+                </div>
             </div>
-          </div>
-            <div class="col-12 col-md-4 col-lg-4 order-md-1">
-                <!-- Image -->
-                <img width="400" height="auto" src="\static\world.png" class="img-fluid mw-md-150 mw-lg-100 mb-6 mb-md-0 aos-init aos-animate" alt="..." data-aos="fade-up" data-aos-delay="100">
+          </div>    <!-- / .container -->
+        </section>  <!-- / .section -->
+<!--#endregion -->
+
+
+    <!--#region Display all the available models  -->
+
+        <br>
+        <br>
+        <section class="py-8 py-md-11 border-bottom">
+          <div class="container">
+            <div class="row">
+
+                <!--#region Times Model -->
+              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#TimesModal">Times Model</a>
+                    </h3>
+                    <!-- Modal Times Model -->
+                    {% include 'timesModal.html' %}
+                    <!-- Text -->
+                    <p class="text-muted mb-6 mb-md-0">
+                        Short description of the Times model.
+                    </p>
+              </div>
+                <!--#endregion -->
+
+                <!--#region Maven Model -->
+              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#MavenModal">Maven Model</a>
+                    </h3>
+                      <!-- Modal Maven Model -->
+                    {% include 'mavenModal.html' %}
+                <!-- Text -->
+                <p class="text-muted mb-6 mb-md-0">
+                  Short description of the Maven model.
+                </p>
+              </div>
+                <!--#endregion -->
+
+                <!--#region Effect Model -->
+
+              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#EffectModal">Effect Model</a>
+                    </h3>
+                    <!-- Modal Effect Model -->
+                    {% include 'effectModal.html' %}
+                <!-- Text -->
+                <p class="text-muted mb-0">
+                   Short description of the Effect model.
+                </p>
+              </div>
+                <!--#endregion-->
+
+                <!--#region Curp Model-->
+              <br><div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#CurpModal">Curp Model</a>
+                    </h3>
+
+                    <!-- Modal Curp Model -->
+                    {% include 'curpModal.html' %}
+
+                <!-- Text -->
+                <p class="text-muted mb-0">
+                   Short description of the Curp model.
+                </p>
             </div>
-      </div> <!-- / .container -->
+                <!--#endregion-->
 
-    </div>
-    </section>
-
-    <!-- FEATURES
-    ================================================== -->
-    <br>
-    <br>
-    <section class="py-8 py-md-11 border-bottom">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up">
-              <!-- Icon -->
-            <div class="icon text-primary mb-3">
-              <!--?xml version="1.0" encoding="UTF-8"?-->
-              <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-                  <title>Stockholm-icons / Layout / Layout-arrange</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                      <path d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z" id="Combined-Shape" fill="#335EEA"></path>
-                      <path d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z" id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
-                  </g>
-              </svg>
+                <!--#region Fica Model-->
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#FicaModal">Fica Model</a>
+                    </h3>
+                    <!-- Modal Fica Model -->
+                    {% include 'ficaModal.html' %}
+                <!-- Text -->
+                <p class="text-muted mb-0">
+                   Short description of the Fica model.
+                </p>
             </div>
-            <!-- Heading -->
-            <h3>
-              Times Model
-            </h3>
-            <!-- Text -->
-            <p class="text-muted mb-6 mb-md-0">
-              Short description of the Times model.
-            </p>
+                <!--#endregion-->
 
-          </div>
-          <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
+                <!--#region Factor Model-->
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
 
-            <!-- Icon -->
-            <div class="icon text-primary mb-3">
-              <!--?xml version="1.0" encoding="UTF-8"?-->
-              <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-                  <title>Stockholm-icons / Layout / Layout-arrange</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                      <path d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z" id="Combined-Shape" fill="#335EEA"></path>
-                      <path d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z" id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
-                  </g>
-              </svg>
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#FactorModal">Factor Model</a>
+                    </h3>
+
+                    <!-- Modal Factor Model -->
+                    {% include 'factorModal.html' %}
+
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                        Short description of the Factor model.
+                    </p>
             </div>
+                <!--#endregion-->
 
-            <!-- Heading -->
-            <h3>
-              Maven Model
-            </h3>
-
-            <!-- Text -->
-            <p class="text-muted mb-6 mb-md-0">
-              Short description of the Maven model.
-            </p>
-
-          </div>
-          <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-
-             <!-- Icon -->
-            <div class="icon text-primary mb-3">
-              <!--?xml version="1.0" encoding="UTF-8"?-->
-              <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-                  <title>Stockholm-icons / Layout / Layout-arrange</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                      <path d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z" id="Combined-Shape" fill="#335EEA"></path>
-                      <path d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z" id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
-                  </g>
-              </svg>
+                <!--#region Comca Model-->
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#ComcaModal"> Comca Model</a>
+                    </h3>
+                    <!-- Modal Comca Model -->
+                    {% include 'comcaModal.html' %}
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                       Short description of the Comca model.
+                    </p>
             </div>
+                <!--#endregion-->
 
-            <!-- Heading -->
-            <h3>
-              Effect Model
-            </h3>
-
-            <!-- Text -->
-            <p class="text-muted mb-0">
-               Short description of the Effect model.
-            </p>
-
-          </div>
-
-          <br><div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-            <!-- Icon -->
-            <div class="icon text-primary mb-3">
-              <!--?xml version="1.0" encoding="UTF-8"?-->
-              <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-                  <title>Stockholm-icons / Layout / Layout-arrange</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                      <path d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z" id="Combined-Shape" fill="#335EEA"></path>
-                      <path d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z" id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
-                  </g>
-              </svg>
-            </div>
-
-            <!-- Heading -->
-            <h3>
-              Curp Model
-            </h3>
-
-            <!-- Text -->
-            <p class="text-muted mb-0">
-               Short description of the Curp model.
-            </p>
-
-        </div>
-
-            <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-            <!-- Icon -->
-            <div class="icon text-primary mb-3">
-              <!--?xml version="1.0" encoding="UTF-8"?-->
-              <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-                  <title>Stockholm-icons / Layout / Layout-arrange</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                      <path d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z" id="Combined-Shape" fill="#335EEA"></path>
-                      <path d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z" id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
-                  </g>
-              </svg>
-            </div>
-
-            <!-- Heading -->
-            <h3>
-              Fica Model
-            </h3>
-
-            <!-- Text -->
-            <p class="text-muted mb-0">
-               Short description of the Fica model.
-            </p>
-
-        </div>
-
-            <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-            <!-- Icon -->
-            <div class="icon text-primary mb-3">
-              <!--?xml version="1.0" encoding="UTF-8"?-->
-              <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-                  <title>Stockholm-icons / Layout / Layout-arrange</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                      <path d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z" id="Combined-Shape" fill="#335EEA"></path>
-                      <path d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z" id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
-                  </g>
-              </svg>
-            </div>
-
-            <!-- Heading -->
-            <h3>
-              Factor Model
-            </h3>
-
-            <!-- Text -->
-            <p class="text-muted mb-0">
-               Short description of the Factor model.
-            </p>
-
-        </div>
-
-            <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-            <!-- Icon -->
-            <div class="icon text-primary mb-3">
-              <!--?xml version="1.0" encoding="UTF-8"?-->
-              <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-                  <title>Stockholm-icons / Layout / Layout-arrange</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Stockholm-icons-/-Layout-/-Layout-arrange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="bound" x="0" y="0" width="24" height="24"></rect>
-                      <path d="M5.5,4 L9.5,4 C10.3284271,4 11,4.67157288 11,5.5 L11,6.5 C11,7.32842712 10.3284271,8 9.5,8 L5.5,8 C4.67157288,8 4,7.32842712 4,6.5 L4,5.5 C4,4.67157288 4.67157288,4 5.5,4 Z M14.5,16 L18.5,16 C19.3284271,16 20,16.6715729 20,17.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,17.5 C13,16.6715729 13.6715729,16 14.5,16 Z" id="Combined-Shape" fill="#335EEA"></path>
-                      <path d="M5.5,10 L9.5,10 C10.3284271,10 11,10.6715729 11,11.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,11.5 C4,10.6715729 4.67157288,10 5.5,10 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,12.5 C20,13.3284271 19.3284271,14 18.5,14 L14.5,14 C13.6715729,14 13,13.3284271 13,12.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z" id="Combined-Shape" fill="#335EEA" opacity="0.3"></path>
-                  </g>
-              </svg>
-            </div>
-
-            <!-- Heading -->
-            <h3>
-              Comca Model
-            </h3>
-
-            <!-- Text -->
-            <p class="text-muted mb-0">
-               Short description of the Comca model.
-            </p>
-
-        </div>
-
-
-        </div> <!-- / .row -->
-      </div> <!-- / .container -->
-    </section>
-</body>
+            </div>  <!-- / .row -->
+          </div>    <!-- / .container -->
+        </section>  <!-- / .section -->
+    <!--#endregion -->
+    </body>         <!-- / .body -->
 
 {% endblock %}
 

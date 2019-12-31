@@ -11,7 +11,6 @@
         #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:3px solid #fff;}
         <!--#navbar1 .logo .navbar-left img, #navbar1 .logo .navbar-left img svg {width="62";height="auto"}-->
         <!--img{max-width:100%;}-->
-}
     </style>
 
     <body>
@@ -53,16 +52,12 @@
                 body{font-size: 4.5 rem; font-weight:300; font-family:arial,Sans-Serif}
             </style>
 
-            <div class="main-login">
-                {% block mainlogin %}{% endblock %}
-            </div>
-
             <div class="main-login-wtf">
                {% block mainloginwtf%} {% endblock %}
             </div>
 
             <div class="main-home">
-                {% block mainhome %}{% endblock %}
+                {% block mainhome %} {% endblock %}
             </div>
         {% endblock%}
     </body>
