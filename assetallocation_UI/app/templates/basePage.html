@@ -1,0 +1,81 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block navbar %}
+    <style type="text/css">
+        body{font-size: 4.5 rem; font-weight:300; font-family: arial,Sans-Serif}
+        .navbar{margin-bottom:22px; background-color:#007faa; border-color:#007faa;}
+        .navbar-inverse .navbar-brand{color:#fff}
+        .navbar-inverse .navbar-toggle collapsed .navbar-right{float:right;}
+        #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa;}
+        #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16 px; text-decoration:none; border-bottom:3px solid transparent;}
+        #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:3px solid #fff;}
+        <!--#navbar1 .logo .navbar-left img, #navbar1 .logo .navbar-left img svg {width="62";height="auto"}-->
+        <!--img{max-width:100%;}-->
+    </style>
+
+    <body>
+    <!-- Navbar
+         ===================================== !-->
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation" id="navbar1">
+                <div class="container-fluid">
+                    <div class="navbar-header" style="padding-left: 10px">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                    </button>
+                    </div>
+                    <div class="collapse navbar-collapse pull-left">
+                        <a href="{{ url_for('home') }}">
+                            <img width="75" height="auto"  alt="Legal and General" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-link active"><a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
+                            <!-- User is log-in -->
+                            {% if g.user.is_authenticated %}
+                                <li class="nav-link"><a class="nav-link" href="{{ url_for('protected_models') }}">Models</a></li>
+                                <li class="nav-link"><a class="nav-link" href="{{ url_for('logout') }}">LogOut</a></li>
+                            {% endif %}
+                            <!-- User is log-off -->
+                            {% if not g.user.is_authenticated %}
+                                <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+    </body>
+    {% endblock %}
+
+    <body class="text-center">
+        {% block content %}
+            <style type="text/css">
+                .text p {text-align: center; }
+                .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff}
+                .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
+                {
+                    background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
+                }
+
+}
+                body{font-size: 4.5 rem; font-weight:300; font-family:arial,Sans-Serif}
+            </style>
+
+            <div class="main-login-wtf">
+               {% block mainloginwtf%} {% endblock %}
+            </div>
+
+            <div class="main-home">
+                {% block mainhome %} {% endblock %}
+            </div>
+
+            <div class="main-models">
+                {% block selectModels %} {% endblock %}
+            </div>
+        {% endblock%}
+    </body>
+
+
+
