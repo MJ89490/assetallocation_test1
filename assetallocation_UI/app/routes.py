@@ -43,9 +43,9 @@ def login_post():
         password = form.password.data
         print("username", username)
         print("password", password)
-        hash_password = User.hash_password(password=password)
-        print(hash_password)
-        if username != username_origin or hash_password != password_origin:
+
+
+        if username != username_origin or password != password_origin:
             flash('Please check your login details and try again.')
             return redirect(url_for('login'))
         else:
