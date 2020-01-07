@@ -10,5 +10,3 @@ def randomIdentification():
     value = randint(1, 10)
     return value
 
-
-print(randomIdentification())

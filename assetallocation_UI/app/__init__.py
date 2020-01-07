@@ -2,6 +2,10 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from flask_bootstrap import Bootstrap
 from app import config
+from flask_login import LoginManager
+from .models import User
+from flask_socketio import SocketIO
+from flask import session
 
 import jinja2
 import os
@@ -14,8 +18,8 @@ modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modals
 modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
 
 app = Flask(__name__)
-template_folders = [origin_path, modals_icons_path, modals_models_path]
 
+template_folders = [origin_path, modals_icons_path, modals_models_path]
 # Change the original folder of Flask by adding subfolders
 app.jinja_loader = jinja2.ChoiceLoader([
     app.jinja_loader,
@@ -24,6 +28,16 @@ app.jinja_loader = jinja2.ChoiceLoader([
 app.config.from_object(config.DevelopmentConfig)
 CSRFProtect(app).init_app(app)
 bootstrap = Bootstrap(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+app.config['SECRET_KEY'] = 'secret*'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
 
 # Import is at the bottom to avoid circular imports
 from app import routes

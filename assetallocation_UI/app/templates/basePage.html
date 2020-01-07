@@ -14,6 +14,8 @@
     </style>
 
     <body>
+    <!-- Navbar
+         ===================================== !-->
         <nav class="navbar navbar-inverse navbar-static-top" role="navigation" id="navbar1">
                 <div class="container-fluid">
                     <div class="navbar-header" style="padding-left: 10px">
@@ -31,8 +33,15 @@
                     <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li class="nav-link active"><a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
-                            <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-                            <li class="nav-link"><a class="nav-link" href="#">Login Out</a></li>
+                            <!-- User is log-in -->
+                            {% if g.user.is_authenticated %}
+                                <li class="nav-link"><a class="nav-link" href="{{ url_for('protected_models') }}">Models</a></li>
+                                <li class="nav-link"><a class="nav-link" href="{{ url_for('logout') }}">LogOut</a></li>
+                            {% endif %}
+                            <!-- User is log-off -->
+                            {% if not g.user.is_authenticated %}
+                                <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -47,8 +56,10 @@
                 .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff}
                 .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
                 {
-                    background-color:#869ab8 ; border-color:#869ab8 ; color:#fff;
+                    background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
                 }
+
+}
                 body{font-size: 4.5 rem; font-weight:300; font-family:arial,Sans-Serif}
             </style>
 
@@ -58,6 +69,10 @@
 
             <div class="main-home">
                 {% block mainhome %} {% endblock %}
+            </div>
+
+            <div class="main-models">
+                {% block selectModels %} {% endblock %}
             </div>
         {% endblock%}
     </body>
