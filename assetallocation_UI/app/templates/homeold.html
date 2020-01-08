@@ -1,0 +1,240 @@
+{% extends "basePage.html" %}
+
+{% block mainhome %}
+    <!-- Style of the Home Page -->
+    <style type="text/css">
+body {
+    margin: 0;
+    font-family: Merriweather Sans,sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #f8f9fa;
+}
+
+*, :after, :before {
+    box-sizing: border-box;
+    x: ;
+}
+
+body {
+    display: block;
+    margin: 8px;
+}
+
+.h1, h1{font-size:36px;}
+.h1, .h2, .h3, h1, h2, h3{margin-top:20px; margin-bottom:10px;}
+.text-center{text-align:center;}
+
+.container {
+    width: 100%;
+    padding-right: 18px;
+    padding-left: 18px;
+    margin-right: auto;
+    margin-left: auto;
+}
+article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+    display: block;
+}
+.bg-skew {
+    position: relative;
+}
+.bg-skew-light:before {
+    background-color: #F0F0F0;
+}
+
+.bg-skew:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: skewY(-5deg);
+    transform-origin: top left;
+    z-index: -1;
+}
+
+.container {
+    width: 100%;
+    padding-right: 18px;
+    padding-left: 18px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.pb-5, .py-5 {
+    padding-bottom: 3rem!important;
+}
+
+.pt-5, .py-5 {
+    padding-top: 3rem!important;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -18px;
+    margin-left: -18px;
+}
+
+.mb-4, .my-4 {
+    margin-bottom: 1.5rem!important;
+}
+
+.display-4 {
+    font-size: 2.75rem;
+}
+
+.display-3, .display-4 {
+    font-weight: 300;
+    line-height: 1.3;
+}
+
+.lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.btn-pill {
+    border-radius: 10rem;
+}
+
+.btn {
+    font-size: .875rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.w-auto {
+    width: auto!important;
+}
+
+@media (min-width: 768px)
+.d-md-inline-block {
+    display: inline-block!important;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #006aff;
+    border-color: #006aff;
+    box-shadow: 0 7px 16px 0 rgba(0,0,0,.2);
+}
+
+
+
+    </style>
+<body>
+    <main id="main">
+        <!--#region Main Home Text  -->
+        <!-- ASSET ALLOCATION HOME PAGE
+        ================================================== -->
+        <section class="pt-4 pt-md-11">
+          <div class="container">
+            <div class="row align-items-center" id="items-center">
+                <div class="col-12 col-md-8 col-lg-8 order-md-1 aos-init aos-animate" data-aos="fade-up" id="text-home">
+                    <!-- Heading -->
+                    <h1 class="display-3 text-center text-md-left">
+                        Asset Allocation Models <span class="text-database">Database</span>.
+                    </h1>
+                    <!-- Text -->
+                    <p class="lead text-center text-md-left text-muted mb-6 mb-lg-8">
+                        Build a beautiful, modern website with flexible Bootstrap components built from scratch.
+                    </p>
+                    <!-- Modal Learn More -->
+                    <div class="text-center text-md-left">
+                        <div class="button-learn">
+                            <button type="button" class="btn btn-primary btn-lg shadow-none" role="button" data-toggle="modal" data-target="#exampleModalLong">
+                                Learn More <i class="fe fe-arrow-right d-none d-md-inline ml-3"></i>
+                            </button>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>
+                              </div>
+                              <div class="modal-body">
+                                       <p>
+                                           Cras mattis consectetur purus sit amet fermentum.Cras justo<br>
+                                           odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>
+                                           porta ac consectetur ac, vestibulum at eros.
+                                       </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-4 order-md-1">
+                    <!-- Image of LGIM -->
+                    <img width="400" height="auto" src="\static\world.png" class="img-fluid mw-md-150 mw-lg-100 mb-6 mb-md-0 aos-init aos-animate" alt="..." data-aos="fade-up" data-aos-delay="100">
+                </div>
+            </div>
+          </div>    <!-- / .container -->
+        </section>  <!-- / .section -->
+<!--#endregion -->
+
+        <div class="bg-skew bg-skew-light">
+            <!-- Demos -->
+            <section class="container">
+                <div class="row py-5">
+                    <div class="col-lg-6 mb-4">
+                        <a href="app.html" class="stretched-link">
+                            <img src="img/app.png" class="img-fluid img-thumbnail img-thumbnail-hover mb-4" alt="App demo">
+                            <h2 class="h5 text-center text-dark">App</h2>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <a href="course.html" class="stretched-link">
+                            <img src="img/course.png" class="img-fluid img-thumbnail mb-4" alt="Course demo">
+                            <h2 class="h5 text-center text-dark">Course</h2>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <a href="event.html" class="stretched-link">
+                            <img src="img/event.jpg" class="img-fluid img-thumbnail mb-4" alt="Event demo">
+                            <h2 class="h5 text-center text-dark">Event</h2>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <a href="saas.html" class="stretched-link">
+                            <img src="img/saas.png" class="img-fluid img-thumbnail mb-4" alt="Saas demo">
+                            <h2 class="h5 text-center text-dark">SaaS</h2>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer mt-5">
+        <div class="container">
+            <hr class="m-0" role="presentation">
+            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-center mt-4">
+                <p class="small text-muted">© Boost 2018</p>
+            </div>
+        </div>
+    </footer>
+</body>
+{% endblock %}
+
+
+
+
