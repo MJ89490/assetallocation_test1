@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 from tests.assetallocation_arp.models import DataTestClass as data_test
-from assetallocation_arp.enum import LeverageTypes as leverage
+from assetallocation_arp.enum import leverage_types as leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 
@@ -52,10 +52,10 @@ def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path,
     r_origin = data_object.getter_r
     positioning_origin = data_object.getter_positioning
 
-    expected_signals = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", signals_path))
-    expected_returns = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", returns_path))
-    expected_r = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", r_path))
-    expected_positioning = os.path.abspath(os.path.join(CURRENT_PATH, "..", "data_times_to_test", positioning_path))
+    expected_signals = os.path.abspath(os.path.join(CURRENT_PATH, "resources", "data_times_to_test", signals_path))
+    expected_returns = os.path.abspath(os.path.join(CURRENT_PATH, "resources", "data_times_to_test", returns_path))
+    expected_r = os.path.abspath(os.path.join(CURRENT_PATH, "resources", "data_times_to_test", r_path))
+    expected_positioning = os.path.abspath(os.path.join(CURRENT_PATH, "resources", "data_times_to_test", positioning_path))
 
     dataframe_signals = pd.read_csv(expected_signals, index_col=0, sep='\t')
     dataframe_returns = pd.read_csv(expected_returns, index_col=0, sep='\t')

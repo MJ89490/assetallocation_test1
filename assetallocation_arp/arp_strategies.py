@@ -4,7 +4,7 @@ import models.times as times
 import sys
 import os
 
-from assetallocation_arp.enum import ModelsNames as models
+from assetallocation_arp.enum import models_names as models
 
 
 def run_model(model_type, mat_file=None, input_file=None):
@@ -12,6 +12,18 @@ def run_model(model_type, mat_file=None, input_file=None):
 	if model_type == models.Models.times.name:
 		# get inputs from excel and matlab data
 		times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+
+		times_inputs.to_csv(
+			r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\resources\data_times_for_computations\times_inputs_v',
+			sep='\t', encoding='utf-8')
+		all_data.to_csv(
+			r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\resources\data_times_for_computations\all_data_v',
+			sep='\t', encoding='utf-8')
+
+		asset_inputs.to_csv(
+			r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\resources\data_times_for_computations\asset_inputs_v',
+			sep='\t', encoding='utf-8')
+
 		# run strategy
 		signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
 		# write results to output sheet
@@ -53,19 +65,23 @@ def write_output_to_excel(model_outputs):
 		sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
 
 
-def get_inputs_from_excel(model):
+def get_inputs_from_excel():
 	# select data from excel
-	# mat_file = xw.Range('rng_mat_file_path').value
-	# model_type = xw.Range('rng_model_type').value
-	# mock_caller = xw.Book.caller().fullname
-	# # run selected model
-	# run_model(model_type, mat_file, mock_caller)
 
+	mat_file = xw.Range('rng_mat_file_path').value
+
+	model_type = xw.Range('rng_model_type').value
+
+	# run selected model
+
+	run_model(model_type, mat_file, xw.Book.caller().fullname)
+
+
+def get_inputs_from_python(model):
 	#launch the script from Python
 	mat_file = None
 	input_file = None
-	models_list = [models.Models.times.name, models.Models.maven.name, models.Models.effect.name, models.Models.curp.name,
-				   models.Models.fica.name, models.Models.factor.name, models.Models.comca.name]
+	models_list = [model.name for model in models.Models]
 
 	if model in models_list:
 		model_type = model
@@ -79,4 +95,4 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-	sys.exit(get_inputs_from_excel(get_input_user()))
+	sys.exit(get_inputs_from_python(get_input_user()))

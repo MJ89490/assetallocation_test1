@@ -4,10 +4,10 @@ import pandas as pd
 
 from assetallocation_arp.models import times
 from assetallocation_arp.data_etl import import_data as gd
-from assetallocation_arp.enum import ModelsNames as models
+from assetallocation_arp.enum import models_names as models
 
 CURRENT_PATH = os.path.dirname(__file__)
-INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm"))
+INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy.xlsm"))
 
 
 class DataTest:
@@ -62,7 +62,7 @@ class DataTest:
         :noteworthy: the function only works on the copy of the arp_dashboard.xlsm
         """
         # set the workbook arp_dashboard_test_copy
-        wb_dashboard = op.load_workbook(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm")))
+        wb_dashboard = op.load_workbook(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy.xlsm")))
         # set the sheet of the current workbook with times_input
         sheet_times = wb_dashboard.get_sheet_by_name('times_input')
         # replace the leverage by the current leverage of the Data Class
@@ -73,7 +73,7 @@ class DataTest:
         xlsm_file = op.load_workbook(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsx")),
                                                      keep_vba=True)
         # save your xlsm file
-        xlsm_file.save(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsm")))
+        xlsm_file.save(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy.xlsm")))
 
     def get_data(self):
         """
@@ -83,6 +83,18 @@ class DataTest:
                                                                                              mat_file=None,
                                                                                              input_file=INPUT_FILE,
                                                                                              model_date=None)
+
+        # times_inputs = os.path.abspath\
+        #     (os.path.join(CURRENT_PATH, "resources", "data_times_for_computations", "times_inputs_v"))
+        # asset_inputs = os.path.abspath\
+        #     (os.path.join(CURRENT_PATH, "resources", "data_times_for_computations", "asset_inputs_v"))
+        # all_data = os.path.abspath(
+        #     os.path.join(CURRENT_PATH, "resources", "data_times_for_computations", "all_data_v"))
+        #
+        # self.times_inputs = pd.read_csv(times_inputs, sep='\t')
+        # self.asset_inputs = pd.read_csv(asset_inputs, sep='\t')
+        # self.all_data = pd.read_csv(all_data, sep='\t')
+
 
     def get_times_model_data(self):
         """
