@@ -1,0 +1,231 @@
+{% extends "basePage.html" %}
+
+{% block mainhome %}
+    <!-- Style of the Home Page -->
+    <style type="text/css">
+            .text-database { color: #007faa; }
+            .link-model {color: #333;}
+            .link-model:visited {color: #333; text-decoration: none; outline: none;}
+            .link-model:hover {color: #333;}
+            .link-model:active {color: #333; text-decoration: none; outline: none;}
+            .link-model:focus {color: #333; text-decoration: none; outline: none;}
+            .display-4 {font-size: 2.75rem;}
+            .display-3 {font-size: 5rem;}
+            @media (min-width: 992px)
+            .text-lg-left {text-align: left!important;}
+            .text-secondary {color: #656e79!important;}
+            p {display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px;
+               margin-inline-end: 0px;}
+    </style>
+
+    <!-- Body of the Home Page -->
+    <body data-aos-easing="ease-out-quad" data-aos-duration="700" data-aos-delay="0">
+
+    <!--#region Main Home Text  -->
+        <!-- ASSET ALLOCATION HOME PAGE
+        ================================================== -->
+        <section class="pt-4 pt-md-11">
+          <div class="container">
+            <div class="row justify-content-lg-between align-items-lg-center py-5" id="items-center">
+                <div class="col-12 col-md-7 col-lg-8 order-md-1 text-center text-lg-left" id="text-home">
+                    <!-- Heading -->
+                    <h1 class="display-3 text-center text-md-left">
+                        Asset Allocation Models <span class="text-database">Database</span>.
+                    </h1>
+                    <!-- Text -->
+                    <p class="lead text-secondary mb-4">
+                        Build a beautiful, modern website with flexible Bootstrap components built from scratch.
+                    </p>
+                    <!-- Modal Learn More -->
+                    <div class="text-center text-md-left">
+                        <div class="button-learn">
+                            <button type="button" class="btn btn-primary btn-lg" role="button" data-toggle="modal" data-target="#exampleModalLong">
+                                Learn More <i class="fe fe-arrow-right d-none d-md-inline ml-3"></i>
+                            </button>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>
+                              </div>
+                              <div class="modal-body">
+                                       <p>
+                                           Cras mattis consectetur purus sit amet fermentum.Cras justo<br>
+                                           odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>
+                                           porta ac consectetur ac, vestibulum at eros.
+                                       </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-5 col-lg-4 order-md-1">
+                    <!-- Image of LGIM -->
+                    <img width="300" height="auto" src="\static\world_blue.png" class="img-fluid d-none d-lg-block">
+                </div>
+            </div>
+          </div>    <!-- / .container -->
+        </section>  <!-- / .section -->
+<!--#endregion -->
+
+
+    <!--#region Display all the available models  -->
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <section class="py-8 py-md-11 border-bottom">
+          <div class="container">
+            <div class="row">
+
+                <!--#region Times Model -->
+              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#TimesModal">Times Model</a>
+                    </h3>
+                    <!-- Modal Times Model -->
+                    {% include 'timesModal.html' %}
+                    <!-- Text -->
+                    <p class="text-muted mb-6 mb-md-0">
+                        Short description of the Times model.
+                    </p>
+              </div>
+                <!--#endregion -->
+
+                <!--#region Maven Model -->
+              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#MavenModal">Maven Model</a>
+                    </h3>
+                      <!-- Modal Maven Model -->
+                    {% include 'mavenModal.html' %}
+                <!-- Text -->
+                <p class="text-muted mb-6 mb-md-0">
+                  Short description of the Maven model.
+                </p>
+              </div>
+                <!--#endregion -->
+
+                <!--#region Effect Model -->
+
+              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#EffectModal">Effect Model</a>
+                    </h3>
+                    <!-- Modal Effect Model -->
+                    {% include 'effectModal.html' %}
+                <!-- Text -->
+                <p class="text-muted mb-0">
+                   Short description of the Effect model.
+                </p>
+              </div>
+                <!--#endregion-->
+
+                <!--#region Curp Model-->
+              <br><div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#CurpModal">Curp Model</a>
+                    </h3>
+
+                    <!-- Modal Curp Model -->
+                    {% include 'curpModal.html' %}
+
+                <!-- Text -->
+                <p class="text-muted mb-0">
+                   Short description of the Curp model.
+                </p>
+            </div>
+                <!--#endregion-->
+
+                <!--#region Fica Model-->
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#FicaModal">Fica Model</a>
+                    </h3>
+                    <!-- Modal Fica Model -->
+                    {% include 'ficaModal.html' %}
+                <!-- Text -->
+                <p class="text-muted mb-0">
+                   Short description of the Fica model.
+                </p>
+            </div>
+                <!--#endregion-->
+
+                <!--#region Factor Model-->
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#FactorModal">Factor Model</a>
+                    </h3>
+
+                    <!-- Modal Factor Model -->
+                    {% include 'factorModal.html' %}
+
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                        Short description of the Factor model.
+                    </p>
+            </div>
+                <!--#endregion-->
+
+                <!--#region Comca Model-->
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Icon -->
+                    {% include 'modelsIcons.html' %}
+                    <!-- Heading -->
+                    <h3>
+                        <a class="link-model" href="#" data-toggle="modal" data-target="#ComcaModal"> Comca Model</a>
+                    </h3>
+                    <!-- Modal Comca Model -->
+                    {% include 'comcaModal.html' %}
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                       Short description of the Comca model.
+                    </p>
+            </div>
+                <!--#endregion-->
+            </div>  <!-- / .row -->
+          </div>    <!-- / .container -->
+        </section>  <!-- / .section -->
+        <footer class="site-footer mt-5">
+            <div class="container">
+                <hr class="m-0" role="presentation">
+                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-center mt-4">
+                    <p class="small text-muted">© Nexus 2020</p>
+                </div>
+            </div>
+        </footer>       <!-- / .footer -->
+    </body>         <!-- / .body -->
+
+{% endblock %}
