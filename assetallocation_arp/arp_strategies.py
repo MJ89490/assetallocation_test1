@@ -12,18 +12,6 @@ def run_model(model_type, mat_file=None, input_file=None):
 	if model_type == models.Models.times.name:
 		# get inputs from excel and matlab data
 		times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
-
-		times_inputs.to_csv(
-			r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\resources\data_times_for_computations\times_inputs_v',
-			sep='\t', encoding='utf-8')
-		all_data.to_csv(
-			r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\resources\data_times_for_computations\all_data_v',
-			sep='\t', encoding='utf-8')
-
-		asset_inputs.to_csv(
-			r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\assetallocation_arp\models\resources\data_times_for_computations\asset_inputs_v',
-			sep='\t', encoding='utf-8')
-
 		# run strategy
 		signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
 		# write results to output sheet
