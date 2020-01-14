@@ -1,9 +1,45 @@
 {% extends "basePage.html" %}
 
 {% block selectModels %}
+<style type="text/css">
+    .text-model { color: #007faa; }
+    .dropdown-menu .dropdown-item{color: #333; font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
+</style>
+
+ <body>
+    <div class="container">
+        <div class="row" style="height: 100px;">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4 my-1">
+                <div class="text-center">
+                    <img class="mb-4" alt="" src="\static\bar_graph.png" >
+                    <!-- Heading -->
+                    <h1 class="display-3 text-center text-md-left">
+                        Select a <span class="text-model">model</span> below
+                    </h1>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Models
+                        </button><br>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Times</a><br>
+                            <a class="dropdown-item" href="#">Maven</a><br>
+                            <a class="dropdown-item" href="#">Effect</a><br>
+                            <a class="dropdown-item" href="#">Curp</a><br>
+                            <a class="dropdown-item" href="#">Fica</a><br>
+                            <a class="dropdown-item" href="#">Factor</a><br>
+                            <a class="dropdown-item" href="#">Comca</a>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="text">
+                        <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-sm-4"></div>
+    </div>
 <body>
-    <h1 class="title">
-        Welcome, select a model through the box!
-    </h1>
-</body>
 {% endblock %}
