@@ -13,10 +13,11 @@ from assetallocation_arp.data_etl import import_data as data
 CURRENT_PATH = os.path.dirname(__file__)
 
 """
-Module test_import_data.py: tests the extract data method (import_data.py) in order to know if it returns the correct following outputs:
+Module test_import_data.py: tests the extract data method (import_data.py) in order to know if it returns the correct 
+following outputs:
     - strategy_inputs
     - asset_inputs
-    - all_data (we assume they are the correct data because we cant test the matlab file, it is very heavy)
+    - all_data (we assume they are the correct data because we can't test the matlab file, it is very heavy)
 """
 
 @pytest.mark.parametrize("model_type, mat_file, input_file, model_date, strategy_inputs_expected, asset_inputs_expected",
@@ -34,7 +35,7 @@ def test_extract_inputs_and_mat_data(model_type, mat_file, input_file, model_dat
     strategy_inputs_origin, asset_inputs_origin, all_data = data.extract_inputs_and_mat_data(model_type=model_type,
                                                                                              mat_file=mat_file,
                                                                                              input_file=input_file,
-                                                                                             model_date=None)
+                                                                                             model_date=model_date)
     pd.testing.assert_frame_equal(strategy_inputs_origin,
                                       dataframe_strategy_inputs, check_column_type=False, check_names=False, check_dtype=False)
 

@@ -84,17 +84,6 @@ class DataTest:
                                                                                              input_file=INPUT_FILE,
                                                                                              model_date=None)
 
-        # times_inputs = os.path.abspath\
-        #     (os.path.join(CURRENT_PATH, "resources", "data_times_for_computations", "times_inputs_v"))
-        # asset_inputs = os.path.abspath\
-        #     (os.path.join(CURRENT_PATH, "resources", "data_times_for_computations", "asset_inputs_v"))
-        # all_data = os.path.abspath(
-        #     os.path.join(CURRENT_PATH, "resources", "data_times_for_computations", "all_data_v"))
-        #
-        # self.times_inputs = pd.read_csv(times_inputs, sep='\t')
-        # self.asset_inputs = pd.read_csv(asset_inputs, sep='\t')
-        # self.all_data = pd.read_csv(all_data, sep='\t')
-
 
     def get_times_model_data(self):
         """

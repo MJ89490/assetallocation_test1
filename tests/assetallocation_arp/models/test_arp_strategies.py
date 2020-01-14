@@ -16,7 +16,7 @@ from assetallocation_arp.arp_strategies import get_inputs_from_excel
 @pytest.mark.parametrize("model",
 
                          ["time", "", "conca"])
-def test_get_inputs_from_excel_exception(model):
+def test_get_inputs_from_excel_incorrect_model_raises_name_error(model):
     """
 
     :param model: name of the model
