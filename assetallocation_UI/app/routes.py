@@ -14,7 +14,7 @@ from flask_login import current_user
 from flask import g, abort
 
 from .userIdentification import randomIdentification
-
+import webbrowser
 @app.before_request
 def before_request():
     g.user = current_user
@@ -61,6 +61,10 @@ def login_post():
 def protected_models():
     return render_template('selectArpModels.html', title="Models")
 
+@app.route('/redirection_models')
+@login_required
+def redirection_models():
+    return render_template('redirection_display.html', title="Models")
 
 @app.route('/logout')
 @login_required
