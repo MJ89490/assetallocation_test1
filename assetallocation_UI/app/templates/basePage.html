@@ -14,7 +14,7 @@
         <!--img{max-width:100%;}-->
     </style>
 
-    <body>
+    <body class="home-page">
     <!-- Navbar
          ===================================== !-->
         <nav class="navbar navbar-inverse navbar-static-top" role="navigation" id="navbar1">
@@ -37,6 +37,7 @@
                             <!-- User is log-in -->
                             {% if g.user.is_authenticated %}
                                 <li class="nav-link"><a class="nav-link" href="{{ url_for('protected_models') }}">Models</a></li>
+                                <li class="nav-link"><a class="nav-link" href="#">Models Consolidattion</a></li>
                                 <li class="nav-link"><a class="nav-link" href="{{ url_for('logout') }}">LogOut</a></li>
                             {% endif %}
                             <!-- User is log-off -->
