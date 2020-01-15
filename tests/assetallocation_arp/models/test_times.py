@@ -71,5 +71,5 @@ def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path,
     pd.testing.assert_frame_equal(positioning_origin.reset_index(drop=True),
                                       dataframe_positioning.reset_index(drop=True), check_column_type=False)
 
-
+    data_object.set_leverage_from_excel(use_test_value=True)
 

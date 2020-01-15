@@ -11,6 +11,7 @@ INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy
 
 
 class DataTest:
+    test_file_leverage = 'n'
     """
     Class DataTest: set all the necessary data for the times model testing
     """
@@ -56,7 +57,7 @@ class DataTest:
     def getter_positioning(self):
         return self.positioning
 
-    def set_leverage_from_excel(self):
+    def set_leverage_from_excel(self, use_test_value=False):
         """
         The function allows to change automatically in the arp_dashboard_test_copy.xlsm the type of the leverage
         :noteworthy: the function only works on the copy of the arp_dashboard.xlsm
@@ -66,7 +67,9 @@ class DataTest:
         # set the sheet of the current workbook with times_input
         sheet_times = wb_dashboard.get_sheet_by_name('times_input')
         # replace the leverage by the current leverage of the Data Class
-        sheet_times['C9'].value = self.leverage
+
+        sheet_times['C9'].value = self.leverage if not use_test_value else self.test_file_leverage
+
         # save the new workbook with the new leverage (overwrite the current arp_dashboard_copy)
         wb_dashboard.save(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsx")))
         # load the newly created workbook
