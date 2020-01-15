@@ -43,7 +43,6 @@ def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path,
     """
 
     data_object = data_test.DataTest(leverage=leverage_type)
-    data_object.set_leverage_from_excel()
     data_object.get_data()
     data_object.get_times_model_data()
 
@@ -71,5 +70,4 @@ def test_format_data_and_calc(leverage_type, signals_path, returns_path, r_path,
     pd.testing.assert_frame_equal(positioning_origin.reset_index(drop=True),
                                       dataframe_positioning.reset_index(drop=True), check_column_type=False)
 
-    data_object.set_leverage_from_excel(use_test_value=True)
 

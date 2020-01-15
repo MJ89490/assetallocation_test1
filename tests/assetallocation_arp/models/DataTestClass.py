@@ -1,30 +1,23 @@
-import openpyxl as op
 import os
+
 import pandas as pd
 
 from assetallocation_arp.models import times
 from assetallocation_arp.data_etl import import_data as gd
 from assetallocation_arp.enum import models_names as models
+from assetallocation_arp.enum.leverage_types import Leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy.xlsm"))
 
 
 class DataTest:
-    test_file_leverage = 'n'
     """
     Class DataTest: set all the necessary data for the times model testing
     """
     def __init__(self, leverage):
         """
         :param leverage: type of the leverage (Equal, Normative, Volatility, Standalone)
-        :param times_inputs:
-        :param asset_inputs:
-        :param all_data:
-        :param signals:
-        :param returns:
-        :param r:
-        :param positioning:
         """
         self.leverage = leverage
         self.times_inputs = pd.DataFrame
@@ -38,55 +31,43 @@ class DataTest:
     @property
     def getter_times_inputs(self):
         return self.times_inputs
+
     @property
     def getter_asset_inputs(self):
         return self.asset_inputs
+
     @property
     def getter_all_data(self):
         return self.all_data
+
     @property
     def getter_signals(self):
         return self.signals
+
     @property
     def getter_returns(self):
         return self.returns
+
     @property
     def getter_r(self):
         return self.r
+
     @property
     def getter_positioning(self):
         return self.positioning
-
-    def set_leverage_from_excel(self, use_test_value=False):
-        """
-        The function allows to change automatically in the arp_dashboard_test_copy.xlsm the type of the leverage
-        :noteworthy: the function only works on the copy of the arp_dashboard.xlsm
-        """
-        # set the workbook arp_dashboard_test_copy
-        wb_dashboard = op.load_workbook(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy.xlsm")))
-        # set the sheet of the current workbook with times_input
-        sheet_times = wb_dashboard.get_sheet_by_name('times_input')
-        # replace the leverage by the current leverage of the Data Class
-
-        sheet_times['C9'].value = self.leverage if not use_test_value else self.test_file_leverage
-
-        # save the new workbook with the new leverage (overwrite the current arp_dashboard_copy)
-        wb_dashboard.save(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsx")))
-        # load the newly created workbook
-        xlsm_file = op.load_workbook(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard _test_copy.xlsx")),
-                                                     keep_vba=True)
-        # save your xlsm file
-        xlsm_file.save(os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy.xlsm")))
 
     def get_data(self):
         """
         The function gets the different required data for the times model by using the extract_inputs_and_mat_data
         """
-        self.times_inputs, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type=models.Models.times.name,
+        not_needed_for_test, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type=models.Models.times.name,
                                                                                              mat_file=None,
                                                                                              input_file=INPUT_FILE,
                                                                                              model_date=None)
 
+        leverage_file_name = f'times_inputs_{self.leverage}_leverage'
+        strategy_inputs_expected = os.path.abspath(os.path.join(CURRENT_PATH, "resources", leverage_file_name))
+        self.times_inputs = pd.read_csv(strategy_inputs_expected, index_col=0)
 
     def get_times_model_data(self):
         """
