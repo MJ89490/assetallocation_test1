@@ -23,6 +23,7 @@ def momentum(index_data, inputs, week_day):
 
     sig = dm.set_data_frequency(sig, inputs['frequency'].item(), week_day)
     sig = sig.shift(inputs['time_lag'].item(), freq="D")
+    sig.to_csv('signals')
     return sig
 
 

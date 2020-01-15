@@ -10,13 +10,13 @@
 
 import pytest
 
-from assetallocation_arp.arp_strategies import get_inputs_from_excel
+from assetallocation_arp.arp_strategies import get_inputs_from_python
 
 
 @pytest.mark.parametrize("model",
 
                          ["time", "", "conca"])
-def test_get_inputs_from_excel_incorrect_model_raises_name_error(model):
+def test_get_inputs_from_python_incorrect_model_raises_name_error(model):
     """
 
     :param model: name of the model
@@ -26,6 +26,6 @@ def test_get_inputs_from_excel_incorrect_model_raises_name_error(model):
     """
 
     with pytest.raises(NameError) as e:
-        assert get_inputs_from_excel(model)
+        assert get_inputs_from_python(model)
 
     assert str(e.value) == "Your input is incorrect."
