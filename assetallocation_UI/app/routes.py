@@ -66,6 +66,11 @@ def protected_models():
 def redirection_models():
     return render_template('redirection_display.html', title="Models")
 
+@app.route('/times_display')
+@login_required
+def times():
+    return render_template('times_display.html', title="Times")
+
 @app.route('/logout')
 @login_required
 def logout():
