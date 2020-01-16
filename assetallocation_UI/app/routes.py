@@ -11,10 +11,12 @@ from flask_login import login_required
 from flask_login import logout_user
 from flask_login import login_user
 from flask_login import current_user
-from flask import g, abort
+from flask import g
 
 from .userIdentification import randomIdentification
-import webbrowser
+
+
+
 @app.before_request
 def before_request():
     g.user = current_user
