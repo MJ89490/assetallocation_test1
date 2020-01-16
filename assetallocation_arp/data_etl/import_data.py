@@ -7,7 +7,15 @@ DATA IMPORT
 import scipy.io as spio
 import pandas as pd
 import openpyxl
+import os
+import numpy as np
 from datetime import datetime
+
+#Comments: may be we should the structure of the import data when we will have the database
+#          we are not going to use the matlab file but grab the data from the database directly
+#          it might be a good idea to create classes?
+
+FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
 
 
 def matfile_to_dataframe(file_path, model_date):
@@ -29,8 +37,8 @@ def matfile_to_dataframe(file_path, model_date):
     mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
     mat_dataframe.set_index('Date', inplace=True)
 
-    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]  # remove weekends
-    mat_dataframe = mat_dataframe[mat_dataframe.index.value < model_date] # remove data after selected date
+    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
+    mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date]  # remove data after selected date
     return mat_dataframe
 
 
@@ -78,17 +86,17 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        file_path = r'H:\assetallocation_arp\data\raw\matlabData.mat'
+        file_path = FILE_PATH
     else:
         file_path = mat_file
 
     if input_file is None:
-        input_path = r'H:\assetallocation_arp\assetallocation_arp\arp_dashboard.xlsm'
+        input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
     else:
         input_path = input_file
 
     if model_date is None:
-        model_date = datetime.today()
+        model_date = np.datetime64(datetime.today())
     else:
         model_date = model_date
 
@@ -96,5 +104,5 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
     asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
     all_data = matfile_to_dataframe(file_path, model_date)
-    return strategy_inputs, asset_inputs, all_data
 
+    return strategy_inputs, asset_inputs, all_data
