@@ -8,24 +8,6 @@ import json
 
 def create_plot():
 
-    # N = 1000
-    # x = np.random.randn(N)
-    # y = np.random.randn(N)
-    # df = pd.DataFrame({'x': x, 'y': y}) # creating a sample dataframe
-    #
-    # trace = go.Scatter(
-    #     x=x,
-    #     y=y,
-    #     mode='markers'
-    # )
-    # data = [trace]
-    # data = [
-    #     go.Bar(
-    #         x=df['x'], # assign x as the dataframe column 'x'
-    #         y=df['y']
-    #     )
-    # ]
-
     N = 100
     random_x = np.linspace(0, 1, N)
     random_y0 = np.random.randn(N) + 5
