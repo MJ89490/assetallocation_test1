@@ -15,7 +15,7 @@ from flask import g
 
 from .userIdentification import randomIdentification
 
-
+from .times_charts import create_plot
 
 @app.before_request
 def before_request():
@@ -66,7 +66,8 @@ def protected_models():
 @app.route('/redirection_models')
 @login_required
 def redirection_models():
-    return render_template('redirection_display.html', title="Models")
+    bar = create_plot()
+    return render_template('redirection_display.html', plot=bar)
 
 @app.route('/times_display')
 @login_required
