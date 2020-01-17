@@ -10,17 +10,11 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-7 col-lg-8 order-md-1 text-center text-lg-left">
-                <div class="chart" id="bargraph">
+    <div class="chart" id="bargraph">
         <script>
-            var graphs = {{plot | safe}};
-            Plotly.plot('bargraph',graphs,{});
-        </script>
-                </div>
-            </div>
-        </div>
+              var graphs = {{plot | safe}};
+              Plotly.plot('bargraph',graphs,{});
+          </script>
     </div>
 </body>
 {% endblock %}

@@ -1,17 +1,19 @@
 
  <style>
+       body{font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
+
       .p-0{padding:0!important;}
       .shadow{box-shadow:0px 0.5rem 1rem rgba(0,0,0,0.15) !important;}
       .bg-dark{background-color:#343a40 !important;}
       .fixed-top {position: fixed; top: 0px; right: 0px; left: 0px; z-index: 1030;}
       *, ::after, ::before {box-sizing: border-box;}
       .navbar-dark .navbar-brand {color: #fff;}
-      body {font-size: 0.87rem;}
+
 
        .navbar-dark .navbar-brand:focus, .navbar-dark .navbar-brand:hover {color: #fff;}
        .navbar-dark .navbar-brand {color: #fff;}
         .navbar-brand {padding-top: 0.75rem; padding-bottom: 0.75rem; font-size: 1rem;
-        background-color: rgba(0, 0, 0, .25); box-shadow: inset -1px 0px 0px rgba(0,0,0,0.25);}
+        background-color: #007faa; box-shadow: inset -1px 0px 0px rgba(0,0,0,0.25);}
         .mr-0, .mx-0 {margin-right: 0px !important;}
         .navbar-brand {display: inline-block; line-height: inherit; white-space: nowrap;}
         /*@media all and (min-width:768px)*/
@@ -61,8 +63,20 @@
         .sidebar .nav-link {font-weight: 500; color: #333;}
         .nav-link {display: block; padding: .5rem 1rem;}
 
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
-                   clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0;}
+        <!--.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;-->
+                   <!--clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0;}-->
+                   <!--.border-bottom {-->
+        <!--border-bottom: 1px solid #dee2e6 !important;}-->
+
+        <!--.pt-3, .py-3 {padding-top: 1rem !important;}-->
+        <!--.pb-2, .py-2 {padding-bottom: 0.5rem !important;}-->
+        <!--.h1, h1 {font-size: 2rem;}-->
+        <!--.h1{margin-bottom: 0.5rem; font-weight: 500; line-height: 1.2;}-->
+        <!--h1{ margin-top: 0px; margin-bottom: 0.5rem;}-->
+
+
+
+
     </style>
 
     <body>
@@ -72,48 +86,52 @@
 
         <div class="container-fluid">
             <div class="row">
-                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                    <div class="sidebar-sticky">
-                        <ul class="nav flex-column">
-                              <li class="nav-item">
-                                <a class="nav-link active" href="#">
-                                  <img src="\static\home_32.png" class="img-fluid d-none d-lg-block">
-                                  Dashboard <span class="sr-only">(current)</span>
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Performance since inception
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Performance Attribution
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Allocation Over Time
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Cumulative Performance
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                  Monthly Performance
-                                </a>
-                              </li>
-                        </ul>
-                    </div>
-                </nav>
+                <!--<nav class="col-md-2 d-none d-md-block bg-light sidebar">-->
+                    <!--<div class="sidebar-sticky">-->
+                        <!--<ul class="nav flex-column">-->
+                              <!--<li class="nav-item">-->
+                                <!--<a class="nav-link active" href="#">-->
+                                  <!--<img src="\static\home_32.png" class="img-fluid d-none d-lg-block">-->
+                                  <!--Dashboard <span class="sr-only">(current)</span>-->
+                                <!--</a>-->
+                              <!--</li>-->
+                              <!--<li class="nav-item">-->
+                                <!--<a class="nav-link">-->
+                                  <!--<img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">-->
+                                    <!--Performance since inception-->
+                                <!--</a>-->
+                              <!--</li>-->
+                              <!--<li class="nav-item">-->
+                                <!--<a class="nav-link">-->
+                                  <!--<img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">-->
+                                    <!--Performance Attribution-->
+                                <!--</a>-->
+                              <!--</li>-->
+                              <!--<li class="nav-item">-->
+                                <!--<a class="nav-link">-->
+                                  <!--<img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">-->
+                                    <!--Allocation Over Time-->
+                                <!--</a>-->
+                              <!--</li>-->
+                              <!--<li class="nav-item">-->
+                                <!--<a class="nav-link">-->
+                                  <!--<img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">-->
+                                    <!--Cumulative Performance-->
+                                <!--</a>-->
+                              <!--</li>-->
+                              <!--<li class="nav-item">-->
+                                <!--<a class="nav-link">-->
+                                  <!--<img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">-->
+                                  <!--Monthly Performance-->
+                                <!--</a>-->
+                              <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                <!--</nav>-->
+
+                <div class="col-md-10 row text-center">
+                    {% block charts %}{% endblock %}
+                </div>
             </div>
         </div>
 </body>
