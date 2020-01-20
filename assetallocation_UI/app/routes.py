@@ -46,7 +46,6 @@ def login_post():
         print("username", username)
         print("password", password)
 
-
         if username != username_origin or password != password_origin:
             flash('Please check your login details and try again.')
             return redirect(url_for('login'))
@@ -63,16 +62,23 @@ def login_post():
 def protected_models():
     return render_template('selectArpModels.html', title="Models")
 
-@app.route('/redirection_models')
-@login_required
-def redirection_models():
-    bar = create_plot()
-    return render_template('redirection_display.html', plot=bar)
+# @app.route('/redirection_models')
+# @login_required
+# def redirection_models():
+#     bar = create_plot()
+#     return render_template('redirection_display.html', plot=bar)
 
 @app.route('/times_display')
 @login_required
 def times():
     return render_template('times_display.html', title="Times")
+
+@app.route('/times_charts')
+@login_required
+def times_charts():
+    bar=create_plot()
+    # return render_template('times_charts.html', title="Times Charts", plot=bar)
+    return render_template('dashboard.html', div_placeholder=bar)
 
 @app.route('/logout')
 @login_required
