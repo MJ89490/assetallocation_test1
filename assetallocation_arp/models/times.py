@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 import assetallocation_arp.models.ARP as arp
 
-#bjugcg
+#nmmkopojh
 # Parameters
 TIMES_LAG=3
 settings=arp.dataimport_settings("Settings")
