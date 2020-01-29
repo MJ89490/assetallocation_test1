@@ -1,0 +1,504 @@
+{% extends 'bootstrap/base.html' %}
+
+
+{% block navbar %}
+    <head>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+
+    <style type="text/css">
+
+    body {
+    min-height: 100%;}
+
+*, ::after, ::before {
+    -webkit-box-sizing: border-box;}
+
+body {
+    padding: 0;
+    background-color: #eee;
+    height: auto;
+    min-height: 100%;
+    line-height: 1.42857143;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto,Arial,sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #404040;
+    text-align: left;
+}
+
+body {
+    display: block;}
+
+     .be-wrapper { min-height: 100%; padding-top: 61px;}
+     div {display: block;}
+
+
+.flex-column, body, .card--summary__theme-action, .hero, .profile__hero {
+    -webkit-box-orient: vertical !important;
+    -webkit-box-direction: normal !important;
+    flex-direction: column !important;
+}
+
+.d-flex, .nav-preview .nav-link, body, .list-dotted, .card--summary__item, .card--summary__theme-action, .card--summary__theme-description, .card--summary__footer, .card--table .card__item, .theme-card--xl .theme-card__footer, .theme-cards__heading, .rating, .hero, .profile__hero, .profile-author, .feature-screenshot__overlay, .theme-description__list__item, .theme-review__heading, .theme-purchases__item, .upload-image__cover__overlay, .stat__title {
+    display: flex !important;
+}
+
+
+.main {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    position: relative;
+}
+
+
+article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, section {
+    display: block;
+}
+        body {padding: 0; background-color: #eee;height: auto;min-height: 100%;line-height: 1.42857143;}
+        body {margin:0; font-family: Roboto,Arial,sans-serif; color:#404040; display: block; }
+
+
+        .be-top-header{padding: 0; margin: 0; margin-bottom:0; background-color:#007faa; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #007faa;  }
+        .be-top-header {padding-bottom: 0.1rem; line-height: 1em;}
+        .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030;}
+
+        .be-fixed-sidebar .be-left-sidebar {height: 100%; margin-top: 61px; padding-bottom: 61px; position: fixed; top: 0; bottom: 0; z-index: 1029;}
+
+        .be-left-sidebar {background-color: #f5f5f5; width: 230px; left: 0; position: absolute; border-right: 1px solid #e3e3e3;}
+
+        .be-left-sidebar .left-sidebar-wrapper {display: table; table-layout: fixed; width: 100%; height: 100%;}
+
+        .be-left-sidebar .left-sidebar-spacer {height: 100%;}
+
+         .be-left-sidebar .left-sidebar-content {top: 0; bottom: 0; left: 0; right: 0;}
+
+         .be-left-sidebar .sidebar-elements {padding-left: 20px;}
+
+         .be-left-sidebar .widget-support .support-title { color: #7b7b7b; font-size: 13px; font-weight:600; line-height: 30px; padding: 0px 20px;}
+
+          .be-left-sidebar .widget-support .icon-settings {padding: 0 15px; float: right;}
+
+           .be-left-sidebar .sidebar-elements .divider {color: #7b7b7b; line-height: 30px; font-weight: 600; text-transform: uppercase; font-size: 18px; margin-top:50px}
+
+         .be-left-sidebar .sidebar-elements>li {list-style: none;  }
+
+         .be-left-sidebar .sidebar-elements>li>a {
+            display: block;
+            padding: 0 20px;
+            color: #696969;
+            font-size: 17px;
+            line-height: 38px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+         .be-left-sidebar .sidebar-elements li.parent>a:before {
+            content: '\203A';
+            float: right;
+            font-family: "Material Icons";
+            font-size: 3rem;
+            color: #b0b0b0;
+        }
+
+         .be-left-sidebar .sidebar-elements>li ul {
+            background-color: #eee;
+            padding-top: 10px;
+            padding-right: 0 px;
+            padding-bottom: 10px;
+            padding-left: 0px;
+            list-style: none;
+            line-height: 20px;
+            height: 820px;
+            width: 200px;
+        }
+
+        .be-left-sidebar .sidebar-elements>li ul li>a {
+            padding: 20px 6px 28px 4px;
+            color: #696969;
+            font-size: 10.5px;
+            display: block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .be-content {position: relative; left: 0; margin-left: 230px; min-height: 100%;}
+
+        .main-content {padding: 25px;}
+
+        .main-content .dashboard-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 10px; }
+
+        .container-fluid {
+                            width: 100%;
+                            padding-right: 15px;
+                            padding-left: 15px;
+                            margin-right: auto;
+                            margin-left: auto;
+                            }
+
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+            }
+
+       @media (min-width: 1200px)
+        .col-xl-3 {
+            -webkit-box-flex: 0;
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+
+        @media (min-width: 768px)
+        .col-md-12 {
+            -webkit-box-flex: 0;
+
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+@media (min-width: 992px)
+.col-lg-6 {
+    -webkit-box-flex: 0;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+@media (min-width: 992px)
+.col-lg-4 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+
+@media (min-width: 992px)
+.col-lg-6 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.mb-4, .my-4 {
+    margin-bottom: 1.539rem!important;
+}
+
+        .widget.widget-fullwidth {
+    padding: 0;
+}
+
+
+element.style {
+    height: 265px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.card {
+    background-color: #fff;
+    margin-bottom: 15px;
+    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,.04);
+    box-shadow: 0 0 4px 0 rgba(0,0,0,.04);
+    border-width: 0;
+    border-radius: 3px;
+    display: block;
+}
+.card {
+    position: relative;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    min-width: 0;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.card-body {
+    padding: 8px 20px 20px;
+    border-radius: 0 0 3px 3px;
+}
+
+
+</style>
+
+<body>
+    <style>html{margin-top:0 !important;}</style>
+    <main class="main bg-dark">
+        <body>
+            <div class="be-wrapper be-fixed-sidebar">
+                <!-- Navbar
+                ===================================== !-->
+                <nav class="navbar navbar-inverse fixed-top be-top-header">
+                <img src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+            </nav>
+                <!-- Sidebar
+                ===================================== !-->
+                <div class="be-left-sidebar">
+                        <div class="left-sidebar-wrapper">
+                            <div class="left-sidebar-spacer">
+                                <div class="left-sidebar-scroll ps">
+                                  <div class="left-sidebar-content">
+                                    <ul class="sidebar-elements">
+                                        <li class="divider">NAVIGATION</li><br><br>
+                                            <li class="parent">
+                                                  <a href="#"><i class="icon mdi mdi-face"></i><span>Home</span></a><br>
+                                                  <a><i class="icon mdi mdi-face"></i><span>Charts</span></a><br>
+                                                    <ul class="sub-menu">
+                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Attribution</a></li>
+                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Allocation Over Time</a></li>
+                                                        <li><a ><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Since Inception</a></li>
+                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Cumulative Performance</a></li>
+                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Monthly Performance</span></a></li>
+                                                    </ul>
+                                            </li>
+                                    </ul>
+                                      <div class="widget-support">
+                                            <div class="support-title">
+                                                <span class="name">Support</span>
+                                                <a href="#"><span><img class="icon-settings" width="auto" height="38" src="/static/icon-settings.png"></span></a>
+                                            </div>
+                                      </div>
+                                  </div>
+                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 122px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 28px;"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- Charts Area
+                ===================================== !-->
+                <div class="be-content">
+                    <div class="main-content container-fluid">
+                        <h1 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"> Dashboard </h1>
+                        <div class="row">
+                                <div class="col-12 col-lg-6">
+                                  <div class="card">
+                                    <div class="card-body">
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                            <ul class="user-timeline user-timeline-compact">
+                                                <div align = "center" class="responsive-plot" id="myDiv">
+                                                    <script>
+                                                        var trace1 = {
+                                                                        x:['Zebras', 'Lions', 'Pelicans'],
+                                                                        y: [90, 40, 60],
+                                                                        type: 'bar',
+                                                                        name: 'New York Zoo'
+                                                                    };
+
+                                                        var trace2 = {
+                                                                        x:['Zebras', 'Lions', 'Pelicans'],
+                                                                        y: [10, 80, 45],
+                                                                        type: 'bar',
+                                                                        name: 'San Francisco Zoo'
+                                                                    };
+
+                                                        var data = [trace1, trace2];
+                                                         var layout = {
+                                                                        title: 'Performance Attribution',
+                                                                        showlegend: true,
+
+                                                                       };
+                                                         Plotly.newPlot('myDiv', data, layout,{displayModeBar: false, responsive: true});
+
+                                                    </script>
+                                                </div>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                  <div class="card">
+                                    <div class="card-body">
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                                <div align = "center" class="responsive-plot" id="myDiv1">
+                                                    <script>
+                                                      var trace1 = {
+                                                                      x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
+                                                                      y: [20, 14, 23, 20, 14, 23, 34, 26],
+                                                                      marker: {
+                                                                        color: ['rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)']
+                                                                      },
+                                                                      name: 'Item 1',
+                                                                      type: 'bar',
+
+                                                                    };
+
+                                                                    var trace2 = {
+                                                                      x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
+                                                                      y: [12, 18, 29, 12, 18, 29, 24, 22],
+                                                                      marker: {
+                                                                        color: ['rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)']
+                                                                      },
+                                                                      name: 'Item 2',
+                                                                      type: 'bar'
+                                                                    };
+
+                                                                    var trace3 = {
+                                                                      x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
+                                                                      y: [12, 18, 29, 12, 18, 29, 24, 22],
+                                                                      marker: {
+                                                                        color: ['rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)']
+                                                                      },
+                                                                      name: 'Item 3',
+                                                                      type: 'bar'
+                                                                    };
+
+                                                                    var data = [trace1, trace2, trace3];
+
+                                                                    var layout = {
+                                                                         title: 'Performance Attribution',
+                                                                      barmode: 'stack',
+                                                                      margin: {
+                                                                        t: 0
+                                                                      },
+
+                                                                      autosize: true // set autosize to rescale
+                                                                    };
+
+                                                                    var config = {
+                                                                      'displayModeBar': false,
+                                                                      'responsive': true,
+
+                                                                    }
+
+                                                                    Plotly.newPlot('myDiv1', data, layout, config);
+                                                    </script>
+                                                </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                      <div class="card">
+                                        <div class="card-body">
+                                            <div class="embed-responsive embed-responsive-16by9">
+                                                <ul class="user-timeline user-timeline-compact">
+                                                    <div align = "center" class="responsive-plot" id="myDiv3">
+                                                        <script>
+                                                            var trace1 = {
+                                                                            x:['Zebras', 'Lions', 'Pelicans'],
+                                                                            y: [90, 40, 60],
+                                                                            type: 'bar',
+                                                                            name: 'New York Zoo'
+                                                                        };
+
+                                                            var trace2 = {
+                                                                            x:['Zebras', 'Lions', 'Pelicans'],
+                                                                            y: [10, 80, 45],
+                                                                            type: 'bar',
+                                                                            name: 'San Francisco Zoo'
+                                                                        };
+
+                                                            var data = [trace1, trace2];
+                                                             var layout = {
+                                                                            title: 'Performance Attribution',
+                                                                            showlegend: true,
+
+                                                                           };
+                                                             Plotly.newPlot('myDiv3', data, layout,{displayModeBar: false, responsive: true});
+
+                                                        </script>
+                                                    </div>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                            <div class="col-12 col-lg-6">
+                                      <div class="card">
+                                        <div class="card-body">
+                                            <div class="embed-responsive embed-responsive-16by9">
+                                                    <div align = "center" class="responsive-plot" id="myDiv4">
+                                                        <script>
+                                                          var trace1 = {
+                                                                          x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
+                                                                          y: [20, 14, 23, 20, 14, 23, 34, 26],
+                                                                          marker: {
+                                                                            color: ['rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)']
+                                                                          },
+                                                                          name: 'Item 1',
+                                                                          type: 'bar',
+
+                                                                        };
+
+                                                                        var trace2 = {
+                                                                          x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
+                                                                          y: [12, 18, 29, 12, 18, 29, 24, 22],
+                                                                          marker: {
+                                                                            color: ['rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)']
+                                                                          },
+                                                                          name: 'Item 2',
+                                                                          type: 'bar'
+                                                                        };
+
+                                                                        var trace3 = {
+                                                                          x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
+                                                                          y: [12, 18, 29, 12, 18, 29, 24, 22],
+                                                                          marker: {
+                                                                            color: ['rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)']
+                                                                          },
+                                                                          name: 'Item 3',
+                                                                          type: 'bar'
+                                                                        };
+
+                                                                        var data = [trace1, trace2, trace3];
+
+                                                                        var layout = {
+
+                                                                          barmode: 'stack',
+                                                                          margin: {
+                                                                            t: 0
+                                                                          },
+
+                                                                          autosize: true // set autosize to rescale
+                                                                        };
+
+                                                                        var config = {
+                                                                          'displayModeBar': false,
+                                                                          'responsive': true,
+
+                                                                        }
+
+                                                                        Plotly.newPlot('myDiv4', data, layout, config);
+
+
+                                                        </script>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+
+    </main>
+    <!-- Footer
+     ===================================== !-->
+    <footer class="pull-right" id="footer">
+        <div class="container text-right">
+            <hr class="m-0" role="presentation">
+            <p class="small text-muted">© Legal & General 2020</p>
+        </div>
+    </footer> <!-- / .footer -->
+</body>
+{% endblock %}
