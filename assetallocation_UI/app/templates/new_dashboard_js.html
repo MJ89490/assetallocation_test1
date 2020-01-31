@@ -1,5 +1,6 @@
 {% extends 'bootstrap/base.html' %}
 
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block navbar %}
     <head>
@@ -24,6 +25,7 @@ body {
 
 body {
     margin: 0;
+     background-color: #eee;
     font-family: Roboto,Arial,sans-serif;
     font-size: 1rem;
     font-weight: 400;
@@ -64,7 +66,7 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
         body {margin:0; font-family: Roboto,Arial,sans-serif; color:#404040; display: block; }
 
 
-        .be-top-header{padding: 0; margin: 0; margin-bottom:0; background-color:#007faa; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #007faa;  }
+        .be-top-header{padding: 0; margin: 0; margin-bottom:0; background-color: #007faa; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #007faa;  }
         .be-top-header {padding-bottom: 0.1rem; line-height: 1em;}
         .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030;}
 
@@ -80,11 +82,11 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
 
          .be-left-sidebar .sidebar-elements {padding-left: 20px;}
 
-         .be-left-sidebar .widget-support .support-title { color: #7b7b7b; font-size: 13px; font-weight:600; line-height: 30px; padding: 0px 20px;}
+         .be-left-sidebar .widget-support .support-title { color: #7b7b7b; font-size: 13px; font-weight:600; line-height: 30px; padding-bottom: 20px;}
 
           .be-left-sidebar .widget-support .icon-settings {padding: 0 15px; float: right;}
 
-           .be-left-sidebar .sidebar-elements .divider {color: #7b7b7b; line-height: 30px; font-weight: 600; text-transform: uppercase; font-size: 18px; margin-top:50px}
+           .be-left-sidebar .sidebar-elements .divider {color: #007faa; line-height: 30px; font-weight: 600; text-transform: uppercase; font-size: 18px; margin-top:50px}
 
          .be-left-sidebar .sidebar-elements>li {list-style: none;  }
 
@@ -93,7 +95,7 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
             padding: 0 20px;
             color: #696969;
             font-size: 17px;
-            line-height: 38px;
+            line-height: 40px;
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
@@ -109,34 +111,34 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
         }
 
          .be-left-sidebar .sidebar-elements>li ul {
-            background-color: #eee;
+            background-color: #f5f5f5;
             padding-top: 10px;
             padding-right: 0 px;
             padding-bottom: 10px;
-            padding-left: 0px;
+            padding-left: 10px;
             list-style: none;
-            line-height: 20px;
+            <!--line-height: 5px;-->
             height: 820px;
             width: 200px;
         }
 
-        .be-left-sidebar .sidebar-elements>li ul li>a {
-            padding: 20px 6px 28px 4px;
-            color: #696969;
-            font-size: 10.5px;
-            display: block;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            text-decoration: none;
-            font-weight: bold;
-        }
+        <!--.be-left-sidebar .sidebar-elements>li ul li>a {-->
+            <!--padding: 20px 6px 28px 4px;-->
+            <!--color: #696969;-->
+            <!--font-size: 11px;-->
+            <!--display: block;-->
+            <!--text-overflow: ellipsis;-->
+            <!--overflow: hidden;-->
+            <!--white-space: nowrap;-->
+            <!--text-decoration: none;-->
+            <!--font-weight: bold;-->
+        <!--}-->
 
         .be-content {position: relative; left: 0; margin-left: 230px; min-height: 100%;}
 
         .main-content {padding: 25px;}
 
-        .main-content .dashboard-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 10px; }
+        .main-content .dashboard-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
 
         .container-fluid {
                             width: 100%;
@@ -144,6 +146,7 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
                             padding-left: 15px;
                             margin-right: auto;
                             margin-left: auto;
+                            margin-top: 5px;
                             }
 
         }
@@ -232,7 +235,63 @@ element.style {
     border-radius: 0 0 3px 3px;
 }
 
+}
+.card-header {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 1.5384rem;
+    margin: 0 1.538rem;
+    border-bottom-width: 0;
+    border-radius: 3px 3px 0 0;
+    background-color: transparent;
+}
 
+.card-header {
+    padding: .7692rem 1.538rem;
+    float: right;
+}
+
+
+    #dropdown-toggle, #dropdown-toggle1{background-color:#fff; padding: 16px; font-size: 16px; border: none; border-color: none; width: 50px; height: 50px;}
+
+                    #dropdown-toggle, #dropdown-toggle1:hover, #dropdown-toggle, #dropdown-toggle1:active,
+                    #dropdown-toggle, #dropdown-toggle1:visited, #dropdown-toggle, #dropdown-toggle1:focus,
+                    #dropdown-toggle, #dropdown-toggle1:active:focus
+                {
+                    background-color:#fff!important ; border-color:#fff ; color:#fff;
+                }
+    .dropdown{
+                position: relative;
+                display: inline-block;
+             }
+
+ .dropdown-menu {
+                 display: none;
+                 position: absolute;
+                 background-color: #fff;
+                 min-width: 160px;
+                 box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                 z-index: 1;
+                 text-align:center;
+
+                }
+
+.dropdown-menu a {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+ .dropdown-menu a:hover{
+
+                color:black !important;
+                text-decoration: none;
+                background-color: #ddd;}
+
+ .dropdown: hover .dropdown-item {display: block;}
+ .dropdown: hover .btn {background-color: #3e8e41;}
+
+ #selectInputToExport {background-color: #eee; height: 35px;}
+ #selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; }
 </style>
 
 <body>
@@ -243,7 +302,7 @@ element.style {
                 <!-- Navbar
                 ===================================== !-->
                 <nav class="navbar navbar-inverse fixed-top be-top-header">
-                <img src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+                <img width="80px" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
             </nav>
                 <!-- Sidebar
                 ===================================== !-->
@@ -255,14 +314,36 @@ element.style {
                                     <ul class="sidebar-elements">
                                         <li class="divider">NAVIGATION</li><br><br>
                                             <li class="parent">
-                                                  <a href="#"><i class="icon mdi mdi-face"></i><span>Home</span></a><br>
-                                                  <a><i class="icon mdi mdi-face"></i><span>Charts</span></a><br>
+                                                  <a href="#"><span>Home</span></a><br><br>
+                                                  <a><span>Export Data</span></a><br><br>
+
                                                     <ul class="sub-menu">
-                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Attribution</a></li>
-                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Allocation Over Time</a></li>
-                                                        <li><a ><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Since Inception</a></li>
-                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Cumulative Performance</a></li>
-                                                        <li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Monthly Performance</span></a></li>
+                                                        <!-- Export Data Form -->
+
+                                                        <form action='', method="POST" novalidate name="ExportDataForm">
+                                                            {{ form.hidden_tag() }}
+                                                            <div class="form-group">
+                                                                <fieldset>
+                                                                    {{ form.inputs.label() }}<br>
+                                                                    {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
+                                                                    {{ form.submit_export(class="btn btn-lg btn-primary  btn-block", id="selectInputToExportSubmit") }}
+
+
+
+
+                                                                </fieldset>
+
+                                                        </div>
+
+
+                                                        </form>
+
+
+                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Attribution</a></li>-->
+                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Allocation Over Time</a></li>-->
+                                                        <!--<li><a ><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Since Inception</a></li>-->
+                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Cumulative Performance</a></li>-->
+                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Monthly Performance</span></a></li>-->
                                                     </ul>
                                             </li>
                                     </ul>
@@ -272,6 +353,7 @@ element.style {
                                                 <a href="#"><span><img class="icon-settings" width="auto" height="38" src="/static/icon-settings.png"></span></a>
                                             </div>
                                       </div>
+
                                   </div>
                                 <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 122px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 28px;"></div></div></div>
                             </div>
@@ -281,10 +363,22 @@ element.style {
                 ===================================== !-->
                 <div class="be-content">
                     <div class="main-content container-fluid">
-                        <h1 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"> Dashboard </h1>
+                        <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"> Dashboard </h2><br>
                         <div class="row">
                                 <div class="col-12 col-lg-6">
                                   <div class="card">
+                                      <div class="card-header">
+                                          <div class="dropdown">
+                                              <button class="button" type="button" id="dropdown-toggle" data-toggle="dropdown">
+                                                  <img class="icon-dashboard" width="auto" height="35" src="/static/icon-card.png">
+                                              </button>
+                                              <div align = "center" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#">Get the data</a>
+                                                <a class="dropdown-item" href="#">Get the chart in png</a>
+                                                <a class="dropdown-item" href="#">Get the chart in jpeg</a>
+                                              </div>
+                                          </div>
+                                      </div>
                                     <div class="card-body">
                                         <div class="embed-responsive embed-responsive-16by9">
                                             <ul class="user-timeline user-timeline-compact">
@@ -314,7 +408,6 @@ element.style {
 
                                                     </script>
                                                 </div>
-
                                             </ul>
                                         </div>
                                     </div>
@@ -322,6 +415,18 @@ element.style {
                                 </div>
                                 <div class="col-12 col-lg-6">
                                   <div class="card">
+                                      <div class="card-header">
+                                          <div class="dropdown">
+                                              <button class="button" type="button" id="dropdown-toggle1" data-toggle="dropdown">
+                                                  <img class="icon-dashboard" width="auto" height="35" src="/static/icon-card.png">
+                                              </button>
+                                              <div align = "center" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#">Get the data</a>
+                                                <a class="dropdown-item" href="#">Get the chart in png</a>
+                                                <a class="dropdown-item" href="#">Get the chart in jpeg</a>
+                                              </div>
+                                          </div>
+                                      </div>
                                     <div class="card-body">
                                         <div class="embed-responsive embed-responsive-16by9">
                                                 <div align = "center" class="responsive-plot" id="myDiv1">
@@ -330,11 +435,10 @@ element.style {
                                                                       x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
                                                                       y: [20, 14, 23, 20, 14, 23, 34, 26],
                                                                       marker: {
-                                                                        color: ['rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)']
-                                                                      },
+                                                                                color: ['rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)']
+                                                                               },
                                                                       name: 'Item 1',
                                                                       type: 'bar',
-
                                                                     };
 
                                                                     var trace2 = {
@@ -360,14 +464,11 @@ element.style {
                                                                     var data = [trace1, trace2, trace3];
 
                                                                     var layout = {
-                                                                         title: 'Performance Attribution',
-                                                                      barmode: 'stack',
-                                                                      margin: {
-                                                                        t: 0
-                                                                      },
+                                                                                    title: 'Performance Attribution',
+                                                                                    showlegend: true,
+                                                                                    barmode: 'stack',
+                                                                                  };
 
-                                                                      autosize: true // set autosize to rescale
-                                                                    };
 
                                                                     var config = {
                                                                       'displayModeBar': false,
@@ -386,6 +487,7 @@ element.style {
                         <div class="row">
                             <div class="col-12 col-lg-6">
                                       <div class="card">
+                                          <div class="card-header"><div class="title">Purchases</div></div>
                                         <div class="card-body">
                                             <div class="embed-responsive embed-responsive-16by9">
                                                 <ul class="user-timeline user-timeline-compact">
@@ -423,6 +525,7 @@ element.style {
                                     </div>
                             <div class="col-12 col-lg-6">
                                       <div class="card">
+                                          <div class="card-header"><div class="title">Purchases</div></div>
                                         <div class="card-body">
                                             <div class="embed-responsive embed-responsive-16by9">
                                                     <div align = "center" class="responsive-plot" id="myDiv4">

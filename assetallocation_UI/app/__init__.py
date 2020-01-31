@@ -5,8 +5,6 @@ from app import config
 from flask_login import LoginManager
 from .models import User
 
-
-
 import jinja2
 import os
 

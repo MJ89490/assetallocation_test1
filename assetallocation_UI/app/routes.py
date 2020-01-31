@@ -4,7 +4,7 @@ from flask import flash
 from flask import url_for
 from flask import redirect
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm, ExportDataForm
 from .models import User
 
 from flask_login import login_required
@@ -15,7 +15,7 @@ from flask import g
 
 from .userIdentification import randomIdentification
 
-from .times_charts import create_plot
+from .times_charts import chart_performance, bar_chart
 
 @app.before_request
 def before_request():
@@ -73,12 +73,22 @@ def protected_models():
 def times():
     return render_template('times_display.html', title="Times")
 
-@app.route('/times_charts')
+
+@app.route('/times_charts', methods=['GET', 'POST'])
 @login_required
 def times_charts():
-    bar=create_plot()
+    form = ExportDataForm()
+
+    if form.validate_on_submit():
+        print(form.inputs.data)
+
+
+
+    # performance_chart = chart_performance()
     # return render_template('times_charts.html', title="Times Charts", plot=bar)
-    return render_template('dashboard.html', div_placeholder=bar)
+    # return render_template('dashboard.html', div_placeholder=bar)
+    # return render_template('new_dashboard_js.html')
+    return render_template('new_dashboard_js.html', form=form)
 
 @app.route('/logout')
 @login_required
