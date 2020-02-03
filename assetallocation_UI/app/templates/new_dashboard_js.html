@@ -290,8 +290,13 @@ element.style {
  .dropdown: hover .dropdown-item {display: block;}
  .dropdown: hover .btn {background-color: #3e8e41;}
 
- #selectInputToExport {background-color: #eee; height: 35px;}
+
+ #selectInputToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px;}
  #selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; }
+ #titleInputToExport {color: #696969; font-size: 12px;}
+ #selectInputToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 8px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+ #selectionStartDateToExport, #selectionEndDateToExport {background-color: #eee; border-color: #696969; color: #696969; }
+
 </style>
 
 <body>
@@ -316,27 +321,26 @@ element.style {
                                             <li class="parent">
                                                   <a href="#"><span>Home</span></a><br><br>
                                                   <a><span>Export Data</span></a><br><br>
-
                                                     <ul class="sub-menu">
                                                         <!-- Export Data Form -->
-
                                                         <form action='', method="POST" novalidate name="ExportDataForm">
                                                             {{ form.hidden_tag() }}
                                                             <div class="form-group">
                                                                 <fieldset>
-                                                                    {{ form.inputs.label() }}<br>
+                                                                    {{ form.inputs.label(id="label_text") }}<br>
                                                                     {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
-                                                                    {{ form.submit_export(class="btn btn-lg btn-primary  btn-block", id="selectInputToExportSubmit") }}
-
-
-
-
+                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectInputToOkSubmit">Ok</button><br><br>
+                                                                    {{ form.start_date.label(id="start_date_text") }}<br>
+                                                                    {{ form.start_date(class="form-control", id="selectionStartDateToExport") }}<br>
+                                                                    {{ form.end_date.label(id="end_date_text") }}<br>
+                                                                    {{ form.end_date(class="form-control", id="selectionEndDateToExport") }}<br>
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button><br>
                                                                 </fieldset>
 
-                                                        </div>
-
-
+                                                            </div>
                                                         </form>
+
+
 
 
                                                         <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Attribution</a></li>-->

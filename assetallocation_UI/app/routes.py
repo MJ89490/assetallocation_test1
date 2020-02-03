@@ -78,16 +78,15 @@ def times():
 @login_required
 def times_charts():
     form = ExportDataForm()
+    from flask import request
 
-    if form.validate_on_submit():
-        print(form.inputs.data)
+    if request.method == "POST":
+        if request.form['submit_button'] == 'selectInputToExport':
+            print(form.start_date.data)
+            print(form.end_date.data)
+        elif request.form['submit_button'] == 'selectInputOk':
+            print(form.inputs.data)
 
-
-
-    # performance_chart = chart_performance()
-    # return render_template('times_charts.html', title="Times Charts", plot=bar)
-    # return render_template('dashboard.html', div_placeholder=bar)
-    # return render_template('new_dashboard_js.html')
     return render_template('new_dashboard_js.html', form=form)
 
 @app.route('/logout')
