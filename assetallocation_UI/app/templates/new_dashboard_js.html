@@ -231,25 +231,28 @@ element.style {
 }
 
 .card-body {
-    padding: 8px 20px 20px;
     border-radius: 0 0 3px 3px;
+    padding-bottom: 45px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-left: 3px;
 }
 
 }
 .card-header {
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 1.5384rem;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
     margin: 0 1.538rem;
     border-bottom-width: 0;
     border-radius: 3px 3px 0 0;
     background-color: transparent;
 }
 
-.card-header {
-    padding: .7692rem 1.538rem;
-    float: right;
-}
+<!--.card-header {-->
+    <!--padding: .7692rem 1.538rem;-->
+
+<!--}-->
 
 
     #dropdown-toggle, #dropdown-toggle1{background-color:#fff; padding: 16px; font-size: 16px; border: none; border-color: none; width: 50px; height: 50px;}
@@ -263,6 +266,8 @@ element.style {
     .dropdown{
                 position: relative;
                 display: inline-block;
+                float: right;
+                padding-right: 10px;
              }
 
  .dropdown-menu {
@@ -290,13 +295,16 @@ element.style {
  .dropdown: hover .dropdown-item {display: block;}
  .dropdown: hover .btn {background-color: #3e8e41;}
 
+ #date_chart_form, #date_chart_form {float: left; text-align:center; }
+ #selectionStartDateChart, #selectionEndDateChart {font-size:10px; height: 25px; padding-top: 5px; }
 
  #selectInputToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px;}
- #selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; }
+ #selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 250px; }
  #titleInputToExport {color: #696969; font-size: 12px;}
- #selectInputToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 8px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+ #selectInputToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
  #selectionStartDateToExport, #selectionEndDateToExport {background-color: #eee; border-color: #696969; color: #696969; }
-
+ #selectInputDatesChartSubmit {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
+ #selectionStartDateChart, #selectionEndDateChart {background-color: #fff; border-color: #696969; color: #696969; }
 </style>
 
 <body>
@@ -320,12 +328,12 @@ element.style {
                                         <li class="divider">NAVIGATION</li><br><br>
                                             <li class="parent">
                                                   <a href="#"><span>Home</span></a><br><br>
-                                                  <a><span>Export Data</span></a><br><br>
+                                                  <a><span>Export Data</span></a><br><br><br>
                                                     <ul class="sub-menu">
                                                         <!-- Export Data Form -->
                                                         <form action='', method="POST" novalidate name="ExportDataForm">
                                                             {{ form.hidden_tag() }}
-                                                            <div class="form-group">
+                                                            <div  class="form-group">
                                                                 <fieldset>
                                                                     {{ form.inputs.label(id="label_text") }}<br>
                                                                     {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
@@ -333,21 +341,11 @@ element.style {
                                                                     {{ form.start_date.label(id="start_date_text") }}<br>
                                                                     {{ form.start_date(class="form-control", id="selectionStartDateToExport") }}<br>
                                                                     {{ form.end_date.label(id="end_date_text") }}<br>
-                                                                    {{ form.end_date(class="form-control", id="selectionEndDateToExport") }}<br>
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button><br>
+                                                                    {{ form.end_date(class="form-control", id="selectionEndDateToExport") }}<br><br>
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
                                                                 </fieldset>
-
                                                             </div>
                                                         </form>
-
-
-
-
-                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Attribution</a></li>-->
-                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Allocation Over Time</a></li>-->
-                                                        <!--<li><a ><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Performance Since Inception</a></li>-->
-                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Cumulative Performance</a></li>-->
-                                                        <!--<li><a><img class="icon-settings" width="auto" height="30" src="/static/icon-chart.png">  Monthly Performance</span></a></li>-->
                                                     </ul>
                                             </li>
                                     </ul>
@@ -371,10 +369,11 @@ element.style {
                         <div class="row">
                                 <div class="col-12 col-lg-6">
                                   <div class="card">
+
                                       <div class="card-header">
                                           <div class="dropdown">
                                               <button class="button" type="button" id="dropdown-toggle" data-toggle="dropdown">
-                                                  <img class="icon-dashboard" width="auto" height="35" src="/static/icon-card.png">
+                                                  <img class="icon-dashboard" width="auto" height="30" src="/static/icon-card.png">
                                               </button>
                                               <div align = "center" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" href="#">Get the data</a>
@@ -405,17 +404,43 @@ element.style {
                                                         var data = [trace1, trace2];
                                                          var layout = {
                                                                         title: 'Performance Attribution',
-                                                                        showlegend: true,
 
+                                                                        showlegend: true, legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
                                                                        };
-                                                         Plotly.newPlot('myDiv', data, layout,{displayModeBar: false, responsive: true});
 
+                                                         Plotly.newPlot('myDiv', data, layout,{displayModeBar: false, responsive: true});
                                                     </script>
                                                 </div>
                                             </ul>
                                         </div>
+                                        <div class="dates">
+                                              <!--Date Form -->
+                                            <form action='', method="POST" novalidate name="DateForm">
+                                            {{ form.hidden_tag() }}
+                                                <div  class="form-group"  id="date_chart_form">
+                                                    <fieldset>
+                                                        <div class="button-group">
+                                                            <div class="row">
+
+                                                                <div class="col-xs-5">
+                                                                {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
+                                                                </div>
+                                                                <div class="col-xs-5">
+                                                                {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
+                                                                </div>
+                                                                <div class="col-xs-2">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit">Ok</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </form>
+                                          </div>
+
                                     </div>
                                   </div>
+
                                 </div>
                                 <div class="col-12 col-lg-6">
                                   <div class="card">

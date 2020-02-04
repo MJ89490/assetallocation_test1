@@ -86,6 +86,8 @@ def times_charts():
             print(form.end_date.data)
         elif request.form['submit_button'] == 'selectInputOk':
             print(form.inputs.data)
+        elif request.form['submit_button'] == 'selectDatesChart':
+            print(form.start_date_chart.data) #we need to separate each button date for each, otherwise, they will be connected to each other
 
     return render_template('new_dashboard_js.html', form=form)
 
