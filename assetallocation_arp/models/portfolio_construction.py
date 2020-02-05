@@ -5,18 +5,18 @@ PORTFOLIO CONSTRUCTION
 """
 import math
 import pandas as pd
-from pandas.tseries.offsets import BDay
 
+from pandas.tseries.offsets import BDay
+from assetallocation_arp.enum import leverage_types as leverage_name
 
 def apply_leverage(futures_data, leverage_type, leverage):
     # leverage_type: Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
-
-    if leverage_type == 'e' or leverage_type == 's':
+    if leverage_type == leverage_name.Leverage.e.name or leverage_type == leverage_name.Leverage.s.name:
         leverage_data = 0 * futures_data + 1
         leverage_data[leverage.index[leverage > 0]] = 1
-    elif leverage_type == 'n':
+    elif leverage_type == leverage_name.Leverage.n.name:
         leverage_data = 0 * futures_data + leverage
-    elif leverage_type == 'v':
+    elif leverage_type == leverage_name.Leverage.v.name:
         leverage_data = 1 / futures_data.ewm(alpha=1/150, min_periods=10).std()
     else:
         raise Exception('Invalid entry')
