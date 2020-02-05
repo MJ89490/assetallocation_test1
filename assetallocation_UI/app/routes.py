@@ -3,6 +3,7 @@ from flask import render_template
 from flask import flash
 from flask import url_for
 from flask import redirect
+from flask import request
 from app import app
 from app.forms import LoginForm, ExportDataForm
 from .models import User
@@ -14,8 +15,8 @@ from flask_login import current_user
 from flask import g
 
 from .userIdentification import randomIdentification
+from .import_data_from_excel import read_data_from_excel, data_allocation_over_time_chart, data_performance_since_inception_chart
 
-from .times_charts import chart_performance, bar_chart
 
 @app.before_request
 def before_request():
@@ -78,8 +79,15 @@ def times():
 @login_required
 def times_charts():
     form = ExportDataForm()
-    from flask import request
+    times_data = read_data_from_excel()
 
+    positions_us_equities, positions_eu_equities, positions_jp_equities, positions_hk_equities, positions_us_bonds, \
+    positions_uk_bonds, positions_eu_bonds, positions_ca_bonds, positions_jpy, positions_eur, positions_aud, \
+    positions_cad, positions_gbp = data_allocation_over_time_chart(times_data)
+
+    performance_total, performance_dates = data_performance_since_inception_chart(times_data)
+
+    print(type(performance_total))
     if request.method == "POST":
         if request.form['submit_button'] == 'selectInputToExport':
             print(form.start_date.data)
@@ -89,7 +97,23 @@ def times_charts():
         elif request.form['submit_button'] == 'selectDatesChart':
             print(form.start_date_chart.data) #we need to separate each button date for each, otherwise, they will be connected to each other
 
-    return render_template('new_dashboard_js.html', form=form)
+    return render_template('new_dashboard_js.html', form=form,
+                           positions_us_equities=positions_us_equities,
+                           positions_eu_equities=positions_eu_equities,
+                           positions_jp_equities=positions_jp_equities,
+                           positions_hk_equities=positions_hk_equities,
+                           positions_us_bonds=positions_us_bonds,
+                           positions_uk_bonds=positions_uk_bonds,
+                           positions_eu_bonds=positions_eu_bonds,
+                           positions_ca_bonds=positions_ca_bonds,
+                           positions_jpy=positions_jpy,
+                           positions_eur=positions_eur,
+                           positions_aud=positions_aud,
+                           positions_cad=positions_cad,
+                           positions_gbp=positions_gbp,
+                           performance_total=performance_total,
+                           performance_dates=performance_dates
+                           )
 
 @app.route('/logout')
 @login_required
