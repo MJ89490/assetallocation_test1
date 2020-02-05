@@ -5,6 +5,7 @@
 {% block navbar %}
     <head>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script type="text/javascript" src="C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\assetallocation_UI\app\templates\times_charts.js"></script>
     </head>
 
     <style type="text/css">
@@ -232,7 +233,7 @@ element.style {
 
 .card-body {
     border-radius: 0 0 3px 3px;
-    padding-bottom: 45px;
+    padding-bottom: 50px;
     padding-top: 0px;
     padding-right: 0px;
     padding-left: 3px;
@@ -295,7 +296,7 @@ element.style {
  .dropdown: hover .dropdown-item {display: block;}
  .dropdown: hover .btn {background-color: #3e8e41;}
 
- #date_chart_form, #date_chart_form {float: left; text-align:center; }
+ #date_chart_form, #date_chart_form, #date_chart1_form {float: left; text-align:center; }
  #selectionStartDateChart, #selectionEndDateChart {font-size:10px; height: 25px; padding-top: 5px; }
 
  #selectInputToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px;}
@@ -303,8 +304,12 @@ element.style {
  #titleInputToExport {color: #696969; font-size: 12px;}
  #selectInputToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
  #selectionStartDateToExport, #selectionEndDateToExport {background-color: #eee; border-color: #696969; color: #696969; }
- #selectInputDatesChartSubmit {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
+ #selectInputDatesChartSubmit, #selectInputDatesChartSubmit1 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
  #selectionStartDateChart, #selectionEndDateChart {background-color: #fff; border-color: #696969; color: #696969; }
+
+
+
+
 </style>
 
 <body>
@@ -369,7 +374,6 @@ element.style {
                         <div class="row">
                                 <div class="col-12 col-lg-6">
                                   <div class="card">
-
                                       <div class="card-header">
                                           <div class="dropdown">
                                               <button class="button" type="button" id="dropdown-toggle" data-toggle="dropdown">
@@ -384,34 +388,140 @@ element.style {
                                       </div>
                                     <div class="card-body">
                                         <div class="embed-responsive embed-responsive-16by9">
-                                            <ul class="user-timeline user-timeline-compact">
                                                 <div align = "center" class="responsive-plot" id="myDiv">
                                                     <script>
-                                                        var trace1 = {
-                                                                        x:['Zebras', 'Lions', 'Pelicans'],
-                                                                        y: [90, 40, 60],
-                                                                        type: 'bar',
-                                                                        name: 'New York Zoo'
-                                                                    };
+                                                            var trace1 = {
+                                                                            y: {{ positions_us_equities }},
+                                                                            name: 'S&P 500',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                            };
 
-                                                        var trace2 = {
-                                                                        x:['Zebras', 'Lions', 'Pelicans'],
-                                                                        y: [10, 80, 45],
-                                                                        type: 'bar',
-                                                                        name: 'San Francisco Zoo'
-                                                                    };
+                                                            var trace2 = {
+                                                                            y: {{ positions_eu_equities }},
+                                                                            name: 'Eurostoxx',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
 
-                                                        var data = [trace1, trace2];
-                                                         var layout = {
-                                                                        title: 'Performance Attribution',
+                                                            var trace3 = {
+                                                                            y: {{ positions_jp_equities }},
+                                                                            name: 'Topix',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
 
-                                                                        showlegend: true, legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
-                                                                       };
+                                                            var trace4 = {
+                                                                            y: {{ positions_hk_equities }},
+                                                                            name: 'Hang-Seng',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
 
-                                                         Plotly.newPlot('myDiv', data, layout,{displayModeBar: false, responsive: true});
+                                                            var trace5 = {
+                                                                            y: {{ positions_us_bonds }},
+                                                                            name: 'Treasury bond',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace6 = {
+                                                                            y: {{ positions_uk_bonds }},
+                                                                            name: 'Gilt',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace7 = {
+                                                                            y: {{  positions_eu_bonds }},
+                                                                            name: 'Bund',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace8 = {
+                                                                            y: {{ positions_ca_bonds }},
+                                                                            name: 'Russell 2000',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace9 = {
+                                                                            y: {{ positions_jpy }},
+                                                                            name: 'JPY',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace10 = {
+                                                                            y: {{ positions_eur }},
+                                                                            name: 'EUR',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace11 = {
+                                                                            y: {{ positions_aud }},
+                                                                            name: 'AUD',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace12 = {
+                                                                            y: {{ positions_cad }},
+                                                                            name: 'CAD',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var trace13 = {
+                                                                            y: {{ positions_gbp }},
+                                                                            name: 'GBP',
+                                                                            fill: 'tozeroy',
+                                                                            type: 'scatter',
+                                                                            mode: 'none'
+                                                                           };
+
+                                                            var layout = {
+                                                                            title: 'Asset Allocation Over Times',
+                                                                            titlefont: {color: '#007faa'},
+                                                                            showlegend: true,
+                                                                            legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+
+                                                                           };
+
+                                                            var config = {
+                                                                      'displayModeBar': false,
+                                                                      'responsive': true,
+
+                                                                    }
+
+                                                            var data = [trace1, trace2, trace3, trace4, trace5,
+                                                            trace6, trace7, trace8, trace9, trace10, trace11,
+                                                            trace12, trace13];
+
+                                                            Plotly.newPlot('myDiv', data, layout, config);
                                                     </script>
+                                                    <!-- TIMES Chart: Asset Allocation -->
+                                                        <!--{% block javascript %}-->
+                                                            <!--<script type="text/javascript">-->
+                                                                <!--{% include "times_charts.js" %}-->
+                                                            <!--</script>-->
+                                                        <!--{% endblock %}-->
+                                                    <!--<script type="text/javascript" src="{{ url_for('static',filename='times_charts.js') }}"></script>-->
                                                 </div>
-                                            </ul>
                                         </div>
                                         <div class="dates">
                                               <!--Date Form -->
@@ -437,7 +547,6 @@ element.style {
                                                 </div>
                                             </form>
                                           </div>
-
                                     </div>
                                   </div>
 
@@ -460,55 +569,54 @@ element.style {
                                         <div class="embed-responsive embed-responsive-16by9">
                                                 <div align = "center" class="responsive-plot" id="myDiv1">
                                                     <script>
-                                                      var trace1 = {
-                                                                      x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
-                                                                      y: [20, 14, 23, 20, 14, 23, 34, 26],
-                                                                      marker: {
-                                                                                color: ['rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)']
-                                                                               },
-                                                                      name: 'Item 1',
-                                                                      type: 'bar',
-                                                                    };
+                                                        var trace1 = {
 
-                                                                    var trace2 = {
-                                                                      x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
-                                                                      y: [12, 18, 29, 12, 18, 29, 24, 22],
-                                                                      marker: {
-                                                                        color: ['rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)']
-                                                                      },
-                                                                      name: 'Item 2',
-                                                                      type: 'bar'
-                                                                    };
+                                                                        y: {{ performance_total }},
+                                                                        mode: 'lines',
+                                                                        name: 'Total'
+                                                                      };
 
-                                                                    var trace3 = {
-                                                                      x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],
-                                                                      y: [12, 18, 29, 12, 18, 29, 24, 22],
-                                                                      marker: {
-                                                                        color: ['rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)']
-                                                                      },
-                                                                      name: 'Item 3',
-                                                                      type: 'bar'
-                                                                    };
+                                                         var data = [trace1];
 
-                                                                    var data = [trace1, trace2, trace3];
+                                                         var layout = {
+                                                                        title: 'Performance Since Inception',
+                                                                        titlefont: {color: '#007faa'},
+                                                                        showlegend: true,
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                       };
 
-                                                                    var layout = {
-                                                                                    title: 'Performance Attribution',
-                                                                                    showlegend: true,
-                                                                                    barmode: 'stack',
-                                                                                  };
-
-
-                                                                    var config = {
+                                                         var config = {
                                                                       'displayModeBar': false,
                                                                       'responsive': true,
+                                                                       };
 
-                                                                    }
-
-                                                                    Plotly.newPlot('myDiv1', data, layout, config);
+                                                         Plotly.newPlot('myDiv1', data, layout, config);
                                                     </script>
                                                 </div>
                                         </div>
+                                        <div class="dates">
+                                              <!--Date Form -->
+                                            <form action='', method="POST" novalidate name="DateForm">
+                                            {{ form.hidden_tag() }}
+                                                <div  class="form-group"  id="date_chart1_form">
+                                                    <fieldset>
+                                                        <div class="button-group">
+                                                            <div class="row">
+                                                                <div class="col-xs-5">
+                                                                {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
+                                                                </div>
+                                                                <div class="col-xs-5">
+                                                                {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
+                                                                </div>
+                                                                <div class="col-xs-2">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                            </form>
+                                          </div>
                                     </div>
                                   </div>
                                 </div>
@@ -522,27 +630,7 @@ element.style {
                                                 <ul class="user-timeline user-timeline-compact">
                                                     <div align = "center" class="responsive-plot" id="myDiv3">
                                                         <script>
-                                                            var trace1 = {
-                                                                            x:['Zebras', 'Lions', 'Pelicans'],
-                                                                            y: [90, 40, 60],
-                                                                            type: 'bar',
-                                                                            name: 'New York Zoo'
-                                                                        };
 
-                                                            var trace2 = {
-                                                                            x:['Zebras', 'Lions', 'Pelicans'],
-                                                                            y: [10, 80, 45],
-                                                                            type: 'bar',
-                                                                            name: 'San Francisco Zoo'
-                                                                        };
-
-                                                            var data = [trace1, trace2];
-                                                             var layout = {
-                                                                            title: 'Performance Attribution',
-                                                                            showlegend: true,
-
-                                                                           };
-                                                             Plotly.newPlot('myDiv3', data, layout,{displayModeBar: false, responsive: true});
 
                                                         </script>
                                                     </div>
