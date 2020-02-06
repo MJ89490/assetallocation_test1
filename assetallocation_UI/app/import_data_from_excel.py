@@ -84,7 +84,7 @@ def data_allocation_over_time_chart(times_data):
 
 def data_performance_since_inception_chart(times_data):
 
-   data_performance = times_data.loc[:, 'TIMES Returns':'Total']
+   data_performance = times_data.loc[:, 'TIMES Returns':'Total'] #TO CHANGE!!!
    data_performance = data_performance.set_index('TIMES Returns')
    dates = times_data.loc[:, 'TIMES Returns']
    dates = dates.tolist()
@@ -92,9 +92,44 @@ def data_performance_since_inception_chart(times_data):
    total_performance = total_performance.loc['2016-03-16':'2019-06-29']
    total_performance = total_performance.tolist()
 
-   return total_performance, dates
+   gbp_performance = data_performance['GBP.1']
+   gbp_performance = gbp_performance.loc['2016-03-16':'2019-06-29']
+   gbp_performance = gbp_performance.tolist()
+
+   jpy_performance = data_performance['JPY.1']
+   jpy_performance = jpy_performance.loc['2016-03-16':'2019-06-29']
+   jpy_performance = jpy_performance.tolist()
+
+   eur_performance = data_performance['EUR.1']
+   eur_performance = eur_performance.loc['2016-03-16':'2019-06-29']
+   eur_performance = eur_performance.tolist()
+
+   aud_performance = data_performance['AUD.1']
+   aud_performance = aud_performance.loc['2016-03-16':'2019-06-29']
+   aud_performance = aud_performance.tolist()
+
+   cad_performance = data_performance['CAD.1']
+   cad_performance = cad_performance.loc['2016-03-16':'2019-06-29']
+   cad_performance = cad_performance.tolist()
+
+   return total_performance, gbp_performance, jpy_performance, eur_performance, aud_performance, cad_performance, dates
+
+def data_table_times(times_data):
+
+    data_mom = times_data.loc[:, 'TIMES Signals':'GBP']
+    data_mom = data_mom.set_index('TIMES Signals')
+
+    data_positions = times_data.loc[:, 'TIMES Positions':]
+
+    signals_off = data_mom.loc[:, 'US Equities':'HK Equities'].last_valid_index()
+
+    signals = round(data_mom.loc[:, 'US Equities':'HK Equities'].loc[signals_off], 2)
+    positions = data_mom.loc[:, 'US Equities':'HK Equities'].loc[signals_off]
+
+    return signals
 
 if __name__ == "__main__":
     data = read_data_from_excel()
     data_allocation_over_time_chart(data)
     data_performance_since_inception_chart(data)
+    data_table_times(data)

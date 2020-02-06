@@ -15,7 +15,8 @@ from flask_login import current_user
 from flask import g
 
 from .userIdentification import randomIdentification
-from .import_data_from_excel import read_data_from_excel, data_allocation_over_time_chart, data_performance_since_inception_chart
+from .import_data_from_excel import read_data_from_excel, data_allocation_over_time_chart, \
+    data_performance_since_inception_chart, data_table_times
 
 
 @app.before_request
@@ -85,7 +86,10 @@ def times_charts():
     positions_uk_bonds, positions_eu_bonds, positions_ca_bonds, positions_jpy, positions_eur, positions_aud, \
     positions_cad, positions_gbp = data_allocation_over_time_chart(times_data)
 
-    performance_total, performance_dates = data_performance_since_inception_chart(times_data)
+    performance_total, performance_gbp, performance_jpy, performance_eur, performance_aud, \
+    performance_cad, performance_dates = data_performance_since_inception_chart(times_data)
+
+    signals = data_table_times(times_data=times_data)
 
     print(type(performance_total))
     if request.method == "POST":
@@ -112,7 +116,16 @@ def times_charts():
                            positions_cad=positions_cad,
                            positions_gbp=positions_gbp,
                            performance_total=performance_total,
-                           performance_dates=performance_dates
+                           performance_gbp=performance_gbp,
+                           performance_jpy=performance_jpy,
+                           performance_eur=performance_eur,
+                           performance_aud=performance_aud,
+                           performance_cad=performance_cad,
+                           performance_dates=performance_dates,
+                           signals_us_equities=signals['US Equities'],
+                           signals_eu_equities=signals['EU Equities'],
+                           signals_jp_equities=signals['JP Equities'],
+                           signals_hk_equities=signals['HK Equities']
                            )
 
 @app.route('/logout')
