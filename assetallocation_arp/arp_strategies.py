@@ -21,6 +21,10 @@ def run_model(model_type, mat_file=None, input_file=None):
 		print(model_type)
 	if model_type == models.Models.effect.name:
 		print(model_type)
+
+		effect_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+
+
 	if model_type == models.Models.curp.name:
 		print(model_type)
 	if model_type == models.Models.fica.name:
@@ -29,6 +33,14 @@ def run_model(model_type, mat_file=None, input_file=None):
 		print(model_type)
 	if model_type == models.Models.comca.name:
 		print(model_type)
+
+	if model_type == models.Models.effect.name:
+		# get inputs from excel and matlab data
+		effect_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+		# run strategy
+		signals, returns, r, positioning = effect.format_data_and_calc(effect_inputs, asset_inputs, all_data)
+		# write results to output sheet
+		write_output_to_excel({models.Models.effect.name: (asset_inputs, positioning, r, signals, effect_inputs)})
 
 
 def write_output_to_excel(model_outputs):
