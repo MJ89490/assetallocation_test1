@@ -32,6 +32,8 @@ future = pd.read_pickle("Future data.pkl")
 index = pd.read_pickle("Data.pkl")
 series = ["S&P 500",	"Euro Stoxx 50",	"Nikkei 225",	"Hang Seng",	"Treasury",	"Gilt",	"Bund",	"Cad10",	"Yen",	"Euro",	"Aus",	"CanDollar", "Sterling"]
 
+data = pd.read_pickle("Data.pkl")
+
 future = future[series]
 index = index[series]
  
