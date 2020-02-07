@@ -1,0 +1,256 @@
+{% extends "basePage.html" %}
+
+{% block overviewTimes %}
+
+<head>
+    <style type="text/css">
+        body {
+                min-height: 100%;
+                display: flex !important;
+             }
+
+        body {
+                padding: 0;
+                background-color: #eee;
+                height: auto;
+                min-height: 100%;
+                line-height: 1.42857143;
+             }
+
+        body {
+                margin: 0;
+                background-color: #eee;
+                font-family: Roboto,Arial,sans-serif;
+                font-size: 1rem;
+                font-weight: 400;
+                color: #404040;
+                text-align: left;
+             }
+
+        body {
+                display: block;
+                -webkit-box-orient: vertical !important;
+                -webkit-box-direction: normal !important;
+                flex-direction: column !important;
+             }
+
+        .main {
+                -webkit-box-flex: 1;
+                -ms-flex: 1 0 auto;
+                flex: 1 0 auto;
+                position: relative;
+              }
+
+        .main-content {padding: 25px;}
+
+        .be-content {
+                        position: relative;
+                        left: 0;
+                        margin-left: 30px;
+                        margin-right: 30px;
+                        min-height: 100%;
+                     }
+
+
+        .container-fluid {
+                            width: 100%;
+                            padding-right: 15px;
+                            padding-left: 15px;
+                            margin-right: auto;
+                            margin-left: auto;
+                            margin-top: 5px;
+                         }
+
+        .row             {
+                            display: flex;
+                            margin-right: -15px;
+                            margin-left: -15px;
+                         }
+
+        @media (min-width: 768px)
+        .col-md-12      {
+                            -webkit-box-flex: 0;
+                            flex: 0 0 100%;
+                            max-width: 100%;
+                         }
+
+        .widget.widget-fullwidth {
+                                    padding: 0;
+                                  }
+
+        .widget.widget-fullwidth .widget-head {
+                                                padding: 20px 20px 10px;
+                                                margin-bottom: 0;
+                                                background-color: #fff;
+                                               }
+
+        .be-loading {
+                        position: relative;
+                    }
+        .widget {
+            background-color: #fff;
+            margin-bottom: 25px;
+            border-radius: 3px;
+        }
+
+        .widget-chart-container {
+            position: relative;
+        }
+
+        .table {
+                    width: 100%;
+                    margin-bottom: 1rem;
+                    color: #404040;
+                    background-color: #fff;
+                }
+
+        table   {
+                    border-collapse: collapse;
+                    text-align:center;
+                }
+
+
+        .table-borderless > tbody > tr > td,
+        .table-borderless > tbody > tr > th,
+        .table-borderless > tfoot > tr > td,
+        .table-borderless > tfoot > tr > th,
+        .table-borderless > thead > tr > td,
+        .table-borderless > thead > tr > th {
+            border: none;
+        }
+
+        .thead-color {background-color: rgb(128, 128, 128);}
+        .thead-title {color: #fff; font-size: 20px;}
+        .thead-title1, .thead-title2 {color: #fff; font-size: 12px;}
+
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+     <div class="be-content">
+          <div class="main-content container-fluid">
+            <h2 class="overview-title">Overview</h2>
+          </div>
+
+         <div class="row">
+             <div class="col-12 col-lg-8">
+                 <div class="widget widget-fullwidth be-loading">
+                     <div class="widget-head">
+                         <div class="widget-chart-container">
+                             <table class="table table-borderless">
+                                 <thead class="thead-color">
+                                      <tr>
+                                            <th class="thead-title">TIMES</th>
+                                            <th></th>
+                                            <th class="thead-title1"><i>Positions</i></th>
+                                            <th class="thead-title2"><i>Performance</i></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                      </tr>
+                                 </thead>
+                                 <tbody class="no-border-x">
+                                      <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                      </tr>
+                                      <tr>
+                                          <td>Signals as off</td>
+                                          <td><strong>28/11/2019</strong></td>
+                                      </tr>
+                                      <tr>
+                                          <td></td>
+                                          <td></td>
+                                          <td><strong>Mom Signals</strong>
+                                          <td><strong>Positions</strong></td>
+                                          <td><strong>Positions YTD</strong></td>
+                                          <td><strong>Weekly</strong></td>
+                                          <td><strong>YTD</strong></td>
+                                      </tr>
+                                      <tr>
+                                          <td>Equities</td>
+                                          <td>US Equities</td>
+                                          <td>{{ signals_us_equities }}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Equities</td>
+                                          <td>EU Equities</td>
+                                          <td>{{ signals_eu_equities }}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Equities</td>
+                                          <td>JP Equities</td>
+                                          <td>{{ signals_jp_equities }}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Equities</td>
+                                          <td>HK Equities</td>
+                                          <td>{{ signals_hk_equities }}</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Bonds</td>
+                                          <td>US 10y Bonds</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Bonds</td>
+                                          <td>UK 10y Bonds</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Bonds</td>
+                                          <td>Eu 10y Bonds</td>
+                                      </tr>
+                                      <tr>
+                                          <td>Bonds</td>
+                                          <td>CA 10y Bonds</td>
+                                      </tr>
+                                      <tr>
+                                          <td>FX</td>
+                                          <td>JPY</td>
+                                      </tr>
+                                      <tr>
+                                          <td>FX</td>
+                                          <td>EUR</td>
+                                      </tr>
+                                      <tr>
+                                          <td>FX</td>
+                                          <td>AUD</td>
+                                      </tr>
+                                      <tr>
+                                          <td>FX</td>
+                                          <td>CAD</td>
+                                      </tr>
+                                      <tr>
+                                          <td>FX</td>
+                                          <td>GBP</td>
+                                      </tr>
+                                </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <div class="col-12 col-lg-4">
+                 <div class="widget widget-fullwidth be-loading">
+                     <div class="widget-head">
+                         <div class="widget-chart-container">
+
+                         </div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+     </div>
+</body>
+
+
+
+
+
+{% endblock %}

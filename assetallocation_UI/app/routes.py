@@ -75,10 +75,23 @@ def protected_models():
 def times():
     return render_template('times_display.html', title="Times")
 
-
-@app.route('/times_charts', methods=['GET', 'POST'])
+@app.route('/times_overview')
 @login_required
-def times_charts():
+def times_overview():
+    times_data = read_data_from_excel()
+
+    signals = data_table_times(times_data=times_data)
+
+    return render_template('times_overview.html', title="Times",
+                           signals_us_equities=signals['US Equities'],
+                           signals_eu_equities=signals['EU Equities'],
+                           signals_jp_equities=signals['JP Equities'],
+                           signals_hk_equities=signals['HK Equities'] )
+
+
+@app.route('/times_dashboard', methods=['GET', 'POST'])
+@login_required
+def times_dashboard():
     form = ExportDataForm()
     times_data = read_data_from_excel()
 
@@ -122,10 +135,6 @@ def times_charts():
                            performance_aud=performance_aud,
                            performance_cad=performance_cad,
                            performance_dates=performance_dates,
-                           signals_us_equities=signals['US Equities'],
-                           signals_eu_equities=signals['EU Equities'],
-                           signals_jp_equities=signals['JP Equities'],
-                           signals_hk_equities=signals['HK Equities']
                            )
 
 @app.route('/logout')
