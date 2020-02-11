@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 
+from datetime import timedelta
+
 PATH = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
 
 #to create a class
@@ -114,22 +116,115 @@ def data_performance_since_inception_chart(times_data):
 
    return total_performance, gbp_performance, jpy_performance, eur_performance, aud_performance, cad_performance, dates
 
+
 def data_table_times(times_data):
 
     data_mom = times_data.loc[:, 'TIMES Signals':'GBP']
     data_mom = data_mom.set_index('TIMES Signals')
 
-    data_positions = times_data.loc[:, 'TIMES Positions':]
+    data_positions = times_data.loc[:, 'TIMES Positions':'GBP.2']
+    data_positions = data_positions.set_index('TIMES Positions')
 
-    signals_off = data_mom.loc[:, 'US Equities':'HK Equities'].last_valid_index()
+    data_performance_weekly = times_data.loc[:, 'TIMES Returns':'GBP.1']
+    data_performance_weekly = data_performance_weekly.set_index('TIMES Returns')
 
-    signals = round(data_mom.loc[:, 'US Equities':'HK Equities'].loc[signals_off], 2)
-    positions = data_mom.loc[:, 'US Equities':'HK Equities'].loc[signals_off]
+    signals_off_signals = data_mom.loc[:, 'US Equities':'HK Equities'].last_valid_index()
+    signals_off_performance = data_performance_weekly.loc[:, 'US Equities.1':'HK Equities.1'].last_valid_index()
+    signals_off_positions = data_positions.loc[:, 'US Equities.2':'HK Equities.2'].last_valid_index()
 
-    return signals
+    signals_off_performance_weekly = signals_off_performance.date()
+    signals_off_performance_weekly = signals_off_performance_weekly - timedelta(days=7)
+    signals_off_performance_weekly = pd.Timestamp(signals_off_performance_weekly)
+
+    year_end = '2018-12-31'
+    year_end = pd.Timestamp(year_end)
+
+    signals = round(data_mom.loc[:, 'US Equities':'GBP'].loc[signals_off_signals], 2)
+    positions = round((data_positions.loc[:, 'US Equities.2':'GBP.2'].loc[signals_off_positions])*100, 2)
+    performance_weekly = round((data_performance_weekly.loc[:, 'US Equities.1': 'GBP.1'].loc[signals_off_performance]
+                                     - data_performance_weekly.loc[:, 'US Equities.1': 'GBP.1'].loc[signals_off_performance_weekly])*100, 3)
+    performance_ytd = round((data_performance_weekly.loc[:, 'US Equities.1': 'GBP.1'].loc[signals_off_performance]
+                                     - data_performance_weekly.loc[:, 'US Equities.1': 'GBP.1'].loc[year_end])*100, 3)
+
+    sum_positions_equities = round(sum(positions.loc['US Equities.2':'HK Equities.2']), 2)
+
+    sum_positions_bonds = round(sum(positions.loc['US 10y Bonds.2':'CA 10y Bonds.2']), 2)
+
+    sum_positions_fx = round(sum(positions.loc['JPY.2':'GBP.2']), 2)
+
+    sum_performance_weekly_equities = round(sum(performance_weekly.loc['US Equities.1': 'HK Equities.1']), 2)
+
+    sum_performance_weekly_bonds = round(sum(performance_weekly.loc['US 10y Bonds.1':'CA 10y Bonds.1']), 2)
+
+    sum_performance_weekly_fx = round(sum(performance_weekly.loc['JPY.1':'GBP.1']), 2)
+
+    sum_performance_ytd_equities = round(sum(performance_ytd.loc['US Equities.1': 'HK Equities.1']), 2)
+
+    sum_performance_ytd_bonds = round(sum(performance_ytd.loc['US 10y Bonds.1':'CA 10y Bonds.1']), 2)
+
+    sum_performance_ytd_fx = round(sum(performance_ytd.loc['JPY.1':'GBP.1']), 2)
+
+
+    return signals, positions, performance_weekly, performance_ytd, sum_positions_equities, sum_positions_bonds, \
+           sum_positions_fx, sum_performance_weekly_equities, sum_performance_weekly_bonds, sum_performance_weekly_fx, \
+           sum_performance_ytd_equities, sum_performance_ytd_bonds, sum_performance_ytd_fx
+
+def data_sparklines_charts(times_data):
+
+    data = times_data.loc[:, 'TIMES Signals':'GBP']
+    data = data.set_index('TIMES Signals')
+
+    data_positions = times_data.loc[:, 'TIMES Positions':'GBP.2']
+    data_positions = data_positions.set_index('TIMES Positions')
+
+    positions_us_equities_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'US Equities.2']
+    positions_us_equities_sparklines = positions_us_equities_sparklines.tolist()
+
+    positions_eu_equities_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'EU Equities.2']
+    positions_eu_equities_sparklines = positions_eu_equities_sparklines.tolist()
+
+    positions_jp_equities_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'JP Equities.2']
+    positions_jp_equities_sparklines = positions_jp_equities_sparklines.tolist()
+
+    positions_hk_equities_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'HK Equities.2']
+    positions_hk_equities_sparklines = positions_hk_equities_sparklines.tolist()
+
+    positions_us_bonds_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'US 10y Bonds.2']
+    positions_us_bonds_sparklines = positions_us_bonds_sparklines.tolist()
+
+    positions_uk_bonds_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'UK 10y Bonds.2']
+    positions_uk_bonds_sparklines = positions_uk_bonds_sparklines.tolist()
+
+    positions_eu_bonds_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'Eu 10y Bonds.2']
+    positions_eu_bonds_sparklines = positions_eu_bonds_sparklines.tolist()
+
+    positions_ca_bonds_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'CA 10y Bonds.2']
+    positions_ca_bonds_sparklines = positions_ca_bonds_sparklines.tolist()
+
+    positions_jpy_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'JPY.2']
+    positions_jpy_sparklines = positions_jpy_sparklines.tolist()
+
+    positions_eur_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'EUR.2']
+    positions_eur_sparklines = positions_eur_sparklines.tolist()
+
+    positions_aud_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'AUD.2']
+    positions_aud_sparklines = positions_aud_sparklines.tolist()
+
+    positions_cad_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'CAD.2']
+    positions_cad_sparklines = positions_cad_sparklines.tolist()
+
+    positions_gbp_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'GBP.2']
+    positions_gbp_sparklines = positions_gbp_sparklines.tolist()
+
+    return positions_us_equities_sparklines, positions_eu_equities_sparklines, positions_jp_equities_sparklines, \
+           positions_hk_equities_sparklines, positions_us_bonds_sparklines, positions_uk_bonds_sparklines, \
+           positions_eu_bonds_sparklines, positions_ca_bonds_sparklines, positions_jpy_sparklines, \
+           positions_eur_sparklines, positions_aud_sparklines, positions_cad_sparklines, positions_gbp_sparklines
+
 
 if __name__ == "__main__":
     data = read_data_from_excel()
     data_allocation_over_time_chart(data)
     data_performance_since_inception_chart(data)
     data_table_times(data)
+    data_sparklines_charts(data)
