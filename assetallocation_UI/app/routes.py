@@ -5,7 +5,7 @@ from flask import url_for
 from flask import redirect
 from flask import request
 from app import app
-from app.forms import LoginForm, ExportDataForm
+from app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
 
 from flask_login import login_required
@@ -70,10 +70,16 @@ def protected_models():
 #     bar = create_plot()
 #     return render_template('redirection_display.html', plot=bar)
 
-@app.route('/times_display')
+@app.route('/times_display',  methods=['GET', 'POST'])
 @login_required
 def times():
-    return render_template('times_display.html', title="Times")
+
+    form = InputsTimesModel()
+    if request.method == "POST":
+        if request.form['submit_button_inputs'] == 'selectInputs':
+            print("INPUTS INPUTS")
+
+    return render_template('times_display.html', title="Times", form=form)
 
 @app.route('/times_overview')
 @login_required

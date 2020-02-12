@@ -110,8 +110,9 @@
         #chart-container1 { height: 547px;
                             width: auto;
                           }
-        #chart-container0 { height: 220px;}
-        #chart-container4 { height: 555x;}
+        #chart-container0 { height: 220px; }
+        #chart-container4 { height: 555x; }
+        #chart-container3 { height: 220px; }
 
         .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
 
@@ -142,11 +143,15 @@
         #body-charts {height: 200px ;}
         .thead-color {background-color: rgb(128, 128, 128);}
         #thead-title, #thead-title1, #thead-title2, #thead-title3, #thead-title4, #thead-title5 {color: #fff; font-size: 20px;}
-        .sub-thead-title1, .sub-thead-title2, .sub-thead-title3, .sub-thead-title4 {color: #fff; font-size: 12px;}
-        #sub-thead-title1 {padding-left: 40px;}
-        #sub-thead-title2 {padding-left: 150px;}
-        #sub-thead-title3 {font-size: 15px; padding-right: 100px; padding-left: 0px;}
-        #sub-thead-title4 {font-size: 15px;}
+        .sub-thead-title1, .sub-thead-title2, .sub-thead-title3, .sub-thead-title4, .sub-thead-title5, .sub-thead-title6, .sub-thead-title7, .sub-thead-title8, .sub-thead-title9 {color: #fff; font-size: 12px;}
+        #sub-thead-title1 {padding-left: 40px; }
+        #sub-thead-title2 {padding-left: 180px; }
+        #sub-thead-title3 {font-size: 15px; padding-left: 10px; }
+        #sub-thead-title4 {font-size: 15px; }
+        #sub-thead-title5 {padding-left: 70px; }
+        #sub-thead-title6 {padding-left: 65px; }
+        #sub-thead-title7 {padding-left: 55px; }
+        #sub-thead-title8, #sub-thead-title9 {font-size: 15px; padding-left: 10px; }
         #performance-weekly {padding-right: 90px;}
         #performance-weekly1 {padding-right: 90px;}
         #positions-sparklines-charts {height: 550px;}
@@ -215,15 +220,13 @@
                  <div class="col-12 col-lg-4">
                      <div class="widget widget-fullwidth be-loading">
                          <div class="widget-head">
-                             <div class="widget-chart-container">
+                             <div class="widget-chart-container" id="chart-container3">
                                  <table class="table table-borderless">
                                     <thead class="thead-color">
-                                   <tr>
-
-                                                <th class="sub-thead-title1">Positions</th>
-                                                <th class="sub-thead-title2">Weekly</th>
-                                                <th>YTD</th>
-
+                                        <tr>
+                                                <th class="sub-thead-title5" id="sub-thead-title5">Positions</th>
+                                                <th class="sub-thead-title6" id="sub-thead-title6">Weekly</th>
+                                                <th class="sub-thead-title7" id="sub-thead-title7">YTD</th>
                                           </tr>
                                  </thead>
                                      <tbody class="no-border-x">
@@ -238,7 +241,7 @@
                                                                                   {{ sum_positions_equities }}
                                                                                   ],
 
-                                                                                    marker: {
+                                                                              marker: {
                                                                                             color: 'green'
                                                                                            },
 
@@ -282,7 +285,7 @@
                                                                                   width: 130,
                                                                                   height: 150,
                                                                                   margin: {
-                                                                                    l: 48,
+                                                                                    l: 58,
                                                                                     r: 0,
                                                                                     b: 0,
                                                                                     t: 20,
@@ -291,7 +294,7 @@
                                                                            };
 
                                                              layout.title = {
-                                                              text: 'Positions',
+                                                              text: '',
                                                               font: {
                                                                 size: 11,
                                                                 color: 'black'
@@ -334,7 +337,7 @@
 
                                                              var layout = {
                                                                               title:{
-                                                                               text: 'Weekly',
+                                                                               text: '',
 
 
                                                                                },
@@ -362,10 +365,10 @@
                                                                               },
 
 
-                                                                                  width: 100,
+                                                                                  width: 115,
                                                                                   height: 150,
                                                                                   margin: {
-                                                                                    l: 48,
+                                                                                    l: 58,
                                                                                     r: 0,
                                                                                     b: 0,
                                                                                     t: 20,
@@ -374,7 +377,7 @@
                                                                            };
 
                                                              layout.title = {
-                                                              text: 'Weekly',
+                                                              text: '',
                                                               font: {
                                                                 size: 11,
                                                                 color: 'black'
@@ -417,7 +420,7 @@
 
                                                              var layout = {
                                                                               title:{
-                                                                               text: 'Weekly',
+                                                                               text: '',
 
 
                                                                                },
@@ -445,10 +448,10 @@
                                                                               },
 
 
-                                                                                  width: 100,
+                                                                                  width: 115,
                                                                                   height: 150,
                                                                                   margin: {
-                                                                                    l: 48,
+                                                                                    l: 58,
                                                                                     r: 0,
                                                                                     b: 0,
                                                                                     t: 20,
@@ -457,7 +460,7 @@
                                                                            };
 
                                                              layout.title = {
-                                                              text: 'Ytd',
+                                                              text: '',
                                                               font: {
                                                                 size: 11,
                                                                 color: 'black'
@@ -495,7 +498,6 @@
                              <table class="table table-borderless">
                                 <thead class="thead-color">
                                     <tr>
-                                        <th class="thead-title" id="thead-title1">TIMES</th>
                                         <th class="sub-thead-title3" id="sub-thead-title3">Positions YTD</th>
                                         <th class="thead-title2"></th>
                                         <th></th>
@@ -914,7 +916,7 @@
 
                                                               font: {family: 'Georgia, serif'},
                                                               height:507,
-                                                              width: 700,
+                                                              width: 660,
                                                               margin: {l: 20,
                                                                        r: 0,
                                                                        b: 0,
@@ -1286,7 +1288,7 @@
                              <table class="table table-borderless" id="table-charts1">
                                  <thead class="thead-color">
                                       <tr>
-                                            <th class="thead-title" id="thead-title4">TIMES</th>
+                                            <th class="sub-thead-title8" id="sub-thead-title8">Positions</th>
                                             <th></th>
                                       </tr>
                                  </thead>
@@ -1517,8 +1519,8 @@
                              <table class="table table-borderless" id="table-charts2">
                                  <thead class="thead-color">
                                       <tr>
-                                            <th class="thead-title" id="thead-title5">TIMES</th>
-                                            <th class="sub-thead-title4" id="sub-thead-title4">Performance</th>
+                                            <th class="sub-thead-title9" id="sub-thead-title9">Performance</th>
+                                           <th></th>
                                       </tr>
                                  </thead>
                                  <tbody class="no-border-x">

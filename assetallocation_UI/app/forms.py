@@ -37,4 +37,18 @@ class ExportDataForm(FlaskForm):
     submit_export = SubmitField('Export Data')
     submit_dates_chart = SubmitField('Ok')
 
+class InputsTimesModel(FlaskForm):
+    strategy_weight = StringField(u'Strategy Weight', validators=[DataRequired(message="The strategy weight is required")])
+    time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
+    leverage_type = StringField(u'Leverage Type', validators=[DataRequired(message="The leverage type is required")])
+    volatility_window = StringField(u'Volatility Window', validators=[DataRequired(message="The volatility window is required")])
+    sig1_short = StringField(u'Sigma1 short', validators=[DataRequired(message="The Sigma1 short is required")])
+    sig1_long = StringField(u'Sigma1 long', validators=[DataRequired(message="The Sigma1 long is required")])
+    sig2_short = StringField(u'Sigma2 short', validators=[DataRequired(message="The Sigma2 short is required")])
+    sig2_long = StringField(u'Sigma2 long', validators=[DataRequired(message="The Sigma2 long is required")])
+    sig3_short = StringField(u'Sigma3 short', validators=[DataRequired(message="The Sigma3 short is required")])
+    sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
+    frequency = StringField(u'Frequency', validators=[DataRequired(message="The frequency is required")])
+    week_day = StringField(u'Week Day', validators=[DataRequired(message="The week day is required")])
+    submit_inputs = SubmitField('Submit Inputs')
 

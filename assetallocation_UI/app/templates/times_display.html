@@ -2,49 +2,305 @@
 
 {% block timesModel %}
     <!-- Style of the Home Page -->
-    <style type="text/css">
-            .text-database { color: #007faa; }
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<style type="text/css">
+        body {
+                min-height: 100%;
+                display: flex !important;
+             }
+
+        body {
+                padding: 0;
+                background-color: #eee;
+                height: auto;
+                min-height: 100%;
+                line-height: 1.42857143;
+             }
+
+        body {
+                margin: 0;
+                background-color: #eee;
+                font-family: Roboto,Arial,sans-serif;
+                font-size: 1rem;
+                font-weight: 400;
+                color: #404040;
+                text-align: left;
+             }
+
+        body {
+                display: block;
+                -webkit-box-orient: vertical !important;
+                -webkit-box-direction: normal !important;
+                flex-direction: column !important;
+             }
+
+        .main {
+                -webkit-box-flex: 1;
+                -ms-flex: 1 0 auto;
+                flex: 1 0 auto;
+                position: relative;
+              }
+
+        .main-content {padding: 25px; }
+
+        .be-content {
+                        position: relative;
+                        left: 0;
+                        margin-left: 30px;
+                        margin-right: 30px;
+                        min-height: 100%;
+                     }
+
+
+        .container-fluid {
+                            width: 100%;
+                            padding-right: 15px;
+                            padding-left: 15px;
+                            margin-right: auto;
+                            margin-left: auto;
+                            margin-top: 1px;
+                         }
+
+        .row             {
+                            display: flex;
+                            margin-right: -15px;
+                            margin-left: -15px;
+                            margin-bottom: 20px;
+                         }
+
+        @media (min-width: 768px)
+        .col-md-12      {
+                            -webkit-box-flex: 0;
+                            flex: 0 0 100%;
+                            max-width: 100%;
+                         }
+
+        .widget.widget-fullwidth {
+                                    padding: 0;
+                                  }
+
+        .widget.widget-fullwidth  {
+                                                padding: 20px 20px 10px;
+                                                margin-bottom: 0;
+                                                background-color: pink;
+                                               }
+        .widget-head {
+                                                padding: 20px 20px 10px;
+                                                margin-bottom: 0;
+
+                                               }
+
+        .be-loading {
+                        position: relative;
+                    }
+        .widget {
+            background-color: #fff;
+            margin-bottom: 25px;
+            border-radius: 3px;
+        }
+
+        .widget-chart-container {
+            position: relative;
+        }
+
+        .overview-span { color: #007faa; }
+        .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
+        .last-run-text {font-size: 20px; margin-left: 12px; padding-bottom: 15px; }
+
+        .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff; }
+        .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
+        {
+            background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
+        }
+        .btn {font-size: .875rem; letter-spacing: 1px; text-transform: uppercase;}
+        .btn, .btn-lg{ padding: 10px 16px; font-size:12px; line-height:1.3333; height: 35px; }
+        .btn-primary {color: #fff; background-color: #007faa; border-color: #007faa; box-shadow: 0 7px 16px 0 rgba(0,0,0,.2); }
+
+        #button-submit2 {padding-bottom: 20px; }
+        .btn-group {padding-right: 6px; }
+
     </style>
-    <!-- Body of the Home Page -->
-    <body data-aos-easing="ease-out-quad" data-aos-duration="700" data-aos-delay="0">
 
-    <!--#region Main Times Text  -->
-        <!-- TIMES MODEL PAGE
-        ================================================== -->
-        <section class="pt-4 pt-md-11">
-          <div class="container">
-            <div class="row justify-content-lg-between align-items-lg-left py-5" id="items-center">
-                <div class="col-12 col-md-4 col-lg-6 order-md-1 text-lg-left" id="text-home">
-                    <!-- Heading -->
-                    <h1 class="display-3 text-md-left">
-                       <span class="text-database">TIMES</span> Model
-                    </h1><br>
-                    <!-- Text -->
-                    <p class="lead text-secondary mb-4">
-                        <i>Last Run: 15-01-2020</i>
-                    </p><br>
-                    <div class="button-charts">
-                        <a href="{{ url_for('times_dashboard') }}" target="_blank" class="button-submit">
-                            <button class="btn btn-lg btn-primary" type="submit">Charts</button><br>
-                        </a>
-                    </div>
-                    <div class="button-charts">
-                        <a href="{{ url_for('times_overview') }}" target="_blank" class="button-submit">
-                            <button class="btn btn-lg btn-primary" type="submit">Overview</button><br>
-                        </a>
-                    </div>
+<body>
+     <div class="be-content">
+          <div class="main-content container-fluid">
+            <h2 class="overview-title"><strong><span class="overview-span">TIMES</span> Model</strong></h2>
+          </div>
 
-                </div>
-                <div class="col-12 col-md-8 col-lg-6 order-md-1">
-                    <h2 class="display-3 text-md-right">
-                        <i>Inputs</i>
-                    </h2>
-                    {% include 'times_tables.html' %}
-                </div>
-            </div>
-          </div>    <!-- / .container -->
-        </section>  <!-- / .section -->
-<!--#endregion -->
-    </body>
+          <p class="last-run-text">
+            <i>Last Run: 15-01-2020</i>
+          </p>
 
+          <div class="row">
+              <div class="col-12 col-lg-10">
+                  <div class="widget widget-fullwidth be-loading">
+                          <div class="widget-chart-container" id="widget-chart-container">
+                               <!-- Inputs Form -->
+                               <form class="center" action="" method="POST" novalidate>
+                                   {{ form.hidden_tag() }}
+                                   <div class="title-inputs-form" id="title-inputs-form"> <h2>Inputs of the Model</h2></div>
+                                   <div class="form-group">
+                                       <div class="button-toolbar d-none d-md-block">
+                                           <div class="btn-group">
+                                                {{ form.strategy_weight(class="form-control", placeholder=("Strategy Weight"))}}<br>
+                                                <!-- Display Alert Message when the strategy weight field is empty -->
+                                                {% for error in form.strategy_weight.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div><br>
+                                           <div class="btn-group">
+                                                {{ form.time_lag(class="form-control", placeholder=("Time Lag"))}}<br>
+                                                <!-- Display Alert Message when the time lag field is empty -->
+                                                {% for error in form.time_lag.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.leverage_type(class="form-control", placeholder=("Leverage Type"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.leverage_type.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.volatility_window(class="form-control", placeholder=("Volatility Window"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.volatility_window.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.sig1_short(class="form-control", placeholder=("Signal1 Short"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.sig1_short.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.sig1_long(class="form-control", placeholder=("Signal1 Long"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.sig1_long.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.sig2_short(class="form-control", placeholder=("Signal2 Short"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.sig2_short.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div><br>
+                                           <div class="btn-group">
+                                                {{ form.leverage_type(class="form-control", placeholder=("Leverage Type"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.leverage_type.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.sig2_long(class="form-control", placeholder=("Signal2 Long"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.sig2_long.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.sig3_short(class="form-control", placeholder=("Signal3 Short"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.sig3_short.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.sig3_long(class="form-control", placeholder=("Signal3 Long"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.sig3_long.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.frequency(class="form-control", placeholder=("Frequency"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.frequency.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                           <div class="btn-group">
+                                                {{ form.week_day(class="form-control", placeholder=("Week Day"))}}<br>
+                                                <!-- Display Alert Message when the leverage type field is empty -->
+                                                {% for error in form.week_day.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <span>{{ error }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                           </div>
+                                       </div>
+                                       <div class="button-submit">
+                                           <button class="btn btn-lg btn-primary" type="submit" name="submit_button_inputs" value="selectInputs" id="selectInputDatesChartSubmit1">{{ form.submit_inputs.label }}</button><br>
+                                       </div>
+                                   </div>
+                               </form>
+                          </div>
+                  </div>
+              </div>
+          </div>
+
+         <div class="row">
+             <div class="col-12 col-lg-10">
+                 <div class="widget widget-fullwidth be-loading">
+                     <div class="widget-chart-container" id="widget-chart-container1">
+                         <div class="button-submit" id="button-submit2">
+                             <button class="btn btn-lg btn-primary" type="submit" name="submit_button_times" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button><br>
+                         </div>
+                         <div class="btn-group">
+                             <a href="{{ url_for('times_dashboard') }}" target="_blank">
+                                <button class="btn btn-lg btn-primary" type="submit"><strong>Dashboard</strong></button>
+                            </a>
+                         </div>
+                         <div class="btn-group">
+                             <a href="{{ url_for('times_overview') }}" target="_blank">
+                                <button class="btn btn-lg btn-primary" type="submit"><strong>Overview</strong></button>
+                            </a>
+                         </div>
+                         <div class="btn-group">
+                             <a href="#" target="_blank">
+                                 <button class="btn btn-lg btn-primary" type="submit"><strong>Add a new version</strong></button>
+                            </a>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+         </div>
+
+
+     </div>
+</body>
 {% endblock %}
