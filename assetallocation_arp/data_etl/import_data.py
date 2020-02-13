@@ -106,3 +106,20 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     all_data = matfile_to_dataframe(file_path, model_date)
 
     return strategy_inputs, asset_inputs, all_data
+
+
+def extract_inputs_from_ui_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
+
+    if mat_file is None:
+        file_path = FILE_PATH
+
+    if model_date is None:
+        model_date = np.datetime64(datetime.today())
+
+    if input_file is None:
+        input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
+
+    asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
+    all_data = matfile_to_dataframe(file_path, model_date)
+
+    return asset_inputs, all_data
