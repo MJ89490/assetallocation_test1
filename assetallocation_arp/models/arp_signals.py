@@ -17,7 +17,6 @@ def momentum(index_data, inputs, week_day):
         sig1 = calc_int_mom_signal(column, index_data, inputs, 'sig1')
         sig2 = calc_int_mom_signal(column, index_data, inputs, 'sig2')
         sig3 = calc_int_mom_signal(column, index_data, inputs, 'sig3')
-
         sig[column] = (sig1 + sig2 + sig3) / 3
         # S-curve cutout for large movement, alternative curve w/out cutoff:sig[column]=2/(1+math.exp(-2*sig[column]))-1
         sig[column] = sig[column] * np.exp(-1 * sig[column].pow(2) / 6) / (math.sqrt(3) * math.exp(-0.5))
