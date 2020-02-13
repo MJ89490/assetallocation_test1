@@ -50,5 +50,6 @@ class InputsTimesModel(FlaskForm):
     sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
     frequency = StringField(u'Frequency', validators=[DataRequired(message="The frequency is required")])
     week_day = StringField(u'Week Day', validators=[DataRequired(message="The week day is required")])
-    submit_inputs = SubmitField('Submit Inputs')
+    submit_inputs = SubmitField('Submit Inputs and Run the Model')
+    submit_run_times_model = SubmitField('Run the model')
 

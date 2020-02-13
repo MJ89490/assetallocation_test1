@@ -85,7 +85,7 @@
         .widget.widget-fullwidth  {
                                                 padding: 20px 20px 10px;
                                                 margin-bottom: 0;
-                                                background-color: pink;
+                                                background-color: #F5F5F5;
                                                }
         .widget-head {
                                                 padding: 20px 20px 10px;
@@ -119,8 +119,11 @@
         .btn, .btn-lg{ padding: 10px 16px; font-size:12px; line-height:1.3333; height: 35px; }
         .btn-primary {color: #fff; background-color: #007faa; border-color: #007faa; box-shadow: 0 7px 16px 0 rgba(0,0,0,.2); }
 
-        #button-submit2 {padding-bottom: 20px; }
+        #button-submit2 {padding-top: 20px; }
         .btn-group {padding-right: 6px; }
+        .dropdown-menu, .dropdown-item { color: black; text-align: center;  }
+
+
 
     </style>
 
@@ -131,7 +134,7 @@
           </div>
 
           <p class="last-run-text">
-            <i>Last Run: 15-01-2020</i>
+            <i>Last Run: {{ run_date }}</i>
           </p>
 
           <div class="row">
@@ -263,8 +266,9 @@
                                            </div>
                                        </div>
                                        <div class="button-submit">
-                                           <button class="btn btn-lg btn-primary" type="submit" name="submit_button_inputs" value="selectInputs" id="selectInputDatesChartSubmit1">{{ form.submit_inputs.label }}</button><br>
+                                           <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputs" id="selectInputDatesChartSubmit1">{{ form.submit_inputs.label }}</button><br>
                                        </div>
+
                                    </div>
                                </form>
                           </div>
@@ -276,9 +280,6 @@
              <div class="col-12 col-lg-10">
                  <div class="widget widget-fullwidth be-loading">
                      <div class="widget-chart-container" id="widget-chart-container1">
-                         <div class="button-submit" id="button-submit2">
-                             <button class="btn btn-lg btn-primary" type="submit" name="submit_button_times" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button><br>
-                         </div>
                          <div class="btn-group">
                              <a href="{{ url_for('times_dashboard') }}" target="_blank">
                                 <button class="btn btn-lg btn-primary" type="submit"><strong>Dashboard</strong></button>
@@ -294,6 +295,27 @@
                                  <button class="btn btn-lg btn-primary" type="submit"><strong>Add a new version</strong></button>
                             </a>
                          </div>
+                         <div class="btn-group">
+                            <div class="dropdown">
+                              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <strong>Select a version of the model</strong>
+                              </button>
+                              <div align="center" class="dropdown-menu" type="button" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Version1</a><br>
+                                <a class="dropdown-item" href="#">Version2</a><br>
+                                <a class="dropdown-item" href="#">Version3</a>
+                              </div>
+                            </div>
+                         </div>
+
+                         <form class="center" action="" method="POST" novalidate>
+                                   {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                <div class="button-submit" id="button-submit2">
+                                     <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+                                </div>
+                            </div>
+                          </form>
                      </div>
                  </div>
              </div>

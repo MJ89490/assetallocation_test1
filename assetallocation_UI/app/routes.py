@@ -73,13 +73,22 @@ def protected_models():
 @app.route('/times_display',  methods=['GET', 'POST'])
 @login_required
 def times():
-
+    from datetime import date
     form = InputsTimesModel()
+
+    run = ['']
     if request.method == "POST":
-        if request.form['submit_button_inputs'] == 'selectInputs':
+        if request.form['submit_button'] == 'selectInputs':
             print("INPUTS INPUTS")
+        if request.form['submit_button'] == 'runTimesModel':
+            date_of_today = date.today()
+            run_date = date_of_today.strftime(("%d/%m/%Y"))
+            run.append(run_date)
+            print("run the model")
 
     return render_template('times_display.html', title="Times", form=form)
+
+    # return render_template('times_display.html', title="Times", form=form, run_date=run[0])
 
 @app.route('/times_overview')
 @login_required
