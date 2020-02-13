@@ -1,11 +1,9 @@
 import xlwings as xw
 import data_etl.import_data as gd
-import models.times as times
 import sys
 import os
-
 from assetallocation_arp.enum import models_names as models
-
+from assetallocation_arp.models import times
 
 def run_model(model_type, mat_file=None, input_file=None):
 
@@ -56,13 +54,16 @@ def write_output_to_excel(model_outputs):
 def get_inputs_from_excel():
 	# select data from excel
 
+	input_file = None
+
 	mat_file = xw.Range('rng_mat_file_path').value
 
 	model_type = xw.Range('rng_model_type').value
 
 	# run selected model
 
-	run_model(model_type, mat_file, xw.Book.caller().fullname)
+	# run_model(model_type, mat_file, xw.Book.caller().fullname)
+	run_model(model_type, mat_file, input_file)
 
 
 def get_inputs_from_python(model):
@@ -83,4 +84,5 @@ def get_input_user():
 
 
 if __name__ == "__main__":
+	# get_inputs_from_excel()
 	sys.exit(get_inputs_from_python(get_input_user()))
