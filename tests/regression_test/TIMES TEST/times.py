@@ -31,8 +31,7 @@ def signal (index):
 future = pd.read_pickle("Future data.pkl")
 index = pd.read_pickle("Data.pkl")
 series = ["S&P 500",	"Euro Stoxx 50",	"Nikkei 225",	"Hang Seng",	"Treasury",	"Gilt",	"Bund",	"Cad10",	"Yen",	"Euro",	"Aus",	"CanDollar", "Sterling"]
-
-data = pd.read_pickle("Data.pkl")
+# series = ["US Equities", "EU Equities", "JP Equities", "HK Equities", "US 10y Bonds", "UK 10y Bonds", "Eu 10y Bonds", "CA 10y Bonds", "JPY", "EUR", "AUD", "CAD", "GBP"]
 
 future = future[series]
 index = index[series]
