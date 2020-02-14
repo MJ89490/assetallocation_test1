@@ -31,7 +31,7 @@ def run_model(model_type, mat_file=None, input_file=None):
 		print(model_type)
 
 
-def run_model_from_ui(model_type, times_inputs, mat_file=None, input_file=None):
+def run_model_from_ui(model_type, times_inputs, mat_file, input_file=None):
 
 	if model_type == models.Models.times.name:
 		# get inputs from excel and matlab data
@@ -85,10 +85,10 @@ def get_inputs_from_python(model):
 		raise NameError("Your input is incorrect.")
 
 
-def get_inputs_from_flask(model_type):
+def get_inputs_from_flask(model_type, times_inputs):
 	# launch the script from UI
 	mat_file = None
-	run_model_from_ui(model_type, mat_file)
+	run_model_from_ui(model_type, times_inputs, mat_file)
 
 
 def get_input_user():
