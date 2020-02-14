@@ -14,7 +14,7 @@
 
         body {
                 padding: 0;
-                background-color: #eee;
+                background-color: #fff;
                 height: auto;
                 min-height: 100%;
                 line-height: 1.42857143;
@@ -22,7 +22,7 @@
 
         body {
                 margin: 0;
-                background-color: #eee;
+                background-color: #fff;
                 font-family: Roboto,Arial,sans-serif;
                 font-size: 1rem;
                 font-weight: 400;
@@ -85,7 +85,7 @@
         .widget.widget-fullwidth  {
                                                 padding: 20px 20px 10px;
                                                 margin-bottom: 0;
-                                                background-color: #F5F5F5;
+                                                background-color: #F8F8FF;
                                                }
         .widget-head {
                                                 padding: 20px 20px 10px;
@@ -108,7 +108,7 @@
 
         .overview-span { color: #007faa; }
         .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
-        .last-run-text {font-size: 20px; margin-left: 12px; padding-bottom: 15px; }
+        .last-run-text {font-size: 20px; margin-left: 12px; padding-bottom: 35px; }
 
         .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff; }
         .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
@@ -121,10 +121,26 @@
 
         #button-submit2 {padding-top: 20px; }
         .btn-group {padding-right: 6px; }
-        .dropdown-menu, .dropdown-item { color: black; text-align: center;  }
+        .dropdown-menu, .dropdown-item { color: black; text-align: center; }
+
+        .footer { background-color: #fff; }
+
+        .mt-auto, .my-auto {
+    margin-top: auto!important;
+}
 
 
+.pb-3, .py-3 {
+    padding-bottom: 1rem!important;
+}
 
+.pt-3, .py-3 {
+    padding-top: 1rem!important;
+}
+
+#row-2 { padding-bottom: 370px;}
+
+.text-muted {font-size: 12px; }
     </style>
 
 <body>
@@ -132,12 +148,12 @@
           <div class="main-content container-fluid">
             <h2 class="overview-title"><strong><span class="overview-span">TIMES</span> Model</strong></h2>
           </div>
-
           <p class="last-run-text">
-            <i>Last Run: {{ run_date }}</i>
+            <i>Last Run: 14/02/2020</i>
           </p>
 
           <div class="row">
+              <div class="col-12 col-lg-1"></div>
               <div class="col-12 col-lg-10">
                   <div class="widget widget-fullwidth be-loading">
                           <div class="widget-chart-container" id="widget-chart-container">
@@ -155,7 +171,7 @@
                                                         <span>{{ error }}</span>
                                                     </div>
                                                 {% endfor %}
-                                           </div><br>
+                                           </div>
                                            <div class="btn-group">
                                                 {{ form.time_lag(class="form-control", placeholder=("Time Lag"))}}<br>
                                                 <!-- Display Alert Message when the time lag field is empty -->
@@ -200,20 +216,11 @@
                                                         <span>{{ error }}</span>
                                                     </div>
                                                 {% endfor %}
-                                           </div>
+                                           </div><br>
                                            <div class="btn-group">
                                                 {{ form.sig2_short(class="form-control", placeholder=("Signal2 Short"))}}<br>
                                                 <!-- Display Alert Message when the leverage type field is empty -->
                                                 {% for error in form.sig2_short.errors %}
-                                                    <div class="alert alert-danger" role="alert">
-                                                        <span>{{ error }}</span>
-                                                    </div>
-                                                {% endfor %}
-                                           </div><br>
-                                           <div class="btn-group">
-                                                {{ form.leverage_type(class="form-control", placeholder=("Leverage Type"))}}<br>
-                                                <!-- Display Alert Message when the leverage type field is empty -->
-                                                {% for error in form.leverage_type.errors %}
                                                     <div class="alert alert-danger" role="alert">
                                                         <span>{{ error }}</span>
                                                     </div>
@@ -268,61 +275,60 @@
                                        <div class="button-submit">
                                            <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputs" id="selectInputDatesChartSubmit1">{{ form.submit_inputs.label }}</button><br>
                                        </div>
-
                                    </div>
                                </form>
                           </div>
                   </div>
               </div>
+              <div class="col-12 col-lg-1"></div>
           </div>
-
-         <div class="row">
-             <div class="col-12 col-lg-10">
+          <div class="row" id="row-2">
+              <div class="col-12 col-lg-1"></div>
+              <div class="col-12 col-lg-10">
                  <div class="widget widget-fullwidth be-loading">
                      <div class="widget-chart-container" id="widget-chart-container1">
-                         <div class="btn-group">
-                             <a href="{{ url_for('times_dashboard') }}" target="_blank">
-                                <button class="btn btn-lg btn-primary" type="submit"><strong>Dashboard</strong></button>
-                            </a>
-                         </div>
-                         <div class="btn-group">
-                             <a href="{{ url_for('times_overview') }}" target="_blank">
-                                <button class="btn btn-lg btn-primary" type="submit"><strong>Overview</strong></button>
-                            </a>
-                         </div>
-                         <div class="btn-group">
-                             <a href="#" target="_blank">
-                                 <button class="btn btn-lg btn-primary" type="submit"><strong>Add a new version</strong></button>
-                            </a>
-                         </div>
-                         <div class="btn-group">
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <strong>Select a version of the model</strong>
-                              </button>
-                              <div align="center" class="dropdown-menu" type="button" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Version1</a><br>
-                                <a class="dropdown-item" href="#">Version2</a><br>
-                                <a class="dropdown-item" href="#">Version3</a>
-                              </div>
-                            </div>
-                         </div>
-
-                         <form class="center" action="" method="POST" novalidate>
-                                   {{ form.hidden_tag() }}
-                            <div class="form-group">
-                                <div class="button-submit" id="button-submit2">
-                                     <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+                         <div class="text-center">
+                             <div class="btn-group">
+                                 <a href="{{ url_for('times_dashboard') }}" target="_blank">
+                                    <button class="btn btn-lg btn-primary" type="submit"><strong>Dashboard</strong></button>
+                                </a>
+                             </div>
+                             <div class="btn-group">
+                                 <a href="{{ url_for('times_overview') }}" target="_blank">
+                                    <button class="btn btn-lg btn-primary" type="submit"><strong>Overview</strong></button>
+                                </a>
+                             </div>
+                             <div class="btn-group">
+                                <div class="dropdown">
+                                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <strong>Select a version of the model</strong>
+                                  </button>
+                                  <div align="center" class="dropdown-menu" type="button" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Version1</a><br>
+                                    <a class="dropdown-item" href="#">Version2</a><br>
+                                    <a class="dropdown-item" href="#">Version3</a>
+                                  </div>
                                 </div>
-                            </div>
-                          </form>
+                             </div>
+                             <form class="center" action="" method="POST" novalidate>
+                                       {{ form.hidden_tag() }}
+                                <div class="form-group">
+                                    <div class="button-submit" id="button-submit2">
+                                         <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+                                    </div>
+                                </div>
+                             </form>
+                         </div>
                      </div>
                  </div>
              </div>
-
+              <div class="col-12 col-lg-1"></div>
          </div>
-
-
+          <footer class="footer mt-auto py-3" id="container-footer">
+              <div class="container" align="center">
+                  <span class="text-muted">© Legal & General 2020</span>
+              </div>
+          </footer>
      </div>
 </body>
 {% endblock %}
