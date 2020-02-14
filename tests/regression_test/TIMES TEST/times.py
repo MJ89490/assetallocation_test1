@@ -7,10 +7,11 @@ import ARP as arp
 
 # Parameters
 TIMES_LAG = 2
-settings = arp.dataimport_settings("Settings")
-
+# settings = arp.dataimport_settings("Settings")
+settings = pd.read_excel(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\regression_test\resources\settings.xls')
+settings = settings.set_index('Name')
 # Change the universe of markets that is being used
-markets="Leverage_MATR"  # All "Leverage_all_markets" / Minimalist "Leverage_min"
+markets="s_leverage"  # All "Leverage_all_markets" / Minimalist "Leverage_min"
 # Leverage/scaling of individual markets
 sleverage ="v"           #Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
 
@@ -28,16 +29,23 @@ def signal (index):
 
 
 # Import data
-future = pd.read_pickle("Future data.pkl")
-index = pd.read_pickle("Data.pkl")
-series = ["S&P 500",	"Euro Stoxx 50",	"Nikkei 225",	"Hang Seng",	"Treasury",	"Gilt",	"Bund",	"Cad10",	"Yen",	"Euro",	"Aus",	"CanDollar", "Sterling"]
+# future = pd.read_pickle("Future data.pkl")
+# index = pd.read_pickle("Data.pkl")
+future = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\regression_test\resources\futures_data.csv')
+date_timestamp_future = pd.to_datetime(future['Date'])
+future = future.set_index(date_timestamp_future)
+index = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\tests\regression_test\resources\data.csv')
+date_timestamp_index = pd.to_datetime(index['Date'])
+index = index.set_index(date_timestamp_index)
+del index['Date']
+# series = ["S&P 500",	"Euro Stoxx 50",	"Nikkei 225",	"Hang Seng",	"Treasury",	"Gilt",	"Bund",	"Cad10",	"Yen",	"Euro",	"Aus",	"CanDollar", "Sterling"]
 # series = ["US Equities", "EU Equities", "JP Equities", "HK Equities", "US 10y Bonds", "UK 10y Bonds", "Eu 10y Bonds", "CA 10y Bonds", "JPY", "EUR", "AUD", "CAD", "GBP"]
 
-future = future[series]
-index = index[series]
- 
+# future = future[series]
+# index = index[series]
+
 sig = signal(index)
-costs = settings.loc["Costs"]
+costs = settings.loc["costs"]
 marketselect = settings.loc[markets]
 
 if sleverage == 'e' or sleverage == 's':
@@ -50,7 +58,7 @@ elif sleverage == 'v':
 else:
     raise Exception('Invalid entry')
 leverage[marketselect.index[marketselect.isnull()]] = np.nan
-leverage = leverage.shift(periods=TIMES_LAG, freq='D', axis=0).reindex(future.append(pd.DataFrame(index=future.iloc[[-1]].index+BDay(2))).index,method='pad')
+leverage = leverage.shift(periods=TIMES_LAG, freq='D', axis=0).reindex(future.append(pd.DataFrame(index=future.iloc[[-1]].index+BDay(2))).index, method='pad')
 
 if sleverage == 's':
     (ret, R, positioning) = arp.returnTS(sig, future, leverage, 0*costs, 0)
@@ -61,10 +69,10 @@ else:
     (ret, R, positioning) = arp.returnTS(sig, future, leverage, 0*costs, 1)
     (ret1, R1, positioning1) = arp.rescale(ret, R, positioning, "Total", 0.01)
 
-    # import data to csv files
-    ret1.to_csv('ret1_old', encoding='utf-8', index=False)
-    R1.to_csv('R1_old', encoding='utf-8', index=False)
-    positioning1.to_csv('positioning1_old', encoding='utf-8', index=False)
-    sig.to_csv('signals_old', encoding='utf-8', index=False)
+    # # import data to csv files
+    # ret1.to_csv('ret1_old', encoding='utf-8', index=False)
+    # R1.to_csv('R1_old', encoding='utf-8', index=False)
+    # positioning1.to_csv('positioning1_old', encoding='utf-8', index=False)
+    # sig.to_csv('signals_old', encoding='utf-8', index=False)
 
 
