@@ -7,11 +7,18 @@
     .dropdown-item{color: #333; font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
     .dropdown-menu a:hover{font-weight: bold !important; color:black !important;}
     .dropdown-menu .dropdown-item{text-decoration:none; border-bottom:none;}
+
+    .footer { background-color: #fff; }
+    .mt-auto, .my-auto { margin-top: auto!important; }
+    .pb-3, .py-3 { padding-bottom: 1rem!important; }
+    .pt-3, .py-3 { padding-top: 1rem!important; }
+    .text-muted {font-size: 12px; }
+    #row-1 { padding-top: 100px; padding-bottom: 870px; font-size: 11px; }}
 </style>
 
  <body>
     <div class="container">
-        <div class="row" style="height: 100px;">
+        <div class="row" style="height: 100px;" id="row-1">
             <div class="col-sm-4"></div>
             <div class="col-sm-4 my-1">
                 <div class="text-center">
@@ -36,13 +43,16 @@
                         </div>
                     <br>
                     <br>
-                    <div class="text">
-                        <p class="mt-5 mb-3 text-muted">© Legal & General 2020</p>
-                    </div>
                 </div>
             </div>
-        </div>
             <div class="col-sm-4"></div>
+        </div>
+        <footer class="footer mt-auto py-3" id="container-footer">
+            <div class="container" align="center">
+                <span class="text-muted">© Legal & General 2020</span>
+            </div>
+        </footer>
+
     </div>
 <body>
 {% endblock %}
