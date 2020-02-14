@@ -4,6 +4,14 @@
     <!-- Style of the Home Page -->
     <style type="text/css">
             .text-database { color: #007faa; }
+            #section-1 {padding-bottom: 100px; }
+            #container1 {padding-bottom: 100px; }
+            .footer { background-color: #fff; }
+            .mt-auto, .my-auto { margin-top: auto!important; }
+            .pb-3, .py-3 { padding-bottom: 1rem!important; }
+            .pt-3, .py-3 { padding-top: 1rem!important; }
+            .text-muted {font-size: 12px; }
+            #row1 {padding-bottom: 250px; }
             .link-model {color: #333;}
             .link-model:visited {color: #333; text-decoration: none; outline: none;}
             .link-model:hover {color: #333;}
@@ -20,11 +28,10 @@
 
     <!-- Body of the Home Page -->
     <body data-aos-easing="ease-out-quad" data-aos-duration="700" data-aos-delay="0">
-
     <!--#region Main Home Text  -->
         <!-- ASSET ALLOCATION HOME PAGE
         ================================================== -->
-        <section class="pt-4 pt-md-11">
+        <section class="pt-4 pt-md-11" id="section-1">
           <div class="container">
             <div class="row justify-content-lg-between align-items-lg-center py-5" id="items-center">
                 <div class="col-12 col-md-7 col-lg-8 order-md-1 text-center text-lg-left" id="text-home">
@@ -72,27 +79,16 @@
             </div>
           </div>    <!-- / .container -->
         </section>  <!-- / .section -->
-<!--#endregion -->
-
+    <!--#endregion -->
 
     <!--#region Display all the available models  -->
-
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
         <section class="py-8 py-md-11 border-bottom">
           <div class="container">
-            <div class="row">
-
+              <div class="row" id="row1">
                 <!--#region Times Model -->
               <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up">
                     <!-- Icon -->
                     {% include 'modelsIcons.html' %}
-
                     <!-- Heading -->
                     <h3>
                         <a class="link-model" href="#" data-toggle="modal" data-target="#TimesModal">Times Model</a>
@@ -124,7 +120,6 @@
                 <!--#endregion -->
 
                 <!--#region Effect Model -->
-
               <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
                     <!-- Icon -->
                     {% include 'modelsIcons.html' %}
@@ -235,16 +230,14 @@
 
 
             </div>  <!-- / .row -->
+              <div class="row" id="row2">
+                  <footer class="footer mt-auto py-3" id="container-footer">
+                      <div class="container" align="center">
+                          <span class="text-muted">© Legal & General 2020</span>
+                      </div>
+                  </footer>
+              </div>
           </div>    <!-- / .container -->
         </section>  <!-- / .section -->
-        <footer class="site-footer mt-5">
-            <div class="container">
-                <hr class="m-0" role="presentation">
-                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-center mt-4">
-                    <p class="small text-muted">© Legal & General 2020</p>
-                </div>
-            </div>
-        </footer>       <!-- / .footer -->
     </body>         <!-- / .body -->
-
 {% endblock %}
