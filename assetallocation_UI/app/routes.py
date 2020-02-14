@@ -1,5 +1,7 @@
 # Contains view functions for various URLs
 import pandas as pd
+from assetallocation_arp.arp_strategies import get_inputs_from_flask
+from assetallocation_arp.enum import models_names
 from flask import render_template
 from flask import flash
 from flask import url_for
@@ -76,42 +78,41 @@ def protected_models():
 def times():
     form = InputsTimesModel()
 
+    global STRATEGY
     if request.method == "POST":
         if request.form['submit_button'] == 'selectInputs':
             data = {
-                    form.time_lag.name: form.time_lag.data,
-                    form.leverage_type.name: form.leverage_type.data,
-                    form.volatility_window.name: form.volatility_window.data,
-                    form.sig1_short.name: form.sig1_short.data,
-                    form.sig1_long.name: form.sig1_long.data,
-                    form.sig2_short.name: form.sig2_short.data,
-                    form.sig2_long.name: form.sig2_long.data,
-                    form.sig3_short.name: form.sig3_short.data,
-                    form.sig3_long.name: form.sig3_long.data,
-                    form.frequency.name: form.frequency.data,
-                    form.week_day.name: form.week_day.data
+                    form.time_lag.name: [int(form.time_lag.data)],
+                    form.leverage_type.name: [form.leverage_type.data],
+                    form.volatility_window.name: [int(form.volatility_window.data)],
+                    form.sig1_short.name: [int(form.sig1_short.data)],
+                    form.sig1_long.name: [int(form.sig1_long.data)],
+                    form.sig2_short.name: [int(form.sig2_short.data)],
+                    form.sig2_long.name: [int(form.sig2_long.data)],
+                    form.sig3_short.name: [int(form.sig3_short.data)],
+                    form.sig3_long.name: [int(form.sig3_long.data)],
+                    form.frequency.name: [form.frequency.data],
+                    form.week_day.name: [form.week_day.data]
                   }
-
             strategy_inputs = pd.DataFrame(data, columns=[form.time_lag.name,
                                                           form.leverage_type.name,
                                                           form.volatility_window.name,
                                                           form.sig1_short.name,
-                                                          form.sig1_long.name
+                                                          form.sig1_long.name,
                                                           form.sig2_short.name,
                                                           form.sig2_long.name,
                                                           form.sig3_short.name,
                                                           form.sig3_long.name,
                                                           form.frequency.name,
                                                           form.week_day.name
-                                                        ])
+                                                         ])
+            STRATEGY = strategy_inputs
 
-            print("INPUTS INPUTS", form.time_lag.name)
         if request.form['submit_button'] == 'runTimesModel':
-            print("run the model")
+            get_inputs_from_flask(model_type=models_names.Models.times.name, times_inputs=STRATEGY)
 
     return render_template('times_display.html', title="Times", form=form)
 
-    # return render_template('times_display.html', title="Times", form=form, run_date=run[0])
 
 @app.route('/times_overview')
 @login_required
