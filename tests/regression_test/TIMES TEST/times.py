@@ -145,7 +145,7 @@ if __name__ == "__main__":
                                                                            costs=data_costs,
                                                                            leverage_data=leverage)
 
-        user = input("Would you like to write the results in csv (O or N) ?  ")
+        user = input("Would you like to write the results in csv for leverage %s (O or N) ?  " % model)
 
         if user.lower() == "o":
             write_data_to_csv = WriteDataToCsv()
