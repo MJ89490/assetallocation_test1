@@ -1,3 +1,9 @@
+"""
+Created on 17/02/2020
+Author: AJ89720
+email: Anais.Jeremie@lgim.com
+"""
+
 import os
 
 import pandas as pd
