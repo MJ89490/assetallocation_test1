@@ -78,16 +78,16 @@ class WriteDataToCsv(DataTimes):
     def import_data_to_csv(leverage_name, returns, r, positioning, signals):
 
         returns_path = os.path.abspath(os.path.join(CURRENT_PATH, "..", "regression_test", "resources", "ret1_new_"))
-        returns.to_csv(f'{returns_path + leverage_name}', encoding='utf-8', index=False)
+        returns.to_csv(f'{returns_path + leverage_name }', sep='\t', encoding='utf-8')
 
         r_path = os.path.abspath(os.path.join(CURRENT_PATH, "..", "regression_test", "resources", "R1_new_"))
-        r.to_csv(f'{r_path + leverage_name}', encoding='utf-8', index=False)
+        r.to_csv(f'{r_path + leverage_name}', sep='\t', encoding='utf-8')
 
         positioning_path = os.path.abspath(os.path.join(CURRENT_PATH, "..", "regression_test", "resources", "positioning_new_"))
-        positioning.to_csv(f'{positioning_path + leverage_name}', encoding='utf-8', index=False)
+        positioning.to_csv(f'{positioning_path + leverage_name}', sep='\t', encoding='utf-8')
 
         signals_path = os.path.abspath(os.path.join(CURRENT_PATH, "..", "regression_test", "resources", "signals_new_"))
-        signals.to_csv(f'{signals_path + leverage_name}', encoding='utf-8', index=False)
+        signals.to_csv(f'{signals_path + leverage_name}', sep='\t', encoding='utf-8')
 
 
 if __name__ == "__main__":
