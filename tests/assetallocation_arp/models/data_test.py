@@ -61,9 +61,9 @@ class DataTest:
         The function gets the different required data for the times model by using the extract_inputs_and_mat_data
         """
         not_needed_for_test, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type=models.Models.times.name,
-                                                                                             mat_file=None,
-                                                                                             input_file=INPUT_FILE,
-                                                                                             model_date=None)
+                                                                                               mat_file=None,
+                                                                                               input_file=INPUT_FILE,
+                                                                                               model_date=None)
 
         leverage_file_name = f'times_inputs_{self.leverage}_leverage'
         strategy_inputs_expected = os.path.abspath(os.path.join(CURRENT_PATH, "resources", leverage_file_name))
