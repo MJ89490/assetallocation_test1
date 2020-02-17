@@ -1,119 +1,108 @@
+"""
+Created on Fri Nov  8 17:27:51 2019
+DATA IMPORT
+@author: SN69248
+"""
+
+import scipy.io as spio
 import pandas as pd
-import assetallocation_arp.models.ARP as arp
+import openpyxl
+import os
+import numpy as np
+from datetime import datetime
 
-def dataimport_future (file):
-    data=pd.read_excel(file+".xlsx",sheet_name="Data", index_col=[0], header=3,skiprows=[4,5,6,7])
-    data.index = pd.to_datetime(data.index, format='%d.%m.%Y %H:%M:%S')
-    data["SterlingEUR"]=(1+data["Sterling"])/(1+data["Euro"])-1
-    data["SkronaEUR"]=(1+data["Skrona"])/(1+data["Euro"])-1
-    data["NokronaEUR"]=(1+data["Nokrona"])/(1+data["Euro"])-1
-    data["SwissFrancEUR"]=(1+data["SwissFranc"])/(1+data["Euro"])-1 
-    return data
+#Comments: may be we should the structure of the import data when we will have the database
+#          we are not going to use the matlab file but grab the data from the database directly
+#          it might be a good idea to create classes?
 
-def dataimport_index (file):
-    data=pd.read_excel(file+".xlsx",sheet_name="Data1", index_col=None, header=1,skiprows=[2,3,4],usecols=[0]+list(range(1,60,4)))
-    data2=pd.read_excel(file+".xlsx",sheet_name="Data2", index_col=None, header=1,skiprows=[2,3,4],usecols=list(range(0,64,4)))
-    data3=pd.read_excel(file+".xlsx",sheet_name="Data3", index_col=None, header=1,skiprows=[2,3,4],usecols=list(range(0,60,4)))
-    data=pd.concat([data, data2, data3], axis=1)
-    data.index = pd.to_datetime(data['Index'], format='%Y-%m-%d')
-    data=data.drop('Index',axis=1)
-    data["SterlingEUR"]=data["Sterling"]/data["Euro"]
-    data["SkronaEUR"]=data["Skrona"]/1+data["Euro"]
-    data["NokronaEUR"]=data["Nokrona"]/data["Euro"]
-    data["SwissFrancEUR"]=data["SwissFranc"]/data["Euro"]
-    return data
+FILE_PATH = r'\\Inv\lgim\FrontOffice\Structured Products\Solutions Group\SIRM\Shared\Simone\Python\Data\matlabData.mat'
 
-def dataimport_CARRY (file):
-    data=pd.read_excel(file+".xlsx",sheet_name="Data1", index_col=None, header=1,skiprows=[2,3,4],usecols=[0]+list(range(3,60,4)))
-    data2=pd.read_excel(file+".xlsx",sheet_name="Data2", index_col=None, header=1,skiprows=[2,3,4],usecols=list(range(2,64,4)))
-    data3=pd.read_excel(file+".xlsx",sheet_name="Data3", index_col=None, header=1,skiprows=[2,3,4],usecols=list(range(2,60,4)))
-    data=pd.concat([data, data2, data3], axis=1)
-    data.index  = pd.to_datetime(data['Index'], format='%Y-%m-%d')
-    data=data.drop('Index',axis=1)
-    data.columns=[x[:-2] for x in data.columns]
-    return data
 
-def dataimport_VALUE (file):
-    data=pd.read_excel(file+".xlsx",sheet_name="Data1", index_col=None, header=1,skiprows=[2,3,4],usecols=[0]+list(range(4,60,4)))
-    data2=pd.read_excel(file+".xlsx",sheet_name="Data2", index_col=None, header=1,skiprows=[2,3,4],usecols=list(range(3,64,4)))
-    data3=pd.read_excel(file+".xlsx",sheet_name="Data3", index_col=None, header=1,skiprows=[2,3,4],usecols=list(range(3,60,4)))
-    data=pd.concat([data, data2, data3], axis=1)
-    data.index = pd.to_datetime(data['Index'], format='%Y-%m-%d')
-    data=data.drop('Index',axis=1)
-    data.columns=[x[:-2] for x in data.columns]
-    return data
+def matfile_to_dataframe(file_path, model_date):
+    """ Reads Matlab file and formats data into dataframe"""
+    mat_file_data = spio.loadmat(file_path)
 
-def dataimport_FICarry (file,market):
-    data=pd.read_excel(file+".xlsx",sheet_name=market, index_col=None, header=12,skiprows=[13])
-    data.index = pd.to_datetime(data['Index'], format='%Y-%m-%d')
-    data=data.drop('Index',axis=1)
-    return data
+    mat_dates = pd.DataFrame(mat_file_data['dates'])
+    mat_dates = mat_dates.iloc[:, 0].apply(lambda x: datetime.fromordinal(datetime(1900, 1, 1).toordinal() + x - 2))
+    mat_dates = pd.DataFrame({'Date': mat_dates})
 
-def dataimport_FR (file):
-    data=pd.read_excel(file+".xlsx",sheet_name="Sheet1", index_col=[0], header=0)
-    data.index = pd.to_datetime(data.index, format='%d.%m.%Y %H:%M:%S')
-    return data
+    mat_series_names = mat_file_data['updatedInstruments']
+    mat_series_names = pd.DataFrame(mat_series_names)
+    mat_series_names = mat_series_names.iloc[:, 2].str.get(0)
+    mat_series_names = mat_series_names.tolist()
+    mat_series_names = mat_series_names[1:]
 
-def datacheck (future,file,diff):
-    # Check missing data and repeated numbers for last 20 days
-    print("Missing data")
-    print("**********************************")
-    test=future.iloc[-15:]
-    for column in test:
-        if len(test[test[column].isnull()][column])>0:
-                print(test[test[column].isnull()][column])
-    print("")
-    print("Stale data") 
-    print("**********************************")
-    test=future-future.diff(periods=1)[-15:]
-    for column in test:
-        if len(test[(test[column]==0)][column])>0:
-            print(test[(test[column]==0)][column])
-    print("")    
-    
-    # Check for outliers (>2 stdev)
-    print("Outliers")
-    print("**********************************")
-    if diff:
-        test=test.diff(periods=1)
+    mat_data = pd.DataFrame(mat_file_data['dataTable'])
+    mat_data.columns = mat_series_names
+    mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
+    mat_dataframe.set_index('Date', inplace=True)
+
+    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
+    mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date]  # remove data after selected date
+    return mat_dataframe
+
+
+def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
+    """ Get a single rectangular region from the specified file.
+    range_name can be a standard Excel reference ('Sheet1!A2:B7') or
+    refer to a named region ('my_cells')."""
+    wb = openpyxl.load_workbook(xlsx_file, data_only=True, read_only=True)
+    if '!' in range_name:
+        # passed a worksheet!cell reference
+        ws_name, reg = range_name.split('!')
+        if ws_name.startswith("'") and ws_name.endswith("'"):
+            # optionally strip single quotes around sheet name
+            ws_name = ws_name[1:-1]
+        region = wb[ws_name][reg]
     else:
-        test=future
-    test=test.iloc[-15:]/test.std(axis=0)
-    test=test[((test<-2) | (test>2))]
-    for column in test:
-        if len(test[test[column].notnull()][column])>0:
-            print(test[test[column].notnull()][column])
-    print("")
-    
-    # Check for data revisions (>0.5stdev compared to historic data)
-    print("Data revisions")
-    print("**********************************")
-    test=pd.read_pickle(file+".pkl")
-    test=(test-future)/future.std(axis=0)
-    test=test[((test<-0.2) | (test>0.2))]
-    for column in test:
-        if len(test[test[column].notnull()][column])>0:
-            print(test[test[column].notnull()][column])
+        # passed a named range; find the cells in the workbook
+        full_range = wb.defined_names[range_name]
+        if full_range is None:
+            raise ValueError(
+                'Range "{}" not found in workbook "{}".'.format(range_name, xlsx_file)
+            )
+        # convert to list
+        destinations = list(full_range.destinations)
+        if len(destinations) > 1:
+            raise ValueError(
+                'Range "{}" in workbook "{}" contains more than one region.'
+                    .format(range_name, xlsx_file)
+            )
+        ws, reg = destinations[0]
+        # convert to worksheet object
+        if isinstance(ws, str):
+            ws = wb[ws]
+        region = ws[reg]
+    df = pd.DataFrame([cell.value for cell in row] for row in region)
+
+    if hascolnames == 1:
+        # make first row as column names
+        df.columns = df.iloc[0]
+        df = df.drop([0], axis=0)
+    wb.close()
+    return df
 
 
-future=dataimport_future("Future data")
-datacheck(future,"Future data",False)
-accept_data = input('Accept updated data? (y/n): ')
-if accept_data=='y':
-    future.to_pickle("Future data.pkl")
-    print('Future data imported')
-else:
-    print('Future data NOT imported')
+def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
-index=dataimport_index("Data")
-datacheck(index,"Data",True)
-accept_data = input('Accept updated data? (y/n): ')
-if accept_data=='y':
-    index.to_pickle("Data.pkl")
-    print('Index data imported')
-else:
-    print('Index data NOT imported')
-    
-settings=arp.dataimport_settings("Settings")
-#settings.to_pickle("Settings.pkl")
+    if mat_file is None:
+        file_path = FILE_PATH
+    else:
+        file_path = mat_file
 
+    if input_file is None:
+        input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
+    else:
+        input_path = input_file
+
+    if model_date is None:
+        model_date = np.datetime64(datetime.today())
+    else:
+        model_date = model_date
+
+    # load data and inputs
+    strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
+    asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
+    all_data = matfile_to_dataframe(file_path, model_date)
+
+    return strategy_inputs, asset_inputs, all_data
