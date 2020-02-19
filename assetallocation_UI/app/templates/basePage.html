@@ -3,21 +3,31 @@
 {% block navbar %}
     <style type="text/css">
          body{font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
-        .navbar{margin-bottom:50px; background-color:#007faa; border-color:#007faa;}
+
+         .be-top-header{background-color:#007faa; border-color:#007faa;  }
+         .be-top-header {padding-bottom: 0.1rem;  line-height: 1em;}
+         .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030; }
+
+
+
+
+        .navbar{margin-bottom:50px; background-color:#007faa; border-color:#007faa; }
         .navbar-inverse .navbar-brand{color:#fff}
         .navbar-inverse .navbar-toggle collapsed .navbar-right{float:right;}
-        .navbar {padding-top: 0.1rem; padding-bottom: 0.1rem; line-height: 1em;}
-        #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa; font-weight: bold; font-size: 1.25em}
-        #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16px; text-decoration:none; border-bottom:3px solid transparent;}
-        #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:3px solid #fff;}
-        <!--#navbar1 .logo .navbar-left img, #navbar1 .logo .navbar-left img svg {width="62";height="auto"}-->
-        <!--img{max-width:100%;}-->
+        .navbar {padding-top: 0.1rem; padding-bottom: 0.1rem; line-height: 1em; height: 85px; }
+        #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa; font-weight: bold; font-size: 1.20em; }
+        #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent;}
+        #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:2px solid #fff; }
+
+
+
     </style>
 
     <body class="home-page">
     <!-- Navbar
          ===================================== !-->
-        <nav class="navbar navbar-inverse navbar-static-top" role="navigation" id="navbar1">
+
+        <nav class="navbar navbar-inverse fixed-top be-top-header" role="navigation" id="navbar1">
                 <div class="container-fluid">
                     <div class="navbar-header" style="padding-left: 15px">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -28,7 +38,7 @@
                     </div>
                     <div class="collapse navbar-collapse pull-left">
                         <a href="{{ url_for('home') }}">
-                            <img width="auto" height="auto"  alt="Legal and General" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+                            <img width="90px" height="auto" id="icon-lgim" alt="Legal and General" src="/static/icon-lgim.png">
                         </a>
                     </div>
                     <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
@@ -56,7 +66,9 @@
         {% block content %}
             <style type="text/css">
                  body{font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif; background-color: #fff }
+
                 .text p {text-align: center; }
+
                 .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff}
                 .btn-pill {border-radius: 10rem;}
                 .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
@@ -76,6 +88,17 @@
                 }
                 .btn-secondary {color: #fff; background-color: #007faa; border-color: #007faa;
                               box-shadow: 0 7px 16px 0 rgba(0,0,0,.2);}
+
+                .dropdown-menu{width:100%; text-align:center;}
+                .dropdown-item{color: #333; font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
+                .dropdown-menu a:hover{font-weight: bold !important; color:black !important;}
+                .dropdown-menu .dropdown-item{text-decoration:none; border-bottom:none;}
+
+                .footer { background-color: #fff; }
+                .mt-auto, .my-auto { margin-top: auto!important; }
+                .pb-3, .py-3 { padding-bottom: 1rem!important; }
+                .pt-3, .py-3 { padding-top: 1rem!important; }
+                .text-muted {font-size: 12px; }
             </style>
 
             <div class="main-login-wtf">

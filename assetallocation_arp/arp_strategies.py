@@ -31,7 +31,7 @@ def run_model(model_type, mat_file=None, input_file=None):
 		print(model_type)
 
 
-def run_model_from_ui(model_type, times_inputs, mat_file, input_file=None):
+def run_model_from_ui(path_excel_times, model_type, times_inputs, mat_file, input_file=None):
 
 	if model_type == models.Models.times.name:
 		# get inputs from excel and matlab data
@@ -39,15 +39,18 @@ def run_model_from_ui(model_type, times_inputs, mat_file, input_file=None):
 		# run strategy
 		signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
 		# write results to output sheet
-		write_output_to_excel({models.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
+		write_output_to_excel({models.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, path_excel_times=path_excel_times)
 
 
-def write_output_to_excel(model_outputs):
+def write_output_to_excel(model_outputs, path_excel_times):
 
 	if models.Models.times.name in model_outputs.keys():
+
 		asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models.Models.times.name]
 		path = os.path.join(os.path.dirname(__file__), "times_model.xls")
+
 		wb = xw.Book(path)
+
 		sheet_times_output = wb.sheets['output']
 		sheet_times_input = wb.sheets['input']
 
@@ -63,7 +66,10 @@ def write_output_to_excel(model_outputs):
 		sheet_times_input.range('rng_inputs_used').value = asset_inputs
 		sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
 
-
+		app = xw.apps.active
+		wb.save(path=path_excel_times)
+		# wb.close()
+		app.quit()
 def get_inputs_from_excel():
 	# select data from excel
 	mat_file = xw.Range('rng_mat_file_path').value
@@ -85,10 +91,10 @@ def get_inputs_from_python(model):
 		raise NameError("Your input is incorrect.")
 
 
-def get_inputs_from_flask(model_type, times_inputs):
+def get_inputs_from_flask(model_type, times_inputs, path_excel):
 	# launch the script from UI
 	mat_file = None
-	run_model_from_ui(model_type, times_inputs, mat_file)
+	run_model_from_ui(model_type=model_type, times_inputs=times_inputs, mat_file=mat_file, path_excel_times=path_excel)
 
 
 def get_input_user():

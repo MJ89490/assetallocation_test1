@@ -8,22 +8,6 @@ from wtforms.validators import DataRequired
 User login form
 """
 
-DATES_CHOICES = [('Start Date', 'Start Date'),
-                 ('30/05/2019', '30/05/2019'),
-                 ('06/06/2019', '06/06/2019'),
-                 ('13/06/2019', '13/06/2019'),
-                 ('20/06/2019', '20/06/2019'),
-                 ('27/06/2019', '27/06/2019')
-                ]
-DATES_END_CHOICES = [('End Date', 'End Date'),
-                 ('30/05/2019', '30/05/2019'),
-                 ('06/06/2019', '06/06/2019'),
-                 ('13/06/2019', '13/06/2019'),
-                 ('20/06/2019', '20/06/2019'),
-                 ('27/06/2019', '27/06/2019')
-                ]
-
-
 class LoginForm(FlaskForm):
     username = StringField(u'Username', validators=[DataRequired(message="The username is required")])
     password = PasswordField(u'Password', validators=[DataRequired(message="The password is required")])
@@ -37,16 +21,6 @@ class ExportDataForm(FlaskForm):
 
     start_date_inputs = StringField(u'Start Date', validators=[DataRequired(message="The username is required")])
     end_date_inputs = StringField(u'End Date', validators=[DataRequired(message="The username is required")])
-
-    # if inputs == 'TIMES Signals':
-    #     start_date_inputs = SelectField('Start Date', choices=signals_date_field)
-    #     end_date_inputs = SelectField('End Date', choices=signals_date_field)
-    # elif inputs == 'TIMES Returns':
-    #     start_date_inputs = SelectField('Start Date', choices=returns_date_field)
-    #     end_date_inputs = SelectField('End Date', choices=returns_date_field)
-    # else:
-    #     start_date_inputs = SelectField('Start Date', choices=positions_date_field)
-    #     end_date_inputs = SelectField('End Date', choices=positions_date_field)
 
     start_date_chart0 = StringField(u'Start Date')
     end_date_chart0 = StringField(u'End Date')
@@ -69,12 +43,10 @@ class ExportDataForm(FlaskForm):
     start_date_chart6 = StringField(u'Start Date')
     end_date_chart6 = StringField(u'End Date')
 
-    start_date = SelectField('Start Date', choices=DATES_CHOICES)
-    start_date_chart = SelectField('Start Date', choices=DATES_CHOICES)
-    end_date = SelectField('Start Date', choices=DATES_CHOICES)
     submit_export = SubmitField('Export Data')
     submit_dates_chart = SubmitField('Ok')
     submit1 = SubmitField('ok')
+
 
 class InputsTimesModel(FlaskForm):
     strategy_weight = StringField(u'Strategy Weight', [DataRequired(message="The strategy weight is required")])
@@ -89,6 +61,8 @@ class InputsTimesModel(FlaskForm):
     sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
     frequency = StringField(u'Frequency', validators=[DataRequired(message="The frequency is required")])
     week_day = StringField(u'Week Day', validators=[DataRequired(message="The week day is required")])
+    path_save_output_times = StringField(u'Path of the Outputs')
+    name_file_times = StringField(u'Name of the File')
     submit_inputs = SubmitField('Submit Inputs to the Database')
 
 

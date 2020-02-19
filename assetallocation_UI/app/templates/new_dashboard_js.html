@@ -20,6 +20,7 @@
 
     body {
         padding: 0;
+        font-family: Merriweather,serif;
         background-color: #eee;
         height: auto;
         min-height: 100%;
@@ -29,25 +30,23 @@
     body {
         margin: 0;
          background-color: #eee;
-        font-family: Roboto,Arial,sans-serif;
-        font-size: 1rem;
-        font-weight: 400;
+        font-family: Merriweather,serif;
+        font-size: 4.5 rem;
+        font-weight: 300;
         color: #404040;
         text-align: left;
+        display: block;
     }
 
-body {
-    display: block;}
 
-     .be-wrapper { min-height: 100%; padding-top: 61px;}
+    .be-wrapper { min-height: 100%; padding-top: 61px;}
      div {display: block;}
 
-
-.flex-column, body, .card--summary__theme-action, .hero, .profile__hero {
-    -webkit-box-orient: vertical !important;
-    -webkit-box-direction: normal !important;
-    flex-direction: column !important;
-}
+    .flex-column, body, .card--summary__theme-action, .hero, .profile__hero {
+        -webkit-box-orient: vertical !important;
+        -webkit-box-direction: normal !important;
+        flex-direction: column !important;
+    }
 
 .d-flex, .nav-preview .nav-link, body, .list-dotted, .card--summary__item, .card--summary__theme-action, .card--summary__theme-description, .card--summary__footer, .card--table .card__item, .theme-card--xl .theme-card__footer, .theme-cards__heading, .rating, .hero, .profile__hero, .profile-author, .feature-screenshot__overlay, .theme-description__list__item, .theme-review__heading, .theme-purchases__item, .upload-image__cover__overlay, .stat__title {
     display: flex !important;
@@ -65,13 +64,12 @@ body {
 article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, section {
     display: block;
 }
-        body {padding: 0; background-color: #eee;height: auto;min-height: 100%;line-height: 1.42857143;}
-        body {margin:0; font-family: Roboto,Arial,sans-serif; color:#404040; display: block; }
+
 
 
         .be-top-header{padding: 0; margin: 0; margin-bottom:0; background-color: #007faa; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #007faa;  }
         .be-top-header {padding-bottom: 0.1rem; line-height: 1em;}
-        .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030;}
+        .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030; height: 85px;}
 
         .be-fixed-sidebar .be-left-sidebar {height: 100%; margin-top: 61px; padding-bottom: 61px; position: fixed; top: 0; bottom: 0; z-index: 1029;}
 
@@ -125,21 +123,9 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
             width: 200px;
         }
 
-        <!--.be-left-sidebar .sidebar-elements>li ul li>a {-->
-            <!--padding: 20px 6px 28px 4px;-->
-            <!--color: #696969;-->
-            <!--font-size: 11px;-->
-            <!--display: block;-->
-            <!--text-overflow: ellipsis;-->
-            <!--overflow: hidden;-->
-            <!--white-space: nowrap;-->
-            <!--text-decoration: none;-->
-            <!--font-weight: bold;-->
-        <!--}-->
-
         .be-content {position: relative; left: 0; margin-left: 230px; min-height: 100%;}
 
-        .main-content {padding: 25px;}
+        .main-content {padding-top: 50px;}
 
         .main-content .dashboard-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
 
@@ -159,8 +145,6 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
             margin-right: -15px;
             margin-left: -15px;
             }
-
-
 
 
        @media (min-width: 1200px)
@@ -373,9 +357,14 @@ table {
  #selectInputDatesChartSubmit7 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
  #selectionStartDateChart, #selectionEndDateChart {background-color: #fff; border-color: #696969; color: #696969; }
 
+  #footer-dashboard-title {font-size: 12px;}
 
-    #footer-dashboard-title {font-size: 12px;}
+  #icon-lgim {padding-left: 25px; padding-top: 5px; }
 
+  #container-footer{ background-color: #eee; padding-left: 210px;  }
+
+  .overview-span { color: #007faa; }
+<!--https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg-->
 </style>
 
 <body>
@@ -386,7 +375,7 @@ table {
                 <!-- Navbar
                 ===================================== !-->
                 <nav class="navbar navbar-inverse fixed-top be-top-header">
-                <img width="80px" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+                <a><img width="110px" height="auto" id="icon-lgim" src="static/icon-lgim.png"></a>
                 </nav>
                 <!-- Sidebar
                 ===================================== !-->
@@ -401,7 +390,7 @@ table {
                                                   <a href="{{ url_for('home') }}"><span>Home</span></a><br><br>
                                                   <a><span>Export Data</span></a><br><br><br>
                                                     <ul class="sub-menu">
-                                                        <div class="text-center">
+                                                        <div class="text-left">
                                                             <!-- If the user write wrong dates, then a message will be displayed -->
                                                             {% for message in get_flashed_messages() %}
                                                                 <p>{{ message }}</p>
@@ -440,15 +429,14 @@ table {
                 ===================================== !-->
                 <div class="be-content">
                     <div class="main-content container-fluid">
-                        <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"> <strong>Dashboard</strong></h2><br>
+                        <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2><br>
                         <div class="row">
                             <div class="col-md-12">
                               <div class="widget widget-fullwidth be-loading">
                                 <div class="widget-head">
                                     <div class="dates">
                                         <!-- If the user write wrong dates, then a message will be displayed -->
-
-                                        {% if m == "boubou" %}
+                                        {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
                                             <p>{{ m }}</p>
                                         {% endif %}
                                         <!--Date Form -->
@@ -608,7 +596,7 @@ table {
                                 <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                                {% if m == "boubou2" %}
+                                                {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
                                                     <p>{{ m }}</p>
                                                 {% endif %}
                                                 <!-- If the user write wrong dates, then a message will be displayed -->
@@ -669,13 +657,9 @@ table {
                                         <div class="widget-head">
                                             <div class="dates">
                                                 <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% with messages = get_flashed_messages() %}
-                                                    {% if messages %}
-                                                        <div class="notification is-danger">
-                                                            {{ messages[0] }}
-                                                        </div>
-                                                    {% endif %}
-                                                {% endwith %}
+                                                {% if m == "Check the Start and End Date. They are incorrect for this third chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -732,13 +716,9 @@ table {
                                         <div class="widget-head">
                                             <div class="dates">
                                                 <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% with messages = get_flashed_messages() %}
-                                                    {% if messages %}
-                                                        <div class="notification is-danger">
-                                                            {{ messages[0] }}
-                                                        </div>
-                                                    {% endif %}
-                                                {% endwith %}
+                                                {% if m == "Check the Start and End Date. They are incorrect for this fourth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -796,13 +776,9 @@ table {
                                         <div class="widget-head">
                                             <div class="dates">
                                                 <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% with messages = get_flashed_messages() %}
-                                                    {% if messages %}
-                                                        <div class="notification is-danger">
-                                                            {{ messages[0] }}
-                                                        </div>
-                                                    {% endif %}
-                                                {% endwith %}
+                                                {% if m == "Check the Start and End Date. They are incorrect for this fifth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -861,13 +837,9 @@ table {
                                       <div class="widget-head">
                                             <div class="dates">
                                                 <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% with messages = get_flashed_messages() %}
-                                                    {% if messages %}
-                                                        <div class="notification is-danger">
-                                                            {{ messages[0] }}
-                                                        </div>
-                                                    {% endif %}
-                                                {% endwith %}
+                                                {% if m == "Check the Start and End Date. They are incorrect for this sixth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -935,13 +907,9 @@ table {
                                       <div class="widget-head">
                                             <div class="dates">
                                                 <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% with messages = get_flashed_messages() %}
-                                                    {% if messages %}
-                                                        <div class="notification is-danger">
-                                                            {{ messages[0] }}
-                                                        </div>
-                                                    {% endif %}
-                                                {% endwith %}
+                                                {% if m == "Check the Start and End Date. They are incorrect for this seventh chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -963,7 +931,6 @@ table {
                                                 </form>
                                             </div>
                                             <div class="widget-chart-container">
-
                                                 <div align = "center" class="responsive-plot" id="performance1">
                                                     <script>
                                                         var trace1 = {
@@ -1004,20 +971,15 @@ table {
     </main>
     <!-- Footer
      ===================================== !-->
-          <!-- .footer -->
-          <div class="row">
-              <div class="col-12 col-lg-6"></div>
-              <div class="col-12 col-lg-1">
-                <footer class="site-footer mt-5" id="footer-dashboard">
-                  <div class="container">
-                      <hr class="m-0" role="presentation">
-                      <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-center mt-4">
-                          <p class="small text-muted" id="footer-dashboard-title">© Legal & General 2020</p>
-                      </div>
-                  </div>
-                </footer><!-- / .footer -->
-              </div>
-              <div class="col-12 col-lg-6"></div>
+    <!-- .footer -->
+
+
+        <footer class="footer" id="container-footer">
+          <div class="container" align="center">
+              <span class="text-muted" id="footer-dashboard-title">© Legal & General 2020</span>
           </div>
+        </footer>
+
+
 </body>
 {% endblock %}

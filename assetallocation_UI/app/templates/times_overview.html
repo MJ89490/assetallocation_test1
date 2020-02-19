@@ -21,16 +21,6 @@
              }
 
         body {
-                margin: 0;
-                background-color: #eee;
-                font-family: Roboto,Arial,sans-serif;
-                font-size: 1rem;
-                font-weight: 400;
-                color: #404040;
-                text-align: left;
-             }
-
-        body {
                 display: block;
                 -webkit-box-orient: vertical !important;
                 -webkit-box-direction: normal !important;
@@ -42,9 +32,12 @@
                 -ms-flex: 1 0 auto;
                 flex: 1 0 auto;
                 position: relative;
+
               }
 
-        .main-content {padding: 25px; }
+        .main-content {padding-top: 120px; }
+
+        .main-content .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 2px;}
 
         .be-content {
                         position: relative;
@@ -114,7 +107,7 @@
         #chart-container4 { height: 555x; }
         #chart-container3 { height: 220px; }
 
-        .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
+
 
         .table {
                     width: 100%;
@@ -129,21 +122,19 @@
                     text-align:center;
                 }
 
-
         .table-borderless > tbody > tr > td,
         .table-borderless > tbody > tr > th,
         .table-borderless > tfoot > tr > td,
         .table-borderless > tfoot > tr > th,
         .table-borderless > thead > tr > td,
-        .table-borderless > thead > tr > th {
-                                                border: none;
-                                                font-size: 12px;
+        .table-borderless > thead > tr > th { border: none; font-size: 12px; font-family: Arial, serif; }
 
-                                             }
         #body-charts {height: 200px ;}
+
         .thead-color {background-color: rgb(128, 128, 128);}
         #thead-title, #thead-title1, #thead-title2, #thead-title3, #thead-title4, #thead-title5 {color: #fff; font-size: 20px;}
-        .sub-thead-title1, .sub-thead-title2, .sub-thead-title3, .sub-thead-title4, .sub-thead-title5, .sub-thead-title6, .sub-thead-title7, .sub-thead-title8, .sub-thead-title9 {color: #fff; font-size: 12px;}
+
+        .sub-thead-title1, .sub-thead-title2, .sub-thead-title3, .sub-thead-title4, .sub-thead-title5, .sub-thead-title6, .sub-thead-title7, .sub-thead-title8, .sub-thead-title9 {font-family: Arial, serif; color: #fff; font-size: 12px;}
         #sub-thead-title1 {padding-left: 40px; }
         #sub-thead-title2 {padding-left: 180px; }
         #sub-thead-title3 {font-size: 15px; padding-left: 10px; }
@@ -152,23 +143,21 @@
         #sub-thead-title6 {padding-left: 65px; }
         #sub-thead-title7 {padding-left: 55px; }
         #sub-thead-title8, #sub-thead-title9 {font-size: 15px; padding-left: 10px; }
+
         #performance-weekly {padding-right: 90px;}
         #performance-weekly1 {padding-right: 90px;}
         #positions-sparklines-charts {height: 550px;}
 
-        .footer { background-color: #fff; }
-        .mt-auto, .my-auto { margin-top: auto!important; }
-        .pb-3, .py-3 { padding-bottom: 1rem!important; }
-        .pt-3, .py-3 { padding-top: 1rem!important; }
         .text-muted {font-size: 12px; }
-        #row5 {padding-bottom: 250px; }
+        #container-footer {background-color: #eee; }
 
+        .overview-span { color: #007faa; }
 </style>
 
 <body>
      <div class="be-content">
           <div class="main-content container-fluid">
-            <h2 class="overview-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"> <strong>TIMES Overview</strong></h2>
+            <h2 class="overview-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"> <strong><span class="overview-span">TIMES</span> Overview</strong></h2>
           </div>
           <div class="row">
                  <div class="col-12 col-lg-2"></div>
@@ -617,8 +606,7 @@
                                                     layout = {
                                                               showlegend: true,
                                                               legend: { xanchor: 'center', y:0.40,  x: 0.5, orientation: 'h' },
-
-                                                              font: {family: 'Georgia, serif'},
+                                                              font: {family: 'Arial, serif'},
                                                               height:507,
                                                               width: 700,
                                                               margin: {l: 20,
@@ -1286,7 +1274,7 @@
                  </div>
              </div>
          </div>
-          <div class="row">
+          <div class="row" id="row4">
              <div class="col-12 col-lg-2"></div>
              <div class="col-12 col-lg-5">
                  <div class="widget widget-fullwidth be-loading">
@@ -1345,16 +1333,10 @@
                                                                           orientation: 'h',
                                                                            }];
 
-
-
                                                          var layout = {
                                                                           title:{
-                                                                           text: 'Mom Signals',
-
-
-                                                                           },
-
-                                                                          font: {size: 11},
+                                                                          text: 'Mom Signals'},
+                                                                          font: {size: 11, family: 'Arial, serif'},
                                                                           xaxis: {
                                                                             autorange: true,
                                                                             showgrid: false,
@@ -1574,16 +1556,10 @@
                                                                           orientation: 'h',
                                                                            }];
 
-
-
                                                          var layout = {
                                                                           title:{
-                                                                           text: 'Weekly',
-
-
-                                                                           },
-
-                                                                          font: {size: 11},
+                                                                           text: 'Weekly'},
+                                                                          font: {size: 11, family: 'Arial, serif'},
                                                                           xaxis: {
                                                                             autorange: true,
                                                                             showgrid: false,
@@ -1604,24 +1580,23 @@
                                                                             showticklabels: true,
 
                                                                           },
-
-
-                                                                              width: 150,
-                                                                              height: 487,
-                                                                              margin: {
-                                                                                l: 90,
-                                                                                r: 0,
-                                                                                b: 0,
-                                                                                t: 72,
-                                                                                pad: 4
-                                                                              }
+                                                                          width: 150,
+                                                                          height: 487,
+                                                                          margin: {
+                                                                            l: 90,
+                                                                            r: 0,
+                                                                            b: 0,
+                                                                            t: 72,
+                                                                            pad: 4
+                                                                          }
                                                                        };
 
                                                          layout.title = {
                                                           text: 'Weekly',
                                                           font: {
                                                             size: 11,
-                                                            color: 'black'
+                                                            color: 'black',
+                                                             family: 'Arial, serif'
                                                           },
                                                           y: 0.87,
                                                           xanchor: 'left',
@@ -1637,7 +1612,6 @@
                                                 </script>
                                               </div>
                                           </td>
-
                                           <td>
                                               <div class="responsive-plot" id="performance-ytd">
                                                 <script>
@@ -1686,7 +1660,7 @@
                                                          var layout = {
 
                                                                            text: 'Positions',
-                                                                          font: {size: 11},
+                                                                          font: {size: 11, family: 'Arial, serif'},
                                                                           xaxis: {
                                                                             autorange: true,
                                                                             showgrid: false,
@@ -1737,7 +1711,7 @@
                                                                               'responsive': true,
                                                                          };
 
-                                                            Plotly.newPlot('performance-ytd', trace1, layout, config);
+                                                        Plotly.newPlot('performance-ytd', trace1, layout, config);
                                                 </script>
                                               </div>
                                           </td>
@@ -1750,14 +1724,11 @@
              </div>
              <div class="col-12 col-lg-2"></div>
         </div>
-          <!-- .footer -->
-         <div class="row" id="row5">
-              <footer class="footer mt-auto py-3" id="container-footer">
-                  <div class="container" align="center">
-                      <span class="text-muted">© Legal & General 2020</span>
-                  </div>
-              </footer>
-         </div>
+          <footer class="footer" id="container-footer">
+              <div class="container" align="center">
+                  <span class="text-muted">© Legal & General 2020</span>
+              </div>
+          </footer>
      </div>
 </body><!-- / .body -->
 {% endblock %}

@@ -78,7 +78,8 @@ def protected_models():
 def times():
     form = InputsTimesModel()
 
-    global STRATEGY
+    global STRATEGY, PATH_EXCEL_TIMES
+
     if request.method == "POST":
         if request.form['submit_button'] == 'selectInputs':
             data = {
@@ -108,8 +109,15 @@ def times():
                                                          ])
             STRATEGY = strategy_inputs
 
+        if request.form['submit_button'] == 'selectTimesPath':
+            name_of_file = form.name_file_times.data + ".xls"
+            path_excel = form.path_save_output_times.data
+            path_excel_times = path_excel + "\\" + name_of_file
+
+            PATH_EXCEL_TIMES = path_excel_times
+
         if request.form['submit_button'] == 'runTimesModel':
-            get_inputs_from_flask(model_type=models_names.Models.times.name, times_inputs=STRATEGY)
+            get_inputs_from_flask(model_type=models_names.Models.times.name, times_inputs=STRATEGY, path_excel=PATH_EXCEL_TIMES)
 
     return render_template('times_display.html', title="Times", form=form)
 
@@ -117,6 +125,7 @@ def times():
 @app.route('/times_overview')
 @login_required
 def times_overview():
+
     times_data = read_data_from_excel()
 
     signals, positions, performance_weekly, performance_ytd,\
@@ -126,9 +135,10 @@ def times_overview():
         sum_performance_ytd_bonds, sum_performance_ytd_fx = data_table_times(times_data=times_data)
 
     positions_us_equities_sparklines, positions_eu_equities_sparklines, positions_jp_equities_sparklines,\
-        positions_hk_equities_sparklines, positions_us_bonds_sparklines, positions_uk_bonds_sparklines, \
+    positions_hk_equities_sparklines, positions_us_bonds_sparklines, positions_uk_bonds_sparklines, \
     positions_eu_bonds_sparklines, positions_ca_bonds_sparklines, positions_jpy_sparklines, \
-    positions_eur_sparklines, positions_aud_sparklines, positions_cad_sparklines, positions_gbp_sparklines = data_sparklines_charts(times_data=times_data)
+    positions_eur_sparklines, positions_aud_sparklines, positions_cad_sparklines, \
+    positions_gbp_sparklines = data_sparklines_charts(times_data=times_data)
 
     return render_template('times_overview.html', title="Times",
                            sum_positions_equities=sum_positions_equities,
@@ -229,7 +239,7 @@ def times_dashboard():
 
     # signals = data_table_times(times_data=times_data)
 
-    m = "0"
+    m = ""
     if request.method == "POST":
         if request.form['submit_button'] == 'selectInputToExport':
             if form.start_date_inputs.data > form.end_date_inputs.data:
@@ -243,42 +253,43 @@ def times_dashboard():
 
         elif request.form['submit_button'] == 'selectDatesChart0':
             if form.start_date_chart0.data > form.end_date_chart0.data:
-                m="boubou"
-
-                print('chart_0_flash')
+                m = "Check the Start and End Date. They are incorrect for the first chart."
             else:
                 print("Date chart 0")
+
         elif request.form['submit_button'] == 'selectDatesChart1':
             if form.start_date_chart1.data > form.end_date_chart1.data:
-                m = "boubou2"
-
-                print('chart_1_flash')
+                m = "Check the Start and End Date. They are incorrect for this second chart."
             else:
                 print("Date chart 1")
+
         elif request.form['submit_button'] == 'selectDatesChart2':
             if form.start_date_chart2.data > form.end_date_chart2.data:
-                flash("Check the Start and End Date. They are incorrect.")
-                print('chart_2_flash')
+                m = "Check the Start and End Date. They are incorrect for this third chart."
             else:
                 print("Date chart 2")
+
         elif request.form['submit_button'] == 'selectDatesChart3':
             if form.start_date_chart3.data > form.end_date_chart3.data:
-                flash("Check the Start and End Date. They are incorrect.")
+                m = "Check the Start and End Date. They are incorrect for this fourth chart."
             else:
                 print("Date chart 3")
+
         elif request.form['submit_button'] == 'selectDatesChart4':
             if form.start_date_chart4.data > form.end_date_chart4.data:
-                flash("Check the Start and End Date. They are incorrect.")
+                m = "Check the Start and End Date. They are incorrect for this fifth chart."
             else:
                 print("Date chart 4")
+
         elif request.form['submit_button'] == 'selectDatesChart5':
             if form.start_date_chart5.data > form.end_date_chart5.data:
-                flash("Check the Start and End Date. They are incorrect.")
+                m = "Check the Start and End Date. They are incorrect for this sixth chart."
             else:
                 print("Date chart 5")
+
         elif request.form['submit_button'] == 'selectDatesChart6':
             if form.start_date_chart6.data > form.end_date_chart6.data:
-                flash("Check the Start and End Date. They are incorrect.")
+                m = "Check the Start and End Date. They are incorrect for this seventh chart."
             else:
                 print("Date chart 6")
 

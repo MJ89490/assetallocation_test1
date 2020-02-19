@@ -21,16 +21,6 @@
              }
 
         body {
-                margin: 0;
-                background-color: #fff;
-                font-family: Roboto,Arial,sans-serif;
-                font-size: 1rem;
-                font-weight: 400;
-                color: #404040;
-                text-align: left;
-             }
-
-        body {
                 display: block;
                 -webkit-box-orient: vertical !important;
                 -webkit-box-direction: normal !important;
@@ -44,7 +34,7 @@
                 position: relative;
               }
 
-        .main-content {padding: 25px; }
+        .main-content {padding-top: 120px; }
 
         .be-content {
                         position: relative;
@@ -119,28 +109,18 @@
         .btn, .btn-lg{ padding: 10px 16px; font-size:12px; line-height:1.3333; height: 35px; }
         .btn-primary {color: #fff; background-color: #007faa; border-color: #007faa; box-shadow: 0 7px 16px 0 rgba(0,0,0,.2); }
 
-        #button-submit2 {padding-top: 20px; }
+        #button-submit2, #button-submit3, #text-field-path, #text-field-name-file {padding-top: 20px; }
+        #text-field-path { width: 190px; }
+        #text-field-name-file { width: 130px; }
         .btn-group {padding-right: 6px; }
         .dropdown-menu, .dropdown-item { color: black; text-align: center; }
 
         .footer { background-color: #fff; }
-
-        .mt-auto, .my-auto {
-    margin-top: auto!important;
-}
-
-
-.pb-3, .py-3 {
-    padding-bottom: 1rem!important;
-}
-
-.pt-3, .py-3 {
-    padding-top: 1rem!important;
-}
-
-#row-2 { padding-bottom: 370px;}
-
-.text-muted {font-size: 12px; }
+        .mt-auto, .my-auto { margin-top: auto!important; }
+        .pb-3, .py-3 { padding-bottom: 1rem!important; }
+        .pt-3, .py-3 { padding-top: 1rem!important; }
+        #row-2 { padding-bottom: 370px;}
+        .text-muted {font-size: 12px; }
     </style>
 
 <body>
@@ -311,10 +291,27 @@
                                 </div>
                              </div>
                              <form class="center" action="" method="POST" novalidate>
-                                       {{ form.hidden_tag() }}
+                                 {{ form.hidden_tag() }}
                                 <div class="form-group">
-                                    <div class="button-submit" id="button-submit2">
-                                         <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+                                    <div class="btn-group">
+                                        <div class="text-field-path" id="text-field-name-file">
+                                            <i>{{ form.name_file_times(class="form-control", placeholder=("Name of the file"))}}</i>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group">
+                                        <div class="text-field-path" id="text-field-path">
+                                            <i>{{ form.path_save_output_times(class="form-control", placeholder=("C:\\User\\Document\\Models"))}}</i>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group">
+                                        <div class="button-submit" id="button-submit3">
+                                             <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectTimesPath" id="RunTheModelSubmit3"><strong>Select this path</strong></button>
+                                        </div>
+                                    </div><br>
+                                    <div class="btn-group">
+                                        <div class="button-submit" id="button-submit2">
+                                             <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+                                        </div>
                                     </div>
                                 </div>
                              </form>
