@@ -12,4 +12,4 @@ def format_data_and_calc(effect_inputs, asset_inputs, all_data):
     effect_data = all_data[asset_inputs.signal_ticker]
 
 
-    return signals, returns, r, positioning
+    # return signals, returns, r, positioning
