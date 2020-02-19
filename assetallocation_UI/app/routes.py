@@ -227,19 +227,62 @@ def times_dashboard():
     performance_total, performance_gbp, performance_jpy, performance_eur, performance_aud, \
     performance_cad, performance_dates = data_performance_since_inception_chart(times_data)
 
-    signals = data_table_times(times_data=times_data)
+    # signals = data_table_times(times_data=times_data)
 
-    print(type(performance_total))
+    m = "0"
     if request.method == "POST":
         if request.form['submit_button'] == 'selectInputToExport':
-            print(form.start_date.data)
-            print(form.end_date.data)
+            if form.start_date_inputs.data > form.end_date_inputs.data:
+                flash("Check the Start and End Date. They are incorrect.")
+            else:
+                print("Take the data from the CACHE db")
+                print(form.start_date_inputs.data)
+                print(form.end_date_inputs.data)
         elif request.form['submit_button'] == 'selectInputOk':
             print(form.inputs.data)
-        elif request.form['submit_button'] == 'selectDatesChart':
-            print(form.start_date_chart.data) #we need to separate each button date for each, otherwise, they will be connected to each other
 
-    return render_template('new_dashboard_js.html', form=form,
+        elif request.form['submit_button'] == 'selectDatesChart0':
+            if form.start_date_chart0.data > form.end_date_chart0.data:
+                m="boubou"
+
+                print('chart_0_flash')
+            else:
+                print("Date chart 0")
+        elif request.form['submit_button'] == 'selectDatesChart1':
+            if form.start_date_chart1.data > form.end_date_chart1.data:
+                m = "boubou2"
+
+                print('chart_1_flash')
+            else:
+                print("Date chart 1")
+        elif request.form['submit_button'] == 'selectDatesChart2':
+            if form.start_date_chart2.data > form.end_date_chart2.data:
+                flash("Check the Start and End Date. They are incorrect.")
+                print('chart_2_flash')
+            else:
+                print("Date chart 2")
+        elif request.form['submit_button'] == 'selectDatesChart3':
+            if form.start_date_chart3.data > form.end_date_chart3.data:
+                flash("Check the Start and End Date. They are incorrect.")
+            else:
+                print("Date chart 3")
+        elif request.form['submit_button'] == 'selectDatesChart4':
+            if form.start_date_chart4.data > form.end_date_chart4.data:
+                flash("Check the Start and End Date. They are incorrect.")
+            else:
+                print("Date chart 4")
+        elif request.form['submit_button'] == 'selectDatesChart5':
+            if form.start_date_chart5.data > form.end_date_chart5.data:
+                flash("Check the Start and End Date. They are incorrect.")
+            else:
+                print("Date chart 5")
+        elif request.form['submit_button'] == 'selectDatesChart6':
+            if form.start_date_chart6.data > form.end_date_chart6.data:
+                flash("Check the Start and End Date. They are incorrect.")
+            else:
+                print("Date chart 6")
+
+    return render_template('new_dashboard_js.html', form=form, m=m,
                            positions_us_equities=positions_us_equities,
                            positions_eu_equities=positions_eu_equities,
                            positions_jp_equities=positions_jp_equities,
@@ -269,3 +312,9 @@ def logout():
     return redirect(url_for('home'))
 
 
+
+def return_func():
+    def path_getter():
+        some_path = ''
+        return some_path
+    return

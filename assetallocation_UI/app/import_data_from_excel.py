@@ -222,9 +222,33 @@ def data_sparklines_charts(times_data):
            positions_eur_sparklines, positions_aud_sparklines, positions_cad_sparklines, positions_gbp_sparklines
 
 
+def import_dates_inputs_dashboard(times_data):
+
+    signals_date = [str(d.date()) for d in times_data.loc[:, 'TIMES Signals'].dropna()]
+    returns_date = [str(d.date()) for d in times_data.loc[:, 'TIMES Returns'].dropna()]
+    positions_date = [str(d.date()) for d in times_data.loc[:, 'TIMES Positions'].dropna()]
+
+    ################################################################################# create another fct for this
+    signals_data_double = sorted(signals_date*2)
+    signals_iterator = iter(signals_data_double)
+    signals_date_field = list(zip(signals_iterator, signals_iterator))
+
+    returns_data_double = sorted(returns_date*2)
+    returns_iterator = iter(returns_data_double)
+    returns_date_field = list(zip(returns_iterator, returns_iterator))
+
+    positions_data_double = sorted(positions_date*2)
+    positions_iterator = iter(positions_data_double)
+    positions_date_field = list(zip(positions_iterator, positions_iterator))
+
+
+
+    return signals_date_field, returns_date_field, positions_date_field
+
 if __name__ == "__main__":
     data = read_data_from_excel()
     data_allocation_over_time_chart(data)
     data_performance_since_inception_chart(data)
     data_table_times(data)
     data_sparklines_charts(data)
+    import_dates_inputs_dashboard(data)

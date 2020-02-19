@@ -277,6 +277,7 @@ element.style {
 
 .widget-chart-container {
     position: relative;
+
 }
 .table-responsive {
     border: 0;
@@ -373,7 +374,7 @@ table {
  #selectionStartDateChart, #selectionEndDateChart {background-color: #fff; border-color: #696969; color: #696969; }
 
 
-#card-head {background-color: pink;}
+    #footer-dashboard-title {font-size: 12px;}
 
 </style>
 
@@ -386,7 +387,7 @@ table {
                 ===================================== !-->
                 <nav class="navbar navbar-inverse fixed-top be-top-header">
                 <img width="80px" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
-            </nav>
+                </nav>
                 <!-- Sidebar
                 ===================================== !-->
                 <div class="be-left-sidebar">
@@ -397,25 +398,29 @@ table {
                                     <ul class="sidebar-elements">
                                         <li class="divider">NAVIGATION</li><br><br>
                                             <li class="parent">
-                                                  <a href="#"><span>Home</span></a><br><br>
+                                                  <a href="{{ url_for('home') }}"><span>Home</span></a><br><br>
                                                   <a><span>Export Data</span></a><br><br><br>
                                                     <ul class="sub-menu">
-                                                        <!-- Export Data Form -->
-                                                        <form action='', method="POST" novalidate name="ExportDataForm">
-                                                            {{ form.hidden_tag() }}
-                                                            <div  class="form-group">
-                                                                <fieldset>
+                                                        <div class="text-center">
+                                                            <!-- If the user write wrong dates, then a message will be displayed -->
+                                                            {% for message in get_flashed_messages() %}
+                                                                <p>{{ message }}</p>
+                                                            {% endfor %}
+                                                            <!-- Export Data Form -->
+                                                            <form action='', method="POST" novalidate name="ExportDataForm">
+                                                                {{ form.hidden_tag() }}
+                                                                <div  class="form-group">
                                                                     {{ form.inputs.label(id="label_text") }}<br>
                                                                     {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
                                                                     <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectInputToOkSubmit">Ok</button><br><br>
-                                                                    {{ form.start_date.label(id="start_date_text") }}<br>
-                                                                    {{ form.start_date(class="form-control", id="selectionStartDateToExport") }}<br>
-                                                                    {{ form.end_date.label(id="end_date_text") }}<br>
-                                                                    {{ form.end_date(class="form-control", id="selectionEndDateToExport") }}<br><br>
+                                                                    {{ form.start_date_inputs.label(id="start_date_text") }}<br>
+                                                                    <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionStartDateToExport") }}</i><br>
+                                                                    {{ form.end_date_inputs.label(id="end_date_text") }}<br>
+                                                                    <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionEndDateToExport") }}</i><br><br>
                                                                     <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
-                                                                </fieldset>
-                                                            </div>
-                                                        </form>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </ul>
                                             </li>
                                     </ul>
@@ -441,26 +446,30 @@ table {
                               <div class="widget widget-fullwidth be-loading">
                                 <div class="widget-head">
                                     <div class="dates">
+                                        <!-- If the user write wrong dates, then a message will be displayed -->
+
+                                        {% if m == "boubou" %}
+                                            <p>{{ m }}</p>
+                                        {% endif %}
                                         <!--Date Form -->
                                         <form action='', method="POST" novalidate name="DateForm">
                                             {{ form.hidden_tag() }}
                                             <div  class="form-group" id="date_chart0_form">
-                                                <fieldset>
                                                     <div class="button-toolbar d-none d-md-block">
                                                         <div class="btn-group">
-                                                            {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
+                                                            <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
                                                         </div>
                                                         <div class="btn-group">
-                                                            {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
+                                                            <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
                                                         </div>
                                                         <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
+                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart0" id="selectInputDatesChartSubmit1">Ok</button>
                                                         </div>
                                                     </div>
-                                                </fieldset>
                                             </div>
                                         </form>
                                     </div>
+                                    <!--</div>-->
                                     <div class="widget-chart-container">
                                         <div align = "center" class="responsive-plot" id="allocation">
                                             <script>
@@ -590,34 +599,38 @@ table {
                                             </script>
                                         </div>
                                     </div>
-                                </div>
                               </div>
                             </div>
-                       </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-12 col-lg-3">
                                 <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
+                                                {% if m == "boubou2" %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
-                                            {{ form.hidden_tag() }}
-                                            <div  class="form-group" id="date_chart0_form">
-                                                <fieldset>
-                                                    <div class="button-toolbar d-none d-md-block">
-                                                        <div class="btn-group">
-                                                            {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+
+                                                        <div class="button-toolbar d-none d-md-block">
+                                                            <div class="btn-group">
+                                                                <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart1" id="selectInputDatesChartSubmit1">Ok</button>
+                                                            </div>
+
                                                         </div>
                                                     </div>
-                                                </fieldset>
-                                            </div>
-                                        </form>
+                                                </form>
                                             </div>
                                             <div class="widget-chart-container">
                                                 <div align = "center" class="responsive-plot" id="performance3">
@@ -655,26 +668,33 @@ table {
                                       <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                        <!--Date Form -->
-                                        <form action='', method="POST" novalidate name="DateForm">
-                                            {{ form.hidden_tag() }}
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% with messages = get_flashed_messages() %}
+                                                    {% if messages %}
+                                                        <div class="notification is-danger">
+                                                            {{ messages[0] }}
+                                                        </div>
+                                                    {% endif %}
+                                                {% endwith %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
                                             <div  class="form-group" id="date_chart0_form">
                                                 <fieldset>
-                                                    <div class="button-toolbar d-none d-md-block">
-                                                        <div class="btn-group">
-                                                            {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
-                                                        </div>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart2" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                            </div>
                                                     </div>
-                                                </fieldset>
+                                                </form>
                                             </div>
-                                        </form>
-                                    </div>
                                             <div class="widget-chart-container">
                                                 <div align = "center" class="responsive-plot" id="performance4">
                                                         <script>
@@ -711,26 +731,34 @@ table {
                                       <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                        <!--Date Form -->
-                                        <form action='', method="POST" novalidate name="DateForm">
-                                            {{ form.hidden_tag() }}
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% with messages = get_flashed_messages() %}
+                                                    {% if messages %}
+                                                        <div class="notification is-danger">
+                                                            {{ messages[0] }}
+                                                        </div>
+                                                    {% endif %}
+                                                {% endwith %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
                                             <div  class="form-group" id="date_chart0_form">
-                                                <fieldset>
-                                                    <div class="button-toolbar d-none d-md-block">
-                                                        <div class="btn-group">
-                                                            {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
-                                                        </div>
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart3" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
                                                     </div>
-                                                </fieldset>
+                                                </form>
                                             </div>
-                                        </form>
-                                    </div>
                                             <div class="widget-chart-container">
                                                 <div align = "center" class="responsive-plot" id="performance5">
                                                     <script>
@@ -767,26 +795,34 @@ table {
                                       <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                        <!--Date Form -->
-                                        <form action='', method="POST" novalidate name="DateForm">
-                                            {{ form.hidden_tag() }}
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% with messages = get_flashed_messages() %}
+                                                    {% if messages %}
+                                                        <div class="notification is-danger">
+                                                            {{ messages[0] }}
+                                                        </div>
+                                                    {% endif %}
+                                                {% endwith %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
                                             <div  class="form-group" id="date_chart0_form">
-                                                <fieldset>
-                                                    <div class="button-toolbar d-none d-md-block">
-                                                        <div class="btn-group">
-                                                            {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
-                                                        </div>
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart4" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
                                                     </div>
-                                                </fieldset>
+                                                </form>
                                             </div>
-                                        </form>
-                                    </div>
                                             <div class="widget-chart-container">
                                                 <div align = "center" class="responsive-plot" id="performance6">
                                                     <script>
@@ -823,27 +859,35 @@ table {
                              <div class="col-12 col-lg-6">
                                   <div class="widget widget-fullwidth be-loading">
                                       <div class="widget-head">
-                                          <div class="dates">
-                                        <!--Date Form -->
-                                        <form action='', method="POST" novalidate name="DateForm">
-                                            {{ form.hidden_tag() }}
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% with messages = get_flashed_messages() %}
+                                                    {% if messages %}
+                                                        <div class="notification is-danger">
+                                                            {{ messages[0] }}
+                                                        </div>
+                                                    {% endif %}
+                                                {% endwith %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
                                             <div  class="form-group" id="date_chart0_form">
-                                                <fieldset>
-                                                    <div class="button-toolbar d-none d-md-block">
-                                                        <div class="btn-group">
-                                                            {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
-                                                        </div>
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart5(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart5(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart5" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
                                                     </div>
-                                                </fieldset>
+                                                </form>
                                             </div>
-                                        </form>
-                                    </div>
                                           <!--<div class="dropdown">-->
                                               <!--<button class="button" type="button" id="dropdown-toggle1" data-toggle="dropdown">-->
                                                   <!--<img class="icon-dashboard" width="auto" height="35" src="/static/icon-card.png">-->
@@ -890,26 +934,34 @@ table {
                                   <div class="widget widget-fullwidth be-loading">
                                       <div class="widget-head">
                                             <div class="dates">
-                                        <!--Date Form -->
-                                        <form action='', method="POST" novalidate name="DateForm">
-                                            {{ form.hidden_tag() }}
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% with messages = get_flashed_messages() %}
+                                                    {% if messages %}
+                                                        <div class="notification is-danger">
+                                                            {{ messages[0] }}
+                                                        </div>
+                                                    {% endif %}
+                                                {% endwith %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
                                             <div  class="form-group" id="date_chart0_form">
-                                                <fieldset>
-                                                    <div class="button-toolbar d-none d-md-block">
-                                                        <div class="btn-group">
-                                                            {{ form.start_date_chart(class="form-control", id="selectionStartDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            {{ form.end_date(class="form-control", id="selectionEndDateChart") }}
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart" id="selectInputDatesChartSubmit1">Ok</button>
-                                                        </div>
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart6(class="form-control", placeholder="01/01/20202", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart6(class="form-control", placeholder="05/01/20202", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart6" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
                                                     </div>
-                                                </fieldset>
+                                                </form>
                                             </div>
-                                        </form>
-                                    </div>
                                             <div class="widget-chart-container">
 
                                                 <div align = "center" class="responsive-plot" id="performance1">
@@ -945,181 +997,27 @@ table {
                                   </div>
                                 </div>
                         </div>
-                        <!--<div class="row">-->
-                            <!--<div class="col-12 col-lg-6">-->
-                                <!--<div class="card card-table">-->
-                                    <!--<div class="card-body table-responsive">-->
-                                        <!--<table class="table table-borderless">-->
-                                            <!--<thead class="thead-color">-->
-                                              <!--<tr>-->
-                                                    <!--<th class="thead-title">TIMES</th>-->
-                                                    <!--<th></th>-->
-                                                    <!--<th class="thead-title1"><i>Positions</i></th>-->
-                                                    <!--<th class="thead-title2"><i>Performance</i></th>-->
-                                                    <!--<th></th>-->
-                                                    <!--<th></th>-->
-                                                    <!--<th></th>-->
-                                              <!--</tr>-->
-                                            <!--</thead>-->
-                                            <!--<tbody class="no-border-x">-->
-                                              <!--<tr>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Signals as off</td>-->
-                                                  <!--<td><strong>28/11/2019</strong></td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td><img width="55px" height="auto" src="/static/icon-times-table.png"></td>-->
-                                                  <!--<td></td>-->
-                                                  <!--<td><strong>Mom Signals</strong>-->
-                                                  <!--<td><strong>Positions</strong></td>-->
-                                                  <!--<td><strong>Positions YTD</strong></td>-->
-                                                  <!--<td><strong>Weekly</strong></td>-->
-                                                  <!--<td><strong>YTD</strong></td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Equities</td>-->
-                                                  <!--<td>US Equities</td>-->
-                                                  <!--<td>{{ signals_us_equities }}</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Equities</td>-->
-                                                  <!--<td>EU Equities</td>-->
-                                                  <!--<td>{{ signals_eu_equities }}</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Equities</td>-->
-                                                  <!--<td>JP Equities</td>-->
-                                                  <!--<td>{{ signals_jp_equities }}</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Equities</td>-->
-                                                  <!--<td>HK Equities</td>-->
-                                                  <!--<td>{{ signals_hk_equities }}</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Bonds</td>-->
-                                                  <!--<td>US 10y Bonds</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Bonds</td>-->
-                                                  <!--<td>UK 10y Bonds</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Bonds</td>-->
-                                                  <!--<td>Eu 10y Bonds</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>Bonds</td>-->
-                                                  <!--<td>CA 10y Bonds</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>FX</td>-->
-                                                  <!--<td>JPY</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>FX</td>-->
-                                                  <!--<td>EUR</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>FX</td>-->
-                                                  <!--<td>AUD</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>FX</td>-->
-                                                  <!--<td>CAD</td>-->
-                                              <!--</tr>-->
-                                              <!--<tr>-->
-                                                  <!--<td>FX</td>-->
-                                                  <!--<td>GBP</td>-->
-                                              <!--</tr>-->
-                                            <!--</tbody>-->
-                                        <!--</table>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="col-12 col-lg-6">-->
-                                <!--<div class="card">-->
-                                          <!--<div class="card-header"><div class="title">Purchases</div></div>-->
-                                        <!--<div class="card-body">-->
-                                            <!--<div class="embed-responsive embed-responsive-16by9">-->
-                                                    <!--<div align = "center" class="responsive-plot" id="myDiv4">-->
-                                                        <!--<script>-->
-                                                          <!--var trace1 = {-->
-                                                                          <!--x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],-->
-                                                                          <!--y: [20, 14, 23, 20, 14, 23, 34, 26],-->
-                                                                          <!--marker: {-->
-                                                                            <!--color: ['rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)', 'rgba(0,152,212,0.5)']-->
-                                                                          <!--},-->
-                                                                          <!--name: 'Item 1',-->
-                                                                          <!--type: 'bar',-->
-
-                                                                        <!--};-->
-
-                                                                        <!--var trace2 = {-->
-                                                                          <!--x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],-->
-                                                                          <!--y: [12, 18, 29, 12, 18, 29, 24, 22],-->
-                                                                          <!--marker: {-->
-                                                                            <!--color: ['rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)', 'rgba(0,152,212,1)']-->
-                                                                          <!--},-->
-                                                                          <!--name: 'Item 2',-->
-                                                                          <!--type: 'bar'-->
-                                                                        <!--};-->
-
-                                                                        <!--var trace3 = {-->
-                                                                          <!--x: ['Category A', 'Category B', 'Category C', 'Category D ', 'Category E', 'Category F', 'Category G', 'Category H'],-->
-                                                                          <!--y: [12, 18, 29, 12, 18, 29, 24, 22],-->
-                                                                          <!--marker: {-->
-                                                                            <!--color: ['rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)', 'rgba(0,54,136,1)']-->
-                                                                          <!--},-->
-                                                                          <!--name: 'Item 3',-->
-                                                                          <!--type: 'bar'-->
-                                                                        <!--};-->
-
-                                                                        <!--var data = [trace1, trace2, trace3];-->
-
-                                                                        <!--var layout = {-->
-
-                                                                          <!--barmode: 'stack',-->
-                                                                          <!--margin: {-->
-                                                                            <!--t: 0-->
-                                                                          <!--},-->
-
-                                                                          <!--autosize: true // set autosize to rescale-->
-                                                                        <!--};-->
-
-                                                                        <!--var config = {-->
-                                                                          <!--'displayModeBar': false,-->
-                                                                          <!--'responsive': true,-->
-
-                                                                        <!--}-->
-
-                                                                        <!--Plotly.newPlot('myDiv4', data, layout, config);-->
-
-
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                      <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
                     </div>
                 </div>
             </div>
         </body>
-
     </main>
     <!-- Footer
      ===================================== !-->
-    <footer class="pull-right" id="footer">
-        <div class="container text-right">
-            <hr class="m-0" role="presentation">
-            <p class="small text-muted">© Legal & General 2020</p>
-        </div>
-    </footer> <!-- / .footer -->
+          <!-- .footer -->
+          <div class="row">
+              <div class="col-12 col-lg-6"></div>
+              <div class="col-12 col-lg-1">
+                <footer class="site-footer mt-5" id="footer-dashboard">
+                  <div class="container">
+                      <hr class="m-0" role="presentation">
+                      <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-center mt-4">
+                          <p class="small text-muted" id="footer-dashboard-title">© Legal & General 2020</p>
+                      </div>
+                  </div>
+                </footer><!-- / .footer -->
+              </div>
+              <div class="col-12 col-lg-6"></div>
+          </div>
 </body>
 {% endblock %}
