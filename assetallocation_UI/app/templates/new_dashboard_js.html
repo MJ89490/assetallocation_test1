@@ -477,7 +477,8 @@ table {
                                                                 name: 'S&P 500',
                                                                 fill: 'tozeroy',
                                                                 type: 'scatter',
-                                                                mode: 'none'
+                                                                mode: 'none',
+                                                                fillcolor: 'rgba(0, 153, 204, 0.5)'
                                                                 };
 
                                                 var trace2 = {
@@ -525,7 +526,8 @@ table {
                                                                 name: 'Bund',
                                                                 fill: 'tozeroy',
                                                                 type: 'scatter',
-                                                                mode: 'none'
+                                                                mode: 'none',
+                                                                fillcolor: 'rgba(0, 153, 204, 0.5)'
                                                                };
 
                                                 var trace8 = {
@@ -584,16 +586,10 @@ table {
 
                                                                };
 
-                                                var config = {
-                                                          'displayModeBar': false,
-                                                          'responsive': true,
-
-                                                        }
-
+                                                var config = { 'displayModeBar': false, 'responsive': true }
                                                 var data = [trace1, trace2, trace3, trace4, trace5,
                                                 trace6, trace7, trace8, trace9, trace10, trace11,
                                                 trace12, trace13];
-
                                                 Plotly.newPlot('allocation', data, layout, config);
                                             </script>
                                         </div>
@@ -642,7 +638,7 @@ table {
                                                                         y: {{ performance_jpy }},
                                                                         mode: 'lines',
                                                                         name: 'JPY',
-                                                                        line: {color: 'grey'}
+                                                                        line: {color: '#FFD503'}
                                                                       };
 
                                                          var data = [trace1];
@@ -705,7 +701,7 @@ table {
                                                                             y: {{ performance_eur }},
                                                                             mode: 'lines',
                                                                             name: 'EUR',
-                                                                            line: {color: 'green'}
+                                                                            line: {color: '#009F4B'}
                                                                           };
 
                                                              var data = [trace1];
@@ -770,7 +766,7 @@ table {
                                                                         y: {{ performance_aud }},
                                                                         mode: 'lines',
                                                                         name: 'AUD',
-                                                                        line: {color: 'red'}
+                                                                        line: {color: '#ED1C24'}
                                                                       };
 
                                                          var data = [trace1];
@@ -834,7 +830,8 @@ table {
 
                                                                         y: {{ performance_cad }},
                                                                         mode: 'lines',
-                                                                        name: 'CAD'
+                                                                        name: 'CAD',
+                                                                        line: {color: '#00AEEF'}
                                                                       };
 
                                                          var data = [trace1];
@@ -900,7 +897,8 @@ table {
 
                                                                         y: {{ performance_gbp }},
                                                                         mode: 'lines',
-                                                                        name: 'GBP'
+                                                                        name: 'GBP',
+                                                                        line: {color: 'rgb(102, 102, 102)'}
                                                                       };
 
                                                          var data = [trace1];
@@ -965,7 +963,7 @@ table {
                                                                         y: {{ performance_total }},
                                                                         mode: 'lines',
                                                                         name: 'Total',
-                                                                        line: {color: 'grey'}
+                                                                        line: {color: 'rgb(0, 153, 204)'}
                                                                       };
 
                                                          var data = [trace1];

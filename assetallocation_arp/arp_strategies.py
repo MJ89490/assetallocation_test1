@@ -47,29 +47,49 @@ def write_output_to_excel(model_outputs, path_excel_times):
 	if models.Models.times.name in model_outputs.keys():
 
 		asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models.Models.times.name]
-		path = os.path.join(os.path.dirname(__file__), "times_model.xls")
+		# path = os.path.join(os.path.dirname(__file__), "times_model.xls")
 
-		wb = xw.Book(path)
+		wb = xw.Book()
 
-		sheet_times_output = wb.sheets['output']
-		sheet_times_input = wb.sheets['input']
+		wb.sheets.add('signal')
+		wb.sheets.add('returns')
+		wb.sheets.add('positioning')
 
-		n_columns = len(signals.columns) + 2
-		sheet_times_output.range('rng_times_output').offset(-1, 0).value = "TIMES Signals"
-		sheet_times_output.range('rng_times_output').value = signals
-		sheet_times_output.range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
-		sheet_times_output.range('rng_times_output').offset(0, n_columns + 2).value = returns
-		sheet_times_output.range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
-		sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
+		sheet_times_signals_output = wb.sheets['signal']
+		sheet_times_returns_output = wb.sheets['returns']
+		sheet_times_positioning_output = wb.sheets['positioning']
+		# sheet_times_input = wb.sheets['input']
+
+		# n_columns = len(signals.columns) + 2
+		n_rows = signals.shape[0]
+		range_str = 'A2:A%s' % n_rows
+
+		sheet_times_signals_output.range('A1').value = "TIMES Signals"
+		sheet_times_signals_output.range(range_str).value = signals
+
+		sheet_times_returns_output.range('A1').value = "TIMES Returns"
+		sheet_times_returns_output.range(range_str).value = returns
+
+		sheet_times_positioning_output.range('A1').value = "TIMES Returns"
+		sheet_times_positioning_output.range(range_str).value = positioning
+
+
+		# sheet_times_output.range('rng_times_output').offset(0, 0).value = "TIMES Signals"
+		# sheet_times_output.range('rng_times_output').value = signals
+		# sheet_times_output.range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
+		# sheet_times_output.range('rng_times_output').offset(0, n_columns + 2).value = returns
+		# sheet_times_output.range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
+		# sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
 		# write inputs used to excel and run time
 		#sheet_times_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-		sheet_times_input.range('rng_inputs_used').value = asset_inputs
-		sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
+		# sheet_times_input.range('rng_inputs_used').value = asset_inputs
+		# sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
 
 		app = xw.apps.active
 		wb.save(path=path_excel_times)
-		# wb.close()
 		app.quit()
+
+
 def get_inputs_from_excel():
 	# select data from excel
 	mat_file = xw.Range('rng_mat_file_path').value

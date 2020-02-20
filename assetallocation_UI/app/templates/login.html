@@ -3,6 +3,15 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block mainloginwtf %}
+<head>
+    <style type="text/css">
+        .container {margin-top: 230px; }
+        .footer {padding-top: 520px; }
+    </style>
+
+
+</head>
+
 <body>
     <div class="container">
         <div class="row" style="height: 100px;">
@@ -45,15 +54,14 @@
                                     </div>
                                 {% endfor %}
                             </p>
-                            <!-- Submit credentials A MODIFIER COMME LE BOUTON DANS DASHBOARD!!!!!-->
                             <div class="button-submit">
                                 <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button><br>
                             </div>
-                            <div class="text">
-                                <p class="mt-5 mb-3 text-muted">© Legal & General 2020</p>
-                            </div>
                         </div>
                     </form>
+                </div>
+                <div class="footer" align="center">
+                    <p class="mt-5 mb-3 text-muted">© Legal & General 2020</p>
                 </div>
             </div>
             <div class="col-sm-4"></div>
