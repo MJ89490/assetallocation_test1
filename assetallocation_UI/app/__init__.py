@@ -17,16 +17,24 @@ modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modal
 inputs_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\inputs_models"))
 javascript_charts_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\js"))
 
+# Set the origin staic folder (static) of Flask and add subfolders
+origin_path_static = "static"
+css_style_path = os.path.abspath(os.path.join(CURRENT_PATH, "static\img"))
+
 app = Flask(__name__)
 
 template_folders = [origin_path, modals_icons_path, modals_models_path, inputs_models_path, javascript_charts_path]
+static_folders = [origin_path_static, css_style_path]
 
 # Change the original folder of Flask by adding subfolders
 app.jinja_loader = jinja2.ChoiceLoader([
     app.jinja_loader,
     jinja2.FileSystemLoader(template_folders),
 ])
-
+app.jinja_loader = jinja2.ChoiceLoader([
+    app.jinja_loader,
+    jinja2.FileSystemLoader(origin_path_static),
+])
 app.config.from_object(config.DevelopmentConfig)
 CSRFProtect(app).init_app(app)
 bootstrap = Bootstrap(app)

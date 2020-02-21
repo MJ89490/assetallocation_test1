@@ -2,38 +2,15 @@
 
 {% block mainhome %}
     <!-- Style of the Home Page -->
-    <style type="text/css">
-            .text-database { color: #007faa; }
-
-            #section-1 {padding-bottom: 100px; padding-top: 138px; }
-
-            #container1 {padding-bottom: 100px; }
-
-            .footer { background-color: #fff; }
-            .mt-auto, .my-auto { margin-top: auto!important; }
-            .pb-3, .py-3 { padding-bottom: 1rem!important; }
-            .pt-3, .py-3 { padding-top: 1rem!important; }
-            .text-muted {font-size: 12px; }
-            #row1 {padding-bottom: 250px; }
-
-            .link-model {color: #333;}
-            .link-model:visited {color: #333; text-decoration: none; outline: none;}
-            .link-model:hover {color: #333;}
-            .link-model:active {color: #333; text-decoration: none; outline: none;}
-            .link-model:focus {color: #333; text-decoration: none; outline: none;}
-
-            .display-4 {font-size: 2.75rem;}
-            .display-3 {font-size: 5rem;}
-            @media (min-width: 992px)
-            .text-lg-left {text-align: left!important;}
-            .text-secondary {color: #656e79!important;}
-            p {display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px;
-               margin-inline-end: 0px;}
-    </style>
+    <head>
+        <!-- HOME PAGE CSS STYLE
+        ================================================== -->
+        <link rel="stylesheet" href="{{url_for('.static', filename='home_css.css')}}">
+    </head>
 
     <!-- Body of the Home Page -->
     <body data-aos-easing="ease-out-quad" data-aos-duration="700" data-aos-delay="0">
-    <!--#region Main Home Text  -->
+        <!--#region Main Home Text  -->
         <!-- ASSET ALLOCATION HOME PAGE
         ================================================== -->
         <section class="pt-4 pt-md-11" id="section-1">
@@ -84,14 +61,14 @@
             </div>
           </div>    <!-- / .container -->
         </section>  <!-- / .section -->
-    <!--#endregion -->
+        <!--#endregion -->
 
-    <!--#region Display all the available models  -->
+        <!--#region Display all the available models  -->
         <section class="py-8 py-md-11 border-bottom">
           <div class="container">
               <div class="row" id="row1">
                 <!--#region Times Model -->
-              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up">
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up">
                     <!-- Icon -->
                     {% include 'modelsIcons.html' %}
                     <!-- Heading -->
@@ -104,11 +81,11 @@
                     <p class="text-muted mb-6 mb-md-0">
                         Short description of the Times model.
                     </p>
-              </div>
+                </div>
                 <!--#endregion -->
 
                 <!--#region Maven Model -->
-              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
                     <!-- Icon -->
                     {% include 'modelsIcons.html' %}
                     <!-- Heading -->
@@ -117,15 +94,15 @@
                     </h3>
                       <!-- Modal Maven Model -->
                     {% include 'mavenModal.html' %}
-                <!-- Text -->
-                <p class="text-muted mb-6 mb-md-0">
-                  Short description of the Maven model.
-                </p>
-              </div>
+                    <!-- Text -->
+                    <p class="text-muted mb-6 mb-md-0">
+                      Short description of the Maven model.
+                    </p>
+                </div>
                 <!--#endregion -->
 
                 <!--#region Effect Model -->
-              <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
                     <!-- Icon -->
                     {% include 'modelsIcons.html' %}
                     <!-- Heading -->
@@ -134,31 +111,29 @@
                     </h3>
                     <!-- Modal Effect Model -->
                     {% include 'effectModal.html' %}
-                <!-- Text -->
-                <p class="text-muted mb-0">
-                   Short description of the Effect model.
-                </p>
-              </div>
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                       Short description of the Effect model.
+                    </p>
+                </div>
                 <!--#endregion-->
 
                 <!--#region Curp Model-->
               <br><div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
                     <!-- Icon -->
                     {% include 'modelsIcons.html' %}
-
                     <!-- Heading -->
                     <h3>
                         <a class="link-model" href="#" data-toggle="modal" data-target="#CurpModal">Curp Model</a>
                     </h3>
-
                     <!-- Modal Curp Model -->
                     {% include 'curpModal.html' %}
 
-                <!-- Text -->
-                <p class="text-muted mb-0">
-                   Short description of the Curp model.
-                </p>
-            </div>
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                       Short description of the Curp model.
+                    </p>
+                  </div>
                 <!--#endregion-->
 
                 <!--#region Fica Model-->
@@ -171,32 +146,28 @@
                     </h3>
                     <!-- Modal Fica Model -->
                     {% include 'ficaModal.html' %}
-                <!-- Text -->
-                <p class="text-muted mb-0">
-                   Short description of the Fica model.
-                </p>
-            </div>
+                    <!-- Text -->
+                    <p class="text-muted mb-0">
+                       Short description of the Fica model.
+                    </p>
+                </div>
                 <!--#endregion-->
 
                 <!--#region Factor Model-->
                 <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-
                     <!-- Icon -->
                     {% include 'modelsIcons.html' %}
-
                     <!-- Heading -->
                     <h3>
                         <a class="link-model" href="#" data-toggle="modal" data-target="#FactorModal">Factor Model</a>
                     </h3>
-
                     <!-- Modal Factor Model -->
                     {% include 'factorModal.html' %}
-
                     <!-- Text -->
                     <p class="text-muted mb-0">
                         Short description of the Factor model.
                     </p>
-            </div>
+                </div>
                 <!--#endregion-->
 
                 <!--#region Comca Model-->
@@ -213,7 +184,7 @@
                     <p class="text-muted mb-0">
                        Short description of the Comca model.
                     </p>
-            </div>
+                </div>
                 <!--#endregion-->
 
                 <!--#region Consolidation Page-->
@@ -230,7 +201,7 @@
                     <p class="text-muted mb-0">
                        Short description of the Consolidation Page.
                     </p>
-            </div>
+                </div>
                 <!--#endregion-->
             </div>  <!-- / .row -->
               <div class="row" id="row2">
