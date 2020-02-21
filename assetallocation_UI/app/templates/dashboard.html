@@ -11,341 +11,278 @@
         <link rel="stylesheet" href="{{url_for('.static', filename='dashboard_css.css')}}">
     </head>
 
-<!-- Body of the Dashboard Page -->
-<body>
-    <style>html{margin-top:0 !important;}</style>
-    <main class="main bg-dark">
-        <body>
-            <div class="be-wrapper be-fixed-sidebar">
-                <!-- NAVBAR
-                ===================================== !-->
-                <nav class="navbar navbar-inverse fixed-top be-top-header">
-                <a><img width="110px" height="auto" id="icon-lgim" src="static/icon-lgim.png"></a>
-                </nav>
-                <!-- SIDEBAR
-                ===================================== !-->
-                <div class="be-left-sidebar">
-                    <div class="left-sidebar-wrapper">
-                        <div class="left-sidebar-spacer">
-                            <div class="left-sidebar-scroll ps">
-                                  <div class="left-sidebar-content">
-                                    <ul class="sidebar-elements">
-                                        <li class="divider">NAVIGATION</li><br><br>
-                                            <li class="parent">
-                                                  <a href="{{ url_for('home') }}"><span>Home</span></a><br><br>
-                                                  <a><span>Export Data</span></a><br><br><br>
-                                                    <ul class="sub-menu">
-                                                        <div class="text-left">
-                                                            <!-- If the user write wrong dates, then a message will be displayed -->
-                                                            {% for message in get_flashed_messages() %}
-                                                                <p>{{ message }}</p>
-                                                            {% endfor %}
-                                                            <!-- Export Data Form -->
-                                                            <form action='', method="POST" novalidate name="ExportDataForm">
-                                                                {{ form.hidden_tag() }}
-                                                                <div  class="form-group">
-                                                                    {{ form.inputs.label(id="label_text") }}<br>
-                                                                    {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
-                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectInputToOkSubmit">Ok</button><br><br>
-                                                                    {{ form.start_date_inputs.label(id="start_date_text") }}<br>
-                                                                    <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionStartDateToExport") }}</i><br>
-                                                                    {{ form.end_date_inputs.label(id="end_date_text") }}<br>
-                                                                    <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionEndDateToExport") }}</i><br><br>
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </ul>
-                                            </li>
-                                    </ul>
-                                      <div class="widget-support">
-                                            <div class="support-title">
-                                                <span class="name">Support</span>
-                                                <a href="#"><span><img class="icon-settings" width="auto" height="38" src="/static/icon-settings.png"></span></a>
-                                            </div>
+    <!-- Body of the Dashboard Page -->
+    <body>
+        <style>html{margin-top:0 !important;}</style>
+        <main class="main bg-dark">
+            <body>
+                <div class="be-wrapper be-fixed-sidebar">
+                    <!-- NAVBAR
+                    ===================================== !-->
+                    <nav class="navbar navbar-inverse fixed-top be-top-header">
+                    <a><img width="110px" height="auto" id="icon-lgim" src="static/icon-lgim.png"></a>
+                    </nav>
+                    <!-- SIDEBAR
+                    ===================================== !-->
+                    <div class="be-left-sidebar">
+                        <div class="left-sidebar-wrapper">
+                            <div class="left-sidebar-spacer">
+                                <div class="left-sidebar-scroll ps">
+                                      <div class="left-sidebar-content">
+                                        <ul class="sidebar-elements">
+                                            <li class="divider">NAVIGATION</li><br><br>
+                                                <li class="parent">
+                                                      <a href="{{ url_for('home') }}"><span>Home</span></a><br><br>
+                                                      <a><span>Export Data</span></a><br><br><br>
+                                                        <ul class="sub-menu">
+                                                            <div class="text-left">
+                                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                                {% for message in get_flashed_messages() %}
+                                                                    <p>{{ message }}</p>
+                                                                {% endfor %}
+                                                                <!-- Export Data Form -->
+                                                                <form action='', method="POST" novalidate name="ExportDataForm">
+                                                                    {{ form.hidden_tag() }}
+                                                                    <div  class="form-group">
+                                                                        {{ form.inputs.label(id="label_text") }}<br>
+                                                                        {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
+                                                                        <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectInputToOkSubmit">Ok</button><br><br>
+                                                                        {{ form.start_date_inputs.label(id="start_date_text") }}<br>
+                                                                        <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionStartDateToExport") }}</i><br>
+                                                                        {{ form.end_date_inputs.label(id="end_date_text") }}<br>
+                                                                        <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionEndDateToExport") }}</i><br><br>
+                                                                        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </ul>
+                                                </li>
+                                        </ul>
+                                          <div class="widget-support">
+                                                <div class="support-title">
+                                                    <span class="name">Support</span>
+                                                    <a href="#"><span><img class="icon-settings" width="auto" height="38" src="/static/icon-settings.png"></span></a>
+                                                </div>
+                                          </div>
                                       </div>
-                                  </div>
-                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 122px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 28px;"></div></div></div>
-                        </div>
-                    </div>
-                </div><!-- .sidebar -->
-                <!-- CHARTS AREA
-                ===================================== !-->
-                <div class="be-content">
-                    <div class="main-content container-fluid">
-                        <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2><br>
-                        <div class="row">
-                            <div class="col-md-12">
-                              <div class="widget widget-fullwidth be-loading">
-                                <div class="widget-head">
-                                    <div class="dates">
-                                        <!-- If the user write wrong dates, then a message will be displayed -->
-                                        {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
-                                            <p>{{ m }}</p>
-                                        {% endif %}
-                                        <!--Date Form -->
-                                        <form action='', method="POST" novalidate name="DateForm">
-                                            {{ form.hidden_tag() }}
-                                            <div  class="form-group" id="date_chart0_form">
-                                                    <div class="button-toolbar d-none d-md-block">
-                                                        <div class="btn-group">
-                                                            <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart0" id="selectInputDatesChartSubmit1">Ok</button>
-                                                        </div>
-                                                        <div class="btn-group">
-                                                            <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
-                                                                <img width="28" height="auto" src="/static/icon-download.png">
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="widget-chart-container">
-                                        <div align = "center" class="responsive-plot" id="allocation">
-                                            <script>
-                                                var trace1 = {
-                                                                y: {{ positions_us_equities }},
-                                                                name: 'S&P 500',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none',
-                                                                fillcolor: 'rgba(0, 153, 204, 0.5)'
-                                                                };
-
-                                                var trace2 = {
-                                                                y: {{ positions_eu_equities }},
-                                                                name: 'Eurostoxx',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace3 = {
-                                                                y: {{ positions_jp_equities }},
-                                                                name: 'Topix',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace4 = {
-                                                                y: {{ positions_hk_equities }},
-                                                                name: 'Hang-Seng',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace5 = {
-                                                                y: {{ positions_us_bonds }},
-                                                                name: 'Treasury bond',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace6 = {
-                                                                y: {{ positions_uk_bonds }},
-                                                                name: 'Gilt',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace7 = {
-                                                                y: {{  positions_eu_bonds }},
-                                                                name: 'Bund',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none',
-                                                                fillcolor: 'rgba(0, 153, 204, 0.5)'
-                                                               };
-
-                                                var trace8 = {
-                                                                y: {{ positions_ca_bonds }},
-                                                                name: 'Russell 2000',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace9 = {
-                                                                y: {{ positions_jpy }},
-                                                                name: 'JPY',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace10 = {
-                                                                y: {{ positions_eur }},
-                                                                name: 'EUR',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace11 = {
-                                                                y: {{ positions_aud }},
-                                                                name: 'AUD',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace12 = {
-                                                                y: {{ positions_cad }},
-                                                                name: 'CAD',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var trace13 = {
-                                                                y: {{ positions_gbp }},
-                                                                name: 'GBP',
-                                                                fill: 'tozeroy',
-                                                                type: 'scatter',
-                                                                mode: 'none'
-                                                               };
-
-                                                var layout = {
-                                                                title: 'Asset Allocation Over Times'.bold(),
-                                                                titlefont: {color: '#007faa'},
-                                                                showlegend: true,
-                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
-
-                                                               };
-
-                                                var config = { 'displayModeBar': false, 'responsive': true }
-                                                var data = [trace1, trace2, trace3, trace4, trace5,
-                                                trace6, trace7, trace8, trace9, trace10, trace11,
-                                                trace12, trace13];
-                                                Plotly.newPlot('allocation', data, layout, config);
-                                            </script>
-                                        </div>
-                                    </div>
-                                </div>
-                              </div>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 122px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 28px;"></div></div></div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-3">
-                                <div class="widget widget-fullwidth be-loading">
-                                        <div class="widget-head">
-                                            <div class="dates">
-                                                {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                <!--Date Form -->
-                                                <form action='', method="POST" novalidate name="DateForm">
-                                                    {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
+                    </div><!-- .sidebar -->
+                    <!-- CHARTS AREA
+                    ===================================== !-->
+                    <div class="be-content">
+                        <div class="main-content container-fluid">
+                            <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2><br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                  <div class="widget widget-fullwidth be-loading">
+                                    <div class="widget-head">
+                                        <div class="dates">
+                                            <!-- If the user write wrong dates, then a message will be displayed -->
+                                            {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
+                                                <p>{{ m }}</p>
+                                            {% endif %}
+                                            <!--Date Form -->
+                                            <form action='', method="POST" novalidate name="DateForm">
+                                                {{ form.hidden_tag() }}
+                                                <div  class="form-group" id="date_chart0_form">
                                                         <div class="button-toolbar d-none d-md-block">
                                                             <div class="btn-group">
-                                                                <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
                                                             </div>
                                                             <div class="btn-group">
-                                                                <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
                                                             </div>
                                                             <div class="btn-group">
-                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart1" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart0" id="selectInputDatesChartSubmit1">Ok</button>
                                                             </div>
                                                             <div class="btn-group">
-                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart1" id="selectDownloadDataChart">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
                                                                     <img width="28" height="auto" src="/static/icon-download.png">
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="widget-chart-container">
-                                                <div align = "center" class="responsive-plot" id="performance3">
-                                                    <script>
-                                                        var trace1 = {
-
-                                                                        y: {{ performance_jpy }},
-
-                                                                        mode: 'lines',
-                                                                        name: 'JPY',
-                                                                        line: {color: '#FFD503'}
-                                                                      };
-
-                                                         var data = [trace1];
-
-                                                         var layout = {
-                                                                        title: 'Performance JPY'.bold(),
-                                                                        titlefont: {color: '#007faa'},
-                                                                        showlegend: true,
-                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
-                                                                       };
-
-                                                         var config = {
-                                                                      'displayModeBar': false,
-                                                                      'responsive': true,
-                                                                       };
-
-                                                         Plotly.newPlot('performance3', data, layout, config);
-                                                    </script>
                                                 </div>
+                                            </form>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div align = "center" class="responsive-plot" id="allocation">
+                                                <script>
+                                                    var trace1 = {
+                                                                    y: {{ positions_us_equities }},
+                                                                    name: 'S&P 500',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none',
+                                                                    fillcolor: 'rgba(0, 153, 204, 0.5)'
+                                                                    };
+
+                                                    var trace2 = {
+                                                                    y: {{ positions_eu_equities }},
+                                                                    name: 'Eurostoxx',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace3 = {
+                                                                    y: {{ positions_jp_equities }},
+                                                                    name: 'Topix',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace4 = {
+                                                                    y: {{ positions_hk_equities }},
+                                                                    name: 'Hang-Seng',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace5 = {
+                                                                    y: {{ positions_us_bonds }},
+                                                                    name: 'Treasury bond',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace6 = {
+                                                                    y: {{ positions_uk_bonds }},
+                                                                    name: 'Gilt',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace7 = {
+                                                                    y: {{  positions_eu_bonds }},
+                                                                    name: 'Bund',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none',
+                                                                    fillcolor: 'rgba(0, 153, 204, 0.5)'
+                                                                   };
+
+                                                    var trace8 = {
+                                                                    y: {{ positions_ca_bonds }},
+                                                                    name: 'Russell 2000',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace9 = {
+                                                                    y: {{ positions_jpy }},
+                                                                    name: 'JPY',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace10 = {
+                                                                    y: {{ positions_eur }},
+                                                                    name: 'EUR',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace11 = {
+                                                                    y: {{ positions_aud }},
+                                                                    name: 'AUD',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace12 = {
+                                                                    y: {{ positions_cad }},
+                                                                    name: 'CAD',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var trace13 = {
+                                                                    y: {{ positions_gbp }},
+                                                                    name: 'GBP',
+                                                                    fill: 'tozeroy',
+                                                                    type: 'scatter',
+                                                                    mode: 'none'
+                                                                   };
+
+                                                    var layout = {
+                                                                    title: 'Asset Allocation Over Times'.bold(),
+                                                                    titlefont: {color: '#007faa'},
+                                                                    showlegend: true,
+                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+
+                                                                   };
+
+                                                    var config = { 'displayModeBar': false, 'responsive': true }
+                                                    var data = [trace1, trace2, trace3, trace4, trace5,
+                                                    trace6, trace7, trace8, trace9, trace10, trace11,
+                                                    trace12, trace13];
+                                                    Plotly.newPlot('allocation', data, layout, config);
+                                                </script>
                                             </div>
                                         </div>
-                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                             </div>
-                            <div class="col-12 col-lg-3">
-                                      <div class="widget widget-fullwidth be-loading">
-                                        <div class="widget-head">
-                                            <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this third chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
-                                                <!--Date Form -->
-                                                <form action='', method="POST" novalidate name="DateForm">
-                                                    {{ form.hidden_tag() }}
-                                            <div  class="form-group" id="date_chart0_form">
+                            <div class="row">
+                                <div class="col-12 col-lg-3">
+                                    <div class="widget widget-fullwidth be-loading">
+                                            <div class="widget-head">
+                                                <div class="dates">
+                                                    {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
+                                                        <p>{{ m }}</p>
+                                                    {% endif %}
+                                                    <!-- If the user write wrong dates, then a message will be displayed -->
+                                                    <!--Date Form -->
+                                                    <form action='', method="POST" novalidate name="DateForm">
+                                                        {{ form.hidden_tag() }}
+                                                        <div  class="form-group" id="date_chart0_form">
                                                             <div class="button-toolbar d-none d-md-block">
                                                                 <div class="btn-group">
-                                                                    <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                    <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
                                                                 </div>
                                                                 <div class="btn-group">
-                                                                    <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                    <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
                                                                 </div>
                                                                 <div class="btn-group">
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart2" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart1" id="selectInputDatesChartSubmit1">Ok</button>
                                                                 </div>
                                                                 <div class="btn-group">
-                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart2" id="selectDownloadDataChart">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart1" id="selectDownloadDataChart">
                                                                         <img width="28" height="auto" src="/static/icon-download.png">
                                                                     </button>
                                                                 </div>
                                                             </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="widget-chart-container">
-                                                <div align = "center" class="responsive-plot" id="performance4">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="widget-chart-container">
+                                                    <div align = "center" class="responsive-plot" id="performance3">
                                                         <script>
                                                             var trace1 = {
 
-                                                                            y: {{ performance_eur }},
+                                                                            y: {{ performance_jpy }},
+
                                                                             mode: 'lines',
-                                                                            name: 'EUR',
-                                                                            line: {color: '#009F4B'}
+                                                                            name: 'JPY',
+                                                                            line: {color: '#FFD503'}
                                                                           };
 
                                                              var data = [trace1];
 
                                                              var layout = {
-                                                                            title: 'Performance EUR'.bold(),
+                                                                            title: 'Performance JPY'.bold(),
                                                                             titlefont: {color: '#007faa'},
                                                                             showlegend: true,
                                                                             legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
@@ -356,287 +293,350 @@
                                                                           'responsive': true,
                                                                            };
 
-                                                             Plotly.newPlot('performance4', data, layout, config);
+                                                             Plotly.newPlot('performance3', data, layout, config);
                                                         </script>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                      </div>
-                            </div>
-                            <div class="col-12 col-lg-3">
-                                      <div class="widget widget-fullwidth be-loading">
-                                        <div class="widget-head">
-                                            <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this fourth chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
-                                                <!--Date Form -->
-                                                <form action='', method="POST" novalidate name="DateForm">
-                                                    {{ form.hidden_tag() }}
-                                            <div  class="form-group" id="date_chart0_form">
-                                                        <fieldset>
-                                                            <div class="button-toolbar d-none d-md-block">
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart3" id="selectInputDatesChartSubmit1">Ok</button>
-                                                                </div>
-                                                                 <div class="btn-group">
-                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
-                                                                        <img width="28" height="auto" src="/static/icon-download.png">
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="widget-chart-container">
-                                                <div align = "center" class="responsive-plot" id="performance5">
-                                                    <script>
-                                                        var trace1 = {
-
-                                                                        y: {{ performance_aud }},
-                                                                        mode: 'lines',
-                                                                        name: 'AUD',
-                                                                        line: {color: '#ED1C24'}
-                                                                      };
-
-                                                         var data = [trace1];
-
-                                                         var layout = {
-                                                                        title: 'Performance AUD'.bold(),
-                                                                        titlefont: {color: '#007faa'},
-                                                                        showlegend: true,
-                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
-                                                                       };
-
-                                                         var config = {
-                                                                      'displayModeBar': false,
-                                                                      'responsive': true,
-                                                                       };
-
-                                                         Plotly.newPlot('performance5', data, layout, config);
-                                                    </script>
-                                                </div>
-                                            </div>
-                                        </div>
-                                      </div>
-                            </div>
-                            <div class="col-12 col-lg-3">
-                                      <div class="widget widget-fullwidth be-loading">
-                                        <div class="widget-head">
-                                            <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this fifth chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
-                                                <!--Date Form -->
-                                                <form action='', method="POST" novalidate name="DateForm">
-                                                    {{ form.hidden_tag() }}
-                                            <div  class="form-group" id="date_chart0_form">
-                                                        <fieldset>
-                                                            <div class="button-toolbar d-none d-md-block">
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart4" id="selectInputDatesChartSubmit1">Ok</button>
-                                                                </div>
-                                                                 <div class="btn-group">
-                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
-                                                                        <img width="28" height="auto" src="/static/icon-download.png">
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="widget-chart-container">
-                                                <div align = "center" class="responsive-plot" id="performance6">
-                                                    <script>
-                                                        var trace1 = {
-
-                                                                        y: {{ performance_cad }},
-                                                                        mode: 'lines',
-                                                                        name: 'CAD',
-                                                                        line: {color: '#00AEEF'}
-                                                                      };
-
-                                                         var data = [trace1];
-
-                                                         var layout = {
-                                                                        title: 'Performance CAD'.bold(),
-                                                                        titlefont: {color: '#007faa'},
-                                                                        showlegend: true,
-                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
-                                                                       };
-
-                                                         var config = {
-                                                                      'displayModeBar': false,
-                                                                      'responsive': true,
-                                                                       };
-
-                                                         Plotly.newPlot('performance6', data, layout, config);
-                                                    </script>
-                                                </div>
-                                            </div>
-                                        </div>
-                                      </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                             <div class="col-12 col-lg-6">
-                                  <div class="widget widget-fullwidth be-loading">
-                                      <div class="widget-head">
-                                            <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this sixth chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
-                                                <!--Date Form -->
-                                                <form action='', method="POST" novalidate name="DateForm">
-                                                    {{ form.hidden_tag() }}
-                                            <div  class="form-group" id="date_chart0_form">
-                                                        <fieldset>
-                                                            <div class="button-toolbar d-none d-md-block">
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.start_date_chart5(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.end_date_chart5(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart5" id="selectInputDatesChartSubmit1">Ok</button>
-                                                                </div>
-                                                                 <div class="btn-group">
-                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart5" id="selectDownloadDataChart">
-                                                                        <img width="28" height="auto" src="/static/icon-download.png">
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        <div class="widget-chart-container">
-                                        <div align = "center" class="responsive-plot" id="myDiv1">
-                                            <script>
-                                                        var trace1 = {
-
-                                                                        y: {{ performance_gbp }},
-                                                                        mode: 'lines',
-                                                                        name: 'GBP',
-                                                                        line: {color: 'rgb(102, 102, 102)'}
-                                                                      };
-
-                                                         var data = [trace1];
-
-                                                         var layout = {
-                                                                        title: 'Performance GBP'.bold(),
-                                                                        titlefont: {color: '#007faa'},
-                                                                        showlegend: true,
-                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
-                                                                       };
-
-                                                         var config = {
-                                                                      'displayModeBar': false,
-                                                                      'responsive': true,
-                                                                       };
-
-                                                         Plotly.newPlot('myDiv1', data, layout, config);
-                                             </script>
-                                        </div>
-                                    </div>
-                                      </div>
-                                  </div>
+                                          </div>
                                 </div>
-                             <div class="col-12 col-lg-6">
-                                  <div class="widget widget-fullwidth be-loading">
-                                      <div class="widget-head">
-                                            <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this seventh chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
-                                                <!--Date Form -->
-                                                <form action='', method="POST" novalidate name="DateForm">
-                                                    {{ form.hidden_tag() }}
-                                            <div  class="form-group" id="date_chart0_form">
-                                                        <fieldset>
-                                                            <div class="button-toolbar d-none d-md-block">
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.start_date_chart6(class="form-control", placeholder="01/01/20202", id="selectionStartDateChart") }}</i>
+                                <div class="col-12 col-lg-3">
+                                          <div class="widget widget-fullwidth be-loading">
+                                            <div class="widget-head">
+                                                <div class="dates">
+                                                    <!-- If the user write wrong dates, then a message will be displayed -->
+                                                    {% if m == "Check the Start and End Date. They are incorrect for this third chart." %}
+                                                        <p>{{ m }}</p>
+                                                    {% endif %}
+                                                    <!--Date Form -->
+                                                    <form action='', method="POST" novalidate name="DateForm">
+                                                        {{ form.hidden_tag() }}
+                                                <div  class="form-group" id="date_chart0_form">
+                                                                <div class="button-toolbar d-none d-md-block">
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart2" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <button class="button" type="submit" name="submit_button" value="selectDataChart2" id="selectDownloadDataChart">
+                                                                            <img width="28" height="auto" src="/static/icon-download.png">
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.end_date_chart6(class="form-control", placeholder="05/01/20202", id="selectionEndDateChart") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart6" id="selectInputDatesChartSubmit1">Ok</button>
-                                                                </div>
-                                                                 <div class="btn-group">
-                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart6" id="selectDownloadDataChart">
-                                                                        <img width="28" height="auto" src="/static/icon-download.png">
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="widget-chart-container">
-                                                <div align = "center" class="responsive-plot" id="performance1">
-                                                    <script>
-                                                        var trace1 = {
-
-                                                                        y: {{ performance_total }},
-                                                                        mode: 'lines',
-                                                                        name: 'Total',
-                                                                        line: {color: 'rgb(0, 153, 204)'}
-                                                                      };
-
-                                                         var data = [trace1];
-
-                                                         var layout = {
-                                                                        title: 'Performance Since Inception'.bold(),
-                                                                        titlefont: {color: '#007faa'},
-                                                                        showlegend: true,
-                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
-                                                                       };
-
-                                                         var config = {
-                                                                      'displayModeBar': false,
-                                                                      'responsive': true,
-                                                                       };
-
-                                                         Plotly.newPlot('performance1', data, layout, config);
-                                                    </script>
+                                                        </div>
+                                                    </form>
                                                 </div>
+                                                <div class="widget-chart-container">
+                                                    <div align = "center" class="responsive-plot" id="performance4">
+                                                            <script>
+                                                                var trace1 = {
+
+                                                                                y: {{ performance_eur }},
+                                                                                mode: 'lines',
+                                                                                name: 'EUR',
+                                                                                line: {color: '#009F4B'}
+                                                                              };
+
+                                                                 var data = [trace1];
+
+                                                                 var layout = {
+                                                                                title: 'Performance EUR'.bold(),
+                                                                                titlefont: {color: '#007faa'},
+                                                                                showlegend: true,
+                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                               };
+
+                                                                 var config = {
+                                                                              'displayModeBar': false,
+                                                                              'responsive': true,
+                                                                               };
+
+                                                                 Plotly.newPlot('performance4', data, layout, config);
+                                                            </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                          <div class="widget widget-fullwidth be-loading">
+                                            <div class="widget-head">
+                                                <div class="dates">
+                                                    <!-- If the user write wrong dates, then a message will be displayed -->
+                                                    {% if m == "Check the Start and End Date. They are incorrect for this fourth chart." %}
+                                                        <p>{{ m }}</p>
+                                                    {% endif %}
+                                                    <!--Date Form -->
+                                                    <form action='', method="POST" novalidate name="DateForm">
+                                                        {{ form.hidden_tag() }}
+                                                <div  class="form-group" id="date_chart0_form">
+                                                            <fieldset>
+                                                                <div class="button-toolbar d-none d-md-block">
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart3" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                    </div>
+                                                                     <div class="btn-group">
+                                                                        <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
+                                                                            <img width="28" height="auto" src="/static/icon-download.png">
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="widget-chart-container">
+                                                    <div align = "center" class="responsive-plot" id="performance5">
+                                                        <script>
+                                                            var trace1 = {
+
+                                                                            y: {{ performance_aud }},
+                                                                            mode: 'lines',
+                                                                            name: 'AUD',
+                                                                            line: {color: '#ED1C24'}
+                                                                          };
+
+                                                             var data = [trace1];
+
+                                                             var layout = {
+                                                                            title: 'Performance AUD'.bold(),
+                                                                            titlefont: {color: '#007faa'},
+                                                                            showlegend: true,
+                                                                            legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                           };
+
+                                                             var config = {
+                                                                          'displayModeBar': false,
+                                                                          'responsive': true,
+                                                                           };
+
+                                                             Plotly.newPlot('performance5', data, layout, config);
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                          <div class="widget widget-fullwidth be-loading">
+                                            <div class="widget-head">
+                                                <div class="dates">
+                                                    <!-- If the user write wrong dates, then a message will be displayed -->
+                                                    {% if m == "Check the Start and End Date. They are incorrect for this fifth chart." %}
+                                                        <p>{{ m }}</p>
+                                                    {% endif %}
+                                                    <!--Date Form -->
+                                                    <form action='', method="POST" novalidate name="DateForm">
+                                                        {{ form.hidden_tag() }}
+                                                <div  class="form-group" id="date_chart0_form">
+                                                            <fieldset>
+                                                                <div class="button-toolbar d-none d-md-block">
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart4" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                    </div>
+                                                                     <div class="btn-group">
+                                                                        <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
+                                                                            <img width="28" height="auto" src="/static/icon-download.png">
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="widget-chart-container">
+                                                    <div align = "center" class="responsive-plot" id="performance6">
+                                                        <script>
+                                                            var trace1 = {
+
+                                                                            y: {{ performance_cad }},
+                                                                            mode: 'lines',
+                                                                            name: 'CAD',
+                                                                            line: {color: '#00AEEF'}
+                                                                          };
+
+                                                             var data = [trace1];
+
+                                                             var layout = {
+                                                                            title: 'Performance CAD'.bold(),
+                                                                            titlefont: {color: '#007faa'},
+                                                                            showlegend: true,
+                                                                            legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                           };
+
+                                                             var config = {
+                                                                          'displayModeBar': false,
+                                                                          'responsive': true,
+                                                                           };
+
+                                                             Plotly.newPlot('performance6', data, layout, config);
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                 <div class="col-12 col-lg-6">
+                                      <div class="widget widget-fullwidth be-loading">
+                                          <div class="widget-head">
+                                                <div class="dates">
+                                                    <!-- If the user write wrong dates, then a message will be displayed -->
+                                                    {% if m == "Check the Start and End Date. They are incorrect for this sixth chart." %}
+                                                        <p>{{ m }}</p>
+                                                    {% endif %}
+                                                    <!--Date Form -->
+                                                    <form action='', method="POST" novalidate name="DateForm">
+                                                        {{ form.hidden_tag() }}
+                                                <div  class="form-group" id="date_chart0_form">
+                                                            <fieldset>
+                                                                <div class="button-toolbar d-none d-md-block">
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.start_date_chart5(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.end_date_chart5(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart5" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                    </div>
+                                                                     <div class="btn-group">
+                                                                        <button class="button" type="submit" name="submit_button" value="selectDataChart5" id="selectDownloadDataChart">
+                                                                            <img width="28" height="auto" src="/static/icon-download.png">
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            <div class="widget-chart-container">
+                                            <div align = "center" class="responsive-plot" id="myDiv1">
+                                                <script>
+                                                            var trace1 = {
+
+                                                                            y: {{ performance_gbp }},
+                                                                            mode: 'lines',
+                                                                            name: 'GBP',
+                                                                            line: {color: 'rgb(102, 102, 102)'}
+                                                                          };
+
+                                                             var data = [trace1];
+
+                                                             var layout = {
+                                                                            title: 'Performance GBP'.bold(),
+                                                                            titlefont: {color: '#007faa'},
+                                                                            showlegend: true,
+                                                                            legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                           };
+
+                                                             var config = {
+                                                                          'displayModeBar': false,
+                                                                          'responsive': true,
+                                                                           };
+
+                                                             Plotly.newPlot('myDiv1', data, layout, config);
+                                                 </script>
+                                            </div>
                                         </div>
+                                          </div>
                                       </div>
                                     </div>
-                                  </div>
+                                 <div class="col-12 col-lg-6">
+                                      <div class="widget widget-fullwidth be-loading">
+                                          <div class="widget-head">
+                                                <div class="dates">
+                                                    <!-- If the user write wrong dates, then a message will be displayed -->
+                                                    {% if m == "Check the Start and End Date. They are incorrect for this seventh chart." %}
+                                                        <p>{{ m }}</p>
+                                                    {% endif %}
+                                                    <!--Date Form -->
+                                                    <form action='', method="POST" novalidate name="DateForm">
+                                                        {{ form.hidden_tag() }}
+                                                <div  class="form-group" id="date_chart0_form">
+                                                            <fieldset>
+                                                                <div class="button-toolbar d-none d-md-block">
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.start_date_chart6(class="form-control", placeholder="01/01/20202", id="selectionStartDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <i>{{ form.end_date_chart6(class="form-control", placeholder="05/01/20202", id="selectionEndDateChart") }}</i>
+                                                                    </div>
+                                                                    <div class="btn-group">
+                                                                        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart6" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                    </div>
+                                                                     <div class="btn-group">
+                                                                        <button class="button" type="submit" name="submit_button" value="selectDataChart6" id="selectDownloadDataChart">
+                                                                            <img width="28" height="auto" src="/static/icon-download.png">
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="widget-chart-container">
+                                                    <div align = "center" class="responsive-plot" id="performance1">
+                                                        <script>
+                                                            var trace1 = {
+
+                                                                            y: {{ performance_total }},
+                                                                            mode: 'lines',
+                                                                            name: 'Total',
+                                                                            line: {color: 'rgb(0, 153, 204)'}
+                                                                          };
+
+                                                             var data = [trace1];
+
+                                                             var layout = {
+                                                                            title: 'Performance Since Inception'.bold(),
+                                                                            titlefont: {color: '#007faa'},
+                                                                            showlegend: true,
+                                                                            legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                           };
+
+                                                             var config = {
+                                                                          'displayModeBar': false,
+                                                                          'responsive': true,
+                                                                           };
+
+                                                             Plotly.newPlot('performance1', data, layout, config);
+                                                        </script>
+                                                    </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                            </div>
                         </div>
-                    </div>
-                </div><!-- .content -->
+                    </div><!-- .content -->
+                </div>
+            </body><!-- .body2 -->
+        </main>
+        <!-- FOOTER
+         ===================================== !-->
+        <footer class="footer" id="container-footer">
+            <div class="container" align="center">
+                <span class="text-muted" id="footer-dashboard-title">© Legal & General 2020</span>
             </div>
-        </body><!-- .body2 -->
-    </main>
-    <!-- FOOTER
-     ===================================== !-->
-    <footer class="footer" id="container-footer">
-        <div class="container" align="center">
-            <span class="text-muted" id="footer-dashboard-title">© Legal & General 2020</span>
-        </div>
-    </footer><!-- .footer -->
-</body><!-- .body1 -->
+        </footer><!-- .footer -->
+    </body><!-- .body1 -->
 {% endblock %}

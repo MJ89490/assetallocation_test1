@@ -73,7 +73,8 @@ def protected_models():
 #     bar = create_plot()
 #     return render_template('redirection_display.html', plot=bar)
 
-@app.route('/times_display',  methods=['GET', 'POST'])
+
+@app.route('/times_page',  methods=['GET', 'POST'])
 @login_required
 def times():
     form = InputsTimesModel()
@@ -119,7 +120,7 @@ def times():
         if request.form['submit_button'] == 'runTimesModel':
             get_inputs_from_flask(model_type=models_names.Models.times.name, times_inputs=STRATEGY, path_excel=PATH_EXCEL_TIMES)
 
-    return render_template('times_display.html', title="Times", form=form)
+    return render_template('times_page.html', title="Times", form=form)
 
 
 @app.route('/times_overview')
