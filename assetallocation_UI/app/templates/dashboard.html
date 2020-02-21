@@ -1,149 +1,1009 @@
-<head lang="en">
-    <meta charset="UTF-8">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% extends 'bootstrap/base.html' %}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block navbar %}
+    <head>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <!--<script type="text/javascript" src="C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\assetallocation_UI\app\templates\times_charts.js"></script>-->
+    </head>
+
     <style type="text/css">
-.container {
-    margin: 130px auto;
-    min-height: 320px;
-    width: 940px;
-    overflow: auto;
-    padding: 0px 10px;
+
+    body {
+            min-height: 100%;
+         }
+
+    *, ::after, ::before {
+                            -webkit-box-sizing: border-box;
+                         }
+
+    body {
+        padding: 0;
+        font-family: Merriweather,serif;
+        background-color: #eee;
+        height: auto;
+        min-height: 100%;
+        line-height: 1.42857143;
+    }
+
+    body {
+        margin: 0;
+         background-color: #eee;
+        font-family: Merriweather,serif;
+        font-size: 4.5 rem;
+        font-weight: 300;
+        color: #404040;
+        text-align: left;
+        display: block;
+    }
+
+
+    .be-wrapper { min-height: 100%; padding-top: 61px;}
+     div {display: block;}
+
+    .flex-column, body, .card--summary__theme-action, .hero, .profile__hero {
+        -webkit-box-orient: vertical !important;
+        -webkit-box-direction: normal !important;
+        flex-direction: column !important;
+    }
+
+.d-flex, .nav-preview .nav-link, body, .list-dotted, .card--summary__item, .card--summary__theme-action, .card--summary__theme-description, .card--summary__footer, .card--table .card__item, .theme-card--xl .theme-card__footer, .theme-cards__heading, .rating, .hero, .profile__hero, .profile-author, .feature-screenshot__overlay, .theme-description__list__item, .theme-review__heading, .theme-purchases__item, .upload-image__cover__overlay, .stat__title {
+    display: flex !important;
 }
-.left {
-    float: left;
-    width: 600px;
-    margin-right: 20px;
+
+
+.main {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    position: relative;
 }
-</style>
-</head>
-
- <style>
-       body{font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
-
-      .p-0{padding:0!important;}
-      .shadow{box-shadow:0px 0.5rem 1rem rgba(0,0,0,0.15) !important;}
-      .bg-dark{background-color:#343a40 !important;}
-      .fixed-top {position: fixed; top: 0px; right: 0px; left: 0px; z-index: 1030;}
-      *, ::after, ::before {box-sizing: border-box;}
-      .navbar-dark .navbar-brand {color: #fff;}
 
 
-       .navbar-dark .navbar-brand:focus, .navbar-dark .navbar-brand:hover {color: #fff;}
-       .navbar-dark .navbar-brand {color: #fff;}
-        .navbar-brand {padding-top: 0.75rem; padding-bottom: 0.75rem; font-size: 1rem;
-        background-color: #007faa; box-shadow: inset -1px 0px 0px rgba(0,0,0,0.25);}
-        .mr-0, .mx-0 {margin-right: 0px !important;}
-        .navbar-brand {display: inline-block; line-height: inherit; white-space: nowrap;}
-        /*@media all and (min-width:768px)*/
-        .col-md-2 {-ms-flex: 0 0 16.666667%; flex: 0 0 16.666667%; max-width: 16.66%;}
-        .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
-        position: relative;
-        width: 100%;
-        padding-right: 15px;
-        padding-left: 15px;
+article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, section {
+    display: block;
+}
+
+
+
+        .be-top-header{padding: 0; margin: 0; margin-bottom:0; background-color: #007faa; border: 0; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #007faa;  }
+        .be-top-header {padding-bottom: 0.1rem; line-height: 1em;}
+        .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030; height: 85px;}
+
+        .be-fixed-sidebar .be-left-sidebar {height: 100%; margin-top: 61px; padding-bottom: 61px; position: fixed; top: 0; bottom: 0; z-index: 1029;}
+
+        .be-left-sidebar {background-color: #f5f5f5; width: 230px; left: 0; position: absolute; border-right: 1px solid #e3e3e3;}
+
+        .be-left-sidebar .left-sidebar-wrapper {display: table; table-layout: fixed; width: 100%; height: 100%;}
+
+        .be-left-sidebar .left-sidebar-spacer {height: 100%;}
+
+         .be-left-sidebar .left-sidebar-content {top: 0; bottom: 0; left: 0; right: 0;}
+
+         .be-left-sidebar .sidebar-elements {padding-left: 20px;}
+
+         .be-left-sidebar .widget-support .support-title { color: #7b7b7b; font-size: 13px; font-weight:600; line-height: 30px; padding-bottom: 20px;}
+
+          .be-left-sidebar .widget-support .icon-settings {padding: 0 15px; float: right;}
+
+           .be-left-sidebar .sidebar-elements .divider {color: #007faa; line-height: 30px; font-weight: 600; text-transform: uppercase; font-size: 18px; margin-top:50px}
+
+         .be-left-sidebar .sidebar-elements>li {list-style: none;  }
+
+         .be-left-sidebar .sidebar-elements>li>a {
+            display: block;
+            padding: 0 20px;
+            color: #696969;
+            font-size: 17px;
+            line-height: 40px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-decoration: none;
         }
 
-        .pl-3, .px-3 {padding-left: 1rem !important; padding-right: 1rem !important;}
-        .navbar-nav {display: flex; flex-direction: column; margin-bottom: 0px; list-style: none;}
-        dl, ol, ul {margin-top: 0px; margin-bottom: 1rem;}
+         .be-left-sidebar .sidebar-elements li.parent>a:before {
+            content: '\203A';
+            float: right;
+            font-family: "Material Icons";
+            font-size: 3rem;
+            color: #b0b0b0;
+        }
 
-        *, ::after, ::before {box-sizing: border-box;}
-        .navbar-nav {list-style-type:none; list-style-position:outside; list-style-image:none; list-style: none;}
-
-        .navbar-dark .navbar-nav .nav-link {color: rgba(255, 255, 255, 0.5);}
-        .navbar-nav .nav-link {padding-right: 0px; padding-left: 0px;}
-        .nav-link {display: block; padding: .5rem 1rem;}
-        a {color: #007bff; text-decoration: none;}
-
-        .sidebar {
-            position: fixed;
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
-            z-index: 100;
-            padding: 48px 0 0;
-            box-shadow: inset -1px 0px 0px rgba(0,0,0,0.1);}
-            /*@media all and (min-width:768px)*/
-        .d-md-block {display: block !important;}
-        .bg-light {background-color: rgba(255, 255, 255, 1) !important;}
-        /*@media all and (min-width:768px)*/
-        .col-md-2 { -ms-flex: 0 0 16.666667%; flex: 0 0 16.666667%; max-width: 16.66%;}
-        .sidebar-sticky {position: relative; top: 0px; height: calc(100vh - 48px); padding-top: 0.5rem; overflow-x: hidden; overflow-y: auto;}
-
-        .nav {
+         .be-left-sidebar .sidebar-elements>li ul {
+            background-color: #f5f5f5;
+            padding-top: 10px;
+            padding-right: 0 px;
+            padding-bottom: 10px;
+            padding-left: 10px;
             list-style: none;
-            list-style-type:none;
-            list-style-position:outiside;
-            list-style-image:none;
-            padding-left:0px;
+            <!--line-height: 5px;-->
+            height: 820px;
+            width: 200px;
         }
-        .sidebar .active.nav-link {color: #007bff;}
-        .sidebar .nav-link {font-weight: 500; color: #333;}
-        .nav-link {display: block; padding: .5rem 1rem;}
-    </style>
 
-    <body>
-        <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">TIMES Model</a>
-        </nav>
+        .be-content {position: relative; left: 0; margin-left: 230px; min-height: 100%;}
 
-        <div class="container-fluid">
-            <div class="row">
-                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                    <div class="sidebar-sticky">
-                        <ul class="nav flex-column">
-                              <li class="nav-item">
-                                <a class="nav-link active" href="#">
-                                  <img src="\static\home_32.png" class="img-fluid d-none d-lg-block">
-                                  Dashboard <span class="sr-only">(current)</span>
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Performance since inception
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Performance Attribution
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Allocation Over Time
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                    Cumulative Performance
-                                </a>
-                              </li>
-                              <li class="nav-item">
-                                <a class="nav-link">
-                                  <img src="\static\bar_chart_1_32.png" class="img-fluid d-none d-lg-block">
-                                  Monthly Performance
-                                </a>
-                              </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </div>
-</body>
+        .main-content {padding-top: 50px;}
+
+        .main-content .dashboard-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
+
+        .container-fluid {
+                            width: 100%;
+                            padding-right: 15px;
+                            padding-left: 15px;
+                            margin-right: auto;
+                            margin-left: auto;
+                            margin-top: 5px;
+                            }
+
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+            }
+
+
+       @media (min-width: 1200px)
+        .col-xl-3 {
+            -webkit-box-flex: 0;
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+
+        @media (min-width: 768px)
+        .col-md-12 {
+            -webkit-box-flex: 0;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+@media (min-width: 992px)
+.col-lg-6 {
+    -webkit-box-flex: 0;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+@media (min-width: 992px)
+.col-lg-4 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+
+@media (min-width: 992px)
+.col-lg-6 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+@media (min-width: 768px)
+.col-md-12 {
+    -webkit-box-flex: 0;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.mb-4, .my-4 {
+    margin-bottom: 1.539rem!important;
+}
+
+        .widget.widget-fullwidth {
+    padding: 0;
+}
+
+.widget.widget-fullwidth .widget-head {
+    padding: 20px 20px 10px;
+    margin-bottom: 0;
+    background-color: #fff;
+}
+
+
+element.style {
+    height: 265px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.card {
+    background-color: #fff;
+    margin-bottom: 15px;
+    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,.04);
+    box-shadow: 0 0 4px 0 rgba(0,0,0,.04);
+    border-width: 0;
+    border-radius: 3px;
+    display: block;
+}
+.card {
+    position: relative;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    min-width: 0;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.card-body {
+    border-radius: 0 0 3px 3px;
+    padding-bottom: 50px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-left: 3px;
+}
+
+
+.card-table .card-body {
+    padding: 0;
+}
+
+.widget.widget-fullwidth {
+    padding: 0;
+}
+
+.be-loading {
+    position: relative;
+}
+
+.widget {
+    background-color: #fff;
+    margin-bottom: 25px;
+    border-radius: 3px;
+}
+
+.widget-chart-container {
+    position: relative;
+
+}
+.table-responsive {
+    border: 0;
+    margin-bottom: 0;
+}
+
+.card-table table {
+    margin-bottom: 0;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #404040;
+    background-color: #fff;
+}
+
+table {
+    border-collapse: collapse;
+    text-align:center;
+}
+
+
+.table-borderless > tbody > tr > td,
+.table-borderless > tbody > tr > th,
+.table-borderless > tfoot > tr > td,
+.table-borderless > tfoot > tr > th,
+.table-borderless > thead > tr > td,
+.table-borderless > thead > tr > th {
+    border: none;
+}
+
+.thead-color {background-color: rgb(128, 128, 128);}
+.thead-title {color: #fff; font-size: 20px;}
+.thead-title1, .thead-title2 {color: #fff; font-size: 12px;}
+
+
+
+
+
+    #dropdown-toggle, #dropdown-toggle1{background-color:#fff; padding: 16px; font-size: 16px; border: none; border-color: none; width: 50px; height: 50px;}
+    #dropdown-toggle0 {background-color:#fff; padding-top: 1px; padding-right: 2px; font-size: 16px; border: none; border-color: none; width: 50px; height: 50px;}
+
+                    #dropdown-toggle, #dropdown-toggle1:hover, #dropdown-toggle, #dropdown-toggle1:active,
+                    #dropdown-toggle, #dropdown-toggle1:visited, #dropdown-toggle, #dropdown-toggle1:focus,
+                    #dropdown-toggle, #dropdown-toggle1:active:focus
+                {
+                    background-color:#fff!important ; border-color:#fff ; color:#fff;
+                }
+    .dropdown{
+                position: relative;
+                display: inline-block;
+                float: right;
+                padding-right: 10px;
+             }
+
+ .dropdown-menu {
+                 display: none;
+                 position: absolute;
+                 background-color: #fff;
+                 min-width: 160px;
+                 box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                 z-index: 1;
+                 text-align:center;
+
+                }
+
+.dropdown-menu a {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+ .dropdown-menu a:hover{
+
+                color:black !important;
+                text-decoration: none;
+                background-color: #ddd;}
+
+ .dropdown: hover .dropdown-item {display: block;}
+ .dropdown: hover .btn {background-color: #3e8e41;}
+
+ #selectionStartDateChart, #selectionEndDateChart {font-size:10px; height: 25px; padding-top: 5px; }
+
+ #selectInputToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px;}
+ #selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 250px; }
+ #titleInputToExport {color: #696969; font-size: 12px;}
+ #selectInputToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+ #selectionStartDateToExport, #selectionEndDateToExport {background-color: #eee; border-color: #696969; color: #696969; }
+ #selectInputDatesChartSubmit, #selectInputDatesChartSubmit1 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
+ #selectInputDatesChartSubmit7 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
+ #selectionStartDateChart, #selectionEndDateChart {background-color: #fff; border-color: #696969; color: #696969; }
+
+  #footer-dashboard-title {font-size: 12px;}
+
+  #icon-lgim {padding-left: 25px; padding-top: 5px; }
+
+  #container-footer{ background-color: #eee; padding-left: 210px;  }
+
+  .overview-span { color: #007faa; }
+
+  #selectDownloadDataChart {padding-left: 6px; padding-top: 2px; background-color: #fff;  width: 35px; height: 50px; border: none; }
+
+
+  btn.btn-primary:active
+{
+    background-color:pink !important; /* add here any color */
+}
+
+<!--https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg-->
+</style>
 
 <body>
-<div class="container">
-    <div class="left">
-            <div class="chart" id="bargraph">
-                <script>
-                    var graphs = {{div_placeholder | safe}};
-                    Plotly.plot('bargraph',graphs,{});
-                </script>
-        </div>
-    </div>
-</div>
+    <style>html{margin-top:0 !important;}</style>
+    <main class="main bg-dark">
+        <body>
+            <div class="be-wrapper be-fixed-sidebar">
+                <!-- Navbar
+                ===================================== !-->
+                <nav class="navbar navbar-inverse fixed-top be-top-header">
+                <a><img width="110px" height="auto" id="icon-lgim" src="static/icon-lgim.png"></a>
+                </nav>
+                <!-- Sidebar
+                ===================================== !-->
+                <div class="be-left-sidebar">
+                        <div class="left-sidebar-wrapper">
+                            <div class="left-sidebar-spacer">
+                                <div class="left-sidebar-scroll ps">
+                                  <div class="left-sidebar-content">
+                                    <ul class="sidebar-elements">
+                                        <li class="divider">NAVIGATION</li><br><br>
+                                            <li class="parent">
+                                                  <a href="{{ url_for('home') }}"><span>Home</span></a><br><br>
+                                                  <a><span>Export Data</span></a><br><br><br>
+                                                    <ul class="sub-menu">
+                                                        <div class="text-left">
+                                                            <!-- If the user write wrong dates, then a message will be displayed -->
+                                                            {% for message in get_flashed_messages() %}
+                                                                <p>{{ message }}</p>
+                                                            {% endfor %}
+                                                            <!-- Export Data Form -->
+                                                            <form action='', method="POST" novalidate name="ExportDataForm">
+                                                                {{ form.hidden_tag() }}
+                                                                <div  class="form-group">
+                                                                    {{ form.inputs.label(id="label_text") }}<br>
+                                                                    {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
+                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectInputToOkSubmit">Ok</button><br><br>
+                                                                    {{ form.start_date_inputs.label(id="start_date_text") }}<br>
+                                                                    <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionStartDateToExport") }}</i><br>
+                                                                    {{ form.end_date_inputs.label(id="end_date_text") }}<br>
+                                                                    <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionEndDateToExport") }}</i><br><br>
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </ul>
+                                            </li>
+                                    </ul>
+                                      <div class="widget-support">
+                                            <div class="support-title">
+                                                <span class="name">Support</span>
+                                                <a href="#"><span><img class="icon-settings" width="auto" height="38" src="/static/icon-settings.png"></span></a>
+                                            </div>
+                                      </div>
+
+                                  </div>
+                                <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 122px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 28px;"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- Charts Area
+                ===================================== !-->
+                <div class="be-content">
+                    <div class="main-content container-fluid">
+                        <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/icon-dashboard.png"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2><br>
+                        <div class="row">
+                            <div class="col-md-12">
+                              <div class="widget widget-fullwidth be-loading">
+                                <div class="widget-head">
+                                    <div class="dates">
+                                        <!-- If the user write wrong dates, then a message will be displayed -->
+                                        {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
+                                            <p>{{ m }}</p>
+                                        {% endif %}
+                                        <!--Date Form -->
+                                        <form action='', method="POST" novalidate name="DateForm">
+                                            {{ form.hidden_tag() }}
+                                            <div  class="form-group" id="date_chart0_form">
+                                                    <div class="button-toolbar d-none d-md-block">
+                                                        <div class="btn-group">
+                                                            <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                        </div>
+                                                        <div class="btn-group">
+                                                            <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                        </div>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart0" id="selectInputDatesChartSubmit1">Ok</button>
+                                                        </div>
+                                                        <div class="btn-group">
+                                                            <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
+                                                                <img width="28" height="auto" src="/static/icon-download.png">
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!--</div>-->
+                                    <div class="widget-chart-container">
+                                        <div align = "center" class="responsive-plot" id="allocation">
+                                            <script>
+                                                var trace1 = {
+                                                                y: {{ positions_us_equities }},
+                                                                name: 'S&P 500',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none',
+                                                                fillcolor: 'rgba(0, 153, 204, 0.5)'
+                                                                };
+
+                                                var trace2 = {
+                                                                y: {{ positions_eu_equities }},
+                                                                name: 'Eurostoxx',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace3 = {
+                                                                y: {{ positions_jp_equities }},
+                                                                name: 'Topix',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace4 = {
+                                                                y: {{ positions_hk_equities }},
+                                                                name: 'Hang-Seng',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace5 = {
+                                                                y: {{ positions_us_bonds }},
+                                                                name: 'Treasury bond',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace6 = {
+                                                                y: {{ positions_uk_bonds }},
+                                                                name: 'Gilt',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace7 = {
+                                                                y: {{  positions_eu_bonds }},
+                                                                name: 'Bund',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none',
+                                                                fillcolor: 'rgba(0, 153, 204, 0.5)'
+                                                               };
+
+                                                var trace8 = {
+                                                                y: {{ positions_ca_bonds }},
+                                                                name: 'Russell 2000',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace9 = {
+                                                                y: {{ positions_jpy }},
+                                                                name: 'JPY',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace10 = {
+                                                                y: {{ positions_eur }},
+                                                                name: 'EUR',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace11 = {
+                                                                y: {{ positions_aud }},
+                                                                name: 'AUD',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace12 = {
+                                                                y: {{ positions_cad }},
+                                                                name: 'CAD',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var trace13 = {
+                                                                y: {{ positions_gbp }},
+                                                                name: 'GBP',
+                                                                fill: 'tozeroy',
+                                                                type: 'scatter',
+                                                                mode: 'none'
+                                                               };
+
+                                                var layout = {
+                                                                title: 'Asset Allocation Over Times'.bold(),
+                                                                titlefont: {color: '#007faa'},
+                                                                showlegend: true,
+                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+
+                                                               };
+
+                                                var config = { 'displayModeBar': false, 'responsive': true }
+                                                var data = [trace1, trace2, trace3, trace4, trace5,
+                                                trace6, trace7, trace8, trace9, trace10, trace11,
+                                                trace12, trace13];
+                                                Plotly.newPlot('allocation', data, layout, config);
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-3">
+                                <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <div class="button-toolbar d-none d-md-block">
+                                                            <div class="btn-group">
+                                                                <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart1" id="selectInputDatesChartSubmit1">Ok</button>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart1" id="selectDownloadDataChart">
+                                                                    <img width="28" height="auto" src="/static/icon-download.png">
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="widget-chart-container">
+                                                <div align = "center" class="responsive-plot" id="performance3">
+                                                    <script>
+                                                        var trace1 = {
+
+                                                                        y: {{ performance_jpy }},
+
+                                                                        mode: 'lines',
+                                                                        name: 'JPY',
+                                                                        line: {color: '#FFD503'}
+                                                                      };
+
+                                                         var data = [trace1];
+
+                                                         var layout = {
+                                                                        title: 'Performance JPY'.bold(),
+                                                                        titlefont: {color: '#007faa'},
+                                                                        showlegend: true,
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                       };
+
+                                                         var config = {
+                                                                      'displayModeBar': false,
+                                                                      'responsive': true,
+                                                                       };
+
+                                                         Plotly.newPlot('performance3', data, layout, config);
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                      <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this third chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                            <div  class="form-group" id="date_chart0_form">
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart2" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart2" id="selectDownloadDataChart">
+                                                                        <img width="28" height="auto" src="/static/icon-download.png">
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="widget-chart-container">
+                                                <div align = "center" class="responsive-plot" id="performance4">
+                                                        <script>
+                                                            var trace1 = {
+
+                                                                            y: {{ performance_eur }},
+                                                                            mode: 'lines',
+                                                                            name: 'EUR',
+                                                                            line: {color: '#009F4B'}
+                                                                          };
+
+                                                             var data = [trace1];
+
+                                                             var layout = {
+                                                                            title: 'Performance EUR'.bold(),
+                                                                            titlefont: {color: '#007faa'},
+                                                                            showlegend: true,
+                                                                            legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                           };
+
+                                                             var config = {
+                                                                          'displayModeBar': false,
+                                                                          'responsive': true,
+                                                                           };
+
+                                                             Plotly.newPlot('performance4', data, layout, config);
+                                                        </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                      <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this fourth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                            <div  class="form-group" id="date_chart0_form">
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart3" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                                 <div class="btn-group">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
+                                                                        <img width="28" height="auto" src="/static/icon-download.png">
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="widget-chart-container">
+                                                <div align = "center" class="responsive-plot" id="performance5">
+                                                    <script>
+                                                        var trace1 = {
+
+                                                                        y: {{ performance_aud }},
+                                                                        mode: 'lines',
+                                                                        name: 'AUD',
+                                                                        line: {color: '#ED1C24'}
+                                                                      };
+
+                                                         var data = [trace1];
+
+                                                         var layout = {
+                                                                        title: 'Performance AUD'.bold(),
+                                                                        titlefont: {color: '#007faa'},
+                                                                        showlegend: true,
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                       };
+
+                                                         var config = {
+                                                                      'displayModeBar': false,
+                                                                      'responsive': true,
+                                                                       };
+
+                                                         Plotly.newPlot('performance5', data, layout, config);
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                      <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this fifth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                            <div  class="form-group" id="date_chart0_form">
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart4" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                                 <div class="btn-group">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
+                                                                        <img width="28" height="auto" src="/static/icon-download.png">
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="widget-chart-container">
+                                                <div align = "center" class="responsive-plot" id="performance6">
+                                                    <script>
+                                                        var trace1 = {
+
+                                                                        y: {{ performance_cad }},
+                                                                        mode: 'lines',
+                                                                        name: 'CAD',
+                                                                        line: {color: '#00AEEF'}
+                                                                      };
+
+                                                         var data = [trace1];
+
+                                                         var layout = {
+                                                                        title: 'Performance CAD'.bold(),
+                                                                        titlefont: {color: '#007faa'},
+                                                                        showlegend: true,
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                       };
+
+                                                         var config = {
+                                                                      'displayModeBar': false,
+                                                                      'responsive': true,
+                                                                       };
+
+                                                         Plotly.newPlot('performance6', data, layout, config);
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                             <div class="col-12 col-lg-6">
+                                  <div class="widget widget-fullwidth be-loading">
+                                      <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this sixth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                            <div  class="form-group" id="date_chart0_form">
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart5(class="form-control", placeholder="01/01/2020", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart5(class="form-control", placeholder="05/01/2020", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart5" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                                 <div class="btn-group">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart5" id="selectDownloadDataChart">
+                                                                        <img width="28" height="auto" src="/static/icon-download.png">
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        <div class="widget-chart-container">
+                                        <div align = "center" class="responsive-plot" id="myDiv1">
+                                            <script>
+                                                        var trace1 = {
+
+                                                                        y: {{ performance_gbp }},
+                                                                        mode: 'lines',
+                                                                        name: 'GBP',
+                                                                        line: {color: 'rgb(102, 102, 102)'}
+                                                                      };
+
+                                                         var data = [trace1];
+
+                                                         var layout = {
+                                                                        title: 'Performance GBP'.bold(),
+                                                                        titlefont: {color: '#007faa'},
+                                                                        showlegend: true,
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                       };
+
+                                                         var config = {
+                                                                      'displayModeBar': false,
+                                                                      'responsive': true,
+                                                                       };
+
+                                                         Plotly.newPlot('myDiv1', data, layout, config);
+                                             </script>
+                                        </div>
+                                    </div>
+                                      </div>
+                                  </div>
+                                </div>
+                             <div class="col-12 col-lg-6">
+                                  <div class="widget widget-fullwidth be-loading">
+                                      <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this seventh chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                            <div  class="form-group" id="date_chart0_form">
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart6(class="form-control", placeholder="01/01/20202", id="selectionStartDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart6(class="form-control", placeholder="05/01/20202", id="selectionEndDateChart") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart6" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                                 <div class="btn-group">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart6" id="selectDownloadDataChart">
+                                                                        <img width="28" height="auto" src="/static/icon-download.png">
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="widget-chart-container">
+                                                <div align = "center" class="responsive-plot" id="performance1">
+                                                    <script>
+                                                        var trace1 = {
+
+                                                                        y: {{ performance_total }},
+                                                                        mode: 'lines',
+                                                                        name: 'Total',
+                                                                        line: {color: 'rgb(0, 153, 204)'}
+                                                                      };
+
+                                                         var data = [trace1];
+
+                                                         var layout = {
+                                                                        title: 'Performance Since Inception'.bold(),
+                                                                        titlefont: {color: '#007faa'},
+                                                                        showlegend: true,
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                       };
+
+                                                         var config = {
+                                                                      'displayModeBar': false,
+                                                                      'responsive': true,
+                                                                       };
+
+                                                         Plotly.newPlot('performance1', data, layout, config);
+                                                    </script>
+                                                </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </main>
+    <!-- Footer
+     ===================================== !-->
+    <!-- .footer -->
+        <footer class="footer" id="container-footer">
+          <div class="container" align="center">
+              <span class="text-muted" id="footer-dashboard-title">© Legal & General 2020</span>
+          </div>
+        </footer>
+
+
 </body>
+{% endblock %}
