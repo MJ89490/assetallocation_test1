@@ -62,10 +62,10 @@ def login_post():
     return redirect(url_for('login'))
 
 
-@app.route('/selectArpModels')
+@app.route('/selection_models')
 @login_required
 def protected_models():
-    return render_template('selectArpModels.html', title="Models")
+    return render_template('selection_models.html', title="Models")
 
 # @app.route('/redirection_models')
 # @login_required

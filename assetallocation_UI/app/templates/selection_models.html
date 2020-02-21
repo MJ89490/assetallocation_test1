@@ -1,0 +1,52 @@
+{% extends "basePage.html" %}
+
+{% block selectModels %}
+    <!-- Style of the Selection Models Page -->
+    <head>
+        <!-- SELECTION MODELS PAGE CSS STYLE
+        ================================================== -->
+        <link rel="stylesheet" href="{{url_for('.static', filename='selection_models_page_css.css')}}">
+    </head>
+
+    <!-- Body of the Selection Models Page -->
+     <body>
+        <div class="container">
+            <div class="row" style="height: 100px;" id="row-1">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4 my-1">
+                    <div class="text-center">
+                        <img class="mb-4" alt="" src="\static\bar_graph_64.png" >
+                        <!-- Heading -->
+                        <h1 class="display-3 text-center text-md-left">
+                            Select a <span class="text-model">model</span> below
+                        </h1><br>
+                        <div class="btn-group btn-block">
+                            <button class="btn btn-secondary btn-lg dropdown-toggle btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Models
+                            </button><br>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ url_for('times') }}">Times</a><br>
+                                <a class="dropdown-item" href="#">Maven</a><br>
+                                <a class="dropdown-item" href="#">Effect</a><br>
+                                <a class="dropdown-item" href="#">Curp</a><br>
+                                <a class="dropdown-item" href="#">Fica</a><br>
+                                <a class="dropdown-item" href="#">Factor</a><br>
+                                <a class="dropdown-item" href="#">Comca</a>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+              <!-- FOOTER
+              ===================================== !-->
+            <footer class="footer mt-auto py-3" id="container-footer">
+                <div class="container" align="center">
+                    <span class="text-muted">© Legal & General 2020</span>
+                </div>
+            </footer><!-- .footer -->
+        </div><!-- .container -->
+    </body><!-- .body -->
+{% endblock %}
