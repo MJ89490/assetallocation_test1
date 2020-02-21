@@ -67,13 +67,6 @@ def login_post():
 def protected_models():
     return render_template('selection_models.html', title="Models")
 
-# @app.route('/redirection_models')
-# @login_required
-# def redirection_models():
-#     bar = create_plot()
-#     return render_template('redirection_display.html', plot=bar)
-
-
 @app.route('/times_page',  methods=['GET', 'POST'])
 @login_required
 def times():
