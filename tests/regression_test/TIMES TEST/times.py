@@ -67,31 +67,35 @@ class ComputationsSignals(ReadData):
         return sig
 
     def leverage_computations(self, future, market_select):
-        if computations_signals_object.leverage == leverage_types.Leverage.e.name or computations_signals_object.leverage == leverage_types.Leverage.s.name:
-            leverage = 0*future+1
-            leverage[computations_signals_object.market_select.index[market_select > 0]] = 1
-        elif computations_signals_object.leverage == leverage_types.Leverage.n.name:
-            leverage = 0*future + market_select
-        elif computations_signals_object.leverage == leverage_types.Leverage.v.name:
-            leverage = 1/computations_signals_object.future.ewm(alpha=1/150, min_periods=10).std()
+        if computations_signals_object.leverageType == leverage_types.Leverage.e.name or computations_signals_object.leverageType == leverage_types.Leverage.s.name:
+            leverage = 0 * future + 1
+            leverage[market_select.index[market_select > 0]] = 1
+        elif computations_signals_object.leverageType == leverage_types.Leverage.n.name:
+            leverage = 0 * future + market_select
+        elif computations_signals_object.leverageType == leverage_types.Leverage.v.name:
+            leverage = 1 / future.ewm(alpha=1/150, min_periods=10).std()
         else:
             raise Exception('Invalid entry')
-        leverage[computations_signals_object.market_select.index[computations_signals_object.market_select.isnull()]] = np.nan
+        leverage[market_select.index[market_select.isnull()]] = np.nan
         leverage = leverage.shift(periods=TIMES_LAG, freq='D', axis=0).reindex(computations_signals_object.future.append(pd.DataFrame(index=computations_signals_object.future.iloc[[-1]].index+BDay(2))).index, method='pad')
 
         return leverage
 
     def positioning_returns_r_computations(self, future, costs, leverage_data):
 
-        if computations_signals_object.leverageType == leverage_types.Leverage.s:
+        if computations_signals_object.leverageType == leverage_types.Leverage.s.name:
+            # (ret, R, positioning) = arp.returnTS(ComputationsSignals.signal_computations(), future,
+            #                                      leverage_data, 0*costs, 0) !!!!!!!!!!!!!!!!!!!!!!
             (ret, R, positioning) = arp.returnTS(ComputationsSignals.signal_computations(), future,
-                                                 leverage_data, 0*costs, 0)
+                                                 leverage_data, costs, 0)
             ret1 = ret
             R1 = R
             positioning1 = positioning
         else:
+            # (ret, R, positioning) = arp.returnTS(ComputationsSignals.signal_computations(), future,
+            #                                      leverage_data, 0*costs, 1) !!!!!!!!!!!!!!!!!!!!!!
             (ret, R, positioning) = arp.returnTS(ComputationsSignals.signal_computations(), future,
-                                                 leverage_data, 0*costs, 1)
+                                                 leverage_data, costs, 1)
             (ret1, R1, positioning1) = arp.rescale(ret, R, positioning, "Total", 0.01)
 
         return ret1, R1, positioning1
@@ -129,7 +133,7 @@ if __name__ == "__main__":
 
         computations_signals_object = ComputationsSignals()
 
-        computations_signals_object.leverage = model
+        computations_signals_object.leverageType = model
 
         data_future, data_settings, data_index, data_market_select, data_costs = \
             computations_signals_object.read_data_from_excel(path_to_settings=path_settings,
@@ -150,10 +154,11 @@ if __name__ == "__main__":
         if user.lower() == "o":
             write_data_to_csv = WriteDataToCsv()
 
-            write_data_to_csv.import_data_to_csv(leverage_name=computations_signals_object.leverage,
+            write_data_to_csv.import_data_to_csv(leverage_name=computations_signals_object.leverageType,
                                                  ret1_data=ret1_data,
                                                  R1_data=R1_data,
                                                  positioning_data=positioning_data,
                                                  signals_data=signals_data)
         else:
-            sys.exit(0)
+            continue
+    sys.exit(0)
