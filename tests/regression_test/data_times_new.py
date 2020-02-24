@@ -27,14 +27,14 @@ class DataTimes:
         :param leverage: type of the leverage (Equal, Normative, Volatility, Standalone)
         """
         self._leverage_type = ""
-        self.times_inputs = pd.DataFrame
-        self.asset_inputs = pd.DataFrame
-        self.all_data = pd.DataFrame
-        self.signals = pd.DataFrame
-        self.returns = pd.DataFrame
-        self.r = pd.DataFrame
-        self.positioning = pd.DataFrame
-        self.strategy_inputs = pd.DataFrame
+        self.times_inputs = pd.DataFrame()
+        self.asset_inputs = pd.DataFrame()
+        self.all_data = pd.DataFrame()
+        self.signals = pd.DataFrame()
+        self.returns = pd.DataFrame()
+        self.r = pd.DataFrame()
+        self.positioning = pd.DataFrame()
+        self.strategy_inputs = pd.DataFrame()
 
     @property
     def leverageType(self):
@@ -113,4 +113,6 @@ if __name__ == "__main__":
                                                         positioning=positioning_data,
                                                         signals=signals_data)
         else:
-            sys.exit(0)
+            continue
+
+        sys.exit(0)
