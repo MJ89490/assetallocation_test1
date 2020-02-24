@@ -8,7 +8,7 @@ import pytest
 import os
 import pandas as pd
 
-from tests.assetallocation_arp.models import data_test as data_test
+from tests.unit_tests.models import data_test as data_test
 from assetallocation_arp.enum import leverage_types as leverage
 
 CURRENT_PATH = os.path.dirname(__file__)

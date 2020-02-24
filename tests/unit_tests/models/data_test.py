@@ -5,10 +5,8 @@ import pandas as pd
 from assetallocation_arp.models import times
 from assetallocation_arp.data_etl import import_data as gd
 from assetallocation_arp.enum import models_names as models
-from assetallocation_arp.enum.leverage_types import Leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
-INPUT_FILE = os.path.abspath(os.path.join(CURRENT_PATH, "arp_dashboard_test_copy.xlsm"))
 
 
 class DataTest:
@@ -62,7 +60,7 @@ class DataTest:
         """
         not_needed_for_test, self.asset_inputs, self.all_data = gd.extract_inputs_and_mat_data(model_type=models.Models.times.name,
                                                                                                mat_file=None,
-                                                                                               input_file=INPUT_FILE,
+                                                                                               input_file=None,
                                                                                                model_date=None)
 
         leverage_file_name = f'times_inputs_{self.leverage}_leverage'

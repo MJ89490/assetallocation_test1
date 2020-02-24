@@ -30,7 +30,7 @@ setup(
         "Topic :: Utilities",
     ],
 
-    name="assetallocation_arp",
+    name="unit_tests",
     # version="0.0.1",
     version_config={
       "version_format": "{tag}.dev{sha}",
@@ -38,8 +38,8 @@ setup(
     },
     description="sist[3~[3~[3~[3~[3~",
     long_description=open('README.md').read(),
-    packages=find_packages("assetallocation_arp"),
-    package_dir={'': "assetallocation_arp"},
+    packages=find_packages("unit_tests"),
+    package_dir={'': "unit_tests"},
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
