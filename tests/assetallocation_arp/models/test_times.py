@@ -14,7 +14,7 @@ from assetallocation_arp.enum import leverage_types as leverage
 CURRENT_PATH = os.path.dirname(__file__)
 
 """
-Module test_times.py: tests the Times model (times.py) in order to know if it returns the correct following outputs:
+Module test_times.py: tests the Times model (data_times_old.py) in order to know if it returns the correct following outputs:
     - signals
     - returns
     - r

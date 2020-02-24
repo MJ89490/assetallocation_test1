@@ -11,7 +11,7 @@ import pandas as pd
 CURRENT_PATH = os.path.dirname(__file__)
 
 """
-Module test_regression_times.py: tests the Times model (times.py) and the old model results in order to know 
+Module test_regression_times.py: tests the Times model (data_times_old.py) and the old model results in order to know 
 if they return the correct following outputs:
     - signals
     - returns
@@ -20,9 +20,7 @@ if they return the correct following outputs:
 """
 
 
-# @pytest.mark.parametrize("signals_new, signals_old, ret1_new, ret1_old, R1_new, R1_old, positioning_new, positioning_old",
-#                          [("signals_new_v", "signals_old_v", "ret1_new_v", "ret1_old_v", "R1_new_v", "R1_old_v",
-#                            "positioning_new_v", "positioning_old_v")])
+
 @pytest.mark.parametrize("signals_new, signals_old, ret1_new, ret1_old, R1_new, R1_old, positioning_new, positioning_old",
                          [("signals_new_e", "signals_old_e", "ret1_new_e", "ret1_old_e", "R1_new_e", "R1_old_e",
                            "positioning_new_e", "positioning_old_e"),
