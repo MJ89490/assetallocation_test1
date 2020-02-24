@@ -20,25 +20,24 @@ following outputs:
     - all_data (we assume they are the correct data because we can't test the matlab file, it is very heavy)
 """
 
-@pytest.mark.parametrize("model_type, mat_file, input_file, model_date, strategy_inputs_expected, asset_inputs_expected",
+@pytest.mark.parametrize("model_type, mat_file, input_file, model_date, strategy_inputs_expected_leverage_v, asset_inputs_expected",
                          [('times', None, None, None,
-                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "strategy_inputs_expected")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "strategy_inputs_expected_leverage_v")),
                            os.path.abspath(os.path.join(CURRENT_PATH, "resources", "asset_inputs_expected"))
                            )]
                          )
-def test_extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date, strategy_inputs_expected,
+def test_extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date, strategy_inputs_expected_leverage_v,
                                      asset_inputs_expected):
 
-    dataframe_strategy_inputs = pd.read_csv(strategy_inputs_expected, index_col=0)
+    dataframe_strategy_inputs = pd.read_csv(strategy_inputs_expected_leverage_v, index_col=0)
     dataframe_asset_inputs = pd.read_csv(asset_inputs_expected, index_col=0)
 
-    strategy_inputs_origin, asset_inputs_origin, all_data = data.extract_inputs_and_mat_data(model_type=model_type,
-                                                                                             mat_file=mat_file,
-                                                                                             input_file=input_file,
-                                                                                             model_date=model_date)
-    pd.testing.assert_frame_equal(strategy_inputs_origin,
-                                      dataframe_strategy_inputs, check_column_type=False, check_names=False, check_dtype=False)
+    dataframe_strategy_inputs_origin = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "strategy_inputs_origin_leverage_v")), sep="\t", index_col=0)
+    datafrmae_asset_inputs_origin = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "asset_inputs_origin_leverage_v")), sep="\t", index_col=0)
 
-    pd.testing.assert_frame_equal(asset_inputs_origin,
-                                      dataframe_asset_inputs, check_column_type=False, check_names=False, check_dtype=False)
+    pd.testing.assert_frame_equal(dataframe_strategy_inputs_origin,
+                                  dataframe_strategy_inputs, check_column_type=False, check_names=False, check_dtype=False)
+
+    pd.testing.assert_frame_equal(datafrmae_asset_inputs_origin,
+                                  dataframe_asset_inputs, check_column_type=False, check_names=False, check_dtype=False)
 

@@ -19,8 +19,6 @@ if they return the correct following outputs:
     - positioning
 """
 
-
-
 @pytest.mark.parametrize("signals_new, signals_old, ret1_new, ret1_old, R1_new, R1_old, positioning_new, positioning_old",
                          [("signals_new_e", "signals_old_e", "ret1_new_e", "ret1_old_e", "R1_new_e", "R1_old_e",
                            "positioning_new_e", "positioning_old_e"),
