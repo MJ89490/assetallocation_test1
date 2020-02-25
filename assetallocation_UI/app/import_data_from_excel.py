@@ -57,9 +57,25 @@ def data_allocation_over_time_chart(times_data):
     ca_bonds = ca_bonds['CA 10y Bonds.2'].tolist()
 
     jpy = times_data.loc[:, 'TIMES Positions':'JPY.2']
+
+    jpy_start_date = '2018-09-07'
+    jpy_end_date = '2019-10-23'
+
+    jpy_full_dates = [str(d.date()) for d in jpy.loc[:, 'TIMES Positions'].dropna()]
+
+
+
+    jpy_start_date_index = jpy_full_dates.index(jpy_start_date)
+    jpy_end_date_index = jpy_full_dates.index(jpy_end_date) + 1
+
+    jpy_dates_list = jpy_full_dates[jpy_start_date_index:jpy_end_date_index]
+
+
     jpy = jpy.set_index('TIMES Positions')
     jpy = jpy.loc['2018-09-07':'2019-10-23']
     jpy = jpy['JPY.2'].tolist()
+
+
 
     eur = times_data.loc[:, 'TIMES Positions':'EUR.2']
     eur = eur.set_index('TIMES Positions')
@@ -82,7 +98,7 @@ def data_allocation_over_time_chart(times_data):
     gbp = gbp['GBP.2'].tolist()
 
     return us_equities, eu_equities, jp_equities, hk_equities, us_bonds, uk_bonds, eu_bonds, ca_bonds, jpy, eur, aud, \
-           cad, gbp
+           cad, gbp, jpy_dates_list
 
 def data_performance_since_inception_chart(times_data):
 

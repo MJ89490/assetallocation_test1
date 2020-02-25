@@ -226,11 +226,15 @@ def times_dashboard():
 
     positions_us_equities, positions_eu_equities, positions_jp_equities, positions_hk_equities, positions_us_bonds, \
     positions_uk_bonds, positions_eu_bonds, positions_ca_bonds, positions_jpy, positions_eur, positions_aud, \
-    positions_cad, positions_gbp = data_allocation_over_time_chart(times_data)
+    positions_cad, positions_gbp, jpy_dates_list = data_allocation_over_time_chart(times_data)
 
     performance_total, performance_gbp, performance_jpy, performance_eur, performance_aud, \
     performance_cad, performance_dates = data_performance_since_inception_chart(times_data)
 
+    data_test = ['2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04', '2000-01-05', '2000-01-06', '2000-01-07', '2000-01-08',
+     '2000-01-09', '2000-01-10', '2000-01-11', '2000-01-12', '2000-01-13', '2000-01-14', '2000-01-15', '2000-01-16',
+     '2000-01-17', '2000-01-18', '2000-01-19', '2000-01-20', '2000-01-21', '2000-01-22', '2000-01-23', '2000-01-24',
+     '2000-01-25', '2000-01-26', '2000-01-27', '2000-01-28', '2000-01-29', '2000-01-30', '2000-01-31']
     # signals = data_table_times(times_data=times_data)
 
     m = ""
@@ -311,6 +315,8 @@ def times_dashboard():
                            performance_aud=performance_aud,
                            performance_cad=performance_cad,
                            performance_dates=performance_dates,
+
+                           data_test=data_test
                            )
 
 @app.route('/logout')
