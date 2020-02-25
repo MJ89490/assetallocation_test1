@@ -5,7 +5,7 @@
         <!-- NAVBAR CSS STYLE
         ================================================== -->
         <style type="text/css">
-            body{font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
+            body{font-size: 4.5 rem; font-weight:300; font-family: Arial,serif;}
 
             .be-top-header{background-color:#007faa; border-color:#007faa;  }
             .be-top-header {padding-bottom: 0.1rem;  line-height: 1em;}
@@ -18,6 +18,7 @@
             #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa; font-weight: bold; font-size: 1.20em; }
             #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent;}
             #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:2px solid #fff; }
+            .dropdown {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent; font-size: 1.20em;}
         </style>
     </head>
 
@@ -28,10 +29,8 @@
         <nav class="navbar navbar-inverse fixed-top be-top-header" role="navigation" id="navbar1">
                 <div class="container-fluid">
                     <div class="navbar-header" style="padding-left: 15px">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
+                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
                     <div class="collapse navbar-collapse pull-left">
@@ -39,19 +38,35 @@
                             <img width="90px" height="auto" id="icon-lgim" alt="Legal and General" src="/static/img/icon-lgim.png">
                         </a>
                     </div>
-                    <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="nav-link active"><a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
-                            <!-- User is log-in -->
-                            {% if g.user.is_authenticated %}
-                                <li class="nav-link"><a class="nav-link" href="{{ url_for('protected_models') }}">Models</a></li>
+
+                    <div class="collapse navbar-collapse pull-right" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                                <li class="nav-link active">
+                                    <a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
+                                    <!-- User is log-in -->
+                                    {% if g.user.is_authenticated %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Models
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ url_for('times_page') }}">TIMES</a><br>
+                                            <a class="dropdown-item" href="#">MAVEN</a><br>
+                                            <a class="dropdown-item" href="#">EFFECT</a><br>
+                                            <a class="dropdown-item" href="#">CURP</a><br>
+                                            <a class="dropdown-item" href="#">FICA</a><br>
+                                            <a class="dropdown-item" href="#">FACTOR</a><br>
+                                            <a class="dropdown-item" href="#">COMCA</a>
+                                        </div>
+                                    </li>
                                 <li class="nav-link"><a class="nav-link" href="#">Models Consolidation</a></li>
                                 <li class="nav-link"><a class="nav-link" href="{{ url_for('logout') }}">LogOut</a></li>
-                            {% endif %}
-                            <!-- User is log-off -->
-                            {% if not g.user.is_authenticated %}
-                                <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-                            {% endif %}
+                                {% endif %}
+                                <!-- User is log-off -->
+                                {% if not g.user.is_authenticated %}
+                                    <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                                {% endif %}
+
                         </ul>
                     </div>
                 </div> <!-- .container -->
@@ -64,7 +79,7 @@
         <!-- BASE PAGE CSS STYLE
         ================================================== -->
         <style type="text/css">
-             body{font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif; background-color: #fff }
+             body{font-size: 4.5 rem; font-weight:300; font-family: Arial,serif; background-color: #fff }
 
             .text p {text-align: center; }
 
@@ -81,12 +96,12 @@
             .btn-primary {color: #fff; background-color: #007faa; border-color: #007faa;
                           box-shadow: 0 7px 16px 0 rgba(0,0,0,.2);}
 
-            .btn-secondary:hover, .btn-secondary:active, .btn-secondary:visited, .btn-secondary:focus, .btn-secondary:active:focus
-            {
-                background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
-            }
-            .btn-secondary {color: #fff; background-color: #007faa; border-color: #007faa;
-                          box-shadow: 0 7px 16px 0 rgba(0,0,0,.2);}
+            <!--.btn-secondary:hover, .btn-secondary:active, .btn-secondary:visited, .btn-secondary:focus, .btn-secondary:active:focus-->
+            <!--{-->
+                <!--background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;-->
+            <!--}-->
+            <!--.btn-secondary {color: #fff; background-color: #007faa; border-color: #007faa;-->
+                          <!--box-shadow: 0 7px 16px 0 rgba(0,0,0,.2);}-->
 
             .dropdown-menu{width:100%; text-align:center;}
             .dropdown-item{color: #333; font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}

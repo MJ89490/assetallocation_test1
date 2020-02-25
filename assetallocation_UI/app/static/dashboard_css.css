@@ -4,7 +4,7 @@ body { min-height: 100%; }
 
 body {
         padding: 0;
-        font-family: Merriweather,serif;
+        font-family: Arial,serif;
         background-color: #eee;
         height: auto;
         min-height: 100%;
@@ -14,7 +14,7 @@ body {
 body {
         margin: 0;
         background-color: #eee;
-        font-family: Merriweather,serif;
+        font-family: Arial,serif;
         font-size: 4.5 rem;
         font-weight: 300;
         color: #404040;

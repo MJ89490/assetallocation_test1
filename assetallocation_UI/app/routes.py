@@ -69,7 +69,7 @@ def protected_models():
 
 @app.route('/times_page',  methods=['GET', 'POST'])
 @login_required
-def times():
+def times_page():
     form = InputsTimesModel()
 
     global STRATEGY, PATH_EXCEL_TIMES
@@ -327,8 +327,3 @@ def logout():
 
 
 
-def return_func():
-    def path_getter():
-        some_path = ''
-        return some_path
-    return

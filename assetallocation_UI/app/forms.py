@@ -13,7 +13,6 @@ class LoginForm(FlaskForm):
     password = PasswordField(u'Password', validators=[DataRequired(message="The password is required")])
     submit = SubmitField('Sign In')
 
-
 class ExportDataForm(FlaskForm):
 
     inputs = SelectField('Inputs', choices=[('TIMES Signals', 'Signals'), ('TIMES Returns', 'Returns'), ('TIMES Positions','Positions')])
