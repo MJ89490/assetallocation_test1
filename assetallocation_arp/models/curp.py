@@ -7,6 +7,8 @@ CURP
 @author: JL89005
 """
 
+# Curp Carve out file \\inv\LGIM\FrontOffice\Bonds\Asset Allocation\Research&Strategy\ARP\CURP Carve Out.xlsm
+
 import pandas as pd
 import numpy as np
 
