@@ -104,4 +104,5 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
     asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
     all_data = matfile_to_dataframe(file_path, model_date)
+
     return strategy_inputs, asset_inputs, all_data
