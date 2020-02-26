@@ -32,7 +32,7 @@ def create_crosses(currencyList,matrixOne, matrixTwo):
        return matrixOne, matrixTwo
     elif len(currencyList.index) >=2:
        growingMatrixOne = pd.DataFrame([currencyList[0]]*(len(currencyList.index)-1), ignore_index=True)
-       growingMatrixTwo = pd.DataFrame([currencyList.tail],ignore_index=True)
+       growingMatrixTwo = pd.DataFrame([currencyList.tail], ignore_index=True)
        matrixOne = matrixOne.append(growingMatrixOne)
        matrixTwo = matrixTwo.append(growingMatrixTwo)
        currencyList = currencyList.tail
