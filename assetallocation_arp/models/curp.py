@@ -28,14 +28,15 @@ def create_crosses(currencyList,matrixOne, matrixTwo):
    # when this is called for the first time, matrixOne and matrixTwo both need to be []
    #  iterative function to create the matrix
     if len(currencyList.index) == 1:
-       # we have finished
+       # we have finished now just create a data frame with the right headers
+
        return matrixOne, matrixTwo
-    elif len(currencyList.index) >=2:
-       growingMatrixOne = pd.DataFrame([currencyList[0]]*(len(currencyList.index)-1), ignore_index=True)
-       growingMatrixTwo = pd.DataFrame([currencyList.tail], ignore_index=True)
+    elif len(currencyList.index) >= 2:
+       growingMatrixOne = pd.DataFrame([currencyList.head(1)]*(len(currencyList.index)-1), ignore_index=True)
+       growingMatrixTwo = pd.DataFrame([currencyList.tail(len(currencyList.index)-1)], ignore_index=True)
        matrixOne = matrixOne.append(growingMatrixOne)
        matrixTwo = matrixTwo.append(growingMatrixTwo)
-       currencyList = currencyList.tail
+       currencyList = currencyList.tail(len(currencyList.index)-1)
        # now recurse
        create_crosses(currencyList, matrixOne, matrixTwo)
     else:
@@ -90,6 +91,6 @@ def generate_graph_two_data():
 if __name__ == "__main__":
     # test inputs
     currencyInputs = pd.DataFrame(["EUR", "GBP", "USD", "JPY"])
-    matrixOneInput = pd.DataFrame([])
-    matrixTwoInput = pd.DataFrame([])
+    matrixOneInput = pd.DataFrame()
+    matrixTwoInput = pd.DataFrame()
     create_crosses(currencyList=currencyInputs, matrixOne=matrixOneInput, matrixTwo=matrixTwoInput)
