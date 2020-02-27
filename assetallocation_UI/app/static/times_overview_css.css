@@ -74,6 +74,9 @@
         .widget-head {
                                                 padding: 20px 20px 10px;
                                                 margin-bottom: 0;
+                                                background-color: rgb(152, 215, 235);
+                                                font-size: 20px;
+                                                color: #fff;
 
                                                }
 
@@ -98,31 +101,139 @@
         #chart-container4 { height: 555x; }
         #chart-container3 { height: 220px; }
 
-
-
-        .table {
-                    width: 100%;
-
-                    margin-bottom: 1rem;
+         .table {
+                    width: 15%;
+                    margin-left: 65px;
                     color: #404040;
                     background-color: #fff;
                 }
 
-        table   {
+        .table  {
                     border-collapse: collapse;
                     text-align:center;
+                    border-top: none;
+                  }
+
+        .table000 {
+                    width: 100%;
+                    margin-left: 1px;
+                    color: #404040;
+                    background-color: #fff;
                 }
 
-        .table-borderless > tbody > tr > td,
-        .table-borderless > tbody > tr > th,
-        .table-borderless > tfoot > tr > td,
-        .table-borderless > tfoot > tr > th,
-        .table-borderless > thead > tr > td,
-        .table-borderless > thead > tr > th { border: none; font-size: 12px; font-family: Arial, serif; }
+        .table000  {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+         .table00 {
+                    width: 15%;
+                    margin-left: 70px;
+                    color: #404040;
+                    background-color: #eee;
+                    border-top: 1px solid #eee;
+                    border-left: 1px solid #eee;
+                    border-right: 1px solid #eee;
+                }
+
+        .table00  {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+        .table0 {
+                    width: 15%;
+                    margin-left: 70px;
+                    color: #404040;
+                    background-color: #fff;
+                    border-left: 1px solid #eee;
+                    border-right: 1px solid #eee;
+                }
+
+        .table0   {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+
+        .table1 {
+                    width: 15%;
+                    margin-bottom: 1rem;
+                    margin-left: 70px;
+                    color: #404040;
+                    background-color: #fff;
+                    border: 1px solid #eee;
+
+                }
+
+        .table1   {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+
+        .table1bis {
+                    width: 15%;
+                    margin-bottom: 1rem;
+                    margin-left: 70px;
+                    color: #404040;
+                    background-color: #fff;
+                    border: 1px solid #eee;
+
+                }
+
+        .table1bis   {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+
+        .table2 {
+                    width: 100%;
+                    margin-bottom: 1rem;
+                    color: #404040;
+                    background-color: #fff;
+
+                    border: 1px solid #eee;
+                }
+
+        .table2   {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+        #signal-off-title, #signal-off-date {padding-top: 10px; padding-bottom: 10px; }
+        #positions-table0{ padding-left: 90px; padding-right:5px; }
+        #performance-ytd-table0 { padding-left: 15px; padding-right: 15px; }
+        #performance-weekly-table0 {padding-right: 10px; }
+        #performance-main-title-table0{ padding-left: 155px; }
+
+        .table-borderless > tbody > tr > td {font-size: 12px; font-family: Arial, serif; padding-bottom:2px; }
+        .table0-borderless > tbody > tr > td {font-size: 12px; font-family: Arial, serif; padding-bottom:2px; }
+        .table00-borderless > tbody > tr > td {font-size: 12px; font-family: Arial, serif; padding-bottom:2px; }
+        .table000-borderless > tbody > tr > td {font-size: 12px; font-family: Arial, serif; padding-bottom:2px; }
+
+        .table1-borderless > tbody > tr > td,
+        .table1-borderless > tbody > tr > th,
+        .table1-borderless > tfoot > tr > td,
+        .table1-borderless > tfoot > tr > th,
+        .table1-borderless > thead > tr > td,
+        .table1-borderless > thead > tr > th { border: none; font-size: 12px; font-family: Arial, serif; }
+
+        .table1-borderless > tbody > tr > td {padding-bottom: 10px; }
+
+        .table2-borderless > tbody > tr > td,
+        .table2-borderless > tbody > tr > th,
+        .table2-borderless > tfoot > tr > td,
+        .table2-borderless > tfoot > tr > th,
+        .table2-borderless > thead > tr > td,
+        .table2-borderless > thead > tr > th { border: none; font-size: 12px; font-family: Arial, serif; border-right: 1px solid #eee; }
+
+        .table2-borderless > tbody > tr > td {padding-bottom: 10px; }
 
         #body-charts {height: 200px ;}
 
-        .thead-color {background-color: rgb(128, 128, 128);}
+        .thead-color {background-color:#eee;}
         #thead-title, #thead-title1, #thead-title2, #thead-title3, #thead-title4, #thead-title5 {color: #fff; font-size: 20px;}
 
         .sub-thead-title1, .sub-thead-title2, .sub-thead-title3, .sub-thead-title4, .sub-thead-title5, .sub-thead-title6, .sub-thead-title7, .sub-thead-title8, .sub-thead-title9 {font-family: Arial, serif; color: #fff; font-size: 12px;}
@@ -130,9 +241,9 @@
         #sub-thead-title2 {padding-left: 180px; }
         #sub-thead-title3 {font-size: 15px; padding-left: 10px; }
         #sub-thead-title4 {font-size: 15px; }
-        #sub-thead-title5 {padding-left: 70px; }
-        #sub-thead-title6 {padding-left: 65px; }
-        #sub-thead-title7 {padding-left: 55px; }
+        #sub-thead-title5 {padding-left: 70px; color:black; }
+        #sub-thead-title6 {padding-left: 65px; color:black;}
+        #sub-thead-title7 {padding-left: 55px; color:black;}
         #sub-thead-title8, #sub-thead-title9 {font-size: 15px; padding-left: 10px; }
 
         #performance-weekly {padding-right: 90px;}

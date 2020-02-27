@@ -145,6 +145,7 @@ def data_table_times(times_data):
     data_performance_weekly = data_performance_weekly.set_index('TIMES Returns')
 
     signals_off_signals = data_mom.loc[:, 'US Equities':'HK Equities'].last_valid_index()
+
     signals_off_performance = data_performance_weekly.loc[:, 'US Equities.1':'HK Equities.1'].last_valid_index()
     signals_off_positions = data_positions.loc[:, 'US Equities.2':'HK Equities.2'].last_valid_index()
 
