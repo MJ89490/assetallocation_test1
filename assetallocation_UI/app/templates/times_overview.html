@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{{url_for('.static', filename='times_overview_css.css')}}">
 
 
+
     </head>
 
 
@@ -19,8 +20,8 @@
                 <h2 class="overview-title"><img class="icon-dashboard" width="auto" height="55" src="/static/img/icon-dashboard.png"> <strong><span class="overview-span">TIMES</span> Overview</strong></h2>
               </div>
               <div class="row">
-                    <div class="col-12 col-lg-1"></div>
-                    <div class="col-12 col-lg-10">
+
+                    <div class="col-12 col-lg-12">
                      <div class="widget widget-fullwidth be-loading">
                          <div class="widget-head">Positions YTD</div>
                              <div class="widget-chart-container" id="positions-sparklines-charts">
@@ -647,970 +648,1462 @@
                                  </table>
                              </div>
                      </div>
-
                  </div>
-                    <div class="col-12 col-lg-1"></div>
              </div>
               <div class="row">
-                 <div class="col-12 col-lg-12">
+                  <div class="col-12 col-lg-12">
                      <div class="widget widget-fullwidth be-loading">
                          <div class="widget-head"><strong>TIMES</strong></div>
                          <div class="widget-chart-container" id="table1-container">
-                             <!-- Table1: Sign-Off -->
+                             <!-- Table0: Sign-Off -->
                              <div class="signal-off">
-                                 <table class="table table-borderless">
+                                 <table class="table0 table0-borderless">
                                       <tbody class="no-border-x">
                                           <tr>
                                               <td id="signal-off-title">Signal-Off</td>
                                               <td id="signal-off-date"><strong>28/11/2019</strong></td>
                                           </tr>
-
                                       </tbody>
                                  </table>
                              </div>
 
-                            <!-- Table00 (3 sub-tables): Total Performance Positions -->
-                             <div class="total-positions-performance-main-title">
-                                 <table class="table00 table00-borderless">
-                                         <tbody class="no-border-x">
-                                         <tr>
-                                             <td id="performance-main-title-table0"><strong>Performance</strong></td>
-                                         </tr>
-                                         </tbody>
-                                     </table>
-                             </div><!-- .div total-table-main-title-container -->
+                            <!--&lt;!&ndash; Table1 (3 sub-tables): Total Performance Positions &ndash;&gt;-->
+                             <!--<div class="total-positions-performance-main-title">-->
+                                 <!--<table class="table1 table1-borderless">-->
+                                         <!--<tbody class="no-border-x">-->
+                                         <!--<tr>-->
+                                             <!--<td id="performance-main-title-table0"><strong>Performance</strong></td>-->
+                                         <!--</tr>-->
+                                         <!--</tbody>-->
+                                     <!--</table>-->
+                             <!--</div>&lt;!&ndash; .div total-table-main-title-container &ndash;&gt;-->
+                            <!--&lt;!&ndash; Table2 (3 sub-tables): Total Performance Positions &ndash;&gt;-->
+                             <!--<div class="total-positions-performance-titles">-->
+                                      <!--<table class="table2 table2-borderless" >-->
+                                          <!--<tbody class="no-border-x">-->
+                                            <!--<tr>-->
+                                                <!--<td id="positions-table0"><strong>Positions </strong></td>-->
+                                                <!--<td id="performance-weekly-table0"><strong>  Weekly</strong></td>-->
+                                                <!--<td id="performance-ytd-table0"><strong>YTD</strong></td>-->
+                                            <!--</tr>-->
+                                          <!--</tbody>-->
+                                      <!--</table>-->
+                                 <!--</div>&lt;!&ndash; .div total-table-title-container &ndash;&gt;-->
+                            <!--&lt;!&ndash; Table3 (3 sub-tables): Total Performance Positions &ndash;&gt;-->
+                             <!--<div class="total-positions-performance" id="total-positions-performance">-->
+                                     <!--<table class="table3 table3-borderless" >-->
+                                          <!--<tbody class="no-border-x">-->
+                                            <!--<tr>-->
+                                              <!--<td id="equities-table1"><strong>Equities</strong></td>-->
+                                              <!--<td id="p">{{ sum_positions_equities }}%</td>-->
+                                              <!--<td>{{ sum_performance_weekly_equities }}%</td>-->
+                                              <!--<td>{{ sum_performance_ytd_equities }}%</td>-->
+                                            <!--</tr>-->
 
-                            <!-- Table0 (3 sub-tables): Total Performance Positions -->
-                             <div class="total-positions-performance-titles">
-                                      <table class="table0 table0-borderless" >
-                                          <tbody class="no-border-x">
-                                            <tr>
-                                                <td id="positions-table0"><strong>Positions </strong></td>
-                                                <td id="performance-weekly-table0"><strong>  Weekly</strong></td>
-                                                <td id="performance-ytd-table0"><strong>YTD</strong></td>
-                                            </tr>
-                                          </tbody>
-                                      </table>
-                                 </div><!-- .div total-table-title-container -->
-                            <!-- Table1 (3 sub-tables): Total Performance Positions -->
-                             <div class="total-positions-performance" id="total-positions-performance">
-                                     <table class="table1 table1-borderless" >
-                                          <tbody class="no-border-x">
-                                            <tr>
-                                              <td id="equities-table1"><strong>Equities</strong></td>
-                                              <td id="p">{{ sum_positions_equities }}%</td>
-                                              <td>{{ sum_performance_weekly_equities }}%</td>
-                                              <td>{{ sum_performance_ytd_equities }}%</td>
-                                            </tr>
+                                            <!--<tr>-->
+                                              <!--<td id="bonds-table1"><strong>Bonds</strong></td>-->
+                                              <!--<td>{{ sum_positions_bonds }}%</td>-->
+                                              <!--<td>{{ sum_performance_weekly_bonds }}%</td>-->
+                                              <!--<td>{{ sum_performance_ytd_bonds }}%</td>-->
+                                            <!--</tr>-->
 
-                                            <tr>
-                                              <td id="bonds-table1"><strong>Bonds</strong></td>
-                                              <td>{{ sum_positions_bonds }}%</td>
-                                              <td>{{ sum_performance_weekly_bonds }}%</td>
-                                              <td>{{ sum_performance_ytd_bonds }}%</td>
-                                            </tr>
+                                            <!--<tr>-->
+                                              <!--<td id="FX-table1"><strong>FX</strong></td>-->
+                                              <!--<td>{{ sum_positions_fx }}%</td>-->
+                                              <!--<td>{{ sum_performance_weekly_fx }}%</td>-->
+                                              <!--<td>{{ sum_performance_ytd_fx }}%</td>-->
+                                            <!--</tr>-->
+                                          <!--</tbody>-->
+                                     <!--</table>-->
+                                 <!--</div>&lt;!&ndash; .div total-table-container &ndash;&gt;-->
 
-                                            <tr>
-                                              <td id="FX-table1"><strong>FX</strong></td>
-                                              <td>{{ sum_positions_fx }}%</td>
-                                              <td>{{ sum_performance_weekly_fx }}%</td>
-                                              <td>{{ sum_performance_ytd_fx }}%</td>
-                                            </tr>
-                                          </tbody>
-                                     </table>
-                                 </div><!-- .div total-table-container -->
+                             <!-- Table4: Total Performance Positions Chart-->
+                              <div class="row">
+                                  <div class="col-6">
+                                        <!-- Table3 (3 sub-tables): Total Performance Positions -->
+                                      <div class="total-positions-performance" id="total-positions-performance">
+                                          <table class="table1 table1-borderless" >
+                                                      <tbody class="no-border-x">
+                                                        <tr>
+                                                            <td></td>
+                                                            <td><strong>Positions</strong></td>
+                                                            <td><strong>Weekly Performance</strong></td>
+                                                            <td><strong>YTD Performance</strong></td>
+                                                        </tr>
 
-                             <div class="total-positions-bar-charts">
-                                 <table class="table1bis table1bis-borderless">
-                                        <thead class="thead-color">
-                                            <tr>
-                                                <th class="sub-thead-title5" id="sub-thead-title5">Positions</th>
-                                                <th class="sub-thead-title6" id="sub-thead-title6">Weekly</th>
-                                                <th class="sub-thead-title7" id="sub-thead-title7">YTD</th>
-                                            </tr>
-                                     </thead>
-                                         <tbody class="no-border-x">
-                                            <tr>
-                                                <td>
-                                                    <div class="responsive-plot" id="positions-tiny12">
-                                                        <script>
-                                                                var trace1 = [{
-                                                                                  type: 'bar',
-                                                                                  x: [{{ sum_positions_fx }},
-                                                                                      {{ sum_positions_bonds }},
-                                                                                      {{ sum_positions_equities }}
-                                                                                      ],
+                                                        <tr>
+                                                          <td><strong>Equities</strong></td>
+                                                          <td>{{ sum_positions_equities }}%</td>
+                                                          <td>{{ sum_performance_weekly_equities }}%</td>
+                                                          <td>{{ sum_performance_ytd_equities }}%</td>
+                                                        </tr>
 
-                                                                                  marker: { color: '#009F4B'},
+                                                        <tr>
+                                                          <td><strong>Bonds</strong></td>
+                                                          <td>{{ sum_positions_bonds }}%</td>
+                                                          <td>{{ sum_performance_weekly_bonds }}%</td>
+                                                          <td>{{ sum_performance_ytd_bonds }}%</td>
+                                                        </tr>
 
-                                                                                   y: [    'FX',
-                                                                                           'Bonds',
-                                                                                            'Equities'
-                                                                                         ],
-                                                                                  orientation: 'h',
-                                                                                   }];
+                                                        <tr>
+                                                          <td><strong>FX</strong></td>
+                                                          <td>{{ sum_positions_fx }}%</td>
+                                                          <td>{{ sum_performance_weekly_fx }}%</td>
+                                                          <td>{{ sum_performance_ytd_fx }}%</td>
+                                                        </tr>
+                                                      </tbody>
+                                                 </table>
+                                      </div><!-- .div total-table-container -->
+                                  </div>
+                                  <div class="col-6">
+                                        <div class="total-positions-bar-charts">
+                                            <table class="table2 table2-borderless">
+                                                <tbody class="no-border-x">
+                                                    <tr>
+                                                        <td><strong>Positions</strong></td>
+                                                        <td><strong>Weekly Performance</strong></td>
+                                                        <td><strong>YTD Performance</strong></td>
+                                                    </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="responsive-plot" id="positions-tiny12">
+                                                            <script>
+                                                                    var xValue = [{{ sum_positions_fx }},
+                                                                                  {{ sum_positions_bonds }},
+                                                                                          {{ sum_positions_equities }}
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+                                                                                      x: xValue,
+                                                                                      marker: { color: '#009F4B'},
+                                                                                       y: [    'FX',
+                                                                                               'Bonds',
+                                                                                                'Equities'
+                                                                                             ],
+                                                                                      orientation: 'h',
+                                                                                       }];
 
-                                                                 var layout = {
-                                                                                  title:{
-                                                                                   text: 'Weekly',
-
-
-                                                                                   },
-
-                                                                                  font: {size: 11},
-                                                                                  xaxis: {
-                                                                                    autorange: true,
-                                                                                    showgrid: false,
-                                                                                    zeroline: false,
-                                                                                    showline: false,
-                                                                                    autotick: true,
-                                                                                    ticks: '',
-                                                                                    showticklabels: false
-                                                                                  },
-
-                                                                                    yaxis: {
-                                                                                    autorange: true,
-                                                                                    showgrid: false,
-                                                                                    zeroline: false,
-                                                                                    showline: false,
-                                                                                    autotick: true,
-                                                                                    ticks: '',
-                                                                                    showticklabels: true,
-
-                                                                                  },
+                                                                     var layout = {
+                                                                                      title:{
+                                                                                       text: 'Weekly',
 
 
-                                                                                      width: 130,
-                                                                                      height: 150,
-                                                                                      margin: {
-                                                                                        l: 58,
-                                                                                        r: 0,
-                                                                                        b: 0,
-                                                                                        t: 20,
-                                                                                        pad: 4
-                                                                                      }
-                                                                               };
+                                                                                       },
 
-                                                                 layout.title = {
-                                                                  text: '',
-                                                                  font: {
-                                                                    size: 11,
-                                                                    color: 'black'
-                                                                  },
-                                                                  y: 0.90,
-                                                                  xanchor: 'left',
-                                                                  yanchor: 'bottom',
-                                                                };
+                                                                                      font: {size: 11},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
 
-                                                                var config = {
-                                                                                     'displayModeBar': false,
-                                                                                      'responsive': true,
-                                                                                 };
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: true,
 
-                                                                    Plotly.newPlot('positions-tiny12', trace1, layout, config);
-                                                        </script>
-                                                      </div>
-                                                </td>
+                                                                                      },
 
-                                                <td>
-                                                    <div class="responsive-plot" id="performance-weekly-tiny13">
-                                                        <script>
-                                                                var trace1 = [{
-                                                                                  type: 'bar',
-                                                                                  x: [{{ sum_performance_weekly_fx }},
-                                                                                      {{ sum_performance_weekly_bonds }},
-                                                                                      {{ sum_performance_weekly_equities }}
-                                                                                      ],
 
-                                                                                        marker: {
-                                                                                                color: '#FFD503'
+                                                                                          width: 150,
+                                                                                          height: 180,
+                                                                                          margin: {
+                                                                                            l: 48,
+                                                                                            r: 0,
+                                                                                            b: 0,
+                                                                                            t: 20,
+                                                                                            pad: 4
+                                                                                          }
+                                                                                   };
+
+                                                                     layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 11,
+                                                                        color: 'black'
+                                                                      },
+                                                                      y: 0.90,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                        Plotly.newPlot('positions-tiny12', trace1, layout, config);
+                                                            </script>
+                                                          </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="responsive-plot" id="performance-weekly-tiny13">
+                                                            <script>
+                                                                    var xValue = [{{ sum_performance_weekly_fx }},
+                                                                                          {{ sum_performance_weekly_bonds }},
+                                                                                          {{ sum_performance_weekly_equities }}
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      x: xValue,
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+
+                                                                                            marker: {
+                                                                                                    color: '#FFD503'
+                                                                                                   },
+
+                                                                                       y: [    'FX',
+                                                                                               'Bonds',
+                                                                                                'Equities'
+                                                                                             ],
+                                                                                      orientation: 'h',
+                                                                                       }];
+
+                                                                     var layout = {
+                                                                                      title:{
+                                                                                       text: '',
+
+
+                                                                                       },
+
+                                                                                      font: {size: 11},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false,
+
+                                                                                      },
+
+
+                                                                                          width: 130,
+                                                                                          height: 180,
+                                                                                          margin: {
+                                                                                            l: 58,
+                                                                                            r: 0,
+                                                                                            b: 0,
+                                                                                            t: 20,
+                                                                                            pad: 4
+                                                                                          }
+                                                                                   };
+
+                                                                     layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 11,
+                                                                        color: 'black'
+                                                                      },
+                                                                      y: 0.90,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                        Plotly.newPlot('performance-weekly-tiny13', trace1, layout, config);
+                                                            </script>
+                                                          </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="responsive-plot" id="performance-ytd-tiny14">
+                                                            <script>
+                                                                    xValue = [{{ sum_performance_ytd_fx }},
+                                                                              {{ sum_performance_ytd_bonds }},
+                                                                              {{ sum_performance_ytd_equities }}
+                                                                              ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      x: xValue,
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+
+                                                                                            marker: {
+                                                                                                    color: '#00AEEF'
+                                                                                                   },
+
+                                                                                       y: [    'FX',
+                                                                                               'Bonds',
+                                                                                                'Equities'
+                                                                                             ],
+                                                                                      orientation: 'h',
+                                                                                       }];
+
+                                                                     var layout = {
+                                                                                      title:{
+                                                                                       text: '',
+
+
+                                                                                       },
+
+                                                                                      font: {size: 9},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false,
+
+                                                                                      },
+
+
+                                                                                          width: 150,
+                                                                                          height: 180,
+                                                                                          margin: {
+                                                                                            l: 58,
+                                                                                            r: 0,
+                                                                                            b: 0,
+                                                                                            t: 20,
+                                                                                            pad: 4
+                                                                                          }
+                                                                                   };
+
+                                                                     layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 11,
+                                                                        color: 'black'
+                                                                      },
+                                                                      y: 0.90,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                        Plotly.newPlot('performance-ytd-tiny14', trace1, layout, config);
+                                                            </script>
+                                                          </div>
+                                                    </td>
+                                                  </tr>
+                                            </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                              </div>
+
+                            <!-- Table5: Main table Total Performance Positions -->
+                                 <div class="row">
+                                     <div class="col-6">
+                                         <div class="main-table-positions-performance" id="main-table-positions-performance">
+                                           <table class="table5 table5-borderless">
+                                               <tbody class="no-border-x">
+                                                    <tr id="table2-first-row">
+                                                        <td><strong>Class</strong></td>
+                                                        <td><strong>Assets</strong></td>
+                                                        <td><strong>Signals</strong>
+                                                        <td><strong>Today Positions</strong></td>
+                                                        <td><strong>Last Week Positions</strong></td>
+                                                        <td><strong>Buy/Sell</strong></td>
+                                                        <td><strong>Change</strong></td>
+                                                        <td><strong>Weekly Performance</strong></td>
+                                                        <td><strong>YTD</strong></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td><strong>Equities</strong></td>
+                                                        <td>US Equities</td>
+                                                        <td>{{ signals_us_equities }}</td>
+                                                        <td>{{  positions_us_equities }}%</td>
+                                                        <td>{{  positions_us_equities }}%</td>
+                                                        <td>Buy/Sell</td>
+                                                        <td>Change%</td>
+                                                        <td>{{  performance_us_equities }}%</td>
+                                                        <td>{{  performance_ytd_us_equities }}%</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td><strong>Equities</strong></td>
+                                                        <td>EU Equities</td>
+                                                        <td>{{ signals_eu_equities }}</td>
+                                                        <td>{{ positions_eu_equities }}%</td>
+                                                        <td>{{ positions_eu_equities }}%</td>
+                                                        <td>Buy/Sell</td>
+                                                        <td>Change%</td>
+                                                        <td>{{ performance_eu_equities }}%</td>
+                                                        <td>{{ performance_ytd_eu_equities }}%</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td><strong>Equities</strong></td>
+                                                        <td>JP Equities</td>
+                                                        <td>{{ signals_jp_equities }}</td>
+                                                        <td>{{ positions_jp_equities }}%</td>
+                                                        <td>{{ positions_jp_equities }}%</td>
+                                                        <td>Buy/Sell</td>
+                                                        <td>Change%</td>
+                                                        <td>{{ performance_jp_equities }}%</td>
+                                                        <td>{{ performance_ytd_jp_equities }}%</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td><strong>Equities</strong></td>
+                                                        <td>HK Equities</td>
+                                                        <td>{{ signals_hk_equities }}</td>
+                                                        <td>{{ positions_hk_equities }}%</td>
+                                                        <td>{{ positions_hk_equities }}%</td>
+                                                        <td>Buy/Sell</td>
+                                                        <td>Change%</td>
+                                                        <td>{{ performance_hk_equities }}%</td>
+                                                        <td>{{ performance_ytd_hk_equities }}%</td>
+                                                    </tr>
+
+                                                     <tr>
+                                                         <td><strong>Bonds</strong></td>
+                                                         <td>US 10y Bonds</td>
+                                                         <td>{{ signals_us_bonds }}</td>
+                                                         <td>{{  positions_us_bonds }}%</td>
+                                                         <td>{{  positions_us_bonds }}%</td>
+                                                         <td>Buy/Sell</td>
+                                                         <td>Change%</td>
+                                                         <td>{{  performance_us_bonds }}%</td>
+                                                         <td>{{  performance_ytd_us_bonds }}%</td>
+                                                     </tr>
+
+                                                      <tr>
+                                                          <td><strong>Bonds</strong></td>
+                                                          <td>UK 10y Bonds</td>
+                                                          <td>{{ signals_uk_bonds }}</td>
+                                                          <td>{{ positions_uk_bonds }}%</td>
+                                                          <td>{{ positions_uk_bonds }}%</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_uk_bonds }}%</td>
+                                                          <td>{{ performance_ytd_uk_bonds }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>Bonds</strong></td>
+                                                          <td>Eu 10y Bonds</td>
+                                                          <td>{{ signals_eu_bonds }}</td>
+                                                          <td>{{ positions_eu_bonds }}%</td>
+                                                          <td>{{ positions_eu_bonds }}%</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_eu_bonds }}%</td>
+                                                          <td>{{ performance_ytd_eu_bonds }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>Bonds</strong></td>
+                                                          <td>CA 10y Bonds</td>
+                                                          <td>{{ signals_ca_bonds }}</td>
+                                                          <td>{{ positions_ca_bonds }}%</td>
+                                                          <td>{{ positions_ca_bonds }}%</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_ca_bonds }}%</td>
+                                                          <td>{{ performance_ytd_ca_bonds }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>FX</strong></td>
+                                                          <td>JPY</td>
+                                                          <td>{{ signals_jpy }}</td>
+                                                          <td>{{ positions_jpy }}%</td>
+                                                          <td>{{ positions_jpy }}%</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_jpy }}%</td>
+                                                          <td>{{ performance_ytd_jpy }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>FX</strong></td>
+                                                          <td>EUR</td>
+                                                          <td>{{ signals_eur }}</td>
+                                                          <td>{{  positions_eur }}</td>
+                                                          <td>{{  positions_eur }}</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_eur }}%</td>
+                                                          <td>{{ performance_ytd_eur }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>FX</strong></td>
+                                                          <td>AUD</td>
+                                                          <td>{{ signals_aud }}</td>
+                                                          <td>{{ positions_aud }}%</td>
+                                                          <td>{{ positions_aud }}%</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_aud }}%</td>
+                                                          <td>{{ performance_ytd_aud }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>FX</strong></td>
+                                                          <td>CAD</td>
+                                                          <td>{{ signals_cad }}</td>
+                                                          <td>{{ positions_cad }}%</td>
+                                                          <td>{{ positions_cad }}%</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_cad }}%</td>
+                                                          <td>{{ performance_ytd_cad }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>FX</strong></td>
+                                                          <td>GBP</td>
+                                                          <td>{{ signals_gbp }}</td>
+                                                          <td>{{ positions_gbp }}%</td>
+                                                          <td>{{ positions_gbp }}%</td>
+                                                          <td>Buy/Sell</td>
+                                                          <td>Change%</td>
+                                                          <td>{{ performance_gbp }}%</td>
+                                                          <td>{{ performance_ytd_gbp }}%</td>
+                                                      </tr>
+
+                                                      <tr>
+                                                          <td><strong>Total Positions</strong></td>
+                                                          <td></td>
+                                                          <td></td>
+                                                          <td>Total Today Positions</td>
+                                                          <td>Total Last Week Positions</td>
+                                                          <td></td>
+                                                          <td></td>
+                                                          <td></td>
+                                                          <td></td>
+                                                     </tr>
+                                                </tbody>
+                                            </table>
+                                        </div><!-- .div main-table-container -->
+                                     </div>
+                                     <div class="col-6">
+                                         <table class="table3 table3-borderless" id="table-charts1">
+                                             <tbody class="no-border-x">
+                                                <tr>
+                                                    <td><strong>Signals</strong></td>
+                                                    <td><strong>Positions</strong></td>
+                                                    <td><strong>Performances Weekly</strong></td>
+                                                    <td><strong>Performances YTD</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="responsive-plot" id="signals">
+                                                            <script>
+                                                                    var xValue = [{{ signals_gbp }},
+                                                                                          {{ signals_cad }},
+                                                                                          {{ signals_aud }},
+                                                                                          {{ signals_eur }},
+                                                                                          {{ signals_jpy }},
+                                                                                          {{ signals_ca_bonds }},
+                                                                                          {{ signals_eu_bonds }},
+                                                                                          {{ signals_uk_bonds }},
+                                                                                          {{ signals_us_bonds }},
+                                                                                          {{ signals_hk_equities }},
+                                                                                          {{ signals_jp_equities }},
+                                                                                          {{ signals_eu_equities }},
+                                                                                          {{ signals_us_equities }},
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+
+                                                                                      hoverinfo: 'none',
+                                                                                      textfont: {color: 'black'},
+
+                                                                                      x: xValue,
+                                                                                      marker: {
+                                                                                                 color: 'rgb(0, 153, 204)'
                                                                                                },
 
-                                                                                   y: [    'FX',
-                                                                                           'Bonds',
-                                                                                            'Equities'
-                                                                                         ],
-                                                                                  orientation: 'h',
-                                                                                   }];
+                                                                                       y: [    'GBP',
+                                                                                               'CAD',
+                                                                                                  'AUD',
+                                                                                                  'EUR',
+                                                                                                  'JPY',
+                                                                                                  'CA 10y Bonds',
+                                                                                                  'Eu 10y Bonds',
+                                                                                                  'UK 10y Bonds',
+                                                                                                  'US 10y Bonds',
+                                                                                                  'HK Equities',
+                                                                                                  'JP Equities',
+                                                                                                  'EU Equities',
+                                                                                                  'US Equities'
+                                                                                             ],
 
-                                                                 var layout = {
-                                                                                  title:{
-                                                                                   text: '',
+                                                                                      line: {color: 'grey'},
+                                                                                      orientation: 'h',
+                                                                                       }];
+
+                                                                     var layout = {
+
+                                                                                      font: {size: 11, family: 'Arial, serif'},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: true,
+
+                                                                                      },
 
 
-                                                                                   },
-
-                                                                                  font: {size: 11},
-                                                                                  xaxis: {
-                                                                                    autorange: true,
-                                                                                    showgrid: false,
-                                                                                    zeroline: false,
-                                                                                    showline: false,
-                                                                                    autotick: true,
-                                                                                    ticks: '',
-                                                                                    showticklabels: false
-                                                                                  },
-
-                                                                                    yaxis: {
-                                                                                    autorange: true,
-                                                                                    showgrid: false,
-                                                                                    zeroline: false,
-                                                                                    showline: false,
-                                                                                    autotick: true,
-                                                                                    ticks: '',
-                                                                                    showticklabels: false,
-
-                                                                                  },
+                                                                                          width: 200,
+                                                                                          height: 640,
+                                                                                          margin: {
+                                                                                            l: 90,
+                                                                                            r: 0,
+                                                                                            b: 0,
+                                                                                            t: 14,
+                                                                                            pad: 2
+                                                                                          }
+                                                                                   };
 
 
-                                                                                      width: 115,
-                                                                                      height: 150,
-                                                                                      margin: {
-                                                                                        l: 58,
-                                                                                        r: 0,
-                                                                                        b: 0,
-                                                                                        t: 20,
-                                                                                        pad: 4
-                                                                                      }
-                                                                               };
 
-                                                                 layout.title = {
-                                                                  text: '',
-                                                                  font: {
-                                                                    size: 11,
-                                                                    color: 'black'
-                                                                  },
-                                                                  y: 0.90,
-                                                                  xanchor: 'left',
-                                                                  yanchor: 'bottom',
-                                                                };
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
 
-                                                                var config = {
-                                                                                     'displayModeBar': false,
-                                                                                      'responsive': true,
-                                                                                 };
+                                                                        Plotly.newPlot('signals', trace1, layout, config);
+                                                            </script>
+                                                          </div>
+                                                    </td>
 
-                                                                    Plotly.newPlot('performance-weekly-tiny13', trace1, layout, config);
-                                                        </script>
+                                                    <td>
+                                                        <div class="responsive-plot" id="position">
+                                                            <script>
+
+                                                                    xValue = [{{ positions_gbp }},
+                                                                                          {{ positions_cad }},
+                                                                                          {{ positions_aud }},
+                                                                                          {{ positions_eur }},
+                                                                                          {{ positions_jpy }},
+                                                                                          {{ positions_ca_bonds }},
+                                                                                          {{ positions_eu_bonds }},
+                                                                                          {{ positions_uk_bonds }},
+                                                                                          {{ positions_us_bonds }},
+                                                                                          {{ positions_hk_equities }},
+                                                                                          {{ positions_jp_equities }},
+                                                                                          {{ positions_eu_equities }},
+                                                                                          {{ positions_us_equities }}
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      x: xValue,
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+                                                                                       y: [    'GBP',
+                                                                                                  'CAD',
+                                                                                                  'AUD',
+                                                                                                  'EUR',
+                                                                                                  'JPY',
+                                                                                                  'CA 10y Bonds',
+                                                                                                  'Eu 10y Bonds',
+                                                                                                  'UK 10y Bonds',
+                                                                                                  'US 10y Bonds',
+                                                                                                  'HK Equities',
+                                                                                                  'JP Equities',
+                                                                                                  'EU Equities',
+                                                                                                  'US Equities'
+                                                                                             ],
+
+
+                                                                                      orientation: 'h',
+
+                                                                                      marker: {
+                                                                                                    color: 'rgb(0, 170, 85)'
+                                                                                                   },
+                                                                                       }];
+
+
+
+                                                                     var layout = {
+
+                                                                                       text: '',
+                                                                                      font: {size: 11},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false,
+
+                                                                                      },
+
+
+                                                                                          width: 200,
+                                                                                          height: 640,
+                                                                                          margin: {
+                                                                                            l: 0,
+                                                                                            r: 30,
+                                                                                            b: 0,
+                                                                                            t: 14,
+                                                                                            pad: 2
+                                                                                          }
+                                                                                   };
+
+                                                                     layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 12,
+                                                                        color: 'black'
+                                                                      },
+                                                                      x: 0.25,
+                                                                      y: 0.87,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                        Plotly.newPlot('position', trace1, layout, config);
+                                                            </script>
+                                                          </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="responsive-plot" id="weekly">
+                                                            <script>
+
+                                                                    xValue = [{{ performance_gbp }},
+                                                                                          {{ performance_cad }},
+                                                                                          {{ performance_aud }},
+                                                                                          {{ performance_eur }},
+                                                                                          {{ performance_jpy }},
+                                                                                          {{ performance_ca_bond }},
+                                                                                          {{ performance_eu_bonds }},
+                                                                                          {{ performance_uk_bonds }},
+                                                                                          {{ performance_us_bonds }},
+                                                                                          {{ performance_hk_equities }},
+                                                                                          {{ performance_jp_equities }},
+                                                                                          {{ performance_eu_equities }},
+                                                                                          {{ performance_us_equities }}
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      x: xValue,
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+                                                                                       y: [    'GBP',
+                                                                                                  'CAD',
+                                                                                                  'AUD',
+                                                                                                  'EUR',
+                                                                                                  'JPY',
+                                                                                                  'CA 10y Bonds',
+                                                                                                  'Eu 10y Bonds',
+                                                                                                  'UK 10y Bonds',
+                                                                                                  'US 10y Bonds',
+                                                                                                  'HK Equities',
+                                                                                                  'JP Equities',
+                                                                                                  'EU Equities',
+                                                                                                  'US Equities'
+                                                                                             ],
+
+
+                                                                                      orientation: 'h',
+
+                                                                                      marker: {
+                                                                                                    color: 'rgb(255, 204, 0)'
+                                                                                                   },
+                                                                                       }];
+
+
+
+                                                                     var layout = {
+
+                                                                                       text: '',
+                                                                                      font: {size: 11},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false,
+
+                                                                                      },
+
+
+                                                                                          width: 200,
+                                                                                          height: 640,
+                                                                                          margin: {
+                                                                                            l: 0,
+                                                                                            r: 30,
+                                                                                            b: 0,
+                                                                                            t: 14,
+                                                                                            pad: 4
+                                                                                          }
+                                                                                   };
+
+                                                                     layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 12,
+                                                                        color: 'black'
+                                                                      },
+                                                                      x: 0.25,
+                                                                      y: 0.87,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                        Plotly.newPlot('weekly', trace1, layout, config);
+                                                            </script>
+                                                          </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="responsive-plot" id="performance-ytd">
+                                                            <script>
+                                                                    xValue = [{{ performance_ytd_gbp }},
+                                                                                          {{ performance_ytd_cad }},
+                                                                                          {{ performance_ytd_aud }},
+                                                                                          {{ performance_ytd_eur }},
+                                                                                          {{ performance_ytd_jpy }},
+                                                                                          {{ performance_ytd_ca_bonds }},
+                                                                                          {{ performance_ytd_eu_bonds }},
+                                                                                          {{ performance_ytd_uk_bonds }},
+                                                                                          {{ performance_ytd_us_bonds }},
+                                                                                          {{ performance_ytd_hk_equities }},
+                                                                                          {{ performance_ytd_jp_equities }},
+                                                                                          {{ performance_ytd_eu_equities }},
+                                                                                          {{ performance_ytd_us_equities }}
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      x: xValue,
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+
+                                                                                       y: [    'GBP',
+                                                                                                  'CAD',
+                                                                                                  'AUD',
+                                                                                                  'EUR',
+                                                                                                  'JPY',
+                                                                                                  'CA 10y Bonds',
+                                                                                                  'Eu 10y Bonds',
+                                                                                                  'UK 10y Bonds',
+                                                                                                  'US 10y Bonds',
+                                                                                                  'HK Equities',
+                                                                                                  'JP Equities',
+                                                                                                  'EU Equities',
+                                                                                                  'US Equities'
+                                                                                             ],
+
+
+                                                                                        orientation: 'h',
+
+                                                                                      marker: {
+                                                                                                    color: 'rgb(163, 163, 163)'
+                                                                                                   }
+                                                                                       }];
+
+
+
+                                                                     var layout = {
+
+
+                                                                                      font: {size: 11, family: 'Arial, serif'},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false,
+
+                                                                                      },
+
+
+                                                                                          width: 200,
+                                                                                          height: 640,
+                                                                                          margin: {
+                                                                                            l: 0,
+                                                                                            r: 30,
+                                                                                            b: 0,
+                                                                                            t: 14,
+                                                                                            pad: 2
+                                                                                          }
+                                                                                   };
+
+                                                                       layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 12,
+                                                                        color: 'black'
+                                                                      },
+                                                                      x: 0.25,
+                                                                      y: 0.87,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                    Plotly.newPlot('performance-ytd', trace1, layout, config);
+                                                            </script>
                                                       </div>
-                                                </td>
-
-                                                <td>
-                                                    <div class="responsive-plot" id="performance-ytd-tiny14">
-                                                        <script>
-                                                                var trace1 = [{
-                                                                                  type: 'bar',
-                                                                                  x: [{{ sum_performance_ytd_fx }},
-                                                                                      {{ sum_performance_ytd_bonds }},
-                                                                                      {{ sum_performance_ytd_equities }}
-                                                                                      ],
-
-                                                                                        marker: {
-                                                                                                color: '#00AEEF'
-                                                                                               },
-
-                                                                                   y: [    'FX',
-                                                                                           'Bonds',
-                                                                                            'Equities'
-                                                                                         ],
-                                                                                  orientation: 'h',
-                                                                                   }];
-
-                                                                 var layout = {
-                                                                                  title:{
-                                                                                   text: '',
-
-
-                                                                                   },
-
-                                                                                  font: {size: 11},
-                                                                                  xaxis: {
-                                                                                    autorange: true,
-                                                                                    showgrid: false,
-                                                                                    zeroline: false,
-                                                                                    showline: false,
-                                                                                    autotick: true,
-                                                                                    ticks: '',
-                                                                                    showticklabels: false
-                                                                                  },
-
-                                                                                    yaxis: {
-                                                                                    autorange: true,
-                                                                                    showgrid: false,
-                                                                                    zeroline: false,
-                                                                                    showline: false,
-                                                                                    autotick: true,
-                                                                                    ticks: '',
-                                                                                    showticklabels: false,
-
-                                                                                  },
-
-
-                                                                                      width: 115,
-                                                                                      height: 150,
-                                                                                      margin: {
-                                                                                        l: 58,
-                                                                                        r: 0,
-                                                                                        b: 0,
-                                                                                        t: 20,
-                                                                                        pad: 4
-                                                                                      }
-                                                                               };
-
-                                                                 layout.title = {
-                                                                  text: '',
-                                                                  font: {
-                                                                    size: 11,
-                                                                    color: 'black'
-                                                                  },
-                                                                  y: 0.90,
-                                                                  xanchor: 'left',
-                                                                  yanchor: 'bottom',
-                                                                };
-
-                                                                var config = {
-                                                                                     'displayModeBar': false,
-                                                                                      'responsive': true,
-                                                                                 };
-
-                                                                    Plotly.newPlot('performance-ytd-tiny14', trace1, layout, config);
-                                                        </script>
-                                                      </div>
-                                                </td>
-
-                                              </tr>
-                                        </tbody>
-                                     </table>
-                             </div>
-
-                             <div class="main-table-positions-performance" id="main-table-positions-performance">
-                                      <table class="table2 table2-borderless">
-                                          <tbody class="no-border-x">
-
-                                            <tr id="table2-first-row">
-                                                <td><strong>Class</strong></td>
-                                                <td><strong>Assets</strong></td>
-                                                <td><strong>Signals</strong>
-                                                <td><strong>Today Positions</strong></td>
-                                                <td><strong>Last Week Positions</strong></td>
-                                                <td><strong>Buy/Sell</strong></td>
-                                                <td><strong>Change</strong></td>
-                                                <td><strong>Weekly Performance</strong></td>
-                                                <td><strong>YTD</strong></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td><strong>Equities</strong></td>
-                                               <td>US Equities</td>
-                                               <td>{{ signals_us_equities }}</td>
-                                               <td>{{  positions_us_equities }}%</td>
-                                               <td>{{  positions_us_equities }}%</td>
-                                               <td>Buy/Sell</td>
-                                               <td>Change%</td>
-                                               <td>{{  performance_us_equities }}%</td>
-                                               <td>{{  performance_ytd_us_equities }}%</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td><strong>Equities</strong></td>
-                                                <td>EU Equities</td>
-                                                <td>{{ signals_eu_equities }}</td>
-                                                <td>{{ positions_eu_equities }}%</td>
-                                                <td>{{ positions_eu_equities }}%</td>
-                                                <td>Buy/Sell</td>
-                                                <td>Change%</td>
-                                                <td>{{ performance_eu_equities }}%</td>
-                                                <td>{{ performance_ytd_eu_equities }}%</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td><strong>Equities</strong></td>
-                                                <td>JP Equities</td>
-                                                <td>{{ signals_jp_equities }}</td>
-                                                <td>{{ positions_jp_equities }}%</td>
-                                                <td>{{ positions_jp_equities }}%</td>
-                                                <td>Buy/Sell</td>
-                                                <td>Change%</td>
-                                                <td>{{ performance_jp_equities }}%</td>
-                                                <td>{{ performance_ytd_jp_equities }}%</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td><strong>Equities</strong></td>
-                                                <td>HK Equities</td>
-                                                <td>{{ signals_hk_equities }}</td>
-                                                <td>{{ positions_hk_equities }}%</td>
-                                                <td>{{ positions_hk_equities }}%</td>
-                                                <td>Buy/Sell</td>
-                                                <td>Change%</td>
-                                                <td>{{ performance_hk_equities }}%</td>
-                                                <td>{{ performance_ytd_hk_equities }}%</td>
-                                            </tr>
-
-                                             <tr>
-                                                 <td><strong>Bonds</strong></td>
-                                                 <td>US 10y Bonds</td>
-                                                 <td>{{ signals_us_bonds }}</td>
-                                                 <td>{{  positions_us_bonds }}%</td>
-                                                 <td>{{  positions_us_bonds }}%</td>
-                                                 <td>Buy/Sell</td>
-                                                 <td>Change%</td>
-                                                 <td>{{  performance_us_bonds }}%</td>
-                                                 <td>{{  performance_ytd_us_bonds }}%</td>
-                                             </tr>
-
-                                              <tr>
-                                                  <td><strong>Bonds</strong></td>
-                                                  <td>UK 10y Bonds</td>
-                                                  <td>{{ signals_uk_bonds }}</td>
-                                                  <td>{{ positions_uk_bonds }}%</td>
-                                                  <td>{{ positions_uk_bonds }}%</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_uk_bonds }}%</td>
-                                                  <td>{{ performance_ytd_uk_bonds }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>Bonds</strong></td>
-                                                  <td>Eu 10y Bonds</td>
-                                                  <td>{{ signals_eu_bonds }}</td>
-                                                  <td>{{ positions_eu_bonds }}%</td>
-                                                  <td>{{ positions_eu_bonds }}%</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_eu_bonds }}%</td>
-                                                  <td>{{ performance_ytd_eu_bonds }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>Bonds</strong></td>
-                                                  <td>CA 10y Bonds</td>
-                                                  <td>{{ signals_ca_bonds }}</td>
-                                                  <td>{{ positions_ca_bonds }}%</td>
-                                                  <td>{{ positions_ca_bonds }}%</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_ca_bonds }}%</td>
-                                                  <td>{{ performance_ytd_ca_bonds }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>FX</strong></td>
-                                                  <td>JPY</td>
-                                                  <td>{{ signals_jpy }}</td>
-                                                  <td>{{ positions_jpy }}%</td>
-                                                  <td>{{ positions_jpy }}%</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_jpy }}%</td>
-                                                  <td>{{ performance_ytd_jpy }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>FX</strong></td>
-                                                  <td>EUR</td>
-                                                  <td>{{ signals_eur }}</td>
-                                                  <td>{{  positions_eur }}</td>
-                                                  <td>{{  positions_eur }}</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_eur }}%</td>
-                                                  <td>{{ performance_ytd_eur }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>FX</strong></td>
-                                                  <td>AUD</td>
-                                                  <td>{{ signals_aud }}</td>
-                                                  <td>{{ positions_aud }}%</td>
-                                                  <td>{{ positions_aud }}%</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_aud }}%</td>
-                                                  <td>{{ performance_ytd_aud }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>FX</strong></td>
-                                                  <td>CAD</td>
-                                                  <td>{{ signals_cad }}</td>
-                                                  <td>{{ positions_cad }}%</td>
-                                                  <td>{{ positions_cad }}%</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_cad }}%</td>
-                                                  <td>{{ performance_ytd_cad }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>FX</strong></td>
-                                                  <td>GBP</td>
-                                                  <td>{{ signals_gbp }}</td>
-                                                  <td>{{ positions_gbp }}%</td>
-                                                  <td>{{ positions_gbp }}%</td>
-                                                  <td>Buy/Sell</td>
-                                                  <td>Change%</td>
-                                                  <td>{{ performance_gbp }}%</td>
-                                                  <td>{{ performance_ytd_gbp }}%</td>
-                                              </tr>
-
-                                              <tr>
-                                                  <td><strong>Total Positions</strong></td>
-                                                  <td></td>
-                                                  <td></td>
-                                                  <td>Total Today Positions</td>
-                                                  <td>Total Last Week Positions</td>
-                                                  <td></td>
-                                                  <td></td>
-                                                  <td></td>
-                                                  <td></td>
-                                             </tr>
-                                          </tbody>
-                                      </table>
-                                 </div><!-- .div main-table-container -->
+                                                    </td>
+                                                </tr>
+                                             </tbody>
+                                         </table>
+                                     </div>
+                                 </div>
                          </div><!-- .div widget-container -->
                      </div>
-                 </div>
+                  </div>
+
+                  <!--<div class="col-12 col-md-7">-->
+                      <!--<div class="widget widget-fullwidth be-loading">-->
+                         <!--<div class="widget-head">Positions and Performances</div>-->
+                             <!--<div class="widget-chart-container" id="chart-container4">-->
+                                 <!--<table class="table3 table3-borderless" id="table-charts1">-->
+                                     <!--<tbody class="no-border-x">-->
+                                          <!--<tr>-->
+                                              <!--<td>-->
+                                                  <!--<div class="responsive-plot" id="performance-weekly">-->
+                                                    <!--<script>-->
+                                                            <!--var xValue = [{{ signals_gbp }},-->
+                                                                                  <!--{{ signals_cad }},-->
+                                                                                  <!--{{ signals_aud }},-->
+                                                                                  <!--{{ signals_eur }},-->
+                                                                                  <!--{{ signals_jpy }},-->
+                                                                                  <!--{{ signals_ca_bonds }},-->
+                                                                                  <!--{{ signals_eu_bonds }},-->
+                                                                                  <!--{{ signals_uk_bonds }},-->
+                                                                                  <!--{{ signals_us_bonds }},-->
+                                                                                  <!--{{ signals_hk_equities }},-->
+                                                                                  <!--{{ signals_jp_equities }},-->
+                                                                                  <!--{{ signals_eu_equities }},-->
+                                                                                  <!--{{ signals_us_equities }},-->
+                                                                                  <!--]-->
+                                                            <!--var trace1 = [{-->
+                                                                              <!--type: 'bar',-->
+                                                                              <!--text: xValue.map(String),-->
+                                                                              <!--textposition: 'auto',-->
+                                                                              <!--hoverinfo: 'none',-->
+                                                                              <!--x: xValue,-->
+                                                                              <!--marker: {-->
+                                                                                         <!--color: 'rgb(0, 153, 204)'-->
+                                                                                       <!--},-->
+
+                                                                               <!--y: [    'GBP',-->
+                                                                                       <!--'CAD',-->
+                                                                                          <!--'AUD',-->
+                                                                                          <!--'EUR',-->
+                                                                                          <!--'JPY',-->
+                                                                                          <!--'CA 10y Bonds',-->
+                                                                                          <!--'Eu 10y Bonds',-->
+                                                                                          <!--'UK 10y Bonds',-->
+                                                                                          <!--'US 10y Bonds',-->
+                                                                                          <!--'HK Equities',-->
+                                                                                          <!--'JP Equities',-->
+                                                                                          <!--'EU Equities',-->
+                                                                                          <!--'US Equities'-->
+                                                                                     <!--],-->
+
+                                                                              <!--line: {color: 'grey'},-->
+                                                                              <!--orientation: 'h',-->
+                                                                               <!--}];-->
+
+                                                             <!--var layout = {-->
+                                                                              <!--title:{-->
+                                                                              <!--text: 'Mom Signals'},-->
+                                                                              <!--font: {size: 11, family: 'Arial, serif'},-->
+                                                                              <!--xaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: false-->
+                                                                              <!--},-->
+
+                                                                                <!--yaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: true,-->
+
+                                                                              <!--},-->
+
+
+                                                                                  <!--width: 200,-->
+                                                                                  <!--height: 487,-->
+                                                                                  <!--margin: {-->
+                                                                                    <!--l: 90,-->
+                                                                                    <!--r: 0,-->
+                                                                                    <!--b: 0,-->
+                                                                                    <!--t: 72,-->
+                                                                                    <!--pad: 4-->
+                                                                                  <!--}-->
+                                                                           <!--};-->
+
+                                                             <!--layout.title = {-->
+                                                              <!--text: 'Mom Signals',-->
+                                                              <!--font: {-->
+                                                                <!--size: 11,-->
+                                                                <!--color: 'black'-->
+                                                              <!--},-->
+                                                              <!--y: 0.87,-->
+                                                              <!--xanchor: 'left',-->
+                                                              <!--yanchor: 'bottom',-->
+                                                            <!--};-->
+
+                                                            <!--var config = {-->
+                                                                                 <!--'displayModeBar': false,-->
+                                                                                  <!--'responsive': true,-->
+                                                                             <!--};-->
+
+                                                                <!--Plotly.newPlot('performance-weekly', trace1, layout, config);-->
+                                                    <!--</script>-->
+                                                  <!--</div>-->
+                                              <!--</td>-->
+
+                                              <!--<td>-->
+                                                  <!--<div class="responsive-plot" id="position">-->
+                                                    <!--<script>-->
+
+                                                            <!--xValue = [{{ positions_gbp }},-->
+                                                                                  <!--{{ positions_cad }},-->
+                                                                                  <!--{{ positions_aud }},-->
+                                                                                  <!--{{ positions_eur }},-->
+                                                                                  <!--{{ positions_jpy }},-->
+                                                                                  <!--{{ positions_ca_bonds }},-->
+                                                                                  <!--{{ positions_eu_bonds }},-->
+                                                                                  <!--{{ positions_uk_bonds }},-->
+                                                                                  <!--{{ positions_us_bonds }},-->
+                                                                                  <!--{{ positions_hk_equities }},-->
+                                                                                  <!--{{ positions_jp_equities }},-->
+                                                                                  <!--{{ positions_eu_equities }},-->
+                                                                                  <!--{{ positions_us_equities }}-->
+                                                                                  <!--]-->
+                                                            <!--var trace1 = [{-->
+                                                                              <!--type: 'bar',-->
+                                                                              <!--x: xValue,-->
+                                                                              <!--text: xValue.map(String),-->
+                                                                              <!--textposition: 'auto',-->
+                                                                              <!--hoverinfo: 'none',-->
+                                                                               <!--y: [    'GBP',-->
+                                                                                          <!--'CAD',-->
+                                                                                          <!--'AUD',-->
+                                                                                          <!--'EUR',-->
+                                                                                          <!--'JPY',-->
+                                                                                          <!--'CA 10y Bonds',-->
+                                                                                          <!--'Eu 10y Bonds',-->
+                                                                                          <!--'UK 10y Bonds',-->
+                                                                                          <!--'US 10y Bonds',-->
+                                                                                          <!--'HK Equities',-->
+                                                                                          <!--'JP Equities',-->
+                                                                                          <!--'EU Equities',-->
+                                                                                          <!--'US Equities'-->
+                                                                                     <!--],-->
+
+
+                                                                              <!--orientation: 'h',-->
+
+                                                                              <!--marker: {-->
+                                                                                            <!--color: 'rgb(0, 170, 85)'-->
+                                                                                           <!--},-->
+                                                                               <!--}];-->
+
+
+
+                                                             <!--var layout = {-->
+
+                                                                               <!--text: 'Positions',-->
+                                                                              <!--font: {size: 11},-->
+                                                                              <!--xaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: false-->
+                                                                              <!--},-->
+
+                                                                                <!--yaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: false,-->
+
+                                                                              <!--},-->
+
+
+                                                                                  <!--width: 200,-->
+                                                                                  <!--height: 487,-->
+                                                                                  <!--margin: {-->
+                                                                                    <!--l: 0,-->
+                                                                                    <!--r: 30,-->
+                                                                                    <!--b: 0,-->
+                                                                                    <!--t: 72,-->
+                                                                                    <!--pad: 4-->
+                                                                                  <!--}-->
+                                                                           <!--};-->
+
+                                                             <!--layout.title = {-->
+                                                              <!--text: 'Positions',-->
+                                                              <!--font: {-->
+                                                                <!--size: 12,-->
+                                                                <!--color: 'black'-->
+                                                              <!--},-->
+                                                              <!--x: 0.25,-->
+                                                              <!--y: 0.87,-->
+                                                              <!--xanchor: 'left',-->
+                                                              <!--yanchor: 'bottom',-->
+                                                            <!--};-->
+
+                                                            <!--var config = {-->
+                                                                                 <!--'displayModeBar': false,-->
+                                                                                  <!--'responsive': true,-->
+                                                                             <!--};-->
+
+                                                                <!--Plotly.newPlot('position', trace1, layout, config);-->
+                                                    <!--</script>-->
+                                                  <!--</div>-->
+                                              <!--</td>-->
+
+                                              <!--<td>-->
+                                                  <!--<div class="responsive-plot" id="weekly">-->
+                                                    <!--<script>-->
+
+                                                            <!--xValue = [{{ positions_gbp }},-->
+                                                                                  <!--{{ positions_cad }},-->
+                                                                                  <!--{{ positions_aud }},-->
+                                                                                  <!--{{ positions_eur }},-->
+                                                                                  <!--{{ positions_jpy }},-->
+                                                                                  <!--{{ positions_ca_bonds }},-->
+                                                                                  <!--{{ positions_eu_bonds }},-->
+                                                                                  <!--{{ positions_uk_bonds }},-->
+                                                                                  <!--{{ positions_us_bonds }},-->
+                                                                                  <!--{{ positions_hk_equities }},-->
+                                                                                  <!--{{ positions_jp_equities }},-->
+                                                                                  <!--{{ positions_eu_equities }},-->
+                                                                                  <!--{{ positions_us_equities }}-->
+                                                                                  <!--]-->
+                                                            <!--var trace1 = [{-->
+                                                                              <!--type: 'bar',-->
+                                                                              <!--x: xValue,-->
+                                                                              <!--text: xValue.map(String),-->
+                                                                              <!--textposition: 'auto',-->
+                                                                              <!--hoverinfo: 'none',-->
+                                                                               <!--y: [    'GBP',-->
+                                                                                          <!--'CAD',-->
+                                                                                          <!--'AUD',-->
+                                                                                          <!--'EUR',-->
+                                                                                          <!--'JPY',-->
+                                                                                          <!--'CA 10y Bonds',-->
+                                                                                          <!--'Eu 10y Bonds',-->
+                                                                                          <!--'UK 10y Bonds',-->
+                                                                                          <!--'US 10y Bonds',-->
+                                                                                          <!--'HK Equities',-->
+                                                                                          <!--'JP Equities',-->
+                                                                                          <!--'EU Equities',-->
+                                                                                          <!--'US Equities'-->
+                                                                                     <!--],-->
+
+
+                                                                              <!--orientation: 'h',-->
+
+                                                                              <!--marker: {-->
+                                                                                            <!--color: 'rgb(255, 204, 0)'-->
+                                                                                           <!--},-->
+                                                                               <!--}];-->
+
+
+
+                                                             <!--var layout = {-->
+
+                                                                               <!--text: 'Positions',-->
+                                                                              <!--font: {size: 11},-->
+                                                                              <!--xaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: false-->
+                                                                              <!--},-->
+
+                                                                                <!--yaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: false,-->
+
+                                                                              <!--},-->
+
+
+                                                                                  <!--width: 200,-->
+                                                                                  <!--height: 487,-->
+                                                                                  <!--margin: {-->
+                                                                                    <!--l: 0,-->
+                                                                                    <!--r: 30,-->
+                                                                                    <!--b: 0,-->
+                                                                                    <!--t: 72,-->
+                                                                                    <!--pad: 4-->
+                                                                                  <!--}-->
+                                                                           <!--};-->
+
+                                                             <!--layout.title = {-->
+                                                              <!--text: 'Performances Weekly',-->
+                                                              <!--font: {-->
+                                                                <!--size: 12,-->
+                                                                <!--color: 'black'-->
+                                                              <!--},-->
+                                                              <!--x: 0.25,-->
+                                                              <!--y: 0.87,-->
+                                                              <!--xanchor: 'left',-->
+                                                              <!--yanchor: 'bottom',-->
+                                                            <!--};-->
+
+                                                            <!--var config = {-->
+                                                                                 <!--'displayModeBar': false,-->
+                                                                                  <!--'responsive': true,-->
+                                                                             <!--};-->
+
+                                                                <!--Plotly.newPlot('weekly', trace1, layout, config);-->
+                                                    <!--</script>-->
+                                                  <!--</div>-->
+                                              <!--</td>-->
+
+                                              <!--<td>-->
+                                                  <!--<div class="responsive-plot" id="performance-ytd">-->
+                                                    <!--<script>-->
+                                                            <!--xValue = [{{ performance_ytd_gbp }},-->
+                                                                                  <!--{{ performance_ytd_cad }},-->
+                                                                                  <!--{{ performance_ytd_aud }},-->
+                                                                                  <!--{{ performance_ytd_eur }},-->
+                                                                                  <!--{{ performance_ytd_jpy }},-->
+                                                                                  <!--{{ performance_ytd_ca_bonds }},-->
+                                                                                  <!--{{ performance_ytd_eu_bonds }},-->
+                                                                                  <!--{{ performance_ytd_uk_bonds }},-->
+                                                                                  <!--{{ performance_ytd_us_bonds }},-->
+                                                                                  <!--{{ performance_ytd_hk_equities }},-->
+                                                                                  <!--{{ performance_ytd_jp_equities }},-->
+                                                                                  <!--{{ performance_ytd_eu_equities }},-->
+                                                                                  <!--{{ performance_ytd_us_equities }}-->
+                                                                                  <!--]-->
+                                                            <!--var trace1 = [{-->
+                                                                              <!--type: 'bar',-->
+                                                                              <!--x: xValue,-->
+                                                                              <!--text: xValue.map(String),-->
+                                                                              <!--textposition: 'auto',-->
+                                                                              <!--hoverinfo: 'none',-->
+
+                                                                               <!--y: [    'GBP',-->
+                                                                                          <!--'CAD',-->
+                                                                                          <!--'AUD',-->
+                                                                                          <!--'EUR',-->
+                                                                                          <!--'JPY',-->
+                                                                                          <!--'CA 10y Bonds',-->
+                                                                                          <!--'Eu 10y Bonds',-->
+                                                                                          <!--'UK 10y Bonds',-->
+                                                                                          <!--'US 10y Bonds',-->
+                                                                                          <!--'HK Equities',-->
+                                                                                          <!--'JP Equities',-->
+                                                                                          <!--'EU Equities',-->
+                                                                                          <!--'US Equities'-->
+                                                                                     <!--],-->
+
+
+                                                                                <!--orientation: 'h',-->
+
+                                                                              <!--marker: {-->
+                                                                                            <!--color: 'rgb(163, 163, 163)'-->
+                                                                                           <!--}-->
+                                                                               <!--}];-->
+
+
+
+                                                             <!--var layout = {-->
+
+
+                                                                              <!--font: {size: 11, family: 'Arial, serif'},-->
+                                                                              <!--xaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: false-->
+                                                                              <!--},-->
+
+                                                                                <!--yaxis: {-->
+                                                                                <!--autorange: true,-->
+                                                                                <!--showgrid: false,-->
+                                                                                <!--zeroline: false,-->
+                                                                                <!--showline: false,-->
+                                                                                <!--autotick: true,-->
+                                                                                <!--ticks: '',-->
+                                                                                <!--showticklabels: false,-->
+
+                                                                              <!--},-->
+
+
+                                                                                  <!--width: 200,-->
+                                                                                  <!--height: 487,-->
+                                                                                  <!--margin: {-->
+                                                                                    <!--l: 0,-->
+                                                                                    <!--r: 30,-->
+                                                                                    <!--b: 0,-->
+                                                                                    <!--t: 72,-->
+                                                                                    <!--pad: 4-->
+                                                                                  <!--}-->
+                                                                           <!--};-->
+
+                                                               <!--layout.title = {-->
+                                                              <!--text: 'Performances YTD',-->
+                                                              <!--font: {-->
+                                                                <!--size: 12,-->
+                                                                <!--color: 'black'-->
+                                                              <!--},-->
+                                                              <!--x: 0.25,-->
+                                                              <!--y: 0.87,-->
+                                                              <!--xanchor: 'left',-->
+                                                              <!--yanchor: 'bottom',-->
+                                                            <!--};-->
+
+                                                            <!--var config = {-->
+                                                                                 <!--'displayModeBar': false,-->
+                                                                                  <!--'responsive': true,-->
+                                                                             <!--};-->
+
+                                                            <!--Plotly.newPlot('performance-ytd', trace1, layout, config);-->
+                                                    <!--</script>-->
+                                              <!--</div>-->
+                                              <!--</td>-->
+                                          <!--</tr>-->
+                                    <!--</tbody>-->
+                                 <!--</table>-->
+                             <!--</div>-->
+                     <!--</div>-->
+                  <!--</div>-->
              </div>
-              <div class="row" id="row4">
-                 <div class="col-12 col-lg-2"></div>
-                 <div class="col-12 col-lg-5">
-                     <div class="widget widget-fullwidth be-loading">
-                         <div class="widget-head">Positions</div>
-                             <div class="widget-chart-container" id="chart-container4">
-                                 <table class="table table-borderless" id="table-charts1">
-                                     <tbody class="no-border-x">
-                                          <tr>
-                                              <td>
-                                                  <div class="responsive-plot" id="performance-weekly">
-                                                    <script>
-                                                            var trace1 = [{
-                                                                              type: 'bar',
-                                                                              x: [{{ signals_gbp }},
-                                                                                  {{ signals_cad }},
-                                                                                  {{ signals_aud }},
-                                                                                  {{ signals_eur }},
-                                                                                  {{ signals_jpy }},
-                                                                                  {{ signals_ca_bonds }},
-                                                                                  {{ signals_eu_bonds }},
-                                                                                  {{ signals_uk_bonds }},
-                                                                                  {{ signals_us_bonds }},
-                                                                                  {{ signals_hk_equities }},
-                                                                                  {{ signals_jp_equities }},
-                                                                                  {{ signals_eu_equities }},
-                                                                                  {{ signals_us_equities }},
-
-                                                                                  ],
-
-                                                                                    marker: {
-                                                                                            color: 'rgb(0, 153, 204)'
-                                                                                           },
-
-                                                                               y: [    'GBP',
-                                                                                          'CAD',
-                                                                                          'AUD',
-                                                                                          'EUR',
-                                                                                          'JPY',
-                                                                                          'CA 10y Bonds',
-                                                                                          'Eu 10y Bonds',
-                                                                                          'UK 10y Bonds',
-                                                                                          'US 10y Bonds',
-                                                                                          'HK Equities',
-                                                                                          'JP Equities',
-                                                                                          'EU Equities',
-                                                                                          'US Equities'
-                                                                                     ],
-
-                                                                              line: {color: 'grey'},
-                                                                              orientation: 'h',
-                                                                               }];
-
-                                                             var layout = {
-                                                                              title:{
-                                                                              text: 'Mom Signals'},
-                                                                              font: {size: 11, family: 'Arial, serif'},
-                                                                              xaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: false
-                                                                              },
-
-                                                                                yaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: true,
-
-                                                                              },
-
-
-                                                                                  width: 150,
-                                                                                  height: 487,
-                                                                                  margin: {
-                                                                                    l: 90,
-                                                                                    r: 0,
-                                                                                    b: 0,
-                                                                                    t: 72,
-                                                                                    pad: 4
-                                                                                  }
-                                                                           };
-
-                                                             layout.title = {
-                                                              text: 'Mom Signals',
-                                                              font: {
-                                                                size: 11,
-                                                                color: 'black'
-                                                              },
-                                                              y: 0.87,
-                                                              xanchor: 'left',
-                                                              yanchor: 'bottom',
-                                                            };
-
-                                                            var config = {
-                                                                                 'displayModeBar': false,
-                                                                                  'responsive': true,
-                                                                             };
-
-                                                                Plotly.newPlot('performance-weekly', trace1, layout, config);
-                                                    </script>
-                                                  </div>
-                                              </td>
-
-                                              <td>
-                                                  <div class="responsive-plot" id="positions">
-                                                    <script>
-                                                            var trace1 = [{
-                                                                              type: 'bar',
-                                                                              x: [{{ positions_gbp }},
-                                                                                  {{ positions_cad }},
-                                                                                  {{ positions_aud }},
-                                                                                  {{ positions_eur }},
-                                                                                  {{ positions_jpy }},
-                                                                                  {{ positions_ca_bonds }},
-                                                                                  {{ positions_eu_bonds }},
-                                                                                  {{ positions_uk_bonds }},
-                                                                                  {{ positions_us_bonds }},
-                                                                                  {{ positions_hk_equities }},
-                                                                                  {{ positions_jp_equities }},
-                                                                                  {{ positions_eu_equities }},
-                                                                                  {{ positions_us_equities }}
-                                                                                  ],
-
-                                                                               y: [    'GBP',
-                                                                                          'CAD',
-                                                                                          'AUD',
-                                                                                          'EUR',
-                                                                                          'JPY',
-                                                                                          'CA 10y Bonds',
-                                                                                          'Eu 10y Bonds',
-                                                                                          'UK 10y Bonds',
-                                                                                          'US 10y Bonds',
-                                                                                          'HK Equities',
-                                                                                          'JP Equities',
-                                                                                          'EU Equities',
-                                                                                          'US Equities'
-                                                                                     ],
-
-
-                                                                              orientation: 'h',
-
-                                                                              marker: {
-                                                                                            color: 'rgb(0, 170, 85)'
-                                                                                           },
-                                                                               }];
-
-
-
-                                                             var layout = {
-
-                                                                               text: 'Positions',
-                                                                              font: {size: 11},
-                                                                              xaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: false
-                                                                              },
-
-                                                                                yaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: false,
-
-                                                                              },
-
-
-                                                                                  width: 150,
-                                                                                  height: 487,
-                                                                                  margin: {
-                                                                                    l: 0,
-                                                                                    r: 30,
-                                                                                    b: 0,
-                                                                                    t: 72,
-                                                                                    pad: 4
-                                                                                  }
-                                                                           };
-
-                                                             layout.title = {
-                                                              text: 'Positions',
-                                                              font: {
-                                                                size: 12,
-                                                                color: 'black'
-                                                              },
-                                                              x: 0.25,
-                                                              y: 0.87,
-                                                              xanchor: 'left',
-                                                              yanchor: 'bottom',
-                                                            };
-
-                                                            var config = {
-                                                                                 'displayModeBar': false,
-                                                                                  'responsive': true,
-                                                                             };
-
-                                                                Plotly.newPlot('positions', trace1, layout, config);
-                                                    </script>
-                                                  </div>
-                                              </td>
-                                          </tr>
-                                    </tbody>
-                                 </table>
-                             </div>
-
-                     </div>
-                 </div>
-                 <div class="col-12 col-lg-5">
-                     <div class="widget widget-fullwidth be-loading">
-                         <div class="widget-head">Performance</div>
-                             <div class="widget-chart-container" id="chart-container5">
-                                 <table class="table table-borderless" id="table-charts2">
-                                     <tbody class="no-border-x">
-                                          <tr>
-                                              <td>
-                                                  <div class="responsive-plot" id="performance-weekly1">
-                                                    <script>
-                                                            var trace1 = [{
-                                                                              type: 'bar',
-                                                                              x: [{{ performance_gbp }},
-                                                                                  {{ performance_cad }},
-                                                                                  {{ performance_aud }},
-                                                                                  {{ performance_eur }},
-                                                                                  {{ performance_jpy }},
-                                                                                  {{ performance_ca_bonds }},
-                                                                                  {{ performance_eu_bonds }},
-                                                                                  {{ performance_uk_bonds }},
-                                                                                  {{ performance_us_bonds }},
-                                                                                  {{ performance_hk_equities }},
-                                                                                  {{ performance_jp_equities }},
-                                                                                  {{ performance_eu_equities }},
-                                                                                  {{ performance_us_equities }},
-
-                                                                                  ],
-
-                                                                                    marker: {
-                                                                                            color: 'rgb(255, 204, 0)'
-                                                                                           },
-
-                                                                               y: [    'GBP',
-                                                                                          'CAD',
-                                                                                          'AUD',
-                                                                                          'EUR',
-                                                                                          'JPY',
-                                                                                          'CA 10y Bonds',
-                                                                                          'Eu 10y Bonds',
-                                                                                          'UK 10y Bonds',
-                                                                                          'US 10y Bonds',
-                                                                                          'HK Equities',
-                                                                                          'JP Equities',
-                                                                                          'EU Equities',
-                                                                                          'US Equities'
-                                                                                     ],
-                                                                              orientation: 'h',
-                                                                               }];
-
-                                                             var layout = {
-                                                                              title:{
-                                                                               text: 'Weekly'},
-                                                                              font: {size: 11, family: 'Arial, serif'},
-                                                                              xaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: false
-                                                                              },
-
-                                                                                yaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: true,
-
-                                                                              },
-                                                                              width: 150,
-                                                                              height: 487,
-                                                                              margin: {
-                                                                                l: 90,
-                                                                                r: 0,
-                                                                                b: 0,
-                                                                                t: 72,
-                                                                                pad: 4
-                                                                              }
-                                                                           };
-
-                                                             layout.title = {
-                                                              text: 'Weekly',
-                                                              font: {
-                                                                size: 11,
-                                                                color: 'black',
-                                                                 family: 'Arial, serif'
-                                                              },
-                                                              y: 0.87,
-                                                              xanchor: 'left',
-                                                              yanchor: 'bottom',
-                                                            };
-
-                                                            var config = {
-                                                                                 'displayModeBar': false,
-                                                                                  'responsive': true,
-                                                                             };
-
-                                                                Plotly.newPlot('performance-weekly1', trace1, layout, config);
-                                                    </script>
-                                                  </div>
-                                              </td>
-                                              <td>
-                                                  <div class="responsive-plot" id="performance-ytd">
-                                                    <script>
-                                                            var trace1 = [{
-                                                                              type: 'bar',
-                                                                              x: [{{ performance_ytd_gbp }},
-                                                                                  {{ performance_ytd_cad }},
-                                                                                  {{ performance_ytd_aud }},
-                                                                                  {{ performance_ytd_eur }},
-                                                                                  {{ performance_ytd_jpy }},
-                                                                                  {{ performance_ytd_ca_bonds }},
-                                                                                  {{ performance_ytd_eu_bonds }},
-                                                                                  {{ performance_ytd_uk_bonds }},
-                                                                                  {{ performance_ytd_us_bonds }},
-                                                                                  {{ performance_ytd_hk_equities }},
-                                                                                  {{ performance_ytd_jp_equities }},
-                                                                                  {{ performance_ytd_eu_equities }},
-                                                                                  {{ performance_ytd_us_equities }}
-                                                                                  ],
-
-                                                                               y: [    'GBP',
-                                                                                          'CAD',
-                                                                                          'AUD',
-                                                                                          'EUR',
-                                                                                          'JPY',
-                                                                                          'CA 10y Bonds',
-                                                                                          'Eu 10y Bonds',
-                                                                                          'UK 10y Bonds',
-                                                                                          'US 10y Bonds',
-                                                                                          'HK Equities',
-                                                                                          'JP Equities',
-                                                                                          'EU Equities',
-                                                                                          'US Equities'
-                                                                                     ],
-
-
-                                                                                orientation: 'h',
-
-                                                                              marker: {
-                                                                                            color: 'rgb(163, 163, 163)'
-                                                                                           }
-                                                                               }];
-
-
-
-                                                             var layout = {
-
-                                                                               text: 'Positions',
-                                                                              font: {size: 11, family: 'Arial, serif'},
-                                                                              xaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: false
-                                                                              },
-
-                                                                                yaxis: {
-                                                                                autorange: true,
-                                                                                showgrid: false,
-                                                                                zeroline: false,
-                                                                                showline: false,
-                                                                                autotick: true,
-                                                                                ticks: '',
-                                                                                showticklabels: false,
-
-                                                                              },
-
-
-                                                                                  width: 150,
-                                                                                  height: 487,
-                                                                                  margin: {
-                                                                                    l: 0,
-                                                                                    r: 30,
-                                                                                    b: 0,
-                                                                                    t: 72,
-                                                                                    pad: 4
-                                                                                  }
-                                                                           };
-
-                                                             layout.title = {
-                                                              text: 'YTD',
-                                                              font: {
-                                                                size: 12,
-                                                                color: 'black'
-                                                              },
-                                                              x: 0.25,
-                                                              y: 0.87,
-                                                              xanchor: 'left',
-                                                              yanchor: 'bottom',
-                                                            };
-
-                                                            var config = {
-                                                                                 'displayModeBar': false,
-                                                                                  'responsive': true,
-                                                                             };
-
-                                                            Plotly.newPlot('performance-ytd', trace1, layout, config);
-                                                    </script>
-                                                  </div>
-                                              </td>
-                                          </tr>
-                                    </tbody>
-                                 </table>
-                             </div>
-                     </div>
-                 </div>
-                 <div class="col-12 col-lg-2"></div>
-            </div>
-              <footer class="footer" id="container-footer">
+             <footer class="footer" id="container-footer">
                   <div class="container" align="center">
                       <span class="text-muted">© Legal & General 2020</span>
                   </div>

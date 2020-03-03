@@ -1,0 +1,245 @@
+        body {
+                min-height: 100%;
+                display: flex !important;
+             }
+
+        body {
+                padding: 0;
+                background-color: #eee;
+                height: auto;
+                min-height: 100%;
+                line-height: 1.42857143;
+             }
+
+        body {
+                display: block;
+                -webkit-box-orient: vertical !important;
+                -webkit-box-direction: normal !important;
+                flex-direction: column !important;
+             }
+
+        .main {
+                -webkit-box-flex: 1;
+                -ms-flex: 1 0 auto;
+                flex: 1 0 auto;
+                position: relative;
+
+              }
+
+        .main-content {padding-top: 120px; }
+
+        .main-content .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 2px;}
+
+        .be-content {
+                        position: relative;
+                        left: 0;
+                        margin-left: 30px;
+                        margin-right: 30px;
+                        min-height: 100%;
+                     }
+
+
+        .container-fluid {
+                            width: 100%;
+                            padding-right: 15px;
+                            padding-left: 15px;
+                            margin-right: auto;
+                            margin-left: auto;
+                            margin-top: 1px;
+                         }
+
+        .row             {
+                            display: flex;
+                            margin-right: -15px;
+                            margin-left: -15px;
+                            margin-bottom: 20px;
+                         }
+
+        @media (min-width: 768px)
+        .col-md-12      {
+                            -webkit-box-flex: 0;
+                            flex: 0 0 100%;
+                            max-width: 100%;
+                         }
+
+        .widget.widget-fullwidth {
+                                    padding: 0;
+                                  }
+
+        .widget.widget-fullwidth  {
+                                                padding: 20px 20px 10px;
+                                                margin-bottom: 0;
+                                                background-color: #fff;
+                                               }
+        .widget-head {
+                                                padding: 20px 20px 10px;
+                                                margin-bottom: 0;
+                                                background-color: rgb(152, 215, 235);
+                                                font-size: 20px;
+                                                color: #fff;
+
+                                               }
+
+        .be-loading {
+                        position: relative;
+                    }
+        .widget {
+            background-color: #fff;
+            margin-bottom: 25px;
+            border-radius: 3px;
+        }
+
+        .widget-chart-container {
+            position: relative;
+        }
+
+
+        #chart-container1 { height: 547px;
+                            width: auto;
+                          }
+        #chart-container0 { height: 220px; }
+        #chart-container4 { height: 555x; }
+        #chart-container3 { height: 220px; }
+
+         .table0 {
+                    width: 15%;
+                    margin-left: 65px;
+                    color: #404040;
+                    background-color: #fff;
+                    padding-bottom: 40px;
+                }
+
+        .table0  {
+                    border-collapse: collapse;
+                    text-align:center;
+                    border-top: none;
+
+                  }
+
+         .table3 {
+                    width: 40%;
+                    margin-left: 30px;
+                    color: #404040;
+                    background-color: #fff;
+                    border-top: 1px solid #eee;
+                    border-left: 1px solid #eee;
+                    border-right: 1px solid #eee;
+                    border-bottom: 1px solid #eee;
+                    color: #404040;
+                }
+
+        .table3  {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+        .table5 {
+                    width: 100%;
+                    margin-left: 20px;
+                    color: #404040;
+                    background-color: #fff;
+                    border-top: 1px solid #eee;
+                    border-left: 1px solid #eee;
+                    border-right: 1px solid #eee;
+                    border-bottom: 1px solid #eee;
+                }
+
+        .table5   {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+
+        .table1 {
+                    width: 50%;
+                    margin-bottom: 1rem;
+                    margin-left: 80px;
+                    color: #404040;
+                    background-color: #fff;
+                    border-top: 1px solid #eee;
+                    border-bottom: 1px solid #eee;
+                }
+
+        .table1   {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+
+        .table2 {
+                    width: 100%;
+                    margin-bottom: 1rem;
+                    color: #404040;
+                    background-color: #fff;
+                    border-top: 1px solid #eee;
+                    border-bottom: 1px solid #eee;
+                }
+
+        .table2   {
+                    border-collapse: collapse;
+                    text-align:center;
+                  }
+
+
+
+
+        #signal-off-title, #signal-off-date {padding-top: 10px; padding-bottom: 10px; }
+        #positions-table0{ padding-left: 90px; padding-right:5px; }
+        #performance-ytd-table0 { padding-left: 15px; padding-right: 15px; }
+        #performance-weekly-table0 {padding-right: 10px; }
+        #performance-main-title-table0{ padding-left: 155px; }
+
+        .table0-borderless > tbody > tr > td {font-size: 12px; font-family: Arial, serif; padding-bottom:2px; }
+        .table3-borderless > tbody > tr > td {font-size: 12px; font-family: Arial, serif; padding-bottom:2px; }
+
+        .table1-borderless > tbody > tr > td,
+        .table1-borderless > thead > tr > td { font-size: 12px; font-family: Arial, serif; border-right: 1px solid #eee;
+                                                border-left: 1px solid #eee;
+                                                padding-right: 10px; padding-left: 10px; padding-bottom: 28px;
+                                              }
+
+        .table3-borderless > tbody > tr > td,
+        .table3-borderless > tbody > tr > th,
+        .table3-borderless > tfoot > tr > td,
+        .table3-borderless > tfoot > tr > th,
+        .table3-borderless > thead > tr > td,
+        .table3-borderless > thead > tr > th { font-size: 12px; font-family: Arial, serif; padding-bottom: 10px;
+
+
+                                             }
+
+        .table2-borderless > tbody > tr > td,
+        .table2-borderless > thead > tr > td { font-size: 12px; font-family: Arial, serif; border-right: 1px solid #eee;
+                                                border-left: 1px solid #eee;
+                                              }
+
+
+
+
+
+        .table5-borderless > tbody > tr > td,
+        .table5-borderless > tbody > tr > th,
+        .table5-borderless > tfoot > tr > td,
+        .table5-borderless > tfoot > tr > th,
+        .table5-borderless > thead > tr > td,
+        .table5-borderless > thead > tr > th { font-size: 12px; font-family: Arial, serif; border-right: 1px solid #eee;
+                                               padding-bottom: 25px; padding-right: 15px; padding-left: 10px; }
+
+
+        #main-container-table {float: left; }
+        #main-container-table-charts {float: right; }
+
+
+        #body-charts {height: 200px ;}
+
+        .thead-color {background-color:#eee;}
+        #thead-title, #thead-title1, #thead-title2, #thead-title3, #thead-title4, #thead-title5 {color: #fff; font-size: 20px;}
+
+        #performance-weekly {padding-right: 90px;}
+        #performance-weekly1 {padding-right: 90px;}
+        #positions-sparklines-charts {height: 550px;}
+
+        .text-muted {font-size: 12px; }
+        #container-footer {background-color: #eee; }
+
+        .overview-span { color: #007faa; }

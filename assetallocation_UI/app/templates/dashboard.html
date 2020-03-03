@@ -10,6 +10,7 @@
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <link rel="stylesheet" href="{{url_for('.static', filename='dashboard_css.css')}}">
 
+
         <style type="text/css">
             #selectInputDatesChartIMGSubmit1 {padding-top: 5px; }
 
@@ -81,10 +82,1607 @@
                         <div class="be-content">
                             <div class="main-content container-fluid">
                                 <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/img/icon-dashboard.png"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2><br>
+                                <!-- Sparklines Charts -->
+                                <div class="row">
+                                    <div class="col-12 col-lg-12">
+                                        <div class="widget widget-fullwidth be-loading">
+                                            <div class="widget-head-overview"><strong>Positions YTD</strong></div>
+                                            <div class="widget-chart-container" id="positions-sparklines-charts">
+                                                <table class="table0 table0-borderless">
+                                                    <tbody class="no-border-x">
+                                                        <tr>
+                                                            <td>
+                                                                <div class="responsive-plot" id="positions-sparklines">
+                                                                    <script>
+
+                                                                        trace1 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(255, 204, 0, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'US Equities',
+                                                                          type: 'scatter',
+                                                                          y: {{ us_equities_sparklines }},
+                                                                          xaxis: 'x',
+                                                                          yaxis: 'y',
+                                                                          fillcolor: 'rgba(255, 204, 0, 0.5)'
+                                                                        };
+
+                                                                        trace2 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(0, 153, 204, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'EU Equities',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_eu_equities_sparklines }},
+                                                                          xaxis: 'x2',
+                                                                          yaxis: 'y2',
+                                                                          fillcolor: 'rgba(0, 153, 204, 0.5)',
+                                                                        };
+
+                                                                        trace3 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(0, 170, 85, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'JP Equities',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_jp_equities_sparklines }},
+                                                                          xaxis: 'x3',
+                                                                          yaxis: 'y3',
+                                                                          fillcolor: 'rgba(0, 170, 85, 0.5)'
+                                                                        };
+
+                                                                        trace4 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(238, 34, 34, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'HK Equities',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_hk_equities_sparklines }},
+                                                                          xaxis: 'x4',
+                                                                          yaxis: 'y4',
+                                                                          fillcolor: 'rgba(238, 34, 34, 0.5)'
+                                                                        };
+
+                                                                        trace5 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(68, 84, 106, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'US 10y Bonds',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_us_bonds_sparklines }},
+                                                                          xaxis: 'x5',
+                                                                          yaxis: 'y5',
+                                                                          fillcolor: 'rgba(68, 84, 106, 0.5)'
+                                                                        };
+
+                                                                        trace6 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(163, 163, 163, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'UK 10y Bonds',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_uk_bonds_sparklines }},
+                                                                          xaxis: 'x6',
+                                                                          yaxis: 'y6',
+                                                                          fillcolor: 'rgba(163, 163, 163, 0.5)'
+                                                                        };
+
+                                                                        data = [trace1, trace2, trace3, trace4, trace5, trace6];
+
+                                                                        var config = {
+                                                                                  'displayModeBar': false,
+                                                                                  'responsive': true,
+                                                                                   };
+
+                                                                        layout = {
+                                                                                  showlegend: true,
+                                                                                  legend: { xanchor: 'center', y:0.40,  x: 0.5, orientation: 'h' },
+                                                                                  font: {family: 'Arial, serif'},
+                                                                                  height:490,
+                                                                                  width: 700,
+                                                                                  margin: {l: 'auto',
+                                                                                           r: 0,
+                                                                                           b: 0,
+                                                                                           t: 80,
+                                                                                           pad:4},
+                                                                                  xaxis: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis: {
+                                                                                    type: 'linear',
+                                                                                    range: [-4.967737446105644, 10.299745285002633],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x',
+                                                                                    domain: [0.9258333333333333, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis2: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y2',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis3: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y3',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis4: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y4',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis5: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y5',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis6: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y6',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis2: {
+                                                                                    type: 'linear',
+                                                                                    range: [-5.458676464524098, 3.4985553364348685],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x2',
+                                                                                    domain: [0.8416666666666667, 0.9158333333333334],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis3: {
+                                                                                    type: 'linear',
+                                                                                    range: [-8.876358909845749, 11.82745161707441],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x3',
+                                                                                    domain: [0.7575000000000001, 0.8316666666666668],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false,
+                                                                                  },
+                                                                                  yaxis4: {
+                                                                                    type: 'linear',
+                                                                                    range: [-15.61598919694067, 2.5446814048727404],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x4',
+                                                                                    domain: [0.6733333333333333, 0.7475],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis5: {
+                                                                                    type: 'linear',
+                                                                                    range: [-8.630730872223673, 4.805328993705582],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x5',
+                                                                                    domain: [0.5891666666666666, 0.6633333333333333],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis6: {
+                                                                                    type: 'linear',
+                                                                                    range: [-5.89974432058536, 6.58391660738584],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x6',
+                                                                                    domain: [0.505, 0.5791666666666667],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  }
+                                                                                };
+
+                                                                                layout.title = {
+                                                                                          text: '',
+                                                                                          font: {
+                                                                                            size: 12,
+                                                                                            color: 'black'
+                                                                                          },
+                                                                                          y: 0.87,
+                                                                                          xanchor: 'left',
+                                                                                          yanchor: 'bottom',
+                                                                                        };
+
+                                                                                Plotly.plot('positions-sparklines', { data: data, layout: layout, config: config});
+                                                    </script>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="responsive-plot" id="positions-sparklines1">
+                                                                    <script>
+
+                                                                        trace1 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(0, 102, 136, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'EU 10y Bonds',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_eu_bonds_sparklines }},
+                                                                          xaxis: 'x',
+                                                                          yaxis: 'y',
+                                                                          fillcolor: 'rgba(0, 102, 136, 0.5)'
+                                                                        };
+
+                                                                        trace2 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(17, 119, 68, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'CA 10y Bonds',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_ca_bonds_sparklines }},
+                                                                          xaxis: 'x2',
+                                                                          yaxis: 'y2',
+                                                                          fillcolor: 'rgba(17, 119, 68, 0.5)',
+                                                                        };
+
+                                                                        trace3 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(192, 0, 0, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'JPY',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_jpy_sparklines }},
+                                                                          xaxis: 'x3',
+                                                                          yaxis: 'y3',
+                                                                          fillcolor: 'rgba(192, 0, 0, 0.35)'
+                                                                        };
+
+                                                                        trace4 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(238, 34, 34, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'EUR',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_eur_sparklines }},
+                                                                          xaxis: 'x4',
+                                                                          yaxis: 'y4',
+                                                                          fillcolor: 'rgba(238, 34, 34, 0.5)'
+                                                                        };
+
+                                                                        trace5 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(255, 204, 0, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'AUD',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_aud_sparklines }},
+                                                                          xaxis: 'x5',
+                                                                          yaxis: 'y5',
+                                                                          fillcolor: 'rgba(255, 204, 0, 0.5)'
+                                                                        };
+
+                                                                        trace6 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(102, 102, 102, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'CAD',
+                                                                          type: 'scatter',
+                                                                          y: {{ positions_cad_sparklines }},
+                                                                          xaxis: 'x6',
+                                                                          yaxis: 'y6',
+                                                                          fillcolor: 'rgba(102, 102, 102, 0.5)'
+                                                                        };
+
+                                                                        trace7 = {
+                                                                          fill: 'tozeroy',
+                                                                          line: {
+                                                                            color: 'rgba(0, 170, 85, 1)',
+                                                                            width: 1
+                                                                          },
+                                                                          mode: 'lines',
+                                                                          name: 'GBP',
+                                                                          type: 'scatter',
+                                                                          y: [-0.230671508069861, -0.125063342173414, -0.232166995181465, -0.0332964593738595, 0.317429667480378, 0.117849539235538, 0.0584339607722075, 0.143745955986169, -0.0706244816416144, 0.420320682689433, 0.187009358892925, 0.33498970733089, 0.353480703401206, 0.628325574439845, 1.0907166389712, 0.977101644256859, 1.25740586857793, 1.526592069556, 1.5598441428665, 1.70630890985022, 1.34036232478728, 1.65276622081606, 2.10139258521769, 1.9618461792304, 1.78307517363434, 1.90008487705168, 1.89672591922519, 2.09752267945484, 1.7266028913075, 1.84704419645817, 1.59878440513561, 1.92434822639644, 1.90018083813472, 2.12468662074717, 2.07008544371986, 2.27980579177232, 1.98979226339353, 1.66275878588974, 1.24800715657997, 1.32954582639401, 0.916135378228074, 1.26930584710026, 1.21943968920555, 1.71574475067434, 1.26641034319607, 0.898809637178337, 0.544625251078187, 0.0487796094634459, 0.40091892290499, 0.754490252171915, 0.358836404053766, 0.287641980261178, 0.38543087676104, 0.485783314250617, 0.148898288410329, -0.0715727312412996, -0.414711019395015, 0.0811730416918436, 0.475095986251365, 0.455842194134674, 0.603871938226776, 0.783419557234818, 0.494155025709379, 0.530148318295855, 0.456191015286998, 0.0967774932123087, 0.350304271073753, 0.0538096070529999, 0.243646078095198, -0.125965827618945, -0.0492574703797549, 0.321768180508167, -0.05955004162569, -0.248793094016215, -0.487690025891761, -0.757328387587461, -0.857771379428924, -0.737323364908315, -1.04834470564604, -1.50770440864, -1.85087054017533, -2.14188695190307, -2.48178259314506, -2.51738221821007, -2.50283039238671, -2.30515133508396, -1.93848698212588, -2.24645100739065, -2.01398594249151, -1.74420931908488, -1.80612237517494, -1.80550875510435, -1.45073162882567, -1.275357275228, -0.971630189093097, -1.01111593889264, -0.772320131220559, -0.917964379157508, -0.830216795518901, -0.575293583617287, -0.893187624282504, -0.889891489020692, -0.870296990125588, -1.1030594026733, -0.807715488030076, -0.521663726827473, -0.715975250523576, -0.251555395376384, -0.391778188871509, -0.86057118244676, -0.869387790586605, -0.570105194552463, -0.204340600455557, -0.0306391549482554, 0.320007946148037, 0.541781013876485, 0.228658572012003, -0.0450829187681892, -0.483004067869488, -0.328638218528087, -0.47227416755127, -0.0110495412790605, -0.360804321398449, -0.518949028205551, -0.961824611815571, -0.612467334632306, -0.50412753494564, -0.572345742117373, -0.531584608955348, -0.359948741648824, -0.377373018184131, -0.469102649304647, -0.666953767177722, -0.184609060174951, -0.666909974614851, -0.634989605664631, -0.538357736481122, -0.496903863926072, -0.637685483549072, -0.622111106125595, -0.305484220562638, -0.214338978091894, -0.588810658160435, -0.224524639740569, 0.273620399351354, 0.445047798164961, 0.484670208882952, 0.618435439228931, 0.923668455902338, 0.860632164134551, 0.627585673445465, 0.914820611432645, 0.529140791790594, 0.32847223809743, -0.121361632215861, -0.382569699638427, -0.416291285095166, -0.179682396728789, -0.522684889084289, -0.520202003861836, -0.823380118181347, -0.536031535912907, -0.4317104140086, -0.902233896806783, -0.542960308184605, -0.888468543438186, -0.94622724938902, -1.10737470484017, -1.50797355175177, -1.13265265163143, -1.24773172536848, -1.57804243034873, -1.19575144281487, -0.87430984677393, -1.23858614123455, -1.21131837453009, -1.5904751109317, -2.07278826131112, -2.17191273169946, -1.72148165762979, -2.07376714036946, -2.03755985382604, -1.69775630774032, -2.17064736300801, -2.65192091200775, -2.2449901478515, -2.51781823202589, -2.07203575341048, -1.92415548608195, -1.82234162792229, -1.4117458825478, -1.293087899968, -0.847221549046498, -0.476728603706303, -0.494585591360693, -0.838739949720666, -1.02001389729737, -0.796034415679392, -0.731298725588262, -1.11003369386031, -0.982460098857821, -1.20499109215521, -1.17818564339358, -1.18313079937009, -1.28637392112038, -1.7319710662839, -2.01044136166047, -2.45243617957569, -2.37749511553486, -2.16228039002757, -1.99011034007133, -1.98121883460963, -2.10263368847254, -2.06708656070983, -1.88088648520056, -1.46864866956313, -1.01835842441862, -1.35962000631465, -1.19427240155127, -1.08246514639675, -0.626700424477317, -0.974912517687519, -0.646950851153601, -0.207187547243475, -0.203624313961838, -0.661191090640756, -0.654608974077569, -0.244053857134677, -0.13579801471694, -0.245902175613593, -0.12786236489873, -0.0471905265809804, -0.524124048061431, -0.440503024345757, -0.199020426516609, 0.106826172748327, 0.342844349040683, -0.131702584482943, 0.300772912091406, 0.298767620073939, 0.298650024788831, 0.672555670227442, 0.565846657600278, 0.543056353662297, 0.105912968742981, 0.33443333483651, 0.731428933278081, 0.521663609766071, 0.0440404396787282, 0.368151777176506, 0.128666677421579, 0.254121049409702, 0.747696007118669, 1.1479320539049, 1.11661893837045, 1.5905745703062, 1.31108884087599, 0.966621286270965, 0.631778329704143, 0.138461339318248, 0.248996014155582, 0.439027781830177, 0.880939958309915, 0.680847922983915, 1.04039994354975, 1.41991310125544, 1.33391035025391, 1.5265411606121, 1.06748178555943, 1.51415642807346, 1.23012281963916, 1.61062110824862, 1.91575551129878, 1.75927311692519, 2.15905418052885, 1.70260308612075, 2.06228785135265, 2.29238651282601, 2.67215052140023, 2.79532493822771, 2.9987668870319, 2.51212302750762, 2.37864762962811, 2.46105500259536, 2.16923255055947, 2.48644314526319, 2.27828614634128, 2.00003035697504, 1.86169819437245, 2.25739179289779, 2.43774667539354, 2.5650102263387, 2.27883328227158, 2.54569449932996, 2.4091803035116, 2.30269593473536, 2.75579796562445, 3.00089153021788, 2.72341713105951, 2.59950332774716, 2.59005161652804, 2.43450803036232, 2.52905137877219, 2.85514265224421, 2.41531463294048, 2.66618084733533, 2.39960122232085, 2.2028484071459, 2.25530319126425, 2.17566733271446, 2.4837736067218, 2.56987006095351, 3.06023514775809, 2.72336009070549, 3.2059317696964, 2.87165146658653, 2.8785518768714, 2.57517661234351, 2.12218762480949, 1.77149793470374, 2.02779490678488, 2.13722153736172, 1.90740044859334, 1.96075048571647, 2.06246050524501, 1.82157861510137, 1.46413273348334, 1.87052741240299, 2.07841413595551, 1.87231508720489, 1.52843333413421, 1.56075442923717, 1.41642932286379, 1.86041472258068, 2.16970019034668, 2.47961689473176, 2.7977473320015, 2.98326813300894, 3.05362593340873, 3.09381007794477, 2.80545758837143, 2.61472047746386, 2.25603117251879, 2.00154957118357, 2.35836390224763, 2.24303766652564, 2.49511159584654, 1.99997006246852, 1.5273490127729, 1.37699088040728, 1.17346614568331, 1.4834270971618, 1.38382968515777, 1.26725151549953, 1.09931286851923, 1.28622729207017, 1.04453960408586, 1.12444002180058, 0.915395585378055, 1.1066077285442, 1.46446415228026, 1.34778551012462, 1.74741799990606, 1.8972147440549, 2.341275133336, 2.08361108027571, 2.2698023266436, 2.3383347636094, 2.81173803861138, 2.6650742708186, 2.36133885305702, 2.55432192907867, 2.59167394028899, 2.16373243097104, 2.27266119314715, 2.15311333194727, 2.45707570967495, 2.31585670210508, 1.92754371113143, 2.01174066845437, 2.40221234574894, 2.05443071507837, 2.49774652917873, 2.54861559368759, 2.6961941300526, 3.0868918052577, 3.30587932638082, 2.83572475888536, 2.87909414030609, 2.62250724546092, 2.54619876407117, 2.88158317076003, 2.66400396810392, 2.9904712037807, 2.8079524322373, 2.90136066012296, 2.84515904886215, 2.72675961136987, 3.11146958952401, 2.70029925761993, 2.35407611433808, 2.42542407434823, 2.24428207394666, 2.08353958836434, 2.44894217923965, 2.34233139888203, 1.91744254808778, 1.55907642407802, 1.31865751310335, 0.855837043894334, 0.514379015648108, 0.412502437383616, 0.714766796161661, 0.696396690831895, 1.12634491774752, 1.25202447634197, 1.47836655089488, 1.61797421156763, 1.36012799109745, 0.996052361209272, 1.41910688136128, 1.90149105335327, 2.15691663751743, 1.76281100200334, 1.86189113701507, 1.54153488742346, 1.80448129571268, 1.37531850896434, 1.12297686842437, 0.828508966384089, 0.837099396020736, 0.342468719506554, 0.273454382082681, 0.430338433859293, 0.706617647837757, 0.466137960100302, 0.378085484462598, 0.688005101074523, 0.438106871333211, 0.568524579944286, 0.857055433864952, 0.564619950281496, 0.995556611864752, 0.824904556257833, 1.27235769726464, 1.36746528572858, 1.54273226103996, 1.63362230782973, 1.2452992687483, 1.73942808868257, 1.40647125272419, 1.52725868386642, 1.50891499580815, 1.46340506573958, 1.88720446573822, 1.78985858506771, 1.44771775715712, 1.47572031168994, 1.18710870997957, 1.33972888400753, 1.29968053883961, 1.11561563822408, 1.17594569676488, 0.772411241193003, 1.09590587775962, 0.994435910963252, 1.40266489106742, 1.54905176193088, 1.28703952769903, 1.06090158347208, 1.34562896747137, 0.932236756321919, 0.687586124333188, 0.824825538495345, 1.12711138997151, 0.627127335674089, 0.133664640304135, 0.0989475778809693, -0.115265919556023, -0.321006924481617, -0.739568622005307, -0.404327193647818, -0.36700382987562, -0.00220806456319123, 0.122011474564531, 0.300114620858406, -0.0146891945747277, -0.456806136768986, -0.67772528622608, -0.432346648172331, 0.0412849784203445, -0.374677470032126, -0.522144019433553, -0.258912454116899, -0.221688786660095, 0.0481907958803609, -0.22948244402043, -0.14536123145748, -0.564675633053574, -0.497928164305391, -0.0577766672303104, -0.388490178558124, -0.788695691039453, -0.398395041744934, -0.121474131848581, -0.11038563483842, -0.0267025877474372, 0.0949504639907834, -0.0187086640684648, -0.264745425549355, 0.0769177605741113, 0.20959545304838, 0.273202528659453, 0.104297170723479, 0.536046533164322, 0.335339681284062, 0.0537740918320821, -0.0184685126798299, -0.17494852352071, 0.12815375612442, 0.510514349586049, 0.213534971985602, -0.0258596230647925, -0.132743508165363, -0.388673838056871, 0.0320562450998646, 0.425921216218985, 0.748837561587956, 0.860901262991904, 0.882391096667094, 0.422667104901222, 0.532940857811015, 0.893627477465802, 1.38491874816314, 1.32017370671198, 1.17993073148213, 0.695810298618279, 0.377460033863732, 0.716636963820476, 0.312631601172593, 0.394466042609976, 0.0506720111045429, -0.186438501844695, -0.114779356727603, 0.379729486684691, 0.342114991269545, 0.813068405807106, 1.07314930649369, 1.4762787557294, 1.17190807274695, 0.714746719042814, 0.24299931577876, 0.267397055348829, -0.0537290121501989, -0.242001726901831, 0.170212683891404, 0.15764573038771, 0.354818236089966, 0.586858269389938, 0.914117474748098, 0.859520126237109, 0.759754769841978, 1.20541486485919, 0.860062219369978, 0.963677264814189, 1.241024945911, 1.50472865105462, 1.53051197252088, 1.43151026814733, 1.90881425827009, 2.20327003504275, 2.50736009704355, 2.95985932211538, 3.16707631315804, 3.57395026556635, 3.07870919498973, 3.29576026534876, 3.2368579522774, 3.435650488616, 3.02203143129396, 2.58102499691234, 3.03877398047421, 2.55885565183202, 2.29717942400344, 1.91803291773122, 1.48060557364719, 1.20485019290319, 1.68965527034216, 2.16870096705959, 2.49036060739654, 2.37337178561497, 2.05894911971394, 1.58603120133488, 1.80153509852035, 1.79123953974806, 1.55816886148347, 1.90112609123579, 1.73876749076889, 1.64648899146147, 1.1939714123394, 0.772823632852148, 0.672516009767683, 0.408421194716958, 0.810194966990038, 1.04669606303114, 1.13107595392168, 1.01949539303119, 1.05350057306789, 0.873297351701529, 1.1034670694042, 1.32136907459571, 1.51263529333297, 1.23613753710536, 1.09115084664288, 0.956523295776397, 0.761867205788944, 0.59326940926269, 1.04878399886238, 0.809321960136707, 0.499073240214965, 0.451664531570838, 0.637545148869879, 1.0920511360384, 0.961721920689538, 0.479781031865327, 0.107387960294268, -0.107569164400397, 0.21214876241112, 0.438144703559006, 0.7332659769972, 1.11544431219108, 1.34364790904094, 1.47418212244866, 1.93846002729432, 1.54397153509008, 1.41412098185066, 1.24159069248481, 1.44800177966457, 1.71603480087213, 1.9052534007479, 2.3582175010279, 2.41224611636251, 2.62801179249907, 2.15181831908351, 2.64564069454507, 3.03523009160662, 3.5140164867474, 3.72637851289329, 4.19554124406024, 4.03773270339028, 3.89096832729781, 4.16811442077829, 4.22957844823634, 3.73439277310218, 3.43166424746868, 3.27252073420425, 3.10425625503178, 3.25970308382896, 3.2114963061743, 3.19557754470697, 3.20555279955742, 3.48376807868342, 3.35932135661903, 3.74565467535254, 3.32193066738782, 3.77551271003003, 4.12680664218432, 4.26071229337044, 4.70829770773797, 5.17714750582768, 5.67530673219556, 6.12081208152932, 6.05481986598774, 5.73182869845772, 5.24401197667344, 4.84730975012814, 5.18876410268461, 5.57160061273642, 5.59675049113036, 5.35959926316074, 5.66355477099706, 5.16692585422749, 5.30769180253485, 5.70522312164447, 5.31470695765867, 5.45936575220295, 5.0974594083385, 4.94899348745485, 5.41030355631121, 5.2868977626509, 5.78122080893745, 5.75170530852231, 5.91503072071799, 6.17761871837746, 6.34610480188799, 5.85682290762157, 5.78569717584461, 6.07286423193362, 6.14455292201877, 6.06678317625398, 6.1532266353976, 6.05085226035801, 6.39379193737244, 6.84428873415707, 6.5833977051112, 6.60690514155784, 6.89555585269389, 7.22509209537939, 7.61252757544224, 7.42121674911315, 7.18841289223352, 7.12528085569613, 6.97323179392149, 7.20897889501628, 7.32403799680434, 7.39660917352393, 7.48737578589025, 7.80059131127669, 7.6154661506907, 7.13935930472932, 7.48593517697542, 7.41673256447678, 6.96120184290469, 7.41157762073179, 7.70941630007301, 8.14198618748223, 8.26872419288276, 8.66335061531628, 8.73179394639735, 8.4106308129126, 8.15923148339999, 8.26107765286446, 8.60021772821501, 8.14274589752762, 8.43156058152268, 8.04863890914338, 7.63544628113576, 7.62575859543525, 7.14194826013333, 7.19339503863632, 7.58732555421568, 7.28682051334762, 7.58616278625446, 7.7870389531381, 7.6157816337428, 7.88151854867438, 8.13271580311809, 7.83790048824326, 7.34564710049302, 7.4740445211285, 7.42267685609855, 7.28780487925436, 7.32023590593872, 7.28288109078695, 7.30961404458376, 7.60305730321534, 7.82492377759073, 7.36848988183182, 7.10518664996, 7.10861632023947, 7.1325337582212, 7.50887043605944, 7.66683720213914, 7.59626385739897, 7.76967438919517, 8.19912834502936, 7.85874498129738, 7.92072334372305, 7.7228115965754, 7.47064622798496, 7.90800163612465, 7.65637993941085, 8.0640169258631, 7.94169954449055, 8.3947855204324, 8.78488694442987, 9.08041978515128, 8.79059150811363, 8.40915252508747, 7.96671799719468, 8.32492659002243, 8.44195810318744, 8.10951061414764, 7.81706829568635, 8.1243508562781, 7.70490047185205, 8.02923278628299, 7.5317792333623, 7.73801457126078, 7.83994288789452, 7.56473361834324, 7.29775674807933, 6.90684503477929, 6.40765209513269, 6.5464668492147, 6.4787178116032, 6.81090449356769, 6.47580881287274, 5.99881030892603, 5.88210594322229, 5.96326295948391, 6.33562357705381, 5.90652555840906, 5.80310505084565, 5.32520198981209, 5.11847929087816, 4.82981302449222, 5.20432216716281, 5.26817157874449, 5.73490416551015, 5.89687411793038, 6.11413938556944, 5.68598543967134, 6.14840458571878, 6.29985931261891, 6.75414297067506, 7.16059452230144, 7.14560585796526, 7.39616404625811, 6.99424372950071, 7.35721476302819, 7.40629273958727, 7.14763186588873, 7.03135395995892, 6.8252176085543, 6.60810928135507, 6.68401560534996, 6.57204447428855, 6.27170115496321, 6.04718829723227, 5.87089688062771, 5.68207145144297, 5.28789607825632, 5.52189524720328, 5.83318142228712, 5.80165041567468, 6.0154763521797, 5.54928049033857, 5.09740652460778, 4.90015167184557, 4.57768003352402, 4.75859410392873, 4.69127040604623, 4.99088166266194, 5.05988479182277, 5.33569826210889, 5.59648892745766, 6.0336119653973, 6.4032404778613, 6.80687867434555, 7.06282634755803, 6.63249627994971, 6.14496281026257, 5.85310328432632, 6.01485021284389, 6.45030446926854, 6.49490741388185, 6.57027457859797, 6.28752650791688, 6.54465807994523, 6.16038840829341, 5.85590913530794, 5.55084692976208, 5.94349720009591, 6.2367075345034, 6.27909217512881, 5.80451761961838, 6.29987410223561, 6.57601633764775, 6.23951365514484, 6.70884929107748, 6.62743666823562, 6.72059542292321, 7.07114979623387, 7.43234269077432, 7.41687187499773, 7.43514486405526, 7.93016150306707, 7.89271229461996, 8.03021240286325, 7.71984332529713, 8.20921937443089, 8.25341282600031, 8.31492818943862, 8.50967592635839, 8.31591462638814, 8.17538280543381, 7.76887195501402, 7.47348952774033, 7.21958584474077, 7.00681488155457, 6.55212682119731, 6.2776865800135, 6.62901274275277, 6.32431838145943, 5.96387328653093, 6.14763795239017, 6.25256297400691, 5.90958099088348, 5.88412071705122, 5.46467660216411, 5.38161384175464, 5.3098171763579, 5.18002744983314, 5.26326903792203, 5.69905027964603, 5.95648977244493, 6.35093768284521, 6.78551497097193, 6.67336387258715, 7.06588517956623, 6.79051203956243, 7.0046972060859, 6.82915184386709, 6.9299492261302, 6.87739177658984, 6.41816610625044, 6.91380965295356, 6.95442194290872, 7.03267103610629, 7.281976613818, 7.78028223324631, 7.31029849686881, 7.15126464114408, 7.63816186225469, 8.02242795827627, 7.93236663293503, 8.28620933541887, 8.3314371297964, 7.88142583679084, 8.08187520765138, 7.71521433554239, 7.92456061111618, 8.20573560050948, 8.33750586463268, 7.94161232012225, 8.11570770698292, 7.88079956746294, 8.00394948692163, 8.48033118649957, 8.83731937071737, 8.45093001634791, 8.89429373652614, 9.38522285349893, 9.77298496840447, 9.57085173538823, 9.78025131764426, 9.69757520365265, 9.50198554339481, 9.96936463028529, 9.74319462007477, 9.56588439355875, 10.0053821130967, 10.4721904287646, 10.1326141158605, 10.2916410095888, 10.5941454892066, 10.2224769389413, 9.85103737085361, 9.51283277646773, 9.52901973531397, 9.073179162897, 9.23865499264673, 8.82366825255121, 8.93894880045943, 8.47424599926511, 8.16242853408165, 8.53464991264573, 8.46606372469895, 8.64688916610431, 8.55946683906206, 8.57722230105706, 8.88130787927681, 9.32337945278644, 9.7248140701956, 9.67073039193888, 9.95728445400927, 10.4093229160195, 10.3787501954413, 9.93783822148398, 10.1661255289106, 10.3434363139892, 10.3949244551693, 10.2431007262076, 10.3247850824377, 9.8515672693481, 9.8538373437277, 9.54695239568103, 9.60354281160969, 9.25716053648384, 9.22087813676608, 9.52048126762566, 9.16941655395818, 9.04479272205511, 9.28128950511145, 8.87780213145779, 9.31170425861829, 8.90967877922554, 9.24845513430427, 9.07757353575925],
+                                                                          xaxis: 'x7',
+                                                                          yaxis: 'y7',
+                                                                          fillcolor: 'rgba(0, 170, 85, 0.5)',
+                                                                        };
+
+
+                                                                        data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7];
+
+                                                                        var config = {
+                                                                                  'displayModeBar': false,
+                                                                                  'responsive': true,
+                                                                                   };
+
+                                                                        layout = {
+                                                                                  showlegend: true,
+                                                                                  legend: { xanchor: 'center', y:0.40,  x: 0.5, orientation: 'h' },
+
+                                                                                  font: {family: 'Georgia, serif'},
+                                                                                  height:507,
+                                                                                  width: 660,
+                                                                                  margin: {l: 30,
+                                                                                           r: 0,
+                                                                                           b: 0,
+                                                                                           t: 95,
+                                                                                           pad:4},
+                                                                                  xaxis: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis: {
+                                                                                    type: 'linear',
+                                                                                    range: [-4.967737446105644, 10.299745285002633],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x',
+                                                                                    domain: [0.9258333333333333, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis2: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y2',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis3: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y3',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis4: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y4',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis5: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y5',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis6: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y6',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  xaxis7: {
+                                                                                    type: 'linear',
+                                                                                    range: [0, 999],
+                                                                                    ticks: '',
+                                                                                    anchor: 'y7',
+                                                                                    domain: [0, 1],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis2: {
+                                                                                    type: 'linear',
+                                                                                    range: [-5.458676464524098, 3.4985553364348685],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x2',
+                                                                                    domain: [0.8416666666666667, 0.9158333333333334],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis3: {
+                                                                                    type: 'linear',
+                                                                                    range: [-8.876358909845749, 11.82745161707441],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x3',
+                                                                                    domain: [0.7575000000000001, 0.8316666666666668],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false,
+                                                                                  },
+                                                                                  yaxis4: {
+                                                                                    type: 'linear',
+                                                                                    range: [-15.61598919694067, 2.5446814048727404],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x4',
+                                                                                    domain: [0.6733333333333333, 0.7475],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis5: {
+                                                                                    type: 'linear',
+                                                                                    range: [-8.630730872223673, 4.805328993705582],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x5',
+                                                                                    domain: [0.5891666666666666, 0.6633333333333333],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis6: {
+                                                                                    type: 'linear',
+                                                                                    range: [-5.89974432058536, 6.58391660738584],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x6',
+                                                                                    domain: [0.505, 0.5791666666666667],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  },
+                                                                                  yaxis7: {
+                                                                                    type: 'linear',
+                                                                                    range: [-3.3878134898529915, 11.330038067051841],
+                                                                                    ticks: '',
+                                                                                    anchor: 'x7',
+                                                                                    domain: [0.42083333333333334, 0.495],
+                                                                                    mirror: false,
+                                                                                    showgrid: false,
+                                                                                    showline: false,
+                                                                                    zeroline: false,
+                                                                                    autorange: true,
+                                                                                    showticklabels: false
+                                                                                  }
+                                                                                };
+
+                                                                        layout.title = {
+                                                                                  text: '',
+                                                                                  font: {
+                                                                                    size: 12,
+                                                                                    color: 'black'
+                                                                                  },
+                                                                                  y: 0.87,
+                                                                                  xanchor: 'left',
+                                                                                  yanchor: 'bottom',
+                                                                                };
+
+
+                                                                        Plotly.plot('positions-sparklines1', { data: data, layout: layout, config: config});
+                                                                    </script>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Total Performance Positions Chart-->
+                                <div class="row">
+                                    <div class="col-12 col-lg-12">
+                                        <div class="widget widget-fullwidth be-loading" id="main-table-positions-performance-widget">
+                                            <div class="widget-head-overview"><strong>TIMES</strong></div>
+                                            <div class="widget-chart-container" id="table1-container">
+                                                 <!-- Table1: Sign-Off -->
+                                                 <div class="signal-off">
+                                                     <table class="table1 table1-borderless">
+                                                          <tbody class="no-border-x">
+                                                              <tr>
+                                                                  <td id="signal-off-title">Signal-Off</td>
+                                                                  <td id="signal-off-date"><strong>28/11/2019</strong></td>
+                                                              </tr>
+                                                          </tbody>
+                                                     </table>
+                                                 </div>
+                                                 <!-- Table2: Total Performance Positions Chart-->
+                                                 <div class="row" id="table-sum-positions-performance-row">
+                                                    <div class="col-6">
+                                                        <!-- Table2 and Table3 (2 sub-tables): Total Performance Positions -->
+                                                       <div class="total-positions-performance" id="total-positions-performance">
+                                                          <table class="table2 table2-borderless" >
+                                                              <tbody class="no-border-x">
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td><strong>Positions</strong></td>
+                                                                            <td><strong>Weekly Performance</strong></td>
+                                                                            <td><strong>YTD Performance</strong></td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                          <td><strong>Equities</strong></td>
+                                                                          <td>{{ sum_positions_equities }}%</td>
+                                                                          <td>{{ sum_performance_weekly_equities }}%</td>
+                                                                          <td>{{ sum_performance_ytd_equities }}%</td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                          <td><strong>Bonds</strong></td>
+                                                                          <td>{{ sum_positions_bonds }}%</td>
+                                                                          <td>{{ sum_performance_weekly_bonds }}%</td>
+                                                                          <td>{{ sum_performance_ytd_bonds }}%</td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                          <td><strong>FX</strong></td>
+                                                                          <td>{{ sum_positions_fx }}%</td>
+                                                                          <td>{{ sum_performance_weekly_fx }}%</td>
+                                                                          <td>{{ sum_performance_ytd_fx }}%</td>
+                                                                        </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </div><!-- .div total-table-container -->
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="total-positions-bar-charts">
+                                                            <table class="table3 table3-borderless">
+                                                                <tbody class="no-border-x">
+                                                                    <tr>
+                                                                        <td><strong>Positions</strong></td>
+                                                                        <td><strong>Weekly Performance</strong></td>
+                                                                        <td><strong>YTD Performance</strong></td>
+                                                                    </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="positions-tiny12">
+                                                                            <script>
+                                                                                    var xValue = [{{ sum_positions_fx }},
+                                                                                                  {{ sum_positions_bonds }},
+                                                                                                          {{ sum_positions_equities }}
+                                                                                                          ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+                                                                                                      textfont: {color: 'black'},
+                                                                                                      hoverinfo: 'none',
+                                                                                                      x: xValue,
+                                                                                                      marker: { color: '#009F4B'},
+                                                                                                       y: [    'FX',
+                                                                                                               'Bonds',
+                                                                                                                'Equities'
+                                                                                                             ],
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+                                                                                                      title:{
+                                                                                                       text: 'Weekly',
+
+
+                                                                                                       },
+
+                                                                                                      font: {size: 11},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: true,
+
+                                                                                                      },
+
+
+                                                                                                          width: 150,
+                                                                                                          height: 180,
+                                                                                                          margin: {
+                                                                                                            l: 48,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 20,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                                   };
+
+                                                                                     layout.title = {
+                                                                                      text: '',
+                                                                                      font: {
+                                                                                        size: 11,
+                                                                                        color: 'black'
+                                                                                      },
+                                                                                      y: 0.90,
+                                                                                      xanchor: 'left',
+                                                                                      yanchor: 'bottom',
+                                                                                    };
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('positions-tiny12', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="performance-weekly-tiny13">
+                                                                            <script>
+                                                                                    var xValue = [{{ sum_performance_weekly_fx }},
+                                                                                                          {{ sum_performance_weekly_bonds }},
+                                                                                                          {{ sum_performance_weekly_equities }}
+                                                                                                          ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      x: xValue,
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+                                                                                                      textfont: {color: 'black'},
+                                                                                                      hoverinfo: 'none',
+
+                                                                                                            marker: {
+                                                                                                                    color: '#FFD503'
+                                                                                                                   },
+
+                                                                                                       y: [    'FX',
+                                                                                                               'Bonds',
+                                                                                                                'Equities'
+                                                                                                             ],
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+                                                                                                      title:{
+                                                                                                       text: '',
+
+
+                                                                                                       },
+
+                                                                                                      font: {size: 11},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false,
+
+                                                                                                      },
+
+
+                                                                                                          width: 130,
+                                                                                                          height: 180,
+                                                                                                          margin: {
+                                                                                                            l: 58,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 20,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                                   };
+
+                                                                                     layout.title = {
+                                                                                      text: '',
+                                                                                      font: {
+                                                                                        size: 11,
+                                                                                        color: 'black'
+                                                                                      },
+                                                                                      y: 0.90,
+                                                                                      xanchor: 'left',
+                                                                                      yanchor: 'bottom',
+                                                                                    };
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('performance-weekly-tiny13', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="performance-ytd-tiny14">
+                                                                            <script>
+                                                                                    xValue = [{{ sum_performance_ytd_fx }},
+                                                                                              {{ sum_performance_ytd_bonds }},
+                                                                                              {{ sum_performance_ytd_equities }}
+                                                                                              ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      x: xValue,
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+                                                                                                      textfont: {color: 'black'},
+                                                                                                      hoverinfo: 'none',
+
+                                                                                                            marker: {
+                                                                                                                    color: '#00AEEF'
+                                                                                                                   },
+
+                                                                                                       y: [    'FX',
+                                                                                                               'Bonds',
+                                                                                                                'Equities'
+                                                                                                             ],
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+                                                                                                      title:{
+                                                                                                       text: '',
+
+
+                                                                                                       },
+
+                                                                                                      font: {size: 9},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false,
+
+                                                                                                      },
+
+
+                                                                                                          width: 150,
+                                                                                                          height: 180,
+                                                                                                          margin: {
+                                                                                                            l: 58,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 20,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                                   };
+
+                                                                                     layout.title = {
+                                                                                      text: '',
+                                                                                      font: {
+                                                                                        size: 11,
+                                                                                        color: 'black'
+                                                                                      },
+                                                                                      y: 0.90,
+                                                                                      xanchor: 'left',
+                                                                                      yanchor: 'bottom',
+                                                                                    };
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('performance-ytd-tiny14', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+                                                                  </tr>
+                                                            </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                 </div>
+                                                 <!-- Table4 and Table5: Main table Total Performance Positions -->
+                                                <div class="row">
+                                                    <div class="col-6" id="main-table-positions-performance">
+                                                         <div class="main-table-positions-performance" >
+                                                           <table class="table4 table4-borderless">
+                                                               <tbody class="no-border-x">
+                                                                    <tr>
+                                                                        <td><strong>Class</strong></td>
+                                                                        <td><strong>Assets</strong></td>
+                                                                        <td><strong>Signals</strong>
+                                                                        <td><strong>Today Positions</strong></td>
+                                                                        <td><strong>Last Week Positions</strong></td>
+                                                                        <td><strong>Buy/Sell</strong></td>
+                                                                        <td><strong>Change</strong></td>
+                                                                        <td><strong>Weekly Performance</strong></td>
+                                                                        <td><strong>YTD</strong></td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td><strong>Equities</strong></td>
+                                                                        <td>US Equities</td>
+                                                                        <td>{{ signals_us_equities }}</td>
+                                                                        <td>{{  positions_us_equities_overview }}%</td>
+                                                                        <td>{{  positions_us_equities_overview }}%</td>
+                                                                        <td>Buy/Sell</td>
+                                                                        <td>Change%</td>
+                                                                        <td>{{  performance_us_equities }}%</td>
+                                                                        <td>{{  performance_ytd_us_equities }}%</td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td><strong>Equities</strong></td>
+                                                                        <td>EU Equities</td>
+                                                                        <td>{{ signals_eu_equities }}</td>
+                                                                        <td>{{ positions_eu_equities_overview }}%</td>
+                                                                        <td>{{ positions_eu_equities_overview }}%</td>
+                                                                        <td>Buy/Sell</td>
+                                                                        <td>Change%</td>
+                                                                        <td>{{ performance_eu_equities }}%</td>
+                                                                        <td>{{ performance_ytd_eu_equities }}%</td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td><strong>Equities</strong></td>
+                                                                        <td>JP Equities</td>
+                                                                        <td>{{ signals_jp_equities }}</td>
+                                                                        <td>{{ positions_jp_equities_overview }}%</td>
+                                                                        <td>{{ positions_jp_equities_overview }}%</td>
+                                                                        <td>Buy/Sell</td>
+                                                                        <td>Change%</td>
+                                                                        <td>{{ performance_jp_equities }}%</td>
+                                                                        <td>{{ performance_ytd_jp_equities }}%</td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td><strong>Equities</strong></td>
+                                                                        <td>HK Equities</td>
+                                                                        <td>{{ signals_hk_equities }}</td>
+                                                                        <td>{{ positions_hk_equities_overview }}%</td>
+                                                                        <td>{{ positions_hk_equities_overview }}%</td>
+                                                                        <td>Buy/Sell</td>
+                                                                        <td>Change%</td>
+                                                                        <td>{{ performance_hk_equities }}%</td>
+                                                                        <td>{{ performance_ytd_hk_equities }}%</td>
+                                                                    </tr>
+
+                                                                     <tr>
+                                                                         <td><strong>Bonds</strong></td>
+                                                                         <td>US 10y Bonds</td>
+                                                                         <td>{{ signals_us_bonds }}</td>
+                                                                         <td>{{  positions_us_bonds_overview }}%</td>
+                                                                         <td>{{  positions_us_bonds_overview }}%</td>
+                                                                         <td>Buy/Sell</td>
+                                                                         <td>Change%</td>
+                                                                         <td>{{  performance_us_bonds }}%</td>
+                                                                         <td>{{  performance_ytd_us_bonds }}%</td>
+                                                                     </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>Bonds</strong></td>
+                                                                          <td>UK 10y Bonds</td>
+                                                                          <td>{{ signals_uk_bonds }}</td>
+                                                                          <td>{{ positions_uk_bonds_overview }}%</td>
+                                                                          <td>{{ positions_uk_bonds_overview }}%</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_uk_bonds }}%</td>
+                                                                          <td>{{ performance_ytd_uk_bonds }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>Bonds</strong></td>
+                                                                          <td>Eu 10y Bonds</td>
+                                                                          <td>{{ signals_eu_bonds }}</td>
+                                                                          <td>{{ positions_eu_bonds_overview }}%</td>
+                                                                          <td>{{ positions_eu_bonds_overview }}%</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_eu_bonds }}%</td>
+                                                                          <td>{{ performance_ytd_eu_bonds }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>Bonds</strong></td>
+                                                                          <td>CA 10y Bonds</td>
+                                                                          <td>{{ signals_ca_bonds }}</td>
+                                                                          <td>{{ positions_ca_bonds_overview }}%</td>
+                                                                          <td>{{ positions_ca_bonds_overview }}%</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_ca_bonds }}%</td>
+                                                                          <td>{{ performance_ytd_ca_bonds }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>FX</strong></td>
+                                                                          <td>JPY</td>
+                                                                          <td>{{ signals_jpy }}</td>
+                                                                          <td>{{ positions_jpy_overview }}%</td>
+                                                                          <td>{{ positions_jpy_overview }}%</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_jpy_overview }}%</td>
+                                                                          <td>{{ performance_ytd_jpy }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>FX</strong></td>
+                                                                          <td>EUR</td>
+                                                                          <td>{{ signals_eur }}</td>
+                                                                          <td>{{  positions_eur_overview }}</td>
+                                                                          <td>{{  positions_eur_overview }}</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_eur_overview }}%</td>
+                                                                          <td>{{ performance_ytd_eur }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>FX</strong></td>
+                                                                          <td>AUD</td>
+                                                                          <td>{{ signals_aud }}</td>
+                                                                          <td>{{ positions_aud_overview }}%</td>
+                                                                          <td>{{ positions_aud_overview }}%</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_aud_overview }}%</td>
+                                                                          <td>{{ performance_ytd_aud }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>FX</strong></td>
+                                                                          <td>CAD</td>
+                                                                          <td>{{ signals_cad }}</td>
+                                                                          <td>{{ positions_cad_overview }}%</td>
+                                                                          <td>{{ positions_cad_overview }}%</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_cad_overview }}%</td>
+                                                                          <td>{{ performance_ytd_cad }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>FX</strong></td>
+                                                                          <td>GBP</td>
+                                                                          <td>{{ signals_gbp }}</td>
+                                                                          <td>{{ positions_gbp_overview }}%</td>
+                                                                          <td>{{ positions_gbp_overview }}%</td>
+                                                                          <td>Buy/Sell</td>
+                                                                          <td>Change%</td>
+                                                                          <td>{{ performance_gbp_overview }}%</td>
+                                                                          <td>{{ performance_ytd_gbp }}%</td>
+                                                                      </tr>
+
+                                                                      <tr>
+                                                                          <td><strong>Total Positions</strong></td>
+                                                                          <td></td>
+                                                                          <td></td>
+                                                                          <td>Total</td>
+                                                                          <td>Total</td>
+                                                                          <td></td>
+                                                                          <td></td>
+                                                                          <td></td>
+                                                                          <td></td>
+                                                                     </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div><!-- .div main-table-container -->
+                                                     </div>
+                                                    <div class="col-6">
+                                                        <div class="main-table-positions-performance-charts">
+                                                            <table class="table5 table5-borderless" id="table-charts1">
+                                                                <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td><strong>Signals</strong></td>
+                                                                    <td><strong>Positions</strong></td>
+                                                                    <td><strong>Performances Weekly</strong></td>
+                                                                    <td><strong>Performances YTD</strong></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="signals">
+                                                                            <script>
+                                                                                    var xValue = [{{ signals_gbp }},
+                                                                                                          {{ signals_cad }},
+                                                                                                          {{ signals_aud }},
+                                                                                                          {{ signals_eur }},
+                                                                                                          {{ signals_jpy }},
+                                                                                                          {{ signals_ca_bonds }},
+                                                                                                          {{ signals_eu_bonds }},
+                                                                                                          {{ signals_uk_bonds }},
+                                                                                                          {{ signals_us_bonds }},
+                                                                                                          {{ signals_hk_equities }},
+                                                                                                          {{ signals_jp_equities }},
+                                                                                                          {{ signals_eu_equities }},
+                                                                                                          {{ signals_us_equities }},
+                                                                                                          ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+
+                                                                                                      hoverinfo: 'none',
+                                                                                                      textfont: {color: 'black'},
+
+                                                                                                      x: xValue,
+                                                                                                      marker: {
+                                                                                                                 color: 'rgb(0, 153, 204)'
+                                                                                                               },
+
+                                                                                                       y: [    'GBP',
+                                                                                                               'CAD',
+                                                                                                                  'AUD',
+                                                                                                                  'EUR',
+                                                                                                                  'JPY',
+                                                                                                                  'CA 10y Bonds',
+                                                                                                                  'Eu 10y Bonds',
+                                                                                                                  'UK 10y Bonds',
+                                                                                                                  'US 10y Bonds',
+                                                                                                                  'HK Equities',
+                                                                                                                  'JP Equities',
+                                                                                                                  'EU Equities',
+                                                                                                                  'US Equities'
+                                                                                                             ],
+
+                                                                                                      line: {color: 'grey'},
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+
+                                                                                                      font: {size: 11, family: 'Arial, serif'},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: true,
+
+                                                                                                      },
+
+
+                                                                                                          width: 200,
+                                                                                                          height: 440,
+                                                                                                          margin: {
+                                                                                                            l: 90,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 5,
+                                                                                                            pad: 2
+                                                                                                          }
+                                                                                                   };
+
+
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('signals', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="position">
+                                                                            <script>
+
+                                                                                xValue = [{{ positions_gbp_overview }},
+                                                                                                      {{ positions_cad_overview }},
+                                                                                                      {{ positions_aud_overview }},
+                                                                                                      {{ positions_eur_overview }},
+                                                                                                      {{ positions_jpy_overview }},
+                                                                                                      {{ positions_ca_bonds_overview }},
+                                                                                                      {{ positions_eu_bonds_overview }},
+                                                                                                      {{ positions_uk_bonds_overview }},
+                                                                                                      {{ positions_us_bonds_overview }},
+                                                                                                      {{ positions_hk_equities_overview }},
+                                                                                                      {{ positions_jp_equities_overview }},
+                                                                                                      {{ positions_eu_equities_overview }},
+                                                                                                      {{ positions_us_equities_overview }}
+                                                                                                      ]
+                                                                                var trace1 = [{
+                                                                                                  type: 'bar',
+                                                                                                  x: xValue,
+                                                                                                  text: xValue.map(String),
+                                                                                                  textposition: 'auto',
+                                                                                                  textfont: {color: 'black'},
+                                                                                                  hoverinfo: 'none',
+                                                                                                   y: [    'GBP',
+                                                                                                              'CAD',
+                                                                                                              'AUD',
+                                                                                                              'EUR',
+                                                                                                              'JPY',
+                                                                                                              'CA 10y Bonds',
+                                                                                                              'Eu 10y Bonds',
+                                                                                                              'UK 10y Bonds',
+                                                                                                              'US 10y Bonds',
+                                                                                                              'HK Equities',
+                                                                                                              'JP Equities',
+                                                                                                              'EU Equities',
+                                                                                                              'US Equities'
+                                                                                                         ],
+
+
+                                                                                                  orientation: 'h',
+
+                                                                                                  marker: {
+                                                                                                                color: 'rgb(0, 170, 85)'
+                                                                                                               },
+                                                                                                   }];
+
+
+
+                                                                                 var layout = {
+
+                                                                                                   text: '',
+                                                                                                  font: {size: 11},
+                                                                                                  xaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false
+                                                                                                  },
+
+                                                                                                    yaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false,
+
+                                                                                                  },
+
+
+                                                                                                      width: 200,
+                                                                                                      height: 440,
+                                                                                                      margin: {
+                                                                                                        l: 0,
+                                                                                                        r: 30,
+                                                                                                        b: 0,
+                                                                                                        t: 5,
+                                                                                                        pad: 2
+                                                                                                      }
+                                                                                               };
+
+                                                                                 layout.title = {
+                                                                                  text: '',
+                                                                                  font: {
+                                                                                    size: 12,
+                                                                                    color: 'black'
+                                                                                  },
+                                                                                  x: 0.25,
+                                                                                  y: 0.87,
+                                                                                  xanchor: 'left',
+                                                                                  yanchor: 'bottom',
+                                                                                };
+
+                                                                                var config = {
+                                                                                                     'displayModeBar': false,
+                                                                                                      'responsive': true,
+                                                                                                 };
+
+                                                                                    Plotly.newPlot('position', trace1, layout, config);
+                                                                            </script>
+                                                                        </div>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="weekly">
+                                                                            <script>
+
+                                                                    xValue = [{{ performance_gbp_overview }},
+                                                                                          {{ performance_cad_overview }},
+                                                                                          {{ performance_aud_overview }},
+                                                                                          {{ performance_eur_overview }},
+                                                                                          {{ performance_jpy_overview }},
+                                                                                          {{ performance_ca_bond }},
+                                                                                          {{ performance_eu_bonds }},
+                                                                                          {{ performance_uk_bonds }},
+                                                                                          {{ performance_us_bonds }},
+                                                                                          {{ performance_hk_equities }},
+                                                                                          {{ performance_jp_equities }},
+                                                                                          {{ performance_eu_equities }},
+                                                                                          {{ performance_us_equities }}
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      x: xValue,
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+                                                                                       y: [    'GBP',
+                                                                                                  'CAD',
+                                                                                                  'AUD',
+                                                                                                  'EUR',
+                                                                                                  'JPY',
+                                                                                                  'CA 10y Bonds',
+                                                                                                  'Eu 10y Bonds',
+                                                                                                  'UK 10y Bonds',
+                                                                                                  'US 10y Bonds',
+                                                                                                  'HK Equities',
+                                                                                                  'JP Equities',
+                                                                                                  'EU Equities',
+                                                                                                  'US Equities'
+                                                                                             ],
+
+
+                                                                                      orientation: 'h',
+
+                                                                                      marker: {
+                                                                                                    color: 'rgb(255, 204, 0)'
+                                                                                                   },
+                                                                                       }];
+
+
+
+                                                                     var layout = {
+
+                                                                                       text: '',
+                                                                                      font: {size: 11},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false,
+
+                                                                                      },
+
+
+                                                                                          width: 200,
+                                                                                          height: 440,
+                                                                                          margin: {
+                                                                                            l: 0,
+                                                                                            r: 30,
+                                                                                            b: 0,
+                                                                                            t: 5,
+                                                                                            pad: 4
+                                                                                          }
+                                                                                   };
+
+                                                                     layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 12,
+                                                                        color: 'black'
+                                                                      },
+                                                                      x: 0.25,
+                                                                      y: 0.87,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                        Plotly.newPlot('weekly', trace1, layout, config);
+                                                            </script>
+                                                                        </div>
+                                                                    </td>
+
+                                                                     <td>
+                                                                        <div class="responsive-plot" id="performance-ytd">
+                                                                            <script>
+                                                                                xValue = [{{ performance_ytd_gbp }},
+                                                                                                      {{ performance_ytd_cad }},
+                                                                                                      {{ performance_ytd_aud }},
+                                                                                                      {{ performance_ytd_eur }},
+                                                                                                      {{ performance_ytd_jpy }},
+                                                                                                      {{ performance_ytd_ca_bonds }},
+                                                                                                      {{ performance_ytd_eu_bonds }},
+                                                                                                      {{ performance_ytd_uk_bonds }},
+                                                                                                      {{ performance_ytd_us_bonds }},
+                                                                                                      {{ performance_ytd_hk_equities }},
+                                                                                                      {{ performance_ytd_jp_equities }},
+                                                                                                      {{ performance_ytd_eu_equities }},
+                                                                                                      {{ performance_ytd_us_equities }}
+                                                                                                      ]
+                                                                                var trace1 = [{
+                                                                                                  type: 'bar',
+                                                                                                  x: xValue,
+                                                                                                  text: xValue.map(String),
+                                                                                                  textposition: 'auto',
+                                                                                                  textfont: {color: 'black'},
+                                                                                                  hoverinfo: 'none',
+
+                                                                                                   y: [    'GBP',
+                                                                                                              'CAD',
+                                                                                                              'AUD',
+                                                                                                              'EUR',
+                                                                                                              'JPY',
+                                                                                                              'CA 10y Bonds',
+                                                                                                              'Eu 10y Bonds',
+                                                                                                              'UK 10y Bonds',
+                                                                                                              'US 10y Bonds',
+                                                                                                              'HK Equities',
+                                                                                                              'JP Equities',
+                                                                                                              'EU Equities',
+                                                                                                              'US Equities'
+                                                                                                         ],
+
+
+                                                                                                    orientation: 'h',
+
+                                                                                                  marker: {
+                                                                                                                color: 'rgb(163, 163, 163)'
+                                                                                                               }
+                                                                                                   }];
+
+
+
+                                                                                 var layout = {
+
+
+                                                                                                  font: {size: 11, family: 'Arial, serif'},
+                                                                                                  xaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false
+                                                                                                  },
+
+                                                                                                    yaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false,
+
+                                                                                                  },
+
+
+                                                                                                      width: 200,
+                                                                                                      height: 440,
+                                                                                                      margin: {
+                                                                                                        l: 0,
+                                                                                                        r: 30,
+                                                                                                        b: 0,
+                                                                                                        t: 5,
+                                                                                                        pad: 2
+                                                                                                      }
+                                                                                               };
+
+                                                                                   layout.title = {
+                                                                                  text: '',
+                                                                                  font: {
+                                                                                    size: 12,
+                                                                                    color: 'black'
+                                                                                  },
+                                                                                  x: 0.25,
+                                                                                  y: 0.87,
+                                                                                  xanchor: 'left',
+                                                                                  yanchor: 'bottom',
+                                                                                };
+
+                                                                                var config = {
+                                                                                                     'displayModeBar': false,
+                                                                                                      'responsive': true,
+                                                                                                 };
+
+                                                                                Plotly.newPlot('performance-ytd', trace1, layout, config);
+                                                                            </script>
+                                                                        </div>
+                                                                     </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            </table>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Chart: Asset Allocation Over Times-->
                                 <div class="row">
                                     <div class="col-md-12">
                                       <div class="widget widget-fullwidth be-loading">
-                                        <div class="widget-head">
+                                          <div class="widget-head">
                                             <div class="dates">
                                                 <!-- If the user write wrong dates, then a message will be displayed -->
                                                 {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
@@ -113,7 +1711,8 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <div class="widget-chart-container">
+                                        </div>
+                                          <div class="widget-chart-container">
                                                 <div align = "center" class="responsive-plot" id="allocation">
                                                     <script>
                                                         var trace1 = {
@@ -226,7 +1825,14 @@
                                                                         title: 'Asset Allocation Over Times'.bold(),
                                                                         titlefont: {color: '#007faa'},
                                                                         showlegend: true,
-                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                          margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
 
                                                                        };
 
@@ -238,10 +1844,10 @@
                                                     </script>
                                                 </div>
                                             </div>
-                                        </div>
                                       </div>
                                     </div>
                                 </div>
+                                <!-- Three Charts: Performance-->
                                 <div class="row">
                                     <div class="col-12 col-lg-3">
                                         <div class="widget widget-fullwidth be-loading">
@@ -274,6 +1880,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                                </div>
                                                     <div class="widget-chart-container">
                                                         <div align = "center" class="responsive-plot" id="performance3">
                                                             <script>
@@ -291,7 +1898,14 @@
                                                                                     title: 'Performance JPY'.bold(),
                                                                                     titlefont: {color: '#007faa'},
                                                                                     showlegend: true,
-                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                      margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
                                                                                    };
 
                                                                      var config = {
@@ -303,7 +1917,6 @@
                                                             </script>
                                                         </div>
                                                     </div>
-                                                </div>
                                               </div>
                                     </div>
                                     <div class="col-12 col-lg-3">
@@ -317,7 +1930,7 @@
                                                         <!--Date Form -->
                                                         <form action='', method="POST" novalidate name="DateForm">
                                                             {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
+                                                            <div  class="form-group" id="date_chart0_form">
                                                                     <div class="button-toolbar d-none d-md-block">
                                                                         <div class="btn-group">
                                                                             <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionStartDateChart") }}</i>
@@ -337,6 +1950,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                                </div>
                                                     <div class="widget-chart-container">
                                                         <div align = "center" class="responsive-plot" id="performance4">
                                                                 <script>
@@ -354,7 +1968,14 @@
                                                                                     title: 'Performance EUR'.bold(),
                                                                                     titlefont: {color: '#007faa'},
                                                                                     showlegend: true,
-                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                      margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
                                                                                    };
 
                                                                      var config = {
@@ -366,7 +1987,6 @@
                                                                 </script>
                                                         </div>
                                                     </div>
-                                                </div>
                                               </div>
                                     </div>
                                     <div class="col-12 col-lg-3">
@@ -380,7 +2000,7 @@
                                                         <!--Date Form -->
                                                         <form action='', method="POST" novalidate name="DateForm">
                                                             {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
+                                                            <div  class="form-group" id="date_chart0_form">
                                                                 <fieldset>
                                                                     <div class="button-toolbar d-none d-md-block">
                                                                         <div class="btn-group">
@@ -402,6 +2022,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                                </div>
                                                     <div class="widget-chart-container">
                                                         <div align = "center" class="responsive-plot" id="performance5">
                                                             <script>
@@ -419,7 +2040,14 @@
                                                                                 title: 'Performance AUD'.bold(),
                                                                                 titlefont: {color: '#007faa'},
                                                                                 showlegend: true,
-                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                  margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
                                                                                };
 
                                                                  var config = {
@@ -431,7 +2059,6 @@
                                                             </script>
                                                         </div>
                                                     </div>
-                                                </div>
                                               </div>
                                     </div>
                                     <div class="col-12 col-lg-3">
@@ -445,7 +2072,7 @@
                                                         <!--Date Form -->
                                                         <form action='', method="POST" novalidate name="DateForm">
                                                             {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
+                                                            <div  class="form-group" id="date_chart0_form">
                                                                 <fieldset>
                                                                     <div class="button-toolbar d-none d-md-block">
                                                                         <div class="btn-group">
@@ -467,6 +2094,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                                </div>
                                                     <div class="widget-chart-container">
                                                         <div align = "center" class="responsive-plot" id="performance6">
                                                             <script>
@@ -484,7 +2112,14 @@
                                                                                 title: 'Performance CAD'.bold(),
                                                                                 titlefont: {color: '#007faa'},
                                                                                 showlegend: true,
-                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                  margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
                                                                                };
 
                                                                  var config = {
@@ -496,10 +2131,10 @@
                                                             </script>
                                                         </div>
                                                     </div>
-                                                </div>
                                               </div>
                                     </div>
                                 </div>
+                                <!-- Two Charts: Performance-->
                                 <div class="row">
                                      <div class="col-12 col-lg-6">
                                           <div class="widget widget-fullwidth be-loading">
@@ -512,7 +2147,7 @@
                                                         <!--Date Form -->
                                                         <form action='', method="POST" novalidate name="DateForm">
                                                             {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
+                                                            <div  class="form-group" id="date_chart0_form">
                                                                 <fieldset>
                                                                     <div class="button-toolbar d-none d-md-block">
                                                                         <div class="btn-group">
@@ -534,6 +2169,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                              </div>
                                                 <div class="widget-chart-container">
                                                 <div align = "center" class="responsive-plot" id="myDiv1">
                                                     <script>
@@ -551,7 +2187,14 @@
                                                                                 title: 'Performance GBP'.bold(),
                                                                                 titlefont: {color: '#007faa'},
                                                                                 showlegend: true,
-                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                  margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
                                                                                };
 
                                                                  var config = {
@@ -563,7 +2206,6 @@
                                                      </script>
                                                 </div>
                                             </div>
-                                              </div>
                                           </div>
                                         </div>
                                      <div class="col-12 col-lg-6">
@@ -577,7 +2219,7 @@
                                                         <!--Date Form -->
                                                         <form action='', method="POST" novalidate name="DateForm">
                                                             {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
+                                                            <div  class="form-group" id="date_chart0_form">
                                                                 <fieldset>
                                                                     <div class="button-toolbar d-none d-md-block">
                                                                         <div class="btn-group">
@@ -599,6 +2241,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                              </div>
                                                     <div class="widget-chart-container">
                                                         <div align = "center" class="responsive-plot" id="performance1">
                                                             <script>
@@ -629,8 +2272,7 @@
                                                         </div>
                                                 </div>
                                               </div>
-                                            </div>
-                                          </div>
+                                     </div>
                                 </div>
                             </div>
                         </div><!-- .content -->
@@ -640,7 +2282,6 @@
 
         <!-- FOOTER
          ===================================== !-->
-
             <footer class="footer" id="container-footer">
                 <div class="container" align="center">
                     <span class="text-muted" id="footer-dashboard-title">© Legal & General 2020</span>

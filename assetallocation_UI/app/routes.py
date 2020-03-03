@@ -231,6 +231,25 @@ def times_dashboard():
     performance_total, performance_gbp, performance_jpy, performance_eur, performance_aud, \
     performance_cad, performance_dates = data_performance_since_inception_chart(times_data)
 
+    # ------------------------------------- NEW ------------------------------------------------------------------------
+
+    signals, positions, performance_weekly, performance_ytd,\
+        sum_positions_equities, sum_positions_bonds, sum_positions_fx,\
+        sum_performance_weekly_equities, sum_performance_weekly_bonds, \
+        sum_performance_weekly_fx, sum_performance_ytd_equities, \
+        sum_performance_ytd_bonds, sum_performance_ytd_fx = data_table_times(times_data=times_data)
+
+    positions_us_equities_sparklines, positions_eu_equities_sparklines, positions_jp_equities_sparklines,\
+    positions_hk_equities_sparklines, positions_us_bonds_sparklines, positions_uk_bonds_sparklines, \
+    positions_eu_bonds_sparklines, positions_ca_bonds_sparklines, positions_jpy_sparklines, \
+    positions_eur_sparklines, positions_aud_sparklines, positions_cad_sparklines, \
+    positions_gbp_sparklines = data_sparklines_charts(times_data=times_data)
+
+    # ------------------------------------- NEW ------------------------------------------------------------------------
+
+
+
+
     data_test = ['2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04', '2000-01-05', '2000-01-06', '2000-01-07', '2000-01-08',
      '2000-01-09', '2000-01-10', '2000-01-11', '2000-01-12', '2000-01-13', '2000-01-14', '2000-01-15', '2000-01-16',
      '2000-01-17', '2000-01-18', '2000-01-19', '2000-01-20', '2000-01-21', '2000-01-22', '2000-01-23', '2000-01-24',
@@ -295,6 +314,90 @@ def times_dashboard():
             print('data data data')
 
     return render_template('dashboard.html', form=form, m=m,
+
+                           # ------------------------------------- NEW -------------------------------------------------
+                           us_equities_sparklines=positions_us_equities_sparklines,
+                           positions_eu_equities_sparklines=positions_eu_equities_sparklines,
+                           positions_jp_equities_sparklines=positions_jp_equities_sparklines,
+                           positions_hk_equities_sparklines=positions_hk_equities_sparklines,
+                           positions_us_bonds_sparklines=positions_us_bonds_sparklines,
+                           positions_uk_bonds_sparklines=positions_uk_bonds_sparklines,
+                           positions_eu_bonds_sparklines=positions_eu_bonds_sparklines,
+                           positions_ca_bonds_sparklines=positions_ca_bonds_sparklines,
+                           positions_jpy_sparklines=positions_jpy_sparklines,
+                           positions_eur_sparklines=positions_eur_sparklines,
+                           positions_aud_sparklines=positions_aud_sparklines,
+                           positions_cad_sparklines=positions_cad_sparklines,
+                           positions_gbp_sparklines=positions_gbp_sparklines,
+
+                           sum_positions_equities=sum_positions_equities,
+                           sum_positions_bonds=sum_positions_bonds,
+                           sum_positions_fx=sum_positions_fx,
+                           sum_performance_weekly_equities=sum_performance_weekly_equities,
+                           sum_performance_weekly_bonds=sum_performance_weekly_bonds,
+                           sum_performance_weekly_fx=sum_performance_weekly_fx,
+                           sum_performance_ytd_equities=sum_performance_ytd_equities,
+                           sum_performance_ytd_bonds=sum_performance_ytd_bonds,
+                           sum_performance_ytd_fx=sum_performance_ytd_fx,
+
+                           signals_us_equities=signals['US Equities'],
+                           signals_eu_equities=signals['EU Equities'],
+                           signals_jp_equities=signals['JP Equities'],
+                           signals_hk_equities=signals['HK Equities'],
+                           signals_us_bonds=signals['US 10y Bonds'],
+                           signals_uk_bonds=signals['UK 10y Bonds'],
+                           signals_eu_bonds=signals['Eu 10y Bonds'],
+                           signals_ca_bonds=signals['CA 10y Bonds'],
+                           signals_jpy=signals['JPY'],
+                           signals_eur=signals['EUR'],
+                           signals_aud=signals['AUD'],
+                           signals_cad=signals['CAD'],
+                           signals_gbp=signals['GBP'],
+
+                           positions_us_equities_overview=positions['US Equities.2'],
+                           positions_eu_equities_overview=positions['EU Equities.2'],
+                           positions_jp_equities_overview=positions['JP Equities.2'],
+                           positions_hk_equities_overview=positions['HK Equities.2'],
+                           positions_us_bonds_overview=positions['US 10y Bonds.2'],
+                           positions_uk_bonds_overview=positions['UK 10y Bonds.2'],
+                           positions_eu_bonds_overview=positions['Eu 10y Bonds.2'],
+                           positions_ca_bonds_overview=positions['CA 10y Bonds.2'],
+                           positions_jpy_overview=positions['JPY.2'],
+                           positions_eur_overview=positions['EUR.2'],
+                           positions_aud_overview=positions['AUD.2'],
+                           positions_cad_overview=positions['CAD.2'],
+                           positions_gbp_overview=positions['GBP.2'],
+
+                           performance_us_equities=performance_weekly['US Equities.1'],
+                           performance_eu_equities=performance_weekly['EU Equities.1'],
+                           performance_jp_equities=performance_weekly['JP Equities.1'],
+                           performance_hk_equities=performance_weekly['HK Equities.1'],
+                           performance_us_bonds=performance_weekly['US 10y Bonds.1'],
+                           performance_uk_bonds=performance_weekly['UK 10y Bonds.1'],
+                           performance_eu_bonds=performance_weekly['Eu 10y Bonds.1'],
+                           performance_ca_bonds=performance_weekly['CA 10y Bonds.1'],
+                           performance_jpy_overview=performance_weekly['JPY.1'],
+                           performance_eur_overview=performance_weekly['EUR.1'],
+                           performance_aud_overview=performance_weekly['AUD.1'],
+                           performance_cad_overview=performance_weekly['CAD.1'],
+                           performance_gbp_overview=performance_weekly['GBP.1'],
+
+                           performance_ytd_us_equities=performance_ytd['US Equities.1'],
+                           performance_ytd_eu_equities=performance_ytd['EU Equities.1'],
+                           performance_ytd_jp_equities=performance_ytd['JP Equities.1'],
+                           performance_ytd_hk_equities=performance_ytd['HK Equities.1'],
+                           performance_ytd_us_bonds=performance_ytd['US 10y Bonds.1'],
+                           performance_ytd_uk_bonds=performance_ytd['UK 10y Bonds.1'],
+                           performance_ytd_eu_bonds=performance_ytd['Eu 10y Bonds.1'],
+                           performance_ytd_ca_bonds=performance_ytd['CA 10y Bonds.1'],
+                           performance_ytd_jpy=performance_ytd['JPY.1'],
+                           performance_ytd_eur=performance_ytd['EUR.1'],
+                           performance_ytd_aud=performance_ytd['AUD.1'],
+                           performance_ytd_cad=performance_ytd['CAD.1'],
+                           performance_ytd_gbp=performance_ytd['GBP.1'],
+
+                           # -------------------------------------------------------------------------------------------
+
                            positions_us_equities=positions_us_equities,
                            positions_eu_equities=positions_eu_equities,
                            positions_jp_equities=positions_jp_equities,
