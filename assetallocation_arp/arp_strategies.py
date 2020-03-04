@@ -99,6 +99,7 @@ def get_inputs_from_excel():
 
 
 def get_inputs_from_python(model):
+	#launch the script from Python
 	# launch the script from Python
 	mat_file = None
 	input_file = None

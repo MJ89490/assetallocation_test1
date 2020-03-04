@@ -41,7 +41,7 @@
                                                 <li class="divider">NAVIGATION</li><br><br>
                                                     <li class="parent">
                                                           <a href="{{ url_for('home') }}"><span>Home</span></a><br><br>
-                                                          <a><span>Export Data</span></a><br><br><br>
+                                                          <a><span>Export Data</span></a><br>
                                                             <ul class="sub-menu">
                                                                 <div class="text-left">
                                                                     <!-- If the user write wrong dates, then a message will be displayed -->
@@ -52,27 +52,56 @@
                                                                     <form action='', method="POST" novalidate name="ExportDataForm">
                                                                         {{ form.hidden_tag() }}
                                                                         <div  class="form-group">
-                                                                            {{ form.inputs.label(id="label_text") }}<br>
-                                                                            {{ form.inputs(class="form-control", id="selectInputToExport") }}<br>
-                                                                            <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectInputToOkSubmit">Ok</button><br><br>
+                                                                            <!-- Form: Versions -->
+                                                                            {{ form.versions.label(id="label_text")}}
+                                                                            <div class="row" id="versions-submit-ok-row">
+                                                                                <div class="col-8" id="versions-row">
+                                                                                    {{ form.versions(class="form-control", id="selectVersionsToExport") }}
+                                                                                </div>
+                                                                                <div class="col-2" id="submit-ok-versions">
+                                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionToOkSubmit">Ok</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- Form: Leverage Types -->
+                                                                            {{ form.leverage.label(id="label_text")}}
+                                                                            <div class="row" id="leverage-submit-ok-row">
+                                                                                <div class="col-8" id="leverage-row">
+                                                                                    {{ form.leverage(class="form-control", id="selectVersionsToExport") }}
+                                                                                </div>
+                                                                                <div class="col-2" id="submit-ok-leverage">
+                                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectLeverageToOkSubmit">Ok</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- Form: Inputs -->
+                                                                            {{ form.inputs.label(id="label_text") }}
+                                                                            <div class="row" id="inputs-submit-ok-row">
+                                                                                <div class="col-8" id="inputs-row">
+                                                                                    {{ form.inputs(class="form-control", id="selectInputToExport") }}
+                                                                                </div>
+                                                                                <div class="col-2" id="submit-ok-inputs">
+                                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectInputToOkSubmit">Ok</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- Form: Start Date -->
                                                                             {{ form.start_date_inputs.label(id="start_date_text") }}<br>
-                                                                            <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionStartDateToExport") }}</i><br>
-                                                                            {{ form.end_date_inputs.label(id="end_date_text") }}<br>
-                                                                            <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionEndDateToExport") }}</i><br><br>
+                                                                            <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionStartDateToExport") }}</i>
+                                                                            {{ form.end_date_inputs.label(id="end_date_text") }}
+                                                                            <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionEndDateToExport") }}</i>
                                                                             <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
+                                                                            <div class="widget-support">
+                                                                                <div class="support-title">
+                                                                                    <span class="name">Support</span>
+                                                                                    <a href="#"><span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png"></span></a>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </form>
                                                                 </div>
                                                             </ul>
                                                     </li>
                                             </ul>
-                                              <div class="widget-support">
-                                                    <div class="support-title">
-                                                        <span class="name">Support</span>
-                                                        <a href="#"><span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png"></span></a>
-                                                    </div>
-                                              </div>
                                           </div>
+
                                         <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 122px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 28px;"></div></div></div>
                                 </div>
                             </div>
@@ -1715,7 +1744,12 @@
                                           <div class="widget-chart-container">
                                                 <div align = "center" class="responsive-plot" id="allocation">
                                                     <script>
+
+
+
+
                                                         var trace1 = {
+
                                                                         y: {{ positions_us_equities }},
                                                                         name: 'S&P 500',
                                                                         fill: 'tozeroy',
@@ -1822,6 +1856,7 @@
                                                                        };
 
                                                         var layout = {
+
                                                                         title: 'Asset Allocation Over Times'.bold(),
                                                                         titlefont: {color: '#007faa'},
                                                                         showlegend: true,
@@ -1847,7 +1882,7 @@
                                       </div>
                                     </div>
                                 </div>
-                                <!-- Three Charts: Performance-->
+                                <!-- Four Charts: Performance-->
                                 <div class="row">
                                     <div class="col-12 col-lg-3">
                                         <div class="widget widget-fullwidth be-loading">
@@ -1884,6 +1919,9 @@
                                                     <div class="widget-chart-container">
                                                         <div align = "center" class="responsive-plot" id="performance3">
                                                             <script>
+
+
+
                                                                      var trace1 = {
 
                                                                                     y: {{ performance_jpy }},
@@ -2259,7 +2297,15 @@
                                                                                 title: 'Performance Since Inception'.bold(),
                                                                                 titlefont: {color: '#007faa'},
                                                                                 showlegend: true,
-                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' }
+                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                  margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
+
                                                                                };
 
                                                                  var config = {

@@ -83,7 +83,10 @@ body {
 
 .overview-span { color: #007faa; }
 .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
-.last-run-text {font-size: 20px; margin-left: 12px; padding-bottom: 35px; }
+.last-run-text {font-size: 20px; margin-left: 12px; padding-bottom: 35px; padding-right: 55px; }
+.run-date-text {font-size: 20px; margin-left: 12px; padding-bottom: 35px; }
+.last-run-text, .run-date-text {display: inline;}
+
 
 .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff; }
 .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus

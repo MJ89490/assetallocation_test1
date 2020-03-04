@@ -57,7 +57,7 @@ def login_post():
         else:
             track_id = randomIdentification()
             login_user(User(track_id))
-            return redirect(url_for('protected_models'))
+            return redirect(url_for('home'))
     # when the user click on the submit button without adding credentials
     return redirect(url_for('login'))
 

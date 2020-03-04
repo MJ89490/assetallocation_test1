@@ -413,10 +413,31 @@ background-color: #ddd;}
 
 #selectionStartDateChart, #selectionEndDateChart {font-size:10px; height: 25px; padding-top: 5px; }
 
-#selectInputToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px;}
-#selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 250px; }
-#titleInputToExport {color: #696969; font-size: 12px;}
+#inputs-submit-ok-row {padding-bottom: 20px; }
+#selectInputToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px; width: 150px; margin-left: 16px; font-size: 14.5px;}
 #selectInputToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+#selectInputToOkSubmit {height: 35px; }
+#inputs-row {padding-right: 5px; }
+
+#versions-submit-ok-row {padding-bottom: 20px; }
+#selectVersionsToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px; width: 150px; margin-left: 16px; font-size: 14.5px;}
+#selectVersionToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+#selectVersionToOkSubmit {height: 35px; }
+#versions-row {padding-right: 5px; }
+
+#leverage-submit-ok-row {padding-bottom: 20px; }
+#selectLeverageToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px; width: 150px; margin-left: 16px; font-size: 14.5px;}
+#selectLeverageToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+#selectLeverageToOkSubmit {height: 35px; }
+#leverage-row {padding-right: 5px; }
+
+#selectionStartDateToExport {margin-bottom: 20px; }
+
+#selectionEndDateToExport {margin-bottom: 30px; }
+
+#selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 60px; }
+#titleInputToExport {color: #696969; font-size: 12px;}
+
 #selectionStartDateToExport, #selectionEndDateToExport {background-color: #eee; border-color: #696969; color: #696969; }
 #selectInputDatesChartSubmit, #selectInputDatesChartSubmit1 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
 #selectInputDatesChartSubmit7 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}

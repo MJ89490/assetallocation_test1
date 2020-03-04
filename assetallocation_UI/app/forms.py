@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField
 from wtforms.validators import DataRequired
-
+from assetallocation_arp.enum import leverage_types
 
 
 """
@@ -14,6 +14,16 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class ExportDataForm(FlaskForm):
+
+    # todo link to the DB to grap the different versions automatically
+    versions = SelectField('Versions', choices=[('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3','Version3')])
+    submit_ok_versions = SubmitField('Ok')
+
+    leverage = SelectField('Leverage Types', choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name ),
+                                                      (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
+                                                      (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
+                                                      (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
+    submit_ok_leverage = SubmitField('Ok')
 
     inputs = SelectField('Inputs', choices=[('TIMES Signals', 'Signals'), ('TIMES Returns', 'Returns'), ('TIMES Positions','Positions')])
     submit_ok = SubmitField('Ok')
@@ -48,6 +58,12 @@ class ExportDataForm(FlaskForm):
 
 
 class InputsTimesModel(FlaskForm):
+
+    leverage = SelectField('Leverage Types', choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name ),
+                                                      (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
+                                                      (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
+                                                      (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
+
     strategy_weight = StringField(u'Strategy Weight', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
     leverage_type = StringField(u'Leverage Type', validators=[DataRequired(message="The leverage type is required")])
