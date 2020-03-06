@@ -1,6 +1,6 @@
 # Contains view functions for various URLs
 import pandas as pd
-from assetallocation_arp.arp_strategies import get_inputs_from_flask
+from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from assetallocation_arp.enum import models_names
 from flask import render_template
 from flask import flash
@@ -38,7 +38,6 @@ def login():
     form = LoginForm()
     return render_template('login.html', title='LoginPage', form=form)
 
-
 @app.route('/login', methods=['POST'])
 def login_post():
     username_origin = "database"
@@ -72,10 +71,16 @@ def protected_models():
 def times_page():
     form = InputsTimesModel()
 
-    global STRATEGY, PATH_EXCEL_TIMES
+    global STRATEGY, PATH_EXCEL_TIMES, ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
 
     if request.method == "POST":
-        if request.form['submit_button'] == 'selectInputs':
+        # Selection of a model's version
+        if request.form['submit_button'] == 'selectVersions':
+            version_type = form.versions.data
+            return render_template('times_page_new_version_layout.html', title="Times", form=form,
+                                   version_type=version_type)
+        # Run the model
+        elif request.form['submit_button'] == 'runTimesModel':
             data = {
                     form.time_lag.name: [int(form.time_lag.data)],
                     form.leverage_type.name: [form.leverage_type.data],
@@ -100,18 +105,25 @@ def times_page():
                                                           form.sig3_long.name,
                                                           form.frequency.name,
                                                           form.week_day.name
-                                                         ])
+                                                          ])
             STRATEGY = strategy_inputs
 
-        if request.form['submit_button'] == 'selectTimesPath':
+            run_model = "run_model"
+            ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=models_names.Models.times.name)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model)
+
+        elif request.form['submit_button'] == 'selectTimesPath':
+            save = "save"
             name_of_file = form.name_file_times.data + ".xls"
-            path_excel = form.path_save_output_times.data
+            path_excel = "C:\\Users\\AJ89720\\PycharmProjects" #todo change the default location later
             path_excel_times = path_excel + "\\" + name_of_file
 
-            PATH_EXCEL_TIMES = path_excel_times
+            if form.save_excel_outputs.data is True:
+                write_output_to_excel(model_outputs={models_names.Models.times.name:
+                                                    (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
+                                      path_excel_times=path_excel_times)
 
-        if request.form['submit_button'] == 'runTimesModel':
-            get_inputs_from_flask(model_type=models_names.Models.times.name, times_inputs=STRATEGY, path_excel=PATH_EXCEL_TIMES)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, save=save)
 
     return render_template('times_page.html', title="Times", form=form)
 

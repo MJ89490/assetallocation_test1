@@ -31,16 +31,15 @@ def run_model(model_type, mat_file=None, input_file=None):
 		print(model_type)
 
 
-def run_model_from_ui(path_excel_times, model_type, times_inputs, mat_file, input_file=None):
+def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
 
 	if model_type == models.Models.times.name:
 		# get inputs from excel and matlab data
-		asset_inputs, all_data = gd.extract_inputs_from_ui_and_mat_data(model_type, mat_file, input_file)
+		times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 		# run strategy
 		signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
-		# write results to output sheet
-		write_output_to_excel({models.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, path_excel_times=path_excel_times)
 
+		return asset_inputs, positioning, r, signals, times_inputs
 
 def write_output_to_excel(model_outputs, path_excel_times):
 
@@ -110,12 +109,6 @@ def get_inputs_from_python(model):
 		run_model(model_type, mat_file, input_file)
 	else:
 		raise NameError("Your input is incorrect.")
-
-
-def get_inputs_from_flask(model_type, times_inputs, path_excel):
-	# launch the script from UI
-	mat_file = None
-	run_model_from_ui(model_type=model_type, times_inputs=times_inputs, mat_file=mat_file, path_excel_times=path_excel)
 
 
 def get_input_user():

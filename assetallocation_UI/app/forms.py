@@ -1,17 +1,19 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 from assetallocation_arp.enum import leverage_types
-
+from assetallocation_arp.enum import frequency_types
 
 """
 User login form
 """
 
+
 class LoginForm(FlaskForm):
     username = StringField(u'Username', validators=[DataRequired(message="The username is required")])
     password = PasswordField(u'Password', validators=[DataRequired(message="The password is required")])
     submit = SubmitField('Sign In')
+
 
 class ExportDataForm(FlaskForm):
 
@@ -59,14 +61,18 @@ class ExportDataForm(FlaskForm):
 
 class InputsTimesModel(FlaskForm):
 
-    leverage = SelectField('Leverage Types', choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name ),
-                                                      (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
-                                                      (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
-                                                      (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
+    # todo link to the DB to grap the different versions automatically
+    versions = SelectField('Versions',
+                           choices=[('New Version', 'New Version'),('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3', 'Version3')])
+    submit_versions = SubmitField('Select this version')
 
     strategy_weight = StringField(u'Strategy Weight', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
-    leverage_type = StringField(u'Leverage Type', validators=[DataRequired(message="The leverage type is required")])
+    leverage_type = SelectField('Leverage Types',
+                                choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name),
+                                        (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
+                                        (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
+                                        (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
     volatility_window = StringField(u'Volatility Window', validators=[DataRequired(message="The volatility window is required")])
     sig1_short = StringField(u'Sigma1 short', validators=[DataRequired(message="The Sigma1 short is required")])
     sig1_long = StringField(u'Sigma1 long', validators=[DataRequired(message="The Sigma1 long is required")])
@@ -74,10 +80,27 @@ class InputsTimesModel(FlaskForm):
     sig2_long = StringField(u'Sigma2 long', validators=[DataRequired(message="The Sigma2 long is required")])
     sig3_short = StringField(u'Sigma3 short', validators=[DataRequired(message="The Sigma3 short is required")])
     sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
-    frequency = StringField(u'Frequency', validators=[DataRequired(message="The frequency is required")])
-    week_day = StringField(u'Week Day', validators=[DataRequired(message="The week day is required")])
-    path_save_output_times = StringField(u'Path of the Outputs')
+
+    frequency = SelectField('Leverage Types',
+                            choices=[(frequency_types.Frequency.weekly.name, frequency_types.Frequency.weekly.name),
+                                     (frequency_types.Frequency.monthly.name, frequency_types.Frequency.monthly.name),
+                                     (frequency_types.Frequency.monthly.name, frequency_types.Frequency.monthly.name),
+                                     ])
+
+    week_day = SelectField('Week Day',
+                           choices=[("MON", "MON"),
+                                    ("TUE", "TUE"),
+                                    ("WED", "WED"),
+                                    ("THU", "THU"),
+                                    ("FRI", "FRI"),
+                                    ("SUN", "SUN"),
+                                    ("SAT", "SAT")]
+                           )
+
     name_file_times = StringField(u'Name of the File')
-    submit_inputs = SubmitField('Submit Inputs to the Database')
+    save_excel_outputs = BooleanField('Save on Excel')
+    save_db_outputs = BooleanField('Save in the DataBase')
+    submit_save = SubmitField('Save')
+
 
 

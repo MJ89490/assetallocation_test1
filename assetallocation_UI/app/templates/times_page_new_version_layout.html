@@ -1,13 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "times_page.html" %}
+
+
 
 <body>
 
 
-    <h3>boubou</h3>
 
 
+
+
+  {% block inputs %}
+
+  <div class="row" id="row-inputs">
+    <div class="col-12 col-lg-12">
+      <div class="widget widget-fullwidth-inputs be-loading">
+        <div class="widget-chart-container" id="widget-chart-container">
+
+          <div class="title-inputs"><h2>Inputs of the Model</h2></div>
+
+          <div class="center">
+            <div class="form-group">
+                <div class="btn-group">
+                   {{form.strategy_weight.label(id="label_text")}}
+                   {{ form.strategy_weight(class="form-control", id="btn-group-inputs-model", placeholder=("Strategy Weight"))}}
+                </div>
+               <div class="btn-group">
+                 {{form.time_lag.label(id="label_text")}}
+                 {{ form.time_lag(class="form-control", id="btn-group-inputs-model", placeholder=("Time Lag"))}}
+               </div>
+               <div class="btn-group">
+                 {{form.leverage_type.label(id="label_text")}}
+                 {{form.leverage_type(class="form-control", id="btn-group-inputs-model-leverage")}}
+               </div>
+               <div class="btn-group">
+                 {{form.volatility_window.label(id="label_text")}}
+                 {{ form.volatility_window(class="form-control", id="btn-group-inputs-model", placeholder=("Volatility Window"))}}
+               </div>
+               <div class="btn-group">
+                 {{form.sig1_short.label(id="label_text")}}
+                 {{ form.sig1_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Short"))}}
+               </div>
+               <div class="btn-group">
+                  {{form.sig1_long.label(id="label_text")}}
+                 {{ form.sig1_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Long"))}}
+               </div><br>
+               <div class="btn-group">
+                 {{form.sig2_short.label(id="label_text")}}
+                 {{ form.sig2_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Short"))}}
+               </div>
+               <div class="btn-group">
+                 {{form.sig2_long.label(id="label_text")}}
+                    {{ form.sig2_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Long"))}}
+               </div>
+               <div class="btn-group">
+                 {{form.sig3_short.label(id="label_text")}}
+                 {{ form.sig3_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Short"))}}
+               </div>
+               <div class="btn-group">
+                 {{form.sig3_long.label(id="label_text")}}
+                 {{ form.sig3_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Long"))}}
+               </div>
+               <div class="btn-group">
+                 {{form.frequency.label(id="label_text")}}
+                 {{ form.frequency(class="form-control", id="btn-group-inputs-model", placeholder=("Frequency"))}}
+               </div>
+               <div class="btn-group">
+                 {{form.week_day.label(id="label_text")}}
+                 {{ form.week_day(class="form-control", id="btn-group-inputs-model", placeholder=("Week Day"))}}
+               </div><br>
+            </div>
+              {% block runModel%}
+
+                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+
+              {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+ {% block save %}
+
+  <div class="row" id="row-inputs-save">
+    <div class="col-12 col-lg-12">
+      <div class="widget widget-fullwidth-save be-loading" align="center">
+            <div class="text-field-path" id="text-field-name-file">
+              {{form.name_file_times.label(id="label_text")}}
+              <i>{{ form.name_file_times(class="form-control", id="btn-group-inputs-model", placeholder=("Name of the file"))}}</i>
+            </div>
+            <!--Form: Check Boxes to save the results-->
+            <div class="check-box-save" id="check-box-save-excel">
+                {{ form.save_excel_outputs(id="radio-box-save-excel") }} {{ form.save_excel_outputs.label(id="label_text") }}
+            </div>
+
+            <div class="check-box-save" id="check-box-save-db">
+                {{ form.save_db_outputs(id="radio-box-save-db") }} {{ form.save_db_outputs.label(id="label_text") }}
+            </div>
+
+            <div class="button-submit" id="button-submit4">
+               <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectTimesPath" id="SelectSaveSubmit4"><strong>Save</strong></button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ {% endblock %}
 </body>
-
-
-</html>

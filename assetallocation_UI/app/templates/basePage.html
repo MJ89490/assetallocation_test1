@@ -1,6 +1,17 @@
+
+
+<!--Import the JS library here because of the clashes with Boostrap-->
+<head>
+    <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+
 {% extends 'bootstrap/base.html' %}
 
   {% block navbar %}
+
     <head>
         <!-- NAVBAR CSS STYLE
         ================================================== -->
@@ -72,9 +83,11 @@
                 </div> <!-- .container -->
             </nav> <!-- .nav -->
     </body> <!-- .body -->
+
 {% endblock %}
 
 {% block content %}
+
     <head>
         <!-- BASE PAGE CSS STYLE
         ================================================== -->
@@ -118,6 +131,7 @@
 
     <!-- Body of the Base Page -->
     <body class="text-center">
+
             <div class="main-login-wtf">
                {% block mainloginwtf%} {% endblock %}
             </div>
@@ -131,7 +145,9 @@
             </div>
 
             <div class="main-models-display">
-                {% block timesModel %} {% endblock %}
+                {% block timesModel %}
+
+                {% endblock %}
             </div>
 
             <div class="main-charts-display">
@@ -141,7 +157,9 @@
             <div class="main-overview-times-display">
                 {% block overviewTimes %} {% endblock %}
             </div>
+
     </body><!-- .body -->
+
 {% endblock%}
 
 

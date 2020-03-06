@@ -8,345 +8,72 @@
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <link rel="stylesheet" href="{{url_for('.static', filename='times_page_css.css')}}">
         <link rel="import" href="times_page_new_version_layout.html">
-      <!--<script type = "text/javascript"-->
-         <!--src = "{{ url_for('static', filename = 'hello.js') }}" ></script>-->
-
-    <!--</head>-->
+    </head>
 
     <!-- Body of the Dashboard Page -->
     <body>
          <div class="be-content">
+
               <div class="main-content container-fluid">
                 <h2 class="overview-title"><strong><span class="overview-span">TIMES</span> Model</strong></h2>
               </div>
-              <p class="last-run-text">
-                <i>Last Run: 14/02/2020</i>
-              </p>
+
               <div class="row">
                   <div class="col-12 col-lg-1"></div>
+
                   <div class="col-12 col-lg-10">
                       <div class="widget widget-fullwidth be-loading">
                               <div class="widget-chart-container" id="widget-chart-container">
-                                  <p class="last-run-text"><i>Last Run: 14/02/2020</i></p>
-                                  <p class="run-date-text"><i>Run Date: date of today</i></p><br>
-                                  <!--{% include 'times_page_new_version_layout.html' %}-->
-
-                                        <form>
-                                        <h4>Food Type</h4>
-                                        <select class="form-control"  id='firstList' name='firstList' onclick="getFoodItem()">
-                                            <option value='1'>blah</option>
-                                            <option value='2'>blah2</option>
-                                        </select>
-                                        </form>
-
-                                        <script type = "text/javascript">
-
-
-
-                                            function getFoodItem(){
-
-                                                var list1 = document.getElementById('firstList');
-                                                var list1SelectedValue = list1.options[list1.selectedIndex].value;
-
-
-                                                if (list1SelectedValue == 2)
-                                                {
-
-                                                    var loadHtml(file) {
-                                                        $("#LoadHTML").load("C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\assetallocation_UI\app\templates\times_page_new_version_layout.html");
-                                                    });
-
-                                                }
-
-                                                    }
-                                        </script>
-
-                                        <div id="LoadHTML"></div>
-
-
-                                   <!--<form>-->
-
-                                       <!--<select name='PreviousReceiver' id="sort-item">-->
-                                         <!--<option value='0'>Contact List</option>-->
-                                         <!--<option value='1'>blah</option>-->
-                                         <!--<option value='2'>blah2</option>-->
-                                         <!--<option value='3'>blah3</option>-->
-                                       <!--</select>-->
-
-
-
-                                       <!--<p>-->
-                                           <!--the selected value is:-->
-                                           <!--<script text="text/javascript">-->
-
-                                                <!--var selected_index = oForm.elements["PreviousReceiver"].selectedIndex;-->
-                                                <!--oSelectOne = oForm.elements["PreviousReceiver"].selectedIndex;-->
-                                                <!--var selected_option_text = oForm.elements["PreviousReceiver"].options[selected_index].text;-->
-
-                                                <!--document.write(selected_index)-->
-
-                                                <!--&lt;!&ndash;var e = document.getElementById("sort-item").text;&ndash;&gt;-->
-                                                <!--&lt;!&ndash;var item = e.options[e.selectedIndex].text;&ndash;&gt;-->
-
-
-                                                <!--&lt;!&ndash;&lt;!&ndash;var t  = document.getElementById('sort-item').text&ndash;&gt;&ndash;&gt;-->
-                                                <!--&lt;!&ndash;document.write(document.getElementById("sort-item").submit();)&ndash;&gt;-->
-
-                                            <!--</script>-->
-                                       <!--</p>-->
-
-
-
-                                        <!--<select name='myfield' onchange='this.form.submit()' id="myfield">-->
-
-                                          <!--<option>Coffee</option>-->
-                                          <!--<option>Tea</option>-->
-                                        <!--</select>-->
-
-                                        <!--<select id="sort-item">-->
-                                                     <!--<option value="Alphabetical" data-sort="0">Alphabetical</option>-->
-                                                     <!--<option value="low to high" data-sort="1">Low to High Price</option>-->
-                                                     <!--<option value="high to low" data-sort="2">High to Low Price</option>-->
-                                        <!--</select>-->
-
-
-
-                                        <!--<p>-->
-                                            <!--the selected value is:-->
-                                            <!--<script type="text/javascript">-->
-
-
-                                                <!--window.onload =-->
-
-                                                <!--function () {-->
-                                                    <!--var selItem = sessionStorage.getItem("SelItem");-->
-                                                    <!--$('#sort-item').val(selItem);-->
-
-                                                    <!--}-->
-
-                                                    <!--$('#sort-item').change(function() {-->
-                                                        <!--var selVal = $(this).val();-->
-                                                        <!--sessionStorage.setItem("SelItem", selVal);-->
-
-                                                    <!--});-->
-
-                                                    <!--document.write(selVal);-->
-
-                                                <!--&lt;!&ndash;var e = function()&ndash;&gt;-->
-
-
-                                                <!--&lt;!&ndash;var e = document.getElementById("sort-item");&ndash;&gt;-->
-                                                <!--&lt;!&ndash;var item = e.options[e.selectedIndex].text;&ndash;&gt;-->
-
-
-
-
-
-                                            <!--</script>-->
-
-
-                                        <!--</p>-->
-                                        <!--&lt;!&ndash;<noscript><input type="submit" value="Submit"></noscript>&ndash;&gt;-->
-                                    <!--</form>-->
-
-
-                                    <!--{% if value == "coffee" %}-->
-                                        <!--<p>{% include 'times_page_new_version_layout.html' %}</p>-->
-                                    <!--{% endif %}-->
-
-
-
-
-
-
 
                                    <!-- Inputs Form -->
-                                   <form class="center" action="" method="POST" novalidate>
-                                       {{ form.hidden_tag() }}
-                                       <div class="title-inputs-form" id="title-inputs-form"> <h2>Inputs of the Model</h2></div>
-                                       <div class="form-group">
-                                           <div class="button-toolbar d-none d-md-block">
-                                               <div class="btn-group">
-                                                    {{ form.strategy_weight(class="form-control", placeholder=("Strategy Weight"))}}<br>
-                                                    <!-- Display Alert Message when the strategy weight field is empty -->
-                                                    {% for error in form.strategy_weight.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.time_lag(class="form-control", placeholder=("Time Lag"))}}<br>
-                                                    <!-- Display Alert Message when the time lag field is empty -->
-                                                    {% for error in form.time_lag.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.leverage_type(class="form-control", placeholder=("Leverage Type"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.leverage_type.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.volatility_window(class="form-control", placeholder=("Volatility Window"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.volatility_window.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.sig1_short(class="form-control", placeholder=("Signal1 Short"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.sig1_short.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.sig1_long(class="form-control", placeholder=("Signal1 Long"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.sig1_long.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div><br>
-                                               <div class="btn-group">
-                                                    {{ form.sig2_short(class="form-control", placeholder=("Signal2 Short"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.sig2_short.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.sig2_long(class="form-control", placeholder=("Signal2 Long"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.sig2_long.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.sig3_short(class="form-control", placeholder=("Signal3 Short"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.sig3_short.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.sig3_long(class="form-control", placeholder=("Signal3 Long"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.sig3_long.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.frequency(class="form-control", placeholder=("Frequency"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.frequency.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                               <div class="btn-group">
-                                                    {{ form.week_day(class="form-control", placeholder=("Week Day"))}}<br>
-                                                    <!-- Display Alert Message when the leverage type field is empty -->
-                                                    {% for error in form.week_day.errors %}
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <span>{{ error }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                               </div>
-                                           </div>
-                                           <div class="button-submit">
-                                               <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputs" id="selectInputDatesChartSubmit1">{{ form.submit_inputs.label }}</button><br>
-                                           </div>
+                                  <div class="row" id="row-text-dates">
+                                      <p class="last-run-text">
+                                          <strong><i>Last Run: 14/02/2020</i></strong>
+                                      </p>
+                                      <p class="run-date-text">
+                                          <strong><i>Run Date: 14/02/2020</i></strong>
+                                      </p>
+                                  </div>
+
+                                   <div align="center">
+
+                                       <div class="dashboard-btn">
+                                           <a href="{{ url_for('times_dashboard') }}" target="_blank">
+                                               <button class="btn btn-dashboard btn-primary" type="submit"><strong>Dashboard</strong></button>
+                                           </a>
                                        </div>
-                                   </form><!-- .footer -->
+
+                                  <form class="center" action="" method="POST" novalidate>
+                                       {{ form.hidden_tag() }}
+                                            <!-- Form: select the version for the model -->
+                                           <div class="btn-group">
+                                               {{ form.versions(class="form-control")}}
+                                           </div>
+                                            <div class="btn-group">
+                                                <div class="button-submit">
+                                                   <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectVersions" id="selectInputDatesChartSubmit1">{{ form.submit_versions.label }}</button><br>
+                                                </div>
+                                            </div>
+                                            {% if version_type == "New Version"  or  save == "save"  or run_model == "run_model" %}
+
+                                                {% block inputs %}
+                                                    {% block runModel%} {% endblock %}
+                                                {% endblock %}
+
+                                                {% block save %}{% endblock %}
+
+                                            {% endif %}
+                                   </form>
+                                   </div>
                               </div>
                       </div>
                   </div>
                   <div class="col-12 col-lg-1"></div>
               </div>
-              <div class="row" id="row-2">
-                  <div class="col-12 col-lg-1"></div>
-                  <div class="col-12 col-lg-10">
-                     <div class="widget widget-fullwidth be-loading">
-                         <div class="widget-chart-container" id="widget-chart-container1">
-                             <div class="text-center">
-                                 <div class="btn-group">
-                                     <a href="{{ url_for('times_dashboard') }}" target="_blank">
-                                        <button class="btn btn-lg btn-primary" type="submit"><strong>Dashboard</strong></button>
-                                    </a>
-                                 </div>
-                                 <div class="btn-group">
-                                     <a href="{{ url_for('times_overview') }}" target="_blank">
-                                        <button class="btn btn-lg btn-primary" type="submit"><strong>Overview</strong></button>
-                                    </a>
-                                 </div>
-                                 <div class="btn-group">
-                                    <div class="dropdown">
-                                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <strong>Select a version of the model</strong>
-                                      </button>
-                                      <div align="center" class="dropdown-menu" type="button" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Version1</a><br>
-                                        <a class="dropdown-item" href="#">Version2</a><br>
-                                        <a class="dropdown-item" href="#">Version3</a>
-                                      </div>
-                                    </div>
-                                 </div>
-                                 <form class="center" action="" method="POST" novalidate>
-                                     {{ form.hidden_tag() }}
-                                    <div class="form-group">
-                                        <div class="btn-group">
-                                            <div class="text-field-path" id="text-field-name-file">
-                                                <i>{{ form.name_file_times(class="form-control", placeholder=("Name of the file"))}}</i>
-                                            </div>
-                                        </div>
-                                        <div class="btn-group">
-                                            <div class="text-field-path" id="text-field-path">
-                                                <i>{{ form.path_save_output_times(class="form-control", placeholder=("C:\\User\\Document\\Models"))}}</i>
-                                            </div>
-                                        </div>
-                                        <div class="btn-group">
-                                            <div class="button-submit" id="button-submit3">
-                                                 <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectTimesPath" id="RunTheModelSubmit3"><strong>Select this path</strong></button>
-                                            </div>
-                                        </div><br>
-                                        <div class="btn-group">
-                                            <div class="button-submit" id="button-submit2">
-                                                 <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 </form>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                  <div class="col-12 col-lg-1"></div>
-              </div>
+
                 <!-- FOOTER
                ===================================== !-->
-              <footer class="footer mt-auto py-3" id="container-footer">
+              <footer class="footer py-3" id="container-footer">
                   <div class="container" align="center">
                       <span class="text-muted">© Legal & General 2020</span>
                   </div>

@@ -6,6 +6,7 @@
         <!-- HOME PAGE CSS STYLE
         ================================================== -->
         <link rel="stylesheet" href="{{url_for('.static', filename='home_css.css')}}">
+
     </head>
 
     <!-- Body of the Home Page -->
@@ -25,6 +26,7 @@
                     <p class="lead text-secondary mb-4">
                         Build a beautiful, modern website with flexible Bootstrap components built from scratch.
                     </p><br>
+
                     <!-- Modal Learn More -->
                     <div class="text-center text-md-left">
                         <div class="button-learn">
@@ -202,13 +204,17 @@
                 </div>
                 <!--#endregion-->
             </div>  <!-- / .row -->
-              <div class="row" id="row2">
-                  <footer class="footer mt-auto py-3" id="container-footer">
-                      <div class="container" align="center">
-                          <span class="text-muted">© Legal & General 2020</span>
-                      </div>
-                  </footer>
-              </div>
+
+
+              {% block footer %}{% endblock %}
+
+              <!--<div class="row" id="row2">-->
+                  <!--<footer class="footer mt-auto py-3" id="container-footer">-->
+                      <!--<div class="container" align="center">-->
+                          <!--<span class="text-muted">© Legal & General 2020</span>-->
+                      <!--</div>-->
+                  <!--</footer>-->
+              <!--</div>-->
           </div>    <!-- / .container -->
         </section>  <!-- / .section -->
     </body>         <!-- / .body -->
