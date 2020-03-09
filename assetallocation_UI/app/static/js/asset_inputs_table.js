@@ -1,11 +1,13 @@
+// Items in the table (columns)
 var columnDefs = [
     {headerName: "Asset", field: "asset"},
     {headerName: "Signal Ticker", field: "signal_ticker"},
     {headerName: "Future Ticker", field: "future_ticker"},
     {headerName: "Costs", field: "costs"},
-    {headerName: "S Leverage", field: "s_leverage"}
+    {headerName: "S Leverage", field: "s_leverage"},
 ];
 
+// Items in the table (rows)
 var rowData = [
     {asset: "US Equities", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
     {asset: "EU Equities", signal_ticker: "SX5T Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
@@ -21,44 +23,53 @@ var rowData = [
     {asset: "GBP", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1}
 ];
 
-var gridOptions = {animateRows: true, columnDefs: columnDefs, rowData:rowData, rowSelection: 'multiple'};
+// Options of the table
+var gridOptions = {
+    defaultColDef: {
+        editable: true, //the user has the possibility to change the value in the table
+        sortable: true,
+        filter: true
+    },
+    animateRows: true,
+    columnDefs: columnDefs,
+    rowData: rowData,
+    rowSelection: 'multiple'
+};
 
-var newCount = 1;
 
-function createNewRowData(){
+// Create a row to add in the table
+function createNewRowData() {
     var newData = {
-        asset: "",
-        signal_ticker: "",
-        future_ticker: "",
-        costs:"",
-        s_leverage:""
+        asset: "US Equities (to automate)",
+        signal_ticker: "SPXT Index",
+        future_ticker: "SP1 R:00_0_R Index",
+        costs: 0.0002,
+        s_leverage: 1,
     };
-    newCount++;
+
     return newData;
 }
 
+// Clear the data from the table (clear all)
 function clearData() {
     gridOptions.api.setRowData([]);
 }
 
-function onAddRow(){
+// Add a new line in the table => let the user to enter new asset
+function onAddRow() {
     var newItem = createNewRowData();
-    var res = gridOptions.updateRowData({add: [newItem]});
+    var res = gridOptions.api.updateRowData({add: [newItem]});
     printResult(res);
 }
 
-function addItems() {
-    var newItems = [createNewRowData(), createNewRowData(), createNewRowData()];
-    var res = gridOptions.api.updateRowData({add: newItems});
-    printResult(res);
-}
-
+// Remove a row from the table
 function onRemoveSelected() {
     var selectedData = gridOptions.api.getSelectedRows();
     var res = gridOptions.api.updateRowData({remove: selectedData});
     printResult(res);
 }
 
+//Print the rows in the console of the Browser (checking errors)
 function printResult(res) {
     console.log('---------------------------------------')
     if (res.add) {
