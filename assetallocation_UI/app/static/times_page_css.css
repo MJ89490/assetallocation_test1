@@ -81,7 +81,6 @@ body {
 
 .widget {
             background-color: #fff;
-            margin-bottom: 25px;
             border-radius: 3px;
         }
 
@@ -123,13 +122,15 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 .overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
 
-.last-run-text {font-size: 15px; margin-left: 20px; padding-right: 55px; }
+.last-run-text {font-size: 20px; margin-left: 20px; padding-right: 55px; }
 
 .run-date-text {font-size: 15px; }
 
 .last-run-text, .run-date-text {display: inline; }
 
 .title-inputs {color: black; padding-bottom: 20px; padding-top: 10px; }
+
+.title-assets {color: black; padding-top: 10px; }
 
 #text-field-path { width: 190px; }
 
@@ -148,33 +149,58 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 /* Times Page New Version Layout */
 
 /* row */
-#row-inputs {padding-top: 55px;}
+#row-assetsInputs {padding-top: 10px;}
 
 /* widgets */
 .widget.widget-fullwidth-inputs {
-                                    margin-top: 20px;
+
                                     background-color: #F8F8FF;
-                                    height:300px;
+                                    height: 530px;
+                                    width: 1000px;
                                 }
 
 .widget.widget-fullwidth-save{
                                 background-color: #F8F8FF;
-                                height:200px;
+                                height: 200px;
                                 width: 450px;
                                 }
 
-#SelectPathSubmit3 {margin-top: 23px; }
+.widget-fullwidth-assetsInputs{
+                                 margin-top: 30px;
+                                 background-color: #F8F8FF;
+                                 height: 510px;
+                                 width: 1400px;
+                              }
+
+#SelectPathSubmit3 {padding-top: 20px; }
 
 /*buttons */
+#dashboard-btn {margin-top: 55px; }
 #btn-group-inputs-model{text-align: center; color: #D3D3D3; }
-radio-box-save-excel{}
-#RunTheModelSubmit2{ margin-bottom: 40px; }
+#btn-group-inputs-model-leverage {padding-left: 85px; }
+#btn-group-inputs-model-frequency {text-align: center; color: #D3D3D3; padding-left: 65px; }
+#btn-group-inputs-model-week {text-align: center; color: #D3D3D3; padding-left: 65px; }
+#RunTheModelSubmit2{margin-top: 10px; }
 #text-field-name-file{padding-bottom: 5px; }
 #check-box-save-excel{padding-bottom: 5px; }
 #check-box-save-db {padding-left: 46.5px; padding-bottom: 10px; }
+#btn-group-signals{margin-left: 20px; }
 /* text-title */
 #label_text{color:#007faa;}
 #form-control-path-save {color: #808080}
+
+/* ----------------------------- */
+
+/* Times Page AG GRID */
+
+/* Assets Inputs Table */
+
+#onAddRow, #onRemoveSelected, #clearData {margin-top: 12px;  }
+.ag-header-cell-label {
+   justify-content: center;
+   color: rgb(152, 215, 235);
+}
+
 
 
 

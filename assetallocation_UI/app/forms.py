@@ -66,9 +66,9 @@ class InputsTimesModel(FlaskForm):
                            choices=[('New Version', 'New Version'),('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3', 'Version3')])
     submit_versions = SubmitField('Select this version')
 
-    strategy_weight = StringField(u'Strategy Weight', [DataRequired(message="The strategy weight is required")])
+    strategy_weight = StringField(u'Strategy Notional', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
-    leverage_type = SelectField('Leverage Types',
+    leverage_type = SelectField('Leverage Type',
                                 choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name),
                                         (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
                                         (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
@@ -81,10 +81,10 @@ class InputsTimesModel(FlaskForm):
     sig3_short = StringField(u'Sigma3 short', validators=[DataRequired(message="The Sigma3 short is required")])
     sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
 
-    frequency = SelectField('Leverage Types',
+    frequency = SelectField('Frequency',
                             choices=[(frequency_types.Frequency.weekly.name, frequency_types.Frequency.weekly.name),
                                      (frequency_types.Frequency.monthly.name, frequency_types.Frequency.monthly.name),
-                                     (frequency_types.Frequency.monthly.name, frequency_types.Frequency.monthly.name),
+                                     (frequency_types.Frequency.daily.name, frequency_types.Frequency.daily.name),
                                      ])
 
     week_day = SelectField('Week Day',

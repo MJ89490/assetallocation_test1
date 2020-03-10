@@ -4,10 +4,34 @@
 
 <body>
 
+  {% block assetsInputs%}
+
+  <div class="row" id="row-assetsInputs">
+      <div class="col-12 col-lg-12">
+          <div class="widget widget-fullwidth-assetsInputs be-loading">
+              <div class="widget-chart-container" id="widget-chart-container">
+
+                  <div class="title-assets"><h2>Model Assets</h2></div>
+
+                  <div>
+                      <div>
+                          <button class="btn btn-lg btn-primary" onclick="onAddRow()" id="onAddRow"><strong>Add Row</strong></button>
+                          <button class="btn btn-lg btn-primary" onclick="onRemoveSelected()" id="onRemoveSelected"><strong>Remove Selected</strong></button>
+                          <button class="btn btn-lg btn-primary" onclick="clearData()" id="clearData"><strong>Clear Data</strong></button>
+                      </div>
+                  </div>
+                  <div style="width: 1030px; height: 350px; ">
+                      <div id="myGrid" style="height: 100%; margin-top: 20px; " class="ag-theme-balham"></div>
+                  </div>
+                  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+              </div>
+          </div>
+      </div>
+  </div>
 
 
-
-
+  {% endblock %}
 
   {% block inputs %}
 
@@ -16,71 +40,116 @@
       <div class="widget widget-fullwidth-inputs be-loading">
         <div class="widget-chart-container" id="widget-chart-container">
 
-          <div class="title-inputs"><h2>Inputs of the Model</h2></div>
+          <div class="title-inputs"><h2>Model Inputs</h2></div>
 
           <div class="center">
             <div class="form-group">
-                <div class="btn-group">
+
+
+                <div class="btn-group" id="btn-group-inputs">
                    {{form.strategy_weight.label(id="label_text")}}
                    {{ form.strategy_weight(class="form-control", id="btn-group-inputs-model", placeholder=("Strategy Weight"))}}
+
+                    {{form.time_lag.label(id="label_text")}}
+                    {{ form.time_lag(class="form-control", id="btn-group-inputs-model", placeholder=("Time Lag"))}}
+
+                    {{form.leverage_type.label(id="label_text")}}
+                    {{form.leverage_type(class="form-control", id="btn-group-inputs-model-leverage")}}
+
+                    {{form.volatility_window.label(id="label_text")}}
+                    {{ form.volatility_window(class="form-control", id="btn-group-inputs-model", placeholder=("Volatility Window"))}}
+
+                    {{form.frequency.label(id="label_text")}}
+                    {{ form.frequency(class="form-control", id="btn-group-inputs-model-frequency", placeholder=("Frequency"))}}
+
+                    {{form.week_day.label(id="label_text")}}
+                    {{ form.week_day(class="form-control", id="btn-group-inputs-model-week", placeholder=("Week Day"))}}
                 </div>
-               <div class="btn-group">
-                 {{form.time_lag.label(id="label_text")}}
-                 {{ form.time_lag(class="form-control", id="btn-group-inputs-model", placeholder=("Time Lag"))}}
-               </div>
-               <div class="btn-group">
-                 {{form.leverage_type.label(id="label_text")}}
-                 {{form.leverage_type(class="form-control", id="btn-group-inputs-model-leverage")}}
-               </div>
-               <div class="btn-group">
-                 {{form.volatility_window.label(id="label_text")}}
-                 {{ form.volatility_window(class="form-control", id="btn-group-inputs-model", placeholder=("Volatility Window"))}}
-               </div>
-               <div class="btn-group">
-                 {{form.sig1_short.label(id="label_text")}}
-                 {{ form.sig1_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Short"))}}
-               </div>
-               <div class="btn-group">
-                  {{form.sig1_long.label(id="label_text")}}
-                 {{ form.sig1_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Long"))}}
-               </div><br>
-               <div class="btn-group">
-                 {{form.sig2_short.label(id="label_text")}}
-                 {{ form.sig2_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Short"))}}
-               </div>
-               <div class="btn-group">
-                 {{form.sig2_long.label(id="label_text")}}
-                    {{ form.sig2_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Long"))}}
-               </div>
-               <div class="btn-group">
-                 {{form.sig3_short.label(id="label_text")}}
-                 {{ form.sig3_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Short"))}}
-               </div>
-               <div class="btn-group">
-                 {{form.sig3_long.label(id="label_text")}}
-                 {{ form.sig3_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Long"))}}
-               </div>
-               <div class="btn-group">
-                 {{form.frequency.label(id="label_text")}}
-                 {{ form.frequency(class="form-control", id="btn-group-inputs-model", placeholder=("Frequency"))}}
-               </div>
-               <div class="btn-group">
-                 {{form.week_day.label(id="label_text")}}
-                 {{ form.week_day(class="form-control", id="btn-group-inputs-model", placeholder=("Week Day"))}}
-               </div><br>
+
+                <div class="btn-group"  id="btn-group-signals">
+                     {{form.sig1_short.label(id="label_text")}}
+                     {{ form.sig1_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Short"))}}
+
+                      {{form.sig1_long.label(id="label_text")}}
+                     {{ form.sig1_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Long"))}}
+
+                     {{form.sig2_short.label(id="label_text")}}
+                     {{ form.sig2_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Short"))}}
+
+                     {{form.sig2_long.label(id="label_text")}}
+                        {{ form.sig2_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Long"))}}
+
+                     {{form.sig3_short.label(id="label_text")}}
+                     {{ form.sig3_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Short"))}}
+
+                     {{form.sig3_long.label(id="label_text")}}
+                     {{ form.sig3_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Long"))}}
+                </div><br>
+
+
+
+
+
+               <!--<div class="btn-group">-->
+                 <!--{{form.time_lag.label(id="label_text")}}-->
+                 <!--{{ form.time_lag(class="form-control", id="btn-group-inputs-model", placeholder=("Time Lag"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.leverage_type.label(id="label_text")}}-->
+                 <!--{{form.leverage_type(class="form-control", id="btn-group-inputs-model-leverage")}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.volatility_window.label(id="label_text")}}-->
+                 <!--{{ form.volatility_window(class="form-control", id="btn-group-inputs-model", placeholder=("Volatility Window"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.sig1_short.label(id="label_text")}}-->
+                 <!--{{ form.sig1_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Short"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                  <!--{{form.sig1_long.label(id="label_text")}}-->
+                 <!--{{ form.sig1_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Long"))}}-->
+               <!--</div><br>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.sig2_short.label(id="label_text")}}-->
+                 <!--{{ form.sig2_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Short"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.sig2_long.label(id="label_text")}}-->
+                    <!--{{ form.sig2_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Long"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.sig3_short.label(id="label_text")}}-->
+                 <!--{{ form.sig3_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Short"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.sig3_long.label(id="label_text")}}-->
+                 <!--{{ form.sig3_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Long"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.frequency.label(id="label_text")}}-->
+                 <!--{{ form.frequency(class="form-control", id="btn-group-inputs-model", placeholder=("Frequency"))}}-->
+               <!--</div>-->
+               <!--<div class="btn-group">-->
+                 <!--{{form.week_day.label(id="label_text")}}-->
+                 <!--{{ form.week_day(class="form-control", id="btn-group-inputs-model", placeholder=("Week Day"))}}-->
+               <!--</div><br>-->
+
+                {% block runModel%}
+
+                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+
+               {% endblock %}
+
+
             </div>
-              {% block runModel%}
-
-                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
-
-              {% endblock %}
           </div>
         </div>
       </div>
     </div>
   </div>
 
-{% endblock %}
+  {% endblock %}
 
  {% block save %}
 
@@ -109,4 +178,5 @@
   </div>
 
  {% endblock %}
+
 </body>

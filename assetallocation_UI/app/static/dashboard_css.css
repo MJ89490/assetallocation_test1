@@ -447,7 +447,7 @@ background-color: #ddd;}
 
 #icon-lgim {padding-left: 25px; padding-top: 5px; }
 
-#container-footer{ background-color: #eee; padding-left: 210px;  }
+
 
 .overview-span { color: #007faa; }
 
@@ -459,3 +459,9 @@ background-color: #ddd;}
 #main-table-positions-performance-widget { height: 850px; }
 
 #table-sum-positions-performance-row {padding-bottom: 5px; }
+
+/* footer */
+.footer { background-color: #eee; bottom:0; position:fixed; width:100%; }
+#container-footer{ background-color: #eee; padding-left: 210px;  }
+
+.text-muted {font-size: 12px; }

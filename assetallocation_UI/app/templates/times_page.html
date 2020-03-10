@@ -18,32 +18,33 @@
                 <h2 class="overview-title"><strong><span class="overview-span">TIMES</span> Model</strong></h2>
               </div>
 
+                <p class="last-run-text">
+                    <i>Last Run: 14/02/2020</i>
+                </p>
+
+
               <div class="row">
                   <div class="col-12 col-lg-1"></div>
 
                   <div class="col-12 col-lg-10">
                       <div class="widget widget-fullwidth be-loading">
                               <div class="widget-chart-container" id="widget-chart-container">
-
-                                   <!-- Inputs Form -->
-                                  <div class="row" id="row-text-dates">
-                                      <p class="last-run-text">
-                                          <strong><i>Last Run: 14/02/2020</i></strong>
-                                      </p>
-                                      <p class="run-date-text">
-                                          <strong><i>Run Date: 14/02/2020</i></strong>
-                                      </p>
-                                  </div>
+                                  <!-- Inputs Form -->
+                                  <!--<div class="row" id="row-text-dates">-->
+                                      <!--<p class="last-run-text">-->
+                                          <!--<strong><i>Last Run: 14/02/2020</i></strong>-->
+                                      <!--</p>-->
+                                  <!--</div>-->
 
                                    <div align="center">
 
                                        <div class="dashboard-btn">
                                            <a href="{{ url_for('times_dashboard') }}" target="_blank">
-                                               <button class="btn btn-dashboard btn-primary" type="submit"><strong>Dashboard</strong></button>
+                                               <button class="btn btn-dashboard btn-primary" type="submit" id="dashboard-btn"><strong>Dashboard</strong></button>
                                            </a>
                                        </div>
 
-                                  <form class="center" action="" method="POST" novalidate>
+                                       <form class="center" action="" method="POST" novalidate>
                                        {{ form.hidden_tag() }}
                                             <!-- Form: select the version for the model -->
                                            <div class="btn-group">
@@ -54,16 +55,24 @@
                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectVersions" id="selectInputDatesChartSubmit1">{{ form.submit_versions.label }}</button><br>
                                                 </div>
                                             </div>
-                                            {% if version_type == "New Version"  or  save == "save"  or run_model == "run_model" %}
+                                        </form>
 
-                                                {% block inputs %}
-                                                    {% block runModel%} {% endblock %}
-                                                {% endblock %}
 
-                                                {% block save %}{% endblock %}
 
-                                            {% endif %}
-                                   </form>
+                                       {% if version_type == "New Version"  or  save == "save"  or run_model == "run_model" %}
+
+                                            {% block assetsInputs%} {% endblock %}
+
+                                            <form class="center" action="" method="POST" novalidate>
+                                                {{ form.hidden_tag() }}
+
+                                                {% block inputs %} {% block runModel%} {% endblock %} {% endblock %}
+
+                                                {% block save %} {% endblock %}
+                                            </form>
+
+                                       {% endif %}
+
                                    </div>
                               </div>
                       </div>
@@ -79,5 +88,6 @@
                   </div>
               </footer><!-- .footer -->
          </div>
+
     </body><!-- .body -->
 {% endblock %}
