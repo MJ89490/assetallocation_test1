@@ -3,15 +3,7 @@
 <head>
     <link rel="stylesheet" href="{{url_for('.static', filename='times_page_new_version_css.css')}}">
 
-    <style type="text/css">
-        .row {
-        display: flex;
-        margin-right: -15px;
-        margin-left: -15px;
-        padding-bottom: 15px;
-     }
 
-    </style>
 
 
 </head>
@@ -150,9 +142,6 @@
 
  {% block save %}
 
-  <div class="row" id="row-inputs-save">
-    <div class="col-12 col-lg-12">
-      <div class="widget widget-fullwidth-save be-loading" align="center">
             <div class="text-field-path" id="text-field-name-file">
               {{form.name_file_times.label(id="label_text")}}
               <i>{{ form.name_file_times(class="form-control", id="btn-group-inputs-model", placeholder=("Name of the file"))}}</i>
@@ -169,10 +158,6 @@
             <div class="button-submit" id="button-submit4">
                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectTimesPath" id="SelectSaveSubmit4"><strong>Save</strong></button>
             </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
  {% endblock %}
 
