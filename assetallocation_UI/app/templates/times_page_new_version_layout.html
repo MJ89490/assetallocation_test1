@@ -1,15 +1,24 @@
 {% extends "times_page.html" %}
 
+<head>
+    <link rel="stylesheet" href="{{url_for('.static', filename='times_page_new_version_css.css')}}">
 
+    <style type="text/css">
+        .row {
+        display: flex;
+        margin-right: -15px;
+        margin-left: -15px;
+        padding-bottom: 15px;
+     }
+
+    </style>
+
+
+</head>
 
 <body>
 
   {% block assetsInputs%}
-
-  <div class="row" id="row-assetsInputs">
-      <div class="col-12 col-lg-12">
-          <div class="widget widget-fullwidth-assetsInputs be-loading">
-              <div class="widget-chart-container" id="widget-chart-container">
 
                   <div class="title-assets"><h2>Model Assets</h2></div>
 
@@ -25,24 +34,15 @@
                   </div>
                   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-              </div>
-          </div>
-      </div>
-  </div>
-
-
   {% endblock %}
 
   {% block inputs %}
 
-  <div class="row" id="row-inputs">
-    <div class="col-12 col-lg-12">
-      <div class="widget widget-fullwidth-inputs be-loading">
-        <div class="widget-chart-container" id="widget-chart-container">
+
 
           <div class="title-inputs"><h2>Model Inputs</h2></div>
 
-          <div class="center">
+
             <div class="form-group">
 
 
@@ -143,11 +143,8 @@
 
 
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+
+
 
   {% endblock %}
 

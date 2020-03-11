@@ -54,8 +54,10 @@ body {
         display: flex;
         margin-right: -15px;
         margin-left: -15px;
-        padding-bottom: 20px;
+        padding-bottom: 10px;
      }
+
+
 
 @media (min-width: 768px)
 .col-md-12 {
@@ -69,7 +71,7 @@ body {
                             margin-bottom: 0;
                             margin-top: 20px;
                             background-color: #F8F8FF;
-                            height:200px;
+                            height:400px;
                           }
 
 .widget-head {
@@ -120,7 +122,9 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 #text-field-path, #text-field-name-file {padding-top: 20px; }
 
-.overview-title {border-bottom: 1.5px solid #d9d9d9; padding-bottom: 15px; margin-top: 5px;}
+
+
+#icon-model-page {padding-bottom: 15px;}
 
 .last-run-text {font-size: 20px; margin-left: 20px; padding-right: 55px; }
 
@@ -136,6 +140,9 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 #text-field-name-file { width: 130px; }
 
+
+
+
 /* footer */
 .footer { background-color: #fff; bottom:0; position:fixed; width:100%; }
 
@@ -149,14 +156,18 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 /* Times Page New Version Layout */
 
 /* row */
-#row-assetsInputs {padding-top: 10px;}
+#row-assetsInputs {
+                    padding-top: 10px;
+                    margin-right: -15px;
+                    margin-left: -15px;
+                  }
 
 /* widgets */
 .widget.widget-fullwidth-inputs {
 
                                     background-color: #F8F8FF;
                                     height: 530px;
-                                    width: 1000px;
+
                                 }
 
 .widget.widget-fullwidth-save{
@@ -169,7 +180,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
                                  margin-top: 30px;
                                  background-color: #F8F8FF;
                                  height: 510px;
-                                 width: 1400px;
+
                               }
 
 #SelectPathSubmit3 {padding-top: 20px; }
@@ -185,6 +196,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 #check-box-save-excel{padding-bottom: 5px; }
 #check-box-save-db {padding-left: 46.5px; padding-bottom: 10px; }
 #btn-group-signals{margin-left: 20px; }
+
 /* text-title */
 #label_text{color:#007faa;}
 #form-control-path-save {color: #808080}
