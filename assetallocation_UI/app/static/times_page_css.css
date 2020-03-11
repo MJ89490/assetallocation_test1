@@ -29,7 +29,7 @@ body {
         position: relative;
       }
 
-.main-content {padding-top: 120px; }
+.main-content {padding-top: 160px; }
 
 .container-fluid {
                     width: 100%;
@@ -54,10 +54,10 @@ body {
         display: flex;
         margin-right: -15px;
         margin-left: -15px;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
      }
 
-
+#row-inputs-save {padding-bottom: 50px; }
 
 @media (min-width: 768px)
 .col-md-12 {
@@ -69,8 +69,8 @@ body {
 /* widgets */
 .widget.widget-fullwidth  {
                             margin-bottom: 0;
-                            margin-top: 20px;
-                            background-color: #F8F8FF;
+                            margin-top: 10px;
+                            background-color: #fff;
                             height:400px;
                           }
 
@@ -110,9 +110,12 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 #button-submit2, #button-submit3 {padding-top: 20px; }
 
+#selectInputDatesChartSubmit1, #selectVersionId {margin-bottom: 20px; }
+
 #btn-group-inputs-model-leverage{text-align: center; color: #D3D3D3; padding-left: 40px; }
 
 .dashboard-btn {padding-bottom: 30px; width: 300px; }
+
 
 /* dropdown boxes */
 .dropdown-menu, .dropdown-item { color: black; text-align: center; }
@@ -122,9 +125,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 #text-field-path, #text-field-name-file {padding-top: 20px; }
 
-
-
-#icon-model-page {padding-bottom: 15px;}
+#icon-model-page {padding-bottom: 12px;}
 
 .last-run-text {font-size: 20px; margin-left: 20px; padding-right: 55px; }
 
@@ -164,10 +165,8 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 /* widgets */
 .widget.widget-fullwidth-inputs {
-
-                                    background-color: #F8F8FF;
+                                    background-color: #F5F5F5;
                                     height: 530px;
-
                                 }
 
 .widget.widget-fullwidth-save{
@@ -177,10 +176,8 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
                                 }
 
 .widget-fullwidth-assetsInputs{
-                                 margin-top: 30px;
                                  background-color: #F8F8FF;
-                                 height: 510px;
-
+                                 height: 530px;
                               }
 
 #SelectPathSubmit3 {padding-top: 20px; }
@@ -194,9 +191,9 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 #RunTheModelSubmit2{margin-top: 10px; }
 #text-field-name-file{padding-bottom: 5px; }
 #check-box-save-excel{padding-bottom: 5px; }
-#check-box-save-db {padding-left: 46.5px; padding-bottom: 10px; }
+#check-box-save-db {padding-left: 46.5px; }
 #btn-group-signals{margin-left: 20px; }
-
+#SelectSaveSubmit4 {margin-bottom: 20px; }
 /* text-title */
 #label_text{color:#007faa;}
 #form-control-path-save {color: #808080}
@@ -210,7 +207,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 #onAddRow, #onRemoveSelected, #clearData {margin-top: 12px;  }
 .ag-header-cell-label {
    justify-content: center;
-   color: rgb(152, 215, 235);
+   color: #007faa;
 }
 
 
