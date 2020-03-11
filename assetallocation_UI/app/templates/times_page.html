@@ -14,30 +14,16 @@
     <body>
          <div class="be-content">
 
-
-              <div class="main-content container-fluid">
-
-                <h2 class="overview-title"><strong><span class="overview-span"><img id="icon-model-page" src="/static/img/icon-model-page.png"> TIMES</span> Model</strong></h2>
-
-              </div>
-
-                <p class="last-run-text">
-                    <i>Last Run: 14/02/2020</i>
-                </p>
-
+              <div class="main-content container-fluid"></div>
 
               <div class="row">
                   <div class="col-12 col-lg-1"></div>
                   <div class="col-12 col-lg-10">
                       <div class="widget widget-fullwidth be-loading">
-                              <div class="widget-chart-container" id="widget-chart-container">
-                                  <!-- Inputs Form -->
-                                  <!--<div class="row" id="row-text-dates">-->
-                                      <!--<p class="last-run-text">-->
-                                          <!--<strong><i>Last Run: 14/02/2020</i></strong>-->
-                                      <!--</p>-->
-                                  <!--</div>-->
-
+                              <div class="widget-chart-container">
+                                  <p class="last-run-text">
+                                      <i>Last Run: 14/02/2020</i>
+                                  </p>
                                    <div align="center">
                                        <img id="icon-model-page" src="/static/img/bar_chart_3.png">
                                         <h2 class="overview-title"><strong><span class="overview-span">TIMES</span> Model</strong></h2>
@@ -52,7 +38,7 @@
                                        {{ form.hidden_tag() }}
                                             <!-- Form: select the version for the model -->
                                            <div class="btn-group">
-                                               {{ form.versions(class="form-control")}}
+                                               {{ form.versions(class="form-control", id="selectVersionId")}}
                                            </div>
                                             <div class="btn-group">
                                                 <div class="button-submit">
@@ -101,10 +87,24 @@
                     </div>
               </div>
 
+             <div class="row" id="row-inputs-save">
+                 <div class="col-12 col-lg-6"></div>
+                    <div class="col-12 col-lg-4">
+                        <div class="widget widget-fullwidth-save be-loading">
+                            <div class="widget-chart-container">
+                                <form class="center" action="" method="POST" novalidate>
+                                    {{ form.hidden_tag() }}
+                                    <div align="center">
+                                        {% block save %} {% endblock %}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="col-12 col-lg-6"></div>
+             </div>
 
              {% endif %}
-
-
 
                 <!-- FOOTER
                ===================================== !-->
