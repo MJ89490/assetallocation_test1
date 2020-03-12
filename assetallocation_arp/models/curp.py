@@ -64,9 +64,10 @@ def create_crosses_two(currencyList):
     # create data frame
     output = pd.DataFrame({'cross':[]})
     idx = 1
-    for i in list(range(0,(len(currencyList.index)-1))):
-        for j in list(range(i,len(currencyList.index))):
-            output.loc[idx,'cross'] = currencyList.loc[i]+currencyList.loc[j]
+    for i in list(range(1,(len(currencyList.index)-1))):
+        for j in list(range(i+1,len(currencyList.index))):
+            print(currencyList[i])
+            print(currencyList[j])
             idx = idx +1
     return output
 
