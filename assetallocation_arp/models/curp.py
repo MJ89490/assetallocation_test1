@@ -45,26 +45,28 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     matrixCarryB = pd.DataFrame({secondCurrency})
 
     for currency in asset_inputs['Currency']:
-        matrixSpotA(firstCurrency == currency) = sportSparseData[(currency + 'USD Curncy')]
-        matrixSpotB(secondCurrency == currency) = sportSparseData[(currency + 'USD Curncy')]
-        matrixCarryA(firstCurrency == currency) = carrySparseData[(currency + 'USDCR Curncy')]
-        matrixCarryB(secondCurrency == currency) = carrySparseData[(currency + 'USDCR Curncy')]
+        matrixSpotA[firstCurrency == currency] = spotSparseData[(currency + 'USD Curncy')]
+        matrixSpotB[secondCurrency == currency] = spotSparseData[(currency + 'USD Curncy')]
+        matrixCarryA[firstCurrency == currency] = carrySparseData[(currency + 'USDCR Curncy')]
+        matrixCarryB[secondCurrency == currency] = carrySparseData[(currency + 'USDCR Curncy')]
     spotData = matrixSpotA/matrixSpotB #this wont work
     carryData = matrixCarryA/matrixCarryB #this wont work
 
-
+    """""""""""
+    For this section i need to caluclate IR differentials
+    """""""""""
 
 
 
     pass
 
-def create_crosses_two(currencyList)
+def create_crosses_two(currencyList):
     # create data frame
-    output = pd.DataFrame({'cross':[])
+    output = pd.DataFrame({'cross':[]})
     idx = 1
     for i in list(range(0,(len(currencyList.index)-1))):
         for j in list(range(i,len(currencyList.index))):
-            output.loc[idx,'cross'] = currencyList.loc(i)+currencyList.loc(j)
+            output.loc[idx,'cross'] = currencyList.loc[i]+currencyList.loc[j]
             idx = idx +1
     return output
 
@@ -74,10 +76,10 @@ def frst(inpt):
 def scnd(inpt):
     return inpt[3:6]
 
-def filter_data(all_data, tickers)
+def filter_data(all_data, tickers):
     # pass in the entire load of data and only take the columns needed
     output = pd.DataFrame(all_data,columns = tickers)
-        return output
+    return output
 
 
 
