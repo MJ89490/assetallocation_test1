@@ -8,6 +8,8 @@ CURP
 """
 import pandas as pd
 import numpy as np
+import xlwings as xw
+
 
 # my formatting is that variables are camel case, functions use _
 
@@ -19,69 +21,67 @@ import numpy as np
 
 
 
-def run_curp():
+def run_curp(curp_inputs, asset_inputs, all_data ):
     # this will be where the main code is run
+
+    # get data
+    currencyCrosses = create_crosses_two(asset_inputs['Currency'])
+    pppData = filter_data(all_data, asset_inputs['PPP Tickers'])
+    irData = filter_data(all_data, asset_inputs['IR Tickers'])
+    spotSparseData = filter_data(all_data, asset_inputs['Spot Tickers'])
+    carrySparseData = filter_data(all_data, asset_inputs['Carry Tickers'])
+
+    # process data
+
+    asset_inputes.set_index('Currency')
+
+    # create all FX crosses from the ones given
+    # this needs to be smart in that it takes the first part of the cross as one matrix, the second part as the other and does A/B
+    firstCurrency = [frst(x) for x in currencyCrosses]
+    secondCurrency = [scnd(x) for x in currencyCrosses]
+    matrixSpotA = pd.DataFrame({firstCurrency})
+    matrixSpotB = pd.DataFrame({secondCurrency})
+    matrixCarryA = pd.DataFrame({firstCurrency})
+    matrixCarryB = pd.DataFrame({secondCurrency})
+
+    for currency in asset_inputs['Currency']:
+        matrixSpotA(firstCurrency == currency) = sportSparseData[(currency + 'USD Curncy')]
+        matrixSpotB(secondCurrency == currency) = sportSparseData[(currency + 'USD Curncy')]
+        matrixCarryA(firstCurrency == currency) = carrySparseData[(currency + 'USDCR Curncy')]
+        matrixCarryB(secondCurrency == currency) = carrySparseData[(currency + 'USDCR Curncy')]
+    spotData = matrixSpotA/matrixSpotB #this wont work
+    carryData = matrixCarryA/matrixCarryB #this wont work
+
+
+
+
+
     pass
 
 def create_crosses_two(currencyList)
     # create data frame
     output = pd.DataFrame({'cross':[])
-    idx = 0
+    idx = 1
     for i in list(range(0,(len(currencyList.index)-1))):
-        for j in list(range(i,len(currenyList.index))):
+        for j in list(range(i,len(currencyList.index))):
             output.loc[idx,'cross'] = currencyList.loc(i)+currencyList.loc(j)
             idx = idx +1
+    return output
+
+def frst(inpt):
+    return inpt[0:3]
+
+def scnd(inpt):
+    return inpt[3:6]
+
+def filter_data(all_data, tickers)
+    # pass in the entire load of data and only take the columns needed
+    output = pd.DataFrame(all_data,columns = tickers)
+        return output
 
 
-def import_data_IR():
-    # import interest rate data
-    # 1st part: Bloomberg carry tab
-    pass
 
-def import_data_returns():
-    # import carry adjusted returns
-    # 2nd part, Bloomberg RET tab
-    pass
-def import_inputs():
-    # import input data from the model run settings
-    pass
-def prepare_IR_data():
-    # calculate the IR differentials
-    # For the IR differentials, first generate 2 matrices. TThe first is the IR for the 1st currency in the pair, the second is the IR for the second
-
-    # now simply subtract the second matrix from the first
-    pass
-def prepare_XS_returns_index():
-    # simply generate the indexed returns
-    # this is the XSReturnsRET tab
-    pass
-def define_input_parameters_globally():
-    # This data comes from the import of data in import_inputs
-    # make sure stuff is defined globally!
-    pass
-def valuation_tab():
-    # this is the valuation tab
-    # here, will need to use the global variables 'window' and 'historical level averaging'
-    pass
-def calculate_signals():
-    # calculate the signals, using the formula: IR differential -((1+valuation)^(window/12)-1)*DynHedgeMeanReversion
-
-    # There are then some additional steps to do in the tables to the right
-
-    # the first does a look up on the parameters to know how to round the signal to a more round number
-
-    # the second then adds up the values of the longs and subtracts the value of the shorts
-    pass
-def generate_graph_one_data():
-    # just need to take the final row of the matrix from signals, then sort
-    pass
-def generate_graph_two_data():
-    # need to figure this out
-    pass
 
 if __name__ == "__main__":
     # test inputs
-    currencyInputs = pd.DataFrame(["EUR", "GBP", "USD", "JPY"])
-    matrixOneInput = pd.DataFrame()
-    matrixTwoInput = pd.DataFrame()
-    create_crosses(currencyList=currencyInputs, matrixOne=matrixOneInput, matrixTwo=matrixTwoInput)
+    curp_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
