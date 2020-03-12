@@ -23,24 +23,15 @@ def run_curp():
     # this will be where the main code is run
     pass
 
-def create_crosses(currencyList,matrixOne, matrixTwo):
-   # currencyList is just taken from the inputs
-   # when this is called for the first time, matrixOne and matrixTwo both need to be []
-   #  iterative function to create the matrix
-    if len(currencyList.index) == 1:
-       # we have finished now just create a data frame with the right headers
+def create_crosses_two(currencyList)
+    # create data frame
+    output = pd.DataFrame({'cross':[])
+    idx = 0
+    for i in list(range(0,(len(currencyList.index)-1))):
+        for j in list(range(i,len(currenyList.index))):
+            output.loc[idx,'cross'] = currencyList.loc(i)+currencyList.loc(j)
+            idx = idx +1
 
-       return matrixOne, matrixTwo
-    elif len(currencyList.index) >= 2:
-       growingMatrixOne = pd.DataFrame([currencyList.head(1)]*(len(currencyList.index)-1), ignore_index=True)
-       growingMatrixTwo = pd.DataFrame([currencyList.tail(len(currencyList.index)-1)], ignore_index=True)
-       matrixOne = matrixOne.append(growingMatrixOne)
-       matrixTwo = matrixTwo.append(growingMatrixTwo)
-       currencyList = currencyList.tail(len(currencyList.index)-1)
-       # now recurse
-       create_crosses(currencyList, matrixOne, matrixTwo)
-    else:
-        return 'Error - Not enough currencies passed. 2 or more required.'
 
 def import_data_IR():
     # import interest rate data
