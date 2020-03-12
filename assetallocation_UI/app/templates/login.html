@@ -6,9 +6,9 @@
 <head>
      <!-- LOGIN PAGE CSS STYLE
      ================================================== -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='login_page.css')}}">
     <style type="text/css">
         .container {margin-top: 230px; }
-        .footer {padding-top: 520px; }
     </style>
 </head>
 
@@ -63,9 +63,11 @@
                         </div>
                     </form><!-- .form -->
                 </div>
-                <div class="footer" align="center">
-                    <p class="mt-5 mb-3 text-muted">© Legal & General 2020</p>
-                </div><!-- .footer -->
+                <footer class="footer py-3" id="container-footer">
+                    <div class="container" align="center">
+                        <span class="text-muted">© Legal & General 2020</span>
+                    </div>
+                </footer><!-- .footer -->
             </div>
             <div class="col-sm-4"></div>
         </div>
