@@ -66,9 +66,9 @@ def create_crosses_two(currencyList):
     idx = 1
     for i in list(range(1,(len(currencyList.index)-1))):
         for j in list(range(i+1,len(currencyList.index))):
-            print(currencyList[i])
-            print(currencyList[j])
-            idx = idx +1
+            # print(currencyList[i])
+            # print(currencyList[j])
+            idx = idx + 1
     return output
 
 def frst(inpt):
