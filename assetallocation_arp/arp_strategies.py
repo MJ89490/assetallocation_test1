@@ -22,6 +22,7 @@ def run_model(model_type, mat_file=None, input_file=None):
 	if model_type == models.Models.effect.name:
 		print(model_type)
 	if model_type == models.Models.curp.name:
+		curp_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 		print(model_type)
 	if model_type == models.Models.fica.name:
 		print(model_type)

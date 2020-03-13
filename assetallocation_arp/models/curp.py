@@ -37,6 +37,19 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
     # create all FX crosses from the ones given
     # this needs to be smart in that it takes the first part of the cross as one matrix, the second part as the other and does A/B
+
+    mtxSpot=pd.DataFrame({currencyCrosses:[]})
+    for (columnName, columnData) in mtxSpot.iteritems():
+        # get base fx
+        baseFx = columnName[0:3]
+        priceFX = columnName[2:5]
+        # need to find the ticker to use for the base fx
+        baseTicker = asset_inputs.loc[asset_inputs['Currency'] == baseFx, 'Spot Tickers'].iloc[0]
+        priceTicker = asset_inputs.loc[asset_inputs['Currency'] == priceFX, 'Spot Ticker'].iloc[0]
+        # Get the data for each of these columns, then divide or subtract the two and put it back into the DF
+
+
+
     firstCurrency = [frst(x) for x in currencyCrosses]
     secondCurrency = [scnd(x) for x in currencyCrosses]
     matrixSpotA = pd.DataFrame({firstCurrency})
@@ -54,9 +67,9 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
     """""""""""
     For this section i need to caluclate IR differentials
+    To do this:
+    Build 2 empty DF
     """""""""""
-
-
 
     pass
 
