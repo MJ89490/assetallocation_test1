@@ -102,13 +102,13 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
                                                       }
 
 .be-left-sidebar .sidebar-elements>li ul {
-                                            background-color: #f5f5f5;
+
+                                            background-color: pink;
                                             padding-top: 10px;
                                             padding-right: 0 px;
                                             padding-bottom: 10px;
                                             padding-left: 10px;
                                             list-style: none;
-                                            height: 820px;
                                             width: 200px;
                                          }
 

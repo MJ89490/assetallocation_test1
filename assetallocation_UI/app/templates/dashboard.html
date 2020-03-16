@@ -40,7 +40,31 @@
                                             <ul class="sidebar-elements">
                                                 <li class="divider">NAVIGATION</li><br><br>
                                                     <li class="parent">
-                                                          <a href="{{ url_for('home') }}"><span>Home</span></a><br><br>
+                                                          <a href="{{ url_for('home') }}"><span id="home-sidebar-span">Home</span></a><br>
+                                                          <a><span>Charts Data</span></a>
+                                                          <ul class="sub-menu">
+                                                              <div class="text-left">
+                                                                   <form action='' , method="POST" novalidate>
+                                                                       {{ form.hidden_tag() }}
+                                                                       <div  class="form-group">
+                                                                           <!-- Form: Versions for the charts-->
+                                                                            {{ form.versions.label(id="label_text")}}
+                                                                            <div class="row" id="versions-charts-submit-ok-row">
+                                                                                <div class="col-8" id="versions-charts-row">
+                                                                                    {{ form.versions(class="form-control", id="selectVersionsToExport") }}
+                                                                                </div>
+                                                                                <div class="col-2" id="submit-ok-versions">
+                                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionChartsToOkSubmit">Ok</button>
+                                                                                </div>
+                                                                            </div>
+
+                                                                       </div>
+                                                                   </form>
+                                                              </div>
+
+                                                          </ul>
+
+
                                                           <a><span>Export Data</span></a><br>
                                                             <ul class="sub-menu">
                                                                 <div class="text-left">

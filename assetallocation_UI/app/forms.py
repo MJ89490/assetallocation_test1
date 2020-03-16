@@ -19,6 +19,7 @@ class ExportDataForm(FlaskForm):
 
     # todo link to the DB to grap the different versions automatically
     versions = SelectField('Versions', choices=[('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3','Version3')])
+
     submit_ok_versions = SubmitField('Ok')
 
     leverage = SelectField('Leverage Types', choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name ),
