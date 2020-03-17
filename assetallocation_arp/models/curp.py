@@ -24,7 +24,7 @@ import xlwings as xw
 def run_curp(curp_inputs, asset_inputs, all_data ):
     # this will be where the main code is run
 
-    # get data
+    # get data test
     currencyCrosses = create_crosses_two(asset_inputs['Currency'])
     pppData = filter_data(all_data, asset_inputs['PPP Tickers'])
     irData = filter_data(all_data, asset_inputs['IR Tickers'])
