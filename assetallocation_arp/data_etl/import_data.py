@@ -16,7 +16,7 @@ from datetime import datetime
 #          it might be a good idea to create classes?
 
 FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
-FILE_PATH = r'/tmp/workspace/cbd_elan/assetallocation_arp\matlabData.mat'
+FILE_PATH = r'/tmp/workspace/cbd_elan/assetallocation_arp/matlabData.mat'
 
 
 def matfile_to_dataframe(file_path, model_date):
