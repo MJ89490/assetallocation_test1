@@ -15,7 +15,7 @@ from datetime import datetime
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
-FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
+# FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
 FILE_PATH = r'/tmp/workspace/cbd_elan/assetallocation_arp/matlabData.mat'
 
 
