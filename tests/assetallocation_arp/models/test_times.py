@@ -41,13 +41,13 @@ def test_format_data_and_calc(leverage_type, signals_output, returns_output, pos
     """
 
     times_inputs_data = f'times_inputs_leverage_{leverage_type}'
-    times_inputs = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "input_origin",
+    times_inputs = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "inputs_leverages_origin",
                                                             times_inputs_data)), index_col=0)
 
-    asset_inputs_data = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "input_origin",
+    asset_inputs_data = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "inputs_leverages_origin",
                                                                  "asset_input")), index_col=0)
 
-    all_data = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "input_origin",
+    all_data = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "inputs_leverages_origin",
                                                         "all_data")), index_col=0)
 
     index_all_data = [pd.Timestamp(date) for date in all_data.index.values]
@@ -58,13 +58,13 @@ def test_format_data_and_calc(leverage_type, signals_output, returns_output, pos
                                                                                         asset_inputs=asset_inputs_data,
                                                                                         all_data=all_data)
 
-    signals = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_to_test",
+    signals = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_leverages_to_test",
                                                        signals_output)), index_col=0)
-    returns = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_to_test",
+    returns = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_leverages_to_test",
                                                        returns_output)), index_col=0)
-    positioning = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_to_test",
+    positioning = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_leverages_to_test",
                                                            positioning_output)), index_col=0)
-    r = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_to_test",
+    r = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_leverages_to_test",
                                                  r_output)), index_col=0)
 
     pd.testing.assert_frame_equal(signals_origin.reset_index(drop=True),

@@ -18,14 +18,14 @@ following outputs:
     - strategy_inputs
     - asset_inputs
     - all_data (we assume they are the correct data because we can't test the matlab file, it is very heavy)
-We do the test only with the leverage v in order to have "static" data
+We do the test only with the leverage v in order to have "static" dataset
 """
 
 
 @pytest.mark.parametrize("model_type, mat_file, input_file, model_date, strategy_inputs_expected, asset_inputs_expected",
-                         [('times', None, os.path.abspath(os.path.join(CURRENT_PATH, "resources", "arp_dashboard_leverage_v.xlsm")), None,
-                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "strategy_inputs_expected")),
-                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "asset_inputs_expected"))
+                         [('times', None, os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "arp_dashboard_leverage_v.xlsm")), None,
+                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "strategy_inputs_expected")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "asset_inputs_expected"))
                            )]
                          )
 def test_extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date, strategy_inputs_expected,
