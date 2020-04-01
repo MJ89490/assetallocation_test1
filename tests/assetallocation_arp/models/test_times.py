@@ -8,7 +8,6 @@ import pytest
 import os
 import pandas as pd
 
-# from tests.assetallocation_arp.models import data_test as data_test
 from assetallocation_arp.models.times import format_data_and_calc
 from assetallocation_arp.enum import leverage_types as leverage
 
