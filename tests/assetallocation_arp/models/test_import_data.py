@@ -18,27 +18,29 @@ following outputs:
     - strategy_inputs
     - asset_inputs
     - all_data (we assume they are the correct data because we can't test the matlab file, it is very heavy)
+We do the test only with the leverage v in order to have "static" dataset
 """
 
+
 @pytest.mark.parametrize("model_type, mat_file, input_file, model_date, strategy_inputs_expected, asset_inputs_expected",
-                         [('times', None, None, None,
-                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "strategy_inputs_expected")),
-                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "asset_inputs_expected"))
+                         [('times', None, os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "arp_dashboard_leverage_v.xlsm")), None,
+                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "strategy_inputs_expected")),
+                           os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "asset_inputs_expected"))
                            )]
                          )
 def test_extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date, strategy_inputs_expected,
                                      asset_inputs_expected):
 
-    dataframe_strategy_inputs = pd.read_csv(strategy_inputs_expected, index_col=0)
-    dataframe_asset_inputs = pd.read_csv(asset_inputs_expected, index_col=0)
+    strategy_inputs = pd.read_csv(strategy_inputs_expected, index_col=0)
+    asset_inputs = pd.read_csv(asset_inputs_expected, index_col=0)
 
     strategy_inputs_origin, asset_inputs_origin, all_data = data.extract_inputs_and_mat_data(model_type=model_type,
                                                                                              mat_file=mat_file,
                                                                                              input_file=input_file,
                                                                                              model_date=model_date)
     pd.testing.assert_frame_equal(strategy_inputs_origin,
-                                      dataframe_strategy_inputs, check_column_type=False, check_names=False, check_dtype=False)
+                                  strategy_inputs, check_column_type=False, check_names=False, check_dtype=False)
 
     pd.testing.assert_frame_equal(asset_inputs_origin,
-                                      dataframe_asset_inputs, check_column_type=False, check_names=False, check_dtype=False)
+                                  asset_inputs, check_column_type=False, check_names=False, check_dtype=False)
 
