@@ -1,6 +1,6 @@
 import xlwings as xw
-import data_etl.import_data as gd
-import models.times as times
+import assetallocation_arp.data_etl.import_data as gd
+import assetallocation_arp.models.times as times
 import sys
 import os
 from assetallocation_arp.enum import models_names as models
