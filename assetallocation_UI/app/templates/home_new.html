@@ -1,0 +1,71 @@
+{% extends "basePage.html" %}
+
+{% block mainhome %}
+    <!-- Style of the Home Page -->
+    <head>
+        <!-- HOME PAGE CSS STYLE
+        ================================================== -->
+        <link rel="stylesheet" href="{{url_for('.static', filename='home_css_new.css')}}">
+
+    </head>
+
+    <!-- Body of the Home Page -->
+    <body>
+        <!--#region Main Home Text  -->
+        <!-- ASSET ALLOCATION HOME PAGE
+        ================================================== -->
+        <div class="be-content">
+          <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-6" id="text-home">
+                    <!-- Heading -->
+                    <h1 class="display-3 text-md-left">
+                        Asset Allocation ARP<span class="text-database"> <strong>Models</strong></span>.
+                    </h1><br>
+                    <!-- Text -->
+                    <p class="display-3 lead text-secondary text-md-left">
+                        Short description of the database
+                    </p><br>
+
+                    <!-- Modal Learn More -->
+                                        <!-- Modal Learn More -->
+                    <div class="text-center text-md-left">
+                        <div class="button-learn">
+                            <button type="button" class="btn btn-primary btn-lg" role="button" data-toggle="modal" data-target="#exampleModalLong">
+                                Learn More
+                            </button>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>
+                              </div>
+                              <div class="modal-body">
+                                       <p>
+                                           Cras mattis consectetur purus sit amet fermentum.Cras justo<br>
+                                           odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>
+                                           porta ac consectetur ac, vestibulum at eros.
+                                       </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--<div class="col-12 col-lg-6">-->
+                    <!-- Image of LGIM -->
+                    <!--<img width="300" height="auto" src="\static\img\world_blue.png" class="img-fluid d-none d-lg-block">-->
+                <!--</div>-->
+            </div>
+          </div>    <!-- / .container -->
+        </div>  <!-- / .section -->
+        <!--#endregion -->
+    </body>         <!-- / .body -->
+{% endblock %}
