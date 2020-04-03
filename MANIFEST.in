@@ -1,0 +1,7 @@
+recursive-include liabilityhub/doc *
+recursive-include liabilityhub/bin *
+recursive-include liabilityhub/xladdins *
+recursive-include liabilityhub/output/templates *
+include requirements*.*
+prune .git
+prune venv
