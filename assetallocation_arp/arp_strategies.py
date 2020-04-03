@@ -1,9 +1,8 @@
 import xlwings as xw
-import assetallocation_arp.data_etl.import_data as gd
-import assetallocation_arp.models.times as times
-import sys
+import data_etl.import_data as gd
+import models.times as times
 import os
-from assetallocation_arp.enum import models_names as models
+from common_libraries import models_names as models
 
 
 def run_model(model_type, mat_file=None, input_file=None):
@@ -85,5 +84,5 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-	# get_inputs_from_excel()
-	sys.exit(get_inputs_from_python(get_input_user()))
+	get_inputs_from_excel()
+	# sys.exit(get_inputs_from_python(get_input_user()))
