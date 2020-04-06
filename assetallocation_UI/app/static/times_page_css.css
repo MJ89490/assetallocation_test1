@@ -83,7 +83,7 @@ body {
 
 .widget {
             background-color: #fff;
-            border-radius: 3px;
+            border-radius: 15px;
         }
 
 .widget-chart-container { position: relative; }

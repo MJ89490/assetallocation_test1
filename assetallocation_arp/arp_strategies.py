@@ -4,7 +4,7 @@ import models.times as times
 import sys
 import os
 
-from assetallocation_arp.enum import models_names as models
+from common_libraries.models_names import Models as models
 
 
 def run_model(model_type, mat_file=None, input_file=None):

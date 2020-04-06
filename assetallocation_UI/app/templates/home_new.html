@@ -6,7 +6,6 @@
         <!-- HOME PAGE CSS STYLE
         ================================================== -->
         <link rel="stylesheet" href="{{url_for('.static', filename='home_css_new.css')}}">
-
     </head>
 
     <!-- Body of the Home Page -->
@@ -15,57 +14,107 @@
         <!-- ASSET ALLOCATION HOME PAGE
         ================================================== -->
         <div class="be-content">
-          <div class="container">
-            <div class="row">
-                <div class="col-12 col-lg-6" id="text-home">
-                    <!-- Heading -->
-                    <h1 class="display-3 text-md-left">
-                        Asset Allocation ARP<span class="text-database"> <strong>Models</strong></span>.
-                    </h1><br>
-                    <!-- Text -->
-                    <p class="display-3 lead text-secondary text-md-left">
-                        Short description of the database
-                    </p><br>
+            <div class="container-fluid">
+                <!--<div class="row">-->
+                        <!--<div class="col-12 col-lg-8" id="text-home">-->
+                            <!--<div class="widget widget-fullwidth be-loading">-->
+                                <!--<div class="widget-container">-->
+                                    <!--&lt;!&ndash; Heading &ndash;&gt;-->
+                                <!--<h1 class="display-3 text-center">-->
+                                    <!--Asset Allocation ARP<span class="text-database"> <strong>Models</strong></span>.-->
+                                <!--</h1><br>-->
+                                <!--&lt;!&ndash; Text &ndash;&gt;-->
+                                <!--<p class="display-3 lead text-secondary text-center">-->
+                                    <!--Short description of the database-->
+                                <!--</p><br>-->
 
-                    <!-- Modal Learn More -->
-                                        <!-- Modal Learn More -->
-                    <div class="text-center text-md-left">
-                        <div class="button-learn">
-                            <button type="button" class="btn btn-primary btn-lg" role="button" data-toggle="modal" data-target="#exampleModalLong">
-                                Learn More
-                            </button>
-                        </div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>
+                                <!--&lt;!&ndash; Modal Learn More &ndash;&gt;-->
+                                <!--&lt;!&ndash; Modal Learn More &ndash;&gt;-->
+                                <!--<div class="text-center text-md-left">-->
+                                <!--<div class="button-learn">-->
+                                    <!--<button type="button" class="btn btn-primary btn-lg" role="button" data-toggle="modal" data-target="#exampleModalLong">-->
+                                        <!--Learn More-->
+                                    <!--</button>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; Modal &ndash;&gt;-->
+                                <!--<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">-->
+                                  <!--<div class="modal-dialog" role="document">-->
+                                    <!--<div class="modal-content">-->
+                                      <!--<div class="modal-header">-->
+                                        <!--<h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>-->
+                                      <!--</div>-->
+                                      <!--<div class="modal-body">-->
+                                               <!--<p>-->
+                                                   <!--Cras mattis consectetur purus sit amet fermentum.Cras justo<br>-->
+                                                   <!--odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>-->
+                                                   <!--porta ac consectetur ac, vestibulum at eros.-->
+                                               <!--</p>-->
+                                      <!--</div>-->
+                                      <!--<div class="modal-footer">-->
+                                        <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                                      <!--</div>-->
+                                    <!--</div>-->
+                                  <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                                <!--</div>-->
+
+                            <!--</div>&lt;!&ndash; /. div &ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="col-12 col-lg-4">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="widget widget-fullwidth be-loading">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="widget-container">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;&lt;!&ndash;Image of LGIM&ndash;&gt;&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<img width="300" height="auto" src="\static\img\world_blue.png" class="img-fluid d-none d-lg-block">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--</div>-->
+                <!--</div>-->
+              <div class="row">
+                  <div class="col-12 col-lg-12">
+                      <div class="widget widget-fullwidth be-loading">
+                              <div class="widget-chart-container">
+                                  <p class="last-run-text">
+                                      <i>Last Run: 14/02/2020</i>
+                                  </p>
+                                   <div align="center">
+                                       <img id="icon-model-page" src="/static/img/bar_chart_3.png">
+                                        <h2 class="overview-title"><strong><span class="overview-span">TIMES</span> Model</strong></h2>
+
+                                   </div>
                               </div>
-                              <div class="modal-body">
-                                       <p>
-                                           Cras mattis consectetur purus sit amet fermentum.Cras justo<br>
-                                           odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>
-                                           porta ac consectetur ac, vestibulum at eros.
-                                       </p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                              </div>
+                      </div>
+                  </div>
+
+              </div>
+                <div class="row">
+                    <!--#region Times Model -->
+                    <div class="col-12 col-lg-12">
+                        <div class="widget widget-fullwidth be-loading">
+                            <div class="widget-container">
+                                <!-- Icon -->
+                                {% include 'modelsIcons.html' %}
+                                <!-- Heading -->
+                                <h3>
+                                    <a class="link-model" href="{{ url_for('times_page')}}" >TIMES Model</a>
+                                </h3>
+                                <!-- Text -->
+                                <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the Times model.
+                                </p>
                             </div>
-                          </div>
                         </div>
                     </div>
-
+                    <!--#endregion -->
                 </div>
 
-                <!--<div class="col-12 col-lg-6">-->
-                    <!-- Image of LGIM -->
-                    <!--<img width="300" height="auto" src="\static\img\world_blue.png" class="img-fluid d-none d-lg-block">-->
-                <!--</div>-->
             </div>
-          </div>    <!-- / .container -->
-        </div>  <!-- / .section -->
-        <!--#endregion -->
-    </body>         <!-- / .body -->
+        </div>
+        <footer class="footer">
+                <div class="container-fluid text-center">
+                    <span class="text-muted">© Legal & General 2020</span>
+                </div>
+            </footer><!-- /.footer -->
+    </body><!-- / .body -->
 {% endblock %}

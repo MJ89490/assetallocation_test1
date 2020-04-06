@@ -1,7 +1,7 @@
 # Contains view functions for various URLs
 import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
-from assetallocation_arp.enum import models_names
+from common_libraries.models_names import Models
 from flask import render_template
 from flask import flash
 from flask import url_for
@@ -118,7 +118,7 @@ def times_page():
             path_excel_times = path_excel + "\\" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={models_names.Models.times.name:
+                write_output_to_excel(model_outputs={Models.times.name:
                                                     (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
                                       path_excel_times=path_excel_times)
 

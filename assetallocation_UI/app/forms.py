@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
-from assetallocation_arp.enum import leverage_types
-from assetallocation_arp.enum import frequency_types
+from common_libraries.leverage_types import Leverage
+from common_libraries.frequency_types import Frequency
 
 """
 User login form
@@ -22,10 +22,10 @@ class ExportDataForm(FlaskForm):
 
     submit_ok_versions = SubmitField('Ok')
 
-    leverage = SelectField('Leverage Types', choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name ),
-                                                      (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
-                                                      (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
-                                                      (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
+    leverage = SelectField('Leverage Types', choices=[(Leverage.v.name, Leverage.v.name ),
+                                                      (Leverage.n.name, Leverage.n.name),
+                                                      (Leverage.s.name, Leverage.s.name),
+                                                      (Leverage.e.name, Leverage.e.name)])
     submit_ok_leverage = SubmitField('Ok')
 
     inputs = SelectField('Inputs', choices=[('TIMES Signals', 'Signals'), ('TIMES Returns', 'Returns'), ('TIMES Positions','Positions')])
@@ -70,10 +70,10 @@ class InputsTimesModel(FlaskForm):
     strategy_weight = StringField(u'Strategy Notional', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
     leverage_type = SelectField('Leverage Type',
-                                choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name),
-                                        (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
-                                        (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
-                                        (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
+                                choices=[(Leverage.v.name, Leverage.v.name),
+                                        (Leverage.n.name, Leverage.n.name),
+                                        (Leverage.s.name, Leverage.s.name),
+                                        (Leverage.e.name, Leverage.e.name)])
     volatility_window = StringField(u'Volatility Window', validators=[DataRequired(message="The volatility window is required")])
     sig1_short = StringField(u'Sigma1 short', validators=[DataRequired(message="The Sigma1 short is required")])
     sig1_long = StringField(u'Sigma1 long', validators=[DataRequired(message="The Sigma1 long is required")])
@@ -83,9 +83,9 @@ class InputsTimesModel(FlaskForm):
     sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
 
     frequency = SelectField('Frequency',
-                            choices=[(frequency_types.Frequency.weekly.name, frequency_types.Frequency.weekly.name),
-                                     (frequency_types.Frequency.monthly.name, frequency_types.Frequency.monthly.name),
-                                     (frequency_types.Frequency.daily.name, frequency_types.Frequency.daily.name),
+                            choices=[(Frequency.weekly.name, Frequency.weekly.name),
+                                     (Frequency.monthly.name, Frequency.monthly.name),
+                                     (Frequency.daily.name, Frequency.daily.name),
                                      ])
 
     week_day = SelectField('Week Day',
