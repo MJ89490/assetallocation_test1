@@ -31,11 +31,11 @@ setup(
     ],
 
     name="assetallocation_arp",
-    # version="0.0.1",
-    version_config={
-      "version_format": "{tag}.dev{sha}",
-      "starting_version": "0.0.1"
-    },
+    version="0.0.4",
+    #version_config={
+    #  "version_format": "{tag}.dev{sha}",
+    #  "starting_version": "0.0.4"
+    #},
     description="sist[3~[3~[3~[3~[3~",
     long_description=open('README.md').read(),
     packages=find_packages("assetallocation_arp"),
