@@ -30,7 +30,7 @@ def before_request():
 @app.route('/')
 @app.route('/home_new')
 def home_new():
-    return render_template('home_new.html', title='HomePage')
+    return render_template('home.html', title='HomePage')
 
 
 @app.route('/login', methods=['GET'])

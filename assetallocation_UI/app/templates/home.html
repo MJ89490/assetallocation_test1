@@ -5,205 +5,210 @@
     <head>
         <!-- HOME PAGE CSS STYLE
         ================================================== -->
-        <link rel="stylesheet" href="{{url_for('.static', filename='home_css.css')}}">
-
+        <link rel="stylesheet" href="{{url_for('.static', filename='home.css')}}">
     </head>
 
     <!-- Body of the Home Page -->
-    <body data-aos-easing="ease-out-quad" data-aos-duration="700" data-aos-delay="0">
+    <body>
         <!--#region Main Home Text  -->
         <!-- ASSET ALLOCATION HOME PAGE
         ================================================== -->
-        <section class="pt-4 pt-md-11" id="section-1">
-          <div class="container">
-            <div class="row justify-content-lg-between align-items-lg-center py-5" id="items-center">
-                <div class="col-12 col-md-7 col-lg-8 order-md-1 text-center text-lg-left" id="text-home">
-                    <!-- Heading -->
-                    <h1 class="display-3 text-center text-md-left">
-                        Asset Allocation ARP<span class="text-database"> Models</span>.
-                    </h1><br>
-                    <!-- Text -->
-                    <p class="lead text-secondary mb-4">
-                        Build a beautiful, modern website with flexible Bootstrap components built from scratch.
-                    </p><br>
+        <div class="be-content">
+            <div class="main-content container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                      <div class="widget widget-fullwidth be-loading">
+                          <div class="widget-container">
+                              <!-- Heading -->
+                              <h1 class="display-3 text-center">
+                                  Asset Allocation ARP<span class="text-database"> Models</span>.
+                              </h1>
+                              <!-- Text -->
+                              <p class="lead text-secondary mb-4 text-center">
+                                Build a beautiful, modern website with flexible Bootstrap components built from scratch.
+                              </p>
+                              <!-- Modal Learn More -->
+                              <div class="text-center text-md-left">
+                                  <div class="button-learn">
+                                    <button type="button" class="btn btn-primary btn-lg" role="button" data-toggle="modal" data-target="#exampleModalLong">
+                                        Learn More
+                                    </button>
+                                  </div>
 
-                    <!-- Modal Learn More -->
-                    <div class="text-center text-md-left">
-                        <div class="button-learn">
-                            <button type="button" class="btn btn-primary btn-lg" role="button" data-toggle="modal" data-target="#exampleModalLong">
-                                Learn More
-                            </button>
-                        </div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h5 class="modal-title" id="exampleModalLongTitle">Learn More about the Database</h5>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <p>
+                                                       Cras mattis consectetur purus sit amet fermentum.Cras justo<br>
+                                                       odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>
+                                                       porta ac consectetur ac, vestibulum at eros.
+                                                  </p>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
                               </div>
-                              <div class="modal-body">
-                                       <p>
-                                           Cras mattis consectetur purus sit amet fermentum.Cras justo<br>
-                                           odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,<br>
-                                           porta ac consectetur ac, vestibulum at eros.
-                                       </p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                              </div>
-                            </div>
                           </div>
-                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                      <div class="widget widget-fullwidth-img be-loading">
+                          <div class="widget-chart-container">
+                              <!-- Image of LGIM -->
+                              <img width="300" height="auto" src="\static\img\world_blue.png" class="img-fluid d-none d-lg-block">
+                          </div>
+                      </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-5 col-lg-4 order-md-1">
-                    <!-- Image of LGIM -->
-                    <img width="300" height="auto" src="\static\img\world_blue.png" class="img-fluid d-none d-lg-block">
+
+                <div class="row">
+                    <div class="col-12 col-lg-3">
+                        <div class="widget widget-fullwidth-model be-loading">
+                            <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="{{ url_for('times_page')}}" >TIMES Model</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the Times model.
+                              </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="widget widget-fullwidth-model be-loading">
+                          <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="#" >MAVEN Model</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the Maven model.
+                              </p>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="widget widget-fullwidth-model be-loading">
+                          <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="#" >EFFECT Model</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the Effect model.
+                              </p>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="widget widget-fullwidth-model be-loading">
+                          <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="#" >CURP Model</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the Curp model.
+                              </p>
+                          </div>
+                      </div>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-12 col-lg-3">
+                        <div class="widget widget-fullwidth-model be-loading">
+                            <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="{{ url_for('times_page')}}" >FICA Model</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the FICA model.
+                              </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="widget widget-fullwidth-model be-loading">
+                          <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="#" >FACTOR Model</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the FACTOR model.
+                              </p>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="widget widget-fullwidth-model be-loading">
+                          <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="#" >COMCA Model</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the COMCA model.
+                              </p>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="widget widget-fullwidth-model be-loading">
+                          <div class="widget-container text-center">
+                              <!-- Icon -->
+                              {% include 'modelsIcons.html' %}
+                              <!-- Heading -->
+                              <h3>
+                                  <a class="link-model" href="#" >Consolidation Page</a>
+                              </h3>
+                              <!-- Text -->
+                              <p class="text-muted mb-6 mb-md-0">
+                                    Short description of the Consolidation Page.
+                              </p>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+
             </div>
-          </div>    <!-- / .container -->
-        </section>  <!-- / .section -->
-        <!--#endregion -->
-
-        <!--#region Display all the available models  -->
-        <section class="py-8 py-md-11 border-bottom">
-          <div class="container">
-              <div class="row" id="row1">
-                <!--#region Times Model -->
-                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        <a class="link-model" href="{{ url_for('times_page')}}" >TIMES Model</a>
-                    </h3>
-                    <!-- Text -->
-                    <p class="text-muted mb-6 mb-md-0">
-                        Short description of the Times model.
-                    </p>
-                </div>
-                <!--#endregion -->
-
-                <!--#region Maven Model -->
-                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="50">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        <a class="link-model" href="#">MAVEN Model</a>
-                    </h3>
-                      <!-- Modal Maven Model -->
-                    {% include 'mavenModal.html' %}
-                    <!-- Text -->
-                    <p class="text-muted mb-6 mb-md-0">
-                      Short description of the Maven model.
-                    </p>
-                </div>
-                <!--#endregion -->
-
-                <!--#region Effect Model -->
-                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        <a class="link-model" href="#">EFFECT Model</a>
-                    </h3>
-                    <!-- Text -->
-                    <p class="text-muted mb-0">
-                       Short description of the Effect model.
-                    </p>
-                </div>
-                <!--#endregion-->
-
-                <!--#region Curp Model-->
-              <br><div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        <a class="link-model" href="#">CURP Model</a>
-                    </h3>
-                    <!-- Text -->
-                    <p class="text-muted mb-0">
-                       Short description of the Curp model.
-                    </p>
-                  </div>
-                <!--#endregion-->
-
-                <!--#region Fica Model-->
-                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        <a class="link-model" href="#">FICA Model</a>
-                    </h3>
-                    <!-- Text -->
-                    <p class="text-muted mb-0">
-                       Short description of the Fica model.
-                    </p>
-                </div>
-                <!--#endregion-->
-
-                <!--#region Factor Model-->
-                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        <a class="link-model" href="#">FACTOR Model</a>
-                    </h3>
-                    <!-- Text -->
-                    <p class="text-muted mb-0">
-                        Short description of the Factor model.
-                    </p>
-                </div>
-                <!--#endregion-->
-
-                <!--#region Comca Model-->
-                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        <a class="link-model" href="#">COMCA Model</a>
-                    </h3>
-                    <!-- Text -->
-                    <p class="text-muted mb-0">
-                       Short description of the Comca model.
-                    </p>
-                </div>
-                <!--#endregion-->
-
-                <!--#region Consolidation Page-->
-                <div class="col-12 col-md-4 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                    <!-- Icon -->
-                    {% include 'modelsIcons.html' %}
-                    <!-- Heading -->
-                    <h3>
-                        Consolidation Page
-                    </h3>
-                    <!-- Modal Consolidation Page -->
-                    {% include 'consolidationModal.html' %}
-                    <!-- Text -->
-                    <p class="text-muted mb-0">
-                       Short description of the Consolidation Page.
-                    </p>
-                </div>
-                <!--#endregion-->
-            </div>  <!-- / .row -->
-
-          </div>    <!-- / .container -->
-
-            <footer class="footer py-3" id="container-footer">
-                <div class="container" align="center">
-                    <span class="text-muted">© Legal & General 2020</span>
-                </div>
-            </footer><!-- .footer -->
-        </section>  <!-- / .section -->
-        <!-- FOOTER
-        ===================================== !-->
-
-    </body>         <!-- / .body -->
+        </div>
+        <footer class="footer">
+            <div class="container-fluid text-center">
+                <span class="text-muted">© Legal & General 2020</span>
+            </div>
+        </footer><!-- /.footer -->
+    </body><!-- / .body -->
 {% endblock %}
