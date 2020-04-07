@@ -29,7 +29,7 @@ body {
         position: relative;
       }
 
-.main-content {padding-top: 160px; }
+.main-content {padding-top: 100px; }
 
 .container-fluid {
                     width: 100%;
@@ -45,7 +45,9 @@ body {
         display: flex;
         margin-right: -15px;
         margin-left: -15px;
-        padding-bottom: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        background-color: white;
      }
 
 #row-inputs-save {padding-bottom: 50px; }
@@ -61,10 +63,25 @@ body {
 .widget.widget-fullwidth  {
                             margin-bottom: 0;
                             margin-top: 10px;
+                            padding-top: 30px;
                             background-color: #fff;
-                            height:400px;
+                            height:300px;
                           }
 
+.widget.widget-fullwidth-img  {
+                            margin-bottom: 0;
+                            margin-top: 10px;
+                            background-color: #fff;
+                            height:300px;
+                          }
+
+.widget-fullwidth-model {
+
+                            margin-bottom: 0;
+                            margin-top: 10px;
+                            background-color: #fff;
+                            height:150px;
+                          }
 .widget-head {
                 padding: 20px 20px 10px;
                 margin-bottom: 0;
@@ -77,39 +94,7 @@ body {
             border-radius: 15px;
         }
 
-.widget-chart-container { position: relative; }
-
-/* buttons */
-#btn-group-versions, #btn-group-submit-versions {width: 190px; }
-
-.btn-primary {background-color:#007faa; border-color:#007faa; color:#fff; }
-
-.btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
-{
-background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
-}
-
-.btn {font-size: .875rem; letter-spacing: 1px; text-transform: uppercase;}
-
-.btn, .btn-lg{ padding: 10px 16px; font-size:12px; line-height:1.3333; height: 35px; }
-
-.btn-primary {color: #fff; background-color: #007faa; border-color: #007faa; box-shadow: 0 7px 16px 0 rgba(0,0,0,.2); }
-
-.btn-dashboard {padding: 10px 16px; font-size:12px; line-height:1.3333; height: 35px; width: 300px; }
-
-.btn-group {padding-bottom: 15px; }
-
-#button-submit2, #button-submit3 {padding-top: 20px; }
-
-#selectInputDatesChartSubmit1, #selectVersionId {margin-bottom: 20px; }
-
-#btn-group-inputs-model-leverage{text-align: center; color: #D3D3D3; padding-left: 40px; }
-
-.dashboard-btn {padding-bottom: 30px; width: 300px; }
-
-
-/* dropdown boxes */
-.dropdown-menu, .dropdown-item { color: black; text-align: center; }
+.widget-container { position: relative; }
 
 /* text-titles */
 .overview-span { color: #007faa; }
@@ -131,9 +116,6 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 #text-field-path { width: 190px; }
 
 #text-field-name-file { width: 130px; }
-
-
-
 
 /* footer */
 .footer { background-color: #fff; bottom:0; position:fixed; width:100%; }
@@ -171,36 +153,25 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
                                  height: 530px;
                               }
 
-#SelectPathSubmit3 {padding-top: 20px; }
+/* text-titles */
+.text-database {color: #007faa;}
 
-/*buttons */
-#dashboard-btn {margin-top: 55px; }
-#btn-group-inputs-model{text-align: center; color: #D3D3D3; }
-#btn-group-inputs-model-leverage {padding-left: 85px; }
-#btn-group-inputs-model-frequency {text-align: center; color: #D3D3D3; padding-left: 65px; }
-#btn-group-inputs-model-week {text-align: center; color: #D3D3D3; padding-left: 65px; }
-#RunTheModelSubmit2{margin-top: 10px; }
-#text-field-name-file{padding-bottom: 5px; }
-#check-box-save-excel{padding-bottom: 5px; }
-#check-box-save-db {padding-left: 46.5px; }
-#btn-group-signals{margin-left: 20px; }
-#SelectSaveSubmit4 {margin-bottom: 20px; }
-/* text-title */
-#label_text{color:#007faa;}
-#form-control-path-save {color: #808080}
+.link-model {color: #333;}
 
-/* ----------------------------- */
+.link-model:visited {color: #333; text-decoration: none; outline: none;}
 
-/* Times Page AG GRID */
+.link-model:hover {color: #333;}
 
-/* Assets Inputs Table */
+.link-model:active {color: #333; text-decoration: none; outline: none;}
 
-#onAddRow, #onRemoveSelected, #clearData {margin-top: 12px;  }
-.ag-header-cell-label {
-   justify-content: center;
-   color: #007faa;
-}
+.link-model:focus {color: #333; text-decoration: none; outline: none;}
 
+.text-lg-left {text-align: left!important;}
+
+.text-secondary {color: #656e79!important;}
+
+p {display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px;
+   margin-inline-end: 0px; }
 
 
 

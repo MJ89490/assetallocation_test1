@@ -45,7 +45,7 @@
                         </button>
                     </div>
                     <div class="collapse navbar-collapse pull-left">
-                        <a href="{{ url_for('home') }}">
+                        <a href="{{ url_for('home_new') }}">
                             <img width="90px" height="auto" id="icon-lgim" alt="Legal and General" src="/static/img/icon-lgim.png">
                         </a>
                     </div>
@@ -53,7 +53,7 @@
                     <div class="collapse navbar-collapse pull-right" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                                 <li class="nav-link active">
-                                    <a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
+                                    <a class="nav-link" href="{{ url_for('home_new') }}">Home<span class="sr-only">(current)</span></a></li>
                                     <!-- User is log-in -->
                                     {% if g.user.is_authenticated %}
                                     <li class="nav-item dropdown">

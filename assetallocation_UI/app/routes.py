@@ -28,8 +28,8 @@ def before_request():
 
 
 @app.route('/')
-@app.route('/home')
-def home():
+@app.route('/home_new')
+def home_new():
     return render_template('home_new.html', title='HomePage')
 
 
