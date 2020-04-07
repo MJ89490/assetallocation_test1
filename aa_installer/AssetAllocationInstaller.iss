@@ -11,12 +11,12 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{E01627F1-0313-46A7-A34D-5C94A71A9BC8}
+AppId={{216C3833-AD3F-45A2-BFC3-13EEF046FBD5}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName=h:\AssetAllocation_Installer
+DefaultDirName=H:\AssetAllocation_Installer\
 DisableProgramGroupPage=yes
 InfoBeforeFile=S:\Shared\IT\Nexus\aa_installer\Scripts\README.md
 ; Remove the following line to run in administrative install mode (install for all users.)
