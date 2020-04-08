@@ -50,19 +50,14 @@ body {
 
 #row-inputs-save {padding-bottom: 50px; }
 
-@media (min-width: 768px)
-.col-md-12 {
-                -webkit-box-flex: 0;
-                flex: 0 0 100%;
-                max-width: 100%;
-           }
-
 /* widgets */
 .widget.widget-fullwidth  {
                             margin-bottom: 0;
                             margin-top: 10px;
-                            background-color: #fff;
+                            padding-top: 10px;
+                            background-color: #EBF4FA;
                             height:400px;
+                            width: 380px;
                           }
 
 .widget-head {
@@ -77,7 +72,7 @@ body {
             border-radius: 15px;
         }
 
-.widget-chart-container { position: relative; }
+.widget-container { position: relative; }
 
 /* buttons */
 #btn-group-versions, #btn-group-submit-versions {width: 190px; }

@@ -60,12 +60,6 @@ def login_post():
     return redirect(url_for('login'))
 
 
-@app.route('/selection_models')
-@login_required
-def protected_models():
-    return render_template('selection_models.html', title="Models")
-
-
 @app.route('/times_page',  methods=['GET', 'POST'])
 @login_required
 def times_page():
@@ -126,108 +120,6 @@ def times_page():
             return render_template('times_page_new_version_layout.html', title="Times", form=form, save=save)
 
     return render_template('times_page.html', title="Times", form=form)
-
-
-@app.route('/times_overview')
-@login_required
-def times_overview():
-
-    times_data = read_data_from_excel()
-
-    signals, positions, performance_weekly, performance_ytd,\
-        sum_positions_equities, sum_positions_bonds, sum_positions_fx,\
-        sum_performance_weekly_equities, sum_performance_weekly_bonds, \
-        sum_performance_weekly_fx, sum_performance_ytd_equities, \
-        sum_performance_ytd_bonds, sum_performance_ytd_fx = data_table_times(times_data=times_data)
-
-    positions_us_equities_sparklines, positions_eu_equities_sparklines, positions_jp_equities_sparklines,\
-    positions_hk_equities_sparklines, positions_us_bonds_sparklines, positions_uk_bonds_sparklines, \
-    positions_eu_bonds_sparklines, positions_ca_bonds_sparklines, positions_jpy_sparklines, \
-    positions_eur_sparklines, positions_aud_sparklines, positions_cad_sparklines, \
-    positions_gbp_sparklines = data_sparklines_charts(times_data=times_data)
-
-    return render_template('times_overview.html', title="Times",
-                           sum_positions_equities=sum_positions_equities,
-                           sum_positions_bonds=sum_positions_bonds,
-                           sum_positions_fx=sum_positions_fx,
-                           sum_performance_weekly_equities=sum_performance_weekly_equities,
-                           sum_performance_weekly_bonds=sum_performance_weekly_bonds,
-                           sum_performance_weekly_fx=sum_performance_weekly_fx,
-                           sum_performance_ytd_equities=sum_performance_ytd_equities,
-                           sum_performance_ytd_bonds=sum_performance_ytd_bonds,
-                           sum_performance_ytd_fx=sum_performance_ytd_fx,
-                           signals_us_equities=signals['US Equities'],
-                           signals_eu_equities=signals['EU Equities'],
-                           signals_jp_equities=signals['JP Equities'],
-                           signals_hk_equities=signals['HK Equities'],
-                           signals_us_bonds=signals['US 10y Bonds'],
-                           signals_uk_bonds=signals['UK 10y Bonds'],
-                           signals_eu_bonds=signals['Eu 10y Bonds'],
-                           signals_ca_bonds=signals['CA 10y Bonds'],
-                           signals_jpy=signals['JPY'],
-                           signals_eur=signals['EUR'],
-                           signals_aud=signals['AUD'],
-                           signals_cad=signals['CAD'],
-                           signals_gbp=signals['GBP'],
-
-                           positions_us_equities=positions['US Equities.2'],
-                           positions_eu_equities=positions['EU Equities.2'],
-                           positions_jp_equities=positions['JP Equities.2'],
-                           positions_hk_equities=positions['HK Equities.2'],
-                           positions_us_bonds=positions['US 10y Bonds.2'],
-                           positions_uk_bonds=positions['UK 10y Bonds.2'],
-                           positions_eu_bonds=positions['Eu 10y Bonds.2'],
-                           positions_ca_bonds=positions['CA 10y Bonds.2'],
-                           positions_jpy=positions['JPY.2'],
-                           positions_eur=positions['EUR.2'],
-                           positions_aud=positions['AUD.2'],
-                           positions_cad=positions['CAD.2'],
-                           positions_gbp=positions['GBP.2'],
-
-                           performance_us_equities=performance_weekly['US Equities.1'],
-                           performance_eu_equities=performance_weekly['EU Equities.1'],
-                           performance_jp_equities=performance_weekly['JP Equities.1'],
-                           performance_hk_equities=performance_weekly['HK Equities.1'],
-                           performance_us_bonds=performance_weekly['US 10y Bonds.1'],
-                           performance_uk_bonds=performance_weekly['UK 10y Bonds.1'],
-                           performance_eu_bonds=performance_weekly['Eu 10y Bonds.1'],
-                           performance_ca_bonds=performance_weekly['CA 10y Bonds.1'],
-                           performance_jpy=performance_weekly['JPY.1'],
-                           performance_eur=performance_weekly['EUR.1'],
-                           performance_aud=performance_weekly['AUD.1'],
-                           performance_cad=performance_weekly['CAD.1'],
-                           performance_gbp=performance_weekly['GBP.1'],
-
-                           performance_ytd_us_equities=performance_ytd['US Equities.1'],
-                           performance_ytd_eu_equities=performance_ytd['EU Equities.1'],
-                           performance_ytd_jp_equities=performance_ytd['JP Equities.1'],
-                           performance_ytd_hk_equities=performance_ytd['HK Equities.1'],
-                           performance_ytd_us_bonds=performance_ytd['US 10y Bonds.1'],
-                           performance_ytd_uk_bonds=performance_ytd['UK 10y Bonds.1'],
-                           performance_ytd_eu_bonds=performance_ytd['Eu 10y Bonds.1'],
-                           performance_ytd_ca_bonds=performance_ytd['CA 10y Bonds.1'],
-                           performance_ytd_jpy=performance_ytd['JPY.1'],
-                           performance_ytd_eur=performance_ytd['EUR.1'],
-                           performance_ytd_aud=performance_ytd['AUD.1'],
-                           performance_ytd_cad=performance_ytd['CAD.1'],
-                           performance_ytd_gbp=performance_ytd['GBP.1'],
-
-                           us_equities_sparklines=positions_us_equities_sparklines,
-                           positions_eu_equities_sparklines=positions_eu_equities_sparklines,
-                           positions_jp_equities_sparklines=positions_jp_equities_sparklines,
-                           positions_hk_equities_sparklines=positions_hk_equities_sparklines,
-                           positions_us_bonds_sparklines=positions_us_bonds_sparklines,
-                           positions_uk_bonds_sparklines=positions_uk_bonds_sparklines,
-                           positions_eu_bonds_sparklines=positions_eu_bonds_sparklines,
-                           positions_ca_bonds_sparklines=positions_ca_bonds_sparklines,
-                           positions_jpy_sparklines=positions_jpy_sparklines,
-                           positions_eur_sparklines=positions_eur_sparklines,
-                           positions_aud_sparklines=positions_aud_sparklines,
-                           positions_cad_sparklines=positions_cad_sparklines,
-                           positions_gbp_sparklines=positions_gbp_sparklines
-
-
-                           )
 
 
 @app.route('/times_dashboard', methods=['GET', 'POST'])
@@ -426,6 +318,7 @@ def times_dashboard():
 
 
                            )
+
 
 @app.route('/logout')
 @login_required
