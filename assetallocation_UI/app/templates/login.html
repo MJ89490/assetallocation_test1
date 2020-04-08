@@ -6,72 +6,60 @@
 <head>
      <!-- LOGIN PAGE CSS STYLE
      ================================================== -->
-    <link rel="stylesheet" href="{{url_for('.static', filename='login_page.css')}}">
-    <style type="text/css">
-        .container {margin-top: 230px; }
-    </style>
+    <link rel="stylesheet" href="{{url_for('.static', filename='login.css')}}">
 </head>
 
 <!-- Body of the Login Page -->
 <body>
     <!-- ASSET ALLOCATION LOGIN PAGE
     ================================================== -->
-    <div class="container">
-        <div class="row" style="height: 100px;">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4 my-1">
-                <div class="text-center">
-                    <!-- If the user has the wrong credentials, then a message will be displayed -->
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            <div class="notification is-danger">
-                                {{ messages[0] }}
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                    <!-- Login Form -->
-                    <form class="center" action="/login" method="POST" novalidate>
-                        {{ form.hidden_tag() }}
-                        <!-- Image -->
-                        <img width="100" height="100" class="mb-4" alt="" src="\static\img\people-fill.svg" >
-                        <!-- Heading -->
-                        <div class="text"> <h2>Sign In</h2></div>
-                        <div class="form-group">
-                            <!-- Login: Username Field -->
-                            <p>
-                                {{ form.username(class="form-control", placeholder="UserName") }}<br>
-                                <!-- Display Alert Message when the username field is empty -->
-                                {% for error in form.username.errors %}
-                                    <div class="alert alert-danger" role="alert">
-                                        <span>{{ error }}</span>
+    <div class="be-content">
+        <div class="main-content container-fluid">
+            <div class="row">
+                <div class="col-12 col-lg-4"></div>
+                <div class="col-12 col-lg-4">
+                    <div class="widget widget-fullwidth be-loading">
+                        <div class="widget-container text-center text-center">
+                            <!-- Image -->
+                            <img class="img-sign-in" width="100" height="100" alt="" src="\static\img\people-fill.svg" >
+                            <!-- If the user has the wrong credentials, then a message will be displayed -->
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <div class="notification is-danger">
+                                        {{ messages[0] }}
                                     </div>
-                                {% endfor %}
-                            </p>
-                            <!-- Login: Password Field -->
-                            <p>
-                                {{ form.password(class="form-control", placeholder="Password") }}<br>
-                                <!-- Display Alert Message when the password field is empty -->
-                                {% for error in form.password.errors %}
-                                    <div class="alert alert-danger" role="alert">
-                                        <span>{{ error }}</span>
+                                {% endif %}
+                            {% endwith %}
+                            <!-- Login Form -->
+                            <form class="center" action="/login" method="POST" novalidate>
+                                {{ form.hidden_tag() }}
+                                 <!-- Heading -->
+                                <div class="text"> <h2>Sign In</h2></div>
+                                <div class="form-group">
+                                    <!-- Login: Username Field -->
+                                    <p>
+                                        {{ form.username(class="form-control text-center", placeholder="UserName") }}<br>
+                                    </p>
+                                    <!-- Login: Password Field -->
+                                    <p>
+                                        {{ form.password(class="form-control text-center", placeholder="Password") }}<br>
+                                    </p>
+                                    <div class="button-submit">
+                                        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button><br>
                                     </div>
-                                {% endfor %}
-                            </p>
-                            <div class="button-submit">
-                                <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button><br>
-                            </div>
+                                </div>
+                            </form><!-- .form -->
                         </div>
-                    </form><!-- .form -->
-                </div>
-                <footer class="footer py-3" id="container-footer">
-                    <div class="container" align="center">
-                        <span class="text-muted">© Legal & General 2020</span>
                     </div>
-                </footer><!-- .footer -->
+                </div>
             </div>
-            <div class="col-sm-4"></div>
         </div>
-    </div><!-- .container -->
+    </div>
+    <footer class="footer">
+        <div class="container-fluid text-center">
+            <span class="text-muted">© Legal & General 2020</span>
+        </div>
+    </footer><!-- /.footer -->
 <body><!-- .body -->
 {% endblock %}
 

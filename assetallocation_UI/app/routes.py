@@ -28,8 +28,8 @@ def before_request():
 
 
 @app.route('/')
-@app.route('/home_new')
-def home_new():
+@app.route('/hom')
+def home():
     return render_template('home.html', title='HomePage')
 
 
@@ -37,6 +37,7 @@ def home_new():
 def login():
     form = LoginForm()
     return render_template('login.html', title='LoginPage', form=form)
+
 
 @app.route('/login', methods=['POST'])
 def login_post():
@@ -48,7 +49,7 @@ def login_post():
         username = form.username.data
         password = form.password.data
 
-        if username != username_origin or password != password_origin:
+        if username != username_origin or password != password_origin or username == ' ' or password == ' ':
             flash('Please check your login details and try again.')
             return redirect(url_for('login'))
         else:
