@@ -29,7 +29,7 @@ body {
         position: relative;
       }
 
-.main-content {padding-top: 160px; }
+.main-content {padding-top: 140px; }
 
 .container-fluid {
                     width: 100%;
@@ -52,14 +52,18 @@ body {
 
 /* widgets */
 .widget.widget-fullwidth  {
-                            margin-bottom: 0;
-                            margin-top: 10px;
                             padding-top: 10px;
                             background-color: #EBF4FA;
                             height:400px;
                             width: 380px;
                           }
 
+.widget.widget-fullwidth-last-run  {
+                            padding-top: 5px;
+                            background-color: #EBF4FA;
+                            height:45px;
+                            width: 300px;
+                          }
 .widget-head {
                 padding: 20px 20px 10px;
                 margin-bottom: 0;
@@ -113,8 +117,6 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 #icon-model-page {padding-bottom: 12px;}
 
-.last-run-text {font-size: 20px; margin-left: 20px; padding-right: 55px; }
-
 .run-date-text {font-size: 15px; }
 
 .last-run-text, .run-date-text {display: inline; }
@@ -126,9 +128,6 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 #text-field-path { width: 190px; }
 
 #text-field-name-file { width: 130px; }
-
-
-
 
 /* footer */
 .footer { background-color: #fff; bottom:0; position:fixed; width:100%; }
@@ -151,18 +150,18 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 /* widgets */
 .widget.widget-fullwidth-inputs {
-                                    background-color: #F5F5F5;
+                                    background-color: #EBF4FA;
                                     height: 530px;
                                 }
 
 .widget.widget-fullwidth-save{
-                                background-color: #F8F8FF;
+                                background-color: #F5F5F5;
                                 height: 200px;
                                 width: 450px;
                                 }
 
 .widget-fullwidth-assetsInputs{
-                                 background-color: #F8F8FF;
+                                 background-color: #F5F5F5;
                                  height: 530px;
                               }
 

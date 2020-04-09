@@ -1,7 +1,7 @@
 {% extends "times_page.html" %}
 
 <head>
-    <link rel="stylesheet" href="{{url_for('.static', filename='times_page_new_version_css.css')}}">
+    <link rel="stylesheet" href="{{url_for('.static', filename='times_page_new_version.css')}}">
 </head>
 
 <body>
@@ -10,24 +10,24 @@
 
     <div class="title-assets"><h2>Model Assets</h2></div>
 
-    <div>
         <div>
-            <button class="btn btn-lg btn-primary" onclick="onAddRow()" id="onAddRow"><strong>Add Row</strong></button>
-            <button class="btn btn-lg btn-primary" onclick="onRemoveSelected()" id="onRemoveSelected"><strong>Remove Selected</strong></button>
-            <button class="btn btn-lg btn-primary" onclick="clearData()" id="clearData"><strong>Clear Data</strong></button>
+            <div>
+                <button class="btn btn-lg btn-primary" onclick="onAddRow()" id="onAddRow"><strong>Add Row</strong></button>
+                <button class="btn btn-lg btn-primary" onclick="onRemoveSelected()" id="onRemoveSelected"><strong>Remove Selected</strong></button>
+                <button class="btn btn-lg btn-primary" onclick="clearData()" id="clearData"><strong>Clear Data</strong></button>
+            </div>
         </div>
-    </div>
 
-    <div style="width: 1030px; height: 350px; ">
-        <div id="myGrid" style="height: 100%; margin-top: 20px; " class="ag-theme-balham"></div>
-    </div>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <div style="width: 1030px; height: 350px; ">
+            <div id="myGrid" style="height: 100%; margin-top: 20px; " class="ag-theme-balham"></div>
+        </div>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
   {% endblock %}
 
   {% block inputs %}
 
-  <div class="title-inputs"><h2>Model Inputs</h2></div>
+    <div class="title-inputs"><h2>Model Inputs</h2></div>
 
     <div class="form-group">
 
@@ -81,7 +81,7 @@
 
   {% endblock %}
 
- {% block save %}
+  {% block save %}
 
     <div class="text-field-path" id="text-field-name-file">
         {{form.name_file_times.label(id="label_text")}}

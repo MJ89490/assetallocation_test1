@@ -75,7 +75,7 @@ def times_page():
                                    version_type=version_type)
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
-            data = {
+            data = {                                                        #todo créer une fct pour ces données
                     form.time_lag.name: [int(form.time_lag.data)],
                     form.leverage_type.name: [form.leverage_type.data],
                     form.volatility_window.name: [int(form.volatility_window.data)],
@@ -102,8 +102,8 @@ def times_page():
                                                           ])
             STRATEGY = strategy_inputs
 
-            run_model = "run_model"
-            ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=models_names.Models.times.name)
+            run_model = "run_times_model"
+            ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
             return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model)
 
         elif request.form['submit_button'] == 'selectTimesPath':
