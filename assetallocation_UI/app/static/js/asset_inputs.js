@@ -1,10 +1,11 @@
 // Items in the table (columns)
+// TO AUTOMATE WITH THE DATABASE!!!
 var columnDefs = [
 
     {headerName: "Asset", field: "asset"},
     {headerName: "Signal Ticker", field: "signal_ticker"},
     {headerName: "Future Ticker", field: "future_ticker"},
-    {headerName: "  Costs", field: "costs"},
+    {headerName: "Costs", field: "costs"},
     {headerName: "S Leverage", field: "s_leverage"},
 ];
 

@@ -3,8 +3,8 @@ import os
 
 from datetime import timedelta
 
-PATH = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
 
+PATH = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
 #to create a class
 
 

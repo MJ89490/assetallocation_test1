@@ -7,6 +7,9 @@ from flask import flash
 from flask import url_for
 from flask import redirect
 from flask import request
+
+
+
 from app import app
 from app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
@@ -103,11 +106,14 @@ def times_page():
             STRATEGY = strategy_inputs
 
             run_model = "run_times_model"
+            model = "ok"
             ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
-            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model)
+
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, model=model)
 
         elif request.form['submit_button'] == 'selectTimesPath':
             save = "save"
+            save_file = "save_file"
             name_of_file = form.name_file_times.data + ".xls"
             path_excel = "C:\\Users\\AJ89720\\PycharmProjects" #todo change the default location later
             path_excel_times = path_excel + "\\" + name_of_file
@@ -117,7 +123,7 @@ def times_page():
                                                     (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
                                       path_excel_times=path_excel_times)
 
-            return render_template('times_page_new_version_layout.html', title="Times", form=form, save=save)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, save=save, save_file=save_file)
 
     return render_template('times_page.html', title="Times", form=form)
 

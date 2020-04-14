@@ -190,6 +190,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 /* Assets Inputs Table */
 
 #onAddRow, #onRemoveSelected, #clearData {margin-top: 12px;  }
+
 .ag-header-cell-label {
    justify-content: center;
    color: #007faa;
