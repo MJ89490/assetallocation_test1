@@ -216,7 +216,7 @@ def times_dashboard():
         elif request.form['submit_button'] == 'selectDataChart0':
             print('data data data')
 
-    return render_template('dashboard.html', form=form, m=m,
+    return render_template('dashboard_new.html', form=form, m=m,
 
                            # ------------------------------------- NEW -------------------------------------------------
                            us_equities_sparklines=positions_us_equities_sparklines,
