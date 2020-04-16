@@ -10,6 +10,8 @@
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <link rel="stylesheet" href="{{url_for('.static', filename='dashboard_css.css')}}">
 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <style type="text/css">
             #selectInputDatesChartIMGSubmit1 {padding-top: 5px; }
@@ -25,7 +27,7 @@ body {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: rgb(216, 214, 224);
+  background-color: #F5F5F5;
   overflow-x: hidden;
   padding-top: 100px;
 }
@@ -34,7 +36,7 @@ body {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: #818182;
   display: block;
 }
 
@@ -54,6 +56,11 @@ body {
   .sidenav a {font-size: 18px;}
 }
 .btn {font-size: .875rem; letter-spacing: 1px; text-transform: uppercase; width:190px; }
+
+#selectionStartDateChart{text-align: center; color: #D3D3D3; padding-left: 40px; }
+
+#selectToOkSubmit {background-color: #fff; border-color: #B0B0B0; color: #B0B0B0; width: 35px; height: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+#dates-row {margin-left: 5px; }
         </style>
 
     </head>
@@ -167,9 +174,7 @@ body {
 
                             <!-- Support Widget CREATE A BUTTON TO CLICK ON IT AND LINK TO OUTLOOK -->
                             <a>Support<span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png"></span></a>
-
                         </div>
-
 
                         <!-- CHARTS AREA
                         ===================================== !-->
@@ -798,10 +803,1458 @@ body {
                                      </div>
                                  </div>
                             </div>
+                            <!-- Total Performance Positions Chart-->
+                            <div class="row">
+                                <div class="col-12 col-lg-12">
+                                    <div class="widget widget-fullwidth be-loading" id="main-table-positions-performance-widget">
+                                        <div class="widget-head-overview"><strong>TIMES</strong></div>
+                                         <div class="widget-chart-container" id="table1-container">
+                                            <!-- Table1: Sign-Off -->
+                                             <div class="signal-off">
+                                                 <table class="table1 table1-borderless">
+                                                     <tbody class="no-border-x">
+                                                        <tr>
+                                                            <td id="signal-off-title">Signal-Off</td>
+                                                            <td id="signal-off-date"><strong>28/11/2019</strong></td>
+                                                        </tr>
+                                                     </tbody>
+                                                 </table>
+                                             </div>
+                                             <!-- Table2: Total Performance Positions Chart-->
+                                            <div class="row" id="table-sum-positions-performance-row">
+                                                <div class="col-6">
+                                                    <!-- Table2 and Table3 (2 sub-tables): Total Performance Positions -->
+                                                    <div class="total-positions-performance" id="total-positions-performance">
+                                                        <table class="table2 table2-borderless" >
+                                                            <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td><strong>Positions</strong></td>
+                                                                    <td><strong>Weekly Performance</strong></td>
+                                                                    <td><strong>YTD Performance</strong></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>{{ sum_positions_equities }}%</td>
+                                                                    <td>{{ sum_performance_weekly_equities }}%</td>
+                                                                    <td>{{ sum_performance_ytd_equities }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>{{ sum_positions_bonds }}%</td>
+                                                                    <td>{{ sum_performance_weekly_bonds }}%</td>
+                                                                    <td>{{ sum_performance_ytd_bonds }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>{{ sum_positions_fx }}%</td>
+                                                                    <td>{{ sum_performance_weekly_fx }}%</td>
+                                                                    <td>{{ sum_performance_ytd_fx }}%</td>
+                                                                </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </div><!-- .div total-table-container -->
+                                                    </div>
+                                                <div class="col-6">
+                                                    <div class="total-positions-bar-charts">
+                                                        <table class="table3 table3-borderless">
+                                                            <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td><strong>Positions</strong></td>
+                                                                    <td><strong>Weekly Performance</strong></td>
+                                                                    <td><strong>YTD Performance</strong></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="positions-tiny12">
+                                                                            <script>
+                                                                                    var xValue = [{{ sum_positions_fx }},
+                                                                                                  {{ sum_positions_bonds }},
+                                                                                                          {{ sum_positions_equities }}
+                                                                                                          ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+                                                                                                      textfont: {color: 'black'},
+                                                                                                      hoverinfo: 'none',
+                                                                                                      x: xValue,
+                                                                                                      marker: { color: '#009F4B'},
+                                                                                                       y: [    'FX',
+                                                                                                               'Bonds',
+                                                                                                                'Equities'
+                                                                                                             ],
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+                                                                                                      title:{
+                                                                                                       text: 'Weekly',
 
 
+                                                                                                       },
+
+                                                                                                      font: {size: 11},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: true,
+
+                                                                                                      },
+
+
+                                                                                                          width: 240,
+                                                                                                          height: 180,
+                                                                                                          margin: {
+                                                                                                            l: 48,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 20,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                                   };
+
+                                                                                     layout.title = {
+                                                                                      text: '',
+                                                                                      font: {
+                                                                                        size: 11,
+                                                                                        color: 'black'
+                                                                                      },
+                                                                                      y: 0.90,
+                                                                                      xanchor: 'left',
+                                                                                      yanchor: 'bottom',
+                                                                                    };
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('positions-tiny12', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="performance-weekly-tiny13">
+                                                                            <script>
+                                                                                    var xValue = [{{ sum_performance_weekly_fx }},
+                                                                                                          {{ sum_performance_weekly_bonds }},
+                                                                                                          {{ sum_performance_weekly_equities }}
+                                                                                                          ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      x: xValue,
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+                                                                                                      textfont: {color: 'black'},
+                                                                                                      hoverinfo: 'none',
+
+                                                                                                            marker: {
+                                                                                                                    color: '#FFD503'
+                                                                                                                   },
+
+                                                                                                       y: [    'FX',
+                                                                                                               'Bonds',
+                                                                                                                'Equities'
+                                                                                                             ],
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+                                                                                                      title:{
+                                                                                                       text: '',
+
+
+                                                                                                       },
+
+                                                                                                      font: {size: 11},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false,
+
+                                                                                                      },
+
+
+                                                                                                          width: 130,
+                                                                                                          height: 180,
+                                                                                                          margin: {
+                                                                                                            l: 58,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 20,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                                   };
+
+                                                                                     layout.title = {
+                                                                                      text: '',
+                                                                                      font: {
+                                                                                        size: 11,
+                                                                                        color: 'black'
+                                                                                      },
+                                                                                      y: 0.90,
+                                                                                      xanchor: 'left',
+                                                                                      yanchor: 'bottom',
+                                                                                    };
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('performance-weekly-tiny13', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="performance-ytd-tiny14">
+                                                                            <script>
+                                                                                    xValue = [{{ sum_performance_ytd_fx }},
+                                                                                              {{ sum_performance_ytd_bonds }},
+                                                                                              {{ sum_performance_ytd_equities }}
+                                                                                              ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      x: xValue,
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+                                                                                                      textfont: {color: 'black'},
+                                                                                                      hoverinfo: 'none',
+
+                                                                                                            marker: {
+                                                                                                                    color: '#00AEEF'
+                                                                                                                   },
+
+                                                                                                       y: [    'FX',
+                                                                                                               'Bonds',
+                                                                                                                'Equities'
+                                                                                                             ],
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+                                                                                                      title:{
+                                                                                                       text: '',
+
+
+                                                                                                       },
+
+                                                                                                      font: {size: 9},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false,
+
+                                                                                                      },
+
+
+                                                                                                          width: 150,
+                                                                                                          height: 180,
+                                                                                                          margin: {
+                                                                                                            l: 58,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 20,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                                   };
+
+                                                                                     layout.title = {
+                                                                                      text: '',
+                                                                                      font: {
+                                                                                        size: 11,
+                                                                                        color: 'black'
+                                                                                      },
+                                                                                      y: 0.90,
+                                                                                      xanchor: 'left',
+                                                                                      yanchor: 'bottom',
+                                                                                    };
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('performance-ytd-tiny14', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+                                                                  </tr>
+                                                            </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                             <!-- Table4: Main table Total Performance Positions -->
+                                             <div class="row">
+                                                 <div class="col-6" id="main-table-positions-performance">
+                                                     <div class="main-table-positions-performance" >
+                                                         <table class="table4 table4-borderless">
+                                                             <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td><strong>Class</strong></td>
+                                                                    <td><strong>Assets</strong></td>
+                                                                    <td><strong>Signals</strong>
+                                                                    <td><strong>Today Positions</strong></td>
+                                                                    <td><strong>Last Week Positions</strong></td>
+                                                                    <td><strong>Buy/Sell</strong></td>
+                                                                    <td><strong>Change</strong></td>
+                                                                    <td><strong>Weekly Performance</strong></td>
+                                                                    <td><strong>YTD</strong></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>US Equities</td>
+                                                                    <td>{{ signals_us_equities }}</td>
+                                                                    <td>{{  positions_us_equities_overview }}%</td>
+                                                                    <td>{{  positions_us_equities_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{  performance_us_equities }}%</td>
+                                                                    <td>{{  performance_ytd_us_equities }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>EU Equities</td>
+                                                                    <td>{{ signals_eu_equities }}</td>
+                                                                    <td>{{ positions_eu_equities_overview }}%</td>
+                                                                    <td>{{ positions_eu_equities_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_eu_equities }}%</td>
+                                                                    <td>{{ performance_ytd_eu_equities }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>JP Equities</td>
+                                                                    <td>{{ signals_jp_equities }}</td>
+                                                                    <td>{{ positions_jp_equities_overview }}%</td>
+                                                                    <td>{{ positions_jp_equities_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_jp_equities }}%</td>
+                                                                    <td>{{ performance_ytd_jp_equities }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>HK Equities</td>
+                                                                    <td>{{ signals_hk_equities }}</td>
+                                                                    <td>{{ positions_hk_equities_overview }}%</td>
+                                                                    <td>{{ positions_hk_equities_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_hk_equities }}%</td>
+                                                                    <td>{{ performance_ytd_hk_equities }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>US 10y Bonds</td>
+                                                                    <td>{{ signals_us_bonds }}</td>
+                                                                    <td>{{  positions_us_bonds_overview }}%</td>
+                                                                    <td>{{  positions_us_bonds_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{  performance_us_bonds }}%</td>
+                                                                    <td>{{  performance_ytd_us_bonds }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>UK 10y Bonds</td>
+                                                                    <td>{{ signals_uk_bonds }}</td>
+                                                                    <td>{{ positions_uk_bonds_overview }}%</td>
+                                                                    <td>{{ positions_uk_bonds_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_uk_bonds }}%</td>
+                                                                    <td>{{ performance_ytd_uk_bonds }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>Eu 10y Bonds</td>
+                                                                    <td>{{ signals_eu_bonds }}</td>
+                                                                    <td>{{ positions_eu_bonds_overview }}%</td>
+                                                                    <td>{{ positions_eu_bonds_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_eu_bonds }}%</td>
+                                                                    <td>{{ performance_ytd_eu_bonds }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>CA 10y Bonds</td>
+                                                                    <td>{{ signals_ca_bonds }}</td>
+                                                                    <td>{{ positions_ca_bonds_overview }}%</td>
+                                                                    <td>{{ positions_ca_bonds_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_ca_bonds }}%</td>
+                                                                    <td>{{ performance_ytd_ca_bonds }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>JPY</td>
+                                                                    <td>{{ signals_jpy }}</td>
+                                                                    <td>{{ positions_jpy_overview }}%</td>
+                                                                    <td>{{ positions_jpy_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_jpy_overview }}%</td>
+                                                                    <td>{{ performance_ytd_jpy }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>EUR</td>
+                                                                    <td>{{ signals_eur }}</td>
+                                                                    <td>{{  positions_eur_overview }}</td>
+                                                                    <td>{{  positions_eur_overview }}</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_eur_overview }}%</td>
+                                                                    <td>{{ performance_ytd_eur }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>AUD</td>
+                                                                    <td>{{ signals_aud }}</td>
+                                                                    <td>{{ positions_aud_overview }}%</td>
+                                                                    <td>{{ positions_aud_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_aud_overview }}%</td>
+                                                                    <td>{{ performance_ytd_aud }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>CAD</td>
+                                                                    <td>{{ signals_cad }}</td>
+                                                                    <td>{{ positions_cad_overview }}%</td>
+                                                                    <td>{{ positions_cad_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_cad_overview }}%</td>
+                                                                    <td>{{ performance_ytd_cad }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>GBP</td>
+                                                                    <td>{{ signals_gbp }}</td>
+                                                                    <td>{{ positions_gbp_overview }}%</td>
+                                                                    <td>{{ positions_gbp_overview }}%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ performance_gbp_overview }}%</td>
+                                                                    <td>{{ performance_ytd_gbp }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Total Positions</strong></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>Total</td>
+                                                                    <td>Total</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                             </tbody>
+                                                         </table>
+                                                     </div><!-- .div main-table-container -->
+                                                 </div>
+
+                                             </div>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <!-- Total Performance Positions Chart-->
+                            <div class="row">
+                                <div class="col-12 col-lg-12">
+                                    <div class="widget widget-fullwidth be-loading" id="main-table-positions-performance-widget">
+                                        <div class="widget-head-overview"><strong>TIMES</strong></div>
+                                            <div class="widget-chart-container">
+                                                 <div class="main-table-positions-performance-charts">
+                                                     <table class="table5 table5-borderless" id="table-charts1">
+                                                         <tbody class="no-border-x">
+                                                            <tr>
+                                                                <td><strong>Signals</strong></td>
+                                                                <td><strong>Positions</strong></td>
+                                                                <td><strong>Performances Weekly</strong></td>
+                                                                <td><strong>Performances YTD</strong></td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>
+                                                                        <div class="responsive-plot" id="signals">
+                                                                            <script>
+                                                                                    var xValue = [{{ signals_gbp }},
+                                                                                                          {{ signals_cad }},
+                                                                                                          {{ signals_aud }},
+                                                                                                          {{ signals_eur }},
+                                                                                                          {{ signals_jpy }},
+                                                                                                          {{ signals_ca_bonds }},
+                                                                                                          {{ signals_eu_bonds }},
+                                                                                                          {{ signals_uk_bonds }},
+                                                                                                          {{ signals_us_bonds }},
+                                                                                                          {{ signals_hk_equities }},
+                                                                                                          {{ signals_jp_equities }},
+                                                                                                          {{ signals_eu_equities }},
+                                                                                                          {{ signals_us_equities }},
+                                                                                                          ]
+                                                                                    var trace1 = [{
+                                                                                                      type: 'bar',
+                                                                                                      text: xValue.map(String),
+                                                                                                      textposition: 'auto',
+
+                                                                                                      hoverinfo: 'none',
+                                                                                                      textfont: {color: 'black'},
+
+                                                                                                      x: xValue,
+                                                                                                      marker: {
+                                                                                                                 color: 'rgb(0, 153, 204)'
+                                                                                                               },
+
+                                                                                                       y: [    'GBP',
+                                                                                                               'CAD',
+                                                                                                                  'AUD',
+                                                                                                                  'EUR',
+                                                                                                                  'JPY',
+                                                                                                                  'CA 10y Bonds',
+                                                                                                                  'Eu 10y Bonds',
+                                                                                                                  'UK 10y Bonds',
+                                                                                                                  'US 10y Bonds',
+                                                                                                                  'HK Equities',
+                                                                                                                  'JP Equities',
+                                                                                                                  'EU Equities',
+                                                                                                                  'US Equities'
+                                                                                                             ],
+
+                                                                                                      line: {color: 'grey'},
+                                                                                                      orientation: 'h',
+                                                                                                       }];
+
+                                                                                     var layout = {
+
+                                                                                                      font: {size: 11, family: 'Arial, serif'},
+                                                                                                      xaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: false
+                                                                                                      },
+
+                                                                                                        yaxis: {
+                                                                                                        autorange: true,
+                                                                                                        showgrid: false,
+                                                                                                        zeroline: false,
+                                                                                                        showline: false,
+                                                                                                        autotick: true,
+                                                                                                        ticks: '',
+                                                                                                        showticklabels: true,
+
+                                                                                                      },
+                                                                                                          width: 220,
+                                                                                                          height: 600,
+                                                                                                          margin: {
+                                                                                                            l: 90,
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 5,
+                                                                                                            pad: 2
+                                                                                                          }
+                                                                                                   };
+
+
+
+                                                                                    var config = {
+                                                                                                         'displayModeBar': false,
+                                                                                                          'responsive': true,
+                                                                                                     };
+
+                                                                                        Plotly.newPlot('signals', trace1, layout, config);
+                                                                            </script>
+                                                                          </div>
+                                                                </td>
+
+                                                                <td>
+                                                                        <div class="responsive-plot" id="position">
+                                                                            <script>
+
+                                                                                xValue = [{{ positions_gbp_overview }},
+                                                                                                      {{ positions_cad_overview }},
+                                                                                                      {{ positions_aud_overview }},
+                                                                                                      {{ positions_eur_overview }},
+                                                                                                      {{ positions_jpy_overview }},
+                                                                                                      {{ positions_ca_bonds_overview }},
+                                                                                                      {{ positions_eu_bonds_overview }},
+                                                                                                      {{ positions_uk_bonds_overview }},
+                                                                                                      {{ positions_us_bonds_overview }},
+                                                                                                      {{ positions_hk_equities_overview }},
+                                                                                                      {{ positions_jp_equities_overview }},
+                                                                                                      {{ positions_eu_equities_overview }},
+                                                                                                      {{ positions_us_equities_overview }}
+                                                                                                      ]
+                                                                                var trace1 = [{
+                                                                                                  type: 'bar',
+                                                                                                  x: xValue,
+                                                                                                  text: xValue.map(String),
+                                                                                                  textposition: 'auto',
+                                                                                                  textfont: {color: 'black'},
+                                                                                                  hoverinfo: 'none',
+                                                                                                   y: [    'GBP',
+                                                                                                              'CAD',
+                                                                                                              'AUD',
+                                                                                                              'EUR',
+                                                                                                              'JPY',
+                                                                                                              'CA 10y Bonds',
+                                                                                                              'Eu 10y Bonds',
+                                                                                                              'UK 10y Bonds',
+                                                                                                              'US 10y Bonds',
+                                                                                                              'HK Equities',
+                                                                                                              'JP Equities',
+                                                                                                              'EU Equities',
+                                                                                                              'US Equities'
+                                                                                                         ],
+
+
+                                                                                                  orientation: 'h',
+
+                                                                                                  marker: {
+                                                                                                                color: 'rgb(0, 170, 85)'
+                                                                                                               },
+                                                                                                   }];
+
+
+
+                                                                                 var layout = {
+
+                                                                                                   text: '',
+                                                                                                  font: {size: 11},
+                                                                                                  xaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false
+                                                                                                  },
+
+                                                                                                    yaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false,
+
+                                                                                                  },
+
+
+                                                                                                      width: 220,
+                                                                                                      height: 600,
+                                                                                                      margin: {
+                                                                                                        l: 0,
+                                                                                                        r: 30,
+                                                                                                        b: 0,
+                                                                                                        t: 5,
+                                                                                                        pad: 2
+                                                                                                      }
+                                                                                               };
+
+                                                                                 layout.title = {
+                                                                                  text: '',
+                                                                                  font: {
+                                                                                    size: 12,
+                                                                                    color: 'black'
+                                                                                  },
+                                                                                  x: 0.25,
+                                                                                  y: 0.87,
+                                                                                  xanchor: 'left',
+                                                                                  yanchor: 'bottom',
+                                                                                };
+
+                                                                                var config = {
+                                                                                                     'displayModeBar': false,
+                                                                                                      'responsive': true,
+                                                                                                 };
+
+                                                                                    Plotly.newPlot('position', trace1, layout, config);
+                                                                            </script>
+                                                                        </div>
+                                                                </td>
+
+                                                                <td>
+                                                                        <div class="responsive-plot" id="weekly">
+                                                                            <script>
+
+                                                                    xValue = [{{ performance_gbp_overview }},
+                                                                                          {{ performance_cad_overview }},
+                                                                                          {{ performance_aud_overview }},
+                                                                                          {{ performance_eur_overview }},
+                                                                                          {{ performance_jpy_overview }},
+                                                                                          {{ performance_ca_bond }},
+                                                                                          {{ performance_eu_bonds }},
+                                                                                          {{ performance_uk_bonds }},
+                                                                                          {{ performance_us_bonds }},
+                                                                                          {{ performance_hk_equities }},
+                                                                                          {{ performance_jp_equities }},
+                                                                                          {{ performance_eu_equities }},
+                                                                                          {{ performance_us_equities }}
+                                                                                          ]
+                                                                    var trace1 = [{
+                                                                                      type: 'bar',
+                                                                                      x: xValue,
+                                                                                      text: xValue.map(String),
+                                                                                      textposition: 'auto',
+                                                                                      textfont: {color: 'black'},
+                                                                                      hoverinfo: 'none',
+                                                                                       y: [    'GBP',
+                                                                                                  'CAD',
+                                                                                                  'AUD',
+                                                                                                  'EUR',
+                                                                                                  'JPY',
+                                                                                                  'CA 10y Bonds',
+                                                                                                  'Eu 10y Bonds',
+                                                                                                  'UK 10y Bonds',
+                                                                                                  'US 10y Bonds',
+                                                                                                  'HK Equities',
+                                                                                                  'JP Equities',
+                                                                                                  'EU Equities',
+                                                                                                  'US Equities'
+                                                                                             ],
+
+
+                                                                                      orientation: 'h',
+
+                                                                                      marker: {
+                                                                                                    color: 'rgb(255, 204, 0)'
+                                                                                                   },
+                                                                                       }];
+
+
+
+                                                                     var layout = {
+
+                                                                                       text: '',
+                                                                                      font: {size: 11},
+                                                                                      xaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false
+                                                                                      },
+
+                                                                                        yaxis: {
+                                                                                        autorange: true,
+                                                                                        showgrid: false,
+                                                                                        zeroline: false,
+                                                                                        showline: false,
+                                                                                        autotick: true,
+                                                                                        ticks: '',
+                                                                                        showticklabels: false,
+
+                                                                                      },
+
+
+                                                                                          width: 220,
+                                                                                          height: 600,
+                                                                                          margin: {
+                                                                                            l: 0,
+                                                                                            r: 30,
+                                                                                            b: 0,
+                                                                                            t: 5,
+                                                                                            pad: 4
+                                                                                          }
+                                                                                   };
+
+                                                                     layout.title = {
+                                                                      text: '',
+                                                                      font: {
+                                                                        size: 12,
+                                                                        color: 'black'
+                                                                      },
+                                                                      x: 0.25,
+                                                                      y: 0.87,
+                                                                      xanchor: 'left',
+                                                                      yanchor: 'bottom',
+                                                                    };
+
+                                                                    var config = {
+                                                                                         'displayModeBar': false,
+                                                                                          'responsive': true,
+                                                                                     };
+
+                                                                        Plotly.newPlot('weekly', trace1, layout, config);
+                                                            </script>
+                                                                        </div>
+                                                                </td>
+
+                                                                <td>
+                                                                        <div class="responsive-plot" id="performance-ytd">
+                                                                            <script>
+                                                                                xValue = [{{ performance_ytd_gbp }},
+                                                                                                      {{ performance_ytd_cad }},
+                                                                                                      {{ performance_ytd_aud }},
+                                                                                                      {{ performance_ytd_eur }},
+                                                                                                      {{ performance_ytd_jpy }},
+                                                                                                      {{ performance_ytd_ca_bonds }},
+                                                                                                      {{ performance_ytd_eu_bonds }},
+                                                                                                      {{ performance_ytd_uk_bonds }},
+                                                                                                      {{ performance_ytd_us_bonds }},
+                                                                                                      {{ performance_ytd_hk_equities }},
+                                                                                                      {{ performance_ytd_jp_equities }},
+                                                                                                      {{ performance_ytd_eu_equities }},
+                                                                                                      {{ performance_ytd_us_equities }}
+                                                                                                      ]
+                                                                                var trace1 = [{
+                                                                                                  type: 'bar',
+                                                                                                  x: xValue,
+                                                                                                  text: xValue.map(String),
+                                                                                                  textposition: 'auto',
+                                                                                                  textfont: {color: 'black'},
+                                                                                                  hoverinfo: 'none',
+
+                                                                                                   y: [    'GBP',
+                                                                                                              'CAD',
+                                                                                                              'AUD',
+                                                                                                              'EUR',
+                                                                                                              'JPY',
+                                                                                                              'CA 10y Bonds',
+                                                                                                              'Eu 10y Bonds',
+                                                                                                              'UK 10y Bonds',
+                                                                                                              'US 10y Bonds',
+                                                                                                              'HK Equities',
+                                                                                                              'JP Equities',
+                                                                                                              'EU Equities',
+                                                                                                              'US Equities'
+                                                                                                         ],
+
+
+                                                                                                    orientation: 'h',
+
+                                                                                                  marker: {
+                                                                                                                color: 'rgb(163, 163, 163)'
+                                                                                                               }
+                                                                                                   }];
+
+
+
+                                                                                 var layout = {
+
+
+                                                                                                  font: {size: 11, family: 'Arial, serif'},
+                                                                                                  xaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false
+                                                                                                  },
+
+                                                                                                    yaxis: {
+                                                                                                    autorange: true,
+                                                                                                    showgrid: false,
+                                                                                                    zeroline: false,
+                                                                                                    showline: false,
+                                                                                                    autotick: true,
+                                                                                                    ticks: '',
+                                                                                                    showticklabels: false,
+
+                                                                                                  },
+
+
+                                                                                                      width: 220,
+                                                                                                      height: 600,
+                                                                                                      margin: {
+                                                                                                        l: 0,
+                                                                                                        r: 30,
+                                                                                                        b: 0,
+                                                                                                        t: 5,
+                                                                                                        pad: 2
+                                                                                                      }
+                                                                                               };
+
+                                                                                   layout.title = {
+                                                                                  text: '',
+                                                                                  font: {
+                                                                                    size: 12,
+                                                                                    color: 'black'
+                                                                                  },
+                                                                                  x: 0.25,
+                                                                                  y: 0.87,
+                                                                                  xanchor: 'left',
+                                                                                  yanchor: 'bottom',
+                                                                                };
+
+                                                                                var config = {
+                                                                                                     'displayModeBar': false,
+                                                                                                      'responsive': true,
+                                                                                                 };
+
+                                                                                Plotly.newPlot('performance-ytd', trace1, layout, config);
+                                                                            </script>
+                                                                        </div>
+                                                                </td>
+                                                            </tr>
+                                                         </tbody>
+                                                     </table>
+                                                 </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Chart: Asset Allocation Over Times-->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+
+
+
+
+
+                                                                <div class="row" id="dates-row">
+                                                                    <div class="col-3" id="versions-row">
+                                                                        <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
+                                                                    </div>
+                                                                    <div class="col-3" id="versions-row">
+                                                                        <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
+                                                                    </div>
+
+                                                                    <div class="col-3" id="submit-ok-versions">
+                                                                        <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectToOkSubmit">Ok</button>
+                                                                    </div>
+
+                                                                    <div class="col-3" id="versions-row">
+                                                                        <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
+                                                                        <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
+                                                                    </div>
+                                                                </div>
+
+
+
+
+
+
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                          <div class="widget-chart-container">
+                                                <div align = "center" class="responsive-plot" id="allocation">
+                                                    <script>
+
+
+
+
+                                                        var trace1 = {
+
+                                                                        y: {{ positions_us_equities }},
+                                                                        name: 'S&P 500',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none',
+                                                                        fillcolor: 'rgba(0, 153, 204, 0.5)'
+                                                                        };
+
+                                                        var trace2 = {
+                                                                        y: {{ positions_eu_equities }},
+                                                                        name: 'Eurostoxx',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace3 = {
+                                                                        y: {{ positions_jp_equities }},
+                                                                        name: 'Topix',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace4 = {
+                                                                        y: {{ positions_hk_equities }},
+                                                                        name: 'Hang-Seng',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace5 = {
+                                                                        y: {{ positions_us_bonds }},
+                                                                        name: 'Treasury bond',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace6 = {
+                                                                        y: {{ positions_uk_bonds }},
+                                                                        name: 'Gilt',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace7 = {
+                                                                        y: {{  positions_eu_bonds }},
+                                                                        name: 'Bund',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none',
+                                                                        fillcolor: 'rgba(0, 153, 204, 0.5)'
+                                                                       };
+
+                                                        var trace8 = {
+                                                                        y: {{ positions_ca_bonds }},
+                                                                        name: 'Russell 2000',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace9 = {
+                                                                        y: {{ positions_jpy }},
+                                                                        name: 'JPY',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace10 = {
+                                                                        y: {{ positions_eur }},
+                                                                        name: 'EUR',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace11 = {
+                                                                        y: {{ positions_aud }},
+                                                                        name: 'AUD',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace12 = {
+                                                                        y: {{ positions_cad }},
+                                                                        name: 'CAD',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var trace13 = {
+                                                                        y: {{ positions_gbp }},
+                                                                        name: 'GBP',
+                                                                        fill: 'tozeroy',
+                                                                        type: 'scatter',
+                                                                        mode: 'none'
+                                                                       };
+
+                                                        var layout = {
+
+                                                                        title: 'Asset Allocation Over Times'.bold(),
+                                                                        titlefont: {color: '#007faa'},
+                                                                        showlegend: true,
+                                                                        legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                          margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
+
+                                                                       };
+
+                                                        var config = { 'displayModeBar': false, 'responsive': true }
+                                                        var data = [trace1, trace2, trace3, trace4, trace5,
+                                                        trace6, trace7, trace8, trace9, trace10, trace11,
+                                                        trace12, trace13];
+                                                        Plotly.newPlot('allocation', data, layout, config);
+                                                    </script>
+                                                </div>
+                                            </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            <!-- Two Charts: Performance-->
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
+                                                <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <div class="button-toolbar d-none d-md-block">
+                                                            <div class="btn-group">
+                                                                <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart1" id="selectInputDatesChartSubmit1">Ok</button>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart1" id="selectDownloadDataChart">
+                                                                    <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div align = "center" class="responsive-plot" id="performance3">
+                                                <script>
+
+
+
+                                                                     var trace1 = {
+
+                                                                                    y: {{ performance_jpy }},
+                                                                                    mode: 'lines',
+                                                                                    name: 'JPY',
+                                                                            line: {color: '#FFD503'}
+                                                                                  };
+
+                                                                     var data = [trace1];
+
+                                                                     var layout = {
+                                                                                    title: 'Performance JPY'.bold(),
+                                                                                    titlefont: {color: '#007faa'},
+                                                                                    showlegend: true,
+                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                      margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                   };
+
+                                                                     var config = {
+                                                                                  'displayModeBar': false,
+                                                                                  'responsive': true,
+                                                                                   };
+
+                                                                     Plotly.newPlot('performance3', data, layout, config);
+                                                            </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this third chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <div class="button-toolbar d-none d-md-block">
+                                                            <div class="btn-group">
+                                                                <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart2" id="selectInputDatesChartSubmit1">Ok</button>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart2" id="selectDownloadDataChart">
+                                                                    <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div align = "center" class="responsive-plot" id="performance4">
+                                                                <script>
+                                                                    var trace1 = {
+
+                                                                                    y: {{ performance_eur }},
+                                                                                    mode: 'lines',
+                                                                                    name: 'EUR',
+                                                                                    line: {color: '#009F4B'}
+                                                                                  };
+
+                                                                     var data = [trace1];
+
+                                                                     var layout = {
+                                                                                    title: 'Performance EUR'.bold(),
+                                                                                    titlefont: {color: '#007faa'},
+                                                                                    showlegend: true,
+                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                      margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                                   };
+
+                                                                     var config = {
+                                                                                  'displayModeBar': false,
+                                                                                  'responsive': true,
+                                                                                   };
+
+                                                                     Plotly.newPlot('performance4', data, layout, config);
+                                                                </script>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this fourth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionDateToExport") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart3" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
+                                                                        <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div align = "center" class="responsive-plot" id="performance5">
+                                                <script>
+                                                                var trace1 = {
+
+                                                                                y: {{ performance_aud }},
+                                                                                mode: 'lines',
+                                                                                name: 'AUD',
+                                                                                line: {color: '#ED1C24'}
+                                                                              };
+
+                                                                 var data = [trace1];
+
+                                                                 var layout = {
+                                                                                title: 'Performance AUD'.bold(),
+                                                                                titlefont: {color: '#007faa'},
+                                                                                showlegend: true,
+                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                  margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                               };
+
+                                                                 var config = {
+                                                                              'displayModeBar': false,
+                                                                              'responsive': true,
+                                                                               };
+
+                                                                 Plotly.newPlot('performance5', data, layout, config);
+                                                            </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this fifth chart." %}
+                                                    <p>{{ m }}</p>
+                                                {% endif %}
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <fieldset>
+                                                            <div class="button-toolbar d-none d-md-block">
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="selectionDateToExport") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart4" id="selectInputDatesChartSubmit1">Ok</button>
+                                                                </div>
+                                                                <div class="btn-group">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
+                                                                        <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div align = "center" class="responsive-plot" id="performance6">
+                                                <script>
+                                                                var trace1 = {
+
+                                                                                y: {{ performance_cad }},
+                                                                                mode: 'lines',
+                                                                                name: 'CAD',
+                                                                                line: {color: '#00AEEF'}
+                                                                              };
+
+                                                                 var data = [trace1];
+
+                                                                 var layout = {
+                                                                                title: 'Performance CAD'.bold(),
+                                                                                titlefont: {color: '#007faa'},
+                                                                                showlegend: true,
+                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                                                                                  margin: {
+                                                                                                            l: 'auto',
+                                                                                                            r: 0,
+                                                                                                            b: 0,
+                                                                                                            t: 25,
+                                                                                                            pad: 4
+                                                                                                          }
+                                                                               };
+
+                                                                 var config = {
+                                                                              'displayModeBar': false,
+                                                                              'responsive': true,
+                                                                               };
+
+                                                                 Plotly.newPlot('performance6', data, layout, config);
+                                                            </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
                     </div>
                 </body><!-- .body2 -->
             </main>

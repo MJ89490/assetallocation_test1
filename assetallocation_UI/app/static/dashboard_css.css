@@ -202,7 +202,8 @@ element.style {
 .widget {
           background-color: #fff;
           margin-bottom: 25px;
-          border-radius: 3px;
+
+          border-radius: 15px;
         }
 
 .widget-head-overview {
@@ -227,6 +228,9 @@ element.style {
                   }
 
 .card-table table { margin-bottom: 0; }
+
+#main-table-positions-performance {padding-left: 60px;}
+.main-table-positions-performance-charts {margin-top: 70px; padding-left: 20px; }
 
 .table0 {
             width: 100%;
@@ -285,7 +289,6 @@ element.style {
 
 .table4 {
             margin-left: 20px;
-
             color: #404040;
             background-color: #fff;
             border-top: 1px solid #eee;
@@ -348,14 +351,14 @@ table {
 .table4-borderless > tfoot > tr > th,
 .table4-borderless > thead > tr > td,
 .table4-borderless > thead > tr > th { font-size: 11px; font-family: Arial, serif; border-right: 1px solid #eee;
-                                        padding-right: 5px; padding-bottom:18px; padding-left: 5px; }
+                                        padding-right: 16px; padding-bottom:18px; padding-left: 17px; }
 
 .table5-borderless > tbody > tr > td,
 .table5-borderless > tbody > tr > th,
 .table5-borderless > tfoot > tr > td,
 .table5-borderless > tfoot > tr > th,
 .table5-borderless > thead > tr > td,
-.table5-borderless > thead > tr > th { font-size: 11px; font-family: Arial, serif; padding-bottom: 10px; }
+.table5-borderless > thead > tr > th { font-size: 11px; font-family: Arial, serif; padding-bottom: 10px; padding-left: 20px; padding-right: 20px; }
 
 .table-borderless > tbody > tr > td,
 .table-borderless > tbody > tr > th,
@@ -452,8 +455,8 @@ background-color: #ddd;}
 #selectInputToExportSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 60px; }
 #titleInputToExport {color: #696969; font-size: 12px;}
 
-#selectionStartDateToExport, #selectionEndDateToExport {background-color: #eee; border-color: #696969; color: #696969; }
-#selectInputDatesChartSubmit, #selectInputDatesChartSubmit1 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
+#selectionStartDateToExport, #selectionEndDateToExport {background-color: #eee; border-color: #696969; color: #696969; }{background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
+#selectInputDatesChartSubmit, #selectInputDatesChartSubmit1
 #selectInputDatesChartSubmit7 {background-color: #fff; border-color: #696969; color: #696969; width: 15px; height:25px; font-size: 9px; padding-top: 5px; padding-left: 5px; padding-bottom: 8px;}
 #selectionStartDateChart, #selectionEndDateChart {background-color: #fff; border-color: #696969; color: #696969; }
 
@@ -465,7 +468,7 @@ background-color: #ddd;}
 
 .overview-span { color: #007faa; }
 
-#selectDownloadDataChart {padding-left: 6px; padding-top: 2px; background-color: #fff;  width: 35px; height: 50px; border: none; }
+#selectDownloadDataChart {padding-left: 10px; padding-top: 1px; background-color: #fff;  width: 35px; height: 50px; border: none; }
 #signal-off-title, #signal-off-date {padding-top: 10px; padding-bottom: 10px; }
 
 #main-table-positions-performance { padding-right: 15px;}
