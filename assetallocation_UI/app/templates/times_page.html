@@ -75,6 +75,12 @@
                                 <div class="col-12 col-lg-10">
                                     <div class="widget widget-fullwidth-inputs be-loading">
                                         <div class="widget-chart-container" id="widget-chart-container">
+
+                                             <!-- If the user write wrong parameters, then a popup will be displayed -->
+                                            {% if message=="error parameters" %}
+                                                 {% include 'pop_up_error_model.html' %}
+                                            {% endif %}
+
                                             <form class="center" action="" method="POST" novalidate>
                                                 {{ form.hidden_tag() }}
                                                 <div align="center">
@@ -86,7 +92,7 @@
                                 </div>
                         </div>
 
-                        {% if model=="ok" %}
+                        {% if run_model_ok=="run_times_model_ok" %}
                              {% include 'pop_up_model.html' %}
                         {% endif%}
 

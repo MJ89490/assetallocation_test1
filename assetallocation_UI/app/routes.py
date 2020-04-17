@@ -78,38 +78,45 @@ def times_page():
                                    version_type=version_type)
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
-            data = {                                                        #todo créer une fct pour ces données
-                    form.time_lag.name: [int(form.time_lag.data)],
-                    form.leverage_type.name: [form.leverage_type.data],
-                    form.volatility_window.name: [int(form.volatility_window.data)],
-                    form.sig1_short.name: [int(form.sig1_short.data)],
-                    form.sig1_long.name: [int(form.sig1_long.data)],
-                    form.sig2_short.name: [int(form.sig2_short.data)],
-                    form.sig2_long.name: [int(form.sig2_long.data)],
-                    form.sig3_short.name: [int(form.sig3_short.data)],
-                    form.sig3_long.name: [int(form.sig3_long.data)],
-                    form.frequency.name: [form.frequency.data],
-                    form.week_day.name: [form.week_day.data]
-                  }
-            strategy_inputs = pd.DataFrame(data, columns=[form.time_lag.name,
-                                                          form.leverage_type.name,
-                                                          form.volatility_window.name,
-                                                          form.sig1_short.name,
-                                                          form.sig1_long.name,
-                                                          form.sig2_short.name,
-                                                          form.sig2_long.name,
-                                                          form.sig3_short.name,
-                                                          form.sig3_long.name,
-                                                          form.frequency.name,
-                                                          form.week_day.name
-                                                          ])
-            STRATEGY = strategy_inputs
 
             run_model = "run_times_model"
-            model = "ok"
+            run_model_ok = "run_times_model_ok"
+
+            try:
+                data = {                                                        #todo créer une fct pour ces données
+                            form.time_lag.name: [int(form.time_lag.data)],
+                            form.leverage_type.name: [form.leverage_type.data],
+                            form.volatility_window.name: [int(form.volatility_window.data)],
+                            form.sig1_short.name: [int(form.sig1_short.data)],
+                            form.sig1_long.name: [int(form.sig1_long.data)],
+                            form.sig2_short.name: [int(form.sig2_short.data)],
+                            form.sig2_long.name: [int(form.sig2_long.data)],
+                            form.sig3_short.name: [int(form.sig3_short.data)],
+                            form.sig3_long.name: [int(form.sig3_long.data)],
+                            form.frequency.name: [form.frequency.data],
+                            form.week_day.name: [form.week_day.data]
+                          }
+            except ValueError:
+                message = "error parameters"
+                return render_template('times_page_new_version_layout.html',
+                                       title="Times", form=form, run_model=run_model, message=message)
+
+            strategy_inputs = pd.DataFrame(data, columns=[form.time_lag.name,
+                                                              form.leverage_type.name,
+                                                              form.volatility_window.name,
+                                                              form.sig1_short.name,
+                                                              form.sig1_long.name,
+                                                              form.sig2_short.name,
+                                                              form.sig2_long.name,
+                                                              form.sig3_short.name,
+                                                              form.sig3_long.name,
+                                                              form.frequency.name,
+                                                              form.week_day.name
+                                                              ])
+            STRATEGY = strategy_inputs
             ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
 
-            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, model=model)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok)
 
         elif request.form['submit_button'] == 'selectTimesPath':
             save = "save"
