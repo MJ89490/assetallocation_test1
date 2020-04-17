@@ -77,7 +77,7 @@ body {
                         <nav class="navbar navbar-inverse fixed-top be-top-header">
                             <a><img width="110px" height="auto" id="icon-lgim" src="static/img/icon-lgim.png"></a>
                         </nav>
-                        
+
                         <!-- SIDEBAR
                         ===================================== !-->
                         <div class="sidenav">
@@ -112,7 +112,7 @@ body {
                                                 </div>
                                             </div>
                                             <!-- Form: Submit -->
-                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectChartsSubmit" id="selectChartsSubmit">Submit</button>
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectChartsSubmit" id="sidebar-main-submit">Submit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -163,7 +163,7 @@ body {
                                             {{ form.start_date_inputs.label(id="label_text") }}<br>
                                             <div class="row" id="sidebar-row">
                                                 <div class="col-8" id="sidebar-col">
-                                                    <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="sidebar-form") }}</i>
+                                                    <i>{{ form.start_date_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-form") }}</i>
                                                 </div>
                                                 <div class="col-2">
                                                     <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectStartDateOk" id="sidebar-submit2">Ok</button>
@@ -173,20 +173,20 @@ body {
                                             {{ form.end_date_inputs.label(id="label_text") }}
                                             <div class="row" id="sidebar-row">
                                                 <div class="col-8" id="sidebar-col">
-                                                    <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="sidebar-form") }}</i>
+                                                    <i>{{ form.end_date_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-form") }}</i>
                                                 </div>
                                                 <div class="col-2" id="submit-ok-inputs">
                                                     <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectEndDateOk" id="sidebar-submit2">Ok</button>
                                                 </div>
                                             </div>
                                             <!-- Form: Submit -->
-                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="" id="selectDataSubmit">Submit</button>
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDataSubmit" id="sidebar-main-submit">Submit</button>
                                         </div>
                                     </form>
                                 </div>
                             </ul>
                             <!-- Support Widget: connect to Outlook -->
-                            <a href="mailto:NexusQuantDev@lgim.com" target="_blank">Support<span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png"></span></a>
+                            <a class="support-icon" href="mailto:NexusQuantDev@lgim.com" target="_blank">Support<span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png"></span></a>
                         </div>
 
                         <!-- CHARTS AREA
@@ -482,7 +482,7 @@ body {
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="col-12 col-lg-6">
+                                <div class="col-12 col-lg-6">
                                      <div class="widget widget-fullwidth be-loading">
                                          <div class="widget-head-overview"><strong>Positions YTD</strong></div>
                                          <div class="widget-chart-container" id="positions-sparklines-charts">
@@ -1799,16 +1799,14 @@ body {
                                                     <div  class="form-group" id="date_chart0_form">
                                                         <div class="row" id="dates-row">
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="charts-form") }}</i>
                                                             </div>
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="charts-form") }}</i>
                                                             </div>
-
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart0" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart0" id="charts-submit">Ok</button>
                                                             </div>
-
                                                             <div class="col-3" id="versions-row">
                                                                 <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
                                                                     <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
@@ -1975,16 +1973,14 @@ body {
                                                     {{ form.hidden_tag() }}
                                                      <div class="row" id="dates-row">
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="charts-form") }}</i>
                                                             </div>
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="charts-form") }}</i>
                                                             </div>
-
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart1" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart1" id="charts-submit">Ok</button>
                                                             </div>
-
                                                             <div class="col-3" id="versions-row">
                                                                 <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
                                                                     <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
@@ -2047,16 +2043,14 @@ body {
                                                     {{ form.hidden_tag() }}
                                                      <div class="row" id="dates-row">
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="charts-form") }}</i>
                                                             </div>
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="charts-form") }}</i>
                                                             </div>
-
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart2" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart2" id="charts-submit">Ok</button>
                                                             </div>
-
                                                             <div class="col-3" id="versions-row">
                                                                 <button class="button" type="submit" name="submit_button" value="selectDataChart2" id="selectDownloadDataChart">
                                                                     <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
@@ -2119,16 +2113,14 @@ body {
                                                     <div  class="form-group" id="date_chart0_form">
                                                         <div class="row" id="dates-row">
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="charts-form") }}</i>
                                                             </div>
                                                             <div class="col-3" id="versions-row">
-                                                                <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
+                                                                <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="charts-form") }}</i>
                                                             </div>
-
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart3" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart3" id="charts-submit">Ok</button>
                                                             </div>
-
                                                             <div class="col-3" id="versions-row">
                                                                 <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
                                                                     <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
@@ -2191,13 +2183,13 @@ body {
                                                         <div  class="form-group" id="date_chart0_form">
                                                             <div class="row" id="dates-row">
                                                                 <div class="col-3" id="versions-row">
-                                                                    <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="selectionDateToExport") }}</i>
+                                                                    <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="charts-form") }}</i>
                                                                 </div>
                                                                 <div class="col-3" id="versions-row">
-                                                                    <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
+                                                                    <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="charts-form") }}</i>
                                                                 </div>
                                                                 <div class="col-3" id="submit-ok-versions">
-                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart4" id="selectToOkSubmit">Ok</button>
+                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart4" id="charts-submit">Ok</button>
                                                                 </div>
                                                                 <div class="col-3" id="versions-row">
                                                                     <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
