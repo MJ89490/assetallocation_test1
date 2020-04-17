@@ -9,6 +9,7 @@ echo ${wheel_file}
 build_version=`echo $wheel_file | awk -F'[--]' '{print $3}'`
 cp dist/assetallocation_arp-${build_version}-py3-none-any.whl /s/Shared/IT/Nexus/aa_installer/.
 cp -f assetallocation_arp/arp_dashboard.xlsm aa_installer/installer_config/.
+cp -f assetallocation_arp/times_model.xls aa_installer/installer_config/.
 cp -f assetallocation_arp/arp_strategies.py aa_installer/installer_config/.
 cp -f aa_installer/installer_config/*.* /s/Shared/IT/Nexus/aa_installer/Scripts/.
 cp -f aa_installer/*.* /s/Shared/IT/Nexus/aa_installer/Scripts/.
