@@ -31,10 +31,10 @@ setup(
     ],
 
     name="assetallocation_arp",
-    version="0.0.16",
+    version="0.0.17",
     #version_config={
     #  "version_format": "{tag}.dev{sha}",
-    #  "starting_version": "0.0.16"
+    #  "starting_version": "0.0.17"
     #},
     description="sist[3~[3~[3~[3~[3~",
     long_description=open('README.md').read(),
