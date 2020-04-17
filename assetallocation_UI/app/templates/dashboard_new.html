@@ -77,7 +77,9 @@ body {
                         <nav class="navbar navbar-inverse fixed-top be-top-header">
                             <a><img width="110px" height="auto" id="icon-lgim" src="static/img/icon-lgim.png"></a>
                         </nav>
-
+                        
+                        <!-- SIDEBAR
+                        ===================================== !-->
                         <div class="sidenav">
                             <a>NAVIGATION</a>
                             <a href="{{ url_for('home') }}"><span id="home-sidebar-span">Home</span></a>
@@ -91,26 +93,26 @@ body {
                                         <div  class="form-group">
                                             <!-- Form: Versions -->
                                             {{ form.versions.label(id="label_text")}}
-                                            <div class="row" id="versions-submit-ok-row">
-                                                <div class="col-8" id="versions-row">
-                                                    {{ form.versions(class="form-control", id="selectVersionsToExport") }}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.versions(class="form-control", id="sidebar-form") }}
                                                 </div>
-                                                <div class="col-2" id="submit-ok-versions">
-                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionToOkSubmit">Ok</button>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectChartsVersionsOk" id="sidebar-submit">Ok</button>
                                                 </div>
                                             </div>
                                             <!-- Form: Leverage Types -->
                                             {{ form.leverage.label(id="label_text")}}
-                                            <div class="row" id="leverage-submit-ok-row">
-                                                <div class="text-center">
-                                                <div class="col-8" id="versions-row">
-                                                    {{ form.leverage(class="form-control", id="selectVersionsToExport") }}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.leverage(class="form-control", id="sidebar-form") }}
                                                 </div>
-                                                </div>
-                                                <div class="col-2" id="submit-ok-leverage">
-                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionToOkSubmit">Ok</button>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectChartsLeverageOk" id="sidebar-submit">Ok</button>
                                                 </div>
                                             </div>
+                                            <!-- Form: Submit -->
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectChartsSubmit" id="selectChartsSubmit">Submit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -125,32 +127,32 @@ body {
                                         <div  class="form-group">
                                             <!-- Form: Versions -->
                                             {{ form.versions.label(id="label_text")}}
-                                            <div class="row" id="versions-submit-ok-row">
-                                                <div class="col-8" id="versions-row">
-                                                    {{ form.versions(class="form-control", id="selectVersionsToExport") }}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.versions(class="form-control", id="sidebar-form") }}
                                                 </div>
-                                                <div class="col-2" id="submit-ok-versions">
-                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionToOkSubmit">Ok</button>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectVersionsOk" id="sidebar-submit">Ok</button>
                                                 </div>
                                             </div>
                                             <!-- Form: Leverage Types -->
                                             {{ form.leverage.label(id="label_text")}}
-                                            <div class="row" id="leverage-submit-ok-row">
-                                                <div class="col-8" id="versions-row">
-                                                    {{ form.leverage(class="form-control", id="selectVersionsToExport") }}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.leverage(class="form-control", id="sidebar-form") }}
                                                 </div>
-                                                <div class="col-2" id="submit-ok-leverage">
-                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionToOkSubmit">Ok</button>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectLeverageOk" id="sidebar-submit">Ok</button>
                                                 </div>
                                             </div>
                                             <!-- Form: Inputs -->
                                             {{ form.inputs.label(id="label_text") }}
-                                            <div class="row" id="versions-submit-ok-row">
-                                                <div class="col-8" id="versions-row1">
-                                                    {{ form.inputs(class="form-control", id="selectVersionsToExport") }}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.inputs(class="form-control", id="sidebar-form") }}
                                                 </div>
-                                                <div class="col-2" id="submit-ok-inputs">
-                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionToOkSubmit">Ok</button>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputsOk" id="sidebar-submit1">Ok</button>
                                                 </div>
                                             </div>
                                              <!-- If the user write wrong dates, then a message will be displayed -->
@@ -159,11 +161,26 @@ body {
                                             {% endfor %}
                                             <!-- Form: Start Date -->
                                             {{ form.start_date_inputs.label(id="label_text") }}<br>
-                                            <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionDateToExport") }}</i>
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="sidebar-form") }}</i>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectStartDateOk" id="sidebar-submit2">Ok</button>
+                                                </div>
+                                            </div>
                                             <!-- Form: End Date -->
                                             {{ form.end_date_inputs.label(id="label_text") }}
-                                            <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionDateToExport") }}</i>
-                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="sidebar-form") }}</i>
+                                                </div>
+                                                <div class="col-2" id="submit-ok-inputs">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectEndDateOk" id="sidebar-submit2">Ok</button>
+                                                </div>
+                                            </div>
+                                            <!-- Form: Submit -->
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="" id="selectDataSubmit">Submit</button>
                                         </div>
                                     </form>
                                 </div>

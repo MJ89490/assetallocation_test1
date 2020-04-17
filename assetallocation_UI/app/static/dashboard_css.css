@@ -425,11 +425,24 @@ background-color: #ddd;}
 
 
 /* Side Bar */
-#versions-submit-ok-row {padding-bottom: 20px; }
-#selectVersionsToExport {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; height: 35px; width: 150px; margin-left: 16px; font-size: 14.5px;}
-#selectVersionToOkSubmit {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
-#selectVersionToOkSubmit {height: 35px; }
-#versions-row {padding-right: 5px; margin-top: 5px; }
+#sidebar-row {padding-bottom: 20px; }
+#sidebar-col {padding-right: 5px; margin-top: 5px; }
+#sidebar-form {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; height: 35px; width: 150px; margin-left: 16px; font-size: 14.5px;}
+#sidebar-submit {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px; height: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+#sidebar-submit1 {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px; height: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px; margin-top: 4px; }
+#sidebar-submit2 {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px; height: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px; margin-top: 3px; }
+
+
+
+
+
+
+
+
+
+
+
+
 #versions-row1  {padding-right: 5px; margin-top: 4px; }
 #label_text {color: #007faa; font-size: 18px; }
 #selectionDateToExport {margin-bottom: 20px; width:190px;  }
@@ -437,15 +450,19 @@ background-color: #ddd;}
 .icon-settings {padding-left: 20px; }
 .message-dates-sidebar {color: #800000; font-size: 12px; }
 .message-dates-charts {color: #800000; font-size: 12px;}
-
+#selectChartsSubmit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 15px; margin-top: 4px; }
 
 #selectionDateToExport {border-color:#B0B0B0; color:#B0B0B0; }
+
+/* Side Bar: data export */
+
+
 
 
 .dashboard-title{ padding-bottom: 10px; border-bottom: 1px solid #007faa; }
 
 
-#leverage-submit-ok-row {padding-bottom: 20px; }
+
 #selectLeverageToExport {background-color: #eee; border-color: #696969; color: #696969; height: 35px; width: 150px; margin-left: 16px; font-size: 14.5px;}
 #selectLeverageToOkSubmit {background-color: #eee; border-color: #696969; color: #696969; width: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
 #selectLeverageToOkSubmit {height: 35px; }

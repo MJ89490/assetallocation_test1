@@ -161,6 +161,30 @@ def times_dashboard():
 
     m = ""
     if request.method == "POST":
+
+        # Sidebar: charts export
+        if request.form['submit_button'] == 'selectChartsVersionsOk':
+            print(form.versions.data)
+        elif request.form['submit_button'] == 'selectChartsLeverageOk':
+            print(form.leverage.data)
+        elif request.form['submit_button'] == 'selectChartsSubmit':
+            print("Submit chats data")
+
+        # Sidebar: data export
+        if request.form['submit_button'] == 'selectVersionsOk':
+            print(form.versions.data)
+        elif request.form['submit_button'] == 'selectLeverageOk':
+                print(form.leverage.data)
+        elif request.form['submit_button'] == 'selectInputsOk':
+            print(form.inputs.data)
+        elif request.form['submit_button'] == 'selectStartDateOk':
+            print(form.start_date_inputs.data)
+        elif request.form['submit_button'] == 'selectEndDateOk':
+            print(form.end_date_inputs.data)
+        elif request.form['submit_button'] == 'selectDataSubmit':
+            print("Submit data")
+
+        # Main: charts area
         if request.form['submit_button'] == 'selectInputToExport':
             if form.start_date_inputs.data > form.end_date_inputs.data:
                 flash("Check the Start and End Date. They are incorrect.")
