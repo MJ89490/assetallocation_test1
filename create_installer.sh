@@ -14,5 +14,5 @@ cp -f aa_installer/installer_config/*.* /s/Shared/IT/Nexus/aa_installer/Scripts/
 cp -f aa_installer/*.* /s/Shared/IT/Nexus/aa_installer/Scripts/.
 cp -f README.md /s/Shared/IT/Nexus/aa_installer/Scripts/.
 rm -f /s/Shared/IT/Nexus/aa_installer/Scripts/AssetAllocationInstaller.iss
-#git commit -m "modify the version in git" setup.py .bumpversion.cfg
-#git push
+git commit -m "modify the version in git" setup.py .bumpversion.cfg
+git push

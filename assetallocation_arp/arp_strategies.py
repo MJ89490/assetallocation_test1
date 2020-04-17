@@ -1,8 +1,9 @@
 import os
+import sys
 import xlwings as xw
-from pathlib import Path
-
-
+ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+print(ROOT_DIR)
+sys.path.insert(0, ROOT_DIR)
 from assetallocation_arp.data_etl import import_data as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.common_libraries import models_names
