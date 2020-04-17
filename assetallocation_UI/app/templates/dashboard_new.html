@@ -85,10 +85,6 @@ body {
                             <a><span>Charts Data</span></a>
                             <ul class="sub-menu">
                                 <div class="text-left">
-                                    <!-- If the user write wrong dates, then a message will be displayed -->
-                                    {% for message in get_flashed_messages() %}
-                                        <p>{{ message }}</p>
-                                    {% endfor %}
                                     <!-- Export Data Form -->
                                     <form action='', method="POST" novalidate name="ExportDataForm">
                                         {{ form.hidden_tag() }}
@@ -123,10 +119,6 @@ body {
                             <a><span>Export Data</span></a>
                             <ul class="sub-menu">
                                 <div class="text-left">
-                                    <!-- If the user write wrong dates, then a message will be displayed -->
-                                    {% for message in get_flashed_messages() %}
-                                    <p>{{ message }}</p>
-                                    {% endfor %}
                                     <!-- Export Data Form -->
                                     <form action='', method="POST" novalidate name="ExportDataForm">
                                         {{ form.hidden_tag() }}
@@ -161,9 +153,14 @@ body {
                                                     <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectVersionToOkSubmit">Ok</button>
                                                 </div>
                                             </div>
+                                             <!-- If the user write wrong dates, then a message will be displayed -->
+                                            {% for message in get_flashed_messages() %}
+                                                <p class="message-dates-sidebar">{{ message }}</p>
+                                            {% endfor %}
                                             <!-- Form: Start Date -->
                                             {{ form.start_date_inputs.label(id="label_text") }}<br>
                                             <i>{{ form.start_date_inputs(class="form-control", placeholder="example:25/12/2018", id="selectionDateToExport") }}</i>
+                                            <!-- Form: End Date -->
                                             {{ form.end_date_inputs.label(id="label_text") }}
                                             <i>{{ form.end_date_inputs(class="form-control", placeholder="example:05/01/2019", id="selectionDateToExport") }}</i>
                                             <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectInputToExport" id="selectInputToExportSubmit">Submit</button>
@@ -171,9 +168,8 @@ body {
                                     </form>
                                 </div>
                             </ul>
-
-                            <!-- Support Widget CREATE A BUTTON TO CLICK ON IT AND LINK TO OUTLOOK -->
-                            <a>Support<span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png"></span></a>
+                            <!-- Support Widget: connect to Outlook -->
+                            <a href="mailto:NexusQuantDev@lgim.com" target="_blank">Support<span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png"></span></a>
                         </div>
 
                         <!-- CHARTS AREA
@@ -1780,10 +1776,6 @@ body {
                                     <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -1797,7 +1789,7 @@ body {
                                                             </div>
 
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart0" id="selectToOkSubmit">Ok</button>
                                                             </div>
 
                                                             <div class="col-3" id="versions-row">
@@ -1807,7 +1799,12 @@ body {
                                                         </div>
                                                     </div>
                                                 </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
                                             </div>
+
                                         </div>
                                         <div class="widget-chart-container">
                                             <div align = "center" class="responsive-plot" id="allocation">
@@ -1956,10 +1953,6 @@ body {
                                     <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                                {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
-                                                <p>{{ m }}</p>
-                                                {% endif %}
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -1972,7 +1965,7 @@ body {
                                                             </div>
 
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart1" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart1" id="selectToOkSubmit">Ok</button>
                                                             </div>
 
                                                             <div class="col-3" id="versions-row">
@@ -1981,6 +1974,10 @@ body {
                                                             </div>
                                                         </div>
                                                 </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
@@ -2028,10 +2025,6 @@ body {
                                     <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this third chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -2044,7 +2037,7 @@ body {
                                                             </div>
 
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart1" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart2" id="selectToOkSubmit">Ok</button>
                                                             </div>
 
                                                             <div class="col-3" id="versions-row">
@@ -2053,6 +2046,10 @@ body {
                                                             </div>
                                                      </div>
                                                 </form>
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m ==  "Check the Start and End Date. They are incorrect for this third chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
@@ -2099,10 +2096,6 @@ body {
                                     <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this fourth chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -2116,7 +2109,7 @@ body {
                                                             </div>
 
                                                             <div class="col-3" id="submit-ok-versions">
-                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart3" id="selectToOkSubmit">Ok</button>
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart3" id="selectToOkSubmit">Ok</button>
                                                             </div>
 
                                                             <div class="col-3" id="versions-row">
@@ -2126,6 +2119,10 @@ body {
                                                          </div>
                                                     </div>
                                                 </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m ==  "Check the Start and End Date. They are incorrect for this fourth chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
@@ -2170,10 +2167,6 @@ body {
                                     <div class="widget widget-fullwidth be-loading">
                                         <div class="widget-head">
                                             <div class="dates">
-                                                <!-- If the user write wrong dates, then a message will be displayed -->
-                                                {% if m == "Check the Start and End Date. They are incorrect for this fifth chart." %}
-                                                    <p>{{ m }}</p>
-                                                {% endif %}
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
@@ -2187,7 +2180,7 @@ body {
                                                                     <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
                                                                 </div>
                                                                 <div class="col-3" id="submit-ok-versions">
-                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart4" id="selectToOkSubmit">Ok</button>
+                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart4" id="selectToOkSubmit">Ok</button>
                                                                 </div>
                                                                 <div class="col-3" id="versions-row">
                                                                     <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
@@ -2197,6 +2190,10 @@ body {
                                                         </div>
                                                     </div>
                                                 </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m ==  "Check the Start and End Date. They are incorrect for this fifth chart."%}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
