@@ -1788,42 +1788,30 @@ body {
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
                                                     <div  class="form-group" id="date_chart0_form">
+                                                        <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
+                                                                <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
+                                                            </div>
 
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectToOkSubmit">Ok</button>
+                                                            </div>
 
-
-
-
-                                                                <div class="row" id="dates-row">
-                                                                    <div class="col-3" id="versions-row">
-                                                                        <i>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
-                                                                    </div>
-                                                                    <div class="col-3" id="versions-row">
-                                                                        <i>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
-                                                                    </div>
-
-                                                                    <div class="col-3" id="submit-ok-versions">
-                                                                        <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputOk" id="selectToOkSubmit">Ok</button>
-                                                                    </div>
-
-                                                                    <div class="col-3" id="versions-row">
-                                                                        <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
-                                                                        <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
-                                                                    </div>
-                                                                </div>
-
-
-
-
-
-
-
+                                                            <div class="col-3" id="versions-row">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
+                                                                    <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
-                                          <div class="widget-chart-container">
-                                                <div align = "center" class="responsive-plot" id="allocation">
-                                                    <script>
+                                        <div class="widget-chart-container">
+                                            <div align = "center" class="responsive-plot" id="allocation">
+                                                <script>
 
 
 
@@ -1957,8 +1945,8 @@ body {
                                                         trace12, trace13];
                                                         Plotly.newPlot('allocation', data, layout, config);
                                                     </script>
-                                                </div>
                                             </div>
+                                        </div>
                                       </div>
                                     </div>
                                 </div>
@@ -1975,24 +1963,23 @@ body {
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
-                                                        <div class="button-toolbar d-none d-md-block">
-                                                            <div class="btn-group">
+                                                     <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
                                                                 <i>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
                                                             </div>
-                                                            <div class="btn-group">
+                                                            <div class="col-3" id="versions-row">
                                                                 <i>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
                                                             </div>
-                                                            <div class="btn-group">
-                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart1" id="selectInputDatesChartSubmit1">Ok</button>
+
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart1" id="selectToOkSubmit">Ok</button>
                                                             </div>
-                                                            <div class="btn-group">
-                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart1" id="selectDownloadDataChart">
+
+                                                            <div class="col-3" id="versions-row">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
                                                                     <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
-                                                                </button>
                                                             </div>
                                                         </div>
-                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -2048,24 +2035,23 @@ body {
                                                 <!--Date Form -->
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
-                                                    <div  class="form-group" id="date_chart0_form">
-                                                        <div class="button-toolbar d-none d-md-block">
-                                                            <div class="btn-group">
+                                                     <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
                                                                 <i>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="selectionDateToExport") }}</i>
                                                             </div>
-                                                            <div class="btn-group">
+                                                            <div class="col-3" id="versions-row">
                                                                 <i>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="selectionDateToExport") }}</i>
                                                             </div>
-                                                            <div class="btn-group">
-                                                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart2" id="selectInputDatesChartSubmit1">Ok</button>
+
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart1" id="selectToOkSubmit">Ok</button>
                                                             </div>
-                                                            <div class="btn-group">
+
+                                                            <div class="col-3" id="versions-row">
                                                                 <button class="button" type="submit" name="submit_button" value="selectDataChart2" id="selectDownloadDataChart">
                                                                     <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
-                                                                </button>
                                                             </div>
-                                                        </div>
-                                                    </div>
+                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -2121,24 +2107,23 @@ body {
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
                                                     <div  class="form-group" id="date_chart0_form">
-                                                        <fieldset>
-                                                            <div class="button-toolbar d-none d-md-block">
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionDateToExport") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart3" id="selectInputDatesChartSubmit1">Ok</button>
-                                                                </div>
-                                                                <div class="btn-group">
-                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
-                                                                        <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
-                                                                    </button>
-                                                                </div>
+                                                        <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
+                                                                <i>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="selectionDateToExport") }}</i>
                                                             </div>
-                                                        </fieldset>
+                                                            <div class="col-3" id="versions-row">
+                                                                <i>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
+                                                            </div>
+
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart3" id="selectToOkSubmit">Ok</button>
+                                                            </div>
+
+                                                            <div class="col-3" id="versions-row">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
+                                                                    <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
+                                                                </div>
+                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
@@ -2193,24 +2178,25 @@ body {
                                                 <form action='', method="POST" novalidate name="DateForm">
                                                     {{ form.hidden_tag() }}
                                                     <div  class="form-group" id="date_chart0_form">
-                                                        <fieldset>
-                                                            <div class="button-toolbar d-none d-md-block">
-                                                                <div class="btn-group">
+                                                        <div  class="form-group" id="date_chart0_form">
+                                                            <div class="row" id="dates-row">
+                                                                <div class="col-3" id="versions-row">
                                                                     <i>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="selectionDateToExport") }}</i>
                                                                 </div>
-                                                                <div class="btn-group">
+                                                                <div class="col-3" id="versions-row">
                                                                     <i>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="selectionDateToExport") }}</i>
                                                                 </div>
-                                                                <div class="btn-group">
-                                                                    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDatesChart4" id="selectInputDatesChartSubmit1">Ok</button>
+
+                                                                <div class="col-3" id="submit-ok-versions">
+                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDataChart4" id="selectToOkSubmit">Ok</button>
                                                                 </div>
-                                                                <div class="btn-group">
+
+                                                                <div class="col-3" id="versions-row">
                                                                     <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
                                                                         <i class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></i></button>
-                                                                    </button>
-                                                                </div>
+                                                                    </div>
                                                             </div>
-                                                        </fieldset>
+                                                        </div>
                                                     </div>
                                                 </form>
                                             </div>
