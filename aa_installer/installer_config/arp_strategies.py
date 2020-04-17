@@ -1,38 +1,38 @@
-import xlwings as xw
-import data_etl.import_data as gd
-import models.times as times
 import os
-from common_libraries import models_names as models
+import xlwings as xw
+from assetallocation_arp.data_etl import import_data as gd
+from assetallocation_arp.models import times
+from assetallocation_arp.common_libraries import models_names
 
 
 def run_model(model_type, mat_file=None, input_file=None):
 
-	if model_type == models.Models.times.name:
+	if model_type == models_names.Models.times.name:
 		# get inputs from excel and matlab data
 		times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 		# run strategy
 		signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
 		# write results to output sheet
-		write_output_to_excel({models.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
+		write_output_to_excel({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
 
-	if model_type == models.Models.maven.name:
+	if model_type == models_names.Models.maven.name:
 		print(model_type)
-	if model_type == models.Models.effect.name:
+	if model_type == models_names.Models.effect.name:
 		print(model_type)
-	if model_type == models.Models.curp.name:
+	if model_type == models_names.Models.curp.name:
 		print(model_type)
-	if model_type == models.Models.fica.name:
+	if model_type == models_names.Models.fica.name:
 		print(model_type)
-	if model_type == models.Models.factor.name:
+	if model_type == models_names.Models.factor.name:
 		print(model_type)
-	if model_type == models.Models.comca.name:
+	if model_type == models_names.Models.comca.name:
 		print(model_type)
 
 
 def write_output_to_excel(model_outputs):
 
-	if models.Models.times.name in model_outputs.keys():
-		asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models.Models.times.name]
+	if models_names.Models.times.name in model_outputs.keys():
+		asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models_names.Models.times.name]
 		path = os.path.join(os.path.dirname(__file__), "times_model.xls")
 		wb = xw.Book(path)
 		sheet_times_output = wb.sheets['output']
@@ -70,7 +70,7 @@ def get_inputs_from_python(model):
 	#launch the script from Python
 	mat_file = None
 	input_file = None
-	models_list = [model.name for model in models.Models]
+	models_list = [model.name for model in models_names.Models]
 
 	if model in models_list:
 		model_type = model

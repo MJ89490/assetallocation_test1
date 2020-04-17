@@ -22,7 +22,7 @@ InfoBeforeFile=S:\Shared\IT\Nexus\aa_installer\Scripts\README.md
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=S:\Shared\IT\Nexus\aa_installer
-OutputBaseFilename=assetallocation_arp-0.0.10
+OutputBaseFilename=assetallocation_arp-0.0.13
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -47,7 +47,7 @@ Source: "S:\Shared\IT\Nexus\aa_installer\Scripts\arp_dashboard.xlsm"; DestDir: "
 Source: "S:\Shared\IT\Nexus\aa_installer\Scripts\xlwings.xlam"; DestDir: "{app}"; Flags: ignoreversion
 Source: "S:\Shared\IT\Nexus\aa_installer\Scripts\installer.ps1"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "S:\Shared\IT\Nexus\aa_installer\assetallocation_arp-0.0.10-py3-none-any.whl"; DestDir: "{app}";
+Source: "S:\Shared\IT\Nexus\aa_installer\assetallocation_arp-0.0.13-py3-none-any.whl"; DestDir: "{app}";
 Source: "S:\Shared\IT\Nexus\aa_installer\Scripts\installer.exe.lnk"; DestDir: "{app}"; AfterInstall: RunOtherInstaller  
 
 [Code]
