@@ -132,8 +132,9 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
         flex-wrap: wrap;
         margin-right: -15px;
         margin-left: -15px;
-
       }
+
+
 
 @media (min-width: 1200px)
 .col-xl-3 {
@@ -189,6 +190,8 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
                             background-color: #fff;
                            }
 
+
+
 element.style {
                 height: 265px;
                 position: relative;
@@ -202,7 +205,6 @@ element.style {
 .widget {
           background-color: #fff;
           margin-bottom: 25px;
-
           border-radius: 15px;
         }
 
@@ -220,7 +222,9 @@ element.style {
                 color: #fff;
               }
 
-.widget-chart-container { position: relative; }
+.widget-chart-container { position: relative;  }
+
+.widget-table-container { position:relative; }
 
 .table-responsive {
                     border: 0;
@@ -286,39 +290,6 @@ element.style {
             border-collapse: collapse;
             text-align:center;
           }
-
-.table4 {
-            margin-left: 20px;
-            color: #404040;
-            background-color: #fff;
-            border-top: 1px solid #eee;
-            border-left: 1px solid #eee;
-            border-right: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            background-color: #fff;
-        }
-
-.table4   {
-            border-collapse: collapse;
-            text-align:center;
-          }
-
- .table5 {
-            color: #404040;
-            background-color: #fff;
-            border-top: 1px solid #eee;
-            border-left: 1px solid #eee;
-            border-right: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            color: #404040;
-        }
-
-.table5  {
-            border-collapse: collapse;
-            text-align:center;
-          }
-
-          }
 .table {
         width: 100%;
         margin-bottom: 1rem;
@@ -337,21 +308,33 @@ table {
 .table2-borderless > thead > tr > td { font-size: 12px; font-family: Arial, serif;
                                        border-right: 1px solid #eee;
                                        border-left: 1px solid #eee;
-                                       padding-right: 10px; padding-left: 10px; padding-bottom: 28px;
+                                       padding-right: 10px; padding-left: 10px; padding-bottom: 10px;
                                       }
 
 .table3-borderless > tbody > tr > td,
-.table3-borderless > thead > tr > td { font-size: 12px; font-family: Arial, serif; border-right: 1px solid #eee;
-                                        border-left: 1px solid #eee;
-                                      }
+.table3-borderless > thead > tr > td { font-size: 12px; font-family: Arial, serif;
+                                                        border-right: 1px solid #eee;
+                                                        border-left: 1px solid #eee;}
 
 .table4-borderless > tbody > tr > td,
 .table4-borderless > tbody > tr > th,
-.table4-borderless > tfoot > tr > td,
 .table4-borderless > tfoot > tr > th,
 .table4-borderless > thead > tr > td,
-.table4-borderless > thead > tr > th { font-size: 11px; font-family: Arial, serif; border-right: 1px solid #eee;
-                                        padding-right: 16px; padding-bottom:18px; padding-left: 17px; }
+.table4-borderless > thead > tr > th { border: none; font-size: 11px; font-family: Arial, serif;
+                                                                      padding-right: 16px;
+                                                                      padding-bottom:8px;
+                                                                      padding-left: 17px;
+                                                                      margin-left: 20px;
+                                                                      border-right: 1px solid #eee; }
+
+#table4{margin-top: 40px; border-right: 1px solid #eee; border-left: 1px solid #eee;
+                                                        border-top: 1px solid #eee;
+                                                        border-bottom: 1px solid #eee;
+                                                        border-collapse: collapse;
+                                                        text-align:center;
+                                                        background-color: #fff; }
+
+
 
 .table5-borderless > tbody > tr > td,
 .table5-borderless > tbody > tr > th,
@@ -365,9 +348,7 @@ table {
 .table-borderless > tfoot > tr > td,
 .table-borderless > tfoot > tr > th,
 .table-borderless > thead > tr > td,
-.table-borderless > thead > tr > th {
-border: none;
-}
+.table-borderless > thead > tr > th { font-size: 14px; font-family: Arial, serif; border: none;}
 
 .thead-color {background-color: rgb(128, 128, 128);}
 .thead-title {color: #fff; font-size: 20px;}
