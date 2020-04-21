@@ -8,10 +8,11 @@
         <!--DASHBOARD PAGE CSS STYLE
         ================================================== -->
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
         <link rel="stylesheet" href="{{url_for('.static', filename='dashboard_css.css')}}">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <style type="text/css">
             #selectInputDatesChartIMGSubmit1 {padding-top: 5px; }
@@ -2131,40 +2132,11 @@ body {
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div align = "center" class="responsive-plot" id="performance5">
-                                                <script>
-                                                                var trace1 = {
-
-                                                                                y: {{ performance_aud }},
-                                                                                mode: 'lines',
-                                                                                name: 'AUD',
-                                                                                line: {color: '#ED1C24'}
-                                                                              };
-
-                                                                 var data = [trace1];
-
-                                                                 var layout = {
-                                                                                title: 'Performance AUD'.bold(),
-                                                                                titlefont: {color: '#007faa'},
-                                                                                showlegend: true,
-                                                                                legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                                                                                  margin: {
-                                                                                                            l: 'auto',
-                                                                                                            r: 0,
-                                                                                                            b: 0,
-                                                                                                            t: 25,
-                                                                                                            pad: 4
-                                                                                                          }
-                                                                               };
-
-                                                                 var config = {
-                                                                              'displayModeBar': false,
-                                                                              'responsive': true,
-                                                                               };
-
-                                                                 Plotly.newPlot('performance5', data, layout, config);
-                                                            </script>
-                                            </div>
+                                            <div id="performance_aud" align = "center" class="responsive-plot" ></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/performance_aud.js') }}"></script>
+                                            <script type="text/javascript">
+                                                performanceAudChart({{ performance_aud|tojson }})
+                                            </script>
                                         </div>
                                     </div>
                                 </div>
