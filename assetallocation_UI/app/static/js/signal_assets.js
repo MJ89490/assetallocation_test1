@@ -1,7 +1,7 @@
 
 SIGNALS_ASSETS = document.getElementById('signals_assets');
 
-function test(signals_gbp, signals_cad, signals_aud, signals_eur, signals_jpy, signals_ca_bonds, signals_eu_bonds,
+function signalsAssets(signals_gbp, signals_cad, signals_aud, signals_eur, signals_jpy, signals_ca_bonds, signals_eu_bonds,
               signals_uk_bonds, signals_us_bonds, signals_hk_equities, signals_jp_equities, signals_eu_equities,
               signals_us_equities)
 {
