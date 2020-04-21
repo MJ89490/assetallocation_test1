@@ -823,7 +823,7 @@ body {
                                         <div class="widget-head-overview"><strong>TIMES</strong></div>
                                          <div class="widget-table-container" id="table1-container">
                                              <!-- Table1: Sign-Off -->
-                                             <div class="signal-off">
+                                                <div class="signal-off">
                                                 <table class="table1 table1-borderless">
                                                     <tbody class="no-border-x">
                                                         <tr>
@@ -833,53 +833,55 @@ body {
                                                     </tbody>
                                                 </table>
                                             </div>
-                                             <!-- Table2: Total Performance Positions Chart-->
-                                             <div class="row">
-                                                 <div class="total-positions-performance" id="total-positions-performance">
-                                                     <table class="table2 table2-borderless" >
-                                                         <tbody class="no-border-x">
-                                                            <tr>
-                                                                <td></td>
-                                                                <td><strong>Positions</strong></td>
-                                                                <td><strong>Weekly Performance</strong></td>
-                                                                <td><strong>YTD Performance</strong></td>
-                                                            </tr>
+                                                <!-- Table2: Total Performance Positions Chart-->
+                                                <div class="row">
+                                                    <div class="total-positions-performance" id="total-positions-performance">
+                                                           <div class="table-responsive-lg">
+                                                               <table class="table2 table2-borderless" >
+                                                              <tbody class="no-border-x">
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td><strong>Positions</strong></td>
+                                                                            <td><strong>Weekly Performance</strong></td>
+                                                                            <td><strong>YTD Performance</strong></td>
+                                                                        </tr>
 
-                                                            <tr>
-                                                                <td><strong>Equities</strong></td>
-                                                                <td>{{ sum_positions_equities }}%</td>
-                                                                <td>{{ sum_performance_weekly_equities }}%</td>
-                                                                <td>{{ sum_performance_ytd_equities }}%</td>
-                                                            </tr>
+                                                                        <tr>
+                                                                          <td><strong>Equities</strong></td>
+                                                                          <td>{{ sum_positions_equities }}%</td>
+                                                                          <td>{{ sum_performance_weekly_equities }}%</td>
+                                                                          <td>{{ sum_performance_ytd_equities }}%</td>
+                                                                        </tr>
 
-                                                            <tr>
-                                                                <td><strong>Bonds</strong></td>
-                                                                <td>{{ sum_positions_bonds }}%</td>
-                                                                <td>{{ sum_performance_weekly_bonds }}%</td>
-                                                                <td>{{ sum_performance_ytd_bonds }}%</td>
-                                                            </tr>
+                                                                        <tr>
+                                                                          <td><strong>Bonds</strong></td>
+                                                                          <td>{{ sum_positions_bonds }}%</td>
+                                                                          <td>{{ sum_performance_weekly_bonds }}%</td>
+                                                                          <td>{{ sum_performance_ytd_bonds }}%</td>
+                                                                        </tr>
 
-                                                            <tr>
-                                                                <td><strong>FX</strong></td>
-                                                                <td>{{ sum_positions_fx }}%</td>
-                                                                <td>{{ sum_performance_weekly_fx }}%</td>
-                                                                <td>{{ sum_performance_ytd_fx }}%</td>
-                                                            </tr>
-                                                         </tbody>
-                                                     </table>
-                                             </div>
-                                                 <div class="total-positions-bar-charts">
-                                                    <table class="table3 table3-borderless">
-                                                        <tbody class="no-border-x">
-                                                            <tr>
-                                                                <td><strong>Positions</strong></td>
-                                                                <td><strong>Weekly Performance</strong></td>
-                                                                <td><strong>YTD Performance</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                            <td>
-                                                                <div class="responsive-plot" id="positions-tiny12">
-                                                                    <script>
+                                                                        <tr>
+                                                                          <td><strong>FX</strong></td>
+                                                                          <td>{{ sum_positions_fx }}%</td>
+                                                                          <td>{{ sum_performance_weekly_fx }}%</td>
+                                                                          <td>{{ sum_performance_ytd_fx }}%</td>
+                                                                        </tr>
+                                                              </tbody>
+                                                          </table>
+                                                           </div>
+                                                      </div><!-- .div total-table-container -->
+                                                    <div class="total-positions-bar-charts">
+                                                            <table class="table3 table3-borderless">
+                                                                <tbody class="no-border-x">
+                                                                    <tr>
+                                                                        <td><strong>Positions</strong></td>
+                                                                        <td><strong>Weekly Performance</strong></td>
+                                                                        <td><strong>YTD Performance</strong></td>
+                                                                    </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="positions-tiny12">
+                                                                            <script>
                                                                                     var xValue = [{{ sum_positions_fx }},
                                                                                                   {{ sum_positions_bonds }},
                                                                                                           {{ sum_positions_equities }}
@@ -959,10 +961,10 @@ body {
                                                                                         Plotly.newPlot('positions-tiny12', trace1, layout, config);
                                                                             </script>
                                                                           </div>
-                                                            </td>
+                                                                    </td>
 
-                                                            <td>
-                                                                <div class="responsive-plot" id="performance-weekly-tiny13">
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="performance-weekly-tiny13">
                                                                             <script>
                                                                                     var xValue = [{{ sum_performance_weekly_fx }},
                                                                                                           {{ sum_performance_weekly_bonds }},
@@ -1046,12 +1048,12 @@ body {
 
                                                                                         Plotly.newPlot('performance-weekly-tiny13', trace1, layout, config);
                                                                             </script>
-                                                                </div>
-                                                            </td>
+                                                                          </div>
+                                                                    </td>
 
-                                                            <td>
-                                                                <div class="responsive-plot" id="performance-ytd-tiny14">
-                                                                    <script>
+                                                                    <td>
+                                                                        <div class="responsive-plot" id="performance-ytd-tiny14">
+                                                                            <script>
                                                                                     xValue = [{{ sum_performance_ytd_fx }},
                                                                                               {{ sum_performance_ytd_bonds }},
                                                                                               {{ sum_performance_ytd_equities }}
@@ -1134,13 +1136,13 @@ body {
 
                                                                                         Plotly.newPlot('performance-ytd-tiny14', trace1, layout, config);
                                                                             </script>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                             </div>
+                                                                          </div>
+                                                                    </td>
+                                                                  </tr>
+                                                            </tbody>
+                                                            </table>
+                                                        </div>
+                                                 </div>
                                              <!-- Table4: Main table Total Performance Positions -->
                                              <div class="main-table-positions-performance" >
                                                  <div class="table-responsive-lg">
