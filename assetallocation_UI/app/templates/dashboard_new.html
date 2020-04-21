@@ -1991,43 +1991,11 @@ body {
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div align = "center" class="responsive-plot" id="performance3">
-                                                <script>
-
-
-
-                                                                     var trace1 = {
-
-                                                                                    y: {{ performance_jpy }},
-                                                                                    mode: 'lines',
-                                                                                    name: 'JPY',
-                                                                            line: {color: '#FFD503'}
-                                                                                  };
-
-                                                                     var data = [trace1];
-
-                                                                     var layout = {
-                                                                                    title: 'Performance JPY'.bold(),
-                                                                                    titlefont: {color: '#007faa'},
-                                                                                    showlegend: true,
-                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                                                                                      margin: {
-                                                                                                            l: 'auto',
-                                                                                                            r: 0,
-                                                                                                            b: 0,
-                                                                                                            t: 25,
-                                                                                                            pad: 4
-                                                                                                          }
-                                                                                   };
-
-                                                                     var config = {
-                                                                                  'displayModeBar': false,
-                                                                                  'responsive': true,
-                                                                                   };
-
-                                                                     Plotly.newPlot('performance3', data, layout, config);
-                                                            </script>
-                                            </div>
+                                            <div id="performance_jpy" align = "center" class="responsive-plot" ></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/performance_jpy.js') }}"></script>
+                                            <script type="text/javascript">
+                                                performanceJpyChart({{ performance_jpy|tojson }})
+                                            </script>
                                         </div>
                                     </div>
                                 </div>
@@ -2061,40 +2029,11 @@ body {
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div align = "center" class="responsive-plot" id="performance4">
-                                                                <script>
-                                                                    var trace1 = {
-
-                                                                                    y: {{ performance_eur }},
-                                                                                    mode: 'lines',
-                                                                                    name: 'EUR',
-                                                                                    line: {color: '#009F4B'}
-                                                                                  };
-
-                                                                     var data = [trace1];
-
-                                                                     var layout = {
-                                                                                    title: 'Performance EUR'.bold(),
-                                                                                    titlefont: {color: '#007faa'},
-                                                                                    showlegend: true,
-                                                                                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                                                                                      margin: {
-                                                                                                            l: 'auto',
-                                                                                                            r: 0,
-                                                                                                            b: 0,
-                                                                                                            t: 25,
-                                                                                                            pad: 4
-                                                                                                          }
-                                                                                   };
-
-                                                                     var config = {
-                                                                                  'displayModeBar': false,
-                                                                                  'responsive': true,
-                                                                                   };
-
-                                                                     Plotly.newPlot('performance4', data, layout, config);
-                                                                </script>
-                                                        </div>
+                                            <div id="performance_eur" align = "center" class="responsive-plot" ></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/performance_eur.js') }}"></script>
+                                            <script type="text/javascript">
+                                                performanceEurChart({{ performance_eur|tojson }})
+                                            </script>
                                         </div>
                                     </div>
                                 </div>
