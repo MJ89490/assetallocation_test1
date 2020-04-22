@@ -1393,10 +1393,23 @@ body {
                                                                                             {{ positions_us_equities_overview|tojson }})
                                                                         </script>
                                                                     </td>
+                                                                    <td>
                                                                         <div id="weekly_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/weekly_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                            
+                                                                            weeklyAssets({{ performance_gbp_overview|tojson }},
+                                                                                         {{ performance_cad_overview|tojson }},
+                                                                                         {{ performance_aud_overview|tojson }},
+                                                                                         {{ performance_eur_overview|tojson }},
+                                                                                         {{ performance_jpy_overview|tojson }},
+                                                                                         {{ performance_ca_bonds|tojson }},
+                                                                                         {{ performance_eu_bonds|tojson }},
+                                                                                         {{ performance_uk_bonds|tojson }},
+                                                                                         {{ performance_us_bonds|tojson }},
+                                                                                         {{ performance_hk_equities|tojson }},
+                                                                                         {{ performance_jp_equities|tojson }},
+                                                                                         {{ performance_eu_equities|tojson }},
+                                                                                         {{ performance_us_equities|tojson }})
                                                                         </script>
                                                                     <td>
 
