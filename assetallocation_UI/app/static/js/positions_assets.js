@@ -67,7 +67,7 @@ function positionsAssets(positions_gbp_overview, positions_cad_overview, positio
 
     layout.title = {
                     text: '',
-                    font: {size: 12, color: 'black' },
+                    font: {size: 12, color: '#007faa', family: 'Arial, serif' },
                     x: 0.25,
                     y: 0.87,
                     xanchor: 'left',

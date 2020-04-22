@@ -396,6 +396,19 @@ background-color: #ddd;}
 .dropdown: hover .dropdown-item {display: block;}
 .dropdown: hover .btn {background-color: #3e8e41;}
 
+/* Text */
+#signals_title{color: #007faa; font-family: Arial,serif;}
+#positions_title{color: #007faa; font-family: Arial,serif;}
+#weekly_title{color: #007faa; font-family: Arial,serif;}
+#ytd_title{color: #007faa; font-family: Arial,serif;}
+
+
+
+
+
+
+
+
 #selectionStartDateChart, #selectionEndDateChart {font-size:10px; height: 25px; padding-top: 5px; }
 
 #inputs-submit-ok-row {padding-bottom: 20px; }

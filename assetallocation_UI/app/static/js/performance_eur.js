@@ -14,7 +14,8 @@ function performanceEurChart(data)
 
     var layout = {
                     title: 'Performance EUR'.bold(),
-                    titlefont: {color: '#007faa'},
+                    titlefont: {color: '#007faa', family: 'Arial, serif'},
+                    font: {size: 12},
                     showlegend: true,
                     legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
                     margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 }

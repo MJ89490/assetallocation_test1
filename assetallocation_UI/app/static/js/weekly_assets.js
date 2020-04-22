@@ -65,7 +65,7 @@ function weeklyAssets(performance_gbp_overview, performance_cad_overview, perfor
                    };
 
     layout.title = {text: '',
-                    font: {size: 12, color: 'black'},
+                    font: {size: 12, color: '#007faa', family: 'Arial, serif'},
                     x: 0.25,
                     y: 0.87,
                     xanchor: 'left',

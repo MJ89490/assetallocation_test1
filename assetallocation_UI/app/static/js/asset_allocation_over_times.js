@@ -114,7 +114,7 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
 
     var layout = {
                     title: 'Asset Allocation Over Times'.bold(),
-                    titlefont: {color: '#007faa'},
+                    titlefont: {color: '#007faa',family: 'Arial, serif'},
                     showlegend: true,
                     legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
                     margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 }

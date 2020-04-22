@@ -837,129 +837,53 @@ body {
                                                 <!-- Table2: Total Performance Positions Chart-->
                                                 <div class="row">
                                                     <div class="total-positions-performance" id="total-positions-performance">
-                                                           <div class="table-responsive-lg">
-                                                               <table class="table2 table2-borderless" >
-                                                              <tbody class="no-border-x">
-                                                                        <tr>
-                                                                            <td></td>
-                                                                            <td><strong>Positions</strong></td>
-                                                                            <td><strong>Weekly Performance</strong></td>
-                                                                            <td><strong>YTD Performance</strong></td>
-                                                                        </tr>
-
-                                                                        <tr>
-                                                                          <td><strong>Equities</strong></td>
-                                                                          <td>{{ sum_positions_equities }}%</td>
-                                                                          <td>{{ sum_performance_weekly_equities }}%</td>
-                                                                          <td>{{ sum_performance_ytd_equities }}%</td>
-                                                                        </tr>
-
-                                                                        <tr>
-                                                                          <td><strong>Bonds</strong></td>
-                                                                          <td>{{ sum_positions_bonds }}%</td>
-                                                                          <td>{{ sum_performance_weekly_bonds }}%</td>
-                                                                          <td>{{ sum_performance_ytd_bonds }}%</td>
-                                                                        </tr>
-
-                                                                        <tr>
-                                                                          <td><strong>FX</strong></td>
-                                                                          <td>{{ sum_positions_fx }}%</td>
-                                                                          <td>{{ sum_performance_weekly_fx }}%</td>
-                                                                          <td>{{ sum_performance_ytd_fx }}%</td>
-                                                                        </tr>
+                                                        <div class="table-responsive-lg">
+                                                            <table class="table2 table2-borderless" >
+                                                                <tbody class="no-border-x">
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td><strong>Positions</strong></td>
+                                                                        <td><strong>Weekly Performance</strong></td>
+                                                                        <td><strong>YTD Performance</strong></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Equities</strong></td>
+                                                                        <td>{{ sum_positions_equities }}%</td>
+                                                                        <td>{{ sum_performance_weekly_equities }}%</td>
+                                                                        <td>{{ sum_performance_ytd_equities }}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Bonds</strong></td>
+                                                                        <td>{{ sum_positions_bonds }}%</td>
+                                                                        <td>{{ sum_performance_weekly_bonds }}%</td>
+                                                                        <td>{{ sum_performance_ytd_bonds }}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>FX</strong></td>
+                                                                        <td>{{ sum_positions_fx }}%</td>
+                                                                        <td>{{ sum_performance_weekly_fx }}%</td>
+                                                                        <td>{{ sum_performance_ytd_fx }}%</td>
+                                                                    </tr>
                                                               </tbody>
                                                           </table>
                                                            </div>
                                                       </div><!-- .div total-table-container -->
                                                     <div class="total-positions-bar-charts">
-                                                            <table class="table3 table3-borderless">
-                                                                <tbody class="no-border-x">
-                                                                    <tr>
-                                                                        <td><strong>Positions</strong></td>
-                                                                        <td><strong>Weekly Performance</strong></td>
-                                                                        <td><strong>YTD Performance</strong></td>
-                                                                    </tr>
+                                                        <table class="table3 table3-borderless">
+                                                            <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td><strong>Positions</strong></td>
+                                                                    <td><strong>Weekly Performance</strong></td>
+                                                                    <td><strong>YTD Performance</strong></td>
+                                                                </tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <div class="responsive-plot" id="positions-tiny12">
-                                                                            <script>
-                                                                                    var xValue = [{{ sum_positions_fx }},
-                                                                                                  {{ sum_positions_bonds }},
-                                                                                                          {{ sum_positions_equities }}
-                                                                                                          ]
-                                                                                    var trace1 = [{
-                                                                                                      type: 'bar',
-                                                                                                      text: xValue.map(String),
-                                                                                                      textposition: 'auto',
-                                                                                                      textfont: {color: 'black'},
-                                                                                                      hoverinfo: 'none',
-                                                                                                      x: xValue,
-                                                                                                      marker: { color: '#009F4B'},
-                                                                                                       y: [    'FX',
-                                                                                                               'Bonds',
-                                                                                                                'Equities'
-                                                                                                             ],
-                                                                                                      orientation: 'h',
-                                                                                                       }];
-
-                                                                                     var layout = {
-                                                                                                      title:{
-                                                                                                       text: 'Weekly',
-
-
-                                                                                                       },
-
-                                                                                                      font: {size: 11},
-                                                                                                      xaxis: {
-                                                                                                        autorange: true,
-                                                                                                        showgrid: false,
-                                                                                                        zeroline: false,
-                                                                                                        showline: false,
-                                                                                                        autotick: true,
-                                                                                                        ticks: '',
-                                                                                                        showticklabels: false
-                                                                                                      },
-
-                                                                                                        yaxis: {
-                                                                                                        autorange: true,
-                                                                                                        showgrid: false,
-                                                                                                        zeroline: false,
-                                                                                                        showline: false,
-                                                                                                        autotick: true,
-                                                                                                        ticks: '',
-                                                                                                        showticklabels: true,
-
-                                                                                                      },
-
-
-                                                                                                          width: 150,
-                                                                                                          height: 180,
-                                                                                                          margin: {
-                                                                                                            l: 48,
-                                                                                                            r: 0,
-                                                                                                            b: 0,
-                                                                                                            t: 20,
-                                                                                                            pad: 4
-                                                                                                          }
-                                                                                                   };
-
-                                                                                     layout.title = {
-                                                                                      text: '',
-                                                                                      font: {
-                                                                                        size: 11,
-                                                                                        color: 'black'
-                                                                                      },
-                                                                                      y: 0.90,
-                                                                                      xanchor: 'left',
-                                                                                      yanchor: 'bottom',
-                                                                                    };
-
-                                                                                    var config = {
-                                                                                                         'displayModeBar': false,
-                                                                                                          'responsive': true,
-                                                                                                     };
-
-                                                                                        Plotly.newPlot('positions-tiny12', trace1, layout, config);
+                                                                        <div id="positions-summary" class="responsive-plot">
+                                                                            <script type="text/javascript" src="{{ url_for('static', filename='js/positions_summary.js') }}"></script>
+                                                                            <script type="text/javascript">
+                                                                                positionsSummary({{ sum_positions_fx|tojson }},
+                                                                                                 {{ sum_positions_bonds|tojson }},
+                                                                                                 {{ sum_positions_equities|tojson }})
                                                                             </script>
                                                                           </div>
                                                                     </td>
@@ -1139,15 +1063,15 @@ body {
                                                                             </script>
                                                                           </div>
                                                                     </td>
-                                                                  </tr>
+                                                                </tr>
                                                             </tbody>
-                                                            </table>
-                                                        </div>
+                                                        </table>
+                                                    </div>
                                                  </div>
                                                 <!-- Table4: Main table Total Performance Positions -->
                                                 <div class="main-table-positions-performance" >
-                                                 <div class="table-responsive-lg">
-                                                     <table class="table table4-borderless" id="table4">
+                                                    <div class="table-responsive-lg">
+                                                        <table class="table table4-borderless" id="table4">
                                                          <tbody class="no-border-x">
                                                                 <tr>
                                                                     <td><strong>Class</strong></td>
@@ -1330,7 +1254,7 @@ body {
                                                                 </tr>
                                                              </tbody>
                                                      </table>
-                                                 </div>
+                                                    </div>
                                              </div><!-- .div main-table-container -->
                                         </div>
                                     </div>
@@ -1347,12 +1271,11 @@ body {
                                                         <table class="table table-borderless" id="table-charts1">
                                                             <tbody class="no-border-x">
                                                                 <tr>
-                                                                    <td><strong>Signals</strong></td>
-                                                                    <td><strong>Positions</strong></td>
-                                                                    <td><strong>Performances Weekly</strong></td>
-                                                                    <td><strong>Performances YTD</strong></td>
+                                                                    <td id="signals_title"><strong>Signals</strong></td>
+                                                                    <td id="positions_title"><strong>Positions</strong></td>
+                                                                    <td id="weekly_title"><strong>Performances Weekly</strong></td>
+                                                                    <td id="ytd_title"><strong>Performances YTD</strong></td>
                                                                 </tr>
-
                                                                 <tr>
                                                                     <td>
                                                                         <div id="signals_assets" class="responsive-plot"></div>

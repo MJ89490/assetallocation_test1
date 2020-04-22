@@ -44,7 +44,7 @@ function signalsAssets(signals_gbp, signals_cad, signals_aud, signals_eur, signa
                     orientation: 'h',
                     }];
 
-    var layout = {  font: {size: 11, family: 'Arial, serif'},
+    var layout = {  font: {size: 12, family: 'Arial, serif'},
                     xaxis: {
                             autorange: true,
                             showgrid: false,
