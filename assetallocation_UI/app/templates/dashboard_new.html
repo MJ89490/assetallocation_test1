@@ -1373,7 +1373,6 @@ body {
                                                                                            {{ signals_us_equities|tojson }})
                                                                         </script>
                                                                     </td>
-
                                                                     <td>
                                                                         <div id="position_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/positions_assets.js') }}"></script>
@@ -1411,10 +1410,25 @@ body {
                                                                                          {{ performance_eu_equities|tojson }},
                                                                                          {{ performance_us_equities|tojson }})
                                                                         </script>
+                                                                    </td>
                                                                     <td>
-
-
-
+                                                                        <div id="ytd_assets" class="responsive-plot"></div>
+                                                                        <script type="text/javascript" src="{{ url_for('static', filename='js/ytd_assets.js') }}"></script>
+                                                                        <script type="text/javascript">
+                                                                            ytdAssets({{ performance_ytd_gbp|tojson }},
+                                                                                      {{ performance_ytd_cad|tojson }},
+                                                                                      {{ performance_ytd_aud|tojson }},
+                                                                                      {{ performance_ytd_eur|tojson }},
+                                                                                      {{ performance_ytd_jpy|tojson }},
+                                                                                      {{ performance_ytd_ca_bonds|tojson }},
+                                                                                      {{ performance_ytd_eu_bonds|tojson }},
+                                                                                      {{ performance_ytd_uk_bonds|tojson }},
+                                                                                      {{ performance_ytd_us_bonds|tojson }},
+                                                                                      {{ performance_ytd_hk_equities|tojson }},
+                                                                                      {{ performance_ytd_jp_equities|tojson }},
+                                                                                      {{ performance_ytd_eu_equities|tojson }},
+                                                                                      {{ performance_ytd_us_equities|tojson }})
+                                                                        </script>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
