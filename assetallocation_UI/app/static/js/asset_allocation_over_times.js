@@ -12,7 +12,7 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     fill: 'tozeroy',
                     type: 'scatter',
                     mode: 'none',
-                    fillcolor: 'rgba(0, 153, 204, 0.5)'
+                    fillcolor: 'rgb(0, 153, 204)'
                     };
 
     var trace2 = {
@@ -20,7 +20,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'Eurostoxx',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(0, 170, 85)'
                     };
 
     var trace3 = {
@@ -28,7 +29,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'Topix',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(255, 204, 0)'
                  };
 
     var trace4 = {
@@ -36,7 +38,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'Hang-Seng',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(163, 163, 163)'
                  };
 
     var trace5 = {
@@ -44,7 +47,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'Treasury bond',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: '#ED1C24'
                 };
 
     var trace6 = {
@@ -52,7 +56,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'Gilt',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: '#007faa'
                  };
 
     var trace7 = {
@@ -61,7 +66,7 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     fill: 'tozeroy',
                     type: 'scatter',
                     mode: 'none',
-                    fillcolor: 'rgba(0, 153, 204, 0.5)'
+                    fillcolor: 'rgb(0, 153, 204)'
                  };
 
     var trace8 = {
@@ -69,7 +74,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'Russell 2000',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(102, 102, 102)'
                  };
 
     var trace9 = {
@@ -77,7 +83,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'JPY',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(0, 102, 136)'
                  };
 
     var trace10 = {
@@ -85,7 +92,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'EUR',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(102, 204, 238)'
                   };
 
     var trace11 = {
@@ -93,7 +101,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'AUD',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(192, 0, 0)'
                   };
 
     var trace12 = {
@@ -101,7 +110,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'CAD',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(0, 170, 85)'
                   };
 
     var trace13 = {
@@ -109,7 +119,8 @@ function assetAllocationChart(positions_us_equities, positions_eu_equities, posi
                     name: 'GBP',
                     fill: 'tozeroy',
                     type: 'scatter',
-                    mode: 'none'
+                    mode: 'none',
+                    fillcolor: 'rgb(255, 224, 102)'
                   };
 
     var layout = {

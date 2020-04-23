@@ -203,13 +203,13 @@ body {
                                             <div id="sparklines_assets_one" class="responsive-plot"></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_one.js') }}"></script>
                                             <script type="text/javascript">
-                                                sparklinesAssetsOne({{ us_equities_sparklines|tojson }},
+                                                sparklinesAssetsOne({{ positions_us_equities_sparklines|tojson }},
                                                                     {{ positions_eu_equities_sparklines|tojson }},
                                                                     {{ positions_jp_equities_sparklines|tojson }},
                                                                     {{ positions_hk_equities_sparklines|tojson }},
                                                                     {{ positions_us_bonds_sparklines|tojson }},
-                                                                     {{ positions_uk_bonds_sparklines|tojson }})
-                                               </script>
+                                                                    {{ positions_uk_bonds_sparklines|tojson }})
+                                             </script>
                                         </div>
                                     </div>
                                 </div>
@@ -225,7 +225,9 @@ body {
                                                                          {{ positions_jpy_sparklines|tojson }},
                                                                          {{ positions_eur_sparklines|tojson }},
                                                                          {{ positions_aud_sparklines|tojson }},
-                                                                         {{ positions_cad_sparklines|tojson }})
+                                                                         {{ positions_cad_sparklines|tojson }},
+                                                                         {{ positions_gbp_sparklines|tojson }}
+                                                                         )
                                                  </script>
                                          </div>
                                      </div>

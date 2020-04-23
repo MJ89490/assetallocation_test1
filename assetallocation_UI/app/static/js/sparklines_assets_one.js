@@ -6,69 +6,69 @@ function sparklinesAssetsOne(us_equities_sparklines, positions_eu_equities_spark
 {
 
     trace1 = {fill: 'tozeroy',
-              line: {color: 'rgba(255, 204, 0, 1)', width: 1},
+              line: {color: 'rgb(255, 204, 0)', width: 1},
               mode: 'lines',
               name: 'US Equities',
               type: 'scatter',
               y: us_equities_sparklines,
               xaxis: 'x',
               yaxis: 'y',
-              fillcolor: 'rgba(255, 204, 0, 0.5)'
+              fillcolor: 'rgb(255, 204, 0)'
               };
 
     trace2 = {fill: 'tozeroy',
-              line: {color: 'rgba(0, 153, 204, 1)', width: 1},
+              line: {color: 'rgb(0, 153, 204)', width: 1},
               mode: 'lines',
               name: 'EU Equities',
               type: 'scatter',
               y: positions_eu_equities_sparklines ,
               xaxis: 'x2',
               yaxis: 'y2',
-              fillcolor: 'rgba(0, 153, 204, 0.5)',
+              fillcolor: 'rgb(0, 153, 204)',
               };
 
     trace3 = {fill: 'tozeroy',
-              line: {color: 'rgba(0, 170, 85, 1)', width: 1},
+              line: {color: 'rgb(0, 170, 85)', width: 1},
               mode: 'lines',
               name: 'JP Equities',
               type: 'scatter',
               y: positions_jp_equities_sparklines,
               xaxis: 'x3',
               yaxis: 'y3',
-              fillcolor: 'rgba(0, 170, 85, 0.5)'
+              fillcolor: 'rgb(0, 170, 85)'
               };
 
     trace4 = {fill: 'tozeroy',
-              line: {color: 'rgba(238, 34, 34, 1)', width: 1},
+              line: {color: 'rgb(238, 34, 34)', width: 1},
               mode: 'lines',
               name: 'HK Equities',
               type: 'scatter',
               y: positions_hk_equities_sparklines,
               xaxis: 'x4',
               yaxis: 'y4',
-              fillcolor: 'rgba(238, 34, 34, 0.5)'
+              fillcolor: 'rgb(238, 34, 34)'
              };
 
     trace5 = {fill: 'tozeroy',
-              line:{color: 'rgba(68, 84, 106, 1)', width: 1},
+              line:{color: 'rgb(68, 84, 106)', width: 1},
               mode: 'lines',
               name: 'US 10y Bonds',
               type: 'scatter',
               y: positions_us_bonds_sparklines,
               xaxis: 'x5',
               yaxis: 'y5',
-              fillcolor: 'rgba(68, 84, 106, 0.5)'
+              fillcolor: 'rgb(68, 84, 106)'
              };
 
     trace6 = {fill: 'tozeroy',
-             line: {color: 'rgba(163, 163, 163, 1)', width: 1},
+             line: {color: 'rgb(163, 163, 163)', width: 1},
              mode: 'lines',
              name: 'UK 10y Bonds',
              type: 'scatter',
              y: positions_uk_bonds_sparklines,
              xaxis: 'x6',
              yaxis: 'y6',
-             fillcolor: 'rgba(163, 163, 163, 0.5)'
+             fillcolor: 'rgb(163, 163, 163)'
             };
 
     data = [trace1, trace2, trace3, trace4, trace5, trace6];

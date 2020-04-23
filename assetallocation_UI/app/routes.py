@@ -250,7 +250,7 @@ def times_dashboard():
     return render_template('dashboard_new.html', form=form, m=m,
 
                            # ------------------------------------- NEW -------------------------------------------------
-                           us_equities_sparklines=positions_us_equities_sparklines,
+                           positions_us_equities_sparklines=positions_us_equities_sparklines,
                            positions_eu_equities_sparklines=positions_eu_equities_sparklines,
                            positions_jp_equities_sparklines=positions_jp_equities_sparklines,
                            positions_hk_equities_sparklines=positions_hk_equities_sparklines,
