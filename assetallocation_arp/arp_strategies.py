@@ -38,11 +38,11 @@ def write_output_to_excel(model_outputs):
     if models_names.Models.times.name in model_outputs.keys():
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models_names.Models.times.name]
         print(os.getcwd())
-        path = os.path.join(os.path.dirname(__file__), "times_model.xls")
+        path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
         print(path)
         wb = xw.Book(path)
-        sheet_times_output = wb.sheets['output']
-        sheet_times_input = wb.sheets['input']
+        sheet_times_output = wb.sheets['times_output']
+        # sheet_times_input = wb.sheets['input']
 
         n_columns = len(signals.columns) + 2
         sheet_times_output.range('rng_times_output').offset(-1, 0).value = "TIMES Signals"
@@ -53,36 +53,44 @@ def write_output_to_excel(model_outputs):
         sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
         # write inputs used to excel and run time
         #sheet_times_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-        sheet_times_input.range('rng_inputs_used').value = asset_inputs
-        sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
+        # sheet_times_input.range('rng_inputs_used').value = asset_inputs
+        # sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
 
+
+        wb.close()
 
 def write_output(model_outputs):
 
     if models_names.Models.times.name in model_outputs.keys():
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
 
+        path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
+
+        xw.Book('arp_dashboard.xlsm').set_mock_caller()
+
+        sheet_times_output = xw.Book.caller().sheets['times_output']
+
         n_columns = len(signals.columns) + 2
 
-        xw.Range('rng_times_output').offset(-1, 0).value = "TIMES Signals"
+        sheet_times_output.range('rng_times_output').offset(-1, 0).value = "TIMES Signals"
 
-        xw.Range('rng_times_output').value = signals
-
-        xw.Range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
-
-        xw.Range('rng_times_output').offset(0, n_columns + 2).value = returns
-
-        xw.Range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
-
-        xw.Range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
-
-        # write inputs used to excel and run time
-
-        # xw.Range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-
-        xw.Range('rng_inputs_used').value = times_inputs
-
-        xw.Range('rng_inputs_used').offset(3, 0).value = asset_inputs
+        sheet_times_output.range('rng_times_output').value = signals
+        #
+        sheet_times_output.range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
+        #
+        sheet_times_output.range('rng_times_output').offset(0, n_columns + 2).value = returns
+        #
+        sheet_times_output.range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
+        #
+        sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
+        #
+        # # write inputs used to excel and run time
+        #
+        # # xw.Range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        #
+        # sheet_times_output.range('rng_inputs_used').value = times_inputs
+        #
+        # sheet_times_output.range('rng_inputs_used').offset(3, 0).value = asset_inputs
 
 
 def get_inputs_from_excel():
@@ -118,5 +126,5 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-    # get_inputs_from_excel()
-    sys.exit(get_inputs_from_python(get_input_user()))
+    get_inputs_from_excel()
+    # sys.exit(get_inputs_from_python(get_input_user()))
