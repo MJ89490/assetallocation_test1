@@ -17,7 +17,7 @@ def run_model(model_type, mat_file=None, input_file=None):
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
+        write_output({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
 
     if model_type == models_names.Models.maven.name:
         print(model_type)
@@ -57,6 +57,34 @@ def write_output_to_excel(model_outputs):
         sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
 
 
+def write_output(model_outputs):
+
+    if models_names.Models.times.name in model_outputs.keys():
+        asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
+
+        n_columns = len(signals.columns) + 2
+
+        xw.Range('rng_times_output').offset(-1, 0).value = "TIMES Signals"
+
+        xw.Range('rng_times_output').value = signals
+
+        xw.Range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
+
+        xw.Range('rng_times_output').offset(0, n_columns + 2).value = returns
+
+        xw.Range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
+
+        xw.Range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
+
+        # write inputs used to excel and run time
+
+        # xw.Range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
+        xw.Range('rng_inputs_used').value = times_inputs
+
+        xw.Range('rng_inputs_used').offset(3, 0).value = asset_inputs
+
+
 def get_inputs_from_excel():
     # select data from excel
 
@@ -90,5 +118,5 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-    get_inputs_from_excel()
-    # sys.exit(get_inputs_from_python(get_input_user()))
+    # get_inputs_from_excel()
+    sys.exit(get_inputs_from_python(get_input_user()))
