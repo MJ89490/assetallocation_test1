@@ -418,13 +418,13 @@ table {
 
 #sidebar-form {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; height: 35px; width: 150px; margin-left: 16px; font-size: 14.5px;}
 
-#sidebar-submit {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px; height: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
+#sidebar-submit {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px!important; height: 35px!important; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px;}
 
 #sidebar-submit1 {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px; height: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px; margin-top: 4px; }
 
 #sidebar-submit2 {background-color: #fff; border-color: #B0B0B0; color:#B0B0B0; width: 35px; height: 35px; font-size: 9px; padding-top: 8px; padding-left: 10px; padding-bottom: 8px; margin-top: 3px; }
 
-sidebar-main-submit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 15px; margin-top: 4px; }
+#sidebar-main-submit {background-color: #007faa; border-color:#007faa; color:#fff; height: 35px; font-size: 15px; padding-top:5px; margin-bottom: 15px; margin-top: 4px; }
 
 #selectionStartDateChart{text-align: center; color: #D3D3D3; padding-left: 40px; }
 
