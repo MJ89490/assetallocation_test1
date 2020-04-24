@@ -31,6 +31,8 @@ class ExportDataForm(FlaskForm):
     inputs = SelectField('Inputs', choices=[('TIMES Signals', 'Signals'), ('TIMES Returns', 'Returns'), ('TIMES Positions','Positions')])
     submit_ok = SubmitField('Ok')
 
+    # todo create a common button class and gives the inputs
+
     start_date_inputs = StringField(u'Start Date', validators=[DataRequired(message="The username is required")])
     end_date_inputs = StringField(u'End Date', validators=[DataRequired(message="The username is required")])
 

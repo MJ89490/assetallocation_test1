@@ -7,9 +7,6 @@ from flask import flash
 from flask import url_for
 from flask import redirect
 from flask import request
-
-
-
 from app import app
 from app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
@@ -83,6 +80,7 @@ def times_page():
             run_model_ok = "run_times_model_ok"
 
             try:
+                #handling data: another file (file data)
                 data = {                                                        #todo créer une fct pour ces données
                             form.time_lag.name: [int(form.time_lag.data)],
                             form.leverage_type.name: [form.leverage_type.data],
@@ -139,8 +137,9 @@ def times_page():
 @login_required
 def times_dashboard():
     form = ExportDataForm()
-    times_data = read_data_from_excel()
 
+    # move the logic to another file
+    times_data = read_data_from_excel()
     positions_us_equities, positions_eu_equities, positions_jp_equities, positions_hk_equities, positions_us_bonds, \
     positions_uk_bonds, positions_eu_bonds, positions_ca_bonds, positions_jpy, positions_eur, positions_aud, \
     positions_cad, positions_gbp, jpy_dates_list = data_allocation_over_time_chart(times_data)
@@ -247,6 +246,7 @@ def times_dashboard():
         elif request.form['submit_button'] == 'selectDataChart0':
             print('data data data')
 
+    # put the data in dict or create a class to handle the data nicer
     return render_template('dashboard_new.html', form=form, m=m,
 
                            # ------------------------------------- NEW -------------------------------------------------

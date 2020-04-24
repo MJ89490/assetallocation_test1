@@ -8,6 +8,9 @@ from .models import User
 import jinja2
 import os
 
+
+#todo create a function later
+
 CURRENT_PATH = os.path.dirname(__file__)
 
 # Set the origin template (templates) of Flask and add subfolders
