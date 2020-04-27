@@ -50,8 +50,8 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
 
 
-    firstCurrency = [frst(x) for x in currencyCrosses]
-    secondCurrency = [scnd(x) for x in currencyCrosses]
+    firstCurrency = [frst(x) for x in currencyCrosses.cross]
+    secondCurrency = [scnd(x) for x in currencyCrosses.cross]
     matrixSpotA = pd.DataFrame({firstCurrency})
     matrixSpotB = pd.DataFrame({secondCurrency})
     matrixCarryA = pd.DataFrame({firstCurrency})
@@ -73,7 +73,7 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
     pass
 
-def create_crosses_two(currencyList):
+def create_crosses(currencyList):
     # create data frame
     output = pd.DataFrame(columns=['cross'])
     for i in list(range(1,(len(currencyList.index)-1))):
