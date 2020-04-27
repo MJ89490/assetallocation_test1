@@ -81,7 +81,7 @@ def create_crosses(currencyList):
             output = output.append({'cross': currencyList[i]+currencyList[j]}, ignore_index=True)
     x = output
     return x
-# this function has a small problem with the indexing not being correct
+# this function has a small problem with the indexing not being correct in the for's
 
 
 def frst(inpt):
