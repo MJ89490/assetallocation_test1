@@ -244,9 +244,9 @@
                                                                         <div id="positions-summary" class="responsive-plot">
                                                                             <script type="text/javascript" src="{{ url_for('static', filename='js/positions_summary.js') }}"></script>
                                                                             <script type="text/javascript">
-                                                                                positionsSummary({{ sum_positions_fx|tojson }},
-                                                                                                 {{ sum_positions_bonds|tojson }},
-                                                                                                 {{ sum_positions_equities|tojson }})
+                                                                                positionsSummary({{ table['sum_positions_fx']|tojson }},
+                                                                                                 {{ table['sum_positions_bonds']|tojson }},
+                                                                                                 {{ table['sum_positions_equities']|tojson }})
                                                                             </script>
                                                                           </div>
                                                                     </td>
@@ -254,9 +254,9 @@
                                                                         <div id="weekly_summary" class="responsive-plot">
                                                                             <script type="text/javascript" src="{{ url_for('static', filename='js/weekly_summary.js') }}"></script>
                                                                             <script type="text/javascript">
-                                                                                weeklySummary({{ sum_performance_weekly_fx|tojson }},
-                                                                                              {{ sum_performance_weekly_bonds|tojson }},
-                                                                                              {{ sum_performance_weekly_equities|tojson }})
+                                                                                weeklySummary({{ table['sum_performance_weekly_fx']|tojson }},
+                                                                                              {{ table['sum_performance_weekly_bonds']|tojson }},
+                                                                                              {{ table['sum_performance_weekly_equities']|tojson }})
                                                                             </script>
                                                                           </div>
                                                                     </td>
@@ -264,9 +264,9 @@
                                                                         <div id="ytd_summary" class="responsive-plot">
                                                                             <script type="text/javascript" src="{{ url_for('static', filename='js/ytd_summary.js') }}"></script>
                                                                             <script type="text/javascript">
-                                                                                ytdSummary({{ sum_performance_ytd_fx|tojson }},
-                                                                                           {{ sum_performance_ytd_bonds|tojson }},
-                                                                                           {{ sum_performance_ytd_equities|tojson }})
+                                                                                ytdSummary({{ table['sum_performance_ytd_fx']|tojson }},
+                                                                                           {{ table['sum_performance_ytd_bonds']|tojson }},
+                                                                                           {{ table['sum_performance_ytd_equities']|tojson }})
                                                                             </script>
                                                                           </div>
                                                                     </td>
@@ -295,7 +295,7 @@
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>US Equities</td>
-                                                                    <td>{{ signals_us_equities }}</td>
+                                                                    <td>{{ table['signals']['US Equities'] }}</td>
                                                                     <td>{{  positions_us_equities_overview }}%</td>
                                                                     <td>{{  positions_us_equities_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -307,7 +307,7 @@
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>EU Equities</td>
-                                                                    <td>{{ signals_eu_equities }}</td>
+                                                                    <td>{{  table['signals']['EU Equities'] }}</td>
                                                                     <td>{{ positions_eu_equities_overview }}%</td>
                                                                     <td>{{ positions_eu_equities_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -319,7 +319,7 @@
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>JP Equities</td>
-                                                                    <td>{{ signals_jp_equities }}</td>
+                                                                    <td>{{  table['signals']['JP Equities'] }}</td>
                                                                     <td>{{ positions_jp_equities_overview }}%</td>
                                                                     <td>{{ positions_jp_equities_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -331,7 +331,7 @@
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>HK Equities</td>
-                                                                    <td>{{ signals_hk_equities }}</td>
+                                                                    <td>{{  table['signals']['HK Equities'] }}</td>
                                                                     <td>{{ positions_hk_equities_overview }}%</td>
                                                                     <td>{{ positions_hk_equities_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -343,7 +343,7 @@
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
                                                                     <td>US 10y Bonds</td>
-                                                                    <td>{{ signals_us_bonds }}</td>
+                                                                    <td>{{  table['signals']['US 10y Bonds'] }}</td>
                                                                     <td>{{  positions_us_bonds_overview }}%</td>
                                                                     <td>{{  positions_us_bonds_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -355,7 +355,7 @@
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
                                                                     <td>UK 10y Bonds</td>
-                                                                    <td>{{ signals_uk_bonds }}</td>
+                                                                    <td>{{ table['signals']['UK 10y Bonds'] }}</td>
                                                                     <td>{{ positions_uk_bonds_overview }}%</td>
                                                                     <td>{{ positions_uk_bonds_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -366,8 +366,8 @@
 
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
-                                                                    <td>Eu 10y Bonds</td>
-                                                                    <td>{{ signals_eu_bonds }}</td>
+                                                                    <td>EU 10y Bonds</td>
+                                                                    <td>{{ table['signals']['Eu 10y Bonds'] }}</td>
                                                                     <td>{{ positions_eu_bonds_overview }}%</td>
                                                                     <td>{{ positions_eu_bonds_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -379,7 +379,7 @@
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
                                                                     <td>CA 10y Bonds</td>
-                                                                    <td>{{ signals_ca_bonds }}</td>
+                                                                    <td>{{ table['signals']['CA 10y Bonds'] }}</td>
                                                                     <td>{{ positions_ca_bonds_overview }}%</td>
                                                                     <td>{{ positions_ca_bonds_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -391,7 +391,7 @@
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>JPY</td>
-                                                                    <td>{{ signals_jpy }}</td>
+                                                                    <td>{{ table['signals']['JPY'] }}</td>
                                                                     <td>{{ positions_jpy_overview }}%</td>
                                                                     <td>{{ positions_jpy_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -403,7 +403,7 @@
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>EUR</td>
-                                                                    <td>{{ signals_eur }}</td>
+                                                                    <td>{{ table['signals']['EUR'] }}</td>
                                                                     <td>{{  positions_eur_overview }}</td>
                                                                     <td>{{  positions_eur_overview }}</td>
                                                                     <td>Buy/Sell</td>
@@ -415,7 +415,7 @@
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>AUD</td>
-                                                                    <td>{{ signals_aud }}</td>
+                                                                    <td>{{ table['signals']['AUD'] }}</td>
                                                                     <td>{{ positions_aud_overview }}%</td>
                                                                     <td>{{ positions_aud_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -427,7 +427,7 @@
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>CAD</td>
-                                                                    <td>{{ signals_cad }}</td>
+                                                                    <td>{{ table['signals']['CAD'] }}</td>
                                                                     <td>{{ positions_cad_overview }}%</td>
                                                                     <td>{{ positions_cad_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -439,7 +439,7 @@
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>GBP</td>
-                                                                    <td>{{ signals_gbp }}</td>
+                                                                    <td>{{ table['signals']['GBP'] }}</td>
                                                                     <td>{{ positions_gbp_overview }}%</td>
                                                                     <td>{{ positions_gbp_overview }}%</td>
                                                                     <td>Buy/Sell</td>
@@ -488,76 +488,76 @@
                                                                         <div id="signals_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/signal_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                             signalsAssets({{ signals_gbp|tojson }},
-                                                                                           {{ signals_cad|tojson }},
-                                                                                           {{ signals_aud|tojson }},
-                                                                                           {{ signals_eur|tojson }},
-                                                                                           {{ signals_jpy|tojson }},
-                                                                                           {{ signals_ca_bonds|tojson }},
-                                                                                           {{ signals_eu_bonds|tojson }},
-                                                                                           {{ signals_uk_bonds|tojson }},
-                                                                                           {{ signals_us_bonds|tojson }},
-                                                                                           {{ signals_hk_equities|tojson }},
-                                                                                           {{ signals_jp_equities|tojson }},
-                                                                                           {{ signals_eu_equities|tojson }},
-                                                                                           {{ signals_us_equities|tojson }})
+                                                                             signalsAssets({{ table['signals']['GBP']|tojson }},
+                                                                                           {{ table['signals']['CAD']|tojson }},
+                                                                                           {{ table['signals']['AUD']|tojson }},
+                                                                                           {{ table['signals']['EUR']|tojson }},
+                                                                                           {{ table['signals']['JPY']|tojson }},
+                                                                                           {{ table['signals']['CA 10y Bonds']|tojson }},
+                                                                                           {{ table['signals']['Eu 10y Bonds']|tojson }},
+                                                                                           {{ table['signals']['UK 10y Bonds']|tojson }},
+                                                                                           {{ table['signals']['US 10y Bonds']|tojson }},
+                                                                                           {{ table['signals']['HK Equities']|tojson }},
+                                                                                           {{ table['signals']['JP Equities']|tojson }},
+                                                                                           {{ table['signals']['EU Equities']|tojson }},
+                                                                                           {{ table['signals']['US Equities']|tojson }})
                                                                         </script>
                                                                     </td>
                                                                     <td>
                                                                         <div id="position_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/positions_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                            positionsAssets({{ positions_gbp_overview|tojson }},
-                                                                                            {{ positions_cad_overview|tojson }},
-                                                                                            {{ positions_aud_overview|tojson }},
-                                                                                            {{ positions_eur_overview|tojson }},
-                                                                                            {{ positions_jpy_overview|tojson }},
-                                                                                            {{ positions_ca_bonds_overview|tojson }},
-                                                                                            {{ positions_eu_bonds_overview|tojson }},
-                                                                                            {{ positions_uk_bonds_overview|tojson }},
-                                                                                            {{ positions_us_bonds_overview|tojson }},
-                                                                                            {{ positions_hk_equities_overview|tojson }},
-                                                                                            {{ positions_jp_equities_overview|tojson }},
-                                                                                            {{ positions_eu_equities_overview|tojson }},
-                                                                                            {{ positions_us_equities_overview|tojson }})
+                                                                            positionsAssets({{ table['positions']['GBP.2']|tojson }},
+                                                                                            {{ table['positions']['CAD.2']|tojson }},
+                                                                                            {{ table['positions']['AUD.2']|tojson }},
+                                                                                            {{ table['positions']['EUR.2']|tojson }},
+                                                                                            {{ table['positions']['JPY.2']|tojson }},
+                                                                                            {{ table['positions']['CA 10y Bonds.2']|tojson }},
+                                                                                            {{ table['positions']['Eu 10y Bonds.2']positions_eu_bonds_overview|tojson }},
+                                                                                            {{ table['positions']['UK 10y Bonds.2']positions_uk_bonds_overview|tojson }},
+                                                                                            {{ table['positions']['US 10y Bonds.2']positions_us_bonds_overview|tojson }},
+                                                                                            {{ table['positions']['HK Equities.2']positions_hk_equities_overview|tojson }},
+                                                                                            {{ table['positions']['JP Equities.2']positions_jp_equities_overview|tojson }},
+                                                                                            {{ table['positions']['EU Equities.2']positions_eu_equities_overview|tojson }},
+                                                                                            {{ table['positions']['US Equities.2']positions_us_equities_overview|tojson }})
                                                                         </script>
                                                                     </td>
                                                                     <td>
                                                                         <div id="weekly_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/weekly_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                            weeklyAssets({{ performance_gbp_overview|tojson }},
-                                                                                         {{ performance_cad_overview|tojson }},
-                                                                                         {{ performance_aud_overview|tojson }},
-                                                                                         {{ performance_eur_overview|tojson }},
-                                                                                         {{ performance_jpy_overview|tojson }},
-                                                                                         {{ performance_ca_bonds|tojson }},
-                                                                                         {{ performance_eu_bonds|tojson }},
-                                                                                         {{ performance_uk_bonds|tojson }},
-                                                                                         {{ performance_us_bonds|tojson }},
-                                                                                         {{ performance_hk_equities|tojson }},
-                                                                                         {{ performance_jp_equities|tojson }},
-                                                                                         {{ performance_eu_equities|tojson }},
-                                                                                         {{ performance_us_equities|tojson }})
+                                                                            weeklyAssets({{ table['performance_weekly']['GBP.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['CAD.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['AUD.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['EUR.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['JPY.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['CA 10y Bonds.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['Eu 10y Bonds.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['UK 10y Bonds.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['US 10y Bonds.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['HK Equities.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['JP Equities.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['EU Equities.1']|tojson }},
+                                                                                         {{ table['performance_weekly']['US Equities.1']|tojson }})
                                                                         </script>
                                                                     </td>
                                                                     <td>
                                                                         <div id="ytd_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/ytd_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                            ytdAssets({{ performance_ytd_gbp|tojson }},
-                                                                                      {{ performance_ytd_cad|tojson }},
-                                                                                      {{ performance_ytd_aud|tojson }},
-                                                                                      {{ performance_ytd_eur|tojson }},
-                                                                                      {{ performance_ytd_jpy|tojson }},
-                                                                                      {{ performance_ytd_ca_bonds|tojson }},
-                                                                                      {{ performance_ytd_eu_bonds|tojson }},
-                                                                                      {{ performance_ytd_uk_bonds|tojson }},
-                                                                                      {{ performance_ytd_us_bonds|tojson }},
-                                                                                      {{ performance_ytd_hk_equities|tojson }},
-                                                                                      {{ performance_ytd_jp_equities|tojson }},
-                                                                                      {{ performance_ytd_eu_equities|tojson }},
-                                                                                      {{ performance_ytd_us_equities|tojson }})
+                                                                            ytdAssets({{ table['performance_ytd']['GBP.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['CAD.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['AUD.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['EUR.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['JPY.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['CA 10y Bonds.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['Eu 10y Bonds.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['UK 10y Bonds.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['US 10y Bonds.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['HK Equities.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['JP Equities.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['EU Equities.1']|tojson }},
+                                                                                      {{ table['performance_ytd']['US Equities.1']|tojson }})
                                                                         </script>
                                                                     </td>
                                                                 </tr>
@@ -606,19 +606,19 @@
                                             <div id="asset_allocation_over_times" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/asset_allocation_over_times.js') }}"></script>
                                             <script type="text/javascript">
-                                                assetAllocationChart({{ positions_us_equities|tojson }},
-                                                                     {{ positions_eu_equities|tojson }},
-                                                                     {{ positions_jp_equities|tojson }},
-                                                                     {{ positions_hk_equities|tojson }},
-                                                                     {{ positions_us_bonds|tojson }},
-                                                                     {{ positions_uk_bonds|tojson }},
-                                                                     {{ positions_eu_bonds|tojson }},
-                                                                     {{ positions_ca_bonds|tojson }},
-                                                                     {{ positions_jpy|tojson }},
-                                                                     {{ positions_eur|tojson }},
-                                                                     {{ positions_aud|tojson }},
-                                                                     {{ positions_cad|tojson }},
-                                                                     {{ positions_gbp|tojson }}
+                                                assetAllocationChart({{ asset_alloc['us_equities']|tojson }},
+                                                                     {{ asset_alloc['eu_equities']|tojson }},
+                                                                     {{ asset_alloc['jp_equities']|tojson }},
+                                                                     {{ asset_alloc['hk_equities']|tojson }},
+                                                                     {{ asset_alloc['us_bonds']|tojson }},
+                                                                     {{ asset_alloc['uk_bonds']|tojson }},
+                                                                     {{ asset_alloc['eu_bonds']|tojson }},
+                                                                     {{ asset_alloc['ca_bonds']|tojson }},
+                                                                     {{ asset_alloc['jpy']|tojson }},
+                                                                     {{ asset_alloc['eur']|tojson }},
+                                                                     {{ asset_alloc['aud']|tojson }},
+                                                                     {{ asset_alloc['cad']|tojson }},
+                                                                     {{ asset_alloc['gbp']|tojson }}
                                                                      )
                                             </script>
                                         </div>
@@ -660,7 +660,7 @@
                                             <div id="performance_jpy" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_jpy.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceJpyChart({{ performance_jpy|tojson }})
+                                                performanceJpyChart({{ performance['jpy_performance']|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -698,7 +698,7 @@
                                             <div id="performance_eur" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_eur.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceEurChart({{ performance_eur|tojson }})
+                                                performanceEurChart({{ performance['eur_performance']|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -740,7 +740,7 @@
                                             <div id="performance_aud" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_aud.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceAudChart({{ performance_aud|tojson }})
+                                                performanceAudChart({{ performance['aud_performance']|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -782,7 +782,7 @@
                                             <div id="performance_cad" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_cad.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceCadChart({{ performance_cad|tojson }})
+                                                performanceCadChart({{ performance['cad_performance']|tojson }})
                                             </script>
                                         </div>
                                     </div>

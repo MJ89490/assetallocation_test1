@@ -5,8 +5,9 @@ from datetime import timedelta
 
 
 PATH = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
-#to create a class
+#todo create a class
 
+#todo create an import depending on the asset class not depending on the chart!!!
 
 def read_data_from_excel():
     times_data = pd.read_excel(PATH, sheet_name="times_output")
@@ -75,8 +76,6 @@ def data_allocation_over_time_chart(times_data):
     jpy = jpy.loc['2018-09-07':'2019-10-23']
     jpy = jpy['JPY.2'].tolist()
 
-
-
     eur = times_data.loc[:, 'TIMES Positions':'EUR.2']
     eur = eur.set_index('TIMES Positions')
     eur = eur.loc['2018-09-07':'2019-10-23']
@@ -97,8 +96,13 @@ def data_allocation_over_time_chart(times_data):
     gbp = gbp.loc['2018-09-07':'2019-10-23']
     gbp = gbp['GBP.2'].tolist()
 
-    return us_equities, eu_equities, jp_equities, hk_equities, us_bonds, uk_bonds, eu_bonds, ca_bonds, jpy, eur, aud, \
-           cad, gbp, jpy_dates_list
+    return {'us_equities': us_equities , 'eu_equities': eu_equities, 'jp_equities': jp_equities, 'hk_equities': hk_equities,
+     'us_bonds': us_bonds, 'uk_bonds': uk_bonds, 'eu_bonds': eu_bonds, 'ca_bonds': ca_bonds, 'jpy': jpy, 'eur': eur,
+     'aud': aud, 'cad': cad, 'gbp': gbp}
+
+
+    # return us_equities, eu_equities, jp_equities, hk_equities, us_bonds, uk_bonds, eu_bonds, ca_bonds, jpy, eur, aud, \
+    #        cad, gbp, jpy_dates_list
 
 def data_performance_since_inception_chart(times_data):
 
@@ -130,7 +134,8 @@ def data_performance_since_inception_chart(times_data):
    cad_performance = cad_performance.loc['2016-03-16':'2019-06-29']
    cad_performance = cad_performance.tolist()
 
-   return total_performance, gbp_performance, jpy_performance, eur_performance, aud_performance, cad_performance, dates
+   return {'total_performance': total_performance, 'gbp_performance': gbp_performance, 'jpy_performance': jpy_performance,
+           'eur_performance': eur_performance, 'aud_performance': aud_performance, 'cad_performance': cad_performance}
 
 
 def data_table_times(times_data):
@@ -181,10 +186,13 @@ def data_table_times(times_data):
 
     sum_performance_ytd_fx = round(sum(performance_ytd.loc['JPY.1':'GBP.1']), 2)
 
-
-    return signals, positions, performance_weekly, performance_ytd, sum_positions_equities, sum_positions_bonds, \
-           sum_positions_fx, sum_performance_weekly_equities, sum_performance_weekly_bonds, sum_performance_weekly_fx, \
-           sum_performance_ytd_equities, sum_performance_ytd_bonds, sum_performance_ytd_fx
+    return {'signals': signals, 'positions': positions, 'performance_weekly': performance_weekly,
+            'performance_ytd': performance_ytd, 'sum_positions_equities': sum_positions_equities,
+            'sum_positions_bonds': sum_positions_bonds, 'sum_positions_fx': sum_positions_fx,
+            'sum_performance_weekly_equities': sum_performance_weekly_equities,
+            'sum_performance_weekly_bonds': sum_performance_weekly_bonds, 'sum_performance_weekly_fx': sum_performance_weekly_fx,
+            'sum_performance_ytd_equities': sum_performance_ytd_equities, 'sum_performance_ytd_bonds': sum_performance_ytd_bonds,
+            'sum_performance_ytd_fx': sum_performance_ytd_fx}
 
 def data_sparklines_charts(times_data):
 
@@ -261,6 +269,7 @@ def import_dates_inputs_dashboard(times_data):
 
 
     return signals_date_field, returns_date_field, positions_date_field
+
 
 if __name__ == "__main__":
     data = read_data_from_excel()
