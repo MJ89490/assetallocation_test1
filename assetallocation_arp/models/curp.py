@@ -33,7 +33,7 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
     # process data
 
-    asset_inputes.set_index('Currency')
+    asset_inputs.set_index('Currency')
 
     # create all FX crosses from the ones given
     # this needs to be smart in that it takes the first part of the cross as one matrix, the second part as the other and does A/B
@@ -66,7 +66,7 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     carryData = matrixCarryA/matrixCarryB #this wont work
 
     """""""""""
-    For this section i need to caluclate IR differentials
+    For this section i need to calculate IR differentials
     To do this:
     Build 2 empty DF
     """""""""""
@@ -75,14 +75,15 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
 def create_crosses_two(currencyList):
     # create data frame
-    output = pd.DataFrame({'cross':[]})
-    idx = 1
-    for i in list(range(1,(len(currencyList.index)-1))):
-        for j in list(range(i+1,len(currencyList.index))):
-            # print(currencyList[i])
-            # print(currencyList[j])
-            idx = idx + 1
-    return output
+    output = pd.DataFrame(columns=['cross'])
+    for i in list(range(1,(len(currencyList.index)))):
+        for j in list(range(i+1,len(currencyList.index)+1)):
+            output = output.append({'cross': currencyList[i]+currencyList[j]}, ignore_index=True)
+    print(len(currencyList.index)+1)
+    print(currencyList[(len(currencyList.index) + 1)])
+    x = output
+    return x
+# output = output.append({'cross' : currencyList[i]currencyList[j]}, ignore_index=True)
 
 def frst(inpt):
     return inpt[0:3]
@@ -96,8 +97,7 @@ def filter_data(all_data, tickers):
     return output
 
 
-
-
 if __name__ == "__main__":
     # test inputs
+
     curp_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
