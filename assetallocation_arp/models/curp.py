@@ -76,14 +76,13 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 def create_crosses_two(currencyList):
     # create data frame
     output = pd.DataFrame(columns=['cross'])
-    for i in list(range(1,(len(currencyList.index)))):
-        for j in list(range(i+1,len(currencyList.index)+1)):
+    for i in list(range(1,(len(currencyList.index)-1))):
+        for j in list(range(i+1,len(currencyList.index))):
             output = output.append({'cross': currencyList[i]+currencyList[j]}, ignore_index=True)
-    print(len(currencyList.index)+1)
-    print(currencyList[(len(currencyList.index) + 1)])
     x = output
     return x
-# output = output.append({'cross' : currencyList[i]currencyList[j]}, ignore_index=True)
+# this function has a small problem with the indexing not being correct
+
 
 def frst(inpt):
     return inpt[0:3]
