@@ -47,6 +47,8 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     secondCurrencySpotDataRatio = secondCurrencySpotData.pct_change+1
     SpotData = firstCurrencySpotDataRatio.div(secondCurrencySpotDataRatio)-1
 
+    # Blank line, delete later
+
     # Carry Data
     firstCurrencyCarryTicker = firstCurrency.applymap(lambda x: x +'USDCR Curncy')
     firstCurrencyCarryTickerList = firstCurrencyCarryTicker['cross'].tolist()
