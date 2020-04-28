@@ -18,7 +18,7 @@ def run_model(model_type, mat_file, input_file):
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
+        write_output_to_excel({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
 
     if model_type == models_names.Models.maven.name:
         print(model_type)
@@ -34,19 +34,13 @@ def run_model(model_type, mat_file, input_file):
         print(model_type)
 
 
-def write_output_to_excel(model_outputs):
-    """
-    :param model_outputs: outputs of the TIMES model
-    :return: write the results in the dashboard in times_output and times_input tabs
-    """
-
+def write_output_to_excel(model_outputs, input_file):
+    
     if models_names.Models.times.name in model_outputs.keys():
 
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
 
-        path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
-
-        xw.Book(path).set_mock_caller()
+        xw.Book(input_file).set_mock_caller()
 
         sheet_times_output = xw.Book.caller().sheets['times_output']
 
@@ -77,21 +71,15 @@ def write_output_to_excel(model_outputs):
 def get_inputs_from_excel():
 
     # select data from excel
-
-    input_file = None
-
     mat_file = xw.Range('rng_mat_file_path').value
-
     model_type = xw.Range('rng_model_type').value
-
+    file = xw.Range('rng_full_path').value
     # run selected model
-    run_model(model_type, mat_file, input_file)
+    run_model(model_type, mat_file, file)
 
 
-def get_inputs_from_python(model):
-    """
-    :param model: name of the model
-    """
+def get_inputs_from_python(model, file):
+
 
     # launch the script from Python
     mat_file = None
@@ -100,11 +88,12 @@ def get_inputs_from_python(model):
 
     models_list = [model.name for model in models_names.Models]
 
+
+    xw.Book(file).set_mock_caller()
+
     if model in models_list:
         model_type = model
-        path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
-        xw.Book(path).set_mock_caller()
-        run_model(model_type, mat_file, input_file)
+        run_model(model_type, mat_file, file)
     else:
         raise NameError("Your input is incorrect.")
 
@@ -117,5 +106,6 @@ def get_input_user():
 
 
 if __name__ == "__main__":
+
     get_inputs_from_excel()
-    # sys.exit(get_inputs_from_python(get_input_user()))
+    # get_inputs_from_python(model, file="arp_dashboard.xlsm")
