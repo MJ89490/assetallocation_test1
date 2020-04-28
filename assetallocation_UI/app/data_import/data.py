@@ -1,7 +1,7 @@
 import pandas as pd
 
 import enum
-
+#todo put one class per module
 #todo move to a module.py but issue to import module in the data.py
 class Assets(enum.Enum):
     US_Equities = 0
@@ -10,7 +10,7 @@ class Assets(enum.Enum):
     HK_Equities = 3
     US_10_y_Bonds = 4
     UK_10_y_Bonds = 5
-    Eu_10_y_Bonds = 6
+    EU_10_y_Bonds = 6
     CA_10_y_Bonds = 7
     JPY = 8
     EUR = 9
@@ -80,15 +80,73 @@ class CleaningDataFromExcel(ReadDataFromExcel):
         self.times_returns.columns = assets
 
 
-if __name__ == "__main__":
-    obj_cleaning_data = CleaningDataFromExcel()
-    obj_cleaning_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
-    obj_cleaning_data.import_data()
-    obj_cleaning_data.data_processing()
-    obj_cleaning_data.date_processing()
+class ChartsDataFromExcel(CleaningDataFromExcel):
+    def __init__(self):
+        super().__init__()
+        self.start_date = "" # default start date
+        self.end_date = ""   # default end_date
+        self.times_positions_dates = pd.DataFrame()
+        self.times_returns_dates = pd.DataFrame()
+        self.times_signals_dates = pd.DataFrame()
 
-    obj_cleaning_data.columns_names_processing()
+    @property
+    def start_date_chart(self):
+        return self.start_date
 
+    @start_date_chart.setter
+    def start_date_chart(self, value):
+        self.start_date = value
+
+    @property
+    def end_date_chart(self):
+        return self.end_date
+
+    @end_date_chart.setter
+    def end_date_chart(self, value):
+        self.end_date = value
+
+    def data_charts(self):
+
+        self.times_positions_dates = self.times_positions[self.start_date:self.end_date]
+        self.times_signals_dates = self.times_signals[self.start_date:self.end_date]
+        self.times_returns_dates = self.times_returns[self.start_date:self.end_date]
+
+    def template_data_charts(self):
+
+        return {"times_returns":self.times_returns_dates,
+                "times_positions": self.times_positions_dates,
+                "times_signals": self.times_signals_dates}
+
+
+# if __name__ == "__main__":
+#     obj_charts_data = ChartsDataFromExcel()
+#     obj_charts_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
+#     obj_charts_data.import_data()
+#     obj_charts_data.data_processing()
+#     obj_charts_data.date_processing()
+#     obj_charts_data.columns_names_processing()
+#     obj_charts_data.start_date_chart = "2018-09-06"
+#     obj_charts_data.end_date_chart = "2019-10-24"
+#     obj_charts_data.data_charts()
+#
+#     d = obj_charts_data.template_data_charts()
+
+
+#todo put in a main module
+def run_times():
+    obj_charts_data = ChartsDataFromExcel()
+    obj_charts_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
+    obj_charts_data.import_data()
+    obj_charts_data.data_processing()
+    obj_charts_data.date_processing()
+    obj_charts_data.columns_names_processing()
+    obj_charts_data.start_date_chart = "2018-09-06"
+    obj_charts_data.end_date_chart = "2019-10-24"
+    obj_charts_data.data_charts()
+
+    data = obj_charts_data.template_data_charts()
+
+    return data['times_returns'], data['times_positions'], data['times_signals']
 
 
 

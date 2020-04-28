@@ -138,6 +138,14 @@ def times_page():
 def times_dashboard():
     form = ExportDataForm()
 
+
+    from assetallocation_UI.app.data_import.data import run_times
+
+    times_returns, times_positions, times_signals = run_times()
+    template_data_new = {"times_returns": times_returns, "times_positions": times_positions, "times_signals": times_signals}
+
+
+
     # move the logic to another file
     times_data = read_data_from_excel()
     data_asset_alloc = data_allocation_over_time_chart(times_data=times_data)
@@ -229,7 +237,7 @@ def times_dashboard():
             print('data data data')
 
     # put the data in dict or create a class to handle the data nicer (later with the db?)
-    return render_template('dashboard_new.html', form=form, m=m, **template_data)
+    return render_template('dashboard_new.html', form=form, m=m, **template_data, **template_data_new)
 
 
 @app.route('/logout')

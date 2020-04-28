@@ -606,19 +606,19 @@
                                             <div id="asset_allocation_over_times" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/asset_allocation_over_times.js') }}"></script>
                                             <script type="text/javascript">
-                                                assetAllocationChart({{ asset_alloc['us_equities']|tojson }},
-                                                                     {{ asset_alloc['eu_equities']|tojson }},
-                                                                     {{ asset_alloc['jp_equities']|tojson }},
-                                                                     {{ asset_alloc['hk_equities']|tojson }},
-                                                                     {{ asset_alloc['us_bonds']|tojson }},
-                                                                     {{ asset_alloc['uk_bonds']|tojson }},
-                                                                     {{ asset_alloc['eu_bonds']|tojson }},
-                                                                     {{ asset_alloc['ca_bonds']|tojson }},
-                                                                     {{ asset_alloc['jpy']|tojson }},
-                                                                     {{ asset_alloc['eur']|tojson }},
-                                                                     {{ asset_alloc['aud']|tojson }},
-                                                                     {{ asset_alloc['cad']|tojson }},
-                                                                     {{ asset_alloc['gbp']|tojson }}
+                                                assetAllocationChart({{ times_positions['US_Equities'].tolist()|tojson }},
+                                                                     {{ times_positions['EU_Equities'].tolist()|tojson }},
+                                                                     {{ times_positions['JP_Equities'].tolist()|tojson }},
+                                                                     {{ times_positions['HK_Equities'].tolist()|tojson }},
+                                                                     {{ times_positions['US_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_positions['UK_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_positions['EU_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_positions['CA_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_positions['JPY'].tolist()|tojson }},
+                                                                     {{ times_positions['EUR'].tolist()|tojson }},
+                                                                     {{ times_positions['AUD'].tolist()|tojson }},
+                                                                     {{ times_positions['CAD'].tolist()|tojson }},
+                                                                     {{ times_positions['GBP'].tolist()|tojson }}
                                                                      )
                                             </script>
                                         </div>
@@ -660,7 +660,7 @@
                                             <div id="performance_jpy" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_jpy.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceJpyChart({{ performance['jpy_performance']|tojson }})
+                                                performanceJpyChart({{ times_returns['JPY'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -698,7 +698,7 @@
                                             <div id="performance_eur" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_eur.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceEurChart({{ performance['eur_performance']|tojson }})
+                                                performanceEurChart({{ times_returns['EUR'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -740,7 +740,7 @@
                                             <div id="performance_aud" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_aud.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceAudChart({{ performance['aud_performance']|tojson }})
+                                                performanceAudChart({{ times_returns['AUD'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -782,7 +782,7 @@
                                             <div id="performance_cad" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_cad.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceCadChart({{ performance['cad_performance']|tojson }})
+                                                performanceCadChart({{ times_returns['CAD'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>
