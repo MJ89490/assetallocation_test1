@@ -35,11 +35,7 @@ def run_model(model_type, mat_file, input_file):
 
 
 def write_output_to_excel(model_outputs, input_file):
-    """
-    :param model_outputs: outputs of the TIMES model
-    :return: write the results in the dashboard in times_output and times_input tabs
-    """
-
+    
     if models_names.Models.times.name in model_outputs.keys():
 
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
