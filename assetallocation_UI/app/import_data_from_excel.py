@@ -241,11 +241,19 @@ def data_sparklines_charts(times_data):
     positions_gbp_sparklines = data_positions.loc['2019-01-01':'2019-11-28', 'GBP.2']
     positions_gbp_sparklines = positions_gbp_sparklines.tolist()
 
-    return positions_us_equities_sparklines, positions_eu_equities_sparklines, positions_jp_equities_sparklines, \
-           positions_hk_equities_sparklines, positions_us_bonds_sparklines, positions_uk_bonds_sparklines, \
-           positions_eu_bonds_sparklines, positions_ca_bonds_sparklines, positions_jpy_sparklines, \
-           positions_eur_sparklines, positions_aud_sparklines, positions_cad_sparklines, positions_gbp_sparklines
-
+    return {"positions_us_equities_sparklines": positions_us_equities_sparklines,
+            "positions_eu_equities_sparklines": positions_eu_equities_sparklines,
+            "positions_jp_equities_sparklines": positions_jp_equities_sparklines,
+            "positions_hk_equities_sparklines": positions_hk_equities_sparklines,
+            "positions_us_bonds_sparklines": positions_us_bonds_sparklines,
+            "positions_uk_bonds_sparklines": positions_uk_bonds_sparklines,
+            "positions_eu_bonds_sparklines": positions_eu_bonds_sparklines,
+            "positions_ca_bonds_sparklines": positions_ca_bonds_sparklines,
+            "positions_jpy_sparklines": positions_jpy_sparklines,
+            "positions_eur_sparklines": positions_eur_sparklines,
+            "positions_aud_sparklines": positions_aud_sparklines,
+            "positions_cad_sparklines": positions_cad_sparklines,
+            "positions_gbp_sparklines": positions_gbp_sparklines}
 
 def import_dates_inputs_dashboard(times_data):
 

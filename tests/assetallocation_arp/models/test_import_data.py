@@ -13,7 +13,7 @@ from assetallocation_arp.data_etl import import_data as data
 CURRENT_PATH = os.path.dirname(__file__)
 
 """
-Module test_import_data.py: tests the extract data method (import_data.py) in order to know if it returns the correct 
+Module test_import_data.py: tests the extract data method (data.py) in order to know if it returns the correct 
 following outputs:
     - strategy_inputs
     - asset_inputs
