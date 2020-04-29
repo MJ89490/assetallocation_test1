@@ -150,12 +150,12 @@
                                             <div id="sparklines_assets_one" class="responsive-plot"></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_one.js') }}"></script>
                                             <script type="text/javascript">
-                                                sparklinesAssetsOne({{ sparklines['positions_us_equities_sparklines']|tojson }},
-                                                                    {{ sparklines['positions_eu_equities_sparklines']|tojson }},
-                                                                    {{ sparklines['positions_jp_equities_sparklines']|tojson }},
-                                                                    {{ sparklines['positions_hk_equities_sparklines']|tojson }},
-                                                                    {{ sparklines['positions_us_bonds_sparklines']|tojson }},
-                                                                    {{ sparklines['positions_uk_bonds_sparklines']|tojson }})
+                                                sparklinesAssetsOne({{ times_positions['US_Equities'].tolist()|tojson }},
+                                                                    {{ times_positions['EU_Equities'].tolist()|tojson }},
+                                                                    {{ times_positions['JP_Equities'].tolist()|tojson }},
+                                                                    {{ times_positions['HK_Equities'].tolist()|tojson }},
+                                                                    {{ times_positions['US_10_y_Bonds'].tolist()|tojson }},
+                                                                    {{ times_positions['UK_10_y_Bonds'].tolist()|tojson }})
                                              </script>
                                         </div>
                                     </div>
@@ -167,20 +167,20 @@
                                              <div id="sparklines_assets_two" class="responsive-plot"></div>
                                              <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_two.js') }}"></script>
                                                  <script type="text/javascript">
-                                                     sparklinesAssetsTwo({{ sparklines['positions_eu_bonds_sparklines']|tojson }},
-                                                                         {{ sparklines['positions_ca_bonds_sparklines']|tojson }},
-                                                                         {{ sparklines['positions_jpy_sparklines']|tojson }},
-                                                                         {{ sparklines['positions_eur_sparklines']|tojson }},
-                                                                         {{ sparklines['positions_aud_sparklines']|tojson }},
-                                                                         {{ sparklines['positions_cad_sparklines']|tojson }},
-                                                                         {{ sparklines['positions_gbp_sparklines']|tojson }}
+                                                     sparklinesAssetsTwo({{ times_positions['EU_10_y_Bonds'].tolist()|tojson }},
+                                                                         {{ times_positions['CA_10_y_Bonds'].tolist()|tojson }},
+                                                                         {{ times_positions['JPY'].tolist()|tojson }},
+                                                                         {{ times_positions['EUR'].tolist()|tojson }},
+                                                                         {{ times_positions['AUD'].tolist()|tojson }},
+                                                                         {{ times_positions['CAD'].tolist()|tojson }},
+                                                                         {{ times_positions['GBP'].tolist()|tojson }}
                                                                          )
                                                  </script>
                                          </div>
                                      </div>
                                  </div>
                             </div>
-                            <!-- Total Performance Positions Chart-->
+                            <!-- Total Performance Positions Chart TO CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
                             <div class="row">
                                 <div class="col-12 col-lg-12">
                                     <div class="widget widget-fullwidth be-loading" id="main-table-positions-performance-widget">
@@ -197,7 +197,7 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                                <!-- Table2: Total Performance Positions Chart-->
+                                                <!-- Table2: Total Performance Positions Chart TO CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
                                                 <div class="row">
                                                     <div class="total-positions-performance" id="total-positions-performance">
                                                         <div class="table-responsive-lg">
@@ -275,7 +275,7 @@
                                                         </table>
                                                     </div>
                                                  </div>
-                                                <!-- Table4: Main table Total Performance Positions -->
+                                                <!-- Table4: Main table Total Performance Positions TO CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                                                 <div class="main-table-positions-performance" >
                                                     <div class="table-responsive-lg">
                                                         <table class="table table4-borderless" id="table4">
@@ -467,7 +467,7 @@
                                     </div>
                                 </div>
                             </div>
-                             <!-- Total Performance Positions Chart-->
+                             <!-- Total Performance Positions Chart TO CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
                             <div class="row">
                                 <div class="col-12 col-lg-12">
                                     <div class="widget widget-fullwidth be-loading" id="main-table-positions-performance-widget">

@@ -1,6 +1,7 @@
 import pandas as pd
-
 import enum
+from datetime import timedelta
+
 #todo put one class per module
 #todo move to a module.py but issue to import module in the data.py
 class Assets(enum.Enum):
@@ -118,18 +119,103 @@ class ChartsDataFromExcel(CleaningDataFromExcel):
                 "times_signals": self.times_signals_dates}
 
 
-# if __name__ == "__main__":
-#     obj_charts_data = ChartsDataFromExcel()
-#     obj_charts_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
-#     obj_charts_data.import_data()
-#     obj_charts_data.data_processing()
-#     obj_charts_data.date_processing()
-#     obj_charts_data.columns_names_processing()
-#     obj_charts_data.start_date_chart = "2018-09-06"
-#     obj_charts_data.end_date_chart = "2019-10-24"
-#     obj_charts_data.data_charts()
-#
-#     d = obj_charts_data.template_data_charts()
+class ChartsDataComputations:
+
+    def __init__(self, times_signals, times_positions, times_returns):
+        self.times_signals = times_signals
+        self.times_positions = times_positions
+        self.times_returns = times_returns
+        self.signals_off = ""
+        self.return_off = ""
+        self.positions_off = ""
+        self.returns_weekly_off = ""
+        self.end_year = ""
+
+    @property
+    def signals_dates_off(self):
+        self.signals_off = self.times_signals.last_valid_index()
+        return self.signals_off
+
+    @property
+    def returns_dates_off(self):
+        self.return_off = self.times_returns.last_valid_index()
+        return self.return_off
+
+    @property
+    def positions_dates_off(self):
+        self.positions_off = self.times_positions.last_valid_index()
+        return self.positions_off
+
+    @property
+    def returns_dates_weekly_off(self):
+        self.returns_weekly_off = pd.Timestamp(self.times_returns.last_valid_index().date() - timedelta(days=7))
+        return self.returns_weekly_off
+
+    @property
+    def end_year_date(self):
+        return self.end_year
+
+    @end_year_date.setter
+    def end_year_date(self, value):
+        self.end_year = value
+
+    def data_computations(self):
+
+        times_signals_comp = round(self.times_signals.loc[self.signals_off], 2)
+        times_positions_comp = round((self.times_positions.loc[self.positions_off]) * 100, 2)
+        times_returns_comp = round((self.times_returns.loc[self.return_off] - self.times_returns.loc[self.returns_weekly_off]) * 100, 3)
+        times_returns_ytd = round((self.times_returns.loc[self.return_off] - self.times_returns.loc[self.end_year]) * 100, 3)
+
+        return {'times_signals_comp': times_signals_comp, 'times_positions_comp': times_positions_comp,
+                'times_returns_comp': times_returns_comp, 'times_returns_ytd': times_returns_ytd}
+
+    def data_computations_sum(self, times_returns_ytd):
+
+        sum_positions_equities = round(sum(self.times_positions.loc[Assets.US_Equities.name:Assets.HK_Equities.name]), 2)
+
+        sum_positions_bonds = round(sum(self.times_positions.loc[Assets.US_10_y_Bonds.name:Assets.CA_10_y_Bonds.name]), 2)
+
+        sum_positions_fx = round(sum(self.times_positions.loc[Assets.JPY.name:Assets.GBP.name]), 2)
+
+        sum_performance_weekly_equities = round(sum(self.times_returns.loc[Assets.US_Equities.name:Assets.HK_Equities.name]), 2)
+
+        sum_performance_weekly_bonds = round(sum(self.times_returns.loc[Assets.US_10_y_Bonds.name:Assets.CA_10_y_Bonds.name]), 2)
+
+        sum_performance_weekly_fx = round(sum(self.times_returns.loc[Assets.JPY.name:Assets.GBP.name]), 2)
+
+        sum_performance_ytd_equities = round(sum(times_returns_ytd.loc[Assets.US_Equities.name:Assets.HK_Equities.name]), 2)
+
+        sum_performance_ytd_bonds = round(sum(times_returns_ytd.loc[Assets.US_10_y_Bonds.name:Assets.CA_10_y_Bonds.name]), 2)
+
+        sum_performance_ytd_fx = round(sum(times_returns_ytd.loc[Assets.JPY.name:Assets.GBP.name]), 2)
+
+        return {'sum_positions_equities': sum_positions_equities, 'sum_positions_bonds': sum_positions_bonds,
+                'sum_positions_fx': sum_positions_fx, 'sum_performance_weekly_equities': sum_performance_weekly_equities,
+                'sum_performance_weekly_bonds': sum_performance_weekly_bonds, 'sum_performance_weekly_fx': sum_performance_weekly_fx,
+                'sum_performance_ytd_equities': sum_performance_ytd_equities, 'sum_performance_ytd_bonds': sum_performance_ytd_bonds,
+                'sum_performance_ytd_fx': sum_performance_ytd_fx}
+
+if __name__ == "__main__":
+    obj_charts_data = ChartsDataFromExcel()
+    obj_charts_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
+    obj_charts_data.import_data()
+    obj_charts_data.data_processing()
+    obj_charts_data.date_processing()
+    obj_charts_data.columns_names_processing()
+    obj_charts_data.start_date_chart = "2018-09-06"
+    obj_charts_data.end_date_chart = "2019-10-24"
+    obj_charts_data.data_charts()
+
+    data = obj_charts_data.template_data_charts()
+
+    obj_charts_comp = ChartsDataComputations(times_signals=data['times_signals'],
+                                             times_positions=data['times_positions'],
+                                             times_returns=data['times_returns'])
+
+    obj_charts_comp.end_year_date = '2018-12-31'
+    data_comp = obj_charts_comp.data_computations()
+    data_comp_sum = obj_charts_comp.data_computations_sum(times_returns_ytd=data_comp['times_returns_ytd'])
+
 
 
 #todo put in a main module
@@ -146,7 +232,20 @@ def run_times():
 
     data = obj_charts_data.template_data_charts()
 
-    return data['times_returns'], data['times_positions'], data['times_signals']
+    obj_charts_comp = ChartsDataComputations(times_signals=data['times_signals'],
+                                             times_positions=data['times_positions'],
+                                             times_returns=data['times_returns'])
+
+    obj_charts_comp.end_year_date = '2018-12-31'
+    data_comp = obj_charts_comp.data_computations()
+    data_comp_sum = obj_charts_comp.data_computations_sum(times_returns_ytd=data_comp['times_returns_ytd'])
+
+    return data['times_returns'], data['times_positions'], data['times_signals'], data_comp['times_signals_comp'], \
+           data_comp['times_positions_comp'], data_comp['times_returns_comp'], data_comp_sum['sum_positions_equities'],\
+           data_comp_sum['sum_positions_bonds'], data_comp_sum['sum_positions_fx'], data_comp_sum['sum_performance_weekly_equities'], \
+           data_comp_sum['sum_performance_weekly_bonds'], data_comp_sum['sum_performance_weekly_fx'], data_comp_sum['sum_performance_ytd_equities'], \
+           data_comp_sum['sum_performance_ytd_bonds'], data_comp_sum['sum_performance_ytd_fx']
+
 
 
 
