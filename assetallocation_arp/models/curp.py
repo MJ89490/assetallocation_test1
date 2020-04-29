@@ -29,6 +29,7 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     all_data['SEKUSDCR Curncy'] = 1
     all_data['CADUSDCR Curncy'] = 1
     all_data['NOKUSDCR Curncy'] = 1
+    all_data['JPYUSDCR Curncy'] = 1
 
     # create all FX crosses from the ones given
     currencyCrosses = create_crosses(asset_inputs['Currency'])
@@ -43,11 +44,9 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     firstCurrencySpotData = all_data[firstCurrencySpotTickerList]
     secondCurrencySpotData = all_data[secondCurrencySpotTickerList]
     # Next line might need to change: see https://pythontic.com/pandas/dataframe-binaryoperatorfunctions/div
-    firstCurrencySpotDataRatio = firstCurrencySpotData.pct_change+1
-    secondCurrencySpotDataRatio = secondCurrencySpotData.pct_change+1
+    firstCurrencySpotDataRatio = firstCurrencySpotData.shift(1) / firstCurrencySpotData
+    secondCurrencySpotDataRatio = secondCurrencySpotData.shift(1) / secondCurrencySpotData
     SpotData = firstCurrencySpotDataRatio.div(secondCurrencySpotDataRatio)-1
-
-    # Blank line, delete later
 
     # Carry Data
     firstCurrencyCarryTicker = firstCurrency.applymap(lambda x: x +'USDCR Curncy')
@@ -57,8 +56,8 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     firstCurrencyCarryData = all_data[firstCurrencyCarryTickerList]
     secondCurrencyCarryData = all_data[secondCurrencyCarryTickerList]
     # Next line might need to change: see https://pythontic.com/pandas/dataframe-binaryoperatorfunctions/div
-    firstCurrencyCarryDataRatio = firstCurrencyCarryData.pct_change+1
-    secondCurrencyCarryDataRatio = secondCurrencyCarryData.pct_change + 1
+    firstCurrencyCarryDataRatio = firstCurrencyCarryData.shift(1) / firstCurrencyCarryData
+    secondCurrencyCarryDataRatio = secondCurrencyCarryData.shift(1) / secondCurrencyCarryData
     carryData = firstCurrencyCarryDataRatio.div(secondCurrencyCarryDataRatio)-1
 
     # PPP Data
@@ -90,7 +89,9 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     ret = curp_inputs.loc[curp_inputs['Variable Name'] == 'Returns', 'CUMO'].iloc[0]
 
     # Define which type of data should be used for the signals. From the inputs
-    # signalData = ...
+    # signalData is % terms
+    # rebasedSignalData is rebased
+
     if signal == 1 or signal == 5 or signal == 6:
         signalData = spotData
     else:
@@ -102,9 +103,9 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     else:
         returnData = carryData
 
-    vol = sqrt(12)*pd.rolling_std(signalData,volWindow)
+    vol = math.sqrt(12) * signalData.rolling(volWindow).std()
     # could take the rolling average then use 'shift' on the column
-    sharpeAvgData = pd.rolling_mean(rebasedSignalData,2*historicalLevelAveraging)
+    sharpeAvgData = rebasedSignalData.rolling(2*historicalLevelAveraging).mean
     # I think i need to shift by 'Window' - 'Historic Volatility Window'
     sharpeAvgDataOffset = sharpeAvgData.shift(window-historicalLevelAveraging)
 
@@ -127,6 +128,14 @@ def create_crosses(currencyList):
             output = output.append(dict(cross=currencyList[i] + currencyList[j]), ignore_index=True)
     x = output
     return x
+
+def rebase_data(data):
+    cols = list(data)
+    for i in cols:
+        temp = data[i].applymap(lambda x: x/data[i].iloc[0])
+    output = temp
+    return output
+
 
 if __name__ == "__main__":
     # test inputs
