@@ -40,12 +40,16 @@ class ChartsDataComputations(object):
     def data_computations(self, signal_off, returns_off, returns_weekly_off, positions_off):
 
         times_signals_comp = round(self.times_signals.loc[signal_off], 2)
+
         times_positions_comp = round((self.times_positions.loc[positions_off]) * 100, 2)
+
         times_returns_comp = round((self.times_returns.loc[returns_off] - self.times_returns.loc[returns_weekly_off]) * 100, 3)
+
         times_returns_ytd = round((self.times_returns.loc[returns_off] - self.times_returns.loc[self.end_year]) * 100, 3)
 
         return {'times_signals_comp': times_signals_comp, 'times_positions_comp': times_positions_comp,
                 'times_returns_comp': times_returns_comp, 'times_returns_ytd': times_returns_ytd}
+
 
     def data_computations_sum(self, times_returns_ytd, times_positions_comp, times_returns):
 

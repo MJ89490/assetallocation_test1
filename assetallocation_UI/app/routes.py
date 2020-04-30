@@ -1,6 +1,7 @@
 # Contains view functions for various URLs
 import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
+from app.data_import.main_import_data import main
 from common_libraries.models_names import Models
 from flask import render_template
 from flask import flash
@@ -18,8 +19,6 @@ from flask_login import current_user
 from flask import g
 
 from .userIdentification import randomIdentification
-from .import_data_from_excel import read_data_from_excel, data_allocation_over_time_chart, \
-    data_performance_since_inception_chart, data_table_times, data_sparklines_charts
 
 
 @app.before_request
@@ -28,7 +27,7 @@ def before_request():
 
 
 @app.route('/')
-@app.route('/hom')
+@app.route('/home')
 def home():
     return render_template('home.html', title='HomePage')
 
@@ -137,45 +136,7 @@ def times_page():
 @login_required
 def times_dashboard():
     form = ExportDataForm()
-
-    from app.data_import.main_import_data import main
-
-    # times_returns, times_positions, times_signals, times_signals_comp, times_positions_comp, times_returns_comp,\
-    # sum_positions_equities, sum_positions_bonds, sum_positions_fx, sum_performance_weekly_equities, \
-    # sum_performance_weekly_bonds, sum_performance_weekly_fx, sum_performance_ytd_equities, sum_performance_ytd_bonds, \
-    # sum_performance_ytd_fx = run_times()
-
-    times_returns, times_positions, times_signals = main()
-
-
-    # template_data_new = {"times_returns": times_returns,
-    #                      "times_positions": times_positions,
-    #                      "times_signals": times_signals,
-    #                      "times_signals_comp": times_signals_comp,
-    #                      "times_positions_comp": times_positions_comp,
-    #                      "times_returns_comp": times_returns_comp,
-    #                      "sum_positions_equities": sum_positions_equities,
-    #                      "sum_positions_bonds": sum_positions_bonds,
-    #                      "sum_positions_fx": sum_positions_fx,
-    #                      "sum_performance_weekly_equities": sum_performance_weekly_equities,
-    #                      "sum_performance_weekly_bonds": sum_performance_weekly_bonds,
-    #                      "sum_performance_weekly_fx": sum_performance_weekly_fx,
-    #                      "sum_performance_ytd_equities": sum_performance_ytd_equities,
-    #                      "sum_performance_ytd_bonds": sum_performance_ytd_bonds,
-    #                      "sum_performance_ytd_fx": sum_performance_ytd_fx}
-    template_data_new = {"times_returns": times_returns,
-                         "times_positions": times_positions,
-                         "times_signals": times_signals}
-
-
-    # move the logic to another file
-    times_data = read_data_from_excel()
-    data_asset_alloc = data_allocation_over_time_chart(times_data=times_data)
-    data_performance = data_performance_since_inception_chart(times_data=times_data)
-    data_table = data_table_times(times_data=times_data)
-    data_sparklines = data_sparklines_charts(times_data=times_data)
-    template_data = {'asset_alloc': data_asset_alloc, 'performance': data_performance, 'table': data_table,
-                     'sparklines': data_sparklines}
+    template_data = main()
 
     m = ""
     if request.method == "POST":
@@ -259,7 +220,7 @@ def times_dashboard():
             print('data data data')
 
     # put the data in dict or create a class to handle the data nicer (later with the db?)
-    return render_template('dashboard_new.html', form=form, m=m, **template_data, **template_data_new)
+    return render_template('dashboard_new.html', form=form, m=m, **template_data)
 
 
 @app.route('/logout')

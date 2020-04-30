@@ -2,13 +2,11 @@ from app.data_import.cleaning_data_from_excel import CleaningDataFromExcel
 import pandas as pd
 
 
-#todo put the results in a dataframe and then a dict
-
 class ChartsDataFromExcel(CleaningDataFromExcel):
     def __init__(self):
         super().__init__()
-        self.start_date = "" # default start date
-        self.end_date = ""   # default end_date
+        self.start_date = ""  # default start date
+        self.end_date = ""    # default end_date
         self.times_positions_dates = pd.DataFrame()
         self.times_returns_dates = pd.DataFrame()
         self.times_signals_dates = pd.DataFrame()
