@@ -138,30 +138,34 @@ def times_page():
 def times_dashboard():
     form = ExportDataForm()
 
+    from app.data_import.main_import_data import main
 
-    from assetallocation_UI.app.data_import.data import run_times
+    # times_returns, times_positions, times_signals, times_signals_comp, times_positions_comp, times_returns_comp,\
+    # sum_positions_equities, sum_positions_bonds, sum_positions_fx, sum_performance_weekly_equities, \
+    # sum_performance_weekly_bonds, sum_performance_weekly_fx, sum_performance_ytd_equities, sum_performance_ytd_bonds, \
+    # sum_performance_ytd_fx = run_times()
 
-    times_returns, times_positions, times_signals, times_signals_comp, times_positions_comp, times_returns_comp,\
-    sum_positions_equities, sum_positions_bonds, sum_positions_fx, sum_performance_weekly_equities, \
-    sum_performance_weekly_bonds, sum_performance_weekly_fx, sum_performance_ytd_equities, sum_performance_ytd_bonds, \
-    sum_performance_ytd_fx = run_times()
+    times_returns, times_positions, times_signals = main()
 
+
+    # template_data_new = {"times_returns": times_returns,
+    #                      "times_positions": times_positions,
+    #                      "times_signals": times_signals,
+    #                      "times_signals_comp": times_signals_comp,
+    #                      "times_positions_comp": times_positions_comp,
+    #                      "times_returns_comp": times_returns_comp,
+    #                      "sum_positions_equities": sum_positions_equities,
+    #                      "sum_positions_bonds": sum_positions_bonds,
+    #                      "sum_positions_fx": sum_positions_fx,
+    #                      "sum_performance_weekly_equities": sum_performance_weekly_equities,
+    #                      "sum_performance_weekly_bonds": sum_performance_weekly_bonds,
+    #                      "sum_performance_weekly_fx": sum_performance_weekly_fx,
+    #                      "sum_performance_ytd_equities": sum_performance_ytd_equities,
+    #                      "sum_performance_ytd_bonds": sum_performance_ytd_bonds,
+    #                      "sum_performance_ytd_fx": sum_performance_ytd_fx}
     template_data_new = {"times_returns": times_returns,
                          "times_positions": times_positions,
-                         "times_signals": times_signals,
-                         "times_signals_comp": times_signals_comp,
-                         "times_positions_comp": times_positions_comp,
-                         "times_returns_comp": times_returns_comp,
-                         "sum_positions_equities": sum_positions_equities,
-                         "sum_positions_bonds": sum_positions_bonds,
-                         "sum_positions_fx": sum_positions_fx,
-                         "sum_performance_weekly_equities": sum_performance_weekly_equities,
-                         "sum_performance_weekly_bonds": sum_performance_weekly_bonds,
-                         "sum_performance_weekly_fx": sum_performance_weekly_fx,
-                         "sum_performance_ytd_equities": sum_performance_ytd_equities,
-                         "sum_performance_ytd_bonds": sum_performance_ytd_bonds,
-                         "sum_performance_ytd_fx": sum_performance_ytd_fx}
-
+                         "times_signals": times_signals}
 
 
     # move the logic to another file

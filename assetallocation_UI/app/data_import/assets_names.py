@@ -8,7 +8,7 @@ class Assets(enum.Enum):
     HK_Equities = 3
     US_10_y_Bonds = 4
     UK_10_y_Bonds = 5
-    Eu_10_y_Bonds = 6
+    EU_10_y_Bonds = 6
     CA_10_y_Bonds = 7
     JPY = 8
     EUR = 9
