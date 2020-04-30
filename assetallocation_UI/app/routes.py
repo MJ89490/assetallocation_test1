@@ -2,6 +2,7 @@
 import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from app.data_import.main_import_data import main
+from app.data_import.main_import_data_from_form import main
 from common_libraries.models_names import Models
 from flask import render_template
 from flask import flash
@@ -64,53 +65,29 @@ def login_post():
 def times_page():
     form = InputsTimesModel()
 
-    global STRATEGY, ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
+    global ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
 
     if request.method == "POST":
         # Selection of a model's version
         if request.form['submit_button'] == 'selectVersions':
             version_type = form.versions.data
-            return render_template('times_page_new_version_layout.html', title="Times", form=form,
-                                   version_type=version_type)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, version_type=version_type)
+
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
-
             run_model = "run_times_model"
             run_model_ok = "run_times_model_ok"
 
             try:
-                #handling data: another file (file data)
-                data = {                                                        #todo créer une fct pour ces données
-                            form.time_lag.name: [int(form.time_lag.data)],
-                            form.leverage_type.name: [form.leverage_type.data],
-                            form.volatility_window.name: [int(form.volatility_window.data)],
-                            form.sig1_short.name: [int(form.sig1_short.data)],
-                            form.sig1_long.name: [int(form.sig1_long.data)],
-                            form.sig2_short.name: [int(form.sig2_short.data)],
-                            form.sig2_long.name: [int(form.sig2_long.data)],
-                            form.sig3_short.name: [int(form.sig3_short.data)],
-                            form.sig3_long.name: [int(form.sig3_long.data)],
-                            form.frequency.name: [form.frequency.data],
-                            form.week_day.name: [form.week_day.data]
-                          }
+                # 1. Read the input from the form
+                # 2. Return the inputs
+                strategy_inputs_times = main() #todo insert in run_model because it is currently reading the inputs from the Excel
+
             except ValueError:
                 message = "error parameters"
                 return render_template('times_page_new_version_layout.html',
                                        title="Times", form=form, run_model=run_model, message=message)
 
-            strategy_inputs = pd.DataFrame(data, columns=[form.time_lag.name,
-                                                              form.leverage_type.name,
-                                                              form.volatility_window.name,
-                                                              form.sig1_short.name,
-                                                              form.sig1_long.name,
-                                                              form.sig2_short.name,
-                                                              form.sig2_long.name,
-                                                              form.sig3_short.name,
-                                                              form.sig3_long.name,
-                                                              form.frequency.name,
-                                                              form.week_day.name
-                                                              ])
-            STRATEGY = strategy_inputs
             ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
 
             return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok)
@@ -123,8 +100,7 @@ def times_page():
             path_excel_times = path_excel + "\\" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={Models.times.name:
-                                                    (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
+                write_output_to_excel(model_outputs={Models.times.name: (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
                                       path_excel_times=path_excel_times)
 
             return render_template('times_page_new_version_layout.html', title="Times", form=form, save=save, save_file=save_file)
