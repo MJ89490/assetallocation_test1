@@ -27,14 +27,14 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
     all_data['USDUSD Curncy'] = 1
     all_data['USDUSDCR Curncy'] = 1
     # this below should be deleted when the data is made available in the mat file
-    all_data['SEKUSD Curncy'] = 1
-    all_data['CHFUSD Curncy'] = 1
-    all_data['NOKUSD Curncy'] = 1
-    all_data['CHFUSDCR Curncy'] = 1
-    all_data['SEKUSDCR Curncy'] = 1
-    all_data['CADUSDCR Curncy'] = 1
-    all_data['NOKUSDCR Curncy'] = 1
-    all_data['JPYUSDCR Curncy'] = 1
+    all_data['SEKUSD Curncy'] = 1/all_data['USDSEK Curncy']
+    all_data['CHFUSD Curncy'] = 1/all_data['USDCHF Curncy']
+    all_data['NOKUSD Curncy'] = 1/all_data['USDNOK Curncy']
+    all_data['CHFUSDCR Curncy'] = 1/all_data['USDCHFCR Curncy']
+    all_data['SEKUSDCR Curncy'] = 1/all_data['USDSEKCR Curncy']
+    all_data['CADUSDCR Curncy'] = 1/all_data['USDCADCR Curncy']
+    all_data['NOKUSDCR Curncy'] = 1/all_data['USDNOKCR Curncy']
+    all_data['JPYUSDCR Curncy'] = 1/all_data['USDJPYCR Curncy']
 
     # create all FX crosses from the ones given
     currencyCrosses = create_crosses(asset_inputs['Currency'])
@@ -104,10 +104,10 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
     if signal == 1 or signal == 5 or signal == 6:
         signalData = spotData
-        signalDataRebased = spotDataRebased
+        signalDataIndex = spotDataTemp
     else:
         signalData = carryData
-        signalDataRebased = carryDataRebased
+        signalDataIndex = carryDataTemp
 
     # returnData = ...
     if ret == 1:
@@ -117,17 +117,22 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
 
     vol = math.sqrt(12) * signalData.rolling(volWindow).std()
     # could take the rolling average then use 'shift' on the column
-    sharpeAvgData = spotDataRebased.rolling(2*historicalLevelAveraging).mean()
-    # I think i need to shift by 'Window' - 'Historic Volatility Window'
+    sharpeAvgData = signalDataIndex.rolling(2*historicalLevelAveraging).mean()
+    # I think i need to shift by 'Window' - 'Historic Volatility Window' --- this needs checking
     sharpeAvgDataOffset = sharpeAvgData.shift(window-historicalLevelAveraging)
 
     if signal == 4:
         denominator = 1
     else:
-        denominator = sqrt(12)*pd.rolling_std(signalData,window)
+        denominator = sqrt(12)*signalData.rolling(window).std()
 
-    sharpe = (math.log(rebasedSignalData.div(sharpeAvgDataOffset)) ** (12 / window) - 1)/denominator
+    temp = signalDataIndex.div(sharpeAvgDataOffset)
+    temp = temp.applymap(lambda x: math.log(x))
 
+    sharpe = ((temp+1)**(12/window)-1)/denominator
+
+    # Signals tab
+    # if signal == 5 or signal == 6:
 
     pass
 
@@ -144,10 +149,23 @@ def rebase_data(data):
     t_1 = data.head(1)
     t_2 = pd.concat([t_1]*len(data.index))
     t_2['New Index'] = data.index
-    t_2.set_index('New Index')
+    t_2.set_index('New Index',inplace=True)
     output = data.div(t_2)
     return output
 
+def map_USD(firstCurrency, secondCurrency, currencyCrossesList, data):
+    temp = pd.DataFrame([0]*len(firstCurrency),columns = ['value'])
+    temp['first']=firstCurrency
+    temp['second']=secondCurrency
+    temp.loc[(temp['first']=='USD'),'value']=-1
+    temp.loc[(temp['second'] == 'USD'), 'value'] = 1
+    temp = temp.transpose()
+    temp = temp.head(1)
+    temp.columns = currencyCrossesList
+    temp = pd.concat([temp]*len(data.index))
+    temp['new index'] = data.index
+    temp.set_index('new index', inplace=True)
+    return temp
 
 if __name__ == "__main__":
     # test inputs
