@@ -4,7 +4,7 @@ from app.data_import.charts_data_computations import ChartsDataComputations
 import sys
 
 
-def main():
+def main_data():
     obj_charts_data = ChartsDataFromExcel()
     obj_charts_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
     obj_charts_data.import_data()
@@ -17,7 +17,7 @@ def main():
 
     data = obj_charts_data.data_charts()
 
-    dates = obj_charts_data.date_charts()
+    # dates = obj_charts_data.date_charts()
 
     obj_charts_comp = ChartsDataComputations(times_signals=data['times_signals'],
                                              times_positions=data['times_positions'],
@@ -58,4 +58,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main_data())

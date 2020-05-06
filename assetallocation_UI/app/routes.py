@@ -1,8 +1,8 @@
 # Contains view functions for various URLs
 import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
-from app.data_import.main_import_data import main
-from app.data_import.main_import_data_from_form import main
+from app.data_import.main_import_data import main_data
+from app.data_import.main_import_data_from_form import main_form
 from common_libraries.models_names import Models
 from flask import render_template
 from flask import flash
@@ -81,7 +81,7 @@ def times_page():
             try:
                 # 1. Read the input from the form
                 # 2. Return the inputs
-                strategy_inputs_times = main() #todo insert in run_model because it is currently reading the inputs from the Excel
+                strategy_inputs_times = main_form() #todo insert in run_model because it is currently reading the inputs from the Excel
 
             except ValueError:
                 message = "error parameters"
@@ -112,7 +112,7 @@ def times_page():
 @login_required
 def times_dashboard():
     form = ExportDataForm()
-    template_data = main()
+    template_data = main_data()
 
     m = ""
     if request.method == "POST":
