@@ -17,6 +17,8 @@ def main():
 
     data = obj_charts_data.data_charts()
 
+    dates = obj_charts_data.date_charts()
+
     obj_charts_comp = ChartsDataComputations(times_signals=data['times_signals'],
                                              times_positions=data['times_positions'],
                                              times_returns=data['times_returns'])

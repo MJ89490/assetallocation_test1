@@ -32,3 +32,16 @@ class ChartsDataFromExcel(CleaningDataFromExcel):
         return {"times_returns": self.times_returns[self.start_date:self.end_date],
                 "times_positions": self.times_positions[self.start_date:self.end_date],
                 "times_signals": self.times_signals[self.start_date:self.end_date]}
+    #
+    # def date_charts(self):
+    #
+    #
+    #     d = self.times_returns[self.start_date:self.end_date].index.values
+    #     
+    #     p =
+    #     for date in d:
+    #         pd.to_datetime(d[date]).date()
+    #
+    #     date = [pd.to_datetime(d[date]).date() for date in d]
+    #
+    #     return{"times_returns_dates": d }
