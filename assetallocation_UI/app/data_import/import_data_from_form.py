@@ -1,13 +1,19 @@
-from app.forms import InputsTimesModel
 import pandas as pd
 
 
 class TimesInputs:
+    """
+        Class for the Times inputs form from the Times page
+    """
 
-    def __init__(self):
-        self.form = InputsTimesModel()
+    def __init__(self, form):
+        self.form = form
 
     def inputs_times_model(self):
+        """
+        Function gathering the inputs (from the Flask form) of the user
+        :return: dictionary of the inputs of the form
+        """
 
         return {self.form.time_lag.name: [int(self.form.time_lag.data)],
                 self.form.leverage_type.name: [self.form.leverage_type.data],
@@ -23,6 +29,11 @@ class TimesInputs:
                }
 
     def strategy_times_inputs(self, data):
+        """
+        Funcions creating a dataframe of the inputs from the Flask form
+        :param data: inputs data from the form
+        :return: dataframe with all the inputs data
+        """
 
         return pd.DataFrame(data, columns=[self.form.time_lag.name,
                                            self.form.leverage_type.name,

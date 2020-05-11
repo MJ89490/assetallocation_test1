@@ -3,6 +3,9 @@ import pandas as pd
 
 
 class ChartsDataFromExcel(CleaningDataFromExcel):
+    """
+        Class gathering Signals, Returns and Positions data for the dashboard
+    """
     def __init__(self):
         super().__init__()
         self.start_date = ""  # default start date
@@ -28,6 +31,10 @@ class ChartsDataFromExcel(CleaningDataFromExcel):
         self.end_date = value
 
     def data_charts(self):
+        """
+        Function gathering Signals, Positions and Returns data
+        :return: dictionary with Signals, Positions and Returns
+        """
 
         return {"times_returns": self.times_returns[self.start_date:self.end_date],
                 "times_positions": self.times_positions[self.start_date:self.end_date],

@@ -3,21 +3,22 @@ from app.data_import.charts_data_computations import ChartsDataComputations
 
 import sys
 
-
+# Check the code with SonarQube
 def main_data():
+    """
+    Function main to run the ChartsDataFromExcel class
+    :return: dictionary with all the data needed for the Front-End
+    """
     obj_charts_data = ChartsDataFromExcel()
     obj_charts_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\app\arp_dashboard_charts.xlsm'
     obj_charts_data.import_data()
     obj_charts_data.data_processing()
-    obj_charts_data.date_processing()
-    obj_charts_data.columns_names_processing()
+
     obj_charts_data.start_date_chart = "2018-09-06"  # default start date
     obj_charts_data.end_date_chart = "2019-11-28"    # default end date
     obj_charts_data.data_charts()
 
     data = obj_charts_data.data_charts()
-
-    # dates = obj_charts_data.date_charts()
 
     obj_charts_comp = ChartsDataComputations(times_signals=data['times_signals'],
                                              times_positions=data['times_positions'],
@@ -37,22 +38,11 @@ def main_data():
                                                           times_positions_comp=data_comp['times_positions_comp'],
                                                           times_returns=data_comp['times_returns_comp'])
 
-    template_data = {"times_returns": data['times_returns'],
-                     "times_positions": data['times_positions'],
-                     "times_signals": data['times_signals'],
-                     "sum_positions_equities": data_comp_sum['sum_positions_equities'],
-                     "sum_positions_bonds": data_comp_sum['sum_positions_bonds'],
-                     "sum_positions_fx": data_comp_sum['sum_positions_fx'],
-                     "sum_performance_weekly_equities": data_comp_sum['sum_performance_weekly_equities'],
-                     "sum_performance_weekly_bonds": data_comp_sum['sum_performance_weekly_bonds'],
-                     "sum_performance_weekly_fx": data_comp_sum['sum_performance_weekly_fx'],
-                     "sum_performance_ytd_equities": data_comp_sum['sum_performance_ytd_equities'],
-                     "sum_performance_ytd_bonds": data_comp_sum['sum_performance_ytd_bonds'],
-                     "sum_performance_ytd_fx": data_comp_sum['sum_performance_ytd_fx'],
-                     "times_signals_comp": data_comp['times_signals_comp'],
-                     "times_positions_comp": data_comp['times_positions_comp'],
-                     "times_returns_comp": data_comp['times_returns_comp'],
-                     "times_returns_ytd": data_comp['times_returns_ytd']}
+    # use map, map data to values: first way
+    # json: second way
+    # meta classes : third way
+    # collections : fourth way
+    template_data = {"times_data": data, "times_sum": data_comp_sum, "times_data_comp": data_comp}
 
     return template_data
 

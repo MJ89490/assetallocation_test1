@@ -150,12 +150,12 @@
                                             <div id="sparklines_assets_one" class="responsive-plot"></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_one.js') }}"></script>
                                             <script type="text/javascript">
-                                                sparklinesAssetsOne({{ times_positions['US_Equities'].tolist()|tojson }},
-                                                                    {{ times_positions['EU_Equities'].tolist()|tojson }},
-                                                                    {{ times_positions['JP_Equities'].tolist()|tojson }},
-                                                                    {{ times_positions['HK_Equities'].tolist()|tojson }},
-                                                                    {{ times_positions['US_10_y_Bonds'].tolist()|tojson }},
-                                                                    {{ times_positions['UK_10_y_Bonds'].tolist()|tojson }})
+                                                sparklinesAssetsOne({{ times_data['times_positions']['US_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['EU_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['JP_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['HK_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['US_10_y_Bonds'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['UK_10_y_Bonds'].tolist()|tojson }})
                                              </script>
                                         </div>
                                     </div>
@@ -167,13 +167,13 @@
                                              <div id="sparklines_assets_two" class="responsive-plot"></div>
                                              <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_two.js') }}"></script>
                                                  <script type="text/javascript">
-                                                     sparklinesAssetsTwo({{ times_positions['EU_10_y_Bonds'].tolist()|tojson }},
-                                                                         {{ times_positions['CA_10_y_Bonds'].tolist()|tojson }},
-                                                                         {{ times_positions['JPY'].tolist()|tojson }},
-                                                                         {{ times_positions['EUR'].tolist()|tojson }},
-                                                                         {{ times_positions['AUD'].tolist()|tojson }},
-                                                                         {{ times_positions['CAD'].tolist()|tojson }},
-                                                                         {{ times_positions['GBP'].tolist()|tojson }}
+                                                     sparklinesAssetsTwo({{ times_data['times_positions']['EU_10_y_Bonds'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['CA_10_y_Bonds'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['JPY'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['EUR'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['AUD'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['CAD'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['GBP'].tolist()|tojson }}
                                                                          )
                                                  </script>
                                          </div>
@@ -211,21 +211,21 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <td><strong>Equities</strong></td>
-                                                                        <td>{{ sum_positions_equities }}%</td>
-                                                                        <td>{{ sum_performance_weekly_equities }}%</td>
-                                                                        <td>{{ sum_performance_ytd_equities }}%</td>
+                                                                        <td>{{ times_sum['sum_positions_equities'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_weekly_equities'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_ytd_equities'] }}%</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><strong>Bonds</strong></td>
-                                                                        <td>{{ sum_positions_bonds }}%</td>
-                                                                        <td>{{ sum_performance_weekly_bonds }}%</td>
-                                                                        <td>{{ sum_performance_ytd_bonds }}%</td>
+                                                                        <td>{{ times_sum['sum_positions_bonds'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_weekly_bonds'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_ytd_bonds'] }}%</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><strong>FX</strong></td>
-                                                                        <td>{{ sum_positions_fx }}%</td>
-                                                                        <td>{{ sum_performance_weekly_fx }}%</td>
-                                                                        <td>{{ sum_performance_ytd_fx }}%</td>
+                                                                        <td>{{ times_sum['sum_positions_fx'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_weekly_fx'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_ytd_fx'] }}%</td>
                                                                     </tr>
                                                               </tbody>
                                                             </table>
@@ -244,9 +244,9 @@
                                                                         <div id="positions-summary" class="responsive-plot">
                                                                             <script type="text/javascript" src="{{ url_for('static', filename='js/positions_summary.js') }}"></script>
                                                                             <script type="text/javascript">
-                                                                                positionsSummary({{ sum_positions_fx|tojson }},
-                                                                                                 {{ sum_positions_bonds|tojson }},
-                                                                                                 {{ sum_positions_equities|tojson }})
+                                                                                positionsSummary({{ times_sum['sum_positions_fx']|tojson }},
+                                                                                                 {{ times_sum['sum_positions_bonds']|tojson }},
+                                                                                                 {{ times_sum['sum_positions_equities']|tojson }})
                                                                             </script>
                                                                           </div>
                                                                     </td>
@@ -254,9 +254,9 @@
                                                                         <div id="weekly_summary" class="responsive-plot">
                                                                             <script type="text/javascript" src="{{ url_for('static', filename='js/weekly_summary.js') }}"></script>
                                                                             <script type="text/javascript">
-                                                                                weeklySummary({{ sum_performance_weekly_fx|tojson }},
-                                                                                              {{ sum_performance_weekly_bonds|tojson }},
-                                                                                              {{ sum_performance_weekly_equities|tojson }})
+                                                                                weeklySummary({{ times_sum['sum_performance_weekly_fx']|tojson }},
+                                                                                              {{ times_sum['sum_performance_weekly_bonds']|tojson }},
+                                                                                              {{ times_sum['sum_performance_weekly_equities']|tojson }})
                                                                             </script>
                                                                           </div>
                                                                     </td>
@@ -264,9 +264,9 @@
                                                                         <div id="ytd_summary" class="responsive-plot">
                                                                             <script type="text/javascript" src="{{ url_for('static', filename='js/ytd_summary.js') }}"></script>
                                                                             <script type="text/javascript">
-                                                                                ytdSummary({{ sum_performance_ytd_fx|tojson }},
-                                                                                           {{ sum_performance_ytd_bonds|tojson }},
-                                                                                           {{ sum_performance_ytd_equities|tojson }})
+                                                                                ytdSummary({{ times_sum['sum_performance_ytd_fx']|tojson }},
+                                                                                           {{ times_sum['sum_performance_ytd_bonds']|tojson }},
+                                                                                           {{ times_sum['sum_performance_ytd_equities']|tojson }})
                                                                             </script>
                                                                           </div>
                                                                     </td>
@@ -295,157 +295,157 @@
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>US Equities</td>
-                                                                    <td>{{ times_signals_comp["US_Equities"] }}</td>
-                                                                    <td>{{ times_positions_comp["US_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["US_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["US_Equities"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["US_Equities"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["US_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["US_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["US_Equities"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>EU Equities</td>
-                                                                    <td>{{ times_signals_comp["EU_Equities"] }}</td>
-                                                                    <td>{{ times_positions_comp["EU_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["EU_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["EU_Equities"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["EU_Equities"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["EU_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["EU_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["EU_Equities"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>JP Equities</td>
-                                                                    <td>{{ times_signals_comp["JP_Equities"] }}</td>
-                                                                    <td>{{ times_positions_comp["JP_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["JP_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["JP_Equities"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["JP_Equities"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["JP_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["JP_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["JP_Equities"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>Equities</strong></td>
                                                                     <td>HK Equities</td>
-                                                                    <td>{{ times_signals_comp["HK_Equities"] }}</td>
-                                                                    <td>{{ times_positions_comp["HK_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["HK_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["HK_Equities"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["HK_Equities"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["HK_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["HK_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["HK_Equities"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
                                                                     <td>US 10y Bonds</td>
-                                                                    <td>{{  times_signals_comp["US_10_y_Bonds"] }}</td>
-                                                                    <td>{{  times_positions_comp["US_10_y_Bonds"] }}%</td>
+                                                                    <td>{{  times_data_comp['times_signals_comp']["US_10_y_Bonds"] }}</td>
+                                                                    <td>{{  times_data_comp['times_positions_comp']["US_10_y_Bonds"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{  times_returns_comp["US_10_y_Bonds"]  }}%</td>
-                                                                    <td>{{  times_returns_ytd["US_10_y_Bonds"] }}%</td>
+                                                                    <td>{{  times_data_comp['times_returns_comp']["US_10_y_Bonds"]  }}%</td>
+                                                                    <td>{{  times_data_comp['times_returns_ytd']["US_10_y_Bonds"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
                                                                     <td>UK 10y Bonds</td>
-                                                                    <td>{{ times_signals_comp["UK_10_y_Bonds"] }}</td>
-                                                                    <td>{{ times_positions_comp["UK_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["UK_10_y_Bonds"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["UK_10_y_Bonds"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["UK_10_y_Bonds"]  }}%</td>
-                                                                    <td>{{ times_returns_ytd["UK_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["UK_10_y_Bonds"]  }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["UK_10_y_Bonds"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
                                                                     <td>EU 10y Bonds</td>
-                                                                    <td>{{ times_signals_comp["EU_10_y_Bonds"] }}</td>
-                                                                    <td>{{ times_positions_comp["EU_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["EU_10_y_Bonds"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["EU_10_y_Bonds"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["EU_10_y_Bonds"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["EU_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["EU_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["EU_10_y_Bonds"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>Bonds</strong></td>
                                                                     <td>CA 10y Bonds</td>
-                                                                    <td>{{ times_signals_comp["CA_10_y_Bonds"] }}</td>
-                                                                    <td>{{ times_positions_comp["CA_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["CA_10_y_Bonds"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["CA_10_y_Bonds"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["CA_10_y_Bonds"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["CA_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["CA_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["CA_10_y_Bonds"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>JPY</td>
-                                                                    <td>{{ times_signals_comp["JPY"] }}</td>
-                                                                    <td>{{ times_positions_comp["JPY"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["JPY"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["JPY"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["JPY"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["JPY"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["JPY"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["JPY"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>EUR</td>
-                                                                    <td>{{ times_signals_comp["EUR"] }}</td>
-                                                                    <td>{{ times_positions_comp["EUR"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["EUR"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["EUR"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["EUR"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["EUR"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["EUR"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["EUR"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>AUD</td>
-                                                                    <td>{{ times_signals_comp["AUD"] }}</td>
-                                                                    <td>{{ times_positions_comp["AUD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["AUD"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["AUD"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["AUD"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["AUD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["AUD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["AUD"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>CAD</td>
-                                                                    <td>{{ times_signals_comp["CAD"] }}</td>
-                                                                    <td>{{ times_positions_comp["CAD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["CAD"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["CAD"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["CAD"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["CAD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["CAD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["CAD"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
                                                                     <td><strong>FX</strong></td>
                                                                     <td>GBP</td>
-                                                                    <td>{{ times_signals_comp["GBP"] }}</td>
-                                                                    <td>{{ times_positions_comp["GBP"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["GBP"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["GBP"] }}%</td>
                                                                     <td>Last Week Positions%</td>
                                                                     <td>Buy/Sell</td>
                                                                     <td>Change%</td>
-                                                                    <td>{{ times_returns_comp["GBP"] }}%</td>
-                                                                    <td>{{ times_returns_ytd["GBP"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["GBP"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["GBP"] }}%</td>
                                                                 </tr>
 
                                                                 <tr>
@@ -488,76 +488,76 @@
                                                                         <div id="signals_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/signal_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                             signalsAssets({{ times_signals_comp['GBP']|tojson }},
-                                                                                           {{ times_signals_comp['CAD']|tojson }},
-                                                                                           {{ times_signals_comp['AUD']|tojson }},
-                                                                                           {{ times_signals_comp['EUR']|tojson }},
-                                                                                           {{ times_signals_comp['JPY']|tojson }},
-                                                                                           {{ times_signals_comp['CA_10_y_Bonds']|tojson }},
-                                                                                           {{ times_signals_comp['EU_10_y_Bonds']|tojson }},
-                                                                                           {{ times_signals_comp['UK_10_y_Bonds']|tojson }},
-                                                                                           {{ times_signals_comp['US_10_y_Bonds']|tojson }},
-                                                                                           {{ times_signals_comp['HK_Equities']|tojson }},
-                                                                                           {{ times_signals_comp['JP_Equities']|tojson }},
-                                                                                           {{ times_signals_comp['EU_Equities']|tojson }},
-                                                                                           {{ times_signals_comp['US_Equities']|tojson }})
+                                                                             signalsAssets({{ times_data_comp['times_signals_comp']['GBP']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['CAD']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['AUD']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['EUR']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['JPY']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['CA_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['EU_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['UK_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['US_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['HK_Equities']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['JP_Equities']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['EU_Equities']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['US_Equities']|tojson }})
                                                                         </script>
                                                                     </td>
                                                                     <td>
                                                                         <div id="position_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/positions_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                            positionsAssets({{ times_positions_comp['GBP']|tojson }},
-                                                                                            {{ times_positions_comp['CAD']|tojson }},
-                                                                                            {{ times_positions_comp['AUD']|tojson }},
-                                                                                            {{ times_positions_comp['EUR']|tojson }},
-                                                                                            {{ times_positions_comp['JPY']|tojson }},
-                                                                                            {{ times_positions_comp['CA_10_y_Bonds']|tojson }},
-                                                                                            {{ times_positions_comp['EU_10_y_Bonds']|tojson }},
-                                                                                            {{ times_positions_comp['UK_10_y_Bonds']|tojson }},
-                                                                                            {{ times_positions_comp['US_10_y_Bonds']|tojson }},
-                                                                                            {{ times_positions_comp['HK_Equities']|tojson }},
-                                                                                            {{ times_positions_comp['JP_Equities']|tojson }},
-                                                                                            {{ times_positions_comp['EU_Equities']|tojson }},
-                                                                                            {{ times_positions_comp['US_Equities']|tojson }})
+                                                                            positionsAssets({{ times_data_comp['times_positions_comp']['GBP']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['CAD']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['AUD']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['EUR']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['JPY']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['CA_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['EU_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['UK_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['US_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['HK_Equities']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['JP_Equities']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['EU_Equities']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['US_Equities']|tojson }})
                                                                         </script>
                                                                     </td>
                                                                     <td>
                                                                         <div id="weekly_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/weekly_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                            weeklyAssets({{ times_returns_comp['GBP']|tojson }},
-                                                                                         {{ times_returns_comp['CAD']|tojson }},
-                                                                                         {{ times_returns_comp['AUD']|tojson }},
-                                                                                         {{ times_returns_comp['EUR']|tojson }},
-                                                                                         {{ times_returns_comp['JPY']|tojson }},
-                                                                                         {{ times_returns_comp['CA_10_y_Bonds']|tojson }},
-                                                                                         {{ times_returns_comp['EU_10_y_Bonds']|tojson }},
-                                                                                         {{ times_returns_comp['UK_10_y_Bonds']|tojson }},
-                                                                                         {{ times_returns_comp['US_10_y_Bonds']|tojson }},
-                                                                                         {{ times_returns_comp['HK_Equities']|tojson }},
-                                                                                         {{ times_returns_comp['JP_Equities']|tojson }},
-                                                                                         {{ times_returns_comp['EU_Equities']|tojson }},
-                                                                                         {{ times_returns_comp['US_Equities']|tojson }})
+                                                                            weeklyAssets({{ times_data_comp['times_returns_comp']['GBP']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['CAD']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['AUD']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['EUR']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['JPY']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['CA_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['EU_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['UK_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['US_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['HK_Equities']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['JP_Equities']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['EU_Equities']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['US_Equities']|tojson }})
                                                                         </script>
                                                                     </td>
                                                                     <td>
                                                                         <div id="ytd_assets" class="responsive-plot"></div>
                                                                         <script type="text/javascript" src="{{ url_for('static', filename='js/ytd_assets.js') }}"></script>
                                                                         <script type="text/javascript">
-                                                                            ytdAssets({{ times_returns_ytd['GBP']|tojson }},
-                                                                                      {{ times_returns_ytd['CAD']|tojson }},
-                                                                                      {{ times_returns_ytd['AUD']|tojson }},
-                                                                                      {{ times_returns_ytd['EUR']|tojson }},
-                                                                                      {{ times_returns_ytd['JPY']|tojson }},
-                                                                                      {{ times_returns_ytd['CA_10_y_Bonds']|tojson }},
-                                                                                      {{ times_returns_ytd['EU_10_y_Bonds']|tojson }},
-                                                                                      {{ times_returns_ytd['UK_10_y_Bonds']|tojson }},
-                                                                                      {{ times_returns_ytd['US_10_y_Bonds']|tojson }},
-                                                                                      {{ times_returns_ytd['HK_Equities']|tojson }},
-                                                                                      {{ times_returns_ytd['JP_Equities']|tojson }},
-                                                                                      {{ times_returns_ytd['EU_Equities']|tojson }},
-                                                                                      {{ times_returns_ytd['US_Equities']|tojson }})
+                                                                            ytdAssets({{ times_data_comp['times_returns_ytd']['GBP']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['CAD']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['AUD']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['EUR']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['JPY']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['CA_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['EU_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['UK_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['US_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['HK_Equities']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['JP_Equities']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['EU_Equities']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['US_Equities']|tojson }})
                                                                         </script>
                                                                     </td>
                                                                 </tr>
@@ -606,19 +606,19 @@
                                             <div id="asset_allocation_over_times" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/asset_allocation_over_times.js') }}"></script>
                                             <script type="text/javascript">
-                                                assetAllocationChart({{ times_positions['US_Equities'].tolist()|tojson }},
-                                                                     {{ times_positions['EU_Equities'].tolist()|tojson }},
-                                                                     {{ times_positions['JP_Equities'].tolist()|tojson }},
-                                                                     {{ times_positions['HK_Equities'].tolist()|tojson }},
-                                                                     {{ times_positions['US_10_y_Bonds'].tolist()|tojson }},
-                                                                     {{ times_positions['UK_10_y_Bonds'].tolist()|tojson }},
-                                                                     {{ times_positions['EU_10_y_Bonds'].tolist()|tojson }},
-                                                                     {{ times_positions['CA_10_y_Bonds'].tolist()|tojson }},
-                                                                     {{ times_positions['JPY'].tolist()|tojson }},
-                                                                     {{ times_positions['EUR'].tolist()|tojson }},
-                                                                     {{ times_positions['AUD'].tolist()|tojson }},
-                                                                     {{ times_positions['CAD'].tolist()|tojson }},
-                                                                     {{ times_positions['GBP'].tolist()|tojson }}
+                                                assetAllocationChart({{ times_data['times_positions']['US_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['EU_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['JP_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['HK_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['US_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['UK_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['EU_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['CA_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['JPY'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['EUR'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['AUD'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['CAD'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['GBP'].tolist()|tojson }}
                                                                      )
                                             </script>
                                         </div>
@@ -660,7 +660,7 @@
                                             <div id="performance_jpy" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_jpy.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceJpyChart({{ times_returns['JPY'].tolist()|tojson }})
+                                                performanceJpyChart({{ times_data['times_returns']['JPY'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -698,7 +698,7 @@
                                             <div id="performance_eur" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_eur.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceEurChart({{ times_returns['EUR'].tolist()|tojson }})
+                                                performanceEurChart({{ times_data['times_returns']['EUR'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -740,7 +740,7 @@
                                             <div id="performance_aud" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_aud.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceAudChart({{ times_returns['AUD'].tolist()|tojson }})
+                                                performanceAudChart({{ times_data['times_returns']['AUD'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>
@@ -782,7 +782,7 @@
                                             <div id="performance_cad" align = "center" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_cad.js') }}"></script>
                                             <script type="text/javascript">
-                                                performanceCadChart({{ times_returns['CAD'].tolist()|tojson }})
+                                                performanceCadChart({{ times_data['times_returns']['CAD'].tolist()|tojson }})
                                             </script>
                                         </div>
                                     </div>

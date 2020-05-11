@@ -5,6 +5,9 @@ import pandas as pd
 
 
 class CleaningDataFromExcel(ReadDataFromExcel):
+    """
+        Class cleaning up data
+    """
     def __init__(self):
         super().__init__()
         self.times_signals = pd.DataFrame()
@@ -12,13 +15,18 @@ class CleaningDataFromExcel(ReadDataFromExcel):
         self.times_positions = pd.DataFrame()
 
     def data_processing(self):
+        """
+        Function performing data processing
+        Firstly, we split up the data into Signals, Returns and Positions
+        Secondly, we are doing the dates processing for Signals, Returns and Positions
+        Finally, we name the columns of each dataFrame
+        """
 
         self.times_signals = self.data.loc[:, 'TIMES Signals': 'GBP']
         self.times_returns = self.data.loc[:, 'TIMES Returns': 'GBP.1']
         self.times_positions = self.data.loc[:, 'TIMES Positions': 'GBP.2']
 
-    def date_processing(self):
-
+        # Dates processing
         dates_signals = self.times_signals.loc[:, 'TIMES Signals']
         dates_returns = self.times_returns.loc[:, 'TIMES Returns']
         dates_positions = self.times_positions.loc[:, 'TIMES Positions']
@@ -39,7 +47,7 @@ class CleaningDataFromExcel(ReadDataFromExcel):
         self.times_returns = self.times_returns.loc[:last_valid_dates_times_returns]
         self.times_positions = self.times_positions.loc[:last_valid_dates_times_positions]
 
-    def columns_names_processing(self):
+        # Columns processing
 
         assets = [asset.name for asset in Assets]
 

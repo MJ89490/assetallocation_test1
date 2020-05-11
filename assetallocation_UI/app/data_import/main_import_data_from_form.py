@@ -1,8 +1,13 @@
 from app.data_import.import_data_from_form import TimesInputs
+from app.forms import InputsTimesModel
 
 
 def main_form():
-    obj_times_inputs = TimesInputs()
+    """
+    Main function to run the TimesInputs() class
+    :return: inputs data from the Flask form
+    """
+    obj_times_inputs = TimesInputs(form=InputsTimesModel())
     data = obj_times_inputs.inputs_times_model()
     strategy_inputs_times = obj_times_inputs.strategy_times_inputs(data=data)
 

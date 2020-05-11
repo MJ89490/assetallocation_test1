@@ -2,6 +2,9 @@ import enum
 
 
 class Assets(enum.Enum):
+    """
+        Enum class with assets names
+    """
     US_Equities = 0
     EU_Equities = 1
     JP_Equities = 2

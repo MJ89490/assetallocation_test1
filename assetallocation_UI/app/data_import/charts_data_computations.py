@@ -6,6 +6,9 @@ import pandas as pd
 
 
 class ChartsDataComputations(object):
+    """
+        Class doing computations for the data of the dashboard
+    """
 
     def __init__(self, times_signals, times_positions, times_returns):
         self.times_signals = times_signals
@@ -38,6 +41,13 @@ class ChartsDataComputations(object):
         self.end_year = value
 
     def data_computations(self, signal_off, returns_off, returns_weekly_off, positions_off):
+        """
+        :param signal_off: last index available (date) for signal
+        :param returns_off:  last index available (date) for returns
+        :param returns_weekly_off: last weekly index available (date) for returns
+        :param positions_off: last index available (date) for positions
+        :return: dictionary with the computations of signals, returns, positions and returns
+        """
 
         times_signals_comp = round(self.times_signals.loc[signal_off], 2)
 
@@ -50,8 +60,13 @@ class ChartsDataComputations(object):
         return {'times_signals_comp': times_signals_comp, 'times_positions_comp': times_positions_comp,
                 'times_returns_comp': times_returns_comp, 'times_returns_ytd': times_returns_ytd}
 
-
     def data_computations_sum(self, times_returns_ytd, times_positions_comp, times_returns):
+        """
+        :param times_returns_ytd: ytd returns data
+        :param times_positions_comp: computations of positions data
+        :param times_returns: returns data
+        :return: dictionary with all the computations such as the sum of the equities positions, sum of the bonds positions
+        """
 
         sum_positions_equities = round(sum(times_positions_comp.loc[Assets.US_Equities.name:Assets.HK_Equities.name]), 2)
 
