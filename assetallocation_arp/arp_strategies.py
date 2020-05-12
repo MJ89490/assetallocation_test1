@@ -5,10 +5,11 @@ from time import strftime, gmtime
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
 sys.path.insert(0, ROOT_DIR)
-from assetallocation_arp.data_etl import import_data as gd
+from assetallocation_arp.data_etl import import_data_times as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.common_libraries import models_names
 
+from assetallocation_arp.models.effect.effect_model import ImportDataEffect
 
 def run_model(model_type, mat_file, input_file):
 
@@ -23,7 +24,8 @@ def run_model(model_type, mat_file, input_file):
     if model_type == models_names.Models.maven.name:
         print(model_type)
     if model_type == models_names.Models.effect.name:
-        print(model_type)
+        obj_import_data = ImportDataEffect()
+        obj_import_data.import_data_matlab()
     if model_type == models_names.Models.curp.name:
         print(model_type)
     if model_type == models_names.Models.fica.name:
@@ -80,14 +82,12 @@ def get_inputs_from_excel():
 
 def get_inputs_from_python(model, file):
 
-
     # launch the script from Python
     mat_file = None
 
     input_file = None
 
     models_list = [model.name for model in models_names.Models]
-
 
     xw.Book(file).set_mock_caller()
 
@@ -107,5 +107,5 @@ def get_input_user():
 
 if __name__ == "__main__":
 
-    get_inputs_from_excel()
-    # get_inputs_from_python(model, file="arp_dashboard.xlsm")
+    # get_inputs_from_excel()
+    get_inputs_from_python(get_input_user(), file="arp_dashboard.xlsm")

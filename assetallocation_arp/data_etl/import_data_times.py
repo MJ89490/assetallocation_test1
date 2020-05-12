@@ -10,13 +10,13 @@ import openpyxl
 import os
 import numpy as np
 from datetime import datetime
+from common_libraries.models_names import Models
 
 #Comments: may be we should the structure of the import data when we will have the database
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
 FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
-
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
@@ -101,8 +101,15 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
         model_date = model_date
 
     # load data and inputs
-    strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
-    asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
-    all_data = matfile_to_dataframe(file_path, model_date)
+    #todo : to improve
+    if model_type == Models.times.name:
+        strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
+        asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
+        all_data = matfile_to_dataframe(file_path, model_date)
 
-    return strategy_inputs, asset_inputs, all_data
+        return strategy_inputs, asset_inputs, all_data
+
+    else:
+        all_data = matfile_to_dataframe(file_path, model_date)
+        return all_data
+
