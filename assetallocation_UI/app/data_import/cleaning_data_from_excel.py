@@ -1,6 +1,6 @@
 from app.data_import.read_data_from_excel import ReadDataFromExcel
 from app.data_import.assets_names import Assets
-
+from app.data_import import constant
 import pandas as pd
 
 
@@ -22,18 +22,18 @@ class CleaningDataFromExcel(ReadDataFromExcel):
         Finally, we name the columns of each dataFrame
         """
 
-        self.times_signals = self.data.loc[:, 'TIMES Signals': 'GBP']
-        self.times_returns = self.data.loc[:, 'TIMES Returns': 'GBP.1']
-        self.times_positions = self.data.loc[:, 'TIMES Positions': 'GBP.2']
+        self.times_signals = self.data.loc[:, constant.TIMES_SIGNALS: 'GBP']
+        self.times_returns = self.data.loc[:, constant.TIMES_RETURNS: 'GBP.1']
+        self.times_positions = self.data.loc[:, constant.TIMES_POSITIONS: 'GBP.2']
 
         # Dates processing
-        dates_signals = self.times_signals.loc[:, 'TIMES Signals']
-        dates_returns = self.times_returns.loc[:, 'TIMES Returns']
-        dates_positions = self.times_positions.loc[:, 'TIMES Positions']
+        dates_signals = self.times_signals.loc[:, constant.TIMES_SIGNALS]
+        dates_returns = self.times_returns.loc[:, constant.TIMES_RETURNS]
+        dates_positions = self.times_positions.loc[:, constant.TIMES_POSITIONS]
 
-        del self.times_signals['TIMES Signals']
-        del self.times_returns['TIMES Returns']
-        del self.times_positions['TIMES Positions']
+        del self.times_signals[constant.TIMES_SIGNALS]
+        del self.times_returns[constant.TIMES_RETURNS]
+        del self.times_positions[constant.TIMES_POSITIONS]
 
         self.times_signals = self.times_signals.set_index(dates_signals)
         self.times_returns = self.times_returns.set_index(dates_returns)

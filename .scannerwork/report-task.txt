@@ -3,5 +3,5 @@ serverUrl=https://n00-sonar/sonar
 serverVersion=8.1.0.31237
 branch=flask_ui_development
 dashboardUrl=https://n00-sonar/sonar/dashboard?id=%27assetallocation_arp%27%3Aproject&branch=flask_ui_development
-ceTaskId=AXIO_5RT08wZcXIVfzGD
-ceTaskUrl=https://n00-sonar/sonar/api/ce/task?id=AXIO_5RT08wZcXIVfzGD
+ceTaskId=AXIPEnVs08wZcXIVfzGH
+ceTaskUrl=https://n00-sonar/sonar/api/ce/task?id=AXIPEnVs08wZcXIVfzGH
