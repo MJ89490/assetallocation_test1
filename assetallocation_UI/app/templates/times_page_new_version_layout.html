@@ -1,6 +1,7 @@
 {% extends "times_page.html" %}
 
 <head>
+    <title> {{title }} </title>
     <link rel="stylesheet" href="{{url_for('.static', filename='times_page_new_version.css')}}">
 </head>
 
@@ -85,7 +86,7 @@
 
     <div class="text-field-path" id="text-field-name-file">
         {{form.name_file_times.label(id="label_text")}}
-        <i>{{ form.name_file_times(class="form-control", id="btn-group-inputs-model", placeholder=("Name of the file"))}}</i>
+        <em>{{ form.name_file_times(class="form-control", id="btn-group-inputs-model", placeholder=("Name of the file"))}}</em>
     </div>
     <!--Form: Check Boxes to save the results-->
     <div class="check-box-save" id="check-box-save-excel">
