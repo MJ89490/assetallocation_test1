@@ -111,6 +111,7 @@ def times_page():
 @app.route('/times_dashboard', methods=['GET', 'POST'])
 @login_required
 def times_dashboard():
+    title = "Dashboard"
     form = ExportDataForm()
     template_data = main_data()
 
@@ -196,7 +197,7 @@ def times_dashboard():
             print('data data data')
 
     # put the data in dict or create a class to handle the data nicer (later with the db?)
-    return render_template('dashboard_new.html', form=form, m=m, **template_data)
+    return render_template('dashboard_new.html', title=title, form=form, m=m, **template_data)
 
 
 @app.route('/logout')
