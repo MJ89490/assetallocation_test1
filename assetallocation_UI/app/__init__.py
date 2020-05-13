@@ -54,38 +54,3 @@ def load_user(user_id):
 
 # Import is at the bottom to avoid circular imports
 from app import routes
-
-
-
-# def create_app():
-#     # Set the origin template (templates) of Flask and add subfolders
-#     origin_path = "templates"
-#     modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsIcons"))
-#     modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
-#     inputs_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\inputs_models"))
-#
-#     app = Flask(__name__, instance_relative_config=False)
-#
-#     template_folders = [origin_path, modals_icons_path, modals_models_path, inputs_models_path]
-#     # Change the original folder of Flask by adding subfolders
-#     app.jinja_loader = jinja2.ChoiceLoader([
-#         app.jinja_loader,
-#         jinja2.FileSystemLoader(template_folders),
-#     ])
-#
-#     app.config.from_object(config.DevelopmentConfig)
-#     CSRFProtect(app).init_app(app)
-#     bootstrap = Bootstrap(app)
-#
-#     dash_app = dashview.A
-#     login_manager = LoginManager()
-#     login_manager.init_app(app)
-#     login_manager.login_view = 'login'
-#     app.config['SECRET_KEY'] = 'secret*'
-#
-#     @login_manager.user_loader
-#     def load_user(user_id):
-#         return User(user_id)
-#
-#     # Import is at the bottom to avoid circular imports
-#     from app import routes
