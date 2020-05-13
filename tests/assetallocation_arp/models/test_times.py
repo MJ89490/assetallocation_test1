@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 from assetallocation_arp.models.times import format_data_and_calc
-from common_libraries import leverage_types as leverage
+from assetallocation_arp.common_libraries import leverage_types as leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 

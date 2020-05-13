@@ -7,7 +7,7 @@ import math
 import pandas as pd
 
 from pandas.tseries.offsets import BDay
-from common_libraries import leverage_types as leverage_name
+from assetallocation_arp.common_libraries import leverage_types as leverage_name
 
 
 def apply_leverage(futures_data, leverage_type, leverage):

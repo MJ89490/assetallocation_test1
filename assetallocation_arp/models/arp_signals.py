@@ -7,7 +7,7 @@ ARP
 import math
 import pandas as pd
 import numpy as np
-import data_etl.data_manipulation as dm
+import assetallocation_arp.data_etl.data_manipulation as dm
 
 
 def momentum(index_data, inputs, week_day):
