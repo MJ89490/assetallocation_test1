@@ -9,7 +9,8 @@ from assetallocation_arp.data_etl import import_data_times as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.common_libraries import models_names
 
-from assetallocation_arp.models.effect.effect_model import DataProcessingEffect
+from assetallocation_arp.models.effect.effect_model import CurrencyComputations
+
 
 def run_model(model_type, mat_file, input_file):
 
@@ -27,9 +28,10 @@ def run_model(model_type, mat_file, input_file):
 
 
 
-        obj_import_data = DataProcessingEffect()
+        obj_import_data = CurrencyComputations()
         obj_import_data.import_data_matlab()
         obj_import_data.data_processing_effect()
+        obj_import_data.spot_ex_costs_computations()
 
 
 
