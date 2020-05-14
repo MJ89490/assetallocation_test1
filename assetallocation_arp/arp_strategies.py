@@ -9,7 +9,7 @@ from assetallocation_arp.data_etl import import_data_times as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.common_libraries import models_names
 
-from assetallocation_arp.models.effect.effect_model import ImportDataEffect
+from assetallocation_arp.models.effect.effect_model import DataProcessingEffect
 
 def run_model(model_type, mat_file, input_file):
 
@@ -24,8 +24,18 @@ def run_model(model_type, mat_file, input_file):
     if model_type == models_names.Models.maven.name:
         print(model_type)
     if model_type == models_names.Models.effect.name:
-        obj_import_data = ImportDataEffect()
+
+
+
+        obj_import_data = DataProcessingEffect()
         obj_import_data.import_data_matlab()
+        obj_import_data.data_processing_effect()
+
+
+
+
+
+
     if model_type == models_names.Models.curp.name:
         print(model_type)
     if model_type == models_names.Models.fica.name:
