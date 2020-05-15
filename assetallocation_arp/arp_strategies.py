@@ -98,6 +98,8 @@ def get_inputs_from_python(model, file):
     # launch the script from Python
     mat_file = None
 
+    # input_file = None
+
     models_list = [model.name for model in models_names.Models]
 
     xw.Book(file).set_mock_caller()
