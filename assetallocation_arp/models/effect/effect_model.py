@@ -7,6 +7,7 @@ Created on 12/05/2020
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
 from common_libraries.models_names import Models
 from models.effect.constants_currencies import Currencies
+from common_libraries.names_currencies import CurrencyUSD
 import pandas as pd
 
 
@@ -63,33 +64,34 @@ class CurrencyComputations(DataProcessingEffect):
 
     def spot_ex_costs_computations(self):
 
-        start_date_computations = '2000-01-12' #property
+        start_date_computations = '2000-01-11' #property
 
         dates = self.data_currencies_usd.index.values # property
 
-        spot = pd.Series([100] * len(dates), index=dates)
-
-        # spot = spot.set_index(dates)
-
         #todo Target the Spot column for each currency in self.data_currencies_usd to compute spot ex costs
-        combo = 1 # to compute
-        spot = spot.loc[start_date_computations:].shift(1) * (self.data_currencies_usd.loc[start_date_computations:, 'BRLUSD Curncy'] / self.data_currencies_usd.loc[start_date_computations:, 'BRLUSD Curncy'].shift(1))**(combo)
+        combo = 1 # to compute self.combo and change it depending on the currency
+        currencies = [currency.value for currency in CurrencyUSD]
+        # loop to get through each currency
+        for currency in currencies:
+            # Reset the Spot list for the next currency
+            spot = [100]  # the Spot is set 100
+            spot_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
+                                 self.data_currencies_usd.loc[start_date_computations:, currency].shift(1))**combo
+            # Remove the first nan due to the shift(1)
+            spot_division_tmp = spot_division_tmp.iloc[1:]
+            # Transform the spot_division_tmp into a list
+            spot_tmp = spot_division_tmp.values.tolist()
 
-        l = spot.loc[start_date_computations:].shift(1) * p
+            # Compute with the previous Spot
+            for values in range(len(spot_tmp)):
+                spot.append(spot_tmp[values] * spot[values])
 
-        #todo create a loop to compute the previous spot with the current one
+            # Store all the spot for each currency
+            # spot_ex_costs_tmp = pd.DataFrame(spot, columns=["Spot " + currency])
+            self.spot_ex_costs["Spot " + currency] = spot
 
-        spot = spot / spot.shift(1)
+        # Set the dates to the index of self.spot_ex_costs
+        dates_usd = self.data_currencies_usd[start_date_computations:].index.values # property
+        self.spot_ex_costs.set_index(dates_usd)
 
-
-        o = pd.DataFrame([1.006068408, 1.020654359, 1.006805158])
-
-        m = pd.DataFrame([100, 100, 100])
-
-        l =  o * m.shift(1)
-
-
-if __name__=="__main__":
-    obj_import_data = ImportDataEffect()
-    obj_import_data.import_data_matlab()
 
