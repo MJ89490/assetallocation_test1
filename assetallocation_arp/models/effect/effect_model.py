@@ -35,7 +35,7 @@ class DataProcessingEffect(ImportDataEffect):
         obj_currencies = Currencies()
         currencies_usd, currencies_eur = obj_currencies.currencies_data()
 
-        start_date = '1999-01-06' #property
+        start_date = '1999-01-06' # property
         self.data_currencies_usd = self.data_currencies[currencies_usd.currencies_usd_tickers].loc[start_date:]
         self.data_currencies_eur = self.data_currencies[currencies_eur.currencies_eur_tickers].loc[start_date:]
 
@@ -55,7 +55,6 @@ class CurrencyComputations(DataProcessingEffect):
         # Inflation
         # Inflation
 
-
     def carry_computations(self):
         pass
 
@@ -64,11 +63,7 @@ class CurrencyComputations(DataProcessingEffect):
 
     def spot_ex_costs_computations(self):
 
-        start_date_computations = '2000-01-11' #property
-
-        dates = self.data_currencies_usd.index.values # property
-
-        #todo Target the Spot column for each currency in self.data_currencies_usd to compute spot ex costs
+        start_date_computations = '2000-01-11' # property
         combo = 1 # to compute self.combo and change it depending on the currency
         currencies = [currency.value for currency in CurrencyUSD]
         # loop to get through each currency
@@ -81,7 +76,6 @@ class CurrencyComputations(DataProcessingEffect):
             spot_division_tmp = spot_division_tmp.iloc[1:]
             # Transform the spot_division_tmp into a list
             spot_tmp = spot_division_tmp.values.tolist()
-
             # Compute with the previous Spot
             for values in range(len(spot_tmp)):
                 spot.append(spot_tmp[values] * spot[values])
@@ -93,5 +87,3 @@ class CurrencyComputations(DataProcessingEffect):
         # Set the dates to the index of self.spot_ex_costs
         dates_usd = self.data_currencies_usd[start_date_computations:].index.values # property
         self.spot_ex_costs.set_index(dates_usd)
-
-
