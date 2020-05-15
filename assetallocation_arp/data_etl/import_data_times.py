@@ -83,7 +83,7 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
     return df
 
 
-def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
+def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, date=None):
 
     if mat_file is None:
         file_path = FILE_PATH
@@ -95,10 +95,10 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     else:
         input_path = input_file
 
-    if model_date is None:
+    if date is None:
         model_date = np.datetime64(datetime.today())
     else:
-        model_date = model_date
+        model_date = date
 
     # load data and inputs
     #todo : to improve
