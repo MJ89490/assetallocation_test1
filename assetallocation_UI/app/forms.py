@@ -17,6 +17,8 @@ class LoginForm(FlaskForm):
 
 class ExportDataForm(FlaskForm):
 
+    START_DATE = 'Start Date'
+    END_DATE = 'End Date'
     # todo link to the DB to grap the different versions automatically
     versions = SelectField('Versions', choices=[('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3','Version3')])
 
@@ -33,31 +35,31 @@ class ExportDataForm(FlaskForm):
 
     # todo create a common button class and gives the inputs
 
-    start_date_inputs = StringField(u'Start Date', validators=[DataRequired(message="The username is required")])
-    end_date_inputs = StringField(u'End Date', validators=[DataRequired(message="The username is required")])
+    start_date_inputs = StringField(START_DATE, validators=[DataRequired(message="The username is required")])
+    end_date_inputs = StringField(END_DATE, validators=[DataRequired(message="The username is required")])
 
-    start_date_chart0 = StringField(u'Start Date')
-    end_date_chart0 = StringField(u'End Date')
+    start_date_chart0 = StringField(START_DATE)
+    end_date_chart0 = StringField(END_DATE)
 
-    start_date_chart1 = StringField(u'Start Date')
-    end_date_chart1 = StringField(u'End Date')
+    start_date_chart1 = StringField(START_DATE)
+    end_date_chart1 = StringField(END_DATE)
 
-    start_date_chart2 = StringField(u'Start Date')
-    end_date_chart2 = StringField(u'End Date')
+    start_date_chart2 = StringField(START_DATE)
+    end_date_chart2 = StringField(END_DATE)
 
-    start_date_chart3 = StringField(u'Start Date')
-    end_date_chart3 = StringField(u'End Date')
+    start_date_chart3 = StringField(START_DATE)
+    end_date_chart3 = StringField(END_DATE)
 
-    start_date_chart4 = StringField(u'Start Date')
-    end_date_chart4 = StringField(u'End Date')
+    start_date_chart4 = StringField(START_DATE)
+    end_date_chart4 = StringField(END_DATE)
 
-    start_date_chart5 = StringField(u'Start Date')
-    end_date_chart5 = StringField(u'End Date')
+    start_date_chart5 = StringField(START_DATE)
+    end_date_chart5 = StringField(END_DATE)
 
-    start_date_chart6 = StringField(u'Start Date')
-    end_date_chart6 = StringField(u'End Date')
+    start_date_chart6 = StringField(START_DATE)
+    end_date_chart6 = StringField(END_DATE)
 
-    submit_export = SubmitField('Export Data')
+    submit_export = SubmitField(START_DATE)
     submit_dates_chart = SubmitField('Ok')
     submit1 = SubmitField('ok')
 
