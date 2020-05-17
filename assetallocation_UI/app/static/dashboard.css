@@ -284,17 +284,14 @@ element.style {
             border-collapse: collapse;
             text-align:center;
           }
-.table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #404040;
-        background-color: #fff;
-}
 
-table {
-        border-collapse: collapse;
-        text-align:center;
-      }
+.table4{width: 100%; margin-top: 40px; border-right: 1px solid #eee; border-left: 1px solid #eee;
+                                                        border-top: 1px solid #eee;
+                                                        border-bottom: 1px solid #eee;
+                                                        border-collapse: collapse;
+                                                        text-align:center;
+                                                        background-color: #fff;
+                                                        }
 
 .table1-borderless > tbody > tr > td {font-size: 12px; font-family: Arial, serif; padding-bottom:2px; }
 
@@ -313,22 +310,12 @@ table {
 
 .table4-borderless > tbody > tr > td,
 .table4-borderless > tbody > tr > th,
-.table4-borderless > tfoot > tr > th,
-.table4-borderless > thead > tr > td,
-.table4-borderless > thead > tr > th { border: none; font-size: 11px; font-family: Arial, serif;
+.table4-borderless > thead > tr > td{border: none; font-size: 11px; font-family: Arial, serif;
                                                                       padding-right: 16px;
-                                                                      padding-bottom:8px;
+                                                                      padding-bottom:15px;
                                                                       padding-left: 17px;
                                                                       margin-left: 20px;
                                                                       border-right: 1px solid #eee; }
-
-#table4{margin-top: 40px; border-right: 1px solid #eee; border-left: 1px solid #eee;
-                                                        border-top: 1px solid #eee;
-                                                        border-bottom: 1px solid #eee;
-                                                        border-collapse: collapse;
-                                                        text-align:center;
-                                                        background-color: #fff; }
-
 .table5-borderless > tbody > tr > td,
 .table5-borderless > tbody > tr > th,
 .table5-borderless > tfoot > tr > td,
@@ -457,6 +444,24 @@ table {
 #main-table-positions-performance { padding-right: 15px;}
 
 #main-table-positions-performance-widget { height: 850px; }
+
+#class-title  {font-size: 12; padding-left: 45px; }
+
+#assets-title {font-size: 12; padding-left: 35px; }
+
+#signals-title {font-size: 12; padding-left: 20px; }
+
+#positions-title {font-size: 12; padding-left: 20px; }
+
+#weekly-title {font-size: 12; padding-left: 35px; }
+
+#buy/sell-title {font-size: 12; padding-left: 50px; }
+
+#change-title {font-size: 12; padding-left: 25px; }
+
+#performance-title {font-size: 12; padding-left: 25px; }
+
+#ytd-title {font-size: 12px; padding-left: 25px; }
 
 .overview-span { color: #007faa; }
 
