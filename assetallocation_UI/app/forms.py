@@ -10,8 +10,8 @@ User login form
 
 
 class LoginForm(FlaskForm):
-    username = StringField(u'Username', validators=[DataRequired(message="The username is required")])
-    password = PasswordField(u'Password', validators=[DataRequired(message="The password is required")])
+    username = StringField(u'Username')
+    password = PasswordField(u'Password')
     submit = SubmitField('Sign In')
 
 
@@ -19,6 +19,7 @@ class ExportDataForm(FlaskForm):
 
     START_DATE = 'Start Date'
     END_DATE = 'End Date'
+
     # todo link to the DB to grap the different versions automatically
     versions = SelectField('Versions', choices=[('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3','Version3')])
 
@@ -35,8 +36,8 @@ class ExportDataForm(FlaskForm):
 
     # todo create a common button class and gives the inputs
 
-    start_date_inputs = StringField(START_DATE, validators=[DataRequired(message="The username is required")])
-    end_date_inputs = StringField(END_DATE, validators=[DataRequired(message="The username is required")])
+    start_date_inputs = StringField(START_DATE)
+    end_date_inputs = StringField(END_DATE)
 
     start_date_chart0 = StringField(START_DATE)
     end_date_chart0 = StringField(END_DATE)
