@@ -323,12 +323,11 @@ element.style {
 .table5-borderless > thead > tr > td,
 .table5-borderless > thead > tr > th { font-size: 11px; font-family: Arial, serif; padding-bottom: 10px; padding-left: 20px; padding-right: 20px; }
 
-.table-borderless > tbody > tr > td,
-.table-borderless > tbody > tr > th,
-.table-borderless > tfoot > tr > td,
-.table-borderless > tfoot > tr > th,
-.table-borderless > thead > tr > td,
-.table-borderless > thead > tr > th { font-size: 14px; font-family: Arial, serif; border: none;}
+.table6-borderless > tbody > tr > td,
+.table6-borderless > tbody > tr > th,
+.table6-borderless > thead > tr > td,
+.table6-borderless > thead > tr > th { font-size: 14px; font-family: Arial, serif; border: none;padding-left: 25px;
+                                       padding-right: 25px; }
 
 .thead-color {background-color: rgb(128, 128, 128);}
 
@@ -462,6 +461,14 @@ element.style {
 #performance-title {font-size: 12; padding-left: 25px; }
 
 #ytd-title {font-size: 12px; padding-left: 25px; }
+
+#signals_title {padding-left: 165px; }
+
+#positions_title {padding-left: 100px; }
+
+#weekly_title {padding-left: 40px; }
+
+#ytd_title {padding-left: 50px; }
 
 .overview-span { color: #007faa; }
 
