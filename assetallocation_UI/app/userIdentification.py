@@ -6,7 +6,7 @@ from random import randint
 """
 
 
-def randomIdentification():
+def random_identification():
 
     value = randint(1, 10)
     return value

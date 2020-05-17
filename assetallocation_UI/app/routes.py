@@ -19,7 +19,7 @@ from flask_login import login_user
 from flask_login import current_user
 from flask import g
 
-from .userIdentification import randomIdentification
+from .userIdentification import random_identification
 
 
 @app.before_request
@@ -53,7 +53,7 @@ def login_post():
             flash('Please check your login details and try again.')
             return redirect(url_for('login'))
         else:
-            track_id = randomIdentification()
+            track_id = random_identification()
             login_user(User(track_id))
             return redirect(url_for('home'))
     # when the user click on the submit button without adding credentials
