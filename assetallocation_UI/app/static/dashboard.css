@@ -448,6 +448,12 @@ table {
 
 #total-weekly-title, #total-ytd-title {font-size: 12px; padding-left: 10px; }
 
+#total-positions-table3 {font-size: 12px; padding-left: 50px; }
+
+#total-weekly-table3 {font-size: 12px; padding-left: 10px; }
+
+#total-ytd-table3 {font-size: 12px; padding-left: 25px; }
+
 #main-table-positions-performance { padding-right: 15px;}
 
 #main-table-positions-performance-widget { height: 850px; }

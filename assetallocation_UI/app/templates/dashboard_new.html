@@ -200,7 +200,7 @@
                                                 <div class="row">
                                                     <div class="total-positions-performance" id="total-positions-performance">
                                                         <div class="table-responsive-lg">
-                                                            <table class="table2 table2-borderless" aria-describedby="Performance Positions Table">
+                                                            <table class="table2 table2-borderless" aria-describedby="Performance Position Table2">
                                                                 <tbody class="no-border-x">
                                                                     <tr>
                                                                         <th id="blank-id"></th>
@@ -208,7 +208,6 @@
                                                                         <th id="total-weekly-title"><strong>Weekly Performance</strong></th>
                                                                         <th id="total-ytd-title"><strong>YTD Performance</strong></th>
                                                                     </tr>
-
                                                                     <tr>
                                                                         <td><strong>Equities</strong></td>
                                                                         <td>{{ times_sum['sum_positions_equities'] }}%</td>
@@ -232,13 +231,13 @@
                                                         </div>
                                                       </div><!-- .div total-table-container -->
                                                     <div class="total-positions-bar-charts">
-                                                        <table class="table3 table3-borderless">
+                                                        <table class="table3 table3-borderless" aria-describedby="Performance Position Table3">
+                                                            <tr>
+                                                                <th id="total-positions-table3"><strong>Positions</strong></th>
+                                                                <th id="total-weekly-table3"><strong>Weekly Performance</strong></th>
+                                                                <th id="total-ytd-table3"><strong>YTD Performance</strong></th>
+                                                            </tr>
                                                             <tbody class="no-border-x">
-                                                                <tr>
-                                                                    <td><strong>Positions</strong></td>
-                                                                    <td><strong>Weekly Performance</strong></td>
-                                                                    <td><strong>YTD Performance</strong></td>
-                                                                </tr>
                                                                 <tr>
                                                                     <td>
                                                                         <div id="positions-summary" class="responsive-plot">
