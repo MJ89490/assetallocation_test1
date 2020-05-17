@@ -50,6 +50,7 @@ body {
 
 #row-inputs-save {padding-bottom: 50px; }
 
+
 /* widgets */
 .widget.widget-fullwidth  {
                             padding-top: 10px;
@@ -104,8 +105,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 #btn-group-inputs-model-leverage{text-align: center; color: #D3D3D3; padding-left: 40px; }
 
-.dashboard-btn {padding-bottom: 30px; width: 300px; }
-
+.dashboard-btn {padding-bottom: 30px; width: 300px; margin:0px auto;}
 
 /* dropdown boxes */
 .dropdown-menu, .dropdown-item { color: black; text-align: center; }
