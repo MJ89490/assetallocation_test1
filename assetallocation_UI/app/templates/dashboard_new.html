@@ -604,7 +604,7 @@
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div id="asset_allocation_over_times" align = "center" class="responsive-plot" ></div>
+                                            <div class="text-center"><div id="asset_allocation_over_times" class="responsive-plot" ></div></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/asset_allocation_over_times.js') }}"></script>
                                             <script type="text/javascript">
                                                 assetAllocationChart({{ times_data['times_positions']['US_Equities'].tolist()|tojson }},
@@ -658,7 +658,7 @@
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div id="performance_jpy" align = "center" class="responsive-plot" ></div>
+                                            <div id="performance_jpy" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_jpy.js') }}"></script>
                                             <script type="text/javascript">
                                                 performanceJpyChart({{ times_data['times_returns']['JPY'].tolist()|tojson }})
@@ -696,7 +696,7 @@
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div id="performance_eur" align = "center" class="responsive-plot" ></div>
+                                            <div id="performance_eur" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_eur.js') }}"></script>
                                             <script type="text/javascript">
                                                 performanceEurChart({{ times_data['times_returns']['EUR'].tolist()|tojson }})
@@ -738,7 +738,7 @@
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div id="performance_aud" align = "center" class="responsive-plot" ></div>
+                                            <div id="performance_aud" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_aud.js') }}"></script>
                                             <script type="text/javascript">
                                                 performanceAudChart({{ times_data['times_returns']['AUD'].tolist()|tojson }})
@@ -780,7 +780,7 @@
                                             </div>
                                         </div>
                                         <div class="widget-chart-container">
-                                            <div id="performance_cad" align = "center" class="responsive-plot" ></div>
+                                            <div id="performance_cad" class="responsive-plot" ></div>
                                             <script type="text/javascript" src="{{ url_for('static', filename='js/performance_cad.js') }}"></script>
                                             <script type="text/javascript">
                                                 performanceCadChart({{ times_data['times_returns']['CAD'].tolist()|tojson }})
@@ -797,8 +797,10 @@
          <!-- FOOTER
          ===================================== !-->
             <footer class="footer" id="container-footer">
-                <div class="container" align="center">
+                <div class="text-center">
+                <div class="container">
                     <span class="text-muted" id="footer-dashboard-title">© Legal & General 2020</span>
+                </div>
                 </div>
             </footer><!-- .footer -->
 
