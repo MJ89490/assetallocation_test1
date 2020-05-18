@@ -26,7 +26,7 @@ def run_model(model_type, mat_file, input_file):
     if model_type == models_names.Models.effect.name:
 
 
-
+        # todo create a meta class
         obj_import_data = CurrencyComputations()
         obj_import_data.import_data_matlab()
         obj_import_data.data_processing_effect()
@@ -34,6 +34,7 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.bid_ask_spread = 10
         obj_import_data.spot_incl_computations()
         obj_import_data.return_ex_costs_computations()
+        obj_import_data.return_incl_costs_computations()
 
 
 

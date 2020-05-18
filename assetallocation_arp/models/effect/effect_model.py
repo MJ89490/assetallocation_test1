@@ -50,7 +50,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.spot_ex_costs = pd.DataFrame()
         self.spot_incl_costs = pd.DataFrame()
         self.return_ex_costs = pd.DataFrame()
-
+        self.return_incl_costs = pd.DataFrame()
         self.bid_ask_spread = 0
         # Trend
         # Combo
@@ -92,6 +92,25 @@ class CurrencyComputations(DataProcessingEffect):
                 first_return.append(return_tmp[values] * first_return[values])
 
             self.return_ex_costs["Return Ex Costs " + currency] = first_return
+
+        # todo set the dates
+
+    def return_incl_costs_computations(self):
+
+        combo = 1
+        returns_division_tmp = self.return_ex_costs / self.return_ex_costs.shift(1) * (1-self.bid_ask_spread/20000) ** abs(combo)
+
+        returns_division_tmp = returns_division_tmp.iloc[1:]
+
+        currency_ex_costs = returns_division_tmp.columns.values.tolist()
+
+        for name in currency_ex_costs:
+            first_return = [100]
+            return_tmp = returns_division_tmp[name].tolist()
+            for values in range(len(return_tmp)):
+                first_return.append(return_tmp[values] * first_return[values])
+
+            self.return_incl_costs[name.replace("Return Ex Costs", "Return Incl Costs")] = first_return
 
         # todo set the dates
         print()
