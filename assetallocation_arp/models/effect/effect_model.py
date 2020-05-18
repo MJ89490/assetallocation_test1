@@ -7,7 +7,7 @@ Created on 12/05/2020
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
 from common_libraries.models_names import Models
 from models.effect.constants_currencies import Currencies
-from common_libraries.names_currencies import CurrencyUSD
+from common_libraries.names_currencies import CurrencyUSDSpot
 import pandas as pd
 
 
@@ -18,7 +18,7 @@ class ImportDataEffect:
 
     def import_data_matlab(self):
         self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
-                                                  input_file=None, model_date=None)
+                                                  input_file=None, date=None)
 
 
 class DataProcessingEffect(ImportDataEffect):
@@ -48,6 +48,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.trend = pd.DataFrame()
         self.spot_ex_costs = pd.DataFrame()
         self.spot_incl_costs = pd.DataFrame()
+        self.return_ex_costs = pd.DataFrame()
 
         self.bid_ask_spread = 0
         # Trend
@@ -73,11 +74,17 @@ class CurrencyComputations(DataProcessingEffect):
     def trend_computations(self):
         pass
 
+    def return_ex_costs_computations(self):
+
+        start_date_computations = '2000-01-11' # property
+        combo = 1
+
+
     def spot_ex_costs_computations(self):
 
         start_date_computations = '2000-01-11' # property
         combo = 1 # to compute self.combo and change it depending on the currency
-        currencies = [currency.value for currency in CurrencyUSD] # constant to set
+        currencies = [currency.value for currency in CurrencyUSDSpot] # constant to set
         # loop to get through each currency
         for currency in currencies:
             # Reset the Spot list for the next currency
@@ -102,16 +109,24 @@ class CurrencyComputations(DataProcessingEffect):
 
     def spot_incl_computations(self):
 
-        spot = [100]  # the Spot is set 100
         combo = 1 #to compute combo prev and current in the abs
-        currencies = [currency.value for currency in CurrencyUSD]
         spot_division_tmp = (self.spot_ex_costs / self.spot_ex_costs.shift(1))*(1-self.bid_ask_spread/20000)**abs(combo)
-        # Transform the spot_diviions_tmp into list
-        spot_tmp = spot_division_tmp.values.tolist()
-        # Compute with the previous Spot
-        for values in range(len(spot_tmp)):
-            spot.append(spot_tmp[values] * spot[values])
 
+        # Remove the first nan due to the shift(1)
+        spot_division_tmp = spot_division_tmp.iloc[1:]
 
+        currency_ex_costs = spot_division_tmp.columns.values.tolist() # set to global name
+
+        # loop through each currency in spot_division_tmp
+        for name in currency_ex_costs:
+            spot = [100]  # the Spot is set 100
+            spot_tmp = spot_division_tmp[name].tolist()
+            # Compute with the previous Spot
+            for values in range(len(spot_tmp)):
+                spot.append(spot_tmp[values] * spot[values])
+
+            self.spot_incl_costs[name.replace("Spot Ex Costs", "Spot Incl Costs")] = spot
+
+        # todo set the dates to the index of self.spot_incl_costs
         print()
 
