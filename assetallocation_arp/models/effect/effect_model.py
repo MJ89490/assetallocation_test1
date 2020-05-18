@@ -51,15 +51,14 @@ class CurrencyComputations(DataProcessingEffect):
         self.spot_incl_costs = pd.DataFrame()
         self.return_ex_costs = pd.DataFrame()
         self.return_incl_costs = pd.DataFrame()
+
         self.bid_ask_spread = 0
-        # Trend
-        # Combo
-        # Return
-        # Return
-        # Spot
-        # Spot
-        # Inflation
-        # Inflation
+        self.cut_off_long = 0
+        self.shorts = ""
+        self.threshold_for_closing = 0
+        self.trend_ind = ""
+        self.short_term = 0
+        self.long_term = 0
 
     @property
     def bid_ask(self):
@@ -69,10 +68,69 @@ class CurrencyComputations(DataProcessingEffect):
     def bid_ask(self, value):
         self.bid_ask_spread = value
 
+    @property
+    def cut_off(self):
+        return self.cut_off_long
+
+    @cut_off.setter
+    def cut_off(self, value):
+        self.cut_off_long = value
+
+    @property
+    def incl_shorts(self):
+        return self.shorts
+
+    @incl_shorts.setter
+    def incl_shorts(self, value):
+        self.shorts = value
+
+    @property
+    def threshold(self):
+        return self.threshold_for_closing
+
+    @threshold.setter
+    def threshold(self, value):
+        self.threshold_for_closing = value
+
+    @property
+    def trend_indicator(self):
+        return self.trend_ind
+
+    @trend_indicator.setter
+    def trend_indicator(self, value):
+        self.trend_ind = value
+
+    @property
+    def short_term_ma(self):
+        return self.short_term
+
+    @short_term_ma.setter
+    def short_term_ma(self, value):
+        self.short_term = value
+
+    @property
+    def long_term_ma(self):
+        return self.long_term
+
+    @long_term_ma.setter
+    def long_term_ma(self, value):
+        self.long_term = value
+
     def carry_computations(self):
         pass
 
     def trend_computations(self):
+
+        start_date_computations = '2000-01-11' # property
+        from statistics import mean
+
+        # for i in range(1, len(df)):
+        #     df.loc[i, 'C'] = df.loc[i - 1, 'C'] * df.loc[i, 'A'] + df.loc[i, 'B']
+
+
+        trend_tmp = self.data_currencies_usd.loc[start_date_computations:, "BRLUSD Curncy"].shift(4).mean()
+
+    def combo_computations(self):
         pass
 
     def return_ex_costs_computations(self):
@@ -113,7 +171,6 @@ class CurrencyComputations(DataProcessingEffect):
             self.return_incl_costs[name.replace("Return Ex Costs", "Return Incl Costs")] = first_return
 
         # todo set the dates
-        print()
 
     def spot_ex_costs_computations(self):
 
