@@ -36,13 +36,13 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.return_ex_costs_computations()
         obj_import_data.return_incl_costs_computations()
 
-        obj_import_data.trend_indicator = "Total Return" # could be Spot
+        # obj_import_data.trend_indicator = "Total Return" # could be Spot
         obj_import_data.cut_off = 0.02
-        obj_import_data.shorts = "yes"
-        obj_import_data.threshold = 0.0025
+        # obj_import_data.shorts = "yes"
+        # obj_import_data.threshold = 0.0025
 
         obj_import_data.short_term_ma = 4
-        obj_import_data.long_term = 16
+        obj_import_data.long_term_ma = 16
 
         obj_import_data.trend_computations()
 

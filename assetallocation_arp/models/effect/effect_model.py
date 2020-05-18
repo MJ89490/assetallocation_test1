@@ -123,20 +123,45 @@ class CurrencyComputations(DataProcessingEffect):
 
         start_date_computations = '2000-01-11'  # property
 
+
         import datetime
 
-        # days_short = datetime.timedelta(5)
-        start_date_computations_obj = datetime.datetime.strptime(start_date_computations, '%Y-%m-%d')
-        start_date_computations_obj = start_date_computations_obj.date() - datetime.timedelta(1)
-        # start_date_short_offset = start_date_computations_obj - days_short
+        dates_number = self.data_currencies_usd[start_date_computations:].shape[0]
+        # dates_usd = self.data_currencies_usd+[start_date_computations:].index.values.tolist()  # property
+        # loop through each date
+        # dates_usd = self.data_currencies_usd.index.get_loc(start_date_computations)
 
-        trend_short_tmp = self.data_currencies_usd.loc[:start_date_computations_obj, "BRLUSD Curncy"][-self.short_term:].mean()
+        for date in range(dates_number):
 
-        trend_long_tmp = self.data_currencies_usd.loc[:start_date_computations_obj, "BRLUSD Curncy"][-self.long_term:].mean()
+            if date == 0:  # init
+                start_date_loc = self.data_currencies_usd.index.get_loc(start_date_computations)
+                previous_start_date = self.data_currencies_usd.index[start_date_loc - 1]
 
-        trend = (trend_short_tmp / trend_long_tmp) - 1
+                trend_short_tmp = self.data_currencies_usd.loc[:previous_start_date, "BRLUSD Curncy"][
+                                  -self.short_term:].mean()
+                trend_long_tmp = self.data_currencies_usd.loc[:previous_start_date, "BRLUSD Curncy"][
+                                 -self.long_term:].mean()
 
-        # trend_short_tmp = self.data_currencies_usd.loc[start_date_short_offset: start_date_computations_obj, "BRLUSD Curncy"].mean()
+            else:
+                start_date_loc = self.data_currencies_usd.index.get_loc(start_date_computations)
+                next_start_date = self.data_currencies_usd.index[start_date_loc + 1]
+                previous_start_date = self.data_currencies_usd.index[next_start_date - 1]
+                start_date_computations = next_start_date
+
+                trend_short_tmp = self.data_currencies_usd.loc[:previous_start_date, "BRLUSD Curncy"][-self.short_term:].mean()
+                trend_long_tmp = self.data_currencies_usd.loc[:previous_start_date, "BRLUSD Curncy"][-self.long_term:].mean()
+
+            self.trend["Trend " + "BRLUSD Curncy"] = (trend_short_tmp / trend_long_tmp - 1) * 100
+
+
+
+        # start_date_computations_obj = datetime.datetime.strptime(start_date_computations, '%Y-%m-%d')
+        # start_date_computations_obj = start_date_computations_obj.date() - datetime.timedelta(1)
+
+
+
+
+
 
 
 
