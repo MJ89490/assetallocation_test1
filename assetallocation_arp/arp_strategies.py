@@ -33,7 +33,7 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.spot_ex_costs_computations()
         obj_import_data.bid_ask_spread = 10
         obj_import_data.spot_incl_computations()
-
+        obj_import_data.return_ex_costs_computations()
 
 
 

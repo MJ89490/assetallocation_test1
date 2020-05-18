@@ -77,9 +77,24 @@ class CurrencyComputations(DataProcessingEffect):
 
     def return_ex_costs_computations(self):
 
-        start_date_computations = '2000-01-11' # property
+        start_date_computations = '2000-01-11'  # property
         combo = 1
+        currencies = [currency.value for currency in CurrencyUSDCarry]
 
+        for currency in currencies:
+
+            first_return = [100]
+            return_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
+                                   self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
+            return_division_tmp = return_division_tmp.iloc[1:]
+            return_tmp = return_division_tmp.tolist()
+            for values in range(len(return_tmp)):
+                first_return.append(return_tmp[values] * first_return[values])
+
+            self.return_ex_costs["Return Ex Costs " + currency] = first_return
+
+        # todo set the dates
+        print()
 
     def spot_ex_costs_computations(self):
 
@@ -91,7 +106,7 @@ class CurrencyComputations(DataProcessingEffect):
             # Reset the Spot list for the next currency
             spot = [100]  # the Spot is set 100
             spot_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
-                                 self.data_currencies_usd.loc[start_date_computations:, currency].shift(1))**combo
+                                 self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
             # Remove the first nan due to the shift(1)
             spot_division_tmp = spot_division_tmp.iloc[1:]
             # Transform the spot_division_tmp into a list
@@ -101,7 +116,6 @@ class CurrencyComputations(DataProcessingEffect):
                 spot.append(spot_tmp[values] * spot[values])
 
             # Store all the spot for each currency
-            # spot_ex_costs_tmp = pd.DataFrame(spot, columns=["Spot " + currency])
             self.spot_ex_costs["Spot Ex Costs " + currency] = spot
 
         # Set the dates to the index of self.spot_ex_costs
