@@ -10,6 +10,7 @@ from scipy.interpolate import CubicSpline
 
 
 def format_data(fica_inputs, asset_inputs, all_data):
+    #
     curve = pd.DataFrame()
     carry = pd.DataFrame()
 
