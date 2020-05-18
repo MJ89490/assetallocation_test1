@@ -121,14 +121,25 @@ class CurrencyComputations(DataProcessingEffect):
 
     def trend_computations(self):
 
-        start_date_computations = '2000-01-11' # property
-        from statistics import mean
+        start_date_computations = '2000-01-11'  # property
 
-        # for i in range(1, len(df)):
-        #     df.loc[i, 'C'] = df.loc[i - 1, 'C'] * df.loc[i, 'A'] + df.loc[i, 'B']
+        import datetime
+
+        # days_short = datetime.timedelta(5)
+        start_date_computations_obj = datetime.datetime.strptime(start_date_computations, '%Y-%m-%d')
+        start_date_computations_obj = start_date_computations_obj.date() - datetime.timedelta(1)
+        # start_date_short_offset = start_date_computations_obj - days_short
+
+        trend_short_tmp = self.data_currencies_usd.loc[:start_date_computations_obj, "BRLUSD Curncy"][-self.short_term:].mean()
+
+        trend_long_tmp = self.data_currencies_usd.loc[:start_date_computations_obj, "BRLUSD Curncy"][-self.long_term:].mean()
+
+        trend = (trend_short_tmp / trend_long_tmp) - 1
+
+        # trend_short_tmp = self.data_currencies_usd.loc[start_date_short_offset: start_date_computations_obj, "BRLUSD Curncy"].mean()
 
 
-        trend_tmp = self.data_currencies_usd.loc[start_date_computations:, "BRLUSD Curncy"].shift(4).mean()
+
 
     def combo_computations(self):
         pass
