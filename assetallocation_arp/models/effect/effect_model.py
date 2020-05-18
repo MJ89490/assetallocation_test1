@@ -7,7 +7,8 @@ Created on 12/05/2020
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
 from common_libraries.models_names import Models
 from models.effect.constants_currencies import Currencies
-from common_libraries.names_currencies import CurrencyUSDSpot
+from common_libraries.names_currencies_spot import CurrencyUSDSpot
+from common_libraries.names_currencies_carry import CurrencyUSDCarry
 import pandas as pd
 
 
