@@ -1,40 +1,164 @@
+
 {% extends 'bootstrap/base.html' %}
 
+  {% block navbar %}
+    <head>
+        <title>BasePageBootstrap</title>
+        <!--Import the JS library here because of the clashes with Boostrap-->
+        <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+        <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
+        <script src='https://unpkg.com/@ag-grid-community/all-modules@22.1.1/dist/ag-grid-community.min.js'></script>
 
+        <!-- NAVBAR CSS STYLE
+         ================================================== -->
+        <style type="text/css">
+                body{font-size: 4.5 rem; font-weight:300; font-family: Arial,serif;}
 
-     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-         <a class="navbar-brand" href="#">Asset Allocation</a>
-         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-         </button>
+                .be-top-header{background-color:#007faa; border-color:#007faa;  }
+                .be-top-header {padding-bottom: 0.1rem;  line-height: 1em;}
+                .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030; }
 
-         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/home">Home<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/index">Login</a>
-                </li>
+                .navbar{margin-bottom:50px; background-color:#007faa; border-color:#007faa; }
+                .navbar-inverse .navbar-brand{color:#fff}
+                .navbar-inverse .navbar-toggle collapsed .navbar-right{float:right;}
+                .navbar {padding-top: 0.1rem; padding-bottom: 0.1rem; line-height: 1em; height: 85px; }
+                #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa; font-weight: bold; font-size: 1.20em; }
+                #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent;}
+                #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:2px solid #fff; }
+                .dropdown {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent; font-size: 1.20em;}
+            </style>
+    </head>
 
+    <!-- Body of the Base Page -->
+    <body class="home-page">
+        <!-- Navbar
+         ===================================== !-->
+        <nav class="navbar navbar-inverse fixed-top be-top-header" role="navigation" id="navbar1">
+                <div class="container-fluid">
+                    <div class="navbar-header" style="padding-left: 15px">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
+                             <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse pull-left">
+                        <a href="{{ url_for('home') }}">
+                            <img width="90px" height="auto" id="icon-lgim" alt="Legal and General" src="/static/img/icon-lgim.png">
+                        </a>
+                    </div>
 
-         </div>
+                    <div class="collapse navbar-collapse pull-right" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                                <li class="nav-link active">
+                                    <a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
+                                    <!-- User is log-in -->
+                                    {% if g.user.is_authenticated %}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Models
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ url_for('times_page') }}">TIMES</a><br>
+                                            <a class="dropdown-item" href="#">MAVEN</a><br>
+                                            <a class="dropdown-item" href="#">EFFECT</a><br>
+                                            <a class="dropdown-item" href="#">CURP</a><br>
+                                            <a class="dropdown-item" href="#">FICA</a><br>
+                                            <a class="dropdown-item" href="#">FACTOR</a><br>
+                                            <a class="dropdown-item" href="#">COMCA</a>
+                                        </div>
+                                    </li>
+                                <li class="nav-link"><a class="nav-link" href="#">Models Consolidation</a></li>
+                                <li class="nav-link"><a class="nav-link" href="{{ url_for('logout') }}">LogOut</a></li>
+                                {% endif %}
+                                <!-- User is log-off -->
+                                {% if not g.user.is_authenticated %}
+                                    <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                                {% endif %}
 
-     </nav>
+                        </ul>
+                    </div>
+                </div> <!-- .container -->
+            </nav> <!-- .nav -->
+    </body> <!-- .body -->
 
+{% endblock %}
 
+{% block content %}
 
+    <head>
+        <title>BasePageBootstrap</title>
+        <!-- BASE PAGE CSS STYLE
+        ================================================== -->
+        <style type="text/css">
+             body{font-size: 4.5 rem; font-weight:300; font-family: Arial,serif; background-color: #fff }
 
+            .text p {text-align: center; }
 
- {% block content %}
+            .btn-primary {background-color:#007faa; border-color:#007faa; color:#fff}
+            .btn-pill {border-radius: 10rem;}
+            .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus
+            {
+                background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
+            }
+            .btn {font-size: .875rem; letter-spacing: 1px; text-transform: uppercase;}
 
-     <div class="container">
+            .btn, .btn-lg{ padding: 10px 16px; font-size:18px; line-height:1.3333}
 
-         {% block app_content %}{% endblock %}
+            .btn-primary {color: #fff; background-color: #007faa; border-color: #007faa;
+                          box-shadow: 0 7px 16px 0 rgba(0,0,0,.2);}
 
-     </div>
+            <!--.btn-secondary:hover, .btn-secondary:active, .btn-secondary:visited, .btn-secondary:focus, .btn-secondary:active:focus-->
+            <!--{-->
+                <!--background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;-->
+            <!--}-->
+            <!--.btn-secondary {color: #fff; background-color: #007faa; border-color: #007faa;-->
+                          <!--box-shadow: 0 7px 16px 0 rgba(0,0,0,.2);}-->
 
- {% endblock %}
+            .dropdown-menu{width:100%; text-align:center;}
+            .dropdown-item{color: #333; font-size: 4.5 rem; font-weight:300; font-family: Merriweather,serif;}
+            .dropdown-menu a:hover{font-weight: bold !important; color:black !important;}
+            .dropdown-menu .dropdown-item{text-decoration:none; border-bottom:none;}
+
+            .footer { background-color: #fff; }
+            .mt-auto, .my-auto { margin-top: auto!important; }
+            .pb-3, .py-3 { padding-bottom: 1rem!important; }
+            .pt-3, .py-3 { padding-top: 1rem!important; }
+            .text-muted {font-size: 12px; }
+         </style>
+    </head>
+
+    <!-- Body of the Base Page -->
+    <body class="text-center">
+
+            <div class="main-login-wtf">
+               {% block mainloginwtf%} {% endblock %}
+            </div>
+
+            <div class="main-home">
+                {% block mainhome %} {% endblock %}
+            </div>
+
+            <div class="main-models">
+                {% block selectModels %} {% endblock %}
+            </div>
+
+            <div class="main-models-display">
+                {% block timesModel %}
+
+                {% endblock %}
+            </div>
+
+            <div class="main-charts-display">
+                {% block charts %} {% endblock %}
+            </div>
+
+            <div class="main-overview-times-display">
+                {% block overviewTimes %} {% endblock %}
+            </div>
+
+    </body><!-- .body -->
+
+{% endblock%}
 
 
 

@@ -1,90 +1,212 @@
 # Contains view functions for various URLs
-from app import app
-from app.forms import LoginForm
-from flask import render_template #html templates
-from flask import redirect
+import pandas as pd
+from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
+from app.data_import.main_import_data import main_data
+from app.data_import.main_import_data_from_form import main_form
+from common_libraries.models_names import Models
+from flask import render_template
 from flask import flash
 from flask import url_for
+from flask import redirect
+from flask import request
+from app import app
+from app.forms import LoginForm, ExportDataForm, InputsTimesModel
+from .models import User
+
+from flask_login import login_required
+from flask_login import logout_user
+from flask_login import login_user
+from flask_login import current_user
+from flask import g
+
+from .userIdentification import random_identification
+
+
+@app.before_request
+def before_request():
+    g.user = current_user
+
 
 @app.route('/')
 @app.route('/home')
 def home():
-    user = {'username': 'AJ89720'}
-    return render_template('home.html', title='HomePage', user=user)
+    return render_template('home.html', title='HomePage')
 
-# A Login form for users
-@app.route('/login', methods=['GET', 'POST'])
-#GET: returns the information to the client
-#PUT: the browser submits form data to tge server
+
+@app.route('/login', methods=['GET'])
 def login():
     form = LoginForm()
+    return render_template('login.html', title='LoginPage', form=form)
+
+
+@app.route('/login', methods=['POST'])
+def login_post():
+    username_origin = "database"
+    password_origin = "1234*"
+    form = LoginForm()
+
     if form.validate_on_submit():
-        #flash function: show a message to the user
-        flash('Login requested for user {}, remember_me={}'.format(form.username.data, form.remember_me.data))
-        #redirect function: client we browser automatically navigate to a different page ---> home page
-        return redirect(url_for('home'))
-    return render_template('login.html', title='Login', form=form)
+        username = form.username.data
+        password = form.password.data
+
+        if username != username_origin or password != password_origin or username == ' ' or password == ' ':
+            flash('Please check your login details and try again.')
+            return redirect(url_for('login'))
+        else:
+            track_id = random_identification()
+            login_user(User(track_id))
+            return redirect(url_for('home'))
+    # when the user click on the submit button without adding credentials
+    return redirect(url_for('login'))
 
 
-# The home page of the application
-# @app.route('/')
-# @app.route('/index')
-# def index():
-#     user = {'username': 'AJ89720'}
-#     return render_template('home.html', title='Home', user=user)
+@app.route('/times_page',  methods=['GET', 'POST'])
+@login_required
+def times_page():
+    form = InputsTimesModel()
+
+    global ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
+
+    TIMES_PAGE_NEW = 'times_page_new_version_layout.html'
+
+    if request.method == "POST":
+        # Selection of a model's version
+        if request.form['submit_button'] == 'selectVersions':
+            version_type = form.versions.data
+            return render_template(TIMES_PAGE_NEW, title="Times", form=form, version_type=version_type)
+
+        # Run the model
+        elif request.form['submit_button'] == 'runTimesModel':
+            run_model = "run_times_model"
+            run_model_ok = "run_times_model_ok"
+
+            try:
+                # 1. Read the input from the form
+                # 2. Return the inputs
+                strategy_inputs_times = main_form() #todo insert in run_model because it is currently reading the inputs from the Excel
+
+            except ValueError:
+                message = "error parameters"
+                return render_template(TIMES_PAGE_NEW,
+                                       title="Times", form=form, run_model=run_model, message=message)
+
+            ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
+
+            return render_template(TIMES_PAGE_NEW, title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok)
+
+        elif request.form['submit_button'] == 'selectTimesPath':
+            save = "save"
+            save_file = "save_file"
+            name_of_file = form.name_file_times.data + ".xls"
+            path_excel = "C:\\Users\\AJ89720\\PycharmProjects" #todo change the default location later
+            path_excel_times = path_excel + "\\" + name_of_file
+
+            if form.save_excel_outputs.data is True:
+                write_output_to_excel(model_outputs={Models.times.name: (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
+                                      path_excel_times=path_excel_times)
+
+            return render_template(TIMES_PAGE_NEW, title="Times", form=form, save=save, save_file=save_file)
+
+    return render_template('times_page.html', title="Times", form=form)
+
+
+@app.route('/times_dashboard', methods=['GET', 'POST'])
+@login_required
+def times_dashboard():
+    title = "Dashboard"
+    form = ExportDataForm()
+    template_data = main_data()
+
+    m = ""
+    if request.method == "POST":
+
+        # Sidebar: charts export
+        if request.form['submit_button'] == 'selectChartsVersionsOk':
+            print(form.versions.data)
+        elif request.form['submit_button'] == 'selectChartsLeverageOk':
+            print(form.leverage.data)
+        elif request.form['submit_button'] == 'selectChartsSubmit':
+            print("Submit chats data")
+
+        # Sidebar: data export
+        if request.form['submit_button'] == 'selectVersionsOk':
+            print(form.versions.data)
+        elif request.form['submit_button'] == 'selectLeverageOk':
+                print(form.leverage.data)
+        elif request.form['submit_button'] == 'selectInputsOk':
+            print(form.inputs.data)
+        elif request.form['submit_button'] == 'selectStartDateOk':
+            print(form.start_date_inputs.data)
+        elif request.form['submit_button'] == 'selectEndDateOk':
+            print(form.end_date_inputs.data)
+        elif request.form['submit_button'] == 'selectDataSubmit':
+            print("Submit data")
+
+        # Main: charts area
+        if request.form['submit_button'] == 'selectInputToExport':
+            if form.start_date_inputs.data > form.end_date_inputs.data:
+                flash("Check the Start and End Date. They are incorrect.")
+            else:
+                print("Take the data from the CACHE db")
+                print(form.start_date_inputs.data)
+                print(form.end_date_inputs.data)
+        elif request.form['submit_button'] == 'selectInputOk':
+            print(form.inputs.data)
+
+        elif request.form['submit_button'] == 'selectDatesChart0':
+            if form.start_date_chart0.data > form.end_date_chart0.data:
+                m = "Check the Start and End Date. They are incorrect for the first chart."
+            else:
+                print("Date chart 0")
+
+        elif request.form['submit_button'] == 'selectDatesChart1':
+            if form.start_date_chart1.data > form.end_date_chart1.data:
+                m = "Check the Start and End Date. They are incorrect for this second chart."
+            else:
+                print("Date chart 1")
+
+        elif request.form['submit_button'] == 'selectDatesChart2':
+            if form.start_date_chart2.data > form.end_date_chart2.data:
+                m = "Check the Start and End Date. They are incorrect for this third chart."
+            else:
+                print("Date chart 2")
+
+        elif request.form['submit_button'] == 'selectDatesChart3':
+            if form.start_date_chart3.data > form.end_date_chart3.data:
+                m = "Check the Start and End Date. They are incorrect for this fourth chart."
+            else:
+                print("Date chart 3")
+
+        elif request.form['submit_button'] == 'selectDatesChart4':
+            if form.start_date_chart4.data > form.end_date_chart4.data:
+                m = "Check the Start and End Date. They are incorrect for this fifth chart."
+            else:
+                print("Date chart 4")
+
+        elif request.form['submit_button'] == 'selectDatesChart5':
+            if form.start_date_chart5.data > form.end_date_chart5.data:
+                m = "Check the Start and End Date. They are incorrect for this sixth chart."
+            else:
+                print("Date chart 5")
+
+        elif request.form['submit_button'] == 'selectDatesChart6':
+            if form.start_date_chart6.data > form.end_date_chart6.data:
+                m = "Check the Start and End Date. They are incorrect for this seventh chart."
+            else:
+                print("Date chart 6")
+
+        elif request.form['submit_button'] == 'selectDataChart0':
+            print('data data data')
+
+    # put the data in dict or create a class to handle the data nicer (later with the db?)
+    return render_template('dashboard_new.html', title=title, form=form, m=m, **template_data)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 
-#
-# # A Change Password form for users
-# @app.route('/changePass')
-# def changePass():
-#     form = ChangePassword()
-#     return render_template('form.html', title='Sign In', main_heading= 'Password Reset', form=form)
-
-
-# @app.route('/mainPage')
-# def mainPage():
-#     user = {'username': 'JS89652'}
-#     tableData = {'headers' : ['chrome', 'Safari', 'Mozilla', 'Firefox', 'NewCase'],
-#                  'rows' : [[0, 0, 0, 0, 0],
-#                            [1, 0, 0, 0, 0],
-#                            [0, 1, 0, 0, 0],
-#                            [0, 0, 1, 0, 0],
-#                            [0, 0, 0, 1, 0]]}
-#     lenHead = len(tableData['headers'])
-#     lenRow = len(tableData['rows'])
-#     return render_template('table.html', title='Home', user=user, tableData=tableData,lenHead=lenHead,lenRow=lenRow)
-#
-# # An Output page containing charts
-# @app.route('/charts', methods=["GET"])
-# def createlchart():
-#     user = {'username': 'JS89652'}
-#     data = json.dumps([1.0, 2.0, 3.0])
-#     labels = json.dumps(["12-31-18", "01-01-19", "01-02-19"])
-#     return render_template('lineChart.html', title='Charts ', user=user, data=data, labels=labels)
-#
-# @app.route('/mainPage2')
-# def mainPage2():
-#     user = {'username': 'JS89652'}
-#     tiles = [
-#         {
-#             'heading': 'Home',
-#             'img': 'Homebtn.png!'
-#         },
-#         {
-#             'heading': 'Login',
-#             'img': 'Homebtn.png'
-#         },
-#         {
-#             'heading': 'Analytics',
-#             'img': 'Homebtn.png'
-#         },
-#         {
-#             'heading': 'Help with Development',
-#             'img': 'Homebtn.png'
-#         }
-#     ]
-#
-#     return render_template('Main2.html', title='Home', tiles=tiles)
-#
