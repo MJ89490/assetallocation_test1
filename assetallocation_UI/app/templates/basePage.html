@@ -1,36 +1,33 @@
 
-
-<!--Import the JS library here because of the clashes with Boostrap-->
-<head>
-    <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
-    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
-    <script src='https://unpkg.com/@ag-grid-community/all-modules@22.1.1/dist/ag-grid-community.min.js'></script>
-</head>
-
 {% extends 'bootstrap/base.html' %}
 
   {% block navbar %}
-
     <head>
+        <title>BasePageBootstrap</title>
+        <!--Import the JS library here because of the clashes with Boostrap-->
+        <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+        <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
+        <script src='https://unpkg.com/@ag-grid-community/all-modules@22.1.1/dist/ag-grid-community.min.js'></script>
+
         <!-- NAVBAR CSS STYLE
-        ================================================== -->
+         ================================================== -->
         <style type="text/css">
-            body{font-size: 4.5 rem; font-weight:300; font-family: Arial,serif;}
+                body{font-size: 4.5 rem; font-weight:300; font-family: Arial,serif;}
 
-            .be-top-header{background-color:#007faa; border-color:#007faa;  }
-            .be-top-header {padding-bottom: 0.1rem;  line-height: 1em;}
-            .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030; }
+                .be-top-header{background-color:#007faa; border-color:#007faa;  }
+                .be-top-header {padding-bottom: 0.1rem;  line-height: 1em;}
+                .fixed-top {position: fixed; top: 0; right: 0; left: 0; z-index: 1030; }
 
-            .navbar{margin-bottom:50px; background-color:#007faa; border-color:#007faa; }
-            .navbar-inverse .navbar-brand{color:#fff}
-            .navbar-inverse .navbar-toggle collapsed .navbar-right{float:right;}
-            .navbar {padding-top: 0.1rem; padding-bottom: 0.1rem; line-height: 1em; height: 85px; }
-            #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa; font-weight: bold; font-size: 1.20em; }
-            #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent;}
-            #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:2px solid #fff; }
-            .dropdown {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent; font-size: 1.20em;}
-        </style>
+                .navbar{margin-bottom:50px; background-color:#007faa; border-color:#007faa; }
+                .navbar-inverse .navbar-brand{color:#fff}
+                .navbar-inverse .navbar-toggle collapsed .navbar-right{float:right;}
+                .navbar {padding-top: 0.1rem; padding-bottom: 0.1rem; line-height: 1em; height: 85px; }
+                #navbar1 .navbar-nav .nav-link{color:#fff;background-color:#007faa; font-weight: bold; font-size: 1.20em; }
+                #navbar1 .navbar-nav .nav-link {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent;}
+                #navbar1 .navbar-nav a.nav-link:hover{color:#869ab8; font-weight:bold; border-bottom:2px solid #fff; }
+                .dropdown {display:block; padding:14px 16px; text-decoration:none; border-bottom:2px solid transparent; font-size: 1.20em;}
+            </style>
     </head>
 
     <!-- Body of the Base Page -->
@@ -89,6 +86,7 @@
 {% block content %}
 
     <head>
+        <title>BasePageBootstrap</title>
         <!-- BASE PAGE CSS STYLE
         ================================================== -->
         <style type="text/css">

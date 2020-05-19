@@ -1,15 +1,15 @@
 import xlwings as xw
-import data_etl.import_data as gd
-import models.times as times
+import assetallocation_arp.data_etl.import_data as gd
+import assetallocation_arp.models.times as times
 import sys
 import os
 
-from assetallocation_arp.enum import models_names as models
+from assetallocation_arp.common_libraries.models_names import Models as models
 
 
 def run_model(model_type, mat_file=None, input_file=None):
 
-	if model_type == models.Models.times.name:
+	if model_type == models.times.name:
 		# get inputs from excel and matlab data
 		times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 		# run strategy
@@ -33,7 +33,7 @@ def run_model(model_type, mat_file=None, input_file=None):
 
 def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
 
-	if model_type == models.Models.times.name:
+	if model_type == models.times.name:
 		# get inputs from excel and matlab data
 		times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 		# run strategy
@@ -43,9 +43,9 @@ def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
 
 def write_output_to_excel(model_outputs, path_excel_times):
 
-	if models.Models.times.name in model_outputs.keys():
+	if models.times.name in model_outputs.keys():
 
-		asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models.Models.times.name]
+		asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models.times.name]
 		# path = os.path.join(os.path.dirname(__file__), "times_model.xls")
 
 		wb = xw.Book()

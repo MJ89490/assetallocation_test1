@@ -7,7 +7,8 @@ import math
 import pandas as pd
 
 from pandas.tseries.offsets import BDay
-from assetallocation_arp.enum import leverage_types as leverage_name
+from assetallocation_arp.common_libraries import leverage_types as leverage_name
+
 
 def apply_leverage(futures_data, leverage_type, leverage):
     # leverage_type: Equal(e) / Normative(n) / Volatility(v) / Standalone(s)

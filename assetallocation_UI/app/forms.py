@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
-from assetallocation_arp.enum import leverage_types
-from assetallocation_arp.enum import frequency_types
+from common_libraries.leverage_types import Leverage
+from common_libraries.frequency_types import Frequency
 
 """
 User login form
@@ -10,51 +10,57 @@ User login form
 
 
 class LoginForm(FlaskForm):
-    username = StringField(u'Username', validators=[DataRequired(message="The username is required")])
-    password = PasswordField(u'Password', validators=[DataRequired(message="The password is required")])
+    username = StringField(u'Username')
+    password = PasswordField(u'Password')
     submit = SubmitField('Sign In')
 
 
 class ExportDataForm(FlaskForm):
 
+    START_DATE = 'Start Date'
+    END_DATE = 'End Date'
+
     # todo link to the DB to grap the different versions automatically
     versions = SelectField('Versions', choices=[('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3','Version3')])
+
     submit_ok_versions = SubmitField('Ok')
 
-    leverage = SelectField('Leverage Types', choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name ),
-                                                      (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
-                                                      (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
-                                                      (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
+    leverage = SelectField('Leverage Types', choices=[(Leverage.v.name, Leverage.v.name ),
+                                                      (Leverage.n.name, Leverage.n.name),
+                                                      (Leverage.s.name, Leverage.s.name),
+                                                      (Leverage.e.name, Leverage.e.name)])
     submit_ok_leverage = SubmitField('Ok')
 
     inputs = SelectField('Inputs', choices=[('TIMES Signals', 'Signals'), ('TIMES Returns', 'Returns'), ('TIMES Positions','Positions')])
     submit_ok = SubmitField('Ok')
 
-    start_date_inputs = StringField(u'Start Date', validators=[DataRequired(message="The username is required")])
-    end_date_inputs = StringField(u'End Date', validators=[DataRequired(message="The username is required")])
+    # todo create a common button class and gives the inputs
 
-    start_date_chart0 = StringField(u'Start Date')
-    end_date_chart0 = StringField(u'End Date')
+    start_date_inputs = StringField(START_DATE)
+    end_date_inputs = StringField(END_DATE)
 
-    start_date_chart1 = StringField(u'Start Date')
-    end_date_chart1 = StringField(u'End Date')
+    start_date_chart0 = StringField(START_DATE)
+    end_date_chart0 = StringField(END_DATE)
 
-    start_date_chart2 = StringField(u'Start Date')
-    end_date_chart2 = StringField(u'End Date')
+    start_date_chart1 = StringField(START_DATE)
+    end_date_chart1 = StringField(END_DATE)
 
-    start_date_chart3 = StringField(u'Start Date')
-    end_date_chart3 = StringField(u'End Date')
+    start_date_chart2 = StringField(START_DATE)
+    end_date_chart2 = StringField(END_DATE)
 
-    start_date_chart4 = StringField(u'Start Date')
-    end_date_chart4 = StringField(u'End Date')
+    start_date_chart3 = StringField(START_DATE)
+    end_date_chart3 = StringField(END_DATE)
 
-    start_date_chart5 = StringField(u'Start Date')
-    end_date_chart5 = StringField(u'End Date')
+    start_date_chart4 = StringField(START_DATE)
+    end_date_chart4 = StringField(END_DATE)
 
-    start_date_chart6 = StringField(u'Start Date')
-    end_date_chart6 = StringField(u'End Date')
+    start_date_chart5 = StringField(START_DATE)
+    end_date_chart5 = StringField(END_DATE)
 
-    submit_export = SubmitField('Export Data')
+    start_date_chart6 = StringField(START_DATE)
+    end_date_chart6 = StringField(END_DATE)
+
+    submit_export = SubmitField(START_DATE)
     submit_dates_chart = SubmitField('Ok')
     submit1 = SubmitField('ok')
 
@@ -69,10 +75,10 @@ class InputsTimesModel(FlaskForm):
     strategy_weight = StringField(u'Strategy Notional', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
     leverage_type = SelectField('Leverage Type',
-                                choices=[(leverage_types.Leverage.v.name, leverage_types.Leverage.v.name),
-                                        (leverage_types.Leverage.n.name, leverage_types.Leverage.n.name),
-                                        (leverage_types.Leverage.s.name, leverage_types.Leverage.s.name),
-                                        (leverage_types.Leverage.e.name, leverage_types.Leverage.e.name)])
+                                choices=[(Leverage.v.name, Leverage.v.name),
+                                        (Leverage.n.name, Leverage.n.name),
+                                        (Leverage.s.name, Leverage.s.name),
+                                        (Leverage.e.name, Leverage.e.name)])
     volatility_window = StringField(u'Volatility Window', validators=[DataRequired(message="The volatility window is required")])
     sig1_short = StringField(u'Sigma1 short', validators=[DataRequired(message="The Sigma1 short is required")])
     sig1_long = StringField(u'Sigma1 long', validators=[DataRequired(message="The Sigma1 long is required")])
@@ -82,9 +88,9 @@ class InputsTimesModel(FlaskForm):
     sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
 
     frequency = SelectField('Frequency',
-                            choices=[(frequency_types.Frequency.weekly.name, frequency_types.Frequency.weekly.name),
-                                     (frequency_types.Frequency.monthly.name, frequency_types.Frequency.monthly.name),
-                                     (frequency_types.Frequency.daily.name, frequency_types.Frequency.daily.name),
+                            choices=[(Frequency.weekly.name, Frequency.weekly.name),
+                                     (Frequency.monthly.name, Frequency.monthly.name),
+                                     (Frequency.daily.name, Frequency.daily.name),
                                      ])
 
     week_day = SelectField('Week Day',

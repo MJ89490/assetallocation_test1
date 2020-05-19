@@ -1,10 +1,6 @@
-from flask import Flask #import flask
+from flask import Flask
 
-# from app import create_app
-
-app = Flask(__name__)   #create an app instance
-# app = create_app()
-
+app = Flask(__name__)
 
 from app import app
 

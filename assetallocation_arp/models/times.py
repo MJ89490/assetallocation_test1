@@ -10,9 +10,11 @@ import pandas as pd
 from assetallocation_arp.models import portfolio_construction as pc
 from assetallocation_arp.models import arp_signals as arp
 from pandas.tseries.offsets import BDay
-from assetallocation_arp.enum import leverage_types as leverage_name
+from assetallocation_arp.common_libraries import leverage_types as leverage_name
+
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
+
     # format data and inputs
     asset_inputs_t = asset_inputs.set_index('asset').T
     times_data = all_data[asset_inputs.signal_ticker]
@@ -40,6 +42,9 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
         (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
     return signals, returns, r, positioning
+
+
+
 
 
 
