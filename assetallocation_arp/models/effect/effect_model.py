@@ -131,6 +131,8 @@ class CurrencyComputations(DataProcessingEffect):
         # loop through each date
         # dates_usd = self.data_currencies_usd.index.get_loc(start_date_computations)
 
+        # todo add the other currencies
+        # todo add IF statement for computations
         for date in range(dates_number):
 
             if date == 0:  # init
