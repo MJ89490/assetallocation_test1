@@ -4,6 +4,7 @@ Created on 12/05/2020
 """
 
 #todo sort the imports AND RENAME COLUMNS OF DATAFRAME WITHOUT SPACES
+#todo TRIER LES PROPERTIES
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
 from common_libraries.models_names import Models
 from models.effect.constants_currencies import Currencies
@@ -31,7 +32,7 @@ class DataProcessingEffect(ImportDataEffect):
 
     def data_processing_effect(self):
 
-        #todo : ask to Simone US0003M Curncy # "RONEURCR Curncy", 'ILSUSDCR Curncy', EGPUSDCR Curncy', 'NNNI3M Index', 'NGNUSDCR Curncy' not available in matlab file
+        #todo : ask to Simone US0003M Curncy EUR003M Curncy "RONEURCR Curncy", 'ILSUSDCR Curncy', EGPUSDCR Curncy', 'NNNI3M Index', 'NGNUSDCR Curncy' not available in matlab file
 
         obj_currencies = Currencies()
         currencies_usd, currencies_eur = obj_currencies.currencies_data()
@@ -53,12 +54,6 @@ class CurrencyComputations(DataProcessingEffect):
         self.return_incl_costs = pd.DataFrame()
 
         self.bid_ask_spread = 0
-        self.cut_off_long = 0
-        self.shorts = ""
-        self.threshold_for_closing = 0
-        self.trend_ind = ""
-        self.short_term = 0
-        self.long_term = 0
 
     @property
     def bid_ask(self):
@@ -68,69 +63,28 @@ class CurrencyComputations(DataProcessingEffect):
     def bid_ask(self, value):
         self.bid_ask_spread = value
 
-    @property
-    def cut_off(self):
-        return self.cut_off_long
+    def carry_computations(self, carry_type):
 
-    @cut_off.setter
-    def cut_off(self, value):
-        self.cut_off_long = value
+        currencies = [currency.value for currency in CurrencyUSDSpot]  # constant to set
 
-    @property
-    def incl_shorts(self):
-        return self.shorts
+        if carry_type == "Real":  #ENUM
 
-    @incl_shorts.setter
-    def incl_shorts(self, value):
-        self.shorts = value
+            for currency in currencies:
 
-    @property
-    def threshold(self):
-        return self.threshold_for_closing
+                self.carry = None
 
-    @threshold.setter
-    def threshold(self, value):
-        self.threshold_for_closing = value
-
-    @property
-    def trend_indicator(self):
-        return self.trend_ind
-
-    @trend_indicator.setter
-    def trend_indicator(self, value):
-        self.trend_ind = value
-
-    @property
-    def short_term_ma(self):
-        return self.short_term
-
-    @short_term_ma.setter
-    def short_term_ma(self, value):
-        self.short_term = value
-
-    @property
-    def long_term_ma(self):
-        return self.long_term
-
-    @long_term_ma.setter
-    def long_term_ma(self, value):
-        self.long_term = value
-
-    def carry_computations(self):
-        pass
-
-    def trend_computations(self):
+    def trend_computations(self, trend_ind, short_term, long_term):
 
         #todo set the dates but décalage avec dates de 1
-        if self.trend_ind == "Total Return": #to change to enum
+        if trend_ind == "Total Return": #to change to enum
             currencies = [currency.value for currency in CurrencyUSDSpot]
         else:
             currencies = [currency.value for currency in CurrencyUSDCarry]
 
         # loop through each date
         for currency in currencies:
-            trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(self.short_term).mean()
-            trend_long_tmp = self.data_currencies_usd.loc[:, currency].rolling(self.long_term).mean()
+            trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(short_term).mean()
+            trend_long_tmp = self.data_currencies_usd.loc[:, currency].rolling(long_term).mean()
             self.trend["Trend " + currency] = (trend_short_tmp / trend_long_tmp - 1) * 100
 
         # loop through each date
@@ -174,7 +128,12 @@ class CurrencyComputations(DataProcessingEffect):
         #     self.trend["Trend " + currency] = trend
 
     def combo_computations(self):
-        pass
+
+        start_date_computations = '2000-01-11'  # property
+        currencies = [currency.value for currency in CurrencyUSDSpot]  # constant to set
+        combo = [0]
+
+        
 
     def return_ex_costs_computations(self):
 
@@ -263,4 +222,3 @@ class CurrencyComputations(DataProcessingEffect):
 
         # todo set the dates to the index of self.spot_incl_costs
         print()
-

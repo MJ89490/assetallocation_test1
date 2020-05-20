@@ -25,30 +25,27 @@ def run_model(model_type, mat_file, input_file):
         print(model_type)
     if model_type == models_names.Models.effect.name:
 
-
         # todo create a meta class
+        # moving_average= {"short": input("Short: "), "long": input("Long: ")}
         obj_import_data = CurrencyComputations()
         obj_import_data.import_data_matlab()
         obj_import_data.data_processing_effect()
+
         obj_import_data.spot_ex_costs_computations()
+
         obj_import_data.bid_ask_spread = 10
         obj_import_data.spot_incl_computations()
+
         obj_import_data.return_ex_costs_computations()
         obj_import_data.return_incl_costs_computations()
 
-        obj_import_data.trend_indicator = "Spot"   # could be Spot Total Return
-        obj_import_data.cut_off = 0.02
-        # obj_import_data.shorts = "yes"
-        # obj_import_data.threshold = 0.0025
+        trend_indicator = "Spot"   # could be Spot Total Return
+        moving_average = {"short_term": 4, "long_term": 16}
+        obj_import_data.trend_computations(trend_ind=trend_indicator, short_term=moving_average["short_term"],
+                                           long_term=moving_average["long_term"])
 
-        obj_import_data.short_term_ma = 4
-        obj_import_data.long_term_ma = 16
-
-        obj_import_data.trend_computations()
-
-
-
-
+        carry_type = "Real"
+        obj_import_data.carry_computations(carry_type=carry_type)
 
     if model_type == models_names.Models.curp.name:
         print(model_type)
