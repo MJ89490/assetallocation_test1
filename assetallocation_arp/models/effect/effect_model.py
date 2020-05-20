@@ -3,7 +3,7 @@ Created on 12/05/2020
 @author: AJ89720
 """
 
-#todo sort the imports
+#todo sort the imports AND RENAME COLUMNS OF DATAFRAME WITHOUT SPACES
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
 from common_libraries.models_names import Models
 from models.effect.constants_currencies import Currencies
@@ -121,6 +121,7 @@ class CurrencyComputations(DataProcessingEffect):
 
     def trend_computations(self):
 
+        #todo set the dates but décalage avec dates de 1
         if self.trend_ind == "Total Return": #to change to enum
             currencies = [currency.value for currency in CurrencyUSDSpot]
         else:
@@ -128,35 +129,49 @@ class CurrencyComputations(DataProcessingEffect):
 
         # loop through each date
         for currency in currencies:
-            trend = []
-            start_date_computations = '2000-01-11'  # property
-            dates_number = self.data_currencies_usd[start_date_computations:].shape[0]
-            print(currency)
-            for date in range(dates_number):
+            trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(self.short_term).mean()
+            trend_long_tmp = self.data_currencies_usd.loc[:, currency].rolling(self.long_term).mean()
+            self.trend["Trend " + currency] = (trend_short_tmp / trend_long_tmp - 1) * 100
 
-                if date == 0:  # init
-                    start_date_loc = self.data_currencies_usd.index.get_loc(start_date_computations)
-                    previous_start_date = self.data_currencies_usd.index[start_date_loc - 1]
-
-                    trend_short_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][
-                                      -self.short_term:].mean()
-                    trend_long_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][
-                                     -self.long_term:].mean()
-                else:
-                    start_date_loc = self.data_currencies_usd.index.get_loc(start_date_computations)
-                    next_start_date = self.data_currencies_usd.index[start_date_loc + 1]
-                    next_start_date_loc = self.data_currencies_usd.index.get_loc(next_start_date)
-                    previous_start_date = self.data_currencies_usd.index[next_start_date_loc - 1]
-                    start_date_computations = next_start_date
-
-                    trend_short_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][-self.short_term:].mean()
-                    trend_long_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][-self.long_term:].mean()
-
-                trend.append((trend_short_tmp / trend_long_tmp - 1) * 100)
-
-            self.trend["Trend " + currency] = trend
-
-        print()
+        # loop through each date
+        # for currency in currencies:
+        #     print(currency)
+        #     trend = []
+        #     start_date_computations = '2000-01-11'  # property
+        #     dates_number = self.data_currencies_usd[start_date_computations:].shape[0]
+        #
+        #     for date in tqdm(range(dates_number)):
+        #
+        #         if date == 0:  # init
+        #             start_date_loc = self.data_currencies_usd.index.get_loc(start_date_computations)
+        #             previous_start_date = self.data_currencies_usd.index[start_date_loc - 1]
+        #
+        #             trend_short_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][
+        #                               -self.short_term:].mean()
+        #             t = self.data_currencies_usd.loc[:, currency].rolling(4).mean()
+        #
+        #             trend_long_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][
+        #                              -self.long_term:].mean()
+        #
+        #             l = self.data_currencies_usd.loc[:, currency].rolling(16).mean()
+        #             g = (t / l - 1) * 100
+        #         else:
+        #             start_date_loc = self.data_currencies_usd.index.get_loc(start_date_computations)
+        #             next_start_date = self.data_currencies_usd.index[start_date_loc + 1]
+        #             next_start_date_loc = self.data_currencies_usd.index.get_loc(next_start_date)
+        #             previous_start_date = self.data_currencies_usd.index[next_start_date_loc - 1]
+        #             start_date_computations = next_start_date
+        #
+        #             trend_short_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][-self.short_term:].mean()
+        #             trend_long_tmp = self.data_currencies_usd.loc[:previous_start_date, currency][-self.long_term:].mean()
+        #
+        #             t = self.data_currencies_usd.loc[:, currency].rolling(4).mean()
+        #             l = self.data_currencies_usd.loc[:, currency].rolling(16).mean()
+        #
+        #             g = (t / l - 1) * 100
+        #         trend.append((trend_short_tmp / trend_long_tmp - 1) * 100)
+        #
+        #     self.trend["Trend " + currency] = trend
 
     def combo_computations(self):
         pass
