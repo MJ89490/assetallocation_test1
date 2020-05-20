@@ -9,8 +9,7 @@ import pandas as pd
 import math
 from scipy.interpolate import CubicSpline
 
-# creating dataframe with yieldcurve data
-
+# creating dataframe with yield curve data
 
 def format_data(fica_inputs, asset_inputs, all_data):
     # reading inputs and shortening data
@@ -29,15 +28,11 @@ def format_data(fica_inputs, asset_inputs, all_data):
 
     # creating dataframe for first country and then loop the rest
     curve = all_data[asset_inputs_t['AUD'][ini:ini + 14]]
-    carry = all_data[asset_inputs_t['AUD'][28:32]]
 
     for i in range(2, 11):
         curve = pd.merge(curve, all_data[asset_inputs_t[country[i]][ini:ini + 14]], right_index=True, left_index=True)
 
-    for i in range(2, 11):
-        carry = pd.merge(carry, all_data[asset_inputs_t[country[i]][28:32]], right_index=True, left_index=True)
-
-    return curve, carry
+    return curve
 
 
 # creating dataframe with carry + roll down and return calculations
@@ -74,7 +69,7 @@ def carry_roll_down(fica_inputs, asset_inputs, curve):
             carry_roll.iloc[i, k] = (pv1m.iloc[i, k] / pv.iloc[i, k]) ** 12 * 100 - 100 - curve.iloc[k, i * 14 + 1]
             if k > 0:
                 returns.iloc[i, k] = math.log((pv1m.iloc[i, k] / pv.iloc[i, k - 1])) * 100 \
-                                 - curve.iloc[k - 1, i * 14 + 1] / 12
+                                     - curve.iloc[k - 1, i * 14 + 1] / 12
 
     # transposing and adding column names
     carry_roll = carry_roll.T
@@ -121,9 +116,45 @@ def signals(fica_inputs, carry_roll, returns):
 
     # determining country performance contributions
     contribution = returns.sub(returns.mean(axis=1), axis=0) * signal.shift()
+    cum_contribution = contribution.cumsum()
+    contribution['Return'] = contribution.sum(axis=1)
+    cum_contribution['Return'] = cum_contribution.sum(axis=1)
     sub_signal = signal - signal.shift()
     signal['Turnover'] = sub_signal.abs().sum(axis=1)
     signal['Costs'] = signal['Turnover'] * costs / 100
-    contribution['Return'] = contribution.sum(axis=1)
 
-    return carry_roll, returns, signal, contribution
+    return carry_roll, returns, signal, contribution, cum_contribution
+
+
+def format_daily_data_and_calcs(fica_inputs, asset_inputs, all_data, signal):
+    # reading inputs and shortening data
+    carry = pd.DataFrame()
+
+    country = asset_inputs['country']
+    date_from = fica_inputs['date_from'].item()
+    date_to = fica_inputs['date_to'].item()
+    all_data = all_data.loc[date_from:date_to]
+
+    asset_inputs_t = asset_inputs.set_index('country').T
+
+    # creating dataframe for first country and then loop the rest plus 3x futures tickers
+    futures = all_data[asset_inputs['future_ticker'][3:6]]
+    curve_ox = all_data[asset_inputs_t['AUD'][28:32]]
+
+    for i in range(2, 11):
+        curve_ox = pd.merge(curve_ox, all_data[asset_inputs_t[country[i]][28:32]], right_index=True, left_index=True)
+
+    carry['AUD'] = 10 * curve_ox.iloc[:, 3] - 9 * curve_ox.iloc[:, 2] - curve_ox.iloc[:, 0]
+
+    for i in range(1, 10):
+        carry = pd.merge(carry, pd.Series((10 * curve_ox.iloc[:, 3 + i * 4] - 9 * curve_ox.iloc[:, 2 + i * 4]
+                - curve_ox.iloc[:, i * 4]), name=country[i + 1]), right_index=True, left_index=True)
+
+    carry.columns = country
+
+    # creating daily signals from monthly signals
+    signal_daily = signal.resample('B').ffill()
+
+
+    return carry, futures, signal_daily
+
