@@ -127,13 +127,21 @@ class CurrencyComputations(DataProcessingEffect):
         #
         #     self.trend["Trend " + currency] = trend
 
-    def combo_computations(self):
+    def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
         start_date_computations = '2000-01-11'  # property
         currencies = [currency.value for currency in CurrencyUSDSpot]  # constant to set
         combo = [0]
 
-        
+        # if combo[-1] == 0: #previous value equals to zero
+
+        self.combo = self.carry[start_date_computations:, "BRLUSD Curncy"] > cut_off and self.trend[start_date_computations:, "BRLUSD Curncy"]
+
+
+        print(0)
+
+
+
 
     def return_ex_costs_computations(self):
 

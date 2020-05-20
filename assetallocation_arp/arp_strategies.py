@@ -44,8 +44,12 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.trend_computations(trend_ind=trend_indicator, short_term=moving_average["short_term"],
                                            long_term=moving_average["long_term"])
 
-        carry_type = "Real"
-        obj_import_data.carry_computations(carry_type=carry_type)
+        # carry_type = "Real"
+        # obj_import_data.carry_computations(carry_type=carry_type)
+
+        combo_inputs = {"cut_off": 0.002, "incl_shorts": "yes", "cut_off_s": 0.00, "threshold": 0.0025}
+        obj_import_data.combo_computations(cut_off=combo_inputs["cut_off"], incl_shorts=combo_inputs["incl_shorts"],
+                                           cut_off_s=combo_inputs["cut_off_s"], threshold_for_closing=combo_inputs["threshold"])
 
     if model_type == models_names.Models.curp.name:
         print(model_type)
