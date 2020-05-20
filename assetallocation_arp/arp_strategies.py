@@ -22,6 +22,7 @@ def run_model(model_type, mat_file=None, input_file=None):
 	if model_type == models.Models.effect.name:
 		print(model_type)
 	if model_type == models.Models.curp.name:
+		curp_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 		print(model_type)
 	if model_type == models.Models.fica.name:
 		print(model_type)
@@ -55,14 +56,15 @@ def write_output_to_excel(model_outputs):
 
 def get_inputs_from_excel():
 	# select data from excel
-
+	input_file = None
 	mat_file = xw.Range('rng_mat_file_path').value
 
 	model_type = xw.Range('rng_model_type').value
+	run_model(model_type, mat_file, input_file)
 
 	# run selected model
-
-	run_model(model_type, mat_file, xw.Book.caller().fullname)
+	# run_model(model_type, mat_file, xw.Book.caller().fullname)
+#
 
 
 def get_inputs_from_python(model):
