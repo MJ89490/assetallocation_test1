@@ -284,7 +284,12 @@ def map_USD(firstCurrency, secondCurrency, currencyCrossesList, data):
     return temp
 
 def momentum (data, weights):
-    #
+    # this wont change the frequency of data
+    for i in list(range(0,len(weights))):
+        mom = mom + weights[i] * data.shift(i)
+        denominator = denominator + weights[i]
+    x = mom/denominator
+    return mom
 
 if __name__ == "__main__":
     # test inputs
