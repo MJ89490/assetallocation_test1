@@ -149,17 +149,15 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
         else:
             denominator = 1
         frstMatrix = ((1+((lag1*signalData + lag2*signalData.shift(1) + lag3*signalData.shift(2) + lag4*signalData.shift(3)+lag5*signalData.shift(4)+lag6*signalData.shift(5))/(lag1+lag2+lag3+lag4+lag5+lag6)))**12-1)/denominator
+        # frst_test =((1+momentum(signalData,[6,5,4,3,2,1]))**12-1)/denominator
 
     # second matrix
     if curp_inputs.loc[curp_inputs['Variable Name'] == 'Value Adjustment', 'CUMO'].iloc[0] == True:
         # need a fancy way to check if the signs are equal
         # map all values to 1 or -1 for both matrices. map 0's to 10. add the two together. if abs is 2 then the same sign. if abs is 20 then both 0's.
         # map all values to 1 or -1 for both matrices.
-        t_1 = frstMatrix.copy()
-        t_1 = t_1.applymap(lambda x: 1 if x > 0 else(-1 if x < 0 else 10))
-        t_2 = sharpe.copy()
-        t_2 = t_2.applymap(lambda x: 1 if x > 0 else(-1 if x < 0 else 10))
-        # add the two together.
+        t_1 = frstMatrix.applymap(lambda x: 1 if x > 0 else(-1 if x < 0 else 10))
+        t_2 = sharpe.applymap(lambda x: 1 if x > 0 else(-1 if x < 0 else 10))
         t_3 = t_1 + t_2
         # if abs is 2 then the same sign. if abs is 20 then both 0's. Otherwise will be 0,9,11
         t_3[t_3 == 20] = 2
@@ -168,8 +166,8 @@ def run_curp(curp_inputs, asset_inputs, all_data ):
         t_3[t_3 == 11] = 0
         # if t_3 = 2 then the sign is the same, if its 0 then not the same
         t_3 = t_3.applymap(lambda x: 1 if x == 2 else 0)
-        t_4 = sharpe.copy()
-        t_4 = t_4.applymap(lambda x: abs(x))
+        t_4 = sharpe.applymap(lambda x: abs(x))
+        # define first to speed up calc
         sharpeCutoff = curp_inputs.loc[curp_inputs['Variable Name'] == 'Sharpe Cut-Off', 'CUMO'].iloc[0]
         t_4 = t_4.applymap(lambda x: 1 if x > sharpeCutoff else 0)
         #add them together, where this is 2 both conditions are satisfied. Map this to 0, map everything else to 1. Then can multiply through by this matrix to ge tthe desired outcome :)
@@ -285,11 +283,17 @@ def map_USD(firstCurrency, secondCurrency, currencyCrossesList, data):
 
 def momentum (data, weights):
     # this wont change the frequency of data
+    mom = pd.DataFrame()
+    denominator = 0
     for i in list(range(0,len(weights))):
-        mom = mom + weights[i] * data.shift(i)
-        denominator = denominator + weights[i]
+        if i == 0:
+            mom = weights[i] * data
+            denominator = weights[i]
+        else:
+            mom = mom + weights[i] * data.shift(i)
+            denominator = denominator + weights[i]
     x = mom/denominator
-    return mom
+    return x
 
 if __name__ == "__main__":
     # test inputs
