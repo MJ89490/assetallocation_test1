@@ -67,12 +67,40 @@ class CurrencyComputations(DataProcessingEffect):
     def carry_computations(self, carry_type):
 
         currencies = [currency.value for currency in CurrencyUSDSpot]  # constant to set
+        start_date_computations = '2000-01-11'  # property
+        rows = self.data_currencies_usd[start_date_computations:].shape[0]
+
+        data_all_currencies_spot_usd = self.data_currencies_usd.loc["BRLUSD Curncy"].tolist()
+        data_all_currencies_carry_usd = self.data_currencies_usd.loc["BRLUSDCR Curncy"].tolist()
+
+        carry = []
 
         if carry_type == "Real":  #ENUM
+            try:
+                self.carry = 1 + "s"
+            except TypeError:
 
-            for currency in currencies:
+                for value in range(rows):
 
-                self.carry = None
+                    start_date_index = self.data_currencies_usd.index.get_loc(start_date_computations)
+
+                    previous_start_date = self.data_currencies_usd.index[start_date_index - 1]
+                    previous_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
+
+                    previous_eleven_start_date = self.data_currencies_usd.index[start_date_index - 11]
+                    previous_eleven_start_date_index = self.data_currencies_usd.index.get_loc(previous_eleven_start_date)
+
+                    numerator = data_all_currencies_carry_usd(previous_start_date_index) / data_all_currencies_carry_usd(previous_eleven_start_date_index)
+                    denominator = data_all_currencies_spot_usd(previous_start_date_index) / data_all_currencies_spot_usd(previous_eleven_start_date_index)
+
+                    carry.append((numerator / denominator) ^ (52/10))
+
+                    start_date_computations = previous_start_date
+
+
+
+
+
 
     def trend_computations(self, trend_ind, short_term, long_term):
 

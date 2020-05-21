@@ -51,6 +51,8 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.combo_computations(cut_off=combo_inputs["cut_off"], incl_shorts=combo_inputs["incl_shorts"],
                                            cut_off_s=combo_inputs["cut_off_s"], threshold_for_closing=combo_inputs["threshold"])
 
+        obj_import_data.carry_computations(carry_type="Real")
+
     if model_type == models_names.Models.curp.name:
         print(model_type)
     if model_type == models_names.Models.fica.name:
