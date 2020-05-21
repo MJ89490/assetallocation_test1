@@ -52,6 +52,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.spot_incl_costs = pd.DataFrame()
         self.return_ex_costs = pd.DataFrame()
         self.return_incl_costs = pd.DataFrame()
+        self.combo = pd.DataFrame()
 
         self.bid_ask_spread = 0
 
@@ -130,18 +131,33 @@ class CurrencyComputations(DataProcessingEffect):
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
         start_date_computations = '2000-01-11'  # property
-        currencies = [currency.value for currency in CurrencyUSDSpot]  # constant to set
-        combo = [0]
+        currencies = [currency.value for currency in CurrencyUSDCarry]  # constant to set
+        rows = self.data_currencies_usd[start_date_computations:].shape[0]
 
-        # if combo[-1] == 0: #previous value equals to zero
+        for currency in currencies:
+            combo = [0]
+            trend = self.trend.loc[start_date_computations:, 'Trend ' + currency].tolist()
+            carry = [0.079] * rows  # set with the correct carry from computations
 
-        self.combo = self.carry[start_date_computations:, "BRLUSD Curncy"] > cut_off and self.trend[start_date_computations:, "BRLUSD Curncy"]
+            for value in range(rows):
+                if combo[-1] == 0:
+                    if carry[value] >= cut_off and trend[value] >= 0:
+                        combo.append(1)
+                    else:
+                        if incl_shorts == "Yes" and carry[value] <= cut_off and trend[value] <= 0:
+                            combo.append(-1)
+                        else:
+                            combo.append(0)
+                else:
+                    if carry[value] >= (cut_off - threshold_for_closing) and trend[value] >= 0:
+                        combo.append(1)
+                    else:
+                        if incl_shorts == "Yes" and carry <= (cut_off + threshold_for_closing) and trend[value] <= 0:
+                            combo.append(-1)
+                        else:
+                            combo.append(0)
 
-
-        print(0)
-
-
-
+            self.combo["Combo " + currency] = combo
 
     def return_ex_costs_computations(self):
 
