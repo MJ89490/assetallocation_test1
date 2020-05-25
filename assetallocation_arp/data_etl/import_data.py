@@ -34,7 +34,8 @@ def matfile_to_dataframe(file_path, model_date):
 
     mat_data = pd.DataFrame(mat_file_data['dataTable'])
     mat_data.columns = mat_series_names
-    mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
+    #mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
+    mat_dataframe = pd.concat([mat_data, mat_dates], axis=1)
     mat_dataframe.set_index('Date', inplace=True)
 
     mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
