@@ -32,8 +32,6 @@ class DataProcessingEffect(ImportDataEffect):
 
     def data_processing_effect(self):
 
-        #todo : ask to Simone US0003M Curncy EUR003M Curncy "RONEURCR Curncy", 'ILSUSDCR Curncy', EGPUSDCR Curncy', 'NNNI3M Index', 'NGNUSDCR Curncy' not available in matlab file
-
         obj_currencies = Currencies()
         currencies_usd, currencies_eur = obj_currencies.currencies_data()
 
