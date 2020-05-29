@@ -31,6 +31,7 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.import_data_matlab()
         obj_import_data.data_processing_effect()
 
+        obj_import_data.start_date_calculations = '2000-01-11'
         obj_import_data.spot_ex_costs_computations()
 
         obj_import_data.bid_ask_spread = 10

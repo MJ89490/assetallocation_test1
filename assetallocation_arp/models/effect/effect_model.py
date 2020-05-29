@@ -3,43 +3,10 @@ Created on 12/05/2020
 @author: AJ89720
 """
 
-#todo sort the imports AND RENAME COLUMNS OF DATAFRAME WITHOUT SPACES
-#todo TRIER LES PROPERTIES
-from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
-from common_libraries.models_names import Models
-from models.effect.constants_currencies import Currencies
-from common_libraries.names_currencies_spot import CurrencySpot
-from common_libraries.names_currencies_carry import CurrencyCarry
-from common_libraries.names_currencies_implied import CurrencyImplied
+from models.effect.data_processing_effect import DataProcessingEffect
+import models.effect.constants as constants
 import pandas as pd
 import numpy as np
-
-class ImportDataEffect:
-
-    def __init__(self):
-        self.data_currencies = pd.DataFrame()
-
-    def import_data_matlab(self):
-        self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
-                                                  input_file=None, date=None)
-
-
-class DataProcessingEffect(ImportDataEffect):
-
-    def __init__(self):
-        super().__init__()
-        self.data_currencies_usd = pd.DataFrame()
-        self.data_currencies_eur = pd.DataFrame()
-
-    def data_processing_effect(self):
-
-        obj_currencies = Currencies()
-        currencies_usd, currencies_eur = obj_currencies.currencies_data()
-
-        start_date = '1999-01-06' # property
-        self.data_currencies_usd = self.data_currencies[currencies_usd.currencies_usd_tickers].loc[start_date:]
-        self.data_currencies_eur = self.data_currencies[currencies_eur.currencies_eur_tickers].loc[start_date:]
-
 
 class CurrencyComputations(DataProcessingEffect):
 
@@ -54,6 +21,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.combo = pd.DataFrame()
 
         self.bid_ask_spread = 0
+        self.start_date_computations = ''
 
     @property
     def bid_ask(self):
@@ -63,18 +31,22 @@ class CurrencyComputations(DataProcessingEffect):
     def bid_ask(self, value):
         self.bid_ask_spread = value
 
-    def carry_computations(self, carry_type):
+    @property
+    def start_date_calculations(self):
+        return self.start_date_computations
 
-        currencies_spot = [currency.value for currency in CurrencySpot]  # constant to set
-        currencies_implied = [currency.value for currency in CurrencyImplied]  # constant to set
-        currencies_carry = [currency.value for currency in CurrencyCarry]  # constant to set
+    @start_date_calculations.setter
+    def start_date_calculations(self, value):
+        self.start_date_computations = value
+
+    def carry_computations(self, carry_type):
 
         if carry_type == "Real":  #ENUM
 
-            for currency_spot, currency_implied, currency_carry in zip(currencies_spot, currencies_implied, currencies_carry):
+            for currency_spot, currency_implied, currency_carry in zip(constants.CURRENCIES_SPOT, constants.CURRENCIES_IMPLIED, constants.CURRENCIES_CARRY):
 
-                start_date_computations = '2000-01-11'  # property
-                rows = self.data_currencies_usd[start_date_computations:].shape[0] - 1
+                tmp_start_date_computations = self.start_date_computations
+                rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0] - 1
 
                 carry = []
 
@@ -91,7 +63,7 @@ class CurrencyComputations(DataProcessingEffect):
 
                 for values in range(rows):
 
-                    start_date_index = self.data_currencies_usd.index.get_loc(start_date_computations)
+                    start_date_index = self.data_currencies_usd.index.get_loc(tmp_start_date_computations)
 
                     previous_start_date = self.data_currencies_usd.index[start_date_index - 4]
                     previous_four_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
@@ -104,7 +76,7 @@ class CurrencyComputations(DataProcessingEffect):
                     if not np.isnan(carry_tmp):
                         carry.append(carry_tmp)
                     else:
-                        start_date_index = self.data_currencies_usd.index.get_loc(start_date_computations)
+                        start_date_index = self.data_currencies_usd.index.get_loc(tmp_start_date_computations)
 
                         previous_start_date = self.data_currencies_usd.index[start_date_index - 1]
                         previous_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
@@ -117,17 +89,17 @@ class CurrencyComputations(DataProcessingEffect):
 
                         carry.append((((numerator / denominator) ** (52/10))-1))
 
-                    start_date_computations = self.data_currencies_usd.index[start_date_index + 1]
+                    tmp_start_date_computations = self.data_currencies_usd.index[start_date_index + 1]
 
                 self.carry['Carry ' + currency_spot] = carry
-            
+
     def trend_computations(self, trend_ind, short_term, long_term):
 
         #todo set the dates but décalage avec dates de 1
         if trend_ind == "Total Return": #to change to enum
-            currencies = [currency.value for currency in CurrencySpot]
+            currencies = constants.CURRENCIES_SPOT
         else:
-            currencies = [currency.value for currency in CurrencyCarry]
+            currencies = constants.CURRENCIES_CARRY
 
         # loop through each date
         for currency in currencies:
@@ -182,13 +154,12 @@ class CurrencyComputations(DataProcessingEffect):
 
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
-        start_date_computations = '2000-01-11'  # property
-        currencies = [currency.value for currency in CurrencyCarry]  # constant to set
-        rows = self.data_currencies_usd[start_date_computations:].shape[0]
+        tmp_start_date_computations = self.start_date_computations
+        rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0]
 
-        for currency in currencies:
+        for currency in constants.CURRENCIES_CARRY:
             combo = [0]
-            trend = self.trend.loc[start_date_computations:, 'Trend ' + currency].tolist()
+            trend = self.trend.loc[tmp_start_date_computations:, 'Trend ' + currency].tolist()
             carry = [0.079] * rows  # set with the correct carry from computations
 
             for value in range(rows):
@@ -213,19 +184,17 @@ class CurrencyComputations(DataProcessingEffect):
 
     def return_ex_costs_computations(self):
 
-        start_date_computations = '2000-01-11'  # property
         combo = 1
-        currencies = [currency.value for currency in CurrencyCarry]
 
-        for currency in currencies:
+        for currency in constants.CURRENCIES_CARRY:
 
             first_return = [100]
             if currency in self.data_currencies_usd.columns:
-                return_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
-                                       self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
+                return_division_tmp = (self.data_currencies_usd.loc[self.start_date_computations:, currency] /
+                                       self.data_currencies_usd.loc[self.start_date_computations:, currency].shift(1)) ** combo
             else:
-                return_division_tmp = (self.data_currencies_eur.loc[start_date_computations:, currency] /
-                                       self.data_currencies_eur.loc[start_date_computations:, currency].shift(1)) ** combo
+                return_division_tmp = (self.data_currencies_eur.loc[self.start_date_computations:, currency] /
+                                       self.data_currencies_eur.loc[self.start_date_computations:, currency].shift(1)) ** combo
 
             return_division_tmp = return_division_tmp.iloc[1:]
             return_tmp = return_division_tmp.tolist()
@@ -258,19 +227,18 @@ class CurrencyComputations(DataProcessingEffect):
 
     def spot_ex_costs_computations(self):
 
-        start_date_computations = '2000-01-11' # property
         combo = 1 # to compute self.combo and change it depending on the currency
-        currencies = [currency.value for currency in CurrencySpot] # constant to set
+
         # loop to get through each currency
-        for currency in currencies:
+        for currency in constants.CURRENCIES_SPOT:
             # Reset the Spot list for the next currency
             spot = [100]  # the Spot is set 100
             if currency in self.data_currencies_usd.columns:
-                spot_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
-                                     self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
+                spot_division_tmp = (self.data_currencies_usd.loc[self.start_date_computations:, currency] /
+                                     self.data_currencies_usd.loc[self.start_date_computations:, currency].shift(1)) ** combo
             else:
-                spot_division_tmp = (self.data_currencies_eur.loc[start_date_computations:, currency] /
-                                     self.data_currencies_eur.loc[start_date_computations:, currency].shift(1)) ** combo
+                spot_division_tmp = (self.data_currencies_eur.loc[self.start_date_computations:, currency] /
+                                     self.data_currencies_eur.loc[self.start_date_computations:, currency].shift(1)) ** combo
 
             # Remove the first nan due to the shift(1)
             spot_division_tmp = spot_division_tmp.iloc[1:]
@@ -284,7 +252,7 @@ class CurrencyComputations(DataProcessingEffect):
             self.spot_ex_costs["Spot Ex Costs " + currency] = spot
 
         # Set the dates to the index of self.spot_ex_costs
-        dates_usd = self.data_currencies_usd[start_date_computations:].index.values # property
+        dates_usd = self.data_currencies_usd[self.start_date_computations:].index.values # property
         self.spot_ex_costs.set_index(dates_usd)
 
     def spot_incl_computations(self):
