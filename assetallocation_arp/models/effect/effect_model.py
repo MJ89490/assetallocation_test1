@@ -8,8 +8,9 @@ Created on 12/05/2020
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
 from common_libraries.models_names import Models
 from models.effect.constants_currencies import Currencies
-from common_libraries.names_currencies_spot import CurrencyUSDSpot
-from common_libraries.names_currencies_carry import CurrencyUSDCarry
+from common_libraries.names_currencies_spot import CurrencySpot
+from common_libraries.names_currencies_carry import CurrencyCarry
+from common_libraries.names_currencies_implied import CurrencyImplied
 import pandas as pd
 import numpy as np
 
@@ -37,7 +38,7 @@ class DataProcessingEffect(ImportDataEffect):
 
         start_date = '1999-01-06' # property
         self.data_currencies_usd = self.data_currencies[currencies_usd.currencies_usd_tickers].loc[start_date:]
-        # self.data_currencies_eur = self.data_currencies[currencies_eur.currencies_eur_tickers].loc[start_date:]
+        self.data_currencies_eur = self.data_currencies[currencies_eur.currencies_eur_tickers].loc[start_date:]
 
 
 class CurrencyComputations(DataProcessingEffect):
@@ -64,71 +65,79 @@ class CurrencyComputations(DataProcessingEffect):
 
     def carry_computations(self, carry_type):
 
-        currencies = [currency.value for currency in CurrencyUSDSpot]  # constant to set
+        currencies_spot = [currency.value for currency in CurrencySpot]  # constant to set
+        currencies_implied = [currency.value for currency in CurrencyImplied]  # constant to set
+        currencies_carry = [currency.value for currency in CurrencyCarry]  # constant to set
 
         if carry_type == "Real":  #ENUM
 
+            for currency_spot, currency_implied, currency_carry in zip(currencies_spot, currencies_implied, currencies_carry):
 
-            start_date_computations = '2000-01-11'  # property
-            rows = self.data_currencies_usd[start_date_computations:].shape[0] - 1
+                start_date_computations = '2000-01-11'  # property
+                rows = self.data_currencies_usd[start_date_computations:].shape[0] - 1
 
-            carry = []
-            data_all_currencies_spot_usd = self.data_currencies_usd.loc[:, 'BRLUSD Curncy'].tolist()
-            data_all_currencies_carry_usd = self.data_currencies_usd.loc[:, 'BRLUSDCR Curncy'].tolist()
+                carry = []
 
-            data_all_currencies_implied_usd = self.data_currencies_usd.loc[:, 'BCNI3M Curncy'].tolist()
-
-
-            data_all_currencies_index_usd = self.data_currencies_usd.loc[:, 'US0003M Index'].tolist()
-
-            for values in range(rows):
-
-                start_date_index = self.data_currencies_usd.index.get_loc(start_date_computations)
-
-                previous_start_date = self.data_currencies_usd.index[start_date_index - 4]
-                previous_four_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
-
-                average_implied = np.mean(data_all_currencies_implied_usd[previous_four_start_date_index:start_date_index])
-                average_index = np.mean(data_all_currencies_index_usd[previous_four_start_date_index:start_date_index])
-
-                carry_tmp = ((average_implied - average_index) / 100) - 0.028 #inflation diff
-
-                if not np.isnan(carry_tmp):
-                    carry.append(carry_tmp)
+                if currency_spot in self.data_currencies_usd.columns:
+                    data_all_currencies_spot = self.data_currencies_usd.loc[:, currency_spot].tolist()
+                    data_all_currencies_carry = self.data_currencies_usd.loc[:, currency_carry].tolist()
+                    data_all_currencies_implied = self.data_currencies_usd.loc[:, currency_implied].tolist()
+                    data_all_currencies_index = self.data_currencies_usd.loc[:, 'US0003M Index'].tolist()
                 else:
+                    data_all_currencies_spot = self.data_currencies_eur.loc[:, currency_spot].tolist()
+                    data_all_currencies_carry = self.data_currencies_eur.loc[:, currency_carry].tolist()
+                    data_all_currencies_implied = self.data_currencies_eur.loc[:, currency_implied].tolist()
+                    data_all_currencies_index = self.data_currencies_eur.loc[:, 'EUR003M Curncy'].tolist()
+
+                for values in range(rows):
+
                     start_date_index = self.data_currencies_usd.index.get_loc(start_date_computations)
 
-                    previous_start_date = self.data_currencies_usd.index[start_date_index - 1]
-                    previous_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
+                    previous_start_date = self.data_currencies_usd.index[start_date_index - 4]
+                    previous_four_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
 
-                    previous_eleven_start_date = self.data_currencies_usd.index[start_date_index - 11]
-                    previous_eleven_start_date_index = self.data_currencies_usd.index.get_loc(previous_eleven_start_date)
+                    average_implied = np.mean(data_all_currencies_implied[previous_four_start_date_index:start_date_index])
+                    average_index = np.mean(data_all_currencies_index[previous_four_start_date_index:start_date_index])
 
-                    numerator = data_all_currencies_carry_usd[previous_start_date_index] / data_all_currencies_carry_usd[previous_eleven_start_date_index]
-                    denominator = data_all_currencies_spot_usd[previous_start_date_index] / data_all_currencies_spot_usd[previous_eleven_start_date_index]
+                    carry_tmp = ((average_implied - average_index) / 100) - 0.028 #inflation diff
 
-                    carry.append((((numerator / denominator) ** (52/10))-1))
+                    if not np.isnan(carry_tmp):
+                        carry.append(carry_tmp)
+                    else:
+                        start_date_index = self.data_currencies_usd.index.get_loc(start_date_computations)
 
-                start_date_computations = self.data_currencies_usd.index[start_date_index + 1]
+                        previous_start_date = self.data_currencies_usd.index[start_date_index - 1]
+                        previous_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
 
+                        previous_eleven_start_date = self.data_currencies_usd.index[start_date_index - 11]
+                        previous_eleven_start_date_index = self.data_currencies_usd.index.get_loc(previous_eleven_start_date)
 
-            self.carry['Carry'] = carry
-            print()
+                        numerator = data_all_currencies_carry[previous_start_date_index] / data_all_currencies_carry[previous_eleven_start_date_index]
+                        denominator = data_all_currencies_spot[previous_start_date_index] / data_all_currencies_spot[previous_eleven_start_date_index]
 
+                        carry.append((((numerator / denominator) ** (52/10))-1))
 
+                    start_date_computations = self.data_currencies_usd.index[start_date_index + 1]
 
+                self.carry['Carry ' + currency_spot] = carry
+            
     def trend_computations(self, trend_ind, short_term, long_term):
 
         #todo set the dates but décalage avec dates de 1
         if trend_ind == "Total Return": #to change to enum
-            currencies = [currency.value for currency in CurrencyUSDSpot]
+            currencies = [currency.value for currency in CurrencySpot]
         else:
-            currencies = [currency.value for currency in CurrencyUSDCarry]
+            currencies = [currency.value for currency in CurrencyCarry]
 
         # loop through each date
         for currency in currencies:
-            trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(short_term).mean()
-            trend_long_tmp = self.data_currencies_usd.loc[:, currency].rolling(long_term).mean()
+            if currency in self.data_currencies_usd.columns:
+                trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(short_term).mean()
+                trend_long_tmp = self.data_currencies_usd.loc[:, currency].rolling(long_term).mean()
+            else:
+                trend_short_tmp = self.data_currencies_eur.loc[:, currency].rolling(short_term).mean()
+                trend_long_tmp = self.data_currencies_eur.loc[:, currency].rolling(long_term).mean()
+
             self.trend["Trend " + currency] = (trend_short_tmp / trend_long_tmp - 1) * 100
 
         # loop through each date
@@ -174,7 +183,7 @@ class CurrencyComputations(DataProcessingEffect):
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
         start_date_computations = '2000-01-11'  # property
-        currencies = [currency.value for currency in CurrencyUSDCarry]  # constant to set
+        currencies = [currency.value for currency in CurrencyCarry]  # constant to set
         rows = self.data_currencies_usd[start_date_computations:].shape[0]
 
         for currency in currencies:
@@ -206,15 +215,21 @@ class CurrencyComputations(DataProcessingEffect):
 
         start_date_computations = '2000-01-11'  # property
         combo = 1
-        currencies = [currency.value for currency in CurrencyUSDCarry]
+        currencies = [currency.value for currency in CurrencyCarry]
 
         for currency in currencies:
 
             first_return = [100]
-            return_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
-                                   self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
+            if currency in self.data_currencies_usd.columns:
+                return_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
+                                       self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
+            else:
+                return_division_tmp = (self.data_currencies_eur.loc[start_date_computations:, currency] /
+                                       self.data_currencies_eur.loc[start_date_computations:, currency].shift(1)) ** combo
+
             return_division_tmp = return_division_tmp.iloc[1:]
             return_tmp = return_division_tmp.tolist()
+
             for values in range(len(return_tmp)):
                 first_return.append(return_tmp[values] * first_return[values])
 
@@ -245,13 +260,18 @@ class CurrencyComputations(DataProcessingEffect):
 
         start_date_computations = '2000-01-11' # property
         combo = 1 # to compute self.combo and change it depending on the currency
-        currencies = [currency.value for currency in CurrencyUSDSpot] # constant to set
+        currencies = [currency.value for currency in CurrencySpot] # constant to set
         # loop to get through each currency
         for currency in currencies:
             # Reset the Spot list for the next currency
             spot = [100]  # the Spot is set 100
-            spot_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
-                                 self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
+            if currency in self.data_currencies_usd.columns:
+                spot_division_tmp = (self.data_currencies_usd.loc[start_date_computations:, currency] /
+                                     self.data_currencies_usd.loc[start_date_computations:, currency].shift(1)) ** combo
+            else:
+                spot_division_tmp = (self.data_currencies_eur.loc[start_date_computations:, currency] /
+                                     self.data_currencies_eur.loc[start_date_computations:, currency].shift(1)) ** combo
+
             # Remove the first nan due to the shift(1)
             spot_division_tmp = spot_division_tmp.iloc[1:]
             # Transform the spot_division_tmp into a list

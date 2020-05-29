@@ -1,7 +1,7 @@
 import enum
 
 
-class CurrencyUSDSpot(enum.Enum):
+class CurrencySpot(enum.Enum):
 
     BRLUSD = "BRLUSD Curncy"
     ARSUSD = "ARSUSD Curncy"
@@ -20,6 +20,9 @@ class CurrencyUSDSpot(enum.Enum):
     PHPUSD = "PHPUSD Curncy"
     TWDUSD = "TWDUSD Curncy"
     THBUSD = "THBUSD Curncy"
+    CZKEUR = "CZKEUR Curncy"
+    HUFEUR = "HUFEUR Curncy"
+    PLNEUR = "PLNEUR Curncy"
 
 
 

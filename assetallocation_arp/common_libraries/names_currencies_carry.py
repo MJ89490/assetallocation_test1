@@ -1,6 +1,6 @@
 import enum
 
-class CurrencyUSDCarry(enum.Enum):
+class CurrencyCarry(enum.Enum):
 
     BRLUSD = "BRLUSDCR Curncy"
     ARSUSD = "ARSUSDCR Curncy"
@@ -19,3 +19,6 @@ class CurrencyUSDCarry(enum.Enum):
     PHPUSD = "PHPUSDCR Curncy"
     TWDUSD = "TWDUSDCR Curncy"
     THBUSD = "THBUSDCR Curncy"
+    CZKEURCR = "CZKEURCR Curncy"
+    HUFEURCR = "HUFEURCR Curncy"
+    PLNEURCR = "PLNEURCR Curncy"

@@ -19,3 +19,6 @@ class CurrencyImplied(enum.Enum):
     PPNI3M = "PPNI3M Curncy"
     NTNI3M = "NTNI3M Curncy"
     THBI3M = "THBI3M Curncy"
+    CZKI3M = "CZKI3M Curncy"
+    HUFI3M = "HUFI3M Curncy"
+    PLNI3M = "PLNI3M Curncy"

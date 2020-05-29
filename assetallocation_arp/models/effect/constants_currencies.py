@@ -11,7 +11,7 @@ class Currencies:
 
         self.currencies_usd = {
                                 "currencies_usd_tickers": ["BRLUSD Curncy", "BRLUSDCR Curncy", "BCNI3M Curncy", "US0003M Index",
-                                                           "ARSUSD Curncy", "ARSUSDCR Curncy", "APNI3M Curncy", 
+                                                           "ARSUSD Curncy", "ARSUSDCR Curncy", "APNI3M Curncy",
                                                            "MXNUSD Curncy", "MXNUSDCR Curncy", "MXNI3M Curncy",
                                                            "COPUSD Curncy", "COPUSDCR Curncy", "CLNI3M Curncy",
                                                            "CLPUSD Curncy", "CLPUSDCR Curncy", "CHNI3M Curncy",
@@ -26,12 +26,12 @@ class Currencies:
                                                            "INRUSD Curncy", "INRUSDCR Curncy", "IRNI3M Curncy",
                                                            "PHPUSD Curncy", "PHPUSDCR Curncy", "PPNI3M Curncy",
                                                            "TWDUSD Curncy", "TWDUSDCR Curncy", "NTNI3M Curncy",
-                                                           "THBUSD Curncy", "THBUSDCR Curncy", "THBI3M Curncy"
+                                                           "THBUSD Curncy", "THBUSDCR Curncy", "THBI3M Curncy",
                                                            ]
                               }
 
         self.currencies_eur = {
-                                "currencies_eur_tickers": ["CZKEUR Curncy", "CZKEURCR Curncy", "CZKI3M Curncy",
+                                "currencies_eur_tickers": ["CZKEUR Curncy", "CZKEURCR Curncy", "CZKI3M Curncy", "EUR003M Curncy",
                                                            "HUFEUR Curncy", "HUFEURCR Curncy", "HUFI3M Curncy",
                                                            "PLNEUR Curncy", "PLNEURCR Curncy", "PLNI3M Curncy"
                                                            ]
