@@ -2,6 +2,7 @@ from models.effect.import_data_effect import ImportDataEffect
 from models.effect.constants_currencies import Currencies
 import pandas as pd
 
+
 class DataProcessingEffect(ImportDataEffect):
 
     def __init__(self):

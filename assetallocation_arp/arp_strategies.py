@@ -32,6 +32,19 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.data_processing_effect()
 
         obj_import_data.start_date_calculations = '2000-01-11'
+
+        obj_import_data.carry_computations(carry_type="Real")
+
+        trend_indicator = "Spot"   # could be Spot Total Return
+        moving_average = {"short_term": 4, "long_term": 16}
+        obj_import_data.trend_computations(trend_ind=trend_indicator, short_term=moving_average["short_term"],
+                                           long_term=moving_average["long_term"])
+
+        combo_inputs = {"cut_off": 0.002, "incl_shorts": "yes", "cut_off_s": 0.00, "threshold": 0.0025}
+        obj_import_data.combo_computations(cut_off=combo_inputs["cut_off"], incl_shorts=combo_inputs["incl_shorts"],
+                                           cut_off_s=combo_inputs["cut_off_s"],
+                                           threshold_for_closing=combo_inputs["threshold"])
+
         obj_import_data.spot_ex_costs_computations()
 
         obj_import_data.bid_ask_spread = 10
@@ -39,20 +52,6 @@ def run_model(model_type, mat_file, input_file):
 
         obj_import_data.return_ex_costs_computations()
         obj_import_data.return_incl_costs_computations()
-
-        trend_indicator = "Spot"   # could be Spot Total Return
-        moving_average = {"short_term": 4, "long_term": 16}
-        obj_import_data.trend_computations(trend_ind=trend_indicator, short_term=moving_average["short_term"],
-                                           long_term=moving_average["long_term"])
-
-        # carry_type = "Real"
-        # obj_import_data.carry_computations(carry_type=carry_type)
-
-        combo_inputs = {"cut_off": 0.002, "incl_shorts": "yes", "cut_off_s": 0.00, "threshold": 0.0025}
-        obj_import_data.combo_computations(cut_off=combo_inputs["cut_off"], incl_shorts=combo_inputs["incl_shorts"],
-                                           cut_off_s=combo_inputs["cut_off_s"], threshold_for_closing=combo_inputs["threshold"])
-
-        obj_import_data.carry_computations(carry_type="Real")
 
     if model_type == models_names.Models.curp.name:
         print(model_type)
@@ -128,8 +127,8 @@ def get_inputs_from_python(model, file):
 
 def get_input_user():
 
-    model_str = input("Choose a Model: ")
-
+    # model_str = input("Choose a Model: ")
+    model_str = 'effect'
     return model_str
 
 
