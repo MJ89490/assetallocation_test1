@@ -20,6 +20,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.return_ex_costs = pd.DataFrame()
         self.return_incl_costs = pd.DataFrame()
         self.combo_currencies = pd.DataFrame()
+        self.inflation_release = pd.DataFrame()
 
         self.bid_ask_spread = 0
         self.start_date_computations = ''
@@ -40,10 +41,26 @@ class CurrencyComputations(DataProcessingEffect):
     def start_date_calculations(self, value):
         self.start_date_computations = value
 
+    def inflation_release_computations(self):
+        dates_index = self.data_currencies_usd.loc[self.start_date_computations:].index.values
+        weo_dates = []
 
-    def inflation_release(self):
+        for date in dates_index:
+            date = pd.to_datetime(date)
+            if date.month < 4:
+                weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
+            elif date.month == 4 and date.day <= 15:
+                weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
+            elif date.month >= 4 and date.month < 10:
+                weo_date = "{month}{year}".format(year=date.year, month='Apr')
+            else:
+                assert date.month >= 10, date
+                weo_date = "{month}{year}".format(year=date.year, month='Oct')
 
-        pass
+            weo_dates.append(weo_date)
+
+        self.inflation_release["Inflation Release"] = weo_dates
+
     def carry_computations(self, carry_type):
 
         if carry_type == "Real":  #ENUM

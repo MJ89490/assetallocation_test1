@@ -53,6 +53,8 @@ def run_model(model_type, mat_file, input_file):
         obj_import_data.return_ex_costs_computations()
         obj_import_data.return_incl_costs_computations()
 
+        obj_import_data.inflation_release_computations()
+
     if model_type == models_names.Models.curp.name:
         print(model_type)
     if model_type == models_names.Models.fica.name:
