@@ -40,6 +40,10 @@ class CurrencyComputations(DataProcessingEffect):
     def start_date_calculations(self, value):
         self.start_date_computations = value
 
+
+    def inflation_release(self):
+
+        pass
     def carry_computations(self, carry_type):
 
         if carry_type == "Real":  #ENUM
