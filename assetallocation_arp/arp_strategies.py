@@ -2,6 +2,7 @@ import xlwings as xw
 import data_etl.import_data as gd
 import models.times as times
 import models.fica as fica
+import models.maven as maven
 import sys
 import os
 
@@ -19,7 +20,12 @@ def run_model(model_type, mat_file=None, input_file=None, model_date=None):
 		write_output_to_excel({models.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
 
 	if model_type == models.Models.maven.name:
-		print(model_type)
+		# get inputs from excel and matlab data
+		maven_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
+																			model_date)
+		# create yield curves and calculate carry & roll down
+		maven_assets, maven_cash = maven.format_data(maven_inputs, asset_inputs, all_data)
+
 	if model_type == models.Models.effect.name:
 		print(model_type)
 	if model_type == models.Models.curp.name:
@@ -29,18 +35,18 @@ def run_model(model_type, mat_file=None, input_file=None, model_date=None):
 	if model_type == models.Models.fica.name:
 		# get inputs from excel and matlab data
 		fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
-																			 model_date)
+																			model_date)
 		# create yield curves and calculate carry & roll down
 		curve = fica.format_data(fica_inputs, asset_inputs, all_data)
-		carry_roll, country_returns = fica.carry_roll_down(fica_inputs, asset_inputs, curve)
+		carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
 		# run strategy
-		carry_roll, signals, cum_cntr, returns = fica.signals_and_returns(fica_inputs, carry_roll, country_returns)
+		signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll,
+																			country_returns)
 		# run daily attributions
-		carry_daily, return_daily = fica.daily_attribution(fica_inputs, asset_inputs, all_data, signals)
+		carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
 		# write results to output sheet
-		write_output_to_excel({models.Models.fica.name: (carry_roll, signals, country_returns, cum_cntr, returns, \
-														asset_inputs, fica_inputs, carry_daily, return_daily)})
-
+		write_output_to_excel({models.Models.fica.name: (carry_roll, signals, country_returns, cum_contribution,
+													returns, asset_inputs, fica_inputs, carry_daily, return_daily)})
 	if model_type == models.Models.factor.name:
 		print(model_type)
 	if model_type == models.Models.comca.name:
@@ -69,8 +75,8 @@ def write_output_to_excel(model_outputs):
 		sheet_times_input.range('rng_input_times_used').offset(0, 7).value = times_inputs
 
 	if models.Models.fica.name in model_outputs.keys():
-		carry_roll, signals, country_returns, cum_cntr, returns, asset_inputs, fica_inputs, carry_daily, return_daily \
-																= model_outputs[models.Models.fica.name]
+		carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily, \
+																return_daily = model_outputs[models.Models.fica.name]
 		path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
 		wb = xw.Book(path)
 		sheet_fica_output = wb.sheets['fica_output']
@@ -85,15 +91,15 @@ def write_output_to_excel(model_outputs):
 		sheet_fica_output.range('rng_fica_output').offset(-1, 2 * n_columns + 1).value = "FICA Country Returns"
 		sheet_fica_output.range('rng_fica_output').offset(0, 2 * n_columns + 1).value = country_returns
 		sheet_fica_output.range('rng_fica_output').offset(-1, 3 * n_columns + 1).value = "FICA Contributions"
-		sheet_fica_output.range('rng_fica_output').offset(0, 3 * n_columns + 1).value = cum_cntr
+		sheet_fica_output.range('rng_fica_output').offset(0, 3 * n_columns + 1).value = cum_contribution
 		sheet_fica_output.range('rng_fica_output').offset(-1, 4 * n_columns + 2).value = "FICA Returns"
 		sheet_fica_output.range('rng_fica_output').offset(0, 4 * n_columns + 2).value = returns
 		sheet_fica_output.range('rng_fica_output').offset(-1, 4 * n_columns + 9).value = "FICA Daily Carry"
 		sheet_fica_output.range('rng_fica_output').offset(0, 4 * n_columns + 9).value = carry_daily
-		sheet_fica_output.range('rng_fica_output').offset(-1, 5 * n_columns + 11).value = "FICA Daily Returns"
-		sheet_fica_output.range('rng_fica_output').offset(0, 5 * n_columns + 11).value = return_daily
+		sheet_fica_output.range('rng_fica_output').offset(-1, 5 * n_columns + 12).value = "FICA Daily Returns"
+		sheet_fica_output.range('rng_fica_output').offset(0, 5 * n_columns + 12).value = return_daily
 		# write inputs used to excel and run time
-		# sheet_fica_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+		#sheet_fica_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 		sheet_fica_input.range('rng_input_fica_used').value = fica_inputs
 		sheet_fica_input.range('rng_input_fica_used').offset(3, 0).value = asset_inputs
 
