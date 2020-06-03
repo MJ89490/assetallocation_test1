@@ -13,6 +13,7 @@ class CurrencyComputations(DataProcessingEffect):
 
     def __init__(self):
         super().__init__()
+
         self.carry_currencies = pd.DataFrame()
         self.trend_currencies = pd.DataFrame()
         self.spot_ex_costs = pd.DataFrame()
@@ -41,6 +42,10 @@ class CurrencyComputations(DataProcessingEffect):
     def start_date_calculations(self, value):
         self.start_date_computations = value
 
+        global dates_index
+
+        dates_index = self.data_currencies_usd[self.start_date_computations:].index.values
+
     def inflation_release_computations(self):
         dates_index = self.data_currencies_usd.loc[self.start_date_computations:].index.values
         weo_dates = []
@@ -63,7 +68,7 @@ class CurrencyComputations(DataProcessingEffect):
 
     def carry_computations(self, carry_type):
 
-        if carry_type == "Real":  #ENUM
+        if carry_type.lower() == 'real':
 
             for currency_spot, currency_implied, currency_carry in zip(constants.CURRENCIES_SPOT, constants.CURRENCIES_IMPLIED, constants.CURRENCIES_CARRY):
 
@@ -119,19 +124,18 @@ class CurrencyComputations(DataProcessingEffect):
 
                 self.carry_currencies['Carry ' + currency_spot] = carry
 
-        dates_usd = self.data_currencies_usd[self.start_date_computations:].index.values  # property
-        self.carry_currencies = self.carry_currencies.set_index(dates_usd)
+        self.carry_currencies = self.carry_currencies.set_index(dates_index)
 
     def trend_computations(self, trend_ind, short_term, long_term):
 
         #todo set the dates but décalage avec dates de 1
-        if trend_ind == "Total Return": #to change to enum
+        if trend_ind.lower() == "total return":
             currencies = constants.CURRENCIES_SPOT
         else:
             currencies = constants.CURRENCIES_CARRY
 
         # loop through each date
-        for currency in currencies:
+        for currency, currency_name_col in zip(currencies, constants.CURRENCIES_SPOT):
             if currency in self.data_currencies_usd.columns:
                 trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(short_term).mean()
                 trend_long_tmp = self.data_currencies_usd.loc[:, currency].rolling(long_term).mean()
@@ -139,7 +143,7 @@ class CurrencyComputations(DataProcessingEffect):
                 trend_short_tmp = self.data_currencies_eur.loc[:, currency].rolling(short_term).mean()
                 trend_long_tmp = self.data_currencies_eur.loc[:, currency].rolling(long_term).mean()
 
-            self.trend_currencies["Trend " + currency] = (trend_short_tmp / trend_long_tmp - 1) * 100
+            self.trend_currencies["Trend " + currency_name_col] = (trend_short_tmp / trend_long_tmp - 1) * 100
 
         self.trend_currencies = self.trend_currencies.loc[self.start_date_computations:]
 
@@ -148,9 +152,9 @@ class CurrencyComputations(DataProcessingEffect):
         tmp_start_date_computations = self.start_date_computations
         rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0]
 
-        for currency_carry, currency_spot in zip(constants.CURRENCIES_CARRY, constants.CURRENCIES_SPOT):
+        for currency_spot in constants.CURRENCIES_SPOT:
             combo = [0] # set the combo to zero as first value
-            trend = self.trend_currencies.loc[tmp_start_date_computations:, 'Trend ' + currency_carry].tolist()
+            trend = self.trend_currencies.loc[tmp_start_date_computations:, 'Trend ' + currency_spot].tolist()
             carry = self.carry_currencies.loc[tmp_start_date_computations:, 'Carry ' + currency_spot].tolist()
 
             for value in range(rows):
@@ -158,7 +162,7 @@ class CurrencyComputations(DataProcessingEffect):
                     if carry[value] >= cut_off and trend[value] >= 0:
                         combo.append(1)
                     else:
-                        if incl_shorts == "Yes" and carry[value] <= cut_off_s and trend[value] <= 0:
+                        if incl_shorts.lower() == 'yes' and carry[value] <= cut_off_s and trend[value] <= 0:
                             combo.append(-1)
                         else:
                             combo.append(0)
@@ -166,16 +170,15 @@ class CurrencyComputations(DataProcessingEffect):
                     if carry[value] >= (cut_off - threshold_for_closing) and trend[value] >= 0:
                         combo.append(1)
                     else:
-                        if incl_shorts == "Yes" and carry <= (cut_off_s + threshold_for_closing) and trend[value] <= 0:
+                        if incl_shorts.lower() == 'yes' and carry[value] <= (cut_off_s + threshold_for_closing) and trend[value] <= 0:
                             combo.append(-1)
                         else:
                             combo.append(0)
 
-            self.combo_currencies["Combo " + currency_spot] = combo
+            self.combo_currencies['Combo ' + currency_spot] = combo
 
-        dates_usd = self.data_currencies_usd[self.start_date_computations:].index.values  # property
         self.combo_currencies = self.combo_currencies.iloc[1:]  # remove the first line as it was the initialization of the combo
-        self.combo_currencies = self.combo_currencies.set_index(dates_usd)
+        self.combo_currencies = self.combo_currencies.set_index(dates_index)
 
     def return_ex_costs_computations(self):
 
@@ -190,7 +193,7 @@ class CurrencyComputations(DataProcessingEffect):
                 return_division_tmp = (self.data_currencies_eur.loc[self.start_date_computations:, currency_carry] /
                                        self.data_currencies_eur.loc[self.start_date_computations:, currency_carry].shift(1))
 
-            combo_tmp = self.combo_currencies["Combo " + currency_spot].tolist()
+            combo_tmp = self.combo_currencies['Combo ' + currency_spot].tolist()
             combo_tmp.pop(0)
             return_division_tmp = return_division_tmp.iloc[1:]
             return_tmp = return_division_tmp.tolist()
@@ -198,10 +201,9 @@ class CurrencyComputations(DataProcessingEffect):
             for values in range(len(return_tmp)):
                 first_return.append(first_return[values] * return_tmp[values] ** combo_tmp[values])
 
-            self.return_ex_costs["Return Ex Costs " + currency_spot] = first_return
+            self.return_ex_costs['Return Ex Costs ' + currency_spot] = first_return
 
-        dates_usd = self.data_currencies_usd[self.start_date_computations:].index.values # property
-        self.return_ex_costs = self.return_ex_costs.set_index(dates_usd)
+        self.return_ex_costs = self.return_ex_costs.set_index(dates_index)
 
     def return_incl_costs_computations(self):
 
@@ -220,10 +222,9 @@ class CurrencyComputations(DataProcessingEffect):
             for values in range(len(return_tmp)):
                 first_return.append(first_return[values] * return_tmp[values] ** combo_tmp[values])
 
-            self.return_incl_costs[name.replace("Return Ex Costs", "Return Incl Costs")] = first_return
+            self.return_incl_costs[name.replace('Return Ex Costs', 'Return Incl Costs')] = first_return
 
-        dates_usd = self.data_currencies_usd[self.start_date_computations:].index.values # property
-        self.return_incl_costs = self.return_incl_costs.set_index(dates_usd)
+        self.return_incl_costs = self.return_incl_costs.set_index(dates_index)
 
     def spot_ex_costs_computations(self):
 
@@ -250,11 +251,10 @@ class CurrencyComputations(DataProcessingEffect):
                 spot.append(spot[value] * spot_tmp[value] ** combo_tmp[value])
 
             # Store all the spot for each currency
-            self.spot_ex_costs["Spot Ex Costs " + currency] = spot
+            self.spot_ex_costs['Spot Ex Costs ' + currency] = spot
 
         # Set the dates to the index of self.spot_ex_costs
-        dates_usd = self.data_currencies_usd[self.start_date_computations:].index.values # property
-        self.spot_ex_costs = self.spot_ex_costs.set_index(dates_usd)
+        self.spot_ex_costs = self.spot_ex_costs.set_index(dates_index)
 
     def spot_incl_computations(self):
 
@@ -278,8 +278,7 @@ class CurrencyComputations(DataProcessingEffect):
             for values in range(len(spot_tmp)):
                 spot.append(spot[values] * spot_tmp[values] ** combo_tmp[values])
 
-            self.spot_incl_costs[name.replace("Spot Ex Costs", "Spot Incl Costs")] = spot
+            self.spot_incl_costs[name.replace('Spot Ex Costs', 'Spot Incl Costs')] = spot
 
         # set the dates to the index of self.spot_incl_costs
-        dates_usd = self.data_currencies_usd[self.start_date_computations:].index.values # property
-        self.spot_incl_costs = self.spot_incl_costs.set_index(dates_usd)
+        self.spot_incl_costs = self.spot_incl_costs.set_index(dates_index)

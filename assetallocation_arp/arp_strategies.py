@@ -8,7 +8,7 @@ sys.path.insert(0, ROOT_DIR)
 from assetallocation_arp.data_etl import import_data_times as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.common_libraries import models_names
-from assetallocation_arp.models.effect.effect_model import CurrencyComputations
+from assetallocation_arp.models.effect.main_effect import run_effect
 
 
 def run_model(model_type, mat_file, input_file):
@@ -24,37 +24,7 @@ def run_model(model_type, mat_file, input_file):
     if model_type == models_names.Models.maven.name:
         print(model_type)
     if model_type == models_names.Models.effect.name:
-
-        # todo create a meta class
-        # moving_average= {"short": input("Short: "), "long": input("Long: ")}
-        obj_import_data = CurrencyComputations()
-        obj_import_data.import_data_matlab()
-        obj_import_data.data_processing_effect()
-
-        obj_import_data.start_date_calculations = '2000-01-11'
-
-        obj_import_data.carry_computations(carry_type="Real")
-
-        trend_indicator = "Spot"   # could be Spot Total Return
-        moving_average = {"short_term": 4, "long_term": 16}
-        obj_import_data.trend_computations(trend_ind=trend_indicator, short_term=moving_average["short_term"],
-                                           long_term=moving_average["long_term"])
-
-        combo_inputs = {"cut_off": 0.002, "incl_shorts": "yes", "cut_off_s": 0.00, "threshold": 0.0025}
-        obj_import_data.combo_computations(cut_off=combo_inputs["cut_off"], incl_shorts=combo_inputs["incl_shorts"],
-                                           cut_off_s=combo_inputs["cut_off_s"],
-                                           threshold_for_closing=combo_inputs["threshold"])
-
-        obj_import_data.spot_ex_costs_computations()
-
-        obj_import_data.bid_ask_spread = 10
-        obj_import_data.spot_incl_computations()
-
-        obj_import_data.return_ex_costs_computations()
-        obj_import_data.return_incl_costs_computations()
-
-        obj_import_data.inflation_release_computations()
-
+        run_effect()
     if model_type == models_names.Models.curp.name:
         print(model_type)
     if model_type == models_names.Models.fica.name:
