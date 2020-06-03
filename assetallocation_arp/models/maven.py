@@ -52,7 +52,7 @@ def format_data(maven_inputs, asset_inputs, all_data):
     return asset_returns
 
 
-def excess_returns(maven_inputs, asset_inputs, asset_returns):
+def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
     # selecting maven assets and corresponding tickers
     if maven_inputs['er_tr'].item() == 'excess':
         maven_tickers = asset_inputs[['bbg_er_ticker', 'cash_ticker']]
@@ -108,3 +108,47 @@ def excess_returns(maven_inputs, asset_inputs, asset_returns):
 
     return maven_returns
 
+
+def calculating_signals(maven_inputs, asset_inputs, maven_returns):
+
+    n = len(maven_returns)
+    mom_weight = [maven_inputs['momentum_weight_' + str(x) + 'm'].item() for x in range(1, 7)]
+    vol_weight = [maven_inputs['volatility_weight_' + str(x) + 'y'].item() for x in range(1, 6)]
+    val_period = maven_inputs['val_period_months'].item()
+    base = maven_inputs['val_period_base'].item()
+    long_cutoff = maven_inputs['long_cutoff'].item()
+    short_cutoff = maven_inputs['short_cutoff'].item()
+    nr_long = maven_inputs['nr_long_assets'].item()
+    nr_short = maven_inputs['nr_short_assets'].item()
+    #
+    maven_prc = maven_returns.pct_change()
+    maven_sqr = maven_returns.pct_change() ** 2
+    #
+    volatility = 12 ** 0.5 * ((vol_weight[0] * maven_sqr.shift(0).rolling(12).sum() +   \
+                               vol_weight[1] * maven_sqr.shift(12).rolling(12).sum() +  \
+                               vol_weight[2] * maven_sqr.shift(24).rolling(12).sum() +  \
+                               vol_weight[3] * maven_sqr.shift(36).rolling(12).sum() +  \
+                               vol_weight[4] * maven_sqr.shift(48).rolling(12).sum()) / (12 * sum(vol_weight)) - \
+                             ((vol_weight[0] * maven_prc.shift(0).rolling(12).mean()  + \
+                               vol_weight[1] * maven_prc.shift(12).rolling(12).mean() + \
+                               vol_weight[2] * maven_prc.shift(24).rolling(12).mean() + \
+                               vol_weight[3] * maven_prc.shift(36).rolling(12).mean() + \
+                               vol_weight[4] * maven_prc.shift(48).rolling(12).mean()) / sum(vol_weight)) ** 2) ** 0.5
+    #
+    momentum = (((1 + maven_prc.shift(0)) ** mom_weight[0] * \
+                 (1 + maven_prc.shift(1)) ** mom_weight[1] * \
+                 (1 + maven_prc.shift(2)) ** mom_weight[2] * \
+                 (1 + maven_prc.shift(3)) ** mom_weight[3] * \
+                 (1 + maven_prc.shift(4)) ** mom_weight[4] * \
+                 (1 + maven_prc.shift(5)) ** mom_weight[5]) ** (12 / sum(mom_weight)) - 1) / volatility
+    #
+    value = -((maven_returns / maven_returns.shift(int(val_period - base / 2)).rolling(base).mean()) \
+                                                                        ** (12 / val_period) - 1) / volatility
+    #
+    long_signals = value.applymap(lambda x: -999 if x < -1 * long_cutoff else x)
+    short_signals = value.applymap(lambda x: -999 if x > short_cutoff else -x)
+    asset_long = value_long.rank(axis=1)
+    asset_short = value_short.rank(axis=1)
+
+
+    return momentum, value
