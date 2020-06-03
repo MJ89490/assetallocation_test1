@@ -151,6 +151,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.trend_currencies = self.trend_currencies[previous_start_date:].iloc[:-1]
         self.trend_currencies = self.trend_currencies.set_index(dates_index)
 
+
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
         tmp_start_date_computations = self.start_date_computations

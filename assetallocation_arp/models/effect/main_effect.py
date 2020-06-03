@@ -13,7 +13,7 @@ def run_effect():
     obj_import_data.carry_computations(carry_type='Real')
 
     # -------------------------- trend calculations -------------------------------------- #
-    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'} # could be Spot or Total Return
+    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'} # could be Spot or Total Return
     obj_import_data.trend_computations(trend_ind=trend_inputs['trend'], short_term=trend_inputs['short_term'],
                                        long_term=trend_inputs['long_term'])
 
