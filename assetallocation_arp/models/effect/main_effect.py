@@ -7,14 +7,14 @@ def run_effect():
     obj_import_data.import_data_matlab()
     obj_import_data.data_processing_effect()
 
-    obj_import_data.start_date_calculations = '2000-01-11'
+    obj_import_data.start_date_calculations = '2000-01-10'
 
     # -------------------------- carry calculations -------------------------------------- #
     obj_import_data.carry_computations(carry_type='Real')
 
     # -------------------------- trend calculations -------------------------------------- #
-    trend_inputs = {'short_term': 4, 'long_term': 16, 'spot': 'spot'} # could be Spot or Total Return
-    obj_import_data.trend_computations(trend_ind=trend_inputs, short_term=trend_inputs['short_term'],
+    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'} # could be Spot or Total Return
+    obj_import_data.trend_computations(trend_ind=trend_inputs['trend'], short_term=trend_inputs['short_term'],
                                        long_term=trend_inputs['long_term'])
 
     # -------------------------- combo calculations -------------------------------------- #

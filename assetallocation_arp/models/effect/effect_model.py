@@ -4,7 +4,7 @@ Created on 12/05/2020
 """
 
 from models.effect.data_processing_effect import DataProcessingEffect
-import models.effect.constants as constants
+import common_libraries.constants as constants
 import pandas as pd
 import numpy as np
 
@@ -128,11 +128,10 @@ class CurrencyComputations(DataProcessingEffect):
 
     def trend_computations(self, trend_ind, short_term, long_term):
 
-        #todo set the dates but décalage avec dates de 1
-        if trend_ind.lower() == "total return":
-            currencies = constants.CURRENCIES_SPOT
-        else:
+        if trend_ind.lower() == 'total return':
             currencies = constants.CURRENCIES_CARRY
+        else:
+            currencies = constants.CURRENCIES_SPOT
 
         # loop through each date
         for currency, currency_name_col in zip(currencies, constants.CURRENCIES_SPOT):
@@ -143,9 +142,14 @@ class CurrencyComputations(DataProcessingEffect):
                 trend_short_tmp = self.data_currencies_eur.loc[:, currency].rolling(short_term).mean()
                 trend_long_tmp = self.data_currencies_eur.loc[:, currency].rolling(long_term).mean()
 
-            self.trend_currencies["Trend " + currency_name_col] = (trend_short_tmp / trend_long_tmp - 1) * 100
+            self.trend_currencies['Trend ' + currency_name_col] = ((trend_short_tmp / trend_long_tmp)-1)*100
 
-        self.trend_currencies = self.trend_currencies.loc[self.start_date_computations:]
+        # take the previous date compared to self.date_computations because there is a shift of 1 because of rolling
+        start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_computations)
+        previous_start_date = self.data_currencies_usd.index[start_date_loc - 1]
+
+        self.trend_currencies = self.trend_currencies[previous_start_date:].iloc[:-1]
+        self.trend_currencies = self.trend_currencies.set_index(dates_index)
 
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
