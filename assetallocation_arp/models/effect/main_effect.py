@@ -7,7 +7,7 @@ def run_effect():
     obj_import_data.import_data_matlab()
     obj_import_data.data_processing_effect()
 
-    obj_import_data.start_date_calculations = '2000-01-10'
+    obj_import_data.start_date_calculations = '2000-01-11'
 
     # -------------------------- carry calculations -------------------------------------- #
     obj_import_data.carry_computations(carry_type='Real')
