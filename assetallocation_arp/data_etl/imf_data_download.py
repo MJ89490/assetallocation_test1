@@ -114,7 +114,8 @@ def extract_required_fields(downloaded_file, target_dir):
     file_path = os.path.abspath(os.path.join(target_dir, downloaded_file))
     data_path = os.path.dirname(file_path)
 
-    aa_required_fields = ['Country', 'Subject Descriptor', 'Subject Notes', 'Units', 'Scale', 'Country/Series-specific Notes', 'Estimates Start After']
+    # aa_required_fields = ['Country', 'Subject Descriptor', 'Subject Notes', 'Units', 'Scale', 'Country/Series-specific Notes', 'Estimates Start After']
+    aa_required_fields = ['Country', 'Subject Notes']
     available_columns = pd.read_csv(file_path, sep="\t", nrows=1).columns.tolist()
     # get last 8 years only
     last_8_years = available_columns[-9:-1]
@@ -123,16 +124,22 @@ def extract_required_fields(downloaded_file, target_dir):
     log.info('Starting extraction of data from: %s' % file_path)
     result = get_encoding(file_path)
 
-    imf_required_data = pd.read_csv(file_path, sep="\t", usecols = aa_required_fields, encoding = result['encoding'])
+    # Dataframe (imf_required_data) with the data and required fields
+    imf_required_data = pd.read_csv(file_path, sep="\t", usecols=aa_required_fields, encoding=result['encoding'])
     print_all_columns_in_dataframe(imf_required_data, 4)
-    footer= get_footer_of_csv_file(file_path)
+    footer = get_footer_of_csv_file(file_path)
 
-    for key, val in filter_attributes.items():
-        imf_required_data = imf_required_data.loc[(imf_required_data[key] == val)]
+    # Select only the data for 'Inflation, end of period consumer price'
+    key_sentence = ' Annual percentages of end of period consumer prices are year-on-year changes.'
+    imf_required_data_inflation = imf_required_data.loc[imf_required_data['Subject Notes'] == key_sentence]
+    del imf_required_data_inflation['Subject Notes']
+    # for key, val in filter_attributes.items():
+    #     imf_required_data = imf_required_data.loc[(imf_required_data[key] == val)]
 
     # write the dataframe to a file TODO later change this to database
     aa_imf_file = os.path.abspath(os.path.join(data_path, f"aa-{downloaded_file}"))
-    imf_required_data.to_csv(aa_imf_file, index = False, sep = "\t")
+    imf_required_data_inflation.to_csv('data_imf_inflation', index=False)
+    imf_required_data.to_csv(aa_imf_file, index=False, sep="\t")
     # write the footer separately
     with open(aa_imf_file, "a+") as wp:
         wp.write("\n")

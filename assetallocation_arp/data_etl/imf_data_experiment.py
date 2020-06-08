@@ -11,7 +11,7 @@ url_2014 = 'http://www.imf.org/external/pubs/ft/weo/2014/01/weodata/WEOApr2014al
 url_2015 = 'http://www.imf.org/external/pubs/ft/weo/2015/01/weodata/WEOApr2015all.xls'
 url_2019_oct = 'http://www.imf.org/external/pubs/ft/weo/2019/02/weodata/WEOOct2019all.xls'
 url_2019_apr =  'http://www.imf.org/external/pubs/ft/weo/2019/02/weodata/WEOApr2019all.xls'
-
+url_2020_apr =  'http://www.imf.org/external/pubs/ft/weo/2020/01/weodata/WEOApr2020all.xls'
 url = url_2019_oct
 
 # filter those attributes for the columns for eg. if columnname is Subject Descriptor filter for
