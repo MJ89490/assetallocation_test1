@@ -1,90 +1,71 @@
 # Contains view functions for various URLs
-from app import app
-from app.forms import LoginForm
-from flask import render_template #html templates
-from flask import redirect
+from flask import render_template
 from flask import flash
 from flask import url_for
+from flask import redirect
+from app import app
+from app.forms import LoginForm
+from .models import User
+
+from flask_login import login_required
+from flask_login import logout_user
+from flask_login import login_user
+from flask_login import current_user
+from flask import g, abort
+
+from .userIdentification import randomIdentification
+
+@app.before_request
+def before_request():
+    g.user = current_user
+
 
 @app.route('/')
 @app.route('/home')
 def home():
-    user = {'username': 'AJ89720'}
-    return render_template('home.html', title='HomePage', user=user)
+    return render_template('home.html', title='HomePage')
 
-# A Login form for users
-@app.route('/login', methods=['GET', 'POST'])
-#GET: returns the information to the client
-#PUT: the browser submits form data to tge server
+
+@app.route('/login', methods=['GET'])
 def login():
     form = LoginForm()
+    return render_template('login.html', title='LoginPage', form=form)
+
+
+@app.route('/login', methods=['POST'])
+def login_post():
+    username_origin = "database"
+    password_origin = "1234*"
+    form = LoginForm()
+
     if form.validate_on_submit():
-        #flash function: show a message to the user
-        flash('Login requested for user {}, remember_me={}'.format(form.username.data, form.remember_me.data))
-        #redirect function: client we browser automatically navigate to a different page ---> home page
-        return redirect(url_for('home'))
-    return render_template('login.html', title='Login', form=form)
+        username = form.username.data
+        password = form.password.data
+        print("username", username)
+        print("password", password)
+        hash_password = User.hash_password(password=password)
+        print(hash_password)
+        if username != username_origin or hash_password != password_origin:
+            flash('Please check your login details and try again.')
+            return redirect(url_for('login'))
+        else:
+            track_id = randomIdentification()
+            login_user(User(track_id))
+            return redirect(url_for('protected_models'))
+    # when the user click on the submit button without adding credentials
+    return redirect(url_for('login'))
 
 
-# The home page of the application
-# @app.route('/')
-# @app.route('/index')
-# def index():
-#     user = {'username': 'AJ89720'}
-#     return render_template('home.html', title='Home', user=user)
+@app.route('/selectArpModels')
+@login_required
+def protected_models():
+    return render_template('selectArpModels.html', title="Models")
 
 
-
-#
-# # A Change Password form for users
-# @app.route('/changePass')
-# def changePass():
-#     form = ChangePassword()
-#     return render_template('form.html', title='Sign In', main_heading= 'Password Reset', form=form)
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
-# @app.route('/mainPage')
-# def mainPage():
-#     user = {'username': 'JS89652'}
-#     tableData = {'headers' : ['chrome', 'Safari', 'Mozilla', 'Firefox', 'NewCase'],
-#                  'rows' : [[0, 0, 0, 0, 0],
-#                            [1, 0, 0, 0, 0],
-#                            [0, 1, 0, 0, 0],
-#                            [0, 0, 1, 0, 0],
-#                            [0, 0, 0, 1, 0]]}
-#     lenHead = len(tableData['headers'])
-#     lenRow = len(tableData['rows'])
-#     return render_template('table.html', title='Home', user=user, tableData=tableData,lenHead=lenHead,lenRow=lenRow)
-#
-# # An Output page containing charts
-# @app.route('/charts', methods=["GET"])
-# def createlchart():
-#     user = {'username': 'JS89652'}
-#     data = json.dumps([1.0, 2.0, 3.0])
-#     labels = json.dumps(["12-31-18", "01-01-19", "01-02-19"])
-#     return render_template('lineChart.html', title='Charts ', user=user, data=data, labels=labels)
-#
-# @app.route('/mainPage2')
-# def mainPage2():
-#     user = {'username': 'JS89652'}
-#     tiles = [
-#         {
-#             'heading': 'Home',
-#             'img': 'Homebtn.png!'
-#         },
-#         {
-#             'heading': 'Login',
-#             'img': 'Homebtn.png'
-#         },
-#         {
-#             'heading': 'Analytics',
-#             'img': 'Homebtn.png'
-#         },
-#         {
-#             'heading': 'Help with Development',
-#             'img': 'Homebtn.png'
-#         }
-#     ]
-#
-#     return render_template('Main2.html', title='Home', tiles=tiles)
-#
