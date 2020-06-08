@@ -55,6 +55,7 @@ def build_weo_data(date):
     return (year, release_number, file_base_name)
 #endregion
 
+
 #region build the weo url by the dataset code
 def build_weo_url_by_dataset_code(date):
     """WEO is a particular case of 2 datasets provided as Excel files.
@@ -69,12 +70,14 @@ def build_weo_url_by_dataset_code(date):
     }
 #endregion
 
+
 #region get the encoding
 def get_encoding(file_path):
     with open(file_path, 'rb') as f:
         result = chardet.detect(f.read())
     return (result)
 #endregion
+
 
 #region get the footer of the csv file
 def get_footer_of_csv_file(file_path):
@@ -90,6 +93,7 @@ def get_footer_of_csv_file(file_path):
         footer = f.readline().decode()
     return (footer)
 #endregion
+
 
 #region print all the columns in the dataframe
 def print_all_columns_in_dataframe(df, number_of_rows=3):

@@ -4,6 +4,7 @@ Created on 12/05/2020
 """
 
 from models.effect.data_processing_effect import DataProcessingEffect
+from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 import common_libraries.constants as constants
 import pandas as pd
 import numpy as np
@@ -46,7 +47,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         dates_index = self.data_currencies_usd[self.start_date_computations:].index.values
 
-    def inflation_release_computations(self):
+    def inflation_release_computations(self): #todo create another file to host the fct
         dates_index = self.data_currencies_usd.loc[self.start_date_computations:].index.values
         weo_dates = []
 
@@ -65,6 +66,33 @@ class CurrencyComputations(DataProcessingEffect):
             weo_dates.append(weo_date)
 
         self.inflation_release["Inflation Release"] = weo_dates
+
+    def inflation_differential(self): #todo create another file to host the fct
+        # todo add an automatic paser in the main_effect.py to specify the path of the csv file to store the results
+        scrape_imf_data()
+        from pandas import DataFrame
+        # todo change the path and create an automatic one
+        inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\models\effect\data_imf_inflation.csv')
+
+        # Select the countries Euro area ==> doesnt exist in the country col + some countries are missing
+        countries = ['Brazil', 'Argentina',  'Mexico', 'Colombia', 'Chile', 'Peru', 'Turkey', 'Russia', 'Czech Republic',
+                     'Hungary', 'Poland', 'South Africa', 'China', 'Korea', 'Malaysia', 'Indonesia', 'India',
+                     'Philippines', 'Taiwan Province of China', 'Thailand']
+        # currencies = ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'CZK', 'HUF', 'PLN', 'ZAR', 'CNY', 'KRW',
+        #               'MYR', 'IDR', 'INR', 'PHP', 'TWD', 'THB']
+        countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP', 'Chile': 'CLP', 'Peru': 'PEN',
+                    'Turkey': 'TRY', 'Russia': 'RUB', 'Czech Republic': 'CZK', 'Hungary': 'HUF', 'Poland': 'PLN',
+                    'South Africa': 'ZAR', 'China': 'CNY', 'Korea': 'KRW', 'Malaysia': 'MYR', 'Indonesia': 'IDR',
+                    'India': 'INR', 'Philippines': 'PHP', 'Taiwan Province of China': 'TWD', 'Thailand': 'THB'}
+
+        inflation_data = DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
+
+        inflation_values = inflation_values[inflation_values['Country'].isin(countries)]
+
+
+        # fusionner les deux dataframes
+
+        print()
 
     def carry_computations(self, carry_type):
 
@@ -150,8 +178,6 @@ class CurrencyComputations(DataProcessingEffect):
 
         self.trend_currencies = self.trend_currencies[previous_start_date:].iloc[:-1]
         self.trend_currencies = self.trend_currencies.set_index(dates_index)
-
-        self.trend_currencies.to_csv('trend_spot_origin.csv')
 
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
