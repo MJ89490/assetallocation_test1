@@ -23,11 +23,24 @@ def run_model(model_type, mat_file=None, input_file=None, model_date=None):
 		# get inputs from excel and matlab data
 		maven_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
 																			model_date)
-		# create yield curves and calculate carry & roll down
-		maven_assets, maven_cash = maven.format_data(maven_inputs, asset_inputs, all_data)
+		# calculate asset return index series and and maven's excess return index series
+		asset_returns = maven.format_data(maven_inputs, asset_inputs, all_data)
+		maven_returns = maven.calculating_excess_returns(maven_inputs, asset_inputs, asset_returns)
+		# calculate value and momentum scores, and the top/bottom countries on the combination score
+		momentum, value, long_signals, short_signals, long_signals_name, short_signals_name, value_last, \
+											momentum_last, long_exposures, short_exposures, volatility = \
+														maven.calculating_signals(maven_inputs, maven_returns)
+		# calculate the maven return series
+		returns_maven, asset_class_long, asset_class_short,asset_contribution_long, asset_contribution_short = \
+		 maven.run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals, short_signals)
+		# write results to output sheet
+		write_output_to_excel({models.Models.maven.name: (momentum, value, long_signals_name, short_signals_name, \
+					value_last, momentum_last, long_exposures, short_exposures, returns_maven, asset_class_long, \
+				asset_class_short, asset_contribution_long, asset_contribution_short, asset_inputs, maven_inputs)})
 
 	if model_type == models.Models.effect.name:
 		print(model_type)
+
 	if model_type == models.Models.curp.name:
 		curp_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 		print(model_type)
@@ -102,6 +115,49 @@ def write_output_to_excel(model_outputs):
 		#sheet_fica_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 		sheet_fica_input.range('rng_input_fica_used').value = fica_inputs
 		sheet_fica_input.range('rng_input_fica_used').offset(3, 0).value = asset_inputs
+
+	if models.Models.maven.name in model_outputs.keys():
+		momentum, value, long_signals_name, short_signals_name, value_last, momentum_last, long_exposures, \
+				short_exposures, returns_maven, asset_class_long, asset_class_short, asset_contribution_long, \
+					asset_contribution_short, asset_inputs, maven_inputs = model_outputs[models.Models.maven.name]
+		path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
+		wb = xw.Book(path)
+		sheet_maven_output = wb.sheets['maven_output']
+		sheet_maven_input = wb.sheets['maven_input']
+
+		n_columns = len(value.columns) + 3
+		m_columns = len(long_signals_name.columns) + 3
+		sheet_maven_output.clear_contents()
+		sheet_maven_output.range('rng_maven_output').offset(-1, 0).value = "Value Scores"
+		sheet_maven_output.range('rng_maven_output').value = value
+		sheet_maven_output.range('rng_maven_output').offset(-1, n_columns).value = "Momentum Scores"
+		sheet_maven_output.range('rng_maven_output').offset(0, n_columns).value = momentum
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2 * n_columns).value = "Long Asset Signals"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2 * n_columns).value = long_signals_name
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2 * n_columns + m_columns).value = "Short Asset Signals"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2 * n_columns + m_columns).value = short_signals_name
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2 * n_columns + 2 * m_columns).value = "Value Last"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2 * n_columns + 2 * m_columns).value = value_last
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2 * n_columns + 2*m_columns+2).value = "Momentum Last"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2 * n_columns + 2 * m_columns + 2).value = momentum_last
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2 * n_columns + 2*m_columns+7).value = "Long Exposures"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2 * n_columns + 2 * m_columns + 7).value = long_exposures
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2*n_columns + 2*m_columns+9).value = "Short Exposures"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2*n_columns + 2*m_columns+9).value = short_exposures
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2*n_columns + 2*m_columns+13).value = "Maven Returns"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2*n_columns + 2*m_columns+13).value = returns_maven
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2*n_columns + 2*m_columns+22).value = "Asset Class %L"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2*n_columns + 2*m_columns+22).value = asset_class_long
+		sheet_maven_output.range('rng_maven_output').offset(-1, 2*n_columns + 2*m_columns+31).value = "Asset Class %S"
+		sheet_maven_output.range('rng_maven_output').offset(0, 2*n_columns + 2*m_columns+31).value = asset_class_short
+		sheet_maven_output.range('rng_maven_output').offset(-1,2*n_columns+2*m_columns+40).value="Asset Contribution L"
+		sheet_maven_output.range('rng_maven_output').offset(0,2*n_columns+2*m_columns+40).value=asset_contribution_long
+		sheet_maven_output.range('rng_maven_output').offset(-1,2*n_columns+2*m_columns+49).value="Asset Contribution S"
+		sheet_maven_output.range('rng_maven_output').offset(0,2*n_columns+2*m_columns+49).value=asset_contribution_short
+		# write inputs used to excel and run time
+		#sheet_maven_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+		sheet_maven_input.range('rng_input_maven_used').value = maven_inputs
+		sheet_maven_input.range('rng_input_maven_used').offset(3, 0).value = asset_inputs
 
 
 
