@@ -13,10 +13,10 @@ from scipy.interpolate import CubicSpline
 def format_data(fica_inputs, asset_inputs, all_data):
     """
     creating dataframe with yield curve data
-    :param pd.DataFrame fica_inputs:
-    :param pd.DataFrame asset_inputs:
-    :param pd.DataFrame all_data:
-    :return:
+    :param pd.DataFrame fica_inputs: parameter choices for the model
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame all_data: historical bloomberg time series
+    :return: dataframe with historical yield curves per country
     """
     # reading inputs and shortening data
     country = asset_inputs['country']
@@ -42,10 +42,10 @@ def format_data(fica_inputs, asset_inputs, all_data):
 def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
     """
     creating dataframe with carry + roll down and return calculations
-    :param pd.DataFrame fica_inputs:
-    :param pd.DataFrame asset_inputs:
-    :param pd.DataFrame curve:
-    :return:
+    :param pd.DataFrame fica_inputs: parameter choices for the model
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame curve: dataframe with historical yield curves per country
+    :return: dataframe with historical carry and roll down and return calculations per country
     """
     # reading inputs
     tenor = fica_inputs['tenor'].item()
@@ -89,10 +89,10 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
 def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns):
     """"
     creating dataframe with country signals and contributions and overall model performances
-    :param pd.DataFrame fica_inputs:
-    :param pd.DataFrame carry_roll:
-    :param pd.DataFrame country_returns:
-    :return:
+    :param pd.DataFrame fica_inputs: parameter choices for the model
+    :param pd.DataFrame carry_roll: historical carry and roll down calculations per country
+    :param pd.DataFrame country_returns: historical return calculations per country
+    :return: dataframes with monthly model signals, cumulative country contributions and model returns
     """
     # reading inputs
     returns = pd.DataFrame()
@@ -127,11 +127,11 @@ def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns):
 def run_daily_attribution(fica_inputs, asset_inputs, all_data, signals):
     """
     performing the daily attributions and inputs for the charts
-    :param pd.DataFrame fica_inputs:
-    :param pd.DataFrame asset_inputs:
-    :param pd.DataFrame all_data:
-    :param pd.DataFrame signals:
-    :return:
+    :param pd.DataFrame fica_inputs: parameter choices for the model
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame all_data: historical bloomberg time series
+    :param pd.DataFrame signals: monthly model signals
+    :return: dataframes with daily carry and roll down and return calculations
     """
     # reading inputs and shortening data
     carry_daily = pd.DataFrame()
