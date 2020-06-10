@@ -47,7 +47,7 @@ def format_data(maven_inputs, asset_inputs, all_data):
     days = [np.array((cash.index - cash.index.shift(-1)).days)] * sum(boolean_cash)
     days = pd.DataFrame(np.transpose(days), columns=cash.columns, index=cash.index)
     cash = (1 + (days * cash) / 36500).cumprod()
-    # merging both pandaframes
+    # merging both dataframes
     asset_returns = pd.merge(assets, cash, right_index=True, left_index=True)
     return asset_returns
 
