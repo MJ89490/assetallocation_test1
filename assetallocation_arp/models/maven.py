@@ -11,10 +11,10 @@ import pandas as pd
 def format_data(maven_inputs, asset_inputs, all_data):
     """
     creating dataframe with asset return index series
-    :param pd.DataFrame maven_inputs:
-    :param pd.DataFrame asset_inputs:
-    :param pd.DataFrame all_data:
-    :return:
+    :param pd.DataFrame maven_inputs: parameter choices for the model
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame all_data: historical bloomberg time series
+    :return: dataframe with formatted asset return series
     """
     # reading inputs
     date_from = maven_inputs['date_from'].item()
@@ -55,10 +55,10 @@ def format_data(maven_inputs, asset_inputs, all_data):
 def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
     """
     creating dataframe with maven's excess return index series
-    :param pd.DataFrame maven_inputs:
-    :param pd.DataFrame asset_inputs:
-    :param pd.DataFrame asset_returns:
-    :return:
+    :param pd.DataFrame maven_inputs: parameter choices for the model
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame asset_returns: formatted asset return series
+    :return: dataframe with formatted return series for maven assets
     """
     # selecting maven assets and corresponding tickers
     if maven_inputs['er_tr'].item() == 'excess':
@@ -85,7 +85,6 @@ def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
     cash = pd.DataFrame(cash)
     cash.index = assets.index
     cash.columns = assets.columns
-    # excess returns
     asset_excess = (assets / assets.shift()) / (cash / cash.shift())
     # combining combination assets (e.g. periphery)
     asset_excess = asset_excess.to_numpy()
@@ -111,15 +110,13 @@ def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
 def calculating_signals(maven_inputs, maven_returns):
     """
     creating dataframes with value and momentum scores, and the top/bottom countries on the combination score
-    :param pd.DataFrame maven_inputs:
-    :param pd.DataFrame maven_returns:
-    :return:
+    :param pd.DataFrame maven_inputs: parameter choices for the model
+    :param pd.DataFrame maven_returns: formatted return series for maven assets
+    :return: dataframes with momentum and value scores, volatility matrix, and long and short signals
     """
     # reading inputs
     mom_weight = [maven_inputs['momentum_weight_' + str(x) + 'm'].item() for x in range(1, 7)]
     vol_weight = [maven_inputs['volatility_weight_' + str(x) + 'y'].item() for x in range(1, 6)]
-    val_period = maven_inputs['val_period_months'].item()
-    base = maven_inputs['val_period_base'].item()
     long_cutoff = maven_inputs['long_cutoff'].item()
     short_cutoff = maven_inputs['short_cutoff'].item()
     number_signals = maven_inputs['number_assets'].item()
@@ -131,15 +128,15 @@ def calculating_signals(maven_inputs, maven_returns):
     if frequency == 'monthly':
         n = 12
         m = maven_inputs['val_period_months'].item()
-        b = maven_inputs['val_period_base'].item()
+        base = maven_inputs['val_period_base'].item()
         ann = 0
-        wm = 1
+        w_m = 1
     else:
         n = 52
         m = int(maven_inputs['val_period_months'].item() / 12 * 52)
-        b = int(maven_inputs['val_period_base'].item() / 12 * 52)
+        base = int(maven_inputs['val_period_base'].item() / 12 * 52)
         ann = 1
-        wm = 4
+        w_m = 4
     vol1 = 0
     vol2 = 0
     mom = 1
@@ -147,11 +144,11 @@ def calculating_signals(maven_inputs, maven_returns):
         vol1 = vol1 + vol_weight[i] * maven_sqr.shift(i * n).rolling(n).mean()
         vol2 = vol2 + vol_weight[i] * maven_prc.shift(i * n).rolling(n).mean()
     for i in range(0, len(mom_weight)):
-        mom = mom * (maven_returns.shift(i * wm) / maven_returns.shift((i + 1) * wm)) ** mom_weight[i]
+        mom = mom * (maven_returns.shift(i * w_m) / maven_returns.shift((i + 1) * w_m)) ** mom_weight[i]
     volatility = n ** 0.5 * (vol1 / sum(vol_weight) - (vol2 / sum(vol_weight)) ** 2) ** 0.5
     momentum = (mom ** ((12 + ann) / sum(mom_weight)) - 1) / volatility
     # calculating the value scores
-    value = ((maven_returns / maven_returns.shift(int(m - b / 2)).rolling(b).mean()) ** (n / m) - 1) / volatility
+    value = ((maven_returns / maven_returns.shift(int(m - base / 2)).rolling(base).mean()) ** (n / m) - 1) / volatility
     # shorting the dataframes and sorting last observation
     start_date = value.first_valid_index()
     value = value[start_date:]
@@ -175,7 +172,7 @@ def calculating_signals(maven_inputs, maven_returns):
     # ranking signals
     long_signals_rank = long_signals.rank(axis=1, method='first', ascending=False)
     short_signals_rank = short_signals.rank(axis=1, method='first', ascending=False)
-    # determining exposures
+    # determining aggregate exposures for mainly the weekly model
     if frequency == 'monthly':
         m = 1
     else:
@@ -197,15 +194,26 @@ def calculating_signals(maven_inputs, maven_returns):
 
 
 def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals, short_signals):
-
+    """
+    creating dataframes with maven returns series, asset class exposures and contributions
+    :param pd.DataFrame maven_inputs: parameter choices for the model
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame maven_returns: formatted return series for maven assets
+    :param pd.DataFrame maven_returns: volatility matrix
+    :param pd.DataFrame long_signals: asset long signals
+    :param pd.DataFrame short_signals: asset short signals
+    :return: dataframes with maven return series, asset class exposures and contributions
+    """
+    # reading inputs and aligning dataframes
     m = len(maven_returns.columns)
     n = len(long_signals)
     number_signals = maven_inputs['number_assets'].item()
     maven_returns = maven_returns.tail(n)
     volatility = volatility.tail(n)
+    # determining equal weights and equal volatility weights
     equal_notional = pd.DataFrame((1 / m) * np.ones((n, m)), index=long_signals.index, columns=long_signals.columns)
     equal_risk = ((1 / volatility).T / (1 / volatility).sum(axis=1)).T
-    # determining benchmark returns
+    # determining benchmark returns, fully invested across all assets
     returns_en = maven_returns.pct_change() * equal_notional.shift()
     returns_er = maven_returns.pct_change() * equal_risk.shift()
     returns_en.iloc[0, :] = 0
@@ -219,9 +227,10 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     long_exposures = long_signals_rank <= number_signals
     short_exposures = short_signals_rank <= number_signals
     vol_long = long_exposures * (1 / volatility)
-    vol_short = short_exposures * volatility
-    equal_risk_long = (vol_long.T / vol_long.sum(axis=1)).T
-    equal_risk_short = (vol_short.T / vol_short.sum(axis=1)).T
+    vol_short = short_exposures * (1 / volatility)
+    # capping asset weight to 50%
+    equal_risk_long = cap_and_redistribute((vol_long.T / vol_long.sum(axis=1)).T, 0.5)
+    equal_risk_short = cap_and_redistribute((vol_short.T / vol_short.sum(axis=1)).T, 0.5)
     # calculating turnover
     costs = asset_inputs.groupby('asset').first(keep='first')['transaction_costs'][equal_risk.columns].tolist()
     sub_equal_risk_long = equal_risk_long - equal_risk_long.shift()
@@ -253,3 +262,11 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     asset_class_long = asset_class_long.groupby(asset_class_long.index).sum().T
     asset_class_short = asset_class_short.groupby(asset_class_short.index).sum().T
     return returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short
+
+
+def cap_and_redistribute(weight_matrix, cap):
+    condition = weight_matrix <= cap
+    cap_weight = cap * (condition.count(axis=1) - condition.sum(axis=1))
+    rest_weight = (weight_matrix * condition).sum(axis=1)
+    cap_matrix = weight_matrix.mul((1 - cap_weight) / rest_weight, axis=0).clip(upper=cap)
+    return cap_matrix
