@@ -50,7 +50,7 @@ class CurrencyComputations(DataProcessingEffect):
     def inflation_release_computations(self): #todo create another file to host the fct
         dates_index = self.data_currencies_usd.loc[self.start_date_computations:].index.values
         weo_dates = []
-
+        # todo 19/04/2006 put latest!!
         for date in dates_index:
             date = pd.to_datetime(date)
             if date.month < 4:
@@ -67,32 +67,27 @@ class CurrencyComputations(DataProcessingEffect):
 
         self.inflation_release["Inflation Release"] = weo_dates
 
+
     def inflation_differential(self): #todo create another file to host the fct
-        # todo add an automatic paser in the main_effect.py to specify the path of the csv file to store the results
+        # todo add an automatic parser in the main_effect.py to specify the path of the csv file to store the results
         scrape_imf_data()
         from pandas import DataFrame
-        # todo change the path and create an automatic one
-        inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\models\effect\data_imf_inflation.csv')
+        # todo change the path and create an automatic one DONT HAVE EUR TAKE GERMANY??
+        inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOApr2019all.csv')
 
-        # Select the countries Euro area ==> doesnt exist in the country col + some countries are missing
-        countries = ['Brazil', 'Argentina',  'Mexico', 'Colombia', 'Chile', 'Peru', 'Turkey', 'Russia', 'Czech Republic',
-                     'Hungary', 'Poland', 'South Africa', 'China', 'Korea', 'Malaysia', 'Indonesia', 'India',
-                     'Philippines', 'Taiwan Province of China', 'Thailand']
-        # currencies = ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'CZK', 'HUF', 'PLN', 'ZAR', 'CNY', 'KRW',
-        #               'MYR', 'IDR', 'INR', 'PHP', 'TWD', 'THB']
-        countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP', 'Chile': 'CLP', 'Peru': 'PEN',
-                    'Turkey': 'TRY', 'Russia': 'RUB', 'Czech Republic': 'CZK', 'Hungary': 'HUF', 'Poland': 'PLN',
-                    'South Africa': 'ZAR', 'China': 'CNY', 'Korea': 'KRW', 'Malaysia': 'MYR', 'Indonesia': 'IDR',
-                    'India': 'INR', 'Philippines': 'PHP', 'Taiwan Province of China': 'TWD', 'Thailand': 'THB'}
+        countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP',
+                                'Chile': 'CLP', 'Peru': 'PEN', 'Turkey': 'TRY', 'Russia': 'RUB',
+                                'Czech Republic': 'CZK', 'Hungary': 'HUF', 'Poland': 'PLN', 'South Africa': 'ZAR',
+                                'China': 'CNY', 'Korea': 'KRW', 'Malaysia': 'MYR', 'Indonesia': 'IDR', 'India': 'INR',
+                                'Philippines': 'PHP', 'Taiwan Province of China': 'TWD', 'Thailand': 'THB',
+                                'United Kingdom': 'GBP', 'United States': 'USD'}
 
         inflation_data = DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
+        inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
 
-        inflation_values = inflation_values[inflation_values['Country'].isin(countries)]
-
-
-        # fusionner les deux dataframes
-
-        print()
+        inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
+        inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
+        inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
 
     def carry_computations(self, carry_type):
 

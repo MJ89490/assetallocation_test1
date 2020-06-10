@@ -119,7 +119,7 @@ def extract_required_fields(downloaded_file, target_dir):
     data_path = os.path.dirname(file_path)
 
     # aa_required_fields = ['Country', 'Subject Descriptor', 'Subject Notes', 'Units', 'Scale', 'Country/Series-specific Notes', 'Estimates Start After']
-    aa_required_fields = ['Country', 'Subject Notes']
+    aa_required_fields = ['Country', 'Subject Descriptor', 'Subject Notes', 'Units']
     available_columns = pd.read_csv(file_path, sep="\t", nrows=1).columns.tolist()
     # get last 8 years only
     last_8_years = available_columns[-9:-1]
@@ -127,20 +127,24 @@ def extract_required_fields(downloaded_file, target_dir):
 
     log.info('Starting extraction of data from: %s' % file_path)
     result = get_encoding(file_path)
-
+    print(available_columns)
     # Dataframe (imf_required_data) with the data and required fields
     imf_required_data = pd.read_csv(file_path, sep="\t", usecols=aa_required_fields, encoding=result['encoding'])
     print_all_columns_in_dataframe(imf_required_data, 4)
     footer = get_footer_of_csv_file(file_path)
 
     # Select only the data for 'Inflation, end of period consumer price'
-    key_sentence = ' Annual percentages of end of period consumer prices are year-on-year changes.'
-    imf_required_data_inflation = imf_required_data.loc[imf_required_data['Subject Notes'] == key_sentence]
-    del imf_required_data_inflation['Subject Notes']
+    # key_sentence = ' Annual percentages of end of period consumer prices are year-on-year changes.'
+    key_sentence = 'Inflation, end of period consumer prices'
+
+    imf_required_data_inflation = imf_required_data.loc[imf_required_data['Subject Descriptor'] == key_sentence]
+    imf_required_data_inflation = imf_required_data_inflation.loc[(imf_required_data_inflation['Units'] == 'Annual percent change') | (imf_required_data_inflation['Units'] == 'Percent change')]
+
 
     # write the dataFrame to a file
     aa_imf_file = os.path.abspath(os.path.join(data_path, f"aa-{downloaded_file}"))
-    imf_required_data_inflation.to_csv('data_imf_inflation.csv', index=False)
+    data_imf_file = os.path.abspath(os.path.join(data_path, f"data_imf_{downloaded_file}"))
+    imf_required_data_inflation.to_csv(data_imf_file, index=False)
     imf_required_data.to_csv(aa_imf_file, index=False, sep="\t")
     # write the footer separately
     with open(aa_imf_file, "a+") as wp:
@@ -191,9 +195,12 @@ def parser_data():
     parser.add_argument('--log', default='INFO', help='level of logging messages')
     args = parser.parse_args()
 
-    if args.date is None:
-        today = date.today()
-        args.date = today.strftime("%d-%m-%Y")
+    date_value = '17-10-2007'
+    args.date = date_value
+    print(args.date)
+    # if args.date is None:
+    #     today = date.today()
+    #     args.date = today.strftime("%d-%m-%Y")
 
     return args.target_dir, args.date, args.log
 #endregion
@@ -214,7 +221,7 @@ def scrape_imf_data():
     log.info("Download IMF WEO Dataset")
     downloaded_file = download_weo_data_from_imf_website(args_date)
     # extract only those fields required for Asset allocation.
-    log.info("Extract only those fields required for Assect allocation")
+    log.info("Extract only those fields required for Asset allocation")
     extract_required_fields(downloaded_file, args_target)
 
     return 0
