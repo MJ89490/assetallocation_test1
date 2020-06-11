@@ -133,7 +133,7 @@ def calculating_signals(maven_inputs, maven_returns):
         n = 52
         ann = 13
         w_m = 4
-    m = int(maven_inputs['val_period_months'].item() / 12 * n)  # look-back period for valuation
+    m = int(maven_inputs['val_period_months'].item() / 12 * n)  # look-back period for value
     base = int(maven_inputs['val_period_base'].item() / 12 * n)  # period around look-back point
     vol1 = 0
     vol2 = 0
@@ -153,13 +153,13 @@ def calculating_signals(maven_inputs, maven_returns):
     momentum = momentum[start_date:]
     n = len(value)
     value_last = value.iloc[n - 1, :]
-    momentum_temp = momentum.iloc[n - 1, :].rename('momentum')
-    combi_temp = (value_last > long_cutoff) * momentum_temp + (value_last < short_cutoff) * momentum_temp
-    combi_temp = combi_temp.rename('value filter')
-    momentum_last = pd.concat([momentum_temp, combi_temp], axis=1)
+    momentum_last = momentum.iloc[n - 1, :].rename('momentum')
+    filter1 = ((value_last > long_cutoff) * momentum_last).rename('too expensive')
+    filter2 = ((value_last < short_cutoff) * momentum_last).rename('too cheap')
+    momentum_last = pd.concat([momentum_last, filter1, filter2], axis=1)
     value_last = value_last.sort_values()
     momentum_last = momentum_last.sort_values(by=['momentum'])
-    momentum_last['momentum'] = momentum_last['momentum'] - momentum_last['value filter']
+    momentum_last['momentum'] = momentum_last['momentum'] - momentum_last['too expensive'] - momentum_last['too cheap']
     # determine signals based on a combination of momentum and value scores: value filter results in -999 scores
     temp_value = (value > long_cutoff) * -999
     temp_momentum = (value <= long_cutoff) * momentum
@@ -203,6 +203,11 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     :return: dataframes with maven return series, asset class exposures and contributions
     """
     # reading inputs and aligning dataframes
+    frequency = maven_inputs['frequency'].item()
+    if frequency == 'monthly':
+        w_m = 1
+    else:
+        w_m = 4
     m = len(maven_returns.columns)
     n = len(long_signals)
     number_signals = maven_inputs['number_assets'].item()
@@ -212,8 +217,8 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     equal_notional = pd.DataFrame((1 / m) * np.ones((n, m)), index=long_signals.index, columns=long_signals.columns)
     equal_risk = ((1 / volatility).T / (1 / volatility).sum(axis=1)).T
     # determining benchmark returns, fully invested across all assets
-    returns_en = maven_returns.pct_change() * equal_notional.shift()
-    returns_er = maven_returns.pct_change() * equal_risk.shift()
+    returns_en = maven_returns.pct_change() * equal_notional.shift().rolling(w_m).mean()
+    returns_er = maven_returns.pct_change() * equal_risk.shift().rolling(w_m).mean()
     returns_en.iloc[0, :] = 0
     returns_er.iloc[0, :] = 0
     returns_en_cum = (1 + returns_en.sum(axis=1)).cumprod() * 100
@@ -229,6 +234,8 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     # capping asset weight to 50%
     equal_risk_long = cap_and_redistribute((vol_long.T / vol_long.sum(axis=1)).T, 0.5)
     equal_risk_short = cap_and_redistribute((vol_short.T / vol_short.sum(axis=1)).T, 0.5)
+    equal_risk_long = equal_risk_long.rolling(w_m).mean()
+    equal_risk_short = equal_risk_short.rolling(w_m).mean()
     # calculating turnover
     costs = asset_inputs.groupby('asset').first(keep='first')['transaction_costs'][equal_risk.columns].tolist()
     sub_equal_risk_long = equal_risk_long - equal_risk_long.shift()
