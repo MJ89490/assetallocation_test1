@@ -127,16 +127,14 @@ def calculating_signals(maven_inputs, maven_returns):
     frequency = maven_inputs['frequency'].item()
     if frequency == 'monthly':
         n = 12
-        m = maven_inputs['val_period_months'].item()
-        base = maven_inputs['val_period_base'].item()
-        ann = 0
+        ann = 12
         w_m = 1
     else:
         n = 52
-        m = int(maven_inputs['val_period_months'].item() / 12 * 52)
-        base = int(maven_inputs['val_period_base'].item() / 12 * 52)
-        ann = 1
+        ann = 13
         w_m = 4
+    m = int(maven_inputs['val_period_months'].item() / 12 * n)  # look-back period for valuation
+    base = int(maven_inputs['val_period_base'].item() / 12 * n)  # period around look-back point
     vol1 = 0
     vol2 = 0
     mom = 1
@@ -146,7 +144,7 @@ def calculating_signals(maven_inputs, maven_returns):
     for i in range(0, len(mom_weight)):
         mom = mom * (maven_returns.shift(i * w_m) / maven_returns.shift((i + 1) * w_m)) ** mom_weight[i]
     volatility = n ** 0.5 * (vol1 / sum(vol_weight) - (vol2 / sum(vol_weight)) ** 2) ** 0.5
-    momentum = (mom ** ((12 + ann) / sum(mom_weight)) - 1) / volatility
+    momentum = (mom ** (ann / sum(mom_weight)) - 1) / volatility
     # calculating the value scores
     value = ((maven_returns / maven_returns.shift(int(m - base / 2)).rolling(base).mean()) ** (n / m) - 1) / volatility
     # shorting the dataframes and sorting last observation
@@ -190,12 +188,12 @@ def calculating_signals(maven_inputs, maven_returns):
         long_signals_name.iloc[:, i] = long_signals_rank.apply(lambda x: x[x == i + 1].idxmin(), axis=1)
         short_signals_name.iloc[:, i] = short_signals_rank.apply(lambda x: x[x == i + 1].idxmin(), axis=1)
     return momentum, value, long_signals, short_signals, long_signals_name, short_signals_name, value_last, \
-                                                            momentum_last, long_exposures, short_exposures, volatility
+                                                momentum_last, long_exposures, short_exposures, volatility
 
 
 def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals, short_signals):
     """
-    creating dataframes with maven returns series, asset class exposures and contributions
+    creating dataframes with maven return series, and benchmarks, asset class exposures and contributions
     :param pd.DataFrame maven_inputs: parameter choices for the model
     :param pd.DataFrame asset_inputs: asset bloomberg tickers
     :param pd.DataFrame maven_returns: formatted return series for maven assets
