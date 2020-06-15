@@ -4,7 +4,10 @@ Created on 12/05/2020
 """
 
 from models.effect.data_processing_effect import DataProcessingEffect
+from models.effect.inflation_imf_publishing_dates import dates_imf_publishing
+
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
+
 import common_libraries.constants as constants
 import pandas as pd
 import numpy as np
@@ -67,27 +70,34 @@ class CurrencyComputations(DataProcessingEffect):
 
         self.inflation_release["Inflation Release"] = weo_dates
 
-
-    def inflation_differential(self): #todo create another file to host the fct
-        # todo add an automatic parser in the main_effect.py to specify the path of the csv file to store the results
-        scrape_imf_data()
-        from pandas import DataFrame
+    def inflation_differential(self):
+        # todo create a class for inflation imf
         # todo change the path and create an automatic one DONT HAVE EUR TAKE GERMANY??
-        inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOOct2015all.csv')
+        # Grab the data from the IMF website according to the imf publishing date
+        # todo set a condition to not download the data
+        for date in dates_imf_publishing:
+            print(date)
+            scrape_imf_data(date_imf=date)
 
-        countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP',
-                                'Chile': 'CLP', 'Peru': 'PEN', 'Turkey': 'TRY', 'Russia': 'RUB',
-                                'Czech Republic': 'CZK', 'Hungary': 'HUF', 'Poland': 'PLN', 'South Africa': 'ZAR',
-                                'China': 'CNY', 'Korea': 'KRW', 'Malaysia': 'MYR', 'Indonesia': 'IDR', 'India': 'INR',
-                                'Philippines': 'PHP', 'Taiwan Province of China': 'TWD', 'Thailand': 'THB',
-                                'United Kingdom': 'GBP', 'United States': 'USD'}
 
-        inflation_data = DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
-        inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
+        from pandas import DataFrame
 
-        inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
-        inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
-        inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
+        # inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOOct2015all.csv')
+        #
+        # countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP',
+        #                         'Chile': 'CLP', 'Peru': 'PEN', 'Turkey': 'TRY', 'Russia': 'RUB',
+        #                         'Czech Republic': 'CZK', 'Hungary': 'HUF', 'Poland': 'PLN', 'South Africa': 'ZAR',
+        #                         'China': 'CNY', 'Korea': 'KRW', 'Malaysia': 'MYR', 'Indonesia': 'IDR', 'India': 'INR',
+        #                         'Philippines': 'PHP', 'Taiwan Province of China': 'TWD', 'Thailand': 'THB',
+        #                         'United Kingdom': 'GBP', 'United States': 'USD'}
+        #
+        # inflation_data = DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
+        # inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
+        #
+        # inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
+        # inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
+        # inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
+        # print()
 
     def carry_computations(self, carry_type):
 
