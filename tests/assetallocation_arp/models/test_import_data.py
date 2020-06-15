@@ -8,12 +8,12 @@ import pytest
 import os
 import pandas as pd
 
-from assetallocation_arp.data_etl import import_data as data
+from assetallocation_arp.data_etl import import_data_from_excel_matlab as data
 
 CURRENT_PATH = os.path.dirname(__file__)
 
 """
-Module test_import_data.py: tests the extract data method (import_data.py) in order to know if it returns the correct 
+Module test_import_data.py: tests the extract data method (import_data_from_excel_matlab.py) in order to know if it returns the correct 
 following outputs:
     - strategy_inputs
     - asset_inputs
