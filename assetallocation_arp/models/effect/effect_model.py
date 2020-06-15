@@ -73,7 +73,7 @@ class CurrencyComputations(DataProcessingEffect):
         scrape_imf_data()
         from pandas import DataFrame
         # todo change the path and create an automatic one DONT HAVE EUR TAKE GERMANY??
-        inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOApr2019all.csv')
+        inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOOct2015all.csv')
 
         countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP',
                                 'Chile': 'CLP', 'Peru': 'PEN', 'Turkey': 'TRY', 'Russia': 'RUB',
