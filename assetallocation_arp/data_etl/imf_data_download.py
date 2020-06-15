@@ -144,12 +144,12 @@ def extract_required_fields(downloaded_file, target_dir):
     aa_imf_file = os.path.abspath(os.path.join(data_path, f"aa-{downloaded_file}"))
     data_imf_file = os.path.abspath(os.path.join(data_path, f"data_imf_{downloaded_file}"))
     imf_required_data_inflation.to_csv(data_imf_file, index=False)
-    imf_required_data.to_csv(aa_imf_file, index=False, sep="\t")
+    # imf_required_data.to_csv(aa_imf_file, index=False, sep="\t")
     # write the footer separately
-    with open(aa_imf_file, "a+") as wp:
-        wp.write("\n")
-        wp.write(footer)
-        wp.write("\n")
+    # with open(aa_imf_file, "a+") as wp:
+    #     wp.write("\n")
+    #     wp.write(footer)
+    #     wp.write("\n")
 
     return True
 #endregion
@@ -188,7 +188,7 @@ def parser_data(date_imf):
     """
     global args
     parser = argparse.ArgumentParser()
-    parser.add_argument('--target_dir', type=Path, help='path of target directory containing data as provided by IMF')
+    parser.add_argument('target_dir', type=Path, help='path of target directory containing data as provided by IMF')
     parser.add_argument('--date', type=str, help='date when the imf data is required, it should be in the format dd-mm-yyyy.'
                                                  ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
     parser.add_argument('--log', default='INFO', help='level of logging messages')

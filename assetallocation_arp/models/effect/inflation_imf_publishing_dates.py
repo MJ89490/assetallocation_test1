@@ -9,7 +9,9 @@ def update_dates():
     pass
 
 
-dates_imf_publishing = ['09-04-2019',
+dates_imf_publishing = ['09-04-2020',
+                        '09-10-2019',
+                        '09-04-2019',
                         '09-10-2018',
                         '17-04-2018',
                         '10-10-2017',

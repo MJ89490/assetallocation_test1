@@ -51,27 +51,34 @@ class CurrencyComputations(DataProcessingEffect):
         dates_index = self.data_currencies_usd[self.start_date_computations:].index.values
 
     def inflation_release_computations(self): #todo create another file to host the fct
+
         dates_index = self.data_currencies_usd.loc[self.start_date_computations:].index.values
+
         weo_dates = []
-        # todo 19/04/2006 put latest!!
+
         for date in dates_index:
             date = pd.to_datetime(date)
-            if date.month < 4:
-                weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
-            elif date.month == 4 and date.day <= 15:
-                weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
-            elif date.month >= 4 and date.month < 10:
-                weo_date = "{month}{year}".format(year=date.year, month='Apr')
+            if date < pd.to_datetime('26-04-2006', format='%d-%m-%Y'):
+                weo_date = "Latest"
             else:
-                assert date.month >= 10, date
-                weo_date = "{month}{year}".format(year=date.year, month='Oct')
+                if date.month < 4:
+                    weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
+                elif date.month == 4 and date.day <= 15:
+                    weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
+                elif date.month >= 4 and date.month < 10:
+                    weo_date = "{month}{year}".format(year=date.year, month='Apr')
+                else:
+                    assert date.month >= 10, date
+                    weo_date = "{month}{year}".format(year=date.year, month='Oct')
 
             weo_dates.append(weo_date)
 
         self.inflation_release["Inflation Release"] = weo_dates
+        self.inflation_release.set_index(dates_index)
 
     def inflation_differential(self):
         # todo create a class for inflation imf
+        # todo remove the aa- files
         # todo change the path and create an automatic one DONT HAVE EUR TAKE GERMANY??
         # Grab the data from the IMF website according to the imf publishing date
         # todo set a condition to not download the data
@@ -79,9 +86,9 @@ class CurrencyComputations(DataProcessingEffect):
             print(date)
             scrape_imf_data(date_imf=date)
 
-
-        from pandas import DataFrame
-
+        # Read the data rom the inflation csv files
+        # from pandas import DataFrame
+        #
         # inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOOct2015all.csv')
         #
         # countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP',
