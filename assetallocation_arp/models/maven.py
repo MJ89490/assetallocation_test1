@@ -6,7 +6,6 @@ FICA
 
 import numpy as np
 import pandas as pd
-import math
 
 
 def format_data(maven_inputs, asset_inputs, all_data):
@@ -147,8 +146,7 @@ def calculating_signals(maven_inputs, maven_returns):
     volatility = n ** 0.5 * (vol1 / sum(vol_weight) - (vol2 / sum(vol_weight)) ** 2) ** 0.5
     momentum = (mom ** (ann / sum(mom_weight)) - 1) / volatility
     # calculating the value scores
-    value = ((maven_returns / maven_returns.shift(math.ceil(m - base / 2)).rolling(max(base, 1)).mean()) \
-                                                                            ** (n / m) - 1) / volatility
+    value = ((maven_returns / maven_returns.shift(int(m - base / 2)).rolling(base+1).mean()) ** (n/m) - 1) / volatility
     # shorting the dataframes and sorting last observation
     start_date = value.first_valid_index()
     value = value[start_date:]
