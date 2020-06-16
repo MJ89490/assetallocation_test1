@@ -42,5 +42,6 @@ def run_effect():
     # -------------------------- inflation differential calculations -------------------------- #
     obj_import_data.inflation_differential()
 
+
 if __name__ == '__main__':
     run_effect()

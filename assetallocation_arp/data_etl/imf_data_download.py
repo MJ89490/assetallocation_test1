@@ -230,4 +230,4 @@ def scrape_imf_data(date_imf):
 #endregion
 
 if __name__ == '__main__':
-    sys.exit(scrape_imf_data(date_imf='11-04-2007'))
+    sys.exit(scrape_imf_data(date))

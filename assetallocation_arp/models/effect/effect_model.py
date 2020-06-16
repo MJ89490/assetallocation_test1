@@ -11,6 +11,7 @@ from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 import common_libraries.constants as constants
 import pandas as pd
 import numpy as np
+import os
 
 
 class CurrencyComputations(DataProcessingEffect):
@@ -74,17 +75,30 @@ class CurrencyComputations(DataProcessingEffect):
             weo_dates.append(weo_date)
 
         self.inflation_release["Inflation Release"] = weo_dates
-        self.inflation_release.set_index(dates_index)
+        self.inflation_release = self.inflation_release.set_index(dates_index)
 
     def inflation_differential(self):
         # todo create a class for inflation imf
-        # todo remove the aa- files
-        # todo change the path and create an automatic one DONT HAVE EUR TAKE GERMANY??
+        # todo ask for eur currency
         # Grab the data from the IMF website according to the imf publishing date
-        # todo set a condition to not download the data
-        for date in dates_imf_publishing:
-            print(date)
-            scrape_imf_data(date_imf=date)
+        inflation_release = self.inflation_release['Inflation Release'].drop_duplicates().iloc[1:].tolist()
+        # Get files from data_imf directory
+        csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
+        # Get through each csv files to know if you need to download data
+        for inflation in inflation_release:
+            print(inflation)
+            csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
+            print(csv_file)
+            if csv_file not in csv_files:
+                # Get the date publishing to download the data
+                months = {'Apr': 0o4, 'Oct': 10}
+                month = months[inflation[:3]]
+                year = inflation[3:]
+                for date in dates_imf_publishing:
+                    if month and year in date:
+                        # Download the data according to the publishing date
+                        scrape_imf_data(date_imf=date)
+
 
         # Read the data rom the inflation csv files
         # from pandas import DataFrame
