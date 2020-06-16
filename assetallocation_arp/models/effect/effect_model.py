@@ -79,7 +79,7 @@ class CurrencyComputations(DataProcessingEffect):
 
     def inflation_differential(self):
         # todo create a class for inflation imf
-        # todo ask for eur currency
+        # todo ask for eur and usd currency
         # Grab the data from the IMF website according to the imf publishing date
         inflation_release = self.inflation_release['Inflation Release'].drop_duplicates().iloc[1:].tolist()
         # Get files from data_imf directory
