@@ -96,9 +96,7 @@ class CurrencyComputations(DataProcessingEffect):
         # Get through each csv files to know if you need to download data
         print(inflation_release)
         for inflation in inflation_release:
-            print(inflation)
             csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
-            print(csv_file)
             # If there is any file in the data_imf folder todo CHANGE IT
             if len(csv_files) == 0:
                 for date in dates_imf_publishing.keys():
@@ -119,14 +117,19 @@ class CurrencyComputations(DataProcessingEffect):
                         if month and year in date:
                             # Download the data according to the publishing date
                             scrape_imf_data(date_imf=date)
+                else:
+                    print('OK ', csv_file)
 
     def inflation_differential(self):
         # todo create a class for inflation imf
         # todo ask for eur and usd currency
+        # Grab the inflation differential data if needed
         self.inflation_differential_download()
 
-
         # Read the data rom the inflation csv files
+
+
+
         # from pandas import DataFrame
         #
         # inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOOct2015all.csv')
