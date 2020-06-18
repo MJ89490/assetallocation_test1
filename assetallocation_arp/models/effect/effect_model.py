@@ -8,6 +8,8 @@ from models.effect.inflation_imf_publishing_dates import dates_imf_publishing
 
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 
+from pandas import DataFrame
+
 import common_libraries.constants as constants
 import pandas as pd
 import numpy as np
@@ -27,6 +29,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.return_incl_costs = pd.DataFrame()
         self.combo_currencies = pd.DataFrame()
         self.inflation_release = pd.DataFrame()
+        self.inflation_differential = pd.DataFrame()
 
         self.bid_ask_spread = 0
         self.start_date_computations = ''
@@ -120,34 +123,82 @@ class CurrencyComputations(DataProcessingEffect):
                 else:
                     print('OK ', csv_file)
 
-    def inflation_differential(self):
+    def inflation_differential_computations(self):
         # todo create a class for inflation imf
         # todo ask for eur and usd currency
         # Grab the inflation differential data if needed
         self.inflation_differential_download()
+        inflations_release_values = self.inflation_release['Inflation Release'].tolist()
+        years_zero = self.inflation_release['Inflation Release'].index.year.tolist()
+        years_one = [year+1 for year in years_zero]
+        months = self.inflation_release['Inflation Release'].index.month.tolist()
 
-        # Read the data rom the inflation csv files
+        # Compute the multiplicators (12 - m)/12 and m/12
+        multiplicator_one = pd.DataFrame(months).apply(lambda x: (12-x)/12)
+        multiplicator_two = pd.DataFrame(months).apply(lambda x: x/12)
 
+        for currency in constants.CURRENCIES_SPOT:
+            inflation_year_zero_value = []
+            inflation_year_one_value = []
+            inflation_year_zero_value_base = []
+            inflation_year_one_value_base = []
 
+            for inflation, year_zero, year_one in zip(inflations_release_values, years_zero, years_one):
 
-        # from pandas import DataFrame
-        #
-        # inflation_values = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\data_etl\data_imf_WEOOct2015all.csv')
-        #
-        # countries_currencies = {'Brazil': 'BRL', 'Argentina': 'ARS',  'Mexico': 'MXN', 'Colombia': 'COP',
-        #                         'Chile': 'CLP', 'Peru': 'PEN', 'Turkey': 'TRY', 'Russia': 'RUB',
-        #                         'Czech Republic': 'CZK', 'Hungary': 'HUF', 'Poland': 'PLN', 'South Africa': 'ZAR',
-        #                         'China': 'CNY', 'Korea': 'KRW', 'Malaysia': 'MYR', 'Indonesia': 'IDR', 'India': 'INR',
-        #                         'Philippines': 'PHP', 'Taiwan Province of China': 'TWD', 'Thailand': 'THB',
-        #                         'United Kingdom': 'GBP', 'United States': 'USD'}
-        #
-        # inflation_data = DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
-        # inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
-        #
-        # inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
-        # inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
-        # inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
-        # print()
+                if inflation != 'Latest':
+                    # Set the name of the csv file
+                    csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
+                    # Read the data rom the inflation csv files
+                    inflation_values = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", csv_file)))
+
+                    countries_currencies = {'Brazil': 'BRLUSD Curncy', 'Argentina': 'ARSUSD Curncy',
+                                            'Mexico': 'MXNUSD Curncy', 'Colombia': 'COPUSD Curncy',
+                                            'Chile': 'CLPUSD Curncy', 'Peru': 'PENUSD Curncy',
+                                            'Turkey': 'TRYUSD Curncy', 'Russia': 'RUBUSD Curncy',
+                                            'Hungary': 'HUFUSD Curncy', 'Poland': 'PLNUSD Curncy',
+                                            'Czech Republic': 'CZKUSD Curncy', 'South Africa': 'ZARUSD Curncy',
+                                            'China': 'CNYUSD Curncy', 'Korea': 'KRWUSD Curncy',
+                                            'Malaysia': 'MYRUSD Curncy', 'Indonesia': 'IDRUSD Curncy',
+                                            'India': 'INRUSD Curncy', 'Philippines': 'PHPUSD Curncy',
+                                            'Taiwan Province of China': 'TWDUSD Curncy', 'Thailand': 'THBUSD Curncy',
+                                            'United Kingdom': 'GBP Curncy', 'United States': 'USD Curncy'
+                                            }
+
+                    inflation_data = DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
+                    inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
+
+                    inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
+                    inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
+                    inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
+
+                    index_currency = inflation_data_merged[inflation_data_merged.Currency.str.contains(currency)].index[0]
+
+                    if currency in self.data_currencies_usd:
+                        index_currency_base = \
+                            inflation_data_merged[inflation_data_merged.Currency.str.contains('USD Curncy')].index[0]
+                    else:
+                        index_currency_base = \
+                        inflation_data_merged[inflation_data_merged.Currency.str.contains('EUR Curncy')].index[0]
+
+                    inflation_year_zero_value.append(inflation_data_merged.loc[index_currency, str(year_zero)])
+                    inflation_year_one_value.append(inflation_data_merged.loc[index_currency, str(year_one)])
+
+                    inflation_year_zero_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_zero)])
+                    inflation_year_one_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_one)])
+
+                    # Store results in dataFrames
+                    inflation_year_zero_values = multiplicator_one.mul(pd.DataFrame(inflation_year_zero_value))
+                    inflation_year_one_values = multiplicator_one.mul(pd.DataFrame(inflation_year_one_value))
+                    inflation_year_zero_values_base = multiplicator_two.mul(pd.DataFrame(inflation_year_zero_value_base))
+                    inflation_year_one_values_base = multiplicator_two.mul(pd.DataFrame(inflation_year_one_value_base))
+
+                    # Compute the inflation differential
+                    inflation_one = inflation_year_zero_values.add(inflation_year_zero_values_base).apply(lambda x: x/100)
+                    inflation_two = inflation_year_one_values.add(inflation_year_one_values_base).apply(lambda x: x/100)
+                    inflation_three = inflation_one.sub(inflation_two)
+                    self.inflation_differential['Inflation_Differential_' + currency] = inflation_three
+
+                    print()
 
     def carry_computations(self, carry_type):
 

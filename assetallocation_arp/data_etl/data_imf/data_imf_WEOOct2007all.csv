@@ -1,24 +1,24 @@
-Country,Subject Descriptor,Subject Notes,Units,2004,2005,2006,2007,2008,2009,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-BRL,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,7.6,5.7,3.1,4,4,4,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-PEN,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.5,1.5,1.1,2.7,2,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-ARS,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,6.1,12.3,9.8,10,13,13,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-MXN,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,5.2,3.3,4.1,3.6,3.6,3.6,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-COP,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,5.5,4.9,4.5,5,4.3,4.3,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-CLP,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.4,3.7,2.6,5.5,3,4.3,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-TRY,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,9.4,7.7,9.7,6,4,3,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-RUB,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,11.7,10.9,9,8,7,4,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-CZK,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.8,2.1,1.8,4,4.5,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-HUF,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,5.5,3.3,6.5,5.9,3.7,4.8,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-PLN,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,4.4,0.7,1.4,2.7,3.1,3.7,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-ZAR,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.5,3.6,5.8,6.9,5.6,7.9,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-CNY,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.2,1.4,2,5.7,3.5,5.6,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-KRW,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3,2.6,2.1,3,2.7,3.5,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-MYR,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.2,3.3,3.1,2.2,2.4,2.7,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-IDR,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,6.4,17.1,6.6,6.5,5.7,2.4,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-INR,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,4.6,5.3,6.7,4.9,4,5.7,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-PHP,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,8.6,6.7,4.3,4.1,3.2,4,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-TWD,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,1.6,2.2,0.7,1.7,1.5,3.2,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-THB,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.9,5.8,3.5,2.3,1.2,1.5,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-EUR,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.4,2.2,1.9,2.2,2,1.2,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-GBP,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,1.4,2.1,2.8,2.1,2,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-USD,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.3,3.4,2.5,3.3,2.2,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Country,Subject Descriptor,Subject Notes,Units,2004,2005,2006,2007,2008,2009
+Brazil,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,7.6,5.7,3.1,4,4,4
+Peru,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.5,1.5,1.1,2.7,2,2
+Argentina,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,6.1,12.3,9.8,10,13,13
+Mexico,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,5.2,3.3,4.1,3.6,3.6,3.6
+Colombia,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,5.5,4.9,4.5,5,4.3,4.3
+Chile,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.4,3.7,2.6,5.5,3,4.3
+Turkey,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,9.4,7.7,9.7,6,4,3
+Russia,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,11.7,10.9,9,8,7,4
+Czech Republic,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.8,2.1,1.8,4,4.5,2
+Hungary,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,5.5,3.3,6.5,5.9,3.7,4.8
+Poland,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,4.4,0.7,1.4,2.7,3.1,3.7
+South Africa,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.5,3.6,5.8,6.9,5.6,7.9
+China,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.2,1.4,2,5.7,3.5,5.6
+Korea,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3,2.6,2.1,3,2.7,3.5
+Malaysia,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.2,3.3,3.1,2.2,2.4,2.7
+Indonesia,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,6.4,17.1,6.6,6.5,5.7,2.4
+india,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,4.6,5.3,6.7,4.9,4,5.7
+Philippines,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,8.6,6.7,4.3,4.1,3.2,4
+Taiwan Province of China,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,1.6,2.2,0.7,1.7,1.5,3.2
+Thailand,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.9,5.8,3.5,2.3,1.2,1.5
+EUR,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,2.4,2.2,1.9,2.2,2,1.2
+United Kingdom,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,1.4,2.1,2.8,2.1,2,2
+United States,"Inflation, end of period consumer prices","Data for inflation are end of the period, not annual average data.",Annual percent change,3.3,3.4,2.5,3.3,2.2,2
