@@ -43,7 +43,11 @@ def build_weo_data(date):
         year = date.year - 1
         release_number = "02"
         file_base_name = "WEO{month_name}{year}all".format(month_name="Oct", year=year)
-    elif date.month >= 4 and date.month < 10:
+    elif date.month == 9:
+        year = date.year
+        release_number = "02"
+        file_base_name = "WEO{month_name}{year}all".format(month_name="Sep", year=year)
+    elif date.month >= 4 and date.month < 9:
         year = date.year
         release_number = "01"
         file_base_name = "WEO{month_name}{year}all".format(month_name="Apr", year=year)
@@ -188,7 +192,7 @@ def parser_data(date_imf):
     """
     global args
     parser = argparse.ArgumentParser()
-    parser.add_argument('target_dir', type=Path, help='path of target directory containing data as provided by IMF')
+    parser.add_argument('--target_dir', type=Path, help='path of target directory containing data as provided by IMF')
     parser.add_argument('--date', type=str, help='date when the imf data is required, it should be in the format dd-mm-yyyy.'
                                                  ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
     parser.add_argument('--log', default='INFO', help='level of logging messages')

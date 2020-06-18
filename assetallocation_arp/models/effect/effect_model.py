@@ -54,50 +54,76 @@ class CurrencyComputations(DataProcessingEffect):
     def inflation_release_computations(self): #todo create another file to host the fct
 
         dates_index = self.data_currencies_usd.loc[self.start_date_computations:].index.values
-
         weo_dates = []
+        flag = False
 
-        for date in dates_index:
-            date = pd.to_datetime(date)
+        for date_index in dates_index:
+            counter = 0
+            date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
+            date = pd.to_datetime(date_index)
             if date < pd.to_datetime('26-04-2006', format='%d-%m-%Y'):
                 weo_date = "Latest"
             else:
-                if date.month < 4:
-                    weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
-                elif date.month == 4 and date.day <= 15:
-                    weo_date = "{month}{year}".format(year=date.year - 1, month='Oct')
-                elif date.month >= 4 and date.month < 10:
-                    weo_date = "{month}{year}".format(year=date.year, month='Apr')
+                while date > date_publication:
+                    counter += 1
+                    if counter >= len(dates_imf_publishing):
+                        # Reach the end of the dates publishing dates
+                        flag = True
+                        break
+                    date_publication = pd.to_datetime(list(dates_imf_publishing)[counter], format='%d-%m-%Y')
                 else:
-                    assert date.month >= 10, date
-                    weo_date = "{month}{year}".format(year=date.year, month='Oct')
+                    weo_date = list(dates_imf_publishing)[counter - 1]
+                    weo_date = dates_imf_publishing[weo_date]
+
+            if flag:
+                weo_date = list(dates_imf_publishing)[-1]
+                weo_date = dates_imf_publishing[weo_date]
+                flag = False
 
             weo_dates.append(weo_date)
 
         self.inflation_release["Inflation Release"] = weo_dates
-        self.inflation_release = self.inflation_release.set_index(dates_index)
+        # Set the index and shift the data by one
+        self.inflation_release = self.inflation_release.set_index(dates_index).shift(1)
+        # Replace the nan by Latest because we know it is the only nan in the Series
+        self.inflation_release = self.inflation_release.fillna('Latest')
 
-    def inflation_differential(self):
-        # todo create a class for inflation imf
-        # todo ask for eur and usd currency
+    def inflation_differential_download(self):
         # Grab the data from the IMF website according to the imf publishing date
         inflation_release = self.inflation_release['Inflation Release'].drop_duplicates().iloc[1:].tolist()
         # Get files from data_imf directory
         csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
         # Get through each csv files to know if you need to download data
+        print(inflation_release)
         for inflation in inflation_release:
             print(inflation)
             csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
             print(csv_file)
-            if csv_file not in csv_files:
-                # Get the date publishing to download the data
-                months = {'Apr': 0o4, 'Oct': 10}
-                month = months[inflation[:3]]
-                year = inflation[3:]
-                for date in dates_imf_publishing:
-                    if month and year in date:
-                        # Download the data according to the publishing date
-                        scrape_imf_data(date_imf=date)
+            # If there is any file in the data_imf folder todo CHANGE IT
+            if len(csv_files) == 0:
+                for date in dates_imf_publishing.keys():
+                    date_tmp = pd.to_datetime(date, format='%d-%m-%Y')
+                    print(date_tmp)
+                    # Inflation end of period consumer prices not available on IMF website for 2006 and 2007
+                    if date_tmp.year == 2006 or date_tmp.year == 2007:
+                        continue
+                    # Download the data according to the publishing date
+                    scrape_imf_data(date_imf=date)
+            else:
+                if csv_file not in csv_files:
+                    # Get the date publishing to download the data
+                    months = {'Apr': 0o4, 'Oct': 10}
+                    month = months[inflation[:3]]
+                    year = inflation[3:]
+                    for date in dates_imf_publishing.keys():
+                        if month and year in date:
+                            # Download the data according to the publishing date
+                            scrape_imf_data(date_imf=date)
+
+    def inflation_differential(self):
+        # todo create a class for inflation imf
+        # todo ask for eur and usd currency
+        self.inflation_differential_download()
 
 
         # Read the data rom the inflation csv files
