@@ -1,5 +1,5 @@
-from models.effect.data_processing_effect import DataProcessingEffect
-from models.effect.effect_model import CurrencyComputations
+from models.effect.data_processing_effect_to_delete import DataProcessingEffect
+from models.effect.currencies_computations import CurrencyComputations
 import pandas as pd
 
 

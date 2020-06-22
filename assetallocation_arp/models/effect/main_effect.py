@@ -1,13 +1,23 @@
-from assetallocation_arp.models.effect.effect_model import CurrencyComputations
+from assetallocation_arp.models.effect.currencies_computations import CurrencyComputations
+from assetallocation_arp.models.effect.data_effect import DataProcessingEffect
+from assetallocation_arp.models.effect.inflation_differential import InflationDifferential
 
 
 def run_effect():
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
-    obj_import_data = CurrencyComputations()
-    obj_import_data.import_data_matlab()
-    obj_import_data.data_processing_effect()
 
-    obj_import_data.start_date_calculations = '2000-01-11'
+    # -------------------------- import data ---------------------- -------------------------- #
+    obj_data_processing = DataProcessingEffect(start_date_calculations='2000-01-11')
+    obj_data_processing.data_processing_effect()
+
+    # -------------------------- inflation differential calculations -------------------------- #
+    obj_inflation_differential = InflationDifferential(dates_index=obj_data_processing.dates_index)
+    obj_inflation_differential.inflation_release_computations()
+    #todo change data currencies by a list with usd values and eur values
+    obj_inflation_differential.inflation_differential_computations(data_currencies_usd=
+                                                                   obj_data_processing.data_currencies_usd)
+
+    obj_import_data = CurrencyComputations(dates_index=obj_data_processing.dates_index)
 
     # -------------------------- carry calculations -------------------------------------- #
     obj_import_data.carry_computations(carry_type='Real')
@@ -36,12 +46,15 @@ def run_effect():
     # -------------------------- return incl costs calculations -------------------------- #
     obj_import_data.return_incl_costs_computations()
 
-    # -------------------------- inflation release calculations -------------------------- #
-    obj_import_data.inflation_release_computations()
+    # # -------------------------- inflation release calculations -------------------------- #
+    # obj_import_data.inflation_release_computations()
+    #
+    # # -------------------------- inflation differential calculations -------------------------- #
+    # obj_import_data.inflation_differential_computations()
 
-    # -------------------------- inflation differential calculations -------------------------- #
-    obj_import_data.inflation_differential_computations()
-
-
+    # obj_import_data.import_data_matlab()
+    # obj_import_data.data_processing_effect()
+    #
+    # obj_import_data.start_date_calculations = '2000-01-11'
 if __name__ == '__main__':
     run_effect()

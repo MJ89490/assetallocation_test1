@@ -1,4 +1,4 @@
-from models.effect.import_data_effect import ImportDataEffect
+from models.effect.import_data_effect_to_delete import ImportDataEffect
 from common_libraries.constants_currencies import Currencies
 import pandas as pd
 
