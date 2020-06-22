@@ -147,13 +147,14 @@ def calculating_signals(maven_inputs, maven_returns):
     momentum = (mom ** (ann / sum(mom_weight)) - 1) / volatility
     # calculating the value scores
     value = ((maven_returns / maven_returns.shift(int(m - base / 2)).rolling(base+1).mean()) ** (n/m) - 1) / volatility
-    # shorting the dataframes and sorting last observation
+    # shorting the dataframes
     start_date = value.first_valid_index()
     value = value[start_date:]
     momentum = momentum[start_date:]
     n = len(value)
     value_last = value.iloc[n - 1, :]
     momentum_last = momentum.iloc[n - 1, :].rename('momentum')
+    # sorting last observation on momentum and applying value filter for charting purposes
     filter1 = ((value_last > long_cutoff) * momentum_last).rename('too expensive')
     filter2 = ((value_last < short_cutoff) * momentum_last).rename('too cheap')
     momentum_last = pd.concat([momentum_last, filter1, filter2], axis=1)
@@ -161,12 +162,12 @@ def calculating_signals(maven_inputs, maven_returns):
     momentum_last = momentum_last.sort_values(by=['momentum'])
     momentum_last['momentum'] = momentum_last['momentum'] - momentum_last['too expensive'] - momentum_last['too cheap']
     # determine signals based on a combination of momentum and value scores: value filter results in -999 scores
-    temp_value = (value > long_cutoff) * -999
-    temp_momentum = (value <= long_cutoff) * momentum
-    long_signals = temp_value + temp_momentum
-    temp_value = (value < short_cutoff) * -999
-    temp_momentum = (value >= short_cutoff) * -momentum
-    short_signals = temp_value + temp_momentum
+    drop_value = (value > long_cutoff) * -999
+    keep_momentum = (value <= long_cutoff) * momentum
+    long_signals = drop_value + keep_momentum
+    drop_value = (value < short_cutoff) * -999
+    keep_momentum = (value >= short_cutoff) * -momentum
+    short_signals = drop_value + keep_momentum
     # ranking signals
     long_signals_rank = long_signals.rank(axis=1, method='first', ascending=False)
     short_signals_rank = short_signals.rank(axis=1, method='first', ascending=False)
@@ -181,7 +182,7 @@ def calculating_signals(maven_inputs, maven_returns):
     short_exposures = short_exposures.sum(axis=0)
     long_exposures = long_exposures[long_exposures != 0]
     short_exposures = short_exposures[short_exposures != 0]
-    # filtering and naming top assets
+    # filtering and getting names of top assets
     long_signals_name = pd.DataFrame(np.ones((n, number_signals)), index=value.index)
     short_signals_name = pd.DataFrame(np.ones((n, number_signals)), index=value.index)
     for i in range(0, number_signals):

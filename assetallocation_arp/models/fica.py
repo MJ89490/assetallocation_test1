@@ -6,7 +6,6 @@ FICA
 
 import numpy as np
 import pandas as pd
-import math
 from scipy.interpolate import CubicSpline
 
 
@@ -75,7 +74,7 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
             pv1m.iloc[i, k] = sum(cash_flows * df.iloc[:, 1])
             carry_roll.iloc[i, k] = (pv1m.iloc[i, k] / pv.iloc[i, k]) ** 12 * 100 - 100 - curve.iloc[k, i * 14 + 1]
             if k > 0:
-                country_returns.iloc[i, k] = math.log((pv1m.iloc[i, k] / pv.iloc[i, k - 1])) * 100 \
+                country_returns.iloc[i, k] = np.log((pv1m.iloc[i, k] / pv.iloc[i, k - 1])) * 100 \
                                            - curve.iloc[k - 1, i * 14 + 1] / 12
     # transposing and adding column names
     carry_roll = carry_roll.T
