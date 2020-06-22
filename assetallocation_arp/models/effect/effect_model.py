@@ -16,7 +16,7 @@ import numpy as np
 import os
 
 #todo error handling for dates!!!
-#todo convert dataframe to series because only one col
+#todo optimisation des calculs de l'inflation: long!!! Lire une seule fois le csv save time avec l'inflation
 class CurrencyComputations(DataProcessingEffect):
 
     def __init__(self):
@@ -55,7 +55,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         dates_index = self.data_currencies_usd[self.start_date_computations:].index.values
 
-    def inflation_release_computations(self): #todo create another file to host the fct
+    def inflation_release_computations(self):
 
         dates_index = self.data_currencies_usd.loc[self.start_date_computations:].index.values
         weo_dates = []
@@ -129,14 +129,15 @@ class CurrencyComputations(DataProcessingEffect):
         # todo ask for eur and usd currency
         # Grab the inflation differential data if needed
         self.inflation_differential_download()
-        inflations_release_values = self.inflation_release['Inflation Release'].tolist()
+
+        inflation_release_values = self.inflation_release['Inflation Release'].tolist()
         years_zero = self.inflation_release['Inflation Release'].index.year.tolist()
         years_one = [year+1 for year in years_zero]
         months = self.inflation_release['Inflation Release'].index.month.tolist()
 
-        # Compute the multiplicators (12 - m)/12 and m/12
-        multiplicator_one = pd.DataFrame(months).apply(lambda m: (12-m)/12)
-        multiplicator_two = pd.DataFrame(months).apply(lambda m: m/12)
+        # Compute the multipliers (12 - m)/12 and m/12
+        multiplier_one = pd.Series(months).apply(lambda m: (12-m)/12)
+        multiplier_two = pd.Series(months).apply(lambda m: m/12)
 
         for currency in constants.CURRENCIES_SPOT:
             inflation_year_zero_value = []
@@ -144,7 +145,7 @@ class CurrencyComputations(DataProcessingEffect):
             inflation_year_zero_value_base = []
             inflation_year_one_value_base = []
 
-            for inflation, year_zero, year_one in zip(inflations_release_values, years_zero, years_one):
+            for inflation, year_zero, year_one in zip(inflation_release_values, years_zero, years_one):
 
                 if inflation != 'Latest':
                     # Set the name of the csv file
@@ -181,7 +182,7 @@ class CurrencyComputations(DataProcessingEffect):
                     else:
                         index_currency_base = \
                             inflation_data_merged[inflation_data_merged.Currency.str.contains('EUR Base')].index[0]
-                    print(currency, inflation_data_merged.loc[index_currency_base, 'Currency'])
+                    print(currency, inflation, year_zero, inflation_data_merged.loc[index_currency_base, 'Currency'])
                     # Look for the value of the inflation at year0 and then append to the list inflation_year_zero_value
                     inflation_year_zero_value.append(inflation_data_merged.loc[index_currency, str(year_zero)])
                     # Look for the value of the inflation at year1 and then append to the list inflation_year_one_value
@@ -195,7 +196,7 @@ class CurrencyComputations(DataProcessingEffect):
                     inflation_year_one_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_one)])
 
                 else:
-                    # Processing
+                    # Processing bloomberg data
                     inflation_values = pd.read_csv(os.path.abspath(
                         os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "bloomberg_data", "bbg_data.csv")))
 
@@ -204,6 +205,7 @@ class CurrencyComputations(DataProcessingEffect):
 
                     # Set the dates to timestamp
                     inflation_values_index = inflation_values.iloc[:, 0].apply(lambda x: int(str(x).split('.')[0]))
+
                     # inflation_values = inflation_values.set_index(inflation_values_index)
                     inflation_values = inflation_values.iloc[:, 1:]
                     inflation_values = inflation_values.set_index(inflation_values_index)
@@ -241,31 +243,29 @@ class CurrencyComputations(DataProcessingEffect):
                     # year_zero_value
                     inflation_year_one_value_base.append(float(inflation_values.loc[year_one, base_currency]))
 
-
             # Store results in dataFrames
-            inflation_year_zero_values = multiplicator_one.mul(pd.DataFrame(inflation_year_zero_value).astype(np.float64))
-            inflation_year_one_values = multiplicator_two.mul(pd.DataFrame(inflation_year_one_value).astype(np.float64))
-            inflation_year_zero_values_base = multiplicator_one.mul(pd.DataFrame(inflation_year_zero_value_base).astype(np.float64))
-            inflation_year_one_values_base = multiplicator_two.mul(pd.DataFrame(inflation_year_one_value_base).astype(np.float64))
+            inflation_year_zero_values = multiplier_one.mul(pd.Series(inflation_year_zero_value).astype(np.float64))
+            inflation_year_one_values = multiplier_two.mul(pd.Series(inflation_year_one_value).astype(np.float64))
+            inflation_year_zero_values_base = multiplier_one.mul(pd.Series(inflation_year_zero_value_base).astype(np.float64))
+            inflation_year_one_values_base = multiplier_two.mul(pd.Series(inflation_year_one_value_base).astype(np.float64))
 
             # Compute the inflation differential
             inflation_one = inflation_year_zero_values.add(inflation_year_one_values).apply(lambda x: x/100)
             inflation_two = inflation_year_zero_values_base.add(inflation_year_one_values_base).apply(lambda x: x/100)
 
             inflation_three = inflation_one.sub(inflation_two).apply(lambda x: x * 100)
-            self.inflation_differential['Inflation_Differential_' + currency] = inflation_three[0].to_list()
+            self.inflation_differential['Inflation_Differential_' + currency] = inflation_three.tolist()
 
-            self.inflation_differential = self.inflation_differential.set_index(self.inflation_release.index.values)
+        # Set the index with dates
+        self.inflation_differential = self.inflation_differential.set_index(self.inflation_release.index.values)
+        # Shift of 1 because we take the previous date to have the result of the current date
+        first_value = self.inflation_differential.loc[self.start_date_computations, :]
+        # print(currency, first_value)
+        self.inflation_differential = self.inflation_differential.shift(1)
 
-            # Shift of 1 because we take the previous date to have the result of the current date
-            first_value = self.inflation_differential.loc[self.start_date_computations][0]
-            print(first_value)
-            self.inflation_differential = self.inflation_differential.shift(1)
+        # Fill the nan value due the shift (first value only)
+        self.inflation_differential.loc[self.start_date_computations] = first_value
 
-            # Fill the nan value due the shift (first value only)
-            self.inflation_differential.loc[self.start_date_computations] = first_value
-
-            print()
 
     def carry_computations(self, carry_type):
 
