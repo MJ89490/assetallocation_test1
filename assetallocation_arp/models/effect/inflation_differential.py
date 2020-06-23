@@ -85,9 +85,8 @@ class InflationDifferential:
                 else:
                     print('OK ', csv_file)
 
-    def inflation_differential_computations(self, data_currencies_usd):
-        # todo create a class for inflation imf
-        # todo ask for eur and usd currency
+    def inflation_differential_computations(self, data_currencies_usd, start_date_computations):
+
         # Grab the inflation differential data if needed
         self.inflation_differential_download()
 
@@ -221,9 +220,9 @@ class InflationDifferential:
         # Set the index with dates
         self.inflation_differential = self.inflation_differential.set_index(self.inflation_release.index.values)
         # Shift of 1 because we take the previous date to have the result of the current date
-        first_value = self.inflation_differential.loc[1, :]
+        first_value = self.inflation_differential.loc[start_date_computations].tolist()
         # print(currency, first_value)
         self.inflation_differential = self.inflation_differential.shift(1)
 
         # Fill the nan value due the shift (first value only)
-        self.inflation_differential.loc[1] = first_value
+        self.inflation_differential.loc[start_date_computations] = first_value

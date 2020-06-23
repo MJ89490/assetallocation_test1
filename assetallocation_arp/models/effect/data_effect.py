@@ -20,10 +20,22 @@ class ImportDataEffect:
 class DataProcessingEffect:
 
     def __init__(self, start_date_calculations='2000-01-11'):
+        self.obj_import_data = ImportDataEffect()
+
         self.data_currencies_usd = pd.DataFrame()
         self.data_currencies_eur = pd.DataFrame()
-        self.obj_import_data = ImportDataEffect()
+
         self.start_date_calculations = start_date_calculations
+
+        self.carry_currencies = pd.DataFrame()
+        self.trend_currencies = pd.DataFrame()
+        self.spot_ex_costs = pd.DataFrame()
+        self.spot_incl_costs = pd.DataFrame()
+        self.return_ex_costs = pd.DataFrame()
+        self.return_incl_costs = pd.DataFrame()
+        self.combo_currencies = pd.DataFrame()
+
+        self.bid_ask_spread = 0
 
     @property
     def dates_index(self):
@@ -35,7 +47,7 @@ class DataProcessingEffect:
 
     @start_date_calculations.setter
     def start_date_calculations(self, value):
-        #todo ADD ERROR HANDLING FOR DATE
+        # todo ADD ERROR HANDLING FOR DATE
         self._start_date_calculations = value
 
     def data_processing_effect(self):
@@ -48,6 +60,8 @@ class DataProcessingEffect:
         # start_date = '1999-01-06'
         self.data_currencies_usd = data_currencies[currencies_usd.currencies_usd_tickers].loc[:]
         self.data_currencies_eur = data_currencies[currencies_eur.currencies_eur_tickers].loc[:]
+
+        return self.data_currencies_usd, self.data_currencies_eur
 
 # if __name__ == "__main__":
 #     ob = DataProcessingEffect()
