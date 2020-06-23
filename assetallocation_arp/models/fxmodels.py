@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 import itertools
 
+from assetallocation_arp.models import portfolio_construction as pc
+
 
 def format_data(fxmodels_inputs, asset_inputs, all_data):
     """
@@ -126,7 +128,7 @@ def determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility):
         signal_rank = np.abs(signal).rank(axis=1, method='first', ascending=False)
         exposure = (signal_rank <= top_fx) * np.sign(signal).astype(float)
         exposure_vol = np.abs(exposure) * (1 / volatility)
-        exposure = np.sign(exposure) * cap_and_redistribute((exposure_vol.T / exposure_vol.sum(axis=1)).T, 0.5)
+        exposure = np.sign(exposure) * pc.cap_and_redistribute((exposure_vol.T / exposure_vol.sum(axis=1)).T, 0.5)
     elif signal_type == 'ppp':
         signal_rank = np.abs(signal).rank(axis=1, method='first', ascending=False)
         exposure = (signal_rank <= top_fx) * np.sign(signal).astype(float) / top_fx
@@ -150,14 +152,6 @@ def create_sizing_mapping():
     map_weight = np.append(np.arange(-0.05, 0.005, 0.005), np.arange(0, 0.055, 0.005)).round(4)
     map = pd.DataFrame(data=map_return, index=map_weight)
     return map
-
-
-def cap_and_redistribute(weight_matrix, cap):
-    condition = weight_matrix <= cap
-    cap_weight = cap * (condition.count(axis=1) - condition.sum(axis=1))
-    rest_weight = (weight_matrix * condition).sum(axis=1)
-    cap_matrix = weight_matrix.mul((1 - cap_weight) / rest_weight, axis=0).clip(upper=cap)
-    return cap_matrix
 
 
 def calculate_returns(fxmodels_inputs, carry, signal, exposure, exposure_agg):
