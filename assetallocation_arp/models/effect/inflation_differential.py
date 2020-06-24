@@ -106,7 +106,7 @@ class InflationDifferential:
                                 'Malaysia': 'MYRUSD Curncy', 'Indonesia': 'IDRUSD Curncy',
                                 'India': 'INRUSD Curncy', 'Philippines': 'PHPUSD Curncy',
                                 'Taiwan Province of China': 'TWDUSD Curncy', 'Thailand': 'THBUSD Curncy',
-                                'United Kingdom': 'GBP Base', 'United States': 'USD Base'
+                                'United Kingdom': 'GBP_Base', 'United States': 'USD_Base'
                                 }
 
         inflation_data = pd.DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
@@ -176,7 +176,7 @@ class InflationDifferential:
             inflation_year_one_value_base = []
 
             flag_imf = ''
-
+            print(currency)
             for inflation, year_zero, year_one in zip(inflation_release_values, years_zero, years_one):
 
                 if inflation != 'Latest':
@@ -200,7 +200,6 @@ class InflationDifferential:
                     # Look for the value of the inflation at year1 and then append to the list inflation_year_one_value
                     inflation_year_one_value.append(inflation_data_merged.loc[index_currency, str(year_one)])
 
-                    print(currency)
                     # Look for the value of the base currency at year0 and then append to the list inflation_
                     # year_zero_value
                     inflation_year_zero_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_zero)])

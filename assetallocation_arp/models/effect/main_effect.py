@@ -43,6 +43,6 @@ def run_effect():
     # -------------------------- return incl costs calculations ------------------------------------------------------ #
     return_incl = obj_import_data.return_incl_costs_computations()
 
-
+    print()
 if __name__ == '__main__':
     run_effect()
