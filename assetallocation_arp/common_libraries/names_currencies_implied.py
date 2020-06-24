@@ -22,3 +22,8 @@ class CurrencyImplied(enum.Enum):
     # CZKI3M = "CZKI3M Curncy"
     # HUFI3M = "HUFI3M Curncy"
     # PLNI3M = "PLNI3M Curncy"
+
+
+class CurrencyBaseImplied(enum.Enum):
+    US0003M = "US0003M Index"
+    EUR003M = "EUR003M Curncy"

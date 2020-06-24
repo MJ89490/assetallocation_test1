@@ -9,6 +9,8 @@ import os
 import common_libraries.constants as constants
 from models.effect.inflation_imf_publishing_dates import dates_imf_publishing
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
+from assetallocation_arp.common_libraries.names_columns_dataframe import CurrencySpot
+from assetallocation_arp.common_libraries.names_currencies_spot import CurrencyBaseSpot
 
 
 class InflationDifferential:
@@ -47,7 +49,7 @@ class InflationDifferential:
 
             weo_dates.append(weo_date)
 
-        self.inflation_release["Inflation Release"] = weo_dates
+        self.inflation_release[CurrencySpot.Inflation_Release.name] = weo_dates
         # Set the index and shift the data by one
         self.inflation_release = self.inflation_release.set_index(self.dates_index).shift(1)
         # Replace the nan by Latest because we know it is the only nan in the Series
@@ -55,7 +57,7 @@ class InflationDifferential:
 
     def inflation_differential_download(self):
         # Grab the data from the IMF website according to the imf publishing date
-        inflation_release = self.inflation_release['Inflation Release'].drop_duplicates().iloc[1:].tolist()
+        inflation_release = self.inflation_release[CurrencySpot.Inflation_Release.name].drop_duplicates().iloc[1:].tolist()
         # Get files from data_imf directory
         csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
         # Get through each csv files to know if you need to download data
@@ -85,16 +87,83 @@ class InflationDifferential:
                 else:
                     print('OK ', csv_file)
 
-    def inflation_differential_computations(self, data_currencies_usd, start_date_computations):
+    def inflation_differential_imf_processing(self, inflation):
+
+        # Set the name of the csv file
+        csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
+
+        # Read the data rom the inflation csv files
+        inflation_values = pd.read_csv(
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", csv_file)))
+
+        countries_currencies = {'Brazil': 'BRLUSD Curncy', 'Argentina': 'ARSUSD Curncy',
+                                'Mexico': 'MXNUSD Curncy', 'Colombia': 'COPUSD Curncy',
+                                'Chile': 'CLPUSD Curncy', 'Peru': 'PENUSD Curncy',
+                                'Turkey': 'TRYUSD Curncy', 'Russia': 'RUBUSD Curncy',
+                                'Hungary': 'HUFUSD Curncy', 'Poland': 'PLNUSD Curncy',
+                                'Czech Republic': 'CZKUSD Curncy', 'South Africa': 'ZARUSD Curncy',
+                                'China': 'CNYUSD Curncy', 'Korea': 'KRWUSD Curncy',
+                                'Malaysia': 'MYRUSD Curncy', 'Indonesia': 'IDRUSD Curncy',
+                                'India': 'INRUSD Curncy', 'Philippines': 'PHPUSD Curncy',
+                                'Taiwan Province of China': 'TWDUSD Curncy', 'Thailand': 'THBUSD Curncy',
+                                'United Kingdom': 'GBP Base', 'United States': 'USD Base'
+                                }
+
+        inflation_data = pd.DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
+        inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
+
+        inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
+        inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
+        inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
+
+        return inflation_data_merged
+
+    @staticmethod
+    def inflation_differential_bloomberg_processing():
+
+        # Processing bloomberg data
+        inflation_values = pd.read_csv(os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "bloomberg_data", "bbg_data.csv")))
+
+        # Remove the first two rows
+        inflation_values = inflation_values.iloc[2:]
+
+        # Set the dates to timestamp
+        inflation_values_index = inflation_values.iloc[:, 0].apply(lambda x: int(str(x).split('.')[0]))
+
+        # inflation_values = inflation_values.set_index(inflation_values_index)
+        inflation_values = inflation_values.iloc[:, 1:]
+        inflation_values = inflation_values.set_index(inflation_values_index)
+
+        # Delete unused columns
+        inflation_values.drop(columns=['RON', 'ILS', 'EGP', 'NGN'])
+
+        # Rename the columns correctly
+        names_currencies = {'BRL': 'BRLUSD Curncy', 'PEN': 'PENUSD Curncy', 'ARS': 'ARSUSD Curncy',
+                            'MXN': 'MXNUSD Curncy', 'COP': 'COPUSD Curncy', 'CLP': 'CLPUSD Curncy',
+                            'TRY': 'TRYUSD Curncy', 'RUB': 'RUBUSD Curncy', 'ILS': 'ILSUSD Curncy',
+                            'CZK': 'CZKUSD Curncy', 'RON': 'RONUSD Curncy', 'HUF': 'HUFUSD Curncy',
+                            'PLN': 'PLNUSD Curncy', 'EGP': 'EGPUSD Curncy', 'ZAR': 'ZARUSD Curncy',
+                            'NGN': 'NGNUSD Curncy', 'CNY': 'CNYUSD Curncy', 'KRW': 'KRWUSD Curncy',
+                            'MYR': 'MYRUSD Curncy', 'IDR': 'IDRUSD Curncy', 'INR': 'INRUSD Curncy',
+                            'PHP': 'PHPUSD Curncy', 'TWD': 'TWDUSD Curncy', 'THB': 'THBUSD Curncy',
+                            'EUR': 'EUR', 'GBP': 'GBP', 'USD': 'USD'}
+
+        inflation_values = inflation_values.rename(columns=names_currencies)
+
+        return inflation_values
+
+    def inflation_differential_computations(self, start_date_computations):
 
         # Grab the inflation differential data if needed
         self.inflation_differential_download()
 
-        inflation_release_values = self.inflation_release['Inflation Release'].tolist()
-        years_zero = self.inflation_release['Inflation Release'].index.year.tolist()
-        # years_one = [year+1 for year in years_zero]
-        years_one = pd.Series(self.inflation_release['Inflation Release'].index.year).apply(lambda y: y + 1).tolist()
-        months = self.inflation_release['Inflation Release'].index.month.tolist()
+        inflation_bloomberg_values = self.inflation_differential_bloomberg_processing()
+
+        inflation_release_values = self.inflation_release[CurrencySpot.Inflation_Release.name].tolist()
+        years_zero = self.inflation_release[CurrencySpot.Inflation_Release.name].index.year.tolist()
+        years_one = pd.Series(self.inflation_release[CurrencySpot.Inflation_Release.name].index.year).apply(lambda y: y + 1).tolist()
+        months = self.inflation_release[CurrencySpot.Inflation_Release.name].index.month.tolist()
 
         # Compute the multipliers (12 - m)/12 and m/12
         multiplier_one = pd.Series(months).apply(lambda m: (12-m)/12)
@@ -106,49 +175,32 @@ class InflationDifferential:
             inflation_year_zero_value_base = []
             inflation_year_one_value_base = []
 
+            flag_imf = ''
+
             for inflation, year_zero, year_one in zip(inflation_release_values, years_zero, years_one):
 
                 if inflation != 'Latest':
-                    # Set the name of the csv file
-                    csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
-                    # Read the data rom the inflation csv files
-                    inflation_values = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", csv_file)))
 
-                    countries_currencies = {'Brazil': 'BRLUSD Curncy', 'Argentina': 'ARSUSD Curncy',
-                                            'Mexico': 'MXNUSD Curncy', 'Colombia': 'COPUSD Curncy',
-                                            'Chile': 'CLPUSD Curncy', 'Peru': 'PENUSD Curncy',
-                                            'Turkey': 'TRYUSD Curncy', 'Russia': 'RUBUSD Curncy',
-                                            'Hungary': 'HUFUSD Curncy', 'Poland': 'PLNUSD Curncy',
-                                            'Czech Republic': 'CZKUSD Curncy', 'South Africa': 'ZARUSD Curncy',
-                                            'China': 'CNYUSD Curncy', 'Korea': 'KRWUSD Curncy',
-                                            'Malaysia': 'MYRUSD Curncy', 'Indonesia': 'IDRUSD Curncy',
-                                            'India': 'INRUSD Curncy', 'Philippines': 'PHPUSD Curncy',
-                                            'Taiwan Province of China': 'TWDUSD Curncy', 'Thailand': 'THBUSD Curncy',
-                                            'United Kingdom': 'GBP Base', 'United States': 'USD Base'
-                                            }
-
-                    inflation_data = pd.DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
-                    inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
-
-                    inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
-                    inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
-                    inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
+                    # Be sure the csv file is read only one time per inflation
+                    if flag_imf != inflation:
+                        inflation_data_merged = self.inflation_differential_imf_processing(inflation=inflation)
 
                     index_currency = inflation_data_merged[inflation_data_merged.Currency.str.contains(currency)].index[0]
 
                     # Select the base currency (USD or EUR) depending on the currency
-                    if currency in data_currencies_usd:
+                    if currency in constants.CURRENCIES_USD:
                         index_currency_base = \
-                            inflation_data_merged[inflation_data_merged.Currency.str.contains('USD Base')].index[0]
+                            inflation_data_merged[inflation_data_merged.Currency.str.contains(CurrencyBaseSpot.USD_Base.name)].index[0]
                     else:
                         index_currency_base = \
-                            inflation_data_merged[inflation_data_merged.Currency.str.contains('EUR Base')].index[0]
-                    print(currency, inflation, year_zero, inflation_data_merged.loc[index_currency_base, 'Currency'])
+                            inflation_data_merged[inflation_data_merged.Currency.str.contains(CurrencyBaseSpot.EUR_Base.name)].index[0]
+
                     # Look for the value of the inflation at year0 and then append to the list inflation_year_zero_value
                     inflation_year_zero_value.append(inflation_data_merged.loc[index_currency, str(year_zero)])
                     # Look for the value of the inflation at year1 and then append to the list inflation_year_one_value
                     inflation_year_one_value.append(inflation_data_merged.loc[index_currency, str(year_one)])
 
+                    print(currency)
                     # Look for the value of the base currency at year0 and then append to the list inflation_
                     # year_zero_value
                     inflation_year_zero_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_zero)])
@@ -157,52 +209,24 @@ class InflationDifferential:
                     inflation_year_one_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_one)])
 
                 else:
-                    # Processing bloomberg data
-                    inflation_values = pd.read_csv(os.path.abspath(
-                        os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "bloomberg_data", "bbg_data.csv")))
-
-                    # Remove the first two rows
-                    inflation_values = inflation_values.iloc[2:]
-
-                    # Set the dates to timestamp
-                    inflation_values_index = inflation_values.iloc[:, 0].apply(lambda x: int(str(x).split('.')[0]))
-
-                    # inflation_values = inflation_values.set_index(inflation_values_index)
-                    inflation_values = inflation_values.iloc[:, 1:]
-                    inflation_values = inflation_values.set_index(inflation_values_index)
-
-                    # Delete unused columns
-                    inflation_values.drop(columns=['RON', 'ILS', 'EGP', 'NGN'])
-
-                    # Rename the columns correctly
-                    names_currencies = {'BRL': 'BRLUSD Curncy', 'PEN': 'PENUSD Curncy', 'ARS': 'ARSUSD Curncy',
-                                        'MXN': 'MXNUSD Curncy', 'COP': 'COPUSD Curncy', 'CLP': 'CLPUSD Curncy',
-                                        'TRY': 'TRYUSD Curncy', 'RUB': 'RUBUSD Curncy', 'ILS': 'ILSUSD Curncy',
-                                        'CZK': 'CZKUSD Curncy', 'RON': 'RONUSD Curncy', 'HUF': 'HUFUSD Curncy',
-                                        'PLN': 'PLNUSD Curncy', 'EGP': 'EGPUSD Curncy', 'ZAR': 'ZARUSD Curncy',
-                                        'NGN': 'NGNUSD Curncy', 'CNY': 'CNYUSD Curncy', 'KRW': 'KRWUSD Curncy',
-                                        'MYR': 'MYRUSD Curncy', 'IDR': 'IDRUSD Curncy', 'INR': 'INRUSD Curncy',
-                                        'PHP': 'PHPUSD Curncy', 'TWD': 'TWDUSD Curncy', 'THB': 'THBUSD Curncy',
-                                        'EUR': 'EUR', 'GBP': 'GBP', 'USD': 'USD'}
-
-                    inflation_values = inflation_values.rename(columns=names_currencies)
-
                     # Select the base currency (USD or EUR) depending on the currency
-                    if currency in data_currencies_usd:
-                        base_currency = 'USD'
+                    if currency in constants.CURRENCIES_USD:
+                        base_currency = CurrencyBaseSpot.USD.name
                     else:
-                        base_currency = 'EUR'
+                        base_currency = CurrencyBaseSpot.EUR.name
 
                     # Look for the value of the inflation at year0 and then append to the list inflation_year_zero_value
-                    inflation_year_zero_value.append(float(inflation_values.loc[year_zero, currency]))
+                    inflation_year_zero_value.append(float(inflation_bloomberg_values.loc[year_zero, currency]))
                     # Look for the value of the inflation at year1 and then append to the list inflation_year_one_value
-                    inflation_year_one_value.append(float(inflation_values.loc[year_one, currency]))
+                    inflation_year_one_value.append(float(inflation_bloomberg_values.loc[year_one, currency]))
                     # Look for the value of the base currency at year0 and then append to the list inflation_
                     # year_zero_value
-                    inflation_year_zero_value_base.append(float(inflation_values.loc[year_zero, base_currency]))
+                    inflation_year_zero_value_base.append(float(inflation_bloomberg_values.loc[year_zero, base_currency]))
                     # Look for the value of the base currency at year1 and then append to the list inflation_
                     # year_zero_value
-                    inflation_year_one_value_base.append(float(inflation_values.loc[year_one, base_currency]))
+                    inflation_year_one_value_base.append(float(inflation_bloomberg_values.loc[year_one, base_currency]))
+
+                flag_imf = inflation
 
             # Store results in dataFrames
             inflation_year_zero_values = multiplier_one.mul(pd.Series(inflation_year_zero_value).astype(np.float64))
@@ -215,7 +239,7 @@ class InflationDifferential:
             inflation_two = inflation_year_zero_values_base.add(inflation_year_one_values_base).apply(lambda x: x/100)
 
             inflation_three = inflation_one.sub(inflation_two).apply(lambda x: x * 100)
-            self.inflation_differential['Inflation_Differential_' + currency] = inflation_three.tolist()
+            self.inflation_differential[CurrencySpot.Inflation_Differential.name + currency] = inflation_three.tolist()
 
         # Set the index with dates
         self.inflation_differential = self.inflation_differential.set_index(self.inflation_release.index.values)
@@ -226,3 +250,5 @@ class InflationDifferential:
 
         # Fill the nan value due the shift (first value only)
         self.inflation_differential.loc[start_date_computations] = first_value
+
+        return self.inflation_differential

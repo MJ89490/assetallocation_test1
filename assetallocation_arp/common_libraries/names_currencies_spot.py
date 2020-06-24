@@ -25,4 +25,9 @@ class CurrencySpot(enum.Enum):
     # PLNEUR = "PLNEUR Curncy"
 
 
+class CurrencyBaseSpot(enum.Enum):
+    USD = 'USD'
+    EUR = 'EUR'
+    USD_Base = 'USD_Base'
+    EUR_Base = 'EUR_Base'
 
