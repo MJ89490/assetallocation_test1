@@ -36,55 +36,67 @@ class CurrencyComputations(DataProcessingEffect):
                 data_all_currencies_spot = self.data_currencies_usd.loc[:, currency_spot].tolist()
                 data_all_currencies_carry = self.data_currencies_usd.loc[:, currency_carry].tolist()
                 data_all_currencies_implied = self.data_currencies_usd.loc[:, currency_implied].tolist()
-                data_all_currencies_index = self.data_currencies_usd.loc[:, CurrencyBaseImplied.US0003M.value].tolist()
+                data_all_currencies_implied_base = self.data_currencies_usd.loc[:, CurrencyBaseImplied.US0003M.value].tolist()
             else:
                 data_all_currencies_spot = self.data_currencies_eur.loc[:, currency_spot].tolist()
                 data_all_currencies_carry = self.data_currencies_eur.loc[:, currency_carry].tolist()
                 data_all_currencies_implied = self.data_currencies_eur.loc[:, currency_implied].tolist()
-                data_all_currencies_index = self.data_currencies_eur.loc[:, CurrencyBaseImplied.EUR003M.value].tolist()
+                data_all_currencies_implied_base = self.data_currencies_eur.loc[:, CurrencyBaseImplied.EUR003M.value].tolist()
 
             for values in range(rows):
 
-                start_date_index_loc = self.data_currencies_usd.index.get_loc(tmp_start_date_computations)
+                # Set the start date to start the computation
+                start_current_date_index_loc = self.data_currencies_usd.index.get_loc(tmp_start_date_computations)
+                start_current_date_index = pd.to_datetime(self.data_currencies_usd.index[start_current_date_index_loc],
+                                                          format='%d-%m-%Y')
+                # Take the previous dates
+                previous_start_date_index = self.data_currencies_usd.index[start_current_date_index_loc - 1]
+                previous_start_date_index_loc = self.data_currencies_usd.index.get_loc(previous_start_date_index)
 
-                start_date_index = pd.to_datetime(self.data_currencies_usd.index[start_date_index_loc],
-                                                  format='%d-%m-%Y')
+                previous_start_four_date_index = self.data_currencies_usd.index[previous_start_date_index_loc - 3]
+                previous_start_four_date_loc = self.data_currencies_usd.index.get_loc(previous_start_four_date_index)
 
-                previous_start_date = self.data_currencies_usd.index[start_date_index_loc - 4]
-                previous_four_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
+                # Do the averages
+                # We use nanmean because we do average with nan and integers values sometimes
+                average_implied = np.nanmean(data_all_currencies_implied[previous_start_four_date_loc:previous_start_date_index_loc+1])
+                average_index = np.nanmean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
 
-                average_implied = np.mean(data_all_currencies_implied[previous_four_start_date_index:start_date_index_loc])
-                average_index = np.mean(data_all_currencies_index[previous_four_start_date_index:start_date_index_loc])
-
+                # Depending on the carry type, if it is real, we take off the inflation, otherwise, we don't
                 if carry_type.lower() == 'real':
-                    carry_tmp = ((average_implied - average_index) / 100) - inflation_differential.loc[start_date_index][0]
+                    carry_tmp = ((average_implied - average_index) / 100) - inflation_differential.loc[start_current_date_index][0]/100
                 else:
                     carry_tmp = ((average_implied - average_index) / 100)
 
+                # If one of the average don't have a nan, we can add the calculation to the list, otherwise, we perform
+                # another calculation in the else statement
                 if not np.isnan(carry_tmp):
                     carry.append(carry_tmp)
+
                 else:
-                    start_date_index_loc = self.data_currencies_usd.index.get_loc(tmp_start_date_computations)
 
-                    previous_start_date = self.data_currencies_usd.index[start_date_index_loc - 1]
-                    previous_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date)
+                    previous_start_date_loc = self.data_currencies_usd.index[start_current_date_index_loc - 1]
+                    previous_start_date_index = self.data_currencies_usd.index.get_loc(previous_start_date_loc)
 
-                    previous_eleven_start_date = self.data_currencies_usd.index[start_date_index_loc - 11]
-                    previous_eleven_start_date_index = self.data_currencies_usd.index.get_loc(previous_eleven_start_date)
+                    previous_eleven_start_date_loc = self.data_currencies_usd.index[start_current_date_index_loc - 11]
+                    previous_eleven_start_date_index = self.data_currencies_usd.index.get_loc(previous_eleven_start_date_loc)
 
                     numerator = data_all_currencies_carry[previous_start_date_index] / data_all_currencies_carry[previous_eleven_start_date_index]
                     denominator = data_all_currencies_spot[previous_start_date_index] / data_all_currencies_spot[previous_eleven_start_date_index]
 
-                    carry.append((((numerator / denominator) ** (52/10))-1))
+                    if carry_type.lower() == 'real':
+                        carry.append((((numerator / denominator) ** (52/10))-1) - inflation_differential.loc[start_current_date_index][0]/100)
+                    else:
+                        carry.append((((numerator / denominator) ** (52/10))-1))
 
+                # Error handling when we reach the end of the dates range
                 try:
-                    tmp_start_date_computations = self.data_currencies_usd.index[start_date_index_loc + 1]
+                    tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc + 1]
                 except IndexError:
-                    tmp_start_date_computations = self.data_currencies_usd.index[start_date_index_loc]
+                    tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc]
 
             self.carry_currencies[CurrencySpot.Carry.name + currency_spot] = carry
 
-        self.carry_currencies = self.carry_currencies.set_index(self.dates_index)
+        self.carry_currencies = self.carry_currencies.set_index(self.dates_index).apply(lambda x: x * 100)
 
         return self.carry_currencies
 
@@ -95,7 +107,7 @@ class CurrencyComputations(DataProcessingEffect):
         else:
             currencies = constants.CURRENCIES_SPOT
 
-        # loop through each date
+        # Loop through each date
         for currency, currency_name_col in zip(currencies, constants.CURRENCIES_SPOT):
             if currency in self.data_currencies_usd.columns:
                 trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(short_term).mean()
@@ -104,9 +116,9 @@ class CurrencyComputations(DataProcessingEffect):
                 trend_short_tmp = self.data_currencies_eur.loc[:, currency].rolling(short_term).mean()
                 trend_long_tmp = self.data_currencies_eur.loc[:, currency].rolling(long_term).mean()
 
-            self.trend_currencies[CurrencySpot.Trend.name + currency_name_col] = ((trend_short_tmp / trend_long_tmp)-1)*100
+            self.trend_currencies[CurrencySpot.Trend.name + currency_name_col] = ((trend_short_tmp / trend_long_tmp)-1) * 100
 
-        # take the previous date compared to self.date_computations because there is a shift of 1 because of rolling
+        # Take the previous date compared to self.date_computations because there is a shift of 1 because of rolling
         start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
         previous_start_date = self.data_currencies_usd.index[start_date_loc - 1]
 
