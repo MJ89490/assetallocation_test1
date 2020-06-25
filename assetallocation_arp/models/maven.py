@@ -67,7 +67,9 @@ def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
         maven_tickers = asset_inputs[['bbg_er_ticker', 'cash_ticker']]
     else:
         maven_tickers = asset_inputs[['bbg_tr_ticker', 'cash_ticker']]
+    # just changing one column header
     maven_tickers.columns = ['asset_ticker', 'cash_ticker']
+    # determining the non-cash assets
     boolean_assets = asset_inputs['asset_weight'] != 0
     m = sum(boolean_assets)
     n = len(asset_returns)
