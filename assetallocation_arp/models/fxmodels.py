@@ -71,7 +71,7 @@ def calculate_signals(fxmodels_inputs, spot, carry, cash, ppp):
     else:
         volatility = 1
     if base is None:
-            base = 0
+        base = 0
     sharpe = (np.log(carry / carry.shift(int(val_win - base / 2)).rolling(base + 1).mean()) + 1) ** (12 / val_win) - 1
     # signal creation for various fx models
     if signal_type == 'momentum':
