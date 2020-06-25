@@ -1,7 +1,7 @@
 """
 Created on Sun Jun  14 15:47:00 2020
 FX Models
-@author: WK68945
+@author:
 """
 
 import numpy as np
@@ -27,12 +27,11 @@ def format_data(fxmodels_inputs, asset_inputs, all_data):
     fx_list = asset_inputs['currency']
     # determining all crosses and tickers
     fx = [x for x in itertools.combinations(fx_list, 2)]
-    #spot = [''.join(x) + ' Curncy' for x in fx]
+    spot = [''.join(x) + ' Curncy' for x in fx]
     carry = [''.join(x) + 'CR Curncy' for x in fx]
     # getting spot and carry data for the crosses directly
-    #spot = all_data[spot]
-    #spot.columns = spot.columns.str[:6]
-    spot = carry # temp correction
+    spot = all_data[spot]
+    spot.columns = spot.columns.str[:6]
     carry = all_data[carry]
     carry.columns = carry.columns.str[:6]
     # deriving ppp and cash rates for the crosses
@@ -66,7 +65,7 @@ def calculate_signals(fxmodels_inputs, spot, carry, cash, ppp):
     val_cutoff = fxmodels_inputs['sharpe cutoff'].item()
     resp_func = fxmodels_inputs['response function'].item()
     mom_weight = [fxmodels_inputs['momentum_weight_' + str(x) + 'm'].item() for x in range(1, 7)]
-    # calculate rolling volatility amd sharpe ratios
+    # calculate rolling volatility and sharpe ratios
     if vol_win is not None:
         volatility = (12 ** 0.5) * carry.pct_change().rolling(vol_win).std()
     else:
@@ -162,7 +161,7 @@ def calculate_returns(fxmodels_inputs, carry, signal, exposure, exposure_agg):
     :param pd.DataFrame signal: model signals
     :param pd.DataFrame exposure: currency exposure for individual crosses
     :param pd.DataFrame exposure_agg: currency exposure aggregated
-    :return: dataframes with with model returns, currency contributions and returns
+    :return: dataframes with model returns, currency contributions and returns
     """
     # reading inputs
     base_fx = fxmodels_inputs['currency'].item()
