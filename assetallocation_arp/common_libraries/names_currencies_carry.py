@@ -2,8 +2,8 @@ import enum
 
 class CurrencyCarry(enum.Enum):
 
-    BRLUSD = "BRLUSDCR Curncy"
-    # ARSUSD = "ARSUSDCR Curncy"
+    # BRLUSD = "BRLUSDCR Curncy"
+    ARSUSD = "ARSUSDCR Curncy"
     # MXNUSD = "MXNUSDCR Curncy"
     # COPUSD = "COPUSDCR Curncy"
     # CLPUSD = "CLPUSDCR Curncy"

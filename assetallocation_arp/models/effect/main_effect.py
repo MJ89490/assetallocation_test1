@@ -25,7 +25,7 @@ def run_effect():
                                                long_term=trend_inputs['long_term'])
 
     # # -------------------------- combo calculations ---------------------------------------------------------------- #
-    combo_inputs = {'cut_off': 0.002, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.0025}
+    combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
     combo = obj_import_data.combo_computations(cut_off=combo_inputs['cut_off'], incl_shorts=combo_inputs['incl_shorts'],
                                                cut_off_s=combo_inputs['cut_off_s'],
                                                threshold_for_closing=combo_inputs['threshold'])
@@ -43,6 +43,5 @@ def run_effect():
     # -------------------------- return incl costs calculations ------------------------------------------------------ #
     return_incl = obj_import_data.return_incl_costs_computations()
 
-    print()
 if __name__ == '__main__':
     run_effect()
