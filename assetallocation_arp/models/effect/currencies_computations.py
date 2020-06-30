@@ -98,7 +98,7 @@ class CurrencyComputations(DataProcessingEffect):
 
             self.carry_currencies[CurrencySpot.Carry.name + currency_spot] = carry
 
-        self.carry_currencies = self.carry_currencies.set_index(self.dates_index).apply(lambda x: x * 100)
+        self.carry_currencies = self.carry_currencies.set_index(self.dates_origin_index).apply(lambda x: x * 100)
 
         return self.carry_currencies
 
@@ -165,12 +165,8 @@ class CurrencyComputations(DataProcessingEffect):
 
             self.combo_currencies[CurrencySpot.Combo.name + currency_spot] = combo
 
-        # Set the new index
-        start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
-        new_index = self.data_currencies_usd.index[start_date_loc - 1:, ]
-        # remove the first line as it was the initialization of the combo
-        # self.combo_currencies = self.combo_currencies.iloc[1:]
-        self.combo_currencies = self.combo_currencies.set_index(new_index)
+        # Set the index
+        self.combo_currencies = self.combo_currencies.set_index(self.dates_index)
 
         return self.combo_currencies
 
@@ -216,10 +212,7 @@ class CurrencyComputations(DataProcessingEffect):
             # pd.DataFrame(first_returns).to_csv("returns_ex_costs_{}.csv".format(currency_spot))
 
         # Set the index with dates by taking into account the 100
-        start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
-        new_index = self.data_currencies_usd.index[start_date_loc - 1:, ]
-
-        self.return_ex_costs = self.return_ex_costs.set_index(new_index)
+        self.return_ex_costs = self.return_ex_costs.set_index(self.dates_index)
 
         return self.return_ex_costs
 
@@ -247,10 +240,7 @@ class CurrencyComputations(DataProcessingEffect):
             self.return_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.name,
                                                 CurrencySpot.Return_Incl_Costs.name)] = return_incl_costs
 
-        start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
-        new_index = self.data_currencies_usd.index[start_date_loc - 1:, ]
-
-        self.return_incl_costs = self.return_incl_costs.set_index(new_index)
+        self.return_incl_costs = self.return_incl_costs.set_index(self.dates_index)
 
         return self.return_incl_costs
 
@@ -282,10 +272,7 @@ class CurrencyComputations(DataProcessingEffect):
             self.spot_ex_costs[CurrencySpot.Spot_Ex_Costs.name + currency] = spot
 
         # Set the dates to the index of self.spot_ex_costs
-        start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
-        new_index = self.data_currencies_usd.index[start_date_loc - 1:, ]
-
-        self.spot_ex_costs = self.spot_ex_costs.set_index(new_index)
+        self.spot_ex_costs = self.spot_ex_costs.set_index(self.dates_index)
 
         return self.spot_ex_costs
 
@@ -313,9 +300,6 @@ class CurrencyComputations(DataProcessingEffect):
             self.spot_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.name,
                                               CurrencySpot.Return_Incl_Costs.name)] = spot_incl_costs
 
-        start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
-        new_index = self.data_currencies_usd.index[start_date_loc - 1:, ]
-
-        self.spot_incl_costs = self.spot_incl_costs.set_index(new_index)
+        self.spot_incl_costs = self.spot_incl_costs.set_index(self.dates_index)
 
         return self.spot_incl_costs

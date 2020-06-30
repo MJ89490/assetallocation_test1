@@ -39,6 +39,13 @@ class DataProcessingEffect:
 
     @property
     def dates_index(self):
+        start_current_date_index_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
+        new_start_date_index = self.data_currencies_usd.index[start_current_date_index_loc - 1]
+
+        return self.data_currencies_usd.loc[new_start_date_index:].index.values
+
+    @property
+    def dates_origin_index(self):
         return self.data_currencies_usd.loc[self.start_date_calculations:].index.values
 
     @property
