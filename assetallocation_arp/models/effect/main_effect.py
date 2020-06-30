@@ -6,7 +6,7 @@ from assetallocation_arp.models.effect.inflation_differential import InflationDi
 def run_effect():
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
 
-    obj_import_data = CurrencyComputations(start_date_calculations='2000-01-11')
+    obj_import_data = CurrencyComputations(start_date_calculations='2006-09-14')
     obj_import_data.data_processing_effect()
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #

@@ -50,10 +50,7 @@ class InflationDifferential:
             weo_dates.append(weo_date)
 
         self.inflation_release[CurrencySpot.Inflation_Release.name] = weo_dates
-        # Set the index and shift the data by one
-        self.inflation_release = self.inflation_release.set_index(self.dates_index).shift(1)
-        # Replace the nan by Latest because we know it is the only nan in the Series
-        self.inflation_release = self.inflation_release.fillna('Latest')
+        self.inflation_release = self.inflation_release.set_index(self.dates_index)
 
     def inflation_differential_download(self):
         # Grab the data from the IMF website according to the imf publishing date
@@ -243,11 +240,11 @@ class InflationDifferential:
         # Set the index with dates
         self.inflation_differential = self.inflation_differential.set_index(self.inflation_release.index.values)
         # Shift of 1 because we take the previous date to have the result of the current date
-        first_value = self.inflation_differential.loc[start_date_computations].tolist()
-        # print(currency, first_value)
-        self.inflation_differential = self.inflation_differential.shift(1)
-
-        # Fill the nan value due the shift (first value only)
-        self.inflation_differential.loc[start_date_computations] = first_value
+        # first_value = self.inflation_differential.loc[start_date_computations].tolist()
+        # # print(currency, first_value)
+        # self.inflation_differential = self.inflation_differential.shift(1)
+        #
+        # # Fill the nan value due the shift (first value only)
+        # self.inflation_differential.loc[start_date_computations] = first_value
 
         return self.inflation_differential

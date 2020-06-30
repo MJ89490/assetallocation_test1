@@ -4,8 +4,8 @@ import enum
 class CurrencySpot(enum.Enum):
 
     # BRLUSD = "BRLUSD Curncy"
-    ARSUSD = "ARSUSD Curncy"
-    # MXNUSD = "MXNUSD Curncy"
+    # ARSUSD = "ARSUSD Curncy"
+    MXNUSD = "MXNUSD Curncy"
     # COPUSD = "COPUSD Curncy"
     # CLPUSD = "CLPUSD Curncy"
     # PENUSD = "PENUSD Curncy"

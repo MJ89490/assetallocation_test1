@@ -24,7 +24,7 @@ class CurrencyComputations(DataProcessingEffect):
         self.bid_ask_spread = value
 
     def carry_computations(self, carry_type, inflation_differential):
-
+        #todo REFAIRE CALCUL EN ENTIER
         for currency_spot, currency_implied, currency_carry in \
                 zip(constants.CURRENCIES_SPOT, constants.CURRENCIES_IMPLIED, constants.CURRENCIES_CARRY):
 
@@ -197,7 +197,7 @@ class CurrencyComputations(DataProcessingEffect):
             # return_tmp = return_division_tmp.tolist()
 
             d = self.data_currencies_usd.index[18792:].tolist()
-            ret = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\models\effect\returns.csv')
+            ret = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\models\effect\returns_mxn.csv')
             ret = ret['Returns'].tolist()
 
             origin_returns = []
@@ -210,9 +210,9 @@ class CurrencyComputations(DataProcessingEffect):
             self.return_ex_costs[CurrencySpot.Return_Ex_Costs.name + currency_spot] = first_returns
             # pd.DataFrame(first_returns[1:]).to_csv('brl_returns_ex_costs_results')
             #POUR LES TESTS ON UTILISE LES NUMPY ARRAY ET ON  COMPARE LES DEUX ARRAYS SI TRUE ON EST OKAY
-            o = np.array(origin_returns)
-            f = np.array(first_returns[1:])
-            print("%s IS EQUAL: %s" % (currency_spot, np.allclose(o, f)))
+            # o = np.array(origin_returns)
+            # f = np.array(first_returns[1:])
+            # print("%s IS EQUAL: %s" % (currency_spot, np.allclose(o, f)))
             # pd.DataFrame(first_returns).to_csv("returns_ex_costs_{}.csv".format(currency_spot))
 
         # Set the index with dates by taking into account the 100
