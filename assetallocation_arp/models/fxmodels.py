@@ -20,6 +20,7 @@ def format_data(fxmodels_inputs, asset_inputs, all_data):
     :return: dataframes with formatted series for spot and carry indices, cash rates and ppp levels
     """
     # reading inputs
+    all_data.iloc[-1:] = all_data.iloc[-2:].fillna(method='ffill').tail(1)
     date_from = fxmodels_inputs['date_from'].item()
     date_to = fxmodels_inputs['date_to'].item()
     all_data = all_data.loc[date_from:date_to]
@@ -149,7 +150,7 @@ def determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility):
 def create_sizing_mapping():
     map_return = np.append(-1, np.arange(-0.05, 0.055, 0.005)).round(4)
     map_weight = np.append(np.arange(-0.05, 0.005, 0.005), np.arange(0, 0.055, 0.005)).round(4)
-    map = pd.DataFrame(data=map_return, index=map_weight)
+    map = pd.DataFrame(data=map_return, index=map_weight, columns=['weight'])
     return map
 
 
@@ -168,7 +169,7 @@ def calculate_returns(fxmodels_inputs, carry, signal, exposure, exposure_agg):
     costs = fxmodels_inputs['transaction costs'].item()
     returns = pd.DataFrame(index=exposure.index)
     # return calculations
-    returns['returns'] = (exposure.shift() * np.log(carry / carry.shift())).sum(axis=1)
+    returns['returns'] = (exposure.shift() * (carry / carry.shift()-1)).sum(axis=1)
     returns['returns_cum'] = (1 + returns['returns']).cumprod() * 100
     returns['turnover'] = (exposure_agg - exposure_agg.shift()).abs().sum(axis=1) / 2
     transaction_costs = returns['turnover'] * costs / 10000

@@ -19,6 +19,7 @@ def format_data(maven_inputs, asset_inputs, all_data):
     :return: dataframe with formatted asset return series
     """
     # reading inputs
+    all_data.iloc[-1:] = all_data.iloc[-2:].fillna(method='ffill').tail(1)
     date_from = maven_inputs['date_from'].item()
     date_to = maven_inputs['date_to'].item()
     all_data = all_data.loc[date_from:date_to]
@@ -144,7 +145,7 @@ def calculating_signals(maven_inputs, maven_returns):
     mom = 1
     for i in range(0, len(mom_weight)):
         mom = mom * (maven_returns.shift(int(i * n / a)) / maven_returns.shift(int((i + 1) * n / a))) ** mom_weight[i]
-    momentum = (mom ** (ann / sum(mom_weight)) - 1) / volatility
+    momentum = (mom ** (a / sum(mom_weight)) - 1) / volatility
     # calculating the value scores
     value = ((maven_returns / maven_returns.shift(int(m - base / 2)).rolling(base+1).mean()) ** (n/m) - 1) / volatility
     # shorting the dataframes

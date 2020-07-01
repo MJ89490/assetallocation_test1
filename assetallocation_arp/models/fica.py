@@ -18,6 +18,7 @@ def format_data(fica_inputs, asset_inputs, all_data):
     :return: dataframe with historical yield curves per country
     """
     # reading inputs and shortening data
+    all_data.iloc[-1:] = all_data.iloc[-2:].fillna(method='ffill').tail(1)
     country = asset_inputs['country']
     m = len(country)
     date_from = fica_inputs['date_from'].item()
@@ -119,7 +120,6 @@ def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns):
     returns['Geometric'] = 100
     for k in range(1, n):
         returns.iloc[k, 3] = (1 + (contribution.iloc[k, m] - returns.iloc[k, 0]) / 100) * returns.iloc[k - 1, 3]
-
     return signals, cum_contribution, returns
 
 
