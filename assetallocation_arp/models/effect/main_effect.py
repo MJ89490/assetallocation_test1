@@ -11,10 +11,9 @@ def run_effect():
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = InflationDifferential(dates_index=obj_import_data.dates_index)
-    obj_inflation_differential.inflation_release_computations()
+    # obj_inflation_differential.inflation_release_computations()
     inflation_differential = \
-        obj_inflation_differential.inflation_differential_computations(start_date_computations=
-                                                                       obj_import_data.start_date_calculations)
+        obj_inflation_differential.inflation_differential_computations()
 
     # -------------------------- carry calculations ------------------------------------------------------------------ #
     carry = obj_import_data.carry_computations(carry_type='Real',  inflation_differential=inflation_differential)
@@ -42,6 +41,7 @@ def run_effect():
 
     # -------------------------- return incl costs calculations ------------------------------------------------------ #
     return_incl = obj_import_data.return_incl_costs_computations()
+
 
 if __name__ == '__main__':
     run_effect()

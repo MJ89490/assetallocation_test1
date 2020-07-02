@@ -15,13 +15,12 @@ from assetallocation_arp.common_libraries.names_currencies_spot import CurrencyB
 
 class InflationDifferential:
     def __init__(self, dates_index):
-        self.inflation_release = pd.DataFrame()
-        self.inflation_differential = pd.DataFrame()
         self.dates_index = dates_index
 
     def inflation_release_computations(self):
 
         weo_dates = []
+        inflation_release = pd.DataFrame()
         flag = False
 
         for date_index in self.dates_index:
@@ -53,32 +52,36 @@ class InflationDifferential:
 
             weo_dates.append(weo_date)
 
-        self.inflation_release[CurrencySpot.Inflation_Release.name] = weo_dates
-        self.inflation_release = self.inflation_release.set_index(self.dates_index).shift(1).iloc[1:]
+        inflation_release[CurrencySpot.Inflation_Release.name] = weo_dates
+        inflation_release = inflation_release.set_index(self.dates_index)
 
-        self.inflation_release.to_csv('inflation_release_results.csv')
+        # We have to shift by one each year because for each current date,
+        # we have to take the previous year to compute the inflation differential
+        years_zero_inflation = pd.DataFrame(inflation_release[CurrencySpot.Inflation_Release.name].index.year,
+                                            columns=['Years']).shift(1).set_index(self.dates_index).iloc[1:]
+        years_zero_inflation = years_zero_inflation.astype('int64')
 
-        # origin = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\tests\assetallocation_arp\models\resources\effect\outputs_origin\inflation_release_origin.csv')
-        # origin = origin['Inflation_Release'].tolist()
-        #
-        # inf = self.inflation_release[CurrencySpot.Inflation_Release.name].tolist()
-        #
-        # for value in range(len(origin)):
-        #     print(value, inf[value], origin[value])
-        #     if inf[value] != origin[value]:
-        #         break
-        #
-        print()
-    def inflation_differential_download(self):
+        # We have to shift by one each month because for each current date,
+        # we have to take the previous month to compute the inflation differential
+        months_inflation = pd.DataFrame(inflation_release[CurrencySpot.Inflation_Release.name].index.month,
+                                        columns=['Months']).shift(1).set_index(self.dates_index).iloc[1:]
+        months_inflation = months_inflation.astype('int64')
+
+        inflation_release = inflation_release.set_index(self.dates_index).shift(1).iloc[1:]
+
+        return inflation_release, years_zero_inflation, months_inflation
+
+    @staticmethod
+    def inflation_differential_download(inflation_release):
         # Grab the data from the IMF website according to the imf publishing date
-        inflation_release = self.inflation_release[CurrencySpot.Inflation_Release.name].drop_duplicates().iloc[1:].tolist()
+        inflation_release = inflation_release[CurrencySpot.Inflation_Release.name].drop_duplicates().iloc[1:].tolist()
         # Get files from data_imf directory
         csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
         # Get through each csv files to know if you need to download data
         print(inflation_release)
         for inflation in inflation_release:
             csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
-            # If there is any file in the data_imf folder todo CHANGE IT
+            # If there is any file in the data_imf folder
             if len(csv_files) == 0:
                 for date in dates_imf_publishing.keys():
                     date_tmp = pd.to_datetime(date, format='%d-%m-%Y')
@@ -101,7 +104,8 @@ class InflationDifferential:
                 else:
                     print('OK ', csv_file)
 
-    def inflation_differential_imf_processing(self, inflation):
+    @staticmethod
+    def inflation_differential_imf_processing(inflation):
 
         # Set the name of the csv file
         csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
@@ -167,34 +171,28 @@ class InflationDifferential:
 
         return inflation_values
 
-    def inflation_differential_computations(self, start_date_computations):
-
-        # Grab the inflation differential data if needed
-        self.inflation_differential_download()
+    def inflation_differential_computations(self):
 
         inflation_bloomberg_values = self.inflation_differential_bloomberg_processing()
 
-        # We remove the first line to be inline with the following shifts (years_zero_inflation, months_inflation)
-        # inflation_release_values = self.inflation_release[CurrencySpot.Inflation_Release.name].iloc[1:].tolist()
-        inflation_release_values = self.inflation_release[CurrencySpot.Inflation_Release.name].tolist()
-        inflation_release_values[1743]
+        inflation_release, years_zero_inflation, months_inflation = self.inflation_release_computations()
 
-        # We have to shift by one each year because for each current date,
-        # we have to take the previous year to compute the inflation differential
-        years_zero_inflation = pd.DataFrame(self.inflation_release[CurrencySpot.Inflation_Release.name].index.year, columns=['Years']).shift(1).set_index(self.dates_index).iloc[1:]
-        years_zero_inflation = years_zero_inflation.astype('int64')
+        # Grab the inflation differential data if needed
+        self.inflation_differential_download(inflation_release=inflation_release)
+
         years_one_inflation = years_zero_inflation.apply(lambda y: y + 1)
         years_zero_inflation = years_zero_inflation['Years'].tolist()
         years_one_inflation = years_one_inflation['Years'].tolist()
-        # We have to shift by one each month because for each current date,
-        # we have to take the previous month to compute the inflation differential
-        months_inflation = pd.DataFrame(self.inflation_release[CurrencySpot.Inflation_Release.name].index.month, columns=['Months']).shift(1).set_index(self.dates_index).iloc[1:]
-        months_inflation = months_inflation.astype('int64')
+
         months_inflation = months_inflation['Months'].tolist()
+
+        inflation_release_values = inflation_release[CurrencySpot.Inflation_Release.name].tolist()
 
         # Compute the multipliers (12 - m)/12 and m/12
         multiplier_one = pd.Series(months_inflation).apply(lambda m: (12-m)/12)
         multiplier_two = pd.Series(months_inflation).apply(lambda m: m/12)
+
+        inflation_differential = pd.DataFrame()
 
         for currency in constants.CURRENCIES_SPOT:
             inflation_year_zero_value = []
@@ -266,10 +264,10 @@ class InflationDifferential:
 
             inflation_three = inflation_one.sub(inflation_two).apply(lambda x: x * 100)
 
-            self.inflation_differential[CurrencySpot.Inflation_Differential.name + currency] = inflation_three.tolist()
+            inflation_differential[CurrencySpot.Inflation_Differential.name + currency] = inflation_three.tolist()
 
         # Set the index with dates
         new_index = np.delete(self.dates_index, 0)
-        self.inflation_differential = self.inflation_differential.set_index(new_index)
+        inflation_differential = inflation_differential.set_index(new_index)
 
-        return self.inflation_differential
+        return inflation_differential
