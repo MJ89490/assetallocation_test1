@@ -192,13 +192,13 @@ class CurrencyComputations(DataProcessingEffect):
             return_division_tmp = return_division_tmp.iloc[1:].tolist()
             # return_tmp = return_division_tmp.tolist()
 
-            d = self.data_currencies_usd.index[18792:].tolist()
-            ret = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\models\effect\returns_mxn.csv')
-            ret = ret['Returns'].tolist()
+            # d = self.data_currencies_usd.index[18792:].tolist()
+            # ret = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\models\effect\returns_mxn.csv')
+            # ret = ret['Returns'].tolist()
 
             origin_returns = []
             for values in range(len(return_division_tmp)):
-                print(d[values], round(first_returns[values] * return_division_tmp[values] ** combo[values], 12), round(ret[values],12), round(ret[values],12) - round(first_returns[values] * return_division_tmp[values] ** combo[values], 12))
+                # print(d[values], round(first_returns[values] * return_division_tmp[values] ** combo[values], 12), round(ret[values],12), round(ret[values],12) - round(first_returns[values] * return_division_tmp[values] ** combo[values], 12))
 
                 first_returns.append(round(first_returns[values] * return_division_tmp[values] ** combo[values], 12))
                 # origin_returns.append(round(ret[values], 12))
@@ -209,7 +209,7 @@ class CurrencyComputations(DataProcessingEffect):
             # o = np.array(origin_returns)
             # f = np.array(first_returns[1:])
             # print("%s IS EQUAL: %s" % (currency_spot, np.allclose(o, f)))
-            # pd.DataFrame(first_returns).to_csv("returns_ex_costs_{}.csv".format(currency_spot))
+            # pd.DataFrame(first_returns).to_csv("returns_ex_costs_new_{}.csv".format(currency_spot))
 
         # Set the index with dates by taking into account the 100
         self.return_ex_costs = self.return_ex_costs.set_index(self.dates_index)

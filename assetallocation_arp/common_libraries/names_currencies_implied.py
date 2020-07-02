@@ -2,7 +2,7 @@ import enum
 
 
 class CurrencyImplied(enum.Enum):
-    # BCNI3M = "BCNI3M Curncy"
+    BCNI3M = "BCNI3M Curncy"
     # APNI3M = "APNI3M Curncy"
     MXNI3M = "MXNI3M Curncy"
     # CLNI3M = "CLNI3M Curncy"
