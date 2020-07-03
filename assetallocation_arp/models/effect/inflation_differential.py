@@ -17,7 +17,7 @@ class InflationDifferential:
     def __init__(self, dates_index):
         self.dates_index = dates_index
 
-    def inflation_release_computations(self):
+    def compute_inflation_release(self):
 
         weo_dates = []
         inflation_release = pd.DataFrame()
@@ -72,7 +72,7 @@ class InflationDifferential:
         return inflation_release, years_zero_inflation, months_inflation
 
     @staticmethod
-    def inflation_differential_download(inflation_release):
+    def download_inflation_differential(inflation_release):
         # Grab the data from the IMF website according to the imf publishing date
         inflation_release = inflation_release[CurrencySpot.Inflation_Release.name].drop_duplicates().iloc[1:].tolist()
         # Get files from data_imf directory
@@ -105,7 +105,7 @@ class InflationDifferential:
                     print('OK ', csv_file)
 
     @staticmethod
-    def inflation_differential_imf_processing(inflation):
+    def process_inflation_differential_imf(inflation):
 
         # Set the name of the csv file
         csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
@@ -137,7 +137,7 @@ class InflationDifferential:
         return inflation_data_merged
 
     @staticmethod
-    def inflation_differential_bloomberg_processing():
+    def process_inflation_differential_bloomberg():
 
         # Processing bloomberg data
         inflation_values = pd.read_csv(os.path.abspath(
@@ -171,14 +171,14 @@ class InflationDifferential:
 
         return inflation_values
 
-    def inflation_differential_computations(self):
+    def compute_inflation_differential(self):
 
-        inflation_bloomberg_values = self.inflation_differential_bloomberg_processing()
+        inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
-        inflation_release, years_zero_inflation, months_inflation = self.inflation_release_computations()
+        inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release()
 
         # Grab the inflation differential data if needed
-        self.inflation_differential_download(inflation_release=inflation_release)
+        self.download_inflation_differential(inflation_release=inflation_release)
 
         years_one_inflation = years_zero_inflation.apply(lambda y: y + 1)
         years_zero_inflation = years_zero_inflation['Years'].tolist()
@@ -208,7 +208,7 @@ class InflationDifferential:
 
                     # Be sure the csv file is read only one time per inflation
                     if flag_imf != inflation:
-                        inflation_data_merged = self.inflation_differential_imf_processing(inflation=inflation)
+                        inflation_data_merged = self.process_inflation_differential_imf(inflation=inflation)
 
                     index_currency = inflation_data_merged[inflation_data_merged.Currency.str.contains(currency)].index[0]
 
@@ -263,7 +263,7 @@ class InflationDifferential:
             inflation_two = inflation_year_zero_values_base.add(inflation_year_one_values_base).apply(lambda x: x/100)
 
             inflation_three = inflation_one.sub(inflation_two).apply(lambda x: x * 100)
-
+            inflation_three.to_csv(currency.lower() + "_inflation_differential_results.csv")
             inflation_differential[CurrencySpot.Inflation_Differential.name + currency] = inflation_three.tolist()
 
         # Set the index with dates
