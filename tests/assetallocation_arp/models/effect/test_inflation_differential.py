@@ -14,6 +14,7 @@ def test_compute_inflation_release():
 
     pd.testing.assert_series_equal(inflation_results.Inflation_Release, inflation_origin.Inflation_Release)
 
+
 @pytest.mark.parametrize("currency, inflation_differential_origin, inflation_differential_results",
                          [("BRL", "brl_inflation_differential_origin.csv", "brl_inflation_differential_results.csv"),
                           ("MXN", "mxn_inflation_differential_origin.csv", "mxn_inflation_differential_results.csv"),
