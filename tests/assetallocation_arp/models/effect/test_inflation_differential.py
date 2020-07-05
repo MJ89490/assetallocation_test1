@@ -29,8 +29,8 @@ def test_compute_inflation_release():
                           ("IDR", "idr_inflation_differential_origin.csv", "idr_inflation_differential_results.csv"),
                           ("INR", "inr_inflation_differential_origin.csv", "inr_inflation_differential_results.csv"),
                           ("PHP", "php_inflation_differential_origin.csv", "php_inflation_differential_results.csv"),
-                            ("TWD", "twd_inflation_differential_origin.csv", "twd_inflation_differential_results.csv"),
-                            ("THB", "thb_inflation_differential_origin.csv", "thb_inflation_differential_results.csv")
+                          ("TWD", "twd_inflation_differential_origin.csv", "twd_inflation_differential_results.csv"),
+                          ("THB", "thb_inflation_differential_origin.csv", "thb_inflation_differential_results.csv")
                           ])
 def test_compute_inflation_differential(currency, inflation_differential_origin, inflation_differential_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "inflation_differential_origin", inflation_differential_origin))
