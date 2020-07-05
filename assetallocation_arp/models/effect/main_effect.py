@@ -15,7 +15,7 @@ def run_effect():
     inflation_differential = obj_inflation_differential.compute_inflation_differential()
 
     # -------------------------- carry calculations ------------------------------------------------------------------ #
-    carry = obj_import_data.carry_computations(carry_type='Real',  inflation_differential=inflation_differential)
+    carry = obj_import_data.compute_carry(carry_type='Real',  inflation_differential=inflation_differential)
 
     # -------------------------- trend calculations ------------------------------------------------------------------ #
     trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'} # could be Spot or Total Return

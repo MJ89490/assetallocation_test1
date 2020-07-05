@@ -11,7 +11,6 @@ import pandas as pd
 import numpy as np
 
 #todo transformer date en timestamp dans la property
-#todo tous les resultats sont 10 chiffres après la virgule
 #todo  modifier propriétés!!
 class CurrencyComputations(DataProcessingEffect):
 
@@ -23,8 +22,8 @@ class CurrencyComputations(DataProcessingEffect):
     def bid_ask(self, value):
         self.bid_ask_spread = value
 
-    def carry_computations(self, carry_type, inflation_differential):
-        #todo REFAIRE CALCUL EN ENTIER
+    def compute_carry(self, carry_type, inflation_differential):
+
         for currency_spot, currency_implied, currency_carry in \
                 zip(constants.CURRENCIES_SPOT, constants.CURRENCIES_IMPLIED, constants.CURRENCIES_CARRY):
 
@@ -65,7 +64,7 @@ class CurrencyComputations(DataProcessingEffect):
 
                 # Depending on the carry type, if it is real, we take off the inflation, otherwise, we don't
                 if carry_type.lower() == 'real':
-                    carry_tmp = ((average_implied - average_index) / 100) - inflation_differential.loc[start_current_date_index][0]/100
+                    carry_tmp = ((average_implied - average_index) / 100) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100
                 else:
                     carry_tmp = ((average_implied - average_index) / 100)
 
@@ -86,7 +85,7 @@ class CurrencyComputations(DataProcessingEffect):
                     denominator = data_all_currencies_spot[previous_start_date_index] / data_all_currencies_spot[previous_eleven_start_date_index]
 
                     if carry_type.lower() == 'real':
-                        carry.append((((numerator / denominator) ** (52/10))-1) - inflation_differential.loc[start_current_date_index][0]/100)
+                        carry.append((((numerator / denominator) ** (52/10))-1) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100)
                     else:
                         carry.append((((numerator / denominator) ** (52/10))-1))
 
@@ -96,7 +95,8 @@ class CurrencyComputations(DataProcessingEffect):
                 except IndexError:
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc]
 
-            self.carry_currencies[CurrencySpot.Carry.name + currency_spot] = carry
+            self.carry_currencies[CurrencySpot.Carry.value + currency_spot] = carry
+            self.carry_currencies[CurrencySpot.Carry.value + currency_spot].to_csv(CurrencySpot.Carry.value + currency_spot + '_results.csv')
 
         self.carry_currencies = self.carry_currencies.set_index(self.dates_origin_index).apply(lambda x: x * 100)
 

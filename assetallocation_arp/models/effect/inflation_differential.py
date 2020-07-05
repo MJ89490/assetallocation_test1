@@ -263,8 +263,7 @@ class InflationDifferential:
             inflation_two = inflation_year_zero_values_base.add(inflation_year_one_values_base).apply(lambda x: x/100)
 
             inflation_three = inflation_one.sub(inflation_two).apply(lambda x: x * 100)
-            inflation_three.to_csv(currency.lower() + "_inflation_differential_results.csv")
-            inflation_differential[CurrencySpot.Inflation_Differential.name + currency] = inflation_three.tolist()
+            inflation_differential[CurrencySpot.Inflation_Differential.value + currency] = inflation_three.tolist()
 
         # Set the index with dates
         new_index = np.delete(self.dates_index, 0)

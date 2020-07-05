@@ -1,9 +1,8 @@
 import enum
 
-
 class CurrencySpot(enum.Enum):
     Inflation_Differential = 'Inflation_Differential_'
-    Inflation_Release = "Inflation_Release_"
+    Inflation_Release = "Inflation_Release"
     Carry = 'Carry_'
     Trend = 'Trend_'
     Combo = 'Combo_'
