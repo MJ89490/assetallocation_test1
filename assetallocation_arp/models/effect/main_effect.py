@@ -11,7 +11,6 @@ def run_effect():
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = InflationDifferential(dates_index=obj_import_data.dates_index)
-    # obj_inflation_differential.inflation_release_computations()
     inflation_differential = obj_inflation_differential.compute_inflation_differential()
 
     # -------------------------- carry calculations ------------------------------------------------------------------ #
@@ -24,9 +23,9 @@ def run_effect():
 
     # # -------------------------- combo calculations ---------------------------------------------------------------- #
     combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
-    combo = obj_import_data.combo_computations(cut_off=combo_inputs['cut_off'], incl_shorts=combo_inputs['incl_shorts'],
-                                               cut_off_s=combo_inputs['cut_off_s'],
-                                               threshold_for_closing=combo_inputs['threshold'])
+    combo = obj_import_data.compute_combo(cut_off=combo_inputs['cut_off'], incl_shorts=combo_inputs['incl_shorts'],
+                                          cut_off_s=combo_inputs['cut_off_s'],
+                                          threshold_for_closing=combo_inputs['threshold'])
 
     # -------------------------- spot ex costs calculations ---------------------------------------------------------- #
     spot_ex = obj_import_data.spot_ex_costs_computations()

@@ -119,7 +119,7 @@ class CurrencyComputations(DataProcessingEffect):
 
             # We set 10 digits because due to Python precision there are small dusts at the end of some numbers
             # and they set 0 as negative result (eg: date 16/02/2004: -0.000%)
-            self.trend_currencies[CurrencySpot.Trend.name + currency_name_col] = \
+            self.trend_currencies[CurrencySpot.Trend.value + currency_name_col] = \
                 (round((trend_short_tmp / trend_long_tmp), 10) - 1) * 100
 
         # Take the previous date compared to self.date_computations because of rolling
@@ -128,7 +128,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         return self.trend_currencies
 
-    def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
+    def compute_combo(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
 
         tmp_start_date_computations = self.start_date_calculations
         rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0]
@@ -136,8 +136,8 @@ class CurrencyComputations(DataProcessingEffect):
         for currency_spot in constants.CURRENCIES_SPOT:
             # Set the combo to zero as first value
             combo = [0]
-            trend = self.trend_currencies.loc[tmp_start_date_computations:, CurrencySpot.Trend.name + currency_spot].tolist()
-            carry = self.carry_currencies.loc[tmp_start_date_computations:, CurrencySpot.Carry.name + currency_spot].tolist()
+            trend = self.trend_currencies.loc[tmp_start_date_computations:, CurrencySpot.Trend.value + currency_spot].tolist()
+            carry = self.carry_currencies.loc[tmp_start_date_computations:, CurrencySpot.Carry.value + currency_spot].tolist()
 
             for value in range(rows):
                 if combo[-1] == 0:
@@ -157,11 +157,11 @@ class CurrencyComputations(DataProcessingEffect):
                         else:
                             combo.append(0)
 
-            self.combo_currencies[CurrencySpot.Combo.name + currency_spot] = combo
+            self.combo_currencies[CurrencySpot.Combo.value + currency_spot] = combo
 
         # Set the index
         self.combo_currencies = self.combo_currencies.set_index(self.dates_index)
-
+        self.combo_currencies.to_csv('combo_results.csv')
         return self.combo_currencies
 
     def return_ex_costs_computations(self):

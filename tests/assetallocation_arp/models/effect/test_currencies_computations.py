@@ -51,3 +51,19 @@ def test_compute_trend(currencies):
     for currency in currencies:
         assert np.allclose(np.array(trend_results[currency].tolist()), np.array(trend_origin[currency].tolist())) is True
 
+
+@pytest.mark.parametrize("currencies",
+                        [('BRL', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR',
+                          'PHP', 'TWD', 'THB')])
+def test_compute_combo(currencies):
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+                                               "combo_origin.csv"))
+
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                               "combo_results.csv"))
+
+    combo_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    combo_results = pd.read_csv(path_result, sep=',', engine='python')
+
+    for currency in currencies:
+        assert np.allclose(np.array(combo_results[currency].tolist()), np.array(combo_origin[currency].tolist())) is True
