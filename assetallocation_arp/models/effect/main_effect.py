@@ -27,6 +27,12 @@ def run_effect():
                                           cut_off_s=combo_inputs['cut_off_s'],
                                           threshold_for_closing=combo_inputs['threshold'])
 
+    # -------------------------- return ex costs calculations -------------------------------------------------------- #
+    return_ex = obj_import_data.compute_return_ex_costs()
+
+    # -------------------------- return incl costs calculations ------------------------------------------------------ #
+    return_incl = obj_import_data.return_incl_costs_computations()
+
     # -------------------------- spot ex costs calculations ---------------------------------------------------------- #
     spot_ex = obj_import_data.spot_ex_costs_computations()
 
@@ -34,11 +40,7 @@ def run_effect():
     obj_import_data.bid_ask_spread = 10
     spot_incl = obj_import_data.spot_incl_computations()
 
-    # -------------------------- return ex costs calculations -------------------------------------------------------- #
-    return_ex = obj_import_data.return_ex_costs_computations()
 
-    # -------------------------- return incl costs calculations ------------------------------------------------------ #
-    return_incl = obj_import_data.return_incl_costs_computations()
 
 
 if __name__ == '__main__':

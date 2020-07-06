@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import pytest
 
-
+#todo instead of mark create a unique list as cst
 @pytest.mark.parametrize("currency, carry_origin, carry_results",
                         [("BRL", "brl_carry_origin.csv", "brl_carry_results.csv"),
                          ("MXN", "mxn_carry_origin.csv", "mxn_carry_results.csv"),
@@ -67,3 +67,19 @@ def test_compute_combo(currencies):
 
     for currency in currencies:
         assert np.allclose(np.array(combo_results[currency].tolist()), np.array(combo_origin[currency].tolist())) is True
+
+@pytest.mark.parametrize("currencies",
+                        [('BRL', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR',
+                          'PHP', 'THB', 'TWD')])
+def test_compute_returns_ex_costs(currencies):
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+                                               "returns_ex_costs_origin.csv"))
+
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                               "returns_ex_costs_results.csv"))
+
+    returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    returns_results = pd.read_csv(path_result, sep=',', engine='python')
+
+    for currency in currencies:
+        assert np.allclose(np.array(returns_results[currency].tolist()), np.array(returns_origin[currency].tolist())) is True

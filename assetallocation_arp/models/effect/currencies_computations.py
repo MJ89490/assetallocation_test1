@@ -161,10 +161,10 @@ class CurrencyComputations(DataProcessingEffect):
 
         # Set the index
         self.combo_currencies = self.combo_currencies.set_index(self.dates_index)
-        self.combo_currencies.to_csv('combo_results.csv')
+
         return self.combo_currencies
 
-    def return_ex_costs_computations(self):
+    def compute_return_ex_costs(self):
 
         for currency_carry, currency_spot in zip(constants.CURRENCIES_CARRY, constants.CURRENCIES_SPOT):
 
@@ -181,29 +181,14 @@ class CurrencyComputations(DataProcessingEffect):
                                        self.data_currencies_eur.loc[tmp_start_computations:, currency_carry].shift(1))
 
             combo = self.combo_currencies.loc[pd.to_datetime(self.start_date_calculations, format='%Y-%m-%d'):,
-                                              CurrencySpot.Combo.name + currency_spot].tolist()
+                                              CurrencySpot.Combo.value + currency_spot].tolist()
 
             return_division_tmp = return_division_tmp.iloc[1:].tolist()
-            # return_tmp = return_division_tmp.tolist()
 
-            # d = self.data_currencies_usd.index[18792:].tolist()
-            # ret = pd.read_csv(r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_arp\models\effect\returns_mxn.csv')
-            # ret = ret['Returns'].tolist()
-
-            origin_returns = []
             for values in range(len(return_division_tmp)):
-                # print(d[values], round(first_returns[values] * return_division_tmp[values] ** combo[values], 12), round(ret[values],12), round(ret[values],12) - round(first_returns[values] * return_division_tmp[values] ** combo[values], 12))
-
                 first_returns.append(round(first_returns[values] * return_division_tmp[values] ** combo[values], 12))
-                # origin_returns.append(round(ret[values], 12))
 
-            self.return_ex_costs[CurrencySpot.Return_Ex_Costs.name + currency_spot] = first_returns
-            # pd.DataFrame(first_returns[1:]).to_csv('brl_returns_ex_costs_results')
-            #POUR LES TESTS ON UTILISE LES NUMPY ARRAY ET ON  COMPARE LES DEUX ARRAYS SI TRUE ON EST OKAY
-            # o = np.array(origin_returns)
-            # f = np.array(first_returns[1:])
-            # print("%s IS EQUAL: %s" % (currency_spot, np.allclose(o, f)))
-            # pd.DataFrame(first_returns).to_csv("returns_ex_costs_new_{}.csv".format(currency_spot))
+            self.return_ex_costs[CurrencySpot.Return_Ex_Costs.value + currency_spot] = first_returns
 
         # Set the index with dates by taking into account the 100
         self.return_ex_costs = self.return_ex_costs.set_index(self.dates_index)
@@ -254,7 +239,7 @@ class CurrencyComputations(DataProcessingEffect):
                 spot_division_tmp = (self.data_currencies_eur.loc[tmp_start_date:, currency] /
                                      self.data_currencies_eur.loc[tmp_start_date:, currency].shift(1))
 
-            combo = self.combo_currencies.loc[self.start_date_calculations:, CurrencySpot.Combo.name + currency].tolist()
+            combo = self.combo_currencies.loc[self.start_date_calculations:, CurrencySpot.Combo.value + currency].tolist()
             # Remove the first nan due to the shift(1) and convert the spot_division_tmp into a list
             spot_division_tmp = spot_division_tmp.iloc[1:].tolist()
 
