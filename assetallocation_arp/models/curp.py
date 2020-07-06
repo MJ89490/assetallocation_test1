@@ -162,6 +162,9 @@ def run_curp(curp_inputs, asset_inputs, all_data):
         outputSignals[currency] = temp.sum(axis=1)
     pass
 
+#just changing something so i can commit
+
+
 def create_crosses(currencyList):
     """
 
