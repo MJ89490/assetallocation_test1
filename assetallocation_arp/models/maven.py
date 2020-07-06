@@ -55,7 +55,7 @@ def format_data(maven_inputs, asset_inputs, all_data):
     return asset_returns
 
 
-def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
+def calculate_excess_returns(maven_inputs, asset_inputs, asset_returns):
     """
     creating dataframe with maven's excess return index series
     :param pd.DataFrame maven_inputs: parameter choices for the model
@@ -72,8 +72,8 @@ def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
     maven_tickers.columns = ['asset_ticker', 'cash_ticker']
     # determining the non-cash assets
     boolean_assets = asset_inputs['asset_weight'] != 0
-    m = sum(boolean_assets)
-    n = len(asset_returns)
+    m = sum(boolean_assets)     # number of assets
+    n = len(asset_returns)      # number of observations
     maven_tickers = maven_tickers.iloc[0: m, :]
     # creating asset excess returns
     assets = asset_returns[maven_tickers['asset_ticker']]
@@ -108,7 +108,7 @@ def calculating_excess_returns(maven_inputs, asset_inputs, asset_returns):
     return maven_returns
 
 
-def calculating_signals(maven_inputs, maven_returns):
+def calculate_signals(maven_inputs, maven_returns):
     """
     creating dataframes with value and momentum scores, and the top/bottom countries on the combination score
     :param pd.DataFrame maven_inputs: parameter choices for the model
@@ -128,10 +128,10 @@ def calculating_signals(maven_inputs, maven_returns):
     frequency = maven_inputs['frequency'].item()
     if frequency == 'monthly':
         n = 12      # 12months
-        a = 12    # 12 sets of 1 month
+        a = 12      # 12 sets of 1 month
     else:
         n = 52      # 52 weeks
-        a = 13    # 13 sets of 4 weeks
+        a = 13      # 13 sets of 4 weeks
     m = int(maven_inputs['val_period_months'].item() / 12 * n)      # look-back period for value
     base = int(maven_inputs['val_period_base'].item() / 12 * n)     # period around look-back point
     # calculating rolling volatility
@@ -147,7 +147,7 @@ def calculating_signals(maven_inputs, maven_returns):
         mom = mom * (maven_returns.shift(int(i * n / a)) / maven_returns.shift(int((i + 1) * n / a))) ** mom_weight[i]
     momentum = (mom ** (a / sum(mom_weight)) - 1) / volatility
     # calculating the value scores
-    value = ((maven_returns / maven_returns.shift(int(m - base / 2)).rolling(base+1).mean()) ** (n/m) - 1) / volatility
+    value = ((maven_returns / maven_returns.shift(int(m - base / 2)).rolling(base + 1).mean()) ** (n / m) - 1) / volatility
     # shorting the dataframes
     start_date = value.first_valid_index()
     value = value[start_date:]
@@ -177,12 +177,12 @@ def calculating_signals(maven_inputs, maven_returns):
         w_m = 1
     else:
         w_m = 4
-    long_exposures = long_signals_rank.iloc[n - w_m: n, :] <= number_signals
-    short_exposures = short_signals_rank.iloc[n - w_m: n, :] <= number_signals
-    long_exposures = long_exposures.sum(axis=0)
-    short_exposures = short_exposures.sum(axis=0)
-    long_exposures = long_exposures[long_exposures != 0]
-    short_exposures = short_exposures[short_exposures != 0]
+    long_list = long_signals_rank.iloc[n - w_m: n, :] <= number_signals
+    short_list = short_signals_rank.iloc[n - w_m: n, :] <= number_signals
+    long_list = long_list.sum(axis=0)
+    short_list = short_list.sum(axis=0)
+    long_list = long_list[long_list != 0]
+    short_list = short_list[short_list != 0]
     # filtering and getting names of top assets
     long_signals_name = pd.DataFrame(np.ones((n, number_signals)), index=value.index)
     short_signals_name = pd.DataFrame(np.ones((n, number_signals)), index=value.index)
@@ -190,7 +190,7 @@ def calculating_signals(maven_inputs, maven_returns):
         long_signals_name.iloc[:, i] = long_signals_rank.apply(lambda x: x[x == i + 1].idxmin(), axis=1)
         short_signals_name.iloc[:, i] = short_signals_rank.apply(lambda x: x[x == i + 1].idxmin(), axis=1)
     return momentum, value, long_signals, short_signals, long_signals_name, short_signals_name, value_last, \
-                                                momentum_last, long_exposures, short_exposures, volatility
+                                                momentum_last, long_list, short_list, volatility
 
 
 def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals, short_signals):
@@ -210,8 +210,8 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
         w_m = 1
     else:
         w_m = 4
-    m = len(maven_returns.columns)
-    n = len(long_signals)
+    m = len(maven_returns.columns)  # number of assets
+    n = len(long_signals)           # number of observations
     number_signals = maven_inputs['number_assets'].item()
     maven_returns = maven_returns.tail(n)
     volatility = volatility.tail(n)
@@ -251,13 +251,17 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     returns_maven['maven short net'] = (1 + returns_maven_short.sum(axis=1) - turnover_cost_short).cumprod() * 100
     # determining asset class contributions
     asset_class = asset_inputs.groupby('asset').first(keep='first')['asset_class'][equal_risk.columns].tolist()
-    asset_contribution_long = pd.DataFrame(data=returns_maven_long.T, index=asset_class)
-    asset_contribution_short = pd.DataFrame(data=returns_maven_short.T, index=asset_class)
+    asset_contribution_long = pd.DataFrame(data=returns_maven_long.T)
+    asset_contribution_long.index = asset_class
+    asset_contribution_short = pd.DataFrame(data=returns_maven_short.T)
+    asset_contribution_short.index = asset_class
     asset_contribution_long = asset_contribution_long.groupby(asset_contribution_long.index).sum().T
     asset_contribution_short = asset_contribution_short.groupby(asset_contribution_short.index).sum().T
     # determining asset class weights
-    asset_class_long = pd.DataFrame(data=equal_risk_long.T, index=asset_class)
-    asset_class_short = pd.DataFrame(data=equal_risk_short.T, index=asset_class)
+    asset_class_long = pd.DataFrame(data=equal_risk_long.T)
+    asset_class_long.index = asset_class
+    asset_class_short = pd.DataFrame(data=equal_risk_short.T)
+    asset_class_short.index = asset_class
     asset_class_long = asset_class_long.groupby(asset_class_long.index).sum().T
     asset_class_short = asset_class_short.groupby(asset_class_short.index).sum().T
     return returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short

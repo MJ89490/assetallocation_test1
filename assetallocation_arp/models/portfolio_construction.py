@@ -58,5 +58,5 @@ def cap_and_redistribute(weight_matrix, cap):
     condition = weight_matrix <= cap
     cap_weight = cap * (condition.count(axis=1) - condition.sum(axis=1))
     rest_weight = (weight_matrix * condition).sum(axis=1)
-    cap_matrix = weight_matrix.mul((1 - cap_weight) / rest_weight, axis=0).clip(upper=cap)
-    return cap_matrix
+    capped_matrix = weight_matrix.mul((1 - cap_weight) / rest_weight, axis=0).clip(upper=cap)
+    return capped_matrix
