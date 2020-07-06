@@ -33,24 +33,23 @@ def calc_int_mom_signal(column, index_data, inputs, signal_name):
     sig_i = sig_i/sig_i.rolling(window=inputs['volatility_window'].item()).std()
     return sig_i
 
-def mom (data, weights):
+def momentum_exp (data, observations,ann_freq):
     """
 
     :param data: data to apply the momentum calcs to
-    :param weights: weights  to apply, in a list  of variable length
+    :param observations: provide the number of observations required. for example, if 6 is input the weights will then be [6,5,...,1].
+    :param ann_freq_ becasue we want to annualise these returns, the ann_freq will depend on the frequency of the data - monthly should be 12, weekly 52.
     :return: DataFrame of the momentum scores. The first item in the weights list is applied to the most recent observation as an exponential weight, then etc.
     """
     # this wont change the frequency of data
     # variable number of inputs (weights)
     # ensure that lag 1 weight is first, i.e. most recent first.
     mom = pd.DataFrame([], columns = data.columns)
-    denominator = 0
+    weights = list(range(observations,0,-1))
     for i in list(range(0,len(weights))):
         if i == 0:
             mom = weights[i] * data
-            denominator = weights[i]
         else:
             mom = mom + weights[i] * data.shift(i)
-            denominator = denominator + weights[i]
-    x = mom/denominator
+    x = 1 + (mom/sum(weights))**ann_freq -1
     return x
