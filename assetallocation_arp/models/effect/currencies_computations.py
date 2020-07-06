@@ -96,13 +96,12 @@ class CurrencyComputations(DataProcessingEffect):
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc]
 
             self.carry_currencies[CurrencySpot.Carry.value + currency_spot] = carry
-            self.carry_currencies[CurrencySpot.Carry.value + currency_spot].to_csv(CurrencySpot.Carry.value + currency_spot + '_results.csv')
 
         self.carry_currencies = self.carry_currencies.set_index(self.dates_origin_index).apply(lambda x: x * 100)
 
         return self.carry_currencies
 
-    def trend_computations(self, trend_ind, short_term, long_term):
+    def compute_trend(self, trend_ind, short_term, long_term):
 
         if trend_ind.lower() == 'total return':
             currencies = constants.CURRENCIES_CARRY
@@ -131,7 +130,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         # self.trend_currencies = self.trend_currencies[previous_start_date:].iloc[:-1]
         # self.trend_currencies = self.trend_currencies.set_index(self.dates_index)
-
+        self.trend_currencies.to_csv("trend.csv")
         return self.trend_currencies
 
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):

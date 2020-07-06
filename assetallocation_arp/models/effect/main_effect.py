@@ -6,7 +6,7 @@ from assetallocation_arp.models.effect.inflation_differential import InflationDi
 def run_effect():
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
 
-    obj_import_data = CurrencyComputations(start_date_calculations='2020-03-30')
+    obj_import_data = CurrencyComputations(start_date_calculations='2000-01-11')
     obj_import_data.data_processing_effect()
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
@@ -19,8 +19,8 @@ def run_effect():
 
     # -------------------------- trend calculations ------------------------------------------------------------------ #
     trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'} # could be Spot or Total Return
-    trend = obj_import_data.trend_computations(trend_ind=trend_inputs['trend'], short_term=trend_inputs['short_term'],
-                                               long_term=trend_inputs['long_term'])
+    trend = obj_import_data.compute_trend(trend_ind=trend_inputs['trend'], short_term=trend_inputs['short_term'],
+                                          long_term=trend_inputs['long_term'])
 
     # # -------------------------- combo calculations ---------------------------------------------------------------- #
     combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
