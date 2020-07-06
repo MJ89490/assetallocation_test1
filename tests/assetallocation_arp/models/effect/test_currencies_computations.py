@@ -34,5 +34,20 @@ def test_compute_carry(currency, carry_origin, carry_results):
     assert np.allclose(np.array(carry_results[currency].tolist()), np.array(carry_origin[currency].tolist())) is True
 
 
-def test_compute_trend():
-    pass
+@pytest.mark.parametrize("currencies",
+                        [('BRL', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR',
+                          'PHP', 'TWD', 'THB')])
+def test_compute_trend(currencies):
+
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+                                               "trend_origin.csv"))
+
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                               "trend_results.csv"))
+
+    trend_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    trend_results = pd.read_csv(path_result, sep=',', engine='python')
+
+    for currency in currencies:
+        assert np.allclose(np.array(trend_results[currency].tolist()), np.array(trend_origin[currency].tolist())) is True
+

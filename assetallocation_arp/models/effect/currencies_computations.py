@@ -123,14 +123,9 @@ class CurrencyComputations(DataProcessingEffect):
                 (round((trend_short_tmp / trend_long_tmp), 10) - 1) * 100
 
         # Take the previous date compared to self.date_computations because of rolling
-        # start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
-        # previous_start_date = self.data_currencies_usd.index[start_date_loc - 1]
         self.trend_currencies = self.trend_currencies.shift(1)
         self.trend_currencies = self.trend_currencies[self.start_date_calculations:]
 
-        # self.trend_currencies = self.trend_currencies[previous_start_date:].iloc[:-1]
-        # self.trend_currencies = self.trend_currencies.set_index(self.dates_index)
-        self.trend_currencies.to_csv("trend.csv")
         return self.trend_currencies
 
     def combo_computations(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
