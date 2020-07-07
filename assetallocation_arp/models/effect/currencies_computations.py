@@ -10,7 +10,7 @@ from common_libraries.names_currencies_implied import CurrencyBaseImplied
 import pandas as pd
 import numpy as np
 
-#todo transformer date en timestamp dans la property + REMETTRE INIT ICI
+#todo transformer date en timestamp dans la property
 
 
 class CurrencyComputations(DataProcessingEffect):
@@ -52,6 +52,7 @@ class CurrencyComputations(DataProcessingEffect):
                 data_all_currencies_carry = self.data_currencies_usd.loc[:, currency_carry].tolist()
                 data_all_currencies_implied = self.data_currencies_usd.loc[:, currency_implied].tolist()
                 data_all_currencies_implied_base = self.data_currencies_usd.loc[:, CurrencyBaseImplied.US0003M.value].tolist()
+
             else:
                 data_all_currencies_spot = self.data_currencies_eur.loc[:, currency_spot].tolist()
                 data_all_currencies_carry = self.data_currencies_eur.loc[:, currency_carry].tolist()
@@ -206,7 +207,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         # Set the index with dates by taking into account the 100
         self.return_ex_costs = self.return_ex_costs.set_index(self.dates_index)
-
+        self.return_ex_costs.to_csv('ret_ex.csv')
         return self.return_ex_costs
 
     def compute_return_incl_costs(self):
@@ -292,9 +293,9 @@ class CurrencyComputations(DataProcessingEffect):
             for value in range(len(spot_tmp)):
                 spot_incl_costs.append(spot_incl_costs[value] * spot_tmp[value] * multiplier_combo[value])
 
-            self.spot_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.value,
-                                              CurrencySpot.Return_Incl_Costs.value)] = spot_incl_costs
+            self.spot_incl_costs[name.replace(CurrencySpot.Spot_Ex_Costs.value,
+                                              CurrencySpot.Spot_Incl_Costs.value)] = spot_incl_costs
 
         self.spot_incl_costs = self.spot_incl_costs.set_index(self.dates_index)
-        self.spot_incl_costs.to_csv('spot_incl_costs_results.csv')
+
         return self.spot_incl_costs

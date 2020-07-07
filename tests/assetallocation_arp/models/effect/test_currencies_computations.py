@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def currencies():
-    return ['BRL', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR', 'PHP', 'THB', 'TWD']
+    return ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR', 'PHP', 'THB', 'TWD']
 
 
 def test_compute_carry(currencies):
