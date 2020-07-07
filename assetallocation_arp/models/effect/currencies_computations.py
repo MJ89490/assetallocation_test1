@@ -207,7 +207,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         # Set the index with dates by taking into account the 100
         self.return_ex_costs = self.return_ex_costs.set_index(self.dates_index)
-        self.return_ex_costs.to_csv('ret_ex.csv')
+
         return self.return_ex_costs
 
     def compute_return_incl_costs(self):

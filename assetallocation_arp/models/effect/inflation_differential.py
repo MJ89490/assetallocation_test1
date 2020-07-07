@@ -268,5 +268,5 @@ class InflationDifferential:
         # Set the index with dates
         new_index = np.delete(self.dates_index, 0)
         inflation_differential = inflation_differential.set_index(new_index)
-        inflation_differential.to_csv('inf.csv')
+
         return inflation_differential
