@@ -39,7 +39,7 @@ def format_data(fica_inputs, asset_inputs, all_data):
     return curve
 
 
-def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
+def calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor):
     """
     creating dataframe with carry + roll down and return calculations
     :param pd.DataFrame fica_inputs: parameter choices for the model
@@ -48,7 +48,6 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
     :return: dataframe with historical carry and roll down and return calculations per country
     """
     # reading inputs
-    tenor = fica_inputs['tenor'].item()
     coupon = fica_inputs['coupon'].item()
     country = asset_inputs['country']
     n = len(curve)
@@ -66,6 +65,7 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
     pv1m = pd.DataFrame(np.array([np.arange(m)] * n).T)
     carry_roll = pd.DataFrame(np.array([np.arange(m)] * n).T, columns=curve.index)
     country_returns = pd.DataFrame(np.array([np.arange(m)] * n).T, columns=curve.index)
+    duration = pd.DataFrame(np.array([np.arange(m)] * n).T, columns=curve.index)
     for i in range(m):
         for k in range(n):
             cs = CubicSpline(nodes_curve, curve.iloc[k, i * 14:i * 14 + 14])
@@ -74,19 +74,21 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
             pv.iloc[i, k] = sum(cash_flows * df.iloc[:, 0])
             pv1m.iloc[i, k] = sum(cash_flows * df.iloc[:, 1])
             carry_roll.iloc[i, k] = (pv1m.iloc[i, k] / pv.iloc[i, k]) ** 12 * 100 - 100 - curve.iloc[k, i * 14 + 1]
+            duration.iloc[i, k] = sum(cash_flows * nodes * df.iloc[:,0]) / pv.iloc[i, k]
             if k > 0:
                 country_returns.iloc[i, k] = np.log((pv1m.iloc[i, k] / pv.iloc[i, k - 1])) * 100 \
                                            - curve.iloc[k - 1, i * 14 + 1] / 12
     # transposing and adding column names
     carry_roll = carry_roll.T
     carry_roll.columns = country
+    duration = duration.T
+    duration.columns = country
     country_returns = country_returns.T
     country_returns.iloc[0, :] = np.NaN
     country_returns.columns = country
-    return carry_roll, country_returns
+    return carry_roll, country_returns, duration
 
-
-def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns):
+def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     """"
     creating dataframe with country signals and contributions and overall model performances
     :param pd.DataFrame fica_inputs: parameter choices for the model
@@ -95,6 +97,16 @@ def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns):
     :return: dataframes with monthly model signals, cumulative country contributions and model returns
     """
     # reading inputs
+    tenor = fica_inputs['tenor'].item()
+    tenor_2 = fica_inputs['tenor 2'].item()
+    if tenor_2 is None:
+        carry_roll, country_returns, duration = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
+    else:
+        carry_roll_1, country_returns_1, duration_1 = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
+        carry_roll_2, country_returns_2, duration_2 = fica.calculate_carry_roll_down(fica_inputs, asset_inputs,curve,tenor_2)
+        carry_roll = carry_roll_2 - duration_2 / duration_1 * (1+carry_roll_1)
+        country_returns = np.log((1+country_returns_2)/(duration_2 / duration_1 *(1 + country_returns_1)))
+
     returns = pd.DataFrame()
     m = len(carry_roll.columns)
     n = len(carry_roll)
