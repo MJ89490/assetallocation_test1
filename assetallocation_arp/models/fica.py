@@ -104,8 +104,8 @@ def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     else:
         carry_roll_1, country_returns_1, duration_1 = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
         carry_roll_2, country_returns_2, duration_2 = fica.calculate_carry_roll_down(fica_inputs, asset_inputs,curve,tenor_2)
-        carry_roll = carry_roll_2 - duration_2 / duration_1 * (1+carry_roll_1)
-        country_returns = np.log((1+country_returns_2)/(duration_2 / duration_1 *(1 + country_returns_1)))
+        carry_roll = carry_roll_2 - duration_2 / duration_1 * carry_roll_1
+        country_returns = np.log((1 + country_returns_2 / 100)/(1 + duration_2 / duration_1 * country_returns_1 / 100))
 
     returns = pd.DataFrame()
     m = len(carry_roll.columns)
