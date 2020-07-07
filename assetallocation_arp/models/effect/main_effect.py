@@ -1,12 +1,11 @@
 from assetallocation_arp.models.effect.currencies_computations import CurrencyComputations
-from assetallocation_arp.models.effect.data_effect import DataProcessingEffect
 from assetallocation_arp.models.effect.inflation_differential import InflationDifferential
 
 
 def run_effect():
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
-
-    obj_import_data = CurrencyComputations(start_date_calculations='2000-01-11')
+    bid_ask_spread = 10
+    obj_import_data = CurrencyComputations(start_date_calculations='2000-01-11', bid_ask_spread=bid_ask_spread)
     obj_import_data.data_processing_effect()
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
@@ -31,16 +30,13 @@ def run_effect():
     return_ex = obj_import_data.compute_return_ex_costs()
 
     # -------------------------- return incl costs calculations ------------------------------------------------------ #
-    return_incl = obj_import_data.return_incl_costs_computations()
+    return_incl = obj_import_data.compute_return_incl_costs()
 
     # -------------------------- spot ex costs calculations ---------------------------------------------------------- #
     spot_ex = obj_import_data.spot_ex_costs_computations()
 
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
-    obj_import_data.bid_ask_spread = 10
     spot_incl = obj_import_data.spot_incl_computations()
-
-
 
 
 if __name__ == '__main__':

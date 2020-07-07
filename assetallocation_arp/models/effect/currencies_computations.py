@@ -10,17 +10,22 @@ from common_libraries.names_currencies_implied import CurrencyBaseImplied
 import pandas as pd
 import numpy as np
 
-#todo transformer date en timestamp dans la property
-#todo  modifier propriétés!!
+#todo transformer date en timestamp dans la property + REMETTRE INIT ICI
+
+
 class CurrencyComputations(DataProcessingEffect):
 
-    @property
-    def bid_ask(self):
-        return self.bid_ask_spread
+    def __init__(self, start_date_calculations='2000-01-11', bid_ask_spread=10):
+        super().__init__(start_date_calculations=start_date_calculations)
+        self.bid_ask_spread = bid_ask_spread
 
-    @bid_ask.setter
-    def bid_ask(self, value):
-        self.bid_ask_spread = value
+    @property
+    def bid_ask_spread(self):
+        return self._bid_ask_spread
+
+    @bid_ask_spread.setter
+    def bid_ask_spread(self, value):
+        self._bid_ask_spread = value
 
     def compute_carry(self, carry_type, inflation_differential):
 
@@ -195,7 +200,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         return self.return_ex_costs
 
-    def return_incl_costs_computations(self):
+    def compute_return_incl_costs(self):
 
         returns_division_tmp = self.return_ex_costs / self.return_ex_costs.shift(1)
 
@@ -211,16 +216,16 @@ class CurrencyComputations(DataProcessingEffect):
             return_tmp = returns_division_tmp[name].tolist()
             combo_values_tmp = combo_substraction_tmp[combo_name].tolist()
 
-            multiplier_combo = [(1 - self.bid_ask / 20000) ** value for value in combo_values_tmp]
+            multiplier_combo = [(1 - self.bid_ask_spread / 20000) ** value for value in combo_values_tmp]
 
             for value in range(len(return_tmp)):
                 return_incl_costs.append(return_incl_costs[value] * return_tmp[value] * multiplier_combo[value])
 
-            self.return_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.name,
-                                                CurrencySpot.Return_Incl_Costs.name)] = return_incl_costs
+            self.return_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.value,
+                                                CurrencySpot.Return_Incl_Costs.value)] = return_incl_costs
 
         self.return_incl_costs = self.return_incl_costs.set_index(self.dates_index)
-
+        self.return_incl_costs.to_csv('returns_incl_costs_results_ok.csv')
         return self.return_incl_costs
 
     def spot_ex_costs_computations(self):

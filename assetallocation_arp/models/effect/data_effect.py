@@ -35,8 +35,6 @@ class DataProcessingEffect:
         self.return_incl_costs = pd.DataFrame()
         self.combo_currencies = pd.DataFrame()
 
-        self.bid_ask_spread = 0
-
     @property
     def dates_index(self):
         start_current_date_index_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
