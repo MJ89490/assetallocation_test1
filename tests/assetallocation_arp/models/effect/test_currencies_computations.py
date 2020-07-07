@@ -92,3 +92,18 @@ def test_compute_spot_ex_costs(currencies):
     for currency in currencies:
 
         assert np.allclose(np.array(spot_results[currency].tolist()), np.array(spot_origin[currency].tolist())) is True
+
+
+def test_compute_spot_incl_costs(currencies):
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+                                               "spot_incl_costs_origin.csv"))
+
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                               "spot_incl_costs_results.csv"))
+
+    spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    spot_results = pd.read_csv(path_result, sep=',', engine='python')
+
+    for currency in currencies:
+
+        assert np.allclose(np.array(spot_results[currency].tolist()), np.array(spot_origin[currency].tolist())) is True

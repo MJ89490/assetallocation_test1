@@ -271,7 +271,7 @@ class CurrencyComputations(DataProcessingEffect):
 
         return self.spot_ex_costs
 
-    def spot_incl_computations(self):
+    def compute_spot_incl(self):
 
         spot_division_tmp = self.spot_ex_costs / self.spot_ex_costs.shift(1)
 
@@ -287,14 +287,14 @@ class CurrencyComputations(DataProcessingEffect):
             spot_tmp = spot_division_tmp[name].tolist()
             combo_values_tmp = combo_substraction_tmp[combo_name].tolist()
 
-            multiplier_combo = [(1 - self.bid_ask / 20000) ** value for value in combo_values_tmp]
+            multiplier_combo = [(1 - self.bid_ask_spread / 20000) ** value for value in combo_values_tmp]
 
             for value in range(len(spot_tmp)):
                 spot_incl_costs.append(spot_incl_costs[value] * spot_tmp[value] * multiplier_combo[value])
 
-            self.spot_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.name,
-                                              CurrencySpot.Return_Incl_Costs.name)] = spot_incl_costs
+            self.spot_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.value,
+                                              CurrencySpot.Return_Incl_Costs.value)] = spot_incl_costs
 
         self.spot_incl_costs = self.spot_incl_costs.set_index(self.dates_index)
-
+        self.spot_incl_costs.to_csv('spot_incl_costs_results.csv')
         return self.spot_incl_costs

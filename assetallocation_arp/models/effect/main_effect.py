@@ -36,7 +36,7 @@ def run_effect():
     spot_ex = obj_import_data.compute_spot_ex_costs()
 
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
-    spot_incl = obj_import_data.spot_incl_computations()
+    spot_incl = obj_import_data.compute_spot_incl()
 
 
 if __name__ == '__main__':
