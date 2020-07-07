@@ -27,14 +27,6 @@ class DataProcessingEffect:
 
         self.start_date_calculations = start_date_calculations
 
-        self.carry_currencies = pd.DataFrame()
-        self.trend_currencies = pd.DataFrame()
-        self.spot_ex_costs = pd.DataFrame()
-        self.spot_incl_costs = pd.DataFrame()
-        self.return_ex_costs = pd.DataFrame()
-        self.return_incl_costs = pd.DataFrame()
-        self.combo_currencies = pd.DataFrame()
-
     @property
     def dates_index(self):
         start_current_date_index_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)

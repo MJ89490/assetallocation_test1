@@ -17,6 +17,15 @@ class CurrencyComputations(DataProcessingEffect):
 
     def __init__(self, start_date_calculations='2000-01-11', bid_ask_spread=10):
         super().__init__(start_date_calculations=start_date_calculations)
+
+        self.carry_currencies = pd.DataFrame()
+        self.trend_currencies = pd.DataFrame()
+        self.spot_ex_costs = pd.DataFrame()
+        self.spot_incl_costs = pd.DataFrame()
+        self.return_ex_costs = pd.DataFrame()
+        self.return_incl_costs = pd.DataFrame()
+        self.combo_currencies = pd.DataFrame()
+
         self.bid_ask_spread = bid_ask_spread
 
     @property
@@ -225,19 +234,20 @@ class CurrencyComputations(DataProcessingEffect):
                                                 CurrencySpot.Return_Incl_Costs.value)] = return_incl_costs
 
         self.return_incl_costs = self.return_incl_costs.set_index(self.dates_index)
-        self.return_incl_costs.to_csv('returns_incl_costs_results_ok.csv')
+
         return self.return_incl_costs
 
-    def spot_ex_costs_computations(self):
+    def compute_spot_ex_costs(self):
 
         start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations) - 1
         tmp_start_date = self.data_currencies_usd.index[start_date_loc]
 
-        # loop to get through each currency
+        # Loop to get through each currency
         for currency in constants.CURRENCIES_SPOT:
             # Reset the Spot list for the next currency
-            spot = [100]  # the Spot is set 100
+            spot = [100]  # The Spot is set 100
             if currency in self.data_currencies_usd.columns:
+
                 spot_division_tmp = (self.data_currencies_usd.loc[tmp_start_date:, currency] /
                                      self.data_currencies_usd.loc[tmp_start_date:, currency].shift(1))
             else:
@@ -245,6 +255,7 @@ class CurrencyComputations(DataProcessingEffect):
                                      self.data_currencies_eur.loc[tmp_start_date:, currency].shift(1))
 
             combo = self.combo_currencies.loc[self.start_date_calculations:, CurrencySpot.Combo.value + currency].tolist()
+
             # Remove the first nan due to the shift(1) and convert the spot_division_tmp into a list
             spot_division_tmp = spot_division_tmp.iloc[1:].tolist()
 
@@ -253,7 +264,7 @@ class CurrencyComputations(DataProcessingEffect):
                 spot.append(spot[value] * spot_division_tmp[value] ** combo[value])
 
             # Store all the spot for each currency
-            self.spot_ex_costs[CurrencySpot.Spot_Ex_Costs.name + currency] = spot
+            self.spot_ex_costs[CurrencySpot.Spot_Ex_Costs.value + currency] = spot
 
         # Set the dates to the index of self.spot_ex_costs
         self.spot_ex_costs = self.spot_ex_costs.set_index(self.dates_index)

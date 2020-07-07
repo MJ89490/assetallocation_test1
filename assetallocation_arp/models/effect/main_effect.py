@@ -33,7 +33,7 @@ def run_effect():
     return_incl = obj_import_data.compute_return_incl_costs()
 
     # -------------------------- spot ex costs calculations ---------------------------------------------------------- #
-    spot_ex = obj_import_data.spot_ex_costs_computations()
+    spot_ex = obj_import_data.compute_spot_ex_costs()
 
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
     spot_incl = obj_import_data.spot_incl_computations()
