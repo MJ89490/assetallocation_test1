@@ -74,7 +74,7 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor):
             pv.iloc[i, k] = sum(cash_flows * df.iloc[:, 0])
             pv1m.iloc[i, k] = sum(cash_flows * df.iloc[:, 1])
             carry_roll.iloc[i, k] = (pv1m.iloc[i, k] / pv.iloc[i, k]) ** 12 * 100 - 100 - curve.iloc[k, i * 14 + 1]
-            duration.iloc[i, k] = sum(cash_flows * nodes * df.iloc[:,0]) / pv.iloc[i, k]
+            duration.iloc[i, k] = sum(cash_flows * nodes * df.iloc[:, 0]) / pv.iloc[i, k]
             if k > 0:
                 country_returns.iloc[i, k] = np.log((pv1m.iloc[i, k] / pv.iloc[i, k - 1])) * 100 \
                                            - curve.iloc[k - 1, i * 14 + 1] / 12
@@ -92,21 +92,21 @@ def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     """"
     creating dataframe with country signals and contributions and overall model performances
     :param pd.DataFrame fica_inputs: parameter choices for the model
-    :param pd.DataFrame carry_roll: historical carry and roll down calculations per country
-    :param pd.DataFrame country_returns: historical return calculations per country
-    :return: dataframes with monthly model signals, cumulative country contributions and model returns
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame curve: dataframe with yield curve data
+    :return: dataFrames with monthly model signals, cumulative country contributions and model returns
     """
     # reading inputs
     tenor = fica_inputs['tenor'].item()
     tenor_2 = fica_inputs['tenor 2'].item()
+    dur_target = fica_inputs['duration'].item()
     if tenor_2 is None:
-        carry_roll, country_returns, duration = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
+        carry_roll, country_returns, duration = calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
     else:
-        carry_roll_1, country_returns_1, duration_1 = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
-        carry_roll_2, country_returns_2, duration_2 = fica.calculate_carry_roll_down(fica_inputs, asset_inputs,curve,tenor_2)
+        carry_roll_1, country_returns_1, duration_1 = calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
+        carry_roll_2, country_returns_2, duration_2 = calculate_carry_roll_down(fica_inputs, asset_inputs,curve,tenor_2)
         carry_roll = carry_roll_2 - duration_2 / duration_1 * carry_roll_1
-        country_returns = np.log((1 + country_returns_2 / 100)/(1 + duration_2 / duration_1 * country_returns_1 / 100))
-
+        country_returns = np.log((1 + country_returns_2 / 100) / (1 + duration_2 / duration_1 * country_returns_1 / 100)) * 100
     returns = pd.DataFrame()
     m = len(carry_roll.columns)
     n = len(carry_roll)
@@ -118,6 +118,9 @@ def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     # determining country weights
     for i in range(m):
         signals = signals.replace(i + 1, weight[m - i - 1])
+    if tenor_2 is not None:
+        signals_2 = - signals * duration_2 / duration_1
+        sub_signals_2 = signals_2 - signals_2.shift()
     # calculating country performance contributions
     contribution = country_returns.sub(country_returns.mean(axis=1), axis=0) * signals.shift()
     cum_contribution = contribution.cumsum()
@@ -125,14 +128,18 @@ def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     cum_contribution['Return'] = cum_contribution.sum(axis=1)
     # calculating returns, starting return index series with 100
     sub_signals = signals - signals.shift()
-    signals['Turnover'] = sub_signals.abs().sum(axis=1)
-    returns['Costs'] = signals['Turnover'] * costs / 100
+    if tenor_2 is None:
+        signals['Turnover'] = sub_signals.abs().sum(axis=1)
+        returns['Costs'] = signals['Turnover'] * costs / 100
+    else:
+        signals['Turnover'] = sub_signals.abs().sum(axis=1) + sub_signals_2.abs().sum(axis=1)
+        returns['Costs'] = costs * (sub_signals.abs().sum(axis=1) + tenor / tenor_2 * sub_signals_2.abs().sum(axis=1)) / 100
     returns['Net_Return'] = cum_contribution['Return'] - returns['Costs'].cumsum()
     returns['Arithmetic'] = (1 + returns['Net_Return'] / 100) * 100
     returns['Geometric'] = 100
     for k in range(1, n):
         returns.iloc[k, 3] = (1 + (contribution.iloc[k, m] - returns.iloc[k, 0]) / 100) * returns.iloc[k - 1, 3]
-    return signals, cum_contribution, returns
+    return signals, cum_contribution, returns, carry_roll, country_returns, signals_2 if 'signals_2' in locals() else None
 
 
 def run_daily_attribution(fica_inputs, asset_inputs, all_data, signals):
