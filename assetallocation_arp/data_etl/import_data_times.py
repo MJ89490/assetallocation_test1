@@ -101,7 +101,7 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, date
     else:
         model_date = date
 
-    # load data and inputs
+    # load data and inputs_effect
     #todo : to improve
     if model_type == Models.times.name:
         strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)

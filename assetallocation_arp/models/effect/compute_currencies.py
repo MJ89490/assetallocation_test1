@@ -3,7 +3,7 @@ Created on 12/05/2020
 @author: AJ89720
 """
 
-from assetallocation_arp.models.effect.data_effect import DataProcessingEffect
+from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_dataframe import CurrencySpot
 import common_libraries.constants as constants
 from common_libraries.names_currencies_implied import CurrencyBaseImplied
@@ -13,7 +13,7 @@ import numpy as np
 #todo transformer date en timestamp dans la property
 
 
-class CurrencyComputations(DataProcessingEffect):
+class ComputeCurrencies(ProcessDataEffect):
 
     def __init__(self, start_date_calculations='2000-01-11', bid_ask_spread=10):
         super().__init__(start_date_calculations=start_date_calculations)

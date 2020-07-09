@@ -15,7 +15,7 @@ from assetallocation_arp.common_libraries import leverage_types as leverage_name
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
-    # format data and inputs
+    # format data and inputs_effect
     asset_inputs_t = asset_inputs.set_index('asset').T
     times_data = all_data[asset_inputs.signal_ticker]
     futures_data = all_data[asset_inputs.future_ticker].pct_change()

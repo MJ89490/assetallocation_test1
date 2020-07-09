@@ -7,13 +7,13 @@ import pandas as pd
 import numpy as np
 import os
 import common_libraries.constants as constants
-from models.effect.inflation_imf_publishing_dates import dates_imf_publishing
+from data_etl.inputs_effect.inflation_imf_publishing_dates import dates_imf_publishing
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 from assetallocation_arp.common_libraries.names_columns_dataframe import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_spot import CurrencyBaseSpot
 
 
-class InflationDifferential:
+class ComputeInflationDifferential:
     def __init__(self, dates_index):
         self.dates_index = dates_index
 
@@ -78,14 +78,12 @@ class InflationDifferential:
         # Get files from data_imf directory
         csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
         # Get through each csv files to know if you need to download data
-        print(inflation_release)
         for inflation in inflation_release:
             csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
             # If there is any file in the data_imf folder
             if len(csv_files) == 0:
                 for date in dates_imf_publishing.keys():
                     date_tmp = pd.to_datetime(date, format='%d-%m-%Y')
-                    print(date_tmp)
                     # Inflation end of period consumer prices not available on IMF website for 2006 and 2007
                     if date_tmp.year == 2006 or date_tmp.year == 2007:
                         continue

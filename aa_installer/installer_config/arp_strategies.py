@@ -13,7 +13,7 @@ from assetallocation_arp.common_libraries import models_names
 def run_model(model_type, mat_file, input_file):
 
     if model_type == models_names.Models.times.name:
-        # get inputs from excel and matlab data
+        # get inputs_effect from excel and matlab data
         times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
@@ -60,7 +60,7 @@ def write_output_to_excel(model_outputs, input_file):
         #
         sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
         #
-        # write inputs used to excel and run time
+        # write inputs_effect used to excel and run time
         sheet_times_inputs.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         #
         sheet_times_inputs.range('rng_inputs_used').offset(0, 0).value = times_inputs

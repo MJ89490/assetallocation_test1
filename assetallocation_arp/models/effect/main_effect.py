@@ -1,15 +1,17 @@
-from assetallocation_arp.models.effect.currencies_computations import CurrencyComputations
-from assetallocation_arp.models.effect.inflation_differential import InflationDifferential
+import sys
+
+from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
+from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
 
 def run_effect():
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
     bid_ask_spread = 10
-    obj_import_data = CurrencyComputations(start_date_calculations='2000-01-11', bid_ask_spread=bid_ask_spread)
-    obj_import_data.data_processing_effect()
+    obj_import_data = ComputeCurrencies(start_date_calculations='2000-01-11', bid_ask_spread=bid_ask_spread)
+    obj_import_data.process_data_effect()
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
-    obj_inflation_differential = InflationDifferential(dates_index=obj_import_data.dates_index)
+    obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
     inflation_differential = obj_inflation_differential.compute_inflation_differential()
 
     # -------------------------- carry calculations ------------------------------------------------------------------ #
@@ -40,4 +42,4 @@ def run_effect():
 
 
 if __name__ == '__main__':
-    run_effect()
+    sys.exit(run_effect())

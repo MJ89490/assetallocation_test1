@@ -17,7 +17,7 @@ class ImportDataEffect:
         return self.data_currencies
 
 
-class DataProcessingEffect:
+class ProcessDataEffect:
 
     def __init__(self, start_date_calculations='2000-01-11'):
         self.obj_import_data = ImportDataEffect()
@@ -47,7 +47,7 @@ class DataProcessingEffect:
         # todo ADD ERROR HANDLING FOR DATE
         self._start_date_calculations = value
 
-    def data_processing_effect(self):
+    def process_data_effect(self):
 
         obj_currencies = Currencies()
         currencies_usd, currencies_eur = obj_currencies.currencies_data()
