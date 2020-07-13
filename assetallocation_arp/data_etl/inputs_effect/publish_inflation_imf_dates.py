@@ -1,14 +1,9 @@
+import pandas as pd
 
 """
 Dates is a list of publishing dates for imf inflation
 The list needs to be updated with the latest publishing dates
 """
-
-
-def update_dates():
-    pass
- #todo when we update the dates => convert automatically to Apr Oct Sept
-
 
 dates_imf_publishing = {'19-04-2006': 'Apr2006',
                         '14-09-2006': 'Sep2006',
@@ -42,4 +37,42 @@ dates_imf_publishing = {'19-04-2006': 'Apr2006',
                         }
 
 
+def update_dates(date_publication):
+    """
+    Function which updates the dates_imf_publishing text file.
+    These dates are used for the inflation release
+    :param date_publication: string date corresponding to the imf publication date
+    """
 
+    dates_imf_publishing = {}
+
+    full_months = {4: 'Apr', 10: 'Oct', 9: 'Sep'}
+    date_tmp = pd.to_datetime(date_publication, format='%d-%m-%Y')
+
+    date_publishing = full_months[date_tmp.month] + str(date_tmp.year)
+
+    dates_imf_publishing[date_publication] = date_publishing
+
+    with open("dates_imf_publishing.txt", 'a') as f:
+        for key, value in dates_imf_publishing.items():
+            f.write('%s %s' % (key, value) + '\n')
+
+
+def read_dates_imf_publishing_text():
+    """
+    Functions which reads the dates_imf_publishing text file.
+    :return: a dictionnary with the dates imf
+    """
+    dates_imf = {}
+    with open("dates_imf_publishing.txt") as f:
+        for line in f:
+            if line != '\n':
+                (key, val) = line.split()
+                dates_imf[key] = val
+            else:
+                continue
+    return dates_imf
+
+# if __name__=="__main__":
+#     update_dates('11-04-2021')
+#     print(read_dates_imf_publishing_text())
