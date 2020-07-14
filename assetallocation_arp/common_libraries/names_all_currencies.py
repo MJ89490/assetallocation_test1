@@ -1,7 +1,7 @@
 from common_libraries.names_currencies_spot import CurrencySpot
 from common_libraries.names_currencies_carry import CurrencyCarry
 from common_libraries.names_currencies_implied import CurrencyImplied
-from common_libraries.constants_currencies import Currencies
+from common_libraries.names_all_currencies_data import Currencies
 
 CURRENCIES_SPOT = [currency.value for currency in CurrencySpot]
 CURRENCIES_IMPLIED = [currency.value for currency in CurrencyImplied]

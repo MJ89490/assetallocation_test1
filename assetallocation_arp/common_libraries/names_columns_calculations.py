@@ -2,6 +2,9 @@ import enum
 
 
 class CurrencySpot(enum.Enum):
+    """
+    Class enum which creates names for dataframe columns
+    """
     Inflation_Differential = 'Inflation_Differential_'
     Inflation_Release = "Inflation_Release"
     Carry = 'Carry_'

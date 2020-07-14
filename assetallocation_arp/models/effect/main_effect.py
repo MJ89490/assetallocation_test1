@@ -3,6 +3,10 @@ import sys
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
+"""
+    Main function to run the EFFECT computations
+"""
+
 
 def run_effect():
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
@@ -38,7 +42,7 @@ def run_effect():
     spot_ex = obj_import_data.compute_spot_ex_costs()
 
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
-    spot_incl = obj_import_data.compute_spot_incl()
+    spot_incl = obj_import_data.compute_spot_incl_costs()
 
 
 if __name__ == '__main__':

@@ -6,10 +6,10 @@
 import pandas as pd
 import numpy as np
 import os
-import common_libraries.constants as constants
-from data_etl.inputs_effect.inflation_imf_publishing_dates import dates_imf_publishing
+import common_libraries.names_all_currencies as constants
+from data_etl.inputs_effect.publish_inflation_imf_dates import dates_imf_publishing
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
-from assetallocation_arp.common_libraries.names_columns_dataframe import CurrencySpot
+from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_spot import CurrencyBaseSpot
 
 
@@ -18,6 +18,10 @@ class ComputeInflationDifferential:
         self.dates_index = dates_index
 
     def compute_inflation_release(self):
+        """
+        Function computing the inflation release depending on the publications IMF dates
+        :return: separate dataFrames inflation_release, years_zero_inflation, months_inflation
+        """
 
         weo_dates = []
         inflation_release = pd.DataFrame()
@@ -26,11 +30,11 @@ class ComputeInflationDifferential:
         for date_index in self.dates_index:
             counter = 0
             date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
-            date = pd.to_datetime(date_index)
-            if date < pd.to_datetime('19-04-2006', format='%d-%m-%Y'):
+            date_tmp = pd.to_datetime(date_index)
+            if date_tmp < pd.to_datetime('19-04-2006', format='%d-%m-%Y'):
                 weo_date = "Latest"
             else:
-                while date > date_publication:
+                while date_tmp > date_publication:
                     counter += 1
                     if counter >= len(dates_imf_publishing):
                         # Reach the end of the dates publishing dates
@@ -38,7 +42,7 @@ class ComputeInflationDifferential:
                         break
                     date_publication = pd.to_datetime(list(dates_imf_publishing)[counter], format='%d-%m-%Y')
                 else:
-                    if date == date_publication:
+                    if date_tmp == date_publication:
                         weo_date = list(dates_imf_publishing)[counter]
                         weo_date = dates_imf_publishing[weo_date]
                     else:
@@ -71,53 +75,64 @@ class ComputeInflationDifferential:
 
         return inflation_release, years_zero_inflation, months_inflation
 
-    @staticmethod
-    def download_inflation_differential(inflation_release):
+    # @staticmethod
+    # def download_inflation_differential(inflation_release):
+    #
         # Grab the data from the IMF website according to the imf publishing date
-        inflation_release = inflation_release[CurrencySpot.Inflation_Release.name].drop_duplicates().iloc[1:].tolist()
-        # Get files from data_imf directory
-        csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
-        # Get through each csv files to know if you need to download data
-        for inflation in inflation_release:
-            csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
-            # If there is any file in the data_imf folder
-            if len(csv_files) == 0:
-                for date in dates_imf_publishing.keys():
-                    date_tmp = pd.to_datetime(date, format='%d-%m-%Y')
-                    # Inflation end of period consumer prices not available on IMF website for 2006 and 2007
-                    if date_tmp.year == 2006 or date_tmp.year == 2007:
-                        continue
-                    # Download the data according to the publishing date
-                    scrape_imf_data(date_imf=date)
-            else:
-                if csv_file not in csv_files:
-                    # Get the date publishing to download the data
-                    months = {'Apr': 0o4, 'Oct': 10}
-                    month = months[inflation[:3]]
-                    year = inflation[3:]
-                    for date in dates_imf_publishing.keys():
-                        if month and year in date:
-                            # Download the data according to the publishing date
-                            scrape_imf_data(date_imf=date)
-                else:
-                    print('OK ', csv_file)
+        # inflation_release = inflation_release[CurrencySpot.Inflation_Release.name].drop_duplicates().iloc[1:].tolist()
+        # # Get files from data_imf directory
+        # csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
+        # # Get through each csv files to know if you need to download data
+        # for inflation in inflation_release:
+        #     csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
+        #     # If there is any file in the data_imf folder
+        #     if len(csv_files) == 0:
+        #         for date in dates_imf_publishing.keys():
+        #             date_tmp = pd.to_datetime(date, format='%d-%m-%Y')
+        #             # Inflation end of period consumer prices not available on IMF website for 2006 and 2007
+        #             if date_tmp.year == 2006 or date_tmp.year == 2007:
+        #                 continue
+        #             # Download the data according to the publishing date
+        #             scrape_imf_data(date_imf=date)
+        #     else:
+        #         if csv_file not in csv_files:
+        #             # Get the date publishing to download the data
+        #             months = {'Apr': 0o4, 'Oct': 10}
+        #             month = months[inflation[:3]]
+        #             year = inflation[3:]
+        #             for date in dates_imf_publishing.keys():
+        #                 if month and year in date:
+        #                     # Download the data according to the publishing date
+        #                     scrape_imf_data(date_imf=date)
+        #         else:
+        #             print('OK ', csv_file)
 
     @staticmethod
     def process_inflation_differential_imf(inflation):
+        """
+        Function processing the inflation differential data from csv files
+        :param inflation: inflation date (eg: Apr2020)
+        :return: a dataFrame inflation_data_merged with inflation data inside for usd and eur countries
+        """
+        # todo modify later because data will be stored in a Db
 
-        # Set the name of the csv file
-        csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
+        # Set the name of the csv file for country and group data
+        data_country = 'data_imf_WEO{}all.csv'.format(inflation)
+        data_group_country = 'data_imf_eur_WEO{}alla.csv'.format(inflation)
 
         # Read the data rom the inflation csv files
         inflation_values = pd.read_csv(
-            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", csv_file)))
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", data_country)))
+
+        inflation_eur_values = pd.read_csv(
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", data_group_country)))
 
         countries_currencies = {'Brazil': 'BRLUSD Curncy', 'Argentina': 'ARSUSD Curncy',
                                 'Mexico': 'MXNUSD Curncy', 'Colombia': 'COPUSD Curncy',
                                 'Chile': 'CLPUSD Curncy', 'Peru': 'PENUSD Curncy',
                                 'Turkey': 'TRYUSD Curncy', 'Russia': 'RUBUSD Curncy',
-                                'Hungary': 'HUFUSD Curncy', 'Poland': 'PLNUSD Curncy',
-                                'Czech Republic': 'CZKUSD Curncy', 'South Africa': 'ZARUSD Curncy',
+                                'Hungary': 'HUFEUR Curncy', 'Poland': 'PLNEUR Curncy',
+                                'Czech Republic': 'CZKEUR Curncy', 'South Africa': 'ZARUSD Curncy',
                                 'China': 'CNYUSD Curncy', 'Korea': 'KRWUSD Curncy',
                                 'Malaysia': 'MYRUSD Curncy', 'Indonesia': 'IDRUSD Curncy',
                                 'India': 'INRUSD Curncy', 'Philippines': 'PHPUSD Curncy',
@@ -125,17 +140,33 @@ class ComputeInflationDifferential:
                                 'United Kingdom': 'GBP_Base', 'United States': 'USD_Base'
                                 }
 
+        country_currency_eur = {'Euro area': 'EUR_Base'}
+
+        inflation_eur_values.rename(columns={'Country Group Name': 'Country'}, inplace=True)
+
+        inflation_data_eur = pd.DataFrame(list(country_currency_eur.items()), columns=['Country', 'Currency'])
+
         inflation_data = pd.DataFrame(list(countries_currencies.items()), columns=['Country', 'Currency'])
         inflation_data_sorted = inflation_data.sort_values(by='Country', ascending=True)
+
+        inflation_eur_values = inflation_eur_values[inflation_eur_values['Country'].isin(list(country_currency_eur.keys()))]
+        inflation_eur_data_merged = pd.merge(inflation_data_eur, inflation_eur_values)
 
         inflation_values = inflation_values[inflation_values['Country'].isin(list(countries_currencies.keys()))]
         inflation_values_sorted = inflation_values.sort_values(by='Country', ascending=True)
         inflation_data_merged = pd.merge(inflation_data_sorted, inflation_values_sorted)
 
+        # Add Euro area data to inflation_data_merged
+        inflation_data_merged = inflation_data_merged.append(inflation_eur_data_merged, ignore_index=True)
+
         return inflation_data_merged
 
     @staticmethod
     def process_inflation_differential_bloomberg():
+        """
+        Function processing the Bloomberg inflation differential data fom csv files
+        :return: a dataFrame inflation_bloomberg_values with inflation data inside for usd and eur countries
+        """
 
         # Processing bloomberg data
         inflation_values = pd.read_csv(os.path.abspath(
@@ -158,25 +189,29 @@ class ComputeInflationDifferential:
         names_currencies = {'BRL': 'BRLUSD Curncy', 'PEN': 'PENUSD Curncy', 'ARS': 'ARSUSD Curncy',
                             'MXN': 'MXNUSD Curncy', 'COP': 'COPUSD Curncy', 'CLP': 'CLPUSD Curncy',
                             'TRY': 'TRYUSD Curncy', 'RUB': 'RUBUSD Curncy', 'ILS': 'ILSUSD Curncy',
-                            'CZK': 'CZKUSD Curncy', 'RON': 'RONUSD Curncy', 'HUF': 'HUFUSD Curncy',
-                            'PLN': 'PLNUSD Curncy', 'EGP': 'EGPUSD Curncy', 'ZAR': 'ZARUSD Curncy',
+                            'CZK': 'CZKEUR Curncy', 'RON': 'RONUSD Curncy', 'HUF': 'HUFEUR Curncy',
+                            'PLN': 'PLNEUR Curncy', 'EGP': 'EGPUSD Curncy', 'ZAR': 'ZARUSD Curncy',
                             'NGN': 'NGNUSD Curncy', 'CNY': 'CNYUSD Curncy', 'KRW': 'KRWUSD Curncy',
                             'MYR': 'MYRUSD Curncy', 'IDR': 'IDRUSD Curncy', 'INR': 'INRUSD Curncy',
                             'PHP': 'PHPUSD Curncy', 'TWD': 'TWDUSD Curncy', 'THB': 'THBUSD Curncy',
                             'EUR': 'EUR', 'GBP': 'GBP', 'USD': 'USD'}
 
-        inflation_values = inflation_values.rename(columns=names_currencies)
+        inflation_bloomberg_values = inflation_values.rename(columns=names_currencies)
 
-        return inflation_values
+        return inflation_bloomberg_values
 
     def compute_inflation_differential(self):
+        """
+        Function computing the inflation differential for usd and eur countries
+        :return: a dataFrame  inflation_differential with all inflation differential data
+        """
 
         inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release()
 
-        # Grab the inflation differential data if needed
-        self.download_inflation_differential(inflation_release=inflation_release)
+        # Grab the latest inflation differential data
+        scrape_imf_data()
 
         years_one_inflation = years_zero_inflation.apply(lambda y: y + 1)
         years_zero_inflation = years_zero_inflation['Years'].tolist()
@@ -227,7 +262,7 @@ class ComputeInflationDifferential:
                     # year_zero_value
                     inflation_year_zero_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_zero)])
                     # Look for the value of the base currency at year1 and then append to the list inflation_
-                    # year_zero_value
+                    # year_one_value
                     inflation_year_one_value_base.append(inflation_data_merged.loc[index_currency_base, str(year_one)])
 
                 else:

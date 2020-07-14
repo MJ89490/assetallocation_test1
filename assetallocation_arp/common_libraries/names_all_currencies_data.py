@@ -2,12 +2,19 @@ import pandas as pd
 
 
 class Currencies:
+    """
+    Class which creates two dictionaries for currencies usd and currencies eur
+    """
 
     def __init__(self):
         self.currencies_usd = {}
         self.currencies_eur = {}
 
     def currencies_data(self):
+        """
+        Function which creates two dictionaries to store all the currencies usd and currencies eur
+        :return: two dictionaries with currencies usd names and currencies eur names
+        """
 
         self.currencies_usd = {
                                 "currencies_usd_tickers": ["BRLUSD Curncy", "BRLUSDCR Curncy", "BCNI3M Curncy", "US0003M Index",

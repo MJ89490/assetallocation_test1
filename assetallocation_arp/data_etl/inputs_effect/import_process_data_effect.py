@@ -1,8 +1,13 @@
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
-from common_libraries.constants_currencies import Currencies
+from common_libraries.names_all_currencies_data import Currencies
 from common_libraries.models_names import Models
 
 import pandas as pd
+
+
+"""
+    Class to import data from matlab file
+"""
 
 
 class ImportDataEffect:
@@ -11,10 +16,19 @@ class ImportDataEffect:
         self.data_currencies = pd.DataFrame()
 
     def import_data_matlab(self):
+        """
+        Function importing the data from matlab file
+        :return: a dataFrame self.data_currencies with matlab data
+        """
         self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
                                                   input_file=None, date=None)
 
         return self.data_currencies
+
+
+"""
+    Class to process data from matlab file
+"""
 
 
 class ProcessDataEffect:
@@ -48,6 +62,10 @@ class ProcessDataEffect:
         self._start_date_calculations = value
 
     def process_data_effect(self):
+        """
+        Function processing data from the matlab file to get the required data
+        :return: two dataFrames self.data_currencies_usd, self.data_currencies_eur for usd and eur currencies
+        """
 
         obj_currencies = Currencies()
         currencies_usd, currencies_eur = obj_currencies.currencies_data()
