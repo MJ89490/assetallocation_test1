@@ -6,8 +6,10 @@
 import pandas as pd
 import numpy as np
 import os
+import json
+from configparser import ConfigParser
+
 import common_libraries.names_all_currencies as constants
-from data_etl.inputs_effect.publish_inflation_imf_dates import dates_imf_publishing
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_spot import CurrencyBaseSpot
@@ -27,11 +29,20 @@ class ComputeInflationDifferential:
         inflation_release = pd.DataFrame()
         flag = False
 
+        # Instantiate ConfigParser
+        config = ConfigParser()
+        # Parse existing file
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'dates_effect.ini'))
+        config.read(path)
+        # Read values from the dates_effect.ini file
+        latest_date = config.get('latest_date_inflation_differential', 'latest_date_inflation')
+        dates_imf_publishing = json.loads(config.get('dates_imf_publishing', 'dates_imf_publication'))
+
         for date_index in self.dates_index:
             counter = 0
             date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
             date_tmp = pd.to_datetime(date_index)
-            if date_tmp < pd.to_datetime('19-04-2006', format='%d-%m-%Y'):
+            if date_tmp < pd.to_datetime(latest_date, format='%d-%m-%Y'):
                 weo_date = "Latest"
             else:
                 while date_tmp > date_publication:
@@ -122,10 +133,9 @@ class ComputeInflationDifferential:
 
         # Read the data rom the inflation csv files
         inflation_values = pd.read_csv(
-            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", data_country)))
-
+            os.path.abspath(os.path.join(os.path.dirname(__file__),  '..', '..', '..', 'data_effect', 'data_imf', data_country)))
         inflation_eur_values = pd.read_csv(
-            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf", data_group_country)))
+            os.path.abspath(os.path.join(os.path.dirname(__file__),  '..', '..', '..', 'data_effect', 'data_imf', data_group_country)))
 
         countries_currencies = {'Brazil': 'BRLUSD Curncy', 'Argentina': 'ARSUSD Curncy',
                                 'Mexico': 'MXNUSD Curncy', 'Colombia': 'COPUSD Curncy',
@@ -168,9 +178,9 @@ class ComputeInflationDifferential:
         :return: a dataFrame inflation_bloomberg_values with inflation data inside for usd and eur countries
         """
 
-        # Processing bloomberg data
+        # Processing Bloomberg data
         inflation_values = pd.read_csv(os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "bloomberg_data", "bbg_data.csv")))
+            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data_effect', 'bloomberg_data', 'bbg_data.csv' )))
 
         # Remove the first two rows
         inflation_values = inflation_values.iloc[2:]
