@@ -1,4 +1,4 @@
-from pytest import fixture, raises
+from pytest import raises
 from pandas import DataFrame, testing
 
 from assetallocation_arp.data_etl.dal.dal import class_attributes_to_df

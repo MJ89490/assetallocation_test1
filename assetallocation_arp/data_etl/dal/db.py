@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Dict
 
 from sqlalchemy import create_engine
 
@@ -20,3 +20,6 @@ class Db:
             self.dbapi_conn.close()
 
         return results
+
+    def get_row_where_equal(self, schema: str, table: str, column_values: Dict[str, Any]):
+        pass
