@@ -2,7 +2,7 @@ from typing import Optional
 
 from .strategy import Strategy
 from .user import User
-from.db import Db
+from .db import Db
 
 
 class Effect(Strategy):
@@ -79,7 +79,7 @@ class Effect(Strategy):
         return self._trend_indicator
 
     def insert(self, db: Db):
-        self._strategy_id, self._system_tstzrange = db.call_proc('add_effect_strategy',
+        self._strategy_id, self._system_tstzrange = db.call_proc('insert_effect_strategy',
                                                                  [self.name, self.description, self.user.user_id,
                                                                   self.carry_type, self.closing_threshold, self.cost,
                                                                   self.day_of_week, self.frequency,

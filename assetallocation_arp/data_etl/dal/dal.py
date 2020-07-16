@@ -8,11 +8,6 @@ def class_attributes_to_df(cls_instances: List[Any]):
     return pd.DataFrame([[v for v in cls.__dict__.values()] for cls in cls_instances], columns=cols)
 
 
-def add_fund_strategy():
-    """add a new fund_strategy"""
-    pass
-
-
 def get_fund_strategy(fund_name, strategy_name, business_datetime, system_datetime):
     """select * from fund_strategy where id = fund_strategy_id"""
     pass

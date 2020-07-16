@@ -38,7 +38,7 @@ class Times(Strategy):
     @property
     def short_signals(self):
         return self._short_signals
-    
+
     @property
     def time_lag(self):
         return self._time_lag
@@ -48,7 +48,7 @@ class Times(Strategy):
         return self._volatility_window
 
     def insert(self, db: Db):
-        self._strategy_id, self._system_tstzrange = db.call_proc('add_effect_strategy',
+        self._strategy_id, self._system_tstzrange = db.call_proc('insert_effect_strategy',
                                                                  [self.name, self.description, self.user.user_id,
                                                                   self.day_of_week, self.frequency, self.leverage_type,
                                                                   self.long_signals, self.short_signals, self.time_lag,
