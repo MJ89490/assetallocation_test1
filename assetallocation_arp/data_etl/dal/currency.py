@@ -1,4 +1,3 @@
 class Currency:
-    def __init__(self, currency: str, currency_id: int):
+    def __init__(self, currency: str):
         self._currency = currency
-        self._id = currency_id
