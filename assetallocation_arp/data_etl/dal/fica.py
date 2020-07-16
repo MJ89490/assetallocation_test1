@@ -4,13 +4,12 @@ from psycopg2.extras import DateTimeTZRange
 
 from .strategy import Strategy
 from .user import User
-from.db import Db
+from .db import Db
 
 
 class Fica(Strategy):
-    def __init__(self, description: str, name: str, user: User,
-                 coupon: float, curve: str, business_tstzrange: DateTimeTZRange,
-                 strategy_weights: List[float], tenor: int, trading_cost: int):
+    def __init__(self, description: str, name: str, user: User, coupon: float, curve: str,
+                 business_tstzrange: DateTimeTZRange, strategy_weights: List[float], tenor: int, trading_cost: int):
         super().__init__(name, user, description)
         self._coupon = coupon
         self._curve = curve
@@ -44,8 +43,7 @@ class Fica(Strategy):
         return self._trading_cost
 
     def insert(self, db: Db):
-        self._strategy_id, self._system_tstzrange = db.call_proc('insert_fica_strategy',
-                                                                 [self.name, self.description, self.user.user_id,
-                                                                  self.coupon, self.curve, self.business_tstzrange,
-                                                                  str(self.strategy_weights), self.tenor,
-                                                                  self.trading_cost])
+        self._system_tstzrange = db.call_proc('insert_fica_strategy',
+                                              [self.name, self.description, self.user.user_id, self.coupon, self.curve,
+                                               self.business_tstzrange, str(self.strategy_weights), self.tenor,
+                                               self.trading_cost])

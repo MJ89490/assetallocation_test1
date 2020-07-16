@@ -6,7 +6,6 @@ from .user import User
 class Strategy:
     def __init__(self, name: str, user: User, description: Optional[str] = None):
         self._description = description
-        self._strategy_id = None
         self._name = name
         self._system_tstzrange = None
         self._user = user

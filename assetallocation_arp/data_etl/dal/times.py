@@ -6,9 +6,8 @@ from .db import Db
 
 
 class Times(Strategy):
-    def __init__(self, name: str, user: User,
-                 day_of_week: int, frequency: str, leverage_type: str, long_signals: List[float],
-                 short_signals: List[float], time_lag: int, volatility_window: int,
+    def __init__(self, name: str, user: User, day_of_week: int, frequency: str, leverage_type: str,
+                 long_signals: List[float], short_signals: List[float], time_lag: int, volatility_window: int,
                  description: Optional[str] = None):
         super().__init__(name, user, description)
         self._day_of_week = day_of_week
@@ -48,8 +47,8 @@ class Times(Strategy):
         return self._volatility_window
 
     def insert(self, db: Db):
-        self._strategy_id, self._system_tstzrange = db.call_proc('insert_effect_strategy',
-                                                                 [self.name, self.description, self.user.user_id,
-                                                                  self.day_of_week, self.frequency, self.leverage_type,
-                                                                  self.long_signals, self.short_signals, self.time_lag,
-                                                                  self.time_lag, self.volatility_window])
+        self._system_tstzrange = db.call_proc('insert_times_strategy',
+                                              [self.name, self.description, self.user.user_id, self.day_of_week,
+                                               self.frequency, self.leverage_type, self.long_signals,
+                                               self.short_signals, self.time_lag, self.time_lag,
+                                               self.volatility_window])
