@@ -86,38 +86,6 @@ class ComputeInflationDifferential:
 
         return inflation_release, years_zero_inflation, months_inflation
 
-    # @staticmethod
-    # def download_inflation_differential(inflation_release):
-    #
-        # Grab the data from the IMF website according to the imf publishing date
-        # inflation_release = inflation_release[CurrencySpot.Inflation_Release.name].drop_duplicates().iloc[1:].tolist()
-        # # Get files from data_imf directory
-        # csv_files = os.listdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data_etl", "data_imf")))
-        # # Get through each csv files to know if you need to download data
-        # for inflation in inflation_release:
-        #     csv_file = 'data_imf_WEO{}all.csv'.format(inflation)
-        #     # If there is any file in the data_imf folder
-        #     if len(csv_files) == 0:
-        #         for date in dates_imf_publishing.keys():
-        #             date_tmp = pd.to_datetime(date, format='%d-%m-%Y')
-        #             # Inflation end of period consumer prices not available on IMF website for 2006 and 2007
-        #             if date_tmp.year == 2006 or date_tmp.year == 2007:
-        #                 continue
-        #             # Download the data according to the publishing date
-        #             scrape_imf_data(date_imf=date)
-        #     else:
-        #         if csv_file not in csv_files:
-        #             # Get the date publishing to download the data
-        #             months = {'Apr': 0o4, 'Oct': 10}
-        #             month = months[inflation[:3]]
-        #             year = inflation[3:]
-        #             for date in dates_imf_publishing.keys():
-        #                 if month and year in date:
-        #                     # Download the data according to the publishing date
-        #                     scrape_imf_data(date_imf=date)
-        #         else:
-        #             print('OK ', csv_file)
-
     @staticmethod
     def process_inflation_differential_imf(inflation):
         """

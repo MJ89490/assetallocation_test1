@@ -2,8 +2,10 @@ from data_etl.import_data_times import extract_inputs_and_mat_data as data_matla
 from common_libraries.names_all_currencies_data import Currencies
 from common_libraries.models_names import Models
 
-import pandas as pd
+from configparser import ConfigParser
 
+import pandas as pd
+import os
 
 """
     Class to import data from matlab file
@@ -33,13 +35,13 @@ class ImportDataEffect:
 
 class ProcessDataEffect:
 
-    def __init__(self, start_date_calculations='2000-01-11'):
+    def __init__(self):
         self.obj_import_data = ImportDataEffect()
 
         self.data_currencies_usd = pd.DataFrame()
         self.data_currencies_eur = pd.DataFrame()
 
-        self.start_date_calculations = start_date_calculations
+        self.start_date_calculations = ''
 
     @property
     def dates_index(self):
@@ -58,8 +60,49 @@ class ProcessDataEffect:
 
     @start_date_calculations.setter
     def start_date_calculations(self, value):
-        # todo ADD ERROR HANDLING FOR DATE
-        self._start_date_calculations = value
+        # Instantiate ConfigParser
+        config = ConfigParser()
+        # Parse existing file
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'dates_effect.ini'))
+        config.read(path)
+        # Read values from the dates_effect.ini file
+        start_common_date = config.get('common_start_date_effect', 'start_common_data')
+
+        if value == '':
+            self._start_date_calculations = None
+        else:
+            if pd.to_datetime(value, format='%Y-%m-%d') < pd.to_datetime(start_common_date, format='%Y-%m-%d'):
+                raise ValueError('Start date is lesser than 11-01-2000')
+            else:
+                start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%Y-%m-%d'))
+                self._start_date_calculations = start_date
+
+    @staticmethod
+    def find_date(dates_set, pivot):
+
+        flag = False
+        # Initialization to start the while loop
+        counter = 0
+        date = dates_set[0]
+
+        while pivot > date:
+            counter += 1
+            if counter >= len(dates_set):
+                # Reach the end of the dates_set list
+                flag = True
+                break
+            date = dates_set[counter]
+        else:
+            if pivot == date:
+                t_start = pivot
+            else:
+                t_start = dates_set[counter - 1]
+
+        # End of the list, we set the date to the last date
+        if flag:
+            t_start = dates_set[-1]
+
+        return t_start
 
     def process_data_effect(self):
         """

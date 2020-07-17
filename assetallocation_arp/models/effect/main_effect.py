@@ -11,8 +11,9 @@ from data_etl.inputs_effect.compute_inflation_differential import ComputeInflati
 def run_effect():
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
     bid_ask_spread = 10
-    obj_import_data = ComputeCurrencies(start_date_calculations='2000-01-11', bid_ask_spread=bid_ask_spread)
+    obj_import_data = ComputeCurrencies(bid_ask_spread=bid_ask_spread)
     obj_import_data.process_data_effect()
+    obj_import_data.start_date_calculations = '2020-04-06'
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
@@ -43,7 +44,7 @@ def run_effect():
 
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
     spot_incl = obj_import_data.compute_spot_incl_costs()
-
+    print(spot_incl)
 
 if __name__ == '__main__':
     sys.exit(run_effect())
