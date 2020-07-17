@@ -6,7 +6,8 @@ import pytest
 
 @pytest.fixture
 def currencies():
-    return ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR', 'PHP', 'THB', 'TWD']
+    return ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'PEN', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR', 'PHP',
+            'THB', 'TWD', 'CZK', 'HUF', 'PLN']
 
 
 def test_compute_inflation_release():

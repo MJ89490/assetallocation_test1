@@ -147,6 +147,8 @@ class ComputeCurrencies(ProcessDataEffect):
                 trend_short_tmp = self.data_currencies_eur.loc[:, currency].rolling(short_term).mean()
                 trend_long_tmp = self.data_currencies_eur.loc[:, currency].rolling(long_term).mean()
 
+                self.data_currencies_eur.loc[:, currency].to_csv('spot_pln.csv')
+
             # We set 10 digits because due to Python precision there are small dusts at the end of some numbers
             # and they set 0 as negative result (eg: date 16/02/2004: -0.000%)
             self.trend_currencies[CurrencySpot.Trend.value + currency_name_col] = \
