@@ -34,21 +34,28 @@ class Db:
 
         return results
 
+
+    def get_times_strategy_id(self, name, description, day_of_week, frequency, leverage_type, long_signals,
+                              short_signals, time_lag, volatility_window) -> int:
+        pass
+        strategy_id = 'foo'
+        return strategy_id
+
     def get_user_by_email(self, user_email: str) -> User:
         row = self.get_row_where_equal('user', 'user', {'email': user_email})
-        return User(row.email, row.id, row.name)
+        return User(row.id, row.email, row.name)
 
     def get_row_where_equal(self, schema: str, table: str, column_values: Dict[str, Any]):
         pass
 
     def get_user_by_id(self, user_id: str) -> User:
         row = self.get_row_where_equal('user', 'user', {'id': user_id})
-        return User(row.email, row.id, row.name)
+        return User(row.id, row.email, row.name)
 
     # TODO test the below
     def get_fund(self, name: str) -> Fund:
         fund_id, currency, currency_id = self.call_proc(Proc.select_fund.name, [name])
-        return Fund(Currency(currency), name)
+        return Fund(name, Currency(currency))
 
     def get_fund_strategy(self, fund_name: str, strategy_name: str, business_datetime: datetime,
                           system_datetime: datetime) -> FundStrategy:
@@ -57,8 +64,8 @@ class Db:
          f_name, save_output_flag, weight) = self.call_proc(Proc.select_fund_strategy.name,
                                                             [fund_name, strategy_name, business_datetime,
                                                              system_datetime])
-        s_user = User(s_user_email, s_user_id, s_user_name)
+        s_user = User(s_user_id, s_user_email, s_user_name)
         s = Strategy(s_name, s_user, description)
-        fs_user = User(fs_user_email, fs_user_id, fs_user_name)
-        f = Fund(Currency(currency), f_name)
+        fs_user = User(fs_user_id, fs_user_email, fs_user_name)
+        f = Fund(f_name, Currency(currency))
         return FundStrategy(business_datetime, f, save_output_flag, s, weight, fs_user)

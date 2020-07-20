@@ -2,7 +2,7 @@ from .currency import Currency
 
 
 class Fund:
-    def __init__(self, currency: Currency, name: str):
+    def __init__(self, name: str, currency: Currency):
         self._currency = currency
         self._name = name
 

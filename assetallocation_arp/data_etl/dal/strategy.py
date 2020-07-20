@@ -30,3 +30,6 @@ class Strategy:
         """insert strategy into database"""
         pass
 
+    def get_id(self, *args) -> Optional[int]:
+        """get strategy id from database"""
+        pass

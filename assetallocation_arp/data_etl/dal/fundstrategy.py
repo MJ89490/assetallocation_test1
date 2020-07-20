@@ -50,8 +50,8 @@ class FundStrategy:
     def user(self):
         return self._user
 
-    def insert(self, db: Db):
-        self._fund_strategy_id, self._system_datetime = db.call_proc('insert_fund_strategy',
-                                                                     [self.business_datetime, self.fund.fund_id,
-                                                                      self.save_output_flag, self.strategy, self.weight,
-                                                                      self.user.user_id])
+    def insert(self, db: Db, strategy_id) -> int:
+        fund_strategy_id = db.call_proc('insert_fund_strategy',
+                                        [self.business_datetime, self.fund.name, self.save_output_flag, strategy_id,
+                                         self.weight, self.user.user_id])[0]
+        return fund_strategy_id
