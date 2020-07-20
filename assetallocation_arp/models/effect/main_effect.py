@@ -3,6 +3,7 @@ import sys
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
+from assetallocation_arp.models.effect.compute_profit_and_loss import ComputeProfitAndLoss
 """
     Main function to run the EFFECT computations
 """
@@ -13,7 +14,7 @@ def run_effect():
     bid_ask_spread = 10
     obj_import_data = ComputeCurrencies(bid_ask_spread=bid_ask_spread)
     obj_import_data.process_data_effect()
-    obj_import_data.start_date_calculations = '2020-04-06'
+    obj_import_data.start_date_calculations = '2000-01-11'
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
@@ -45,6 +46,15 @@ def run_effect():
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
     spot_incl = obj_import_data.compute_spot_incl_costs()
     print(spot_incl)
+
+
+    import pandas as pd
+    obj_compute_profit_and_loss = ComputeProfitAndLoss(latest_date=pd.to_datetime('24-04-2020', format='%d-%m-%Y'))
+
+    profit_and_loss_returns = obj_compute_profit_and_loss.compute_profit_and_loss_returns(returns_ex_costs=return_ex)
+
+    profit_and_loss_spot = obj_compute_profit_and_loss.compute_profit_and_loss_spot(spot_ex_costs=spot_ex)
+
 
 if __name__ == '__main__':
     sys.exit(run_effect())
