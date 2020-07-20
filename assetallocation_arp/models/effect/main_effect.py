@@ -3,7 +3,8 @@ import sys
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
-from assetallocation_arp.models.effect.compute_profit_and_loss import ComputeProfitAndLoss
+from assetallocation_arp.models.effect.compute_profit_and_loss_overview_overview import ComputeProfitAndLoss
+from assetallocation_arp.models.effect.compute_signals_overview import ComputeSignalsOverview
 """
     Main function to run the EFFECT computations
 """
@@ -49,15 +50,28 @@ def run_effect():
 
 
     import pandas as pd
-    obj_compute_profit_and_loss = ComputeProfitAndLoss(latest_date=pd.to_datetime('24-04-2020', format='%d-%m-%Y'))
 
-    profit_and_loss_combo, returns_ex, spot_ex, carry = \
-        obj_compute_profit_and_loss.run_profit_and_loss(combo=combo, returns_ex_costs=return_ex, spot_ex_costs=spot_ex)
+    latest_date = pd.to_datetime('24-04-2020', format='%d-%m-%Y')
+    next_latest_date = pd.to_datetime('27-04-2020', format='%d-%m-%Y')
+    obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
 
-    obj_compute_profit_and_loss.format_profit_and_loss_data(combo=profit_and_loss_combo,
-                                                            returns_ex=returns_ex,
-                                                            spot_ex=spot_ex,
-                                                            carry=carry)
+    profit_and_loss_combo_overview, profit_and_loss_returns_ex_overview, profit_and_loss_spot_ex_overview, \
+    profit_and_loss_carry_overview = \
+        obj_compute_profit_and_loss_overview.run_profit_and_loss(combo=combo, returns_ex_costs=return_ex, spot_ex_costs=spot_ex)
+
+    obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date)
+
+    signals_real_carry_overview, signals_trend_overview, signals_combo_overview = \
+        obj_compute_signals_overview.run_signals_overview(real_carry=carry, trend=trend, combo=combo)
+
+
+
+
+
+    # obj_compute_profit_and_loss.format_profit_and_loss_data(combo=profit_and_loss_combo,
+    #                                                         returns_ex=returns_ex,
+    #                                                         spot_ex=spot_ex,
+    #                                                         carry=carry)
 
 
 if __name__ == '__main__':
