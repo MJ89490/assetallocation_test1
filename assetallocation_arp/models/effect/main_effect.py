@@ -45,15 +45,19 @@ def run_effect():
 
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
     spot_incl = obj_import_data.compute_spot_incl_costs()
-    print(spot_incl)
+
 
 
     import pandas as pd
     obj_compute_profit_and_loss = ComputeProfitAndLoss(latest_date=pd.to_datetime('24-04-2020', format='%d-%m-%Y'))
 
-    profit_and_loss_returns = obj_compute_profit_and_loss.compute_profit_and_loss_returns(returns_ex_costs=return_ex)
+    profit_and_loss_combo, returns_ex, spot_ex, carry = \
+        obj_compute_profit_and_loss.run_profit_and_loss(combo=combo, returns_ex_costs=return_ex, spot_ex_costs=spot_ex)
 
-    profit_and_loss_spot = obj_compute_profit_and_loss.compute_profit_and_loss_spot(spot_ex_costs=spot_ex)
+    obj_compute_profit_and_loss.format_profit_and_loss_data(combo=profit_and_loss_combo,
+                                                            returns_ex=returns_ex,
+                                                            spot_ex=spot_ex,
+                                                            carry=carry)
 
 
 if __name__ == '__main__':
