@@ -1,5 +1,5 @@
 import pandas as pd
-
+from enum import Enum
 
 class Currencies:
     """
