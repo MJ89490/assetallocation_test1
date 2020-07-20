@@ -1,7 +1,7 @@
 """
 Created on Tue May  26 15:58:00 2020
 FICA
-@author: WK68945 & JF12345
+@author: WK68945
 """
 
 import numpy as np
