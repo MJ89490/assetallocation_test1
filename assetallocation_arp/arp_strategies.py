@@ -107,5 +107,5 @@ def get_input_user():
 
 if __name__ == "__main__":
 
-    get_inputs_from_excel()
-    # get_inputs_from_python(model, file="arp_dashboard.xlsm")
+   #get_inputs_from_excel()
+    get_inputs_from_python('times', file="arp_dashboard.xlsm")

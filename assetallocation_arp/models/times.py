@@ -17,6 +17,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
     # format data and inputs
     asset_inputs_t = asset_inputs.set_index('asset').T
+    all_data = all_data[ all_data.index.values > np.datetime64(times_inputs['DateFrom'].item())]
     times_data = all_data[asset_inputs.signal_ticker]
     futures_data = all_data[asset_inputs.future_ticker].pct_change()
     times_data.columns = asset_inputs.asset
@@ -25,7 +26,6 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     costs = asset_inputs_t.loc['costs']
     leverage = asset_inputs_t.loc['s_leverage']
     leverage_type = times_inputs['leverage_type'].item()
-
 
     # calculate signals
     signals = arp.momentum(times_data, times_inputs, times_inputs['week_day'].item())

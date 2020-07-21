@@ -11,11 +11,11 @@ import os
 import numpy as np
 from datetime import datetime
 
-#Comments: may be we should the structure of the import data when we will have the database
+# Comments: may be we should the structure of the import data when we will have the database
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
-FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\Arquive\matlabData.mat'
+FILE_PATH = r'\\Inv\lgim\FrontOffice\Structured Products\Solutions Group\SIRM\Shared\Simone\ARP\Data\matlabData.mat'
 
 
 def matfile_to_dataframe(file_path, model_date):
@@ -103,6 +103,10 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     # load data and inputs
     strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
     asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
+
+    if strategy_inputs['DateFrom'].item() is not None:
+        model_date = np.datetime64(strategy_inputs['DateTo'].item())
+
     all_data = matfile_to_dataframe(file_path, model_date)
 
     return strategy_inputs, asset_inputs, all_data
