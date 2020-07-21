@@ -1,4 +1,8 @@
 import sys
+import os
+import json
+import pandas as pd
+from configparser import ConfigParser
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
@@ -8,7 +12,6 @@ from assetallocation_arp.models.effect.compute_signals_overview import ComputeSi
 from assetallocation_arp.models.effect.compute_trades_overview import compute_trades_overview
 from assetallocation_arp.models.effect.compute_warning_flags_overview import ComputeWarningFlagsOverview
 
-import assetallocation_arp.common_libraries.names_all_currencies as all_currencies
 
 """
     Main function to run the EFFECT computations
@@ -16,10 +19,13 @@ import assetallocation_arp.common_libraries.names_all_currencies as all_currenci
 
 
 def run_effect():
+    # ---------------------------------------------------------------------------------------------------------------- #
+    #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
+    # ---------------------------------------------------------------------------------------------------------------- #
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
     bid_ask_spread = 10
     obj_import_data = ComputeCurrencies(bid_ask_spread=bid_ask_spread)
-    data_currencies_usd, data_currencies_eur = obj_import_data.process_data_effect()
+    obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = '2000-01-11'
 
     # -------------------------- inflation differential calculations ------------------------------------------------- #
@@ -52,51 +58,34 @@ def run_effect():
     # -------------------------- spot incl calculations -------------------------------------------------------------- #
     spot_incl = obj_import_data.compute_spot_incl_costs()
 
+    # ---------------------------------------------------------------------------------------------------------------- #
+    #                                                 EFFECT OVERVIEW                                                  #
+    # ---------------------------------------------------------------------------------------------------------------- #
+    dates_index = obj_import_data.dates_origin_index
 
+    latest_date = dates_index[-5]
+    next_latest_date = dates_index[-4]
+    previous_seven_days_latest_date = dates_index[-10]
 
-    import pandas as pd
-
-    latest_date = pd.to_datetime('24-04-2020', format='%d-%m-%Y')
-    next_latest_date = pd.to_datetime('27-04-2020', format='%d-%m-%Y')
-    previous_seven_days_latest_date = pd.to_datetime('17-04-2020', format='%d-%m-%Y')
-
+    # COMPUTE PROFIT AND LOSS: Combo; Returns Ex costs; Spot; Carry
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
 
     profit_and_loss_combo_overview, profit_and_loss_returns_ex_overview, profit_and_loss_spot_ex_overview, \
-    profit_and_loss_carry_overview = \
-        obj_compute_profit_and_loss_overview.run_profit_and_loss(combo=combo, returns_ex_costs=return_ex, spot_ex_costs=spot_ex)
+    profit_and_loss_carry_overview = obj_compute_profit_and_loss_overview.run_profit_and_loss(combo=combo, returns_ex_costs=return_ex, spot_ex_costs=spot_ex)
 
+    # COMPUTE SIGNALS: Real carry; Trend; Combo
     obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date)
 
-    signals_real_carry_overview, signals_trend_overview, signals_combo_overview = \
-        obj_compute_signals_overview.run_signals_overview(real_carry=carry, trend=trend, combo=combo)
+    signals_real_carry_overview, signals_trend_overview, signals_combo_overview = obj_compute_signals_overview.run_signals_overview(real_carry=carry, trend=trend, combo=combo)
 
+    # COMPUTE TRADES: Combo
     trades_overview = compute_trades_overview(profit_and_loss_combo_overview=profit_and_loss_combo_overview,
                                               signals_combo_overview=signals_combo_overview)
 
-    obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_date=latest_date,
-                                                                     previous_seven_days_latest_date=previous_seven_days_latest_date)
-
-    from configparser import ConfigParser
-    import os
-    import json
-    # Instantiate ConfigParser
-    config = ConfigParser()
-    # Parse existing file
-    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'all_currencies_effect.ini'))
-    config.read(path)
-    # Read values from the all_currencies_effect.ini file
-    currencies_three_month_implied_usd_config = json.loads(config.get('currencies_three_month_implied_usd', 'three_month_implied_usd_data'))
-    currencies_three_month_implied_eur_config = json.loads(config.get('currencies_three_month_implied_eur', 'three_month_implied_eur_data'))
-
-    currencies_three_month_implied_usd = pd.DataFrame(currencies_three_month_implied_usd_config).three_month_implied_usd
-    currencies_three_month_implied_eur = pd.DataFrame(currencies_three_month_implied_eur_config).three_month_implied_eur
-
-    three_month_implied_usd = data_currencies_usd[currencies_three_month_implied_usd]
-    three_month_implied_eur = data_currencies_eur[currencies_three_month_implied_eur]
-
-    obj_compute_warning_flags_overview.compute_warning_flags_rates(currency_three_month_implied_usd=three_month_implied_usd,
-                                                                   currency_three_month_implied_eur=three_month_implied_eur)
+    # COMPUTE WARNING FLAGS: Rates;	Inflation
+    obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_date=latest_date, previous_seven_days_latest_date=previous_seven_days_latest_date)
+    obj_compute_warning_flags_overview.process_data_effect()
+    obj_compute_warning_flags_overview.compute_warning_flags_rates()
 
 
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ from configparser import ConfigParser
 
 import pandas as pd
 import os
+import json
 
 """
     Class to import data from matlab file
@@ -41,6 +42,15 @@ class ProcessDataEffect:
         self.data_currencies_usd = pd.DataFrame()
         self.data_currencies_eur = pd.DataFrame()
 
+        self.three_month_implied_usd = pd.DataFrame()
+        self.three_month_implied_eur = pd.DataFrame()
+        self.spot_usd = pd.DataFrame()
+        self.spot_eur = pd.DataFrame()
+        self.carry_usd = pd.DataFrame()
+        self.carry_eur = pd.DataFrame()
+        self.base_implied_usd = pd.DataFrame()
+        self.base_implied_eur = pd.DataFrame()
+
         self.start_date_calculations = ''
 
     @property
@@ -52,7 +62,7 @@ class ProcessDataEffect:
 
     @property
     def dates_origin_index(self):
-        return self.data_currencies_usd.loc[self.start_date_calculations:].index.values
+        return pd.to_datetime(self.data_currencies_usd.loc[self.start_date_calculations:].index.values,  format='%d-%m-%Y')
 
     @property
     def start_date_calculations(self):
@@ -119,4 +129,47 @@ class ProcessDataEffect:
         self.data_currencies_usd = data_currencies[currencies_usd.currencies_usd_tickers].loc[:]
         self.data_currencies_eur = data_currencies[currencies_eur.currencies_eur_tickers].loc[:]
 
+        self.process_data_config_effect()
+
         return self.data_currencies_usd, self.data_currencies_eur
+
+    def process_data_config_effect(self):
+
+        # Instantiate ConfigParser
+        config = ConfigParser()
+        # Parse existing file
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'all_currencies_effect.ini'))
+        config.read(path)
+        # Read values from the all_currencies_effect.ini file
+        currencies_spot_config = json.loads(config.get('currencies_spot', 'currencies_spot_data'))
+
+        currencies_carry_config = json.loads(config.get('currencies_carry', 'currencies_carry_data'))
+
+        currencies_base_implied_config = json.loads(config.get('currencies_base_implied', 'currencies_base_implied_data'))
+
+        currencies_three_month_implied_usd_config = json.loads(config.get('currencies_three_month_implied_usd', 'three_month_implied_usd_data'))
+        currencies_three_month_implied_eur_config = json.loads(config.get('currencies_three_month_implied_eur', 'three_month_implied_eur_data'))
+
+        currencies_three_month_implied_usd = pd.DataFrame(currencies_three_month_implied_usd_config).three_month_implied_usd
+        currencies_three_month_implied_eur = pd.DataFrame(currencies_three_month_implied_eur_config).three_month_implied_eur
+
+        currencies_spot_usd = pd.DataFrame(currencies_spot_config).currencies_spot_usd
+        currencies_spot_eur = pd.DataFrame(currencies_spot_config).currencies_spot_eur
+
+        currencies_carry_usd = pd.DataFrame(currencies_carry_config).currencies_carry_usd
+        currencies_carry_eur = pd.DataFrame(currencies_carry_config).currencies_carry_eur
+
+        currencies_base_implied_usd = pd.DataFrame(currencies_base_implied_config).currencies_base_implied_usd
+        currencies_base_implied_eur = pd.DataFrame(currencies_base_implied_config).currencies_base_implied_eur
+
+        self.three_month_implied_usd = self.data_currencies_usd[currencies_three_month_implied_usd]
+        self.three_month_implied_eur = self.data_currencies_eur[currencies_three_month_implied_eur]
+
+        self.spot_usd = self.data_currencies_usd[currencies_spot_usd]
+        self.spot_eur = self.data_currencies_eur[currencies_spot_eur]
+
+        self.carry_usd = self.data_currencies_usd[currencies_carry_usd]
+        self.carry_eur = self.data_currencies_eur[currencies_carry_eur]
+
+        self.base_implied_usd = self.data_currencies_usd[currencies_base_implied_usd]
+        self.base_implied_eur = self.data_currencies_eur[currencies_base_implied_eur]

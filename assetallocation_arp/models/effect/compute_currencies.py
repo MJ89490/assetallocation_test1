@@ -56,16 +56,16 @@ class ComputeCurrencies(ProcessDataEffect):
             carry = []
 
             if currency_spot in self.data_currencies_usd.columns:
-                data_all_currencies_spot = self.data_currencies_usd.loc[:, currency_spot].tolist()
-                data_all_currencies_carry = self.data_currencies_usd.loc[:, currency_carry].tolist()
-                data_all_currencies_implied = self.data_currencies_usd.loc[:, currency_implied].tolist()
-                data_all_currencies_implied_base = self.data_currencies_usd.loc[:, CurrencyBaseImplied.US0003M.value].tolist()
+                data_all_currencies_spot = self.spot_usd.loc[:, currency_spot].tolist()
+                data_all_currencies_carry = self.carry_usd.loc[:, currency_carry].tolist()
+                data_all_currencies_implied = self.three_month_implied_usd.loc[:, currency_implied].tolist()
+                data_all_currencies_implied_base = self.base_implied_usd.loc[:, CurrencyBaseImplied.US0003M.value].tolist()
 
             else:
-                data_all_currencies_spot = self.data_currencies_eur.loc[:, currency_spot].tolist()
-                data_all_currencies_carry = self.data_currencies_eur.loc[:, currency_carry].tolist()
-                data_all_currencies_implied = self.data_currencies_eur.loc[:, currency_implied].tolist()
-                data_all_currencies_implied_base = self.data_currencies_eur.loc[:, CurrencyBaseImplied.EUR003M.value].tolist()
+                data_all_currencies_spot = self.spot_eur.loc[:, currency_spot].tolist()
+                data_all_currencies_carry = self.carry_eur.loc[:, currency_carry].tolist()
+                data_all_currencies_implied = self.three_month_implied_eur.loc[:, currency_implied].tolist()
+                data_all_currencies_implied_base = self.base_implied_eur.loc[:, CurrencyBaseImplied.EUR003M.value].tolist()
 
             for values in range(rows):
 
