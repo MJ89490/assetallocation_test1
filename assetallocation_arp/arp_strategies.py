@@ -1,5 +1,5 @@
 import xlwings as xw
-import assetallocation_arp.data_etl.import_data as gd
+import assetallocation_arp.data_etl.import_all_data as gd
 import assetallocation_arp.models.times as times
 import sys
 import os

@@ -8,7 +8,7 @@ import pytest
 import os
 import pandas as pd
 
-from assetallocation_arp.data_etl import import_data as data
+from assetallocation_arp.data_etl import import_all_data as data
 
 CURRENT_PATH = os.path.dirname(__file__)
 
