@@ -27,8 +27,8 @@ def apply_leverage(futures_data, leverage_type, leverage):
 def rescale(ret, r, positioning, column, vol):
     # Calibrate series to a target volatility, uses full historic time series
     m_return = r[column].diff(periods=21)
-    return_scaled = ret/(m_return.std()*math.sqrt(12))*vol
-    positioning_scaled = positioning/(m_return.std()*math.sqrt(12))*vol
+    return_scaled = ret.div(m_return.expanding(2).std()*math.sqrt(12), axis=0 )*vol
+    positioning_scaled = positioning.div(m_return.expanding(2).std()*math.sqrt(12), axis=0)*vol
     r_scaled = return_scaled.cumsum()
     return return_scaled, r_scaled, positioning_scaled
 
