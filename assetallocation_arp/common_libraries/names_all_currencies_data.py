@@ -1,6 +1,7 @@
 import pandas as pd
 from enum import Enum
 
+
 class Currencies:
     """
     Class which creates two dictionaries for currencies usd and currencies eur

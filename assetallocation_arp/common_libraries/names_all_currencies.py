@@ -12,3 +12,20 @@ currency_usd, currency_eur = obj_currencies.currencies_data()
 CURRENCIES_USD = currency_usd.loc[:, "currencies_usd_tickers"].tolist()
 CURRENCIES_EUR = currency_eur.loc[:, "currencies_eur_tickers"].tolist()
 
+
+
+
+from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
+
+
+def test():
+
+    obj_import_data_times = ProcessDataEffect()
+
+    config_data = obj_import_data_times.parse_data_config_effect()
+
+    s = list(zip(config_data['spot_config'].values()))
+
+
+if __name__ == "__main__":
+    test()

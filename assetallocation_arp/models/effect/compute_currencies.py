@@ -71,8 +71,8 @@ class ComputeCurrencies(ProcessDataEffect):
 
                 # Set the start date to start the computation
                 start_current_date_index_loc = self.data_currencies_usd.index.get_loc(tmp_start_date_computations)
-                start_current_date_index = pd.to_datetime(self.data_currencies_usd.index[start_current_date_index_loc],
-                                                          format='%d-%m-%Y')
+                start_current_date_index = self.data_currencies_usd.index[start_current_date_index_loc]
+
                 # Take the previous dates
                 previous_start_date_index = self.data_currencies_usd.index[start_current_date_index_loc - 1]
                 previous_start_date_index_loc = self.data_currencies_usd.index.get_loc(previous_start_date_index)
@@ -147,8 +147,6 @@ class ComputeCurrencies(ProcessDataEffect):
                 trend_short_tmp = self.data_currencies_eur.loc[:, currency].rolling(short_term).mean()
                 trend_long_tmp = self.data_currencies_eur.loc[:, currency].rolling(long_term).mean()
 
-                self.data_currencies_eur.loc[:, currency].to_csv('spot_pln.csv')
-
             # We set 10 digits because due to Python precision there are small dusts at the end of some numbers
             # and they set 0 as negative result (eg: date 16/02/2004: -0.000%)
             self.trend_currencies[CurrencySpot.Trend.value + currency_name_col] = \
@@ -214,18 +212,17 @@ class ComputeCurrencies(ProcessDataEffect):
 
             first_returns = [100]
 
-            tmp_start_computations_loc = self.data_currencies_usd.index.get_loc(pd.to_datetime(self.start_date_calculations)) - 1
+            tmp_start_computations_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations) - 1
             tmp_start_computations = self.data_currencies_usd.index[tmp_start_computations_loc]
 
             if currency_carry in self.data_currencies_usd.columns:
-                return_division_tmp = (self.data_currencies_usd.loc[tmp_start_computations:, currency_carry] /
-                                       self.data_currencies_usd.loc[tmp_start_computations:, currency_carry].shift(1))
+                return_division_tmp = (self.carry_usd.loc[tmp_start_computations:, currency_carry] /
+                                       self.carry_usd.loc[tmp_start_computations:, currency_carry].shift(1))
             else:
-                return_division_tmp = (self.data_currencies_eur.loc[tmp_start_computations:, currency_carry] /
-                                       self.data_currencies_eur.loc[tmp_start_computations:, currency_carry].shift(1))
+                return_division_tmp = (self.carry_eur.loc[tmp_start_computations:, currency_carry] /
+                                       self.carry_eur.loc[tmp_start_computations:, currency_carry].shift(1))
 
-            combo = self.combo_currencies.loc[pd.to_datetime(self.start_date_calculations, format='%Y-%m-%d'):,
-                                              CurrencySpot.Combo.value + currency_spot].tolist()
+            combo = self.combo_currencies.loc[self.start_date_calculations:, CurrencySpot.Combo.value + currency_spot].tolist()
 
             return_division_tmp = return_division_tmp.iloc[1:].tolist()
 
@@ -286,11 +283,11 @@ class ComputeCurrencies(ProcessDataEffect):
             spot = [100]  # The Spot is set 100
             if currency in self.data_currencies_usd.columns:
 
-                spot_division_tmp = (self.data_currencies_usd.loc[tmp_start_date:, currency] /
-                                     self.data_currencies_usd.loc[tmp_start_date:, currency].shift(1))
+                spot_division_tmp = (self.spot_usd.loc[tmp_start_date:, currency] /
+                                     self.spot_usd.loc[tmp_start_date:, currency].shift(1))
             else:
-                spot_division_tmp = (self.data_currencies_eur.loc[tmp_start_date:, currency] /
-                                     self.data_currencies_eur.loc[tmp_start_date:, currency].shift(1))
+                spot_division_tmp = (self.spot_eur.loc[tmp_start_date:, currency] /
+                                     self.spot_eur.loc[tmp_start_date:, currency].shift(1))
 
             combo = self.combo_currencies.loc[self.start_date_calculations:, CurrencySpot.Combo.value + currency].tolist()
 
@@ -340,3 +337,24 @@ class ComputeCurrencies(ProcessDataEffect):
         self.spot_incl_costs = self.spot_incl_costs.set_index(self.dates_index)
 
         return self.spot_incl_costs
+
+    def run_compute_currencies(self, carry_inputs, trend_inputs, combo_inputs):
+        carry = self.compute_carry(carry_type=carry_inputs['type'], inflation_differential=carry_inputs['inflation'])
+
+        trend = self.compute_trend(trend_ind=trend_inputs['trend'], short_term=trend_inputs['short_term'],
+                                   long_term=trend_inputs['long_term'])
+
+        combo = self.compute_combo(cut_off=combo_inputs['cut_off'], incl_shorts=combo_inputs['incl_shorts'],
+                                   cut_off_s=combo_inputs['cut_off_s'],
+                                   threshold_for_closing=combo_inputs['threshold'])
+
+        return_ex = self.compute_return_ex_costs()
+        return_incl = self.compute_return_incl_costs()
+
+        spot_ex = self.compute_spot_ex_costs()
+        spot_incl = self.compute_spot_incl_costs()
+
+        currencies_calculations = {'carry': carry, 'trend': trend, 'combo': combo, 'return_ex': return_ex,
+                                   'return_incl': return_incl, 'spot_ex': spot_ex, 'spot_incl': spot_incl}
+
+        return currencies_calculations

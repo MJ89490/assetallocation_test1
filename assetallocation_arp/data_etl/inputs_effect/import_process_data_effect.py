@@ -58,11 +58,11 @@ class ProcessDataEffect:
         start_current_date_index_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
         new_start_date_index = self.data_currencies_usd.index[start_current_date_index_loc - 1]
 
-        return self.data_currencies_usd.loc[new_start_date_index:].index.values
+        return pd.to_datetime(self.data_currencies_usd.loc[new_start_date_index:].index.values, format='%d-%m-%Y')
 
     @property
     def dates_origin_index(self):
-        return pd.to_datetime(self.data_currencies_usd.loc[self.start_date_calculations:].index.values,  format='%d-%m-%Y')
+        return pd.to_datetime(self.data_currencies_usd.loc[self.start_date_calculations:].index.values, format='%d-%m-%Y')
 
     @property
     def start_date_calculations(self):
@@ -89,7 +89,6 @@ class ProcessDataEffect:
 
     @staticmethod
     def find_date(dates_set, pivot):
-
         flag = False
         # Initialization to start the while loop
         counter = 0
@@ -131,10 +130,8 @@ class ProcessDataEffect:
 
         self.process_data_config_effect()
 
-        return self.data_currencies_usd, self.data_currencies_eur
-
-    def process_data_config_effect(self):
-
+    @staticmethod
+    def parse_data_config_effect():
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file
@@ -147,20 +144,32 @@ class ProcessDataEffect:
 
         currencies_base_implied_config = json.loads(config.get('currencies_base_implied', 'currencies_base_implied_data'))
 
-        currencies_three_month_implied_usd_config = json.loads(config.get('currencies_three_month_implied_usd', 'three_month_implied_usd_data'))
-        currencies_three_month_implied_eur_config = json.loads(config.get('currencies_three_month_implied_eur', 'three_month_implied_eur_data'))
+        currencies_3M_implied_usd_config = json.loads(config.get('currencies_three_month_implied_usd', '3M_implied_usd_data'))
+        currencies_3M_implied_eur_config = json.loads(config.get('currencies_three_month_implied_eur', '3M_implied_eur_data'))
 
-        currencies_three_month_implied_usd = pd.DataFrame(currencies_three_month_implied_usd_config).three_month_implied_usd
-        currencies_three_month_implied_eur = pd.DataFrame(currencies_three_month_implied_eur_config).three_month_implied_eur
+        config_data = {'spot_config': currencies_spot_config,
+                       'carry_config': currencies_carry_config,
+                       'base_implied_config': currencies_base_implied_config,
+                       '3M_implied_usd': currencies_3M_implied_usd_config,
+                       '3M_implied_eur': currencies_3M_implied_eur_config}
 
-        currencies_spot_usd = pd.DataFrame(currencies_spot_config).currencies_spot_usd
-        currencies_spot_eur = pd.DataFrame(currencies_spot_config).currencies_spot_eur
+        return config_data
 
-        currencies_carry_usd = pd.DataFrame(currencies_carry_config).currencies_carry_usd
-        currencies_carry_eur = pd.DataFrame(currencies_carry_config).currencies_carry_eur
+    def process_data_config_effect(self):
 
-        currencies_base_implied_usd = pd.DataFrame(currencies_base_implied_config).currencies_base_implied_usd
-        currencies_base_implied_eur = pd.DataFrame(currencies_base_implied_config).currencies_base_implied_eur
+        config_data = self.parse_data_config_effect()
+
+        currencies_three_month_implied_usd = pd.DataFrame(config_data['3M_implied_usd']).three_month_implied_usd
+        currencies_three_month_implied_eur = pd.DataFrame(config_data['3M_implied_eur']).three_month_implied_eur
+
+        currencies_spot_usd = pd.DataFrame(config_data['spot_config']).currencies_spot_usd
+        currencies_spot_eur = pd.DataFrame(config_data['spot_config']).currencies_spot_eur
+
+        currencies_carry_usd = pd.DataFrame(config_data['carry_config']).currencies_carry_usd
+        currencies_carry_eur = pd.DataFrame(config_data['carry_config']).currencies_carry_eur
+
+        currencies_base_implied_usd = pd.DataFrame(config_data['base_implied_config']).currencies_base_implied_usd
+        currencies_base_implied_eur = pd.DataFrame(config_data['base_implied_config']).currencies_base_implied_eur
 
         self.three_month_implied_usd = self.data_currencies_usd[currencies_three_month_implied_usd]
         self.three_month_implied_eur = self.data_currencies_eur[currencies_three_month_implied_eur]

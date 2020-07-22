@@ -41,7 +41,7 @@ class ComputeInflationDifferential:
         for date_index in self.dates_index:
             counter = 0
             date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
-            date_tmp = pd.to_datetime(date_index)
+            date_tmp = date_index
             if date_tmp < pd.to_datetime(latest_date, format='%d-%m-%Y'):
                 weo_date = "Latest"
             else:
