@@ -45,7 +45,7 @@ def momentum_exp (data, observations,ann_freq,exp_indicator):
     # this wont change the frequency of data
     # variable number of inputs (weights)
     # ensure that lag 1 weight is first, i.e. most recent first.
-    mom = pd.DataFrame([], columns = data.columns)
+    mom = pd.DataFrame([], columns=data.columns)
 
     if exp_indicator is None:
         weights = list(range(observations, 0, - 1))
