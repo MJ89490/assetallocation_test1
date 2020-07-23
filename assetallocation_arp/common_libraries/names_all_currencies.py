@@ -1,31 +1,26 @@
-from common_libraries.names_currencies_spot import CurrencySpot
-from common_libraries.names_currencies_carry import CurrencyCarry
-from common_libraries.names_currencies_implied import CurrencyImplied
-from common_libraries.names_all_currencies_data import Currencies
-
-CURRENCIES_SPOT = [currency.value for currency in CurrencySpot]
-CURRENCIES_IMPLIED = [currency.value for currency in CurrencyImplied]
-CURRENCIES_CARRY = [currency.value for currency in CurrencyCarry]
-
-obj_currencies = Currencies()
-currency_usd, currency_eur = obj_currencies.currencies_data()
-CURRENCIES_USD = currency_usd.loc[:, "currencies_usd_tickers"].tolist()
-CURRENCIES_EUR = currency_eur.loc[:, "currencies_eur_tickers"].tolist()
-
-
-
-
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 
+# -------------------------------------- Spot Carry and 3M implied Data lists ---------------------------------------- #
+obj_import_data_times = ProcessDataEffect()
 
-def test():
+config_data = obj_import_data_times.parse_data_config_effect()
 
-    obj_import_data_times = ProcessDataEffect()
+# Spot, Carry and 3M implied have the same length
+length = len(config_data['spot_config'].values())
 
-    config_data = obj_import_data_times.parse_data_config_effect()
+spot_config = list(config_data['spot_config'].values())
+carry_config = list(config_data['carry_config'].values())
+three_month_implied_config = list(config_data['3M_implied'].values())
 
-    s = list(zip(config_data['spot_config'].values()))
+CURRENCIES_SPOT, CURRENCIES_CARRY, CURRENCIES_IMPLIED = [], [], []
 
+for item in range(length):
+    length_tmp = len(spot_config[item])
+    for name in range(length_tmp):
+        CURRENCIES_SPOT.append(spot_config[item][name])
+        CURRENCIES_CARRY.append(carry_config[item][name])
+        CURRENCIES_IMPLIED.append(three_month_implied_config[item][name])
 
-if __name__ == "__main__":
-    test()
+# -------------------------------------- Base Implied Data list ------------------------------------------------------ #
+CURRENCIES_USD = config_data['spot_config']['currencies_spot_usd']
+CURRENCIES_EUR = config_data['spot_config']['currencies_spot_eur']

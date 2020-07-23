@@ -6,7 +6,7 @@ Created on 12/05/2020
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 import common_libraries.names_all_currencies as constants
-from common_libraries.names_currencies_implied import CurrencyBaseImplied
+from common_libraries.names_currencies_implied_to_delete import CurrencyBaseImplied
 import pandas as pd
 import numpy as np
 
@@ -60,7 +60,6 @@ class ComputeCurrencies(ProcessDataEffect):
                 data_all_currencies_carry = self.carry_usd.loc[:, currency_carry].tolist()
                 data_all_currencies_implied = self.three_month_implied_usd.loc[:, currency_implied].tolist()
                 data_all_currencies_implied_base = self.base_implied_usd.loc[:, CurrencyBaseImplied.US0003M.value].tolist()
-
             else:
                 data_all_currencies_spot = self.spot_eur.loc[:, currency_spot].tolist()
                 data_all_currencies_carry = self.carry_eur.loc[:, currency_carry].tolist()
