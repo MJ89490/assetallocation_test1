@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Dict, Any
+import os
 
 import pandas as pd
 
@@ -7,7 +8,10 @@ import pandas as pd
 def save_inputs_outputs(test_dir: Path):
     def decorator(func):
         def wrapper(**kwargs):
-            for k, v in kwargs:
+            if not os.path.exists(str(test_dir)):
+                os.mkdir(str(test_dir))
+
+            for k, v in kwargs.items():
                 write_to_csv(v, k, test_dir, 'in')
 
             out = func(**kwargs)
@@ -39,17 +43,17 @@ def read_inputs_outputs(test_dir: Path):
     for f in test_dir.iterdir():
         if f.name.endswith('scalar.csv'):
             if f.name.startswith('in'):
-                inputs[f.name[3:-11]] = pd.read_csv(f, header=0, index_col=0).iat[0, 0]
+                inputs[f.name[3:-11]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True).iat[0, 0]
 
             elif f.name.startswith('out'):
-                outputs[f.name[4:-11]] = pd.read_csv(f, header=0, index_col=0).iat[0, 0]
+                outputs[f.name[4:-11]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True).iat[0, 0]
 
         else:
             if f.name.startswith('in'):
-                inputs[f.name[3:-4]] = pd.read_csv(f, header=0, index_col=0)
+                inputs[f.name[3:-4]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True)
 
             elif f.name.startswith('out'):
-                outputs[f.name[4:-4]] = pd.read_csv(f, header=0, index_col=0)
+                outputs[f.name[4:-4]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True)
 
     return inputs, outputs
 

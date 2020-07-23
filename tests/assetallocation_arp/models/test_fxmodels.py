@@ -17,3 +17,27 @@ def test_create_sizing_mapping():
 
     else:
         assert_equal('0', expected, returns)
+
+
+def test_format_data():
+    test_kwargs, expected = read_inputs_outputs(resource_path / 'format_data')
+    returns = fx.format_data(**test_kwargs)
+
+    if isinstance(returns, tuple):
+        for counter, v in enumerate(returns):
+            assert_equal(str(counter), expected, v)
+
+    else:
+        assert_equal('0', expected, returns)
+
+
+def test_calculate_signals():
+    test_kwargs, expected = read_inputs_outputs(resource_path / 'calculate_signals')
+    returns = fx.calculate_signals(**test_kwargs)
+
+    if isinstance(returns, tuple):
+        for counter, v in enumerate(returns):
+            assert_equal(str(counter), expected, v)
+
+    else:
+        assert_equal('0', expected, returns)
