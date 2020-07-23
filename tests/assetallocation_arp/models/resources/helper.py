@@ -60,8 +60,8 @@ def read_inputs_outputs(test_dir: Path):
 
 def assert_equal(counter: str, expected: Dict[str, Any], v: Any):
     if isinstance(v, pd.Series):
-        pd.testing.assert_series_equal(expected[counter], v)
+        pd.testing.assert_series_equal(expected[counter], v, check_names=False)
     elif isinstance(v, pd.DataFrame):
-        pd.testing.assert_frame_equal(expected[counter], v)
+        pd.testing.assert_frame_equal(expected[counter], v, check_names=False)
     else:
         assert expected[counter] == v

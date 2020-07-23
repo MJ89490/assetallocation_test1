@@ -41,3 +41,27 @@ def test_calculate_signals():
 
     else:
         assert_equal('0', expected, returns)
+
+
+def test_determine_sizing():
+    test_kwargs, expected = read_inputs_outputs(resource_path / 'determine_sizing')
+    returns = fx.determine_sizing(**test_kwargs)
+
+    if isinstance(returns, tuple):
+        for counter, v in enumerate(returns):
+            assert_equal(str(counter), expected, v)
+
+    else:
+        assert_equal('0', expected, returns)
+
+
+def test_calculate_returns():
+    test_kwargs, expected = read_inputs_outputs(resource_path / 'calculate_returns')
+    returns = fx.calculate_returns(**test_kwargs)
+
+    if isinstance(returns, tuple):
+        for counter, v in enumerate(returns):
+            assert_equal(str(counter), expected, v)
+
+    else:
+        assert_equal('0', expected, returns)
