@@ -1,5 +1,6 @@
 import enum
 
+
 class Models(enum.Enum):
     times = 0
     maven = 1

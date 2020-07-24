@@ -49,30 +49,29 @@ def run_effect():
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
-
-    combo_overview, returns_ex_overview, spot_ex_overview, carry_overview = \
-        obj_compute_profit_and_loss_overview.run_profit_and_loss(combo=currencies_calculations['combo'],
-                                                                 returns_ex_costs=currencies_calculations['return_ex'],
-                                                                 spot_ex_costs=currencies_calculations['spot_ex'])
+    spot_currencies = obj_import_data.process_data_config_effect()
+    profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
+                      combo=currencies_calculations['combo'],
+                      returns_ex_costs=currencies_calculations['return_ex'],
+                      spot=spot_currencies)
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date)
 
-    signals_real_carry_overview, signals_trend_overview, signals_combo_overview = \
-        obj_compute_signals_overview.run_signals_overview(real_carry=currencies_calculations['carry'],
-                                                          trend=currencies_calculations['trend'],
-                                                          combo=currencies_calculations['combo'])
+    signals_overview = obj_compute_signals_overview.run_signals_overview(real_carry=currencies_calculations['carry'],
+                                                                         trend=currencies_calculations['trend'],
+                                                                         combo=currencies_calculations['combo'])
 
     # -------------------------- Trades: Combo ----------------------------------------------------------------------- #
-    trades_overview = compute_trades_overview(profit_and_loss_combo_overview=combo_overview,
-                                              signals_combo_overview=signals_combo_overview)
+    trades_overview = compute_trades_overview(profit_and_loss_combo_overview=profit_and_loss['profit_and_loss_combo_overview'],
+                                              signals_combo_overview=signals_overview['signals_combo_overview'])
 
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_date=latest_date,
                                                                      previous_seven_days_latest_date=
                                                                      previous_seven_days_latest_date)
     obj_compute_warning_flags_overview.process_data_effect()
-    obj_compute_warning_flags_overview.compute_warning_flags_rates()
+    rates_usd, rates_eur = obj_compute_warning_flags_overview.compute_warning_flags_rates()
 
 
 if __name__ == '__main__':

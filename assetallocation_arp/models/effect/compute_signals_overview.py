@@ -22,5 +22,12 @@ class ComputeSignalsOverview:
         signals_trend_overview = self.compute_signals_trend(trend=trend)
         signals_combo_overview = self.compute_signals_combo(combo=combo)
 
-        return signals_real_carry_overview, signals_trend_overview, signals_combo_overview
+        signals_overview = {'signals_real_carry': signals_real_carry_overview,
+                            'signals_trend_overview': signals_trend_overview,
+                            'signals_combo_overview': signals_combo_overview
+                           }
+        signals_real_carry_overview.to_csv('signals_carry.csv')
+        signals_trend_overview.to_csv('signals_trend.csv')
+        signals_combo_overview.to_csv('signals_combo.csv')
+        return signals_overview
 

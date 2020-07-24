@@ -9,10 +9,10 @@ import os
 import json
 from configparser import ConfigParser
 
-import common_libraries.names_all_currencies as constants
+import common_libraries.listing_names_all_currencies as constants
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
-from assetallocation_arp.common_libraries.names_currencies_spot import CurrencyBaseSpot
+from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
 
 
 class ComputeInflationDifferential:
@@ -189,7 +189,7 @@ class ComputeInflationDifferential:
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release()
 
         # Grab the latest inflation differential data
-        scrape_imf_data()
+        # scrape_imf_data()
 
         years_one_inflation = years_zero_inflation.apply(lambda y: y + 1)
         years_zero_inflation = years_zero_inflation['Years'].tolist()

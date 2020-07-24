@@ -5,7 +5,7 @@ Created on 12/05/2020
 
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
-import common_libraries.names_all_currencies as constants
+import common_libraries.listing_names_all_currencies as constants
 from common_libraries.names_currencies_implied_to_delete import CurrencyBaseImplied
 import pandas as pd
 import numpy as np

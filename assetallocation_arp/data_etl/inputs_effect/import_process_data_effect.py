@@ -1,5 +1,5 @@
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
-from common_libraries.names_all_currencies_data import Currencies
+# from common_libraries.names_all_currencies_data import Currencies
 from common_libraries.models_names import Models
 
 from configparser import ConfigParser
@@ -119,8 +119,8 @@ class ProcessDataEffect:
         :return: two dataFrames self.data_currencies_usd, self.data_currencies_eur for usd and eur currencies
         """
 
-        obj_currencies = Currencies()
-        currencies_usd, currencies_eur = obj_currencies.currencies_data()
+        preprocess_data = self.preprocess_data_config_effect()
+        currencies_usd, currencies_eur = preprocess_data['currencies_usd_config'], preprocess_data['currencies_eur_config']
 
         data_currencies = self.obj_import_data.import_data_matlab()
 
@@ -153,30 +153,56 @@ class ProcessDataEffect:
 
         return config_data
 
-    def process_data_config_effect(self):
-
+    def preprocess_data_config_effect(self):
         config_data = self.parse_data_config_effect()
 
-        currencies_three_month_implied_usd = pd.Series(config_data['3M_implied']['three_month_implied_usd'])
-        currencies_three_month_implied_eur = pd.Series(config_data['3M_implied']['three_month_implied_eur'])
+        currencies_3M_implied_usd = config_data['3M_implied']['three_month_implied_usd']
+        currencies_3M_implied_eur = config_data['3M_implied']['three_month_implied_eur']
 
-        currencies_spot_usd = pd.Series(config_data['spot_config']['currencies_spot_usd'])
-        currencies_spot_eur = pd.Series(config_data['spot_config']['currencies_spot_eur'])
+        currencies_spot_usd = config_data['spot_config']['currencies_spot_usd']
+        currencies_spot_eur = config_data['spot_config']['currencies_spot_eur']
 
-        currencies_carry_usd = pd.Series(config_data['carry_config']['currencies_carry_usd'])
-        currencies_carry_eur = pd.Series(config_data['carry_config']['currencies_carry_eur'])
+        currencies_carry_usd = config_data['carry_config']['currencies_carry_usd']
+        currencies_carry_eur = config_data['carry_config']['currencies_carry_eur']
 
-        currencies_base_implied_usd = pd.Series(config_data['base_implied_config']['currencies_base_implied_usd'])
-        currencies_base_implied_eur = pd.Series(config_data['base_implied_config']['currencies_base_implied_eur'])
+        currencies_base_implied_usd = config_data['base_implied_config']['currencies_base_implied_usd']
+        currencies_base_implied_eur = config_data['base_implied_config']['currencies_base_implied_eur']
 
-        self.three_month_implied_usd = self.data_currencies_usd[currencies_three_month_implied_usd]
-        self.three_month_implied_eur = self.data_currencies_eur[currencies_three_month_implied_eur]
+        currencies_usd = pd.DataFrame({"currencies_usd_tickers": currencies_spot_usd + currencies_carry_usd +
+                                        currencies_3M_implied_usd + currencies_base_implied_usd})
 
-        self.spot_usd = self.data_currencies_usd[currencies_spot_usd]
-        self.spot_eur = self.data_currencies_eur[currencies_spot_eur]
+        currencies_eur = pd.DataFrame({"currencies_eur_tickers": currencies_spot_eur + currencies_carry_eur +
+                                        currencies_3M_implied_eur + currencies_base_implied_eur})
 
-        self.carry_usd = self.data_currencies_usd[currencies_carry_usd]
-        self.carry_eur = self.data_currencies_eur[currencies_carry_eur]
+        preprocess_data = {'3M_implied_usd_config': currencies_3M_implied_usd,
+                           '3M_implied_eur_config': currencies_3M_implied_eur,
+                           'spot_usd_config': currencies_spot_usd,
+                           'spot_eur_config': currencies_spot_eur,
+                           'carry_usd_config': currencies_carry_usd,
+                           'carry_eur_config': currencies_carry_eur,
+                           'base_implied_usd': currencies_base_implied_usd,
+                           'base_implied_eur': currencies_base_implied_eur,
+                           'currencies_usd_config': currencies_usd,
+                           'currencies_eur_config': currencies_eur}
 
-        self.base_implied_usd = self.data_currencies_usd[currencies_base_implied_usd]
-        self.base_implied_eur = self.data_currencies_eur[currencies_base_implied_eur]
+        return preprocess_data
+
+    def process_data_config_effect(self):
+
+        preprocess_data = self.preprocess_data_config_effect()
+
+        self.three_month_implied_usd = self.data_currencies_usd[preprocess_data['3M_implied_usd_config']]
+        self.three_month_implied_eur = self.data_currencies_eur[preprocess_data['3M_implied_eur_config']]
+
+        self.spot_usd = self.data_currencies_usd[preprocess_data['spot_usd_config']]
+        self.spot_eur = self.data_currencies_eur[preprocess_data['spot_eur_config']]
+
+        self.carry_usd = self.data_currencies_usd[preprocess_data['carry_usd_config']]
+        self.carry_eur = self.data_currencies_eur[preprocess_data['carry_eur_config']]
+
+        self.base_implied_usd = self.data_currencies_usd[preprocess_data['base_implied_usd']]
+        self.base_implied_eur = self.data_currencies_eur[preprocess_data['base_implied_eur']]
+
+        common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
+
+        return common_spot
