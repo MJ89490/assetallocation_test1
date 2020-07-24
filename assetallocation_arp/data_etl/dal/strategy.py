@@ -7,7 +7,7 @@ class Strategy:
     def __init__(self, name: str, user: User, description: Optional[str] = None):
         self._description = description
         self._name = name
-        self._system_tstzrange = None
+        self._version = None
         self._user = user
 
     @property
@@ -20,7 +20,7 @@ class Strategy:
 
     @property
     def system_tstzrange(self):
-        return self._system_tstzrange
+        return self._version
 
     @property
     def name(self):

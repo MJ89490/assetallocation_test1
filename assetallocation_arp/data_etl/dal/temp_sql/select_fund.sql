@@ -1,4 +1,4 @@
-CREATE [OR REPLACE] FUNCTION select_fund(fund_name varchar, OUT fund_id int, OUT currency char)
+CREATE OR REPLACE FUNCTION select_fund(fund_name varchar, OUT fund_id int, OUT currency char)
 LANGUAGE SQL
 AS
 $$
