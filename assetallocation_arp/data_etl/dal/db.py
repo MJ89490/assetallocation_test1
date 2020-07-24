@@ -54,7 +54,7 @@ class Db:
 
     # TODO test the below
     def get_fund(self, name: str) -> Fund:
-        fund_id, currency, currency_id = self.call_proc(Proc.select_fund.name, [name])
+        fund_id, currency = self.call_proc(Proc.select_fund.name, [name])
         return Fund(name, Currency(currency))
 
     def get_fund_strategy(self, fund_name: str, strategy_name: str, business_datetime: datetime,
