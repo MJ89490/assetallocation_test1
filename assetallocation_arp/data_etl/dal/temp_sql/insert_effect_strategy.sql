@@ -36,7 +36,7 @@ from
 	iese
 RETURNING execution_state.id
 ),
-WITH inserted_s (strategy_id, execution_state_id) AS (
+inserted_s (strategy_id, execution_state_id) AS (
 INSERT INTO arp.strategy (name, description, user_id, execution_state_id)
 SELECT
   name,
