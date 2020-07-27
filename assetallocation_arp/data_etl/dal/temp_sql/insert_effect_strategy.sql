@@ -20,21 +20,8 @@ CREATE OR REPLACE FUNCTION insert_effect_strategy(
 LANGUAGE SQL
 AS
 $$
-with iese as (
-	select id
-	from config.execution e
-	where e.name = 'insert_effect_strategy'
-	and in_use = 't'
-)
-,
-inserted_es as (
-insert into config.execution_state (system_datetime, execution_id)
-select
-	now(),
-	iese.id
-from
-	iese
-RETURNING execution_state.id
+with inserted_es (execution_state_id) as (
+select insert_execution_state('insert_effect_strategy')
 ),
 inserted_s (strategy_id, execution_state_id) AS (
 INSERT INTO arp.strategy (name, description, user_id, execution_state_id)

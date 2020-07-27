@@ -11,14 +11,9 @@ CREATE OR REPLACE FUNCTION insert_fund_strategy(
 LANGUAGE SQL
 AS
 $$
-with iese as (
-	select id
-	from config.execution e
-	where e.name = 'insert_effect_strategy'
-	and in_use = 't'
-)
-,
-inserted_es (execution_state_id) as (
+with inserted_es (execution_state_id) as (
+select insert_execution_state('insert_fund_strategy')
+),
 insert into confog.execution_state (system_datetime, execution_id)
 select
 	now(),
