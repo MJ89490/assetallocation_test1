@@ -17,15 +17,15 @@ CREATE OR REPLACE FUNCTION insert_effect_strategy(
   trend_indicator varchar,
   OUT version int
 )
-LANGUAGE SQL
+LANGUAGE plpgsql
 AS
 $$
-with inserted_es (execution_state_id) as (
-select insert_execution_state('insert_effect_strategy')
-),
-inserted_s (strategy_id) AS (
-select insert_strategy(name, description, user_id, execution_state_id)
-)
+declare
+	execution_state_id int;
+	strategy_id int;
+BEGIN
+	SELECT insert_execution_state('insert_times_strategy') into execution_state_id;
+	SELECT insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
 INSERT INTO arp.effect (
   strategy_id,
   carry_type,
@@ -43,8 +43,8 @@ INSERT INTO arp.effect (
   trend_indicator,
   execution_state_id
 )
-SELECT
-  inserted_s.strategy_id,
+VALUES(
+  strategy_id,
   carry_type,
   closing_threshold,
   cost,
@@ -58,9 +58,9 @@ SELECT
   moving_average_short_term,
   realtime_inflation_forecast_flag,
   trend_indicator,
-  inserted_es.execution_state_id
-FROM
-  inserted_s
-  CROSS JOIN inserted_es
-RETURNING arp.effect.version
+  execution_state_id
+	)
+	RETURNING arp.effect.version into t_version;
+	return;
+END
 $$;
