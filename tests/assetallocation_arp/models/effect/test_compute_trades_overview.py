@@ -10,6 +10,6 @@ TRADES_RESULTS = pd.read_csv(PATH_RESULTS, sep=',', engine='python')
 TRADES_ORIGIN = pd.read_csv(PATH_ORIGIN, sep=',', engine='python')
 
 
-def test_compute_signals_real_carry():
+def test_compute_trades_overview():
     assert np.allclose(np.array(TRADES_RESULTS.This_week.tolist()),
                        np.array(TRADES_ORIGIN.This_week.tolist())) is True
