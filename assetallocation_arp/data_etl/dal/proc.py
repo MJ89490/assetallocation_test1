@@ -9,3 +9,4 @@ class Proc(Enum):
     insert_effect_strategy = auto()
     insert_fica_strategy = auto()
     insert_times_strategy = auto()
+    select_times_assets = auto()
