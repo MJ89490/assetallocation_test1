@@ -47,6 +47,15 @@ def run_effect():
     next_latest_date = dates_index[-4]
     previous_seven_days_latest_date = dates_index[-10]
 
+    from assetallocation_arp.models.effect.compute_aggregate_currencies import compute_total_incl_signals
+
+    compute_total_incl_signals('1/N', returns_incl_costs=currencies_calculations['return_incl'],
+                               date=obj_import_data.start_date_calculations)
+
+
+
+
+
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
     spot_currencies = obj_import_data.process_data_config_effect()

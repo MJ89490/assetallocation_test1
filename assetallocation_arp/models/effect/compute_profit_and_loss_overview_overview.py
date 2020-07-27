@@ -32,19 +32,58 @@ class ComputeProfitAndLoss:
 
         return pd.DataFrame(profit_and_loss_carry)[0]
 
+    @staticmethod
+    def compute_profit_and_loss_returns_notional_weekly(combo, returns):
+
+        sum_prod = returns.values.dot(abs(combo.values)) / 100
+        length = combo.shape[0]
+
+        return 10000 * (sum_prod / length)
+
+    @staticmethod
+    def compute_profit_and_loss_spot_notional_weekly(combo, spot):
+
+        sum_prod = spot.values.dot(abs(combo.values)) / 100
+        length = combo.shape[0]
+
+        return 10000 * (sum_prod / length)
+
+    def compute_profit_and_loss_returns_notional_ytd(self):
+        pass
+        
+    @staticmethod
+    def compute_profit_and_loss_carry_notional_weekly(notional_returns, notional_spot):
+        return notional_returns - notional_spot
+
     def run_profit_and_loss(self, combo, returns_ex_costs, spot):
 
         profit_and_loss_combo_overview = self.compute_profit_and_loss_combo(combo=combo)
         profit_and_loss_returns_ex_overview = self.compute_profit_and_loss_returns(returns_ex_costs=returns_ex_costs)
         profit_and_loss_spot_overview = self.compute_profit_and_loss_spot(spot=spot, combo=profit_and_loss_combo_overview)
 
-        profit_and_loss_carry_overview = self.compute_profit_and_loss_carry(profit_and_loss_returns=profit_and_loss_returns_ex_overview,
-                                                                            profit_and_loss_spot=profit_and_loss_spot_overview)
+        profit_and_loss_carry_overview = self.compute_profit_and_loss_carry(
+            profit_and_loss_returns=profit_and_loss_returns_ex_overview,
+            profit_and_loss_spot=profit_and_loss_spot_overview)
+
+        profit_and_loss_returns_notional_weekly = self.compute_profit_and_loss_returns_notional_weekly(
+            combo=profit_and_loss_combo_overview,
+            returns=profit_and_loss_returns_ex_overview)
+
+        profit_and_loss_spot_notional_weekly = self.compute_profit_and_loss_spot_notional_weekly(
+            combo=profit_and_loss_combo_overview,
+            spot=profit_and_loss_spot_overview)
+
+        profit_and_loss_carry_notional_weekly = self.compute_profit_and_loss_carry_notional_weekly(
+            notional_returns=profit_and_loss_returns_notional_weekly,
+            notional_spot=profit_and_loss_spot_notional_weekly)
 
         profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview,
                                     'profit_and_loss_returns_ex_overview': profit_and_loss_returns_ex_overview,
                                     'profit_and_loss_spot_ex_overview': profit_and_loss_spot_overview,
-                                    'profit_and_loss_carry_overview': profit_and_loss_carry_overview
+                                    'profit_and_loss_carry_overview': profit_and_loss_carry_overview,
+                                    'profit_and_loss_returns_notional_weekly': profit_and_loss_returns_notional_weekly,
+                                    'profit_and_loss_spot_notional_weekly': profit_and_loss_spot_notional_weekly,
+                                    'profit_and_loss_carry_notional_weekly': profit_and_loss_carry_notional_weekly
                                     }
 
         return profit_and_loss_overview
