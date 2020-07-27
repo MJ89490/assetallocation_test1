@@ -14,14 +14,6 @@ $$
 with inserted_es (execution_state_id) as (
 select insert_execution_state('insert_fund_strategy')
 ),
-insert into confog.execution_state (system_datetime, execution_id)
-select
-	now(),
-	iese.id
-from
-	iese
-RETURNING execution_state.id
-),
 f(fund_id) AS (
   SELECT f.id
   FROM fund.fund f

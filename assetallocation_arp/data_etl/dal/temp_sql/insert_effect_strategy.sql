@@ -23,16 +23,8 @@ $$
 with inserted_es (execution_state_id) as (
 select insert_execution_state('insert_effect_strategy')
 ),
-inserted_s (strategy_id, execution_state_id) AS (
-INSERT INTO arp.strategy (name, description, user_id, execution_state_id)
-SELECT
-  name,
-  description,
-  user_id,
-  inserted_es.id
-FROM
-  inserted_es
-RETURNING arp.strategy.id, arp.strategy.execution_state_id
+inserted_s (strategy_id) AS (
+select insert_strategy(name, description, user_id, execution_state_id)
 )
 INSERT INTO arp.effect (
   strategy_id,
@@ -66,8 +58,9 @@ SELECT
   moving_average_short_term,
   realtime_inflation_forecast_flag,
   trend_indicator,
-  inserted_s.execution_state_id
+  inserted_es.execution_state_id
 FROM
   inserted_s
+  CROSS JOIN inserted_es
 RETURNING arp.effect.version
 $$;
