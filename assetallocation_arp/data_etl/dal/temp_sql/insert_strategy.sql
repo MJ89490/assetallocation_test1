@@ -5,16 +5,18 @@ CREATE OR REPLACE FUNCTION insert_strategy(
 	execution_state_id int,
 	out strategy_id int
 )
-language sql
+language plpgsql
 as
 $$
+BEGIN
 INSERT INTO arp.strategy (name, description, user_id, execution_state_id)
-SELECT
+VALUES (
   name,
   description,
   user_id,
-  inserted_es.id
-FROM
-  inserted_es
-RETURNING arp.strategy.id
+  execution_state_id
+)
+RETURNING arp.strategy.id into strategy_id;
+return;
+END
 $$
