@@ -9,6 +9,12 @@ RETURNS void
 AS
 $$
 BEGIN
+  if not (array_ndims(asset_tickers) =1 and array_ndims(strategy_weights) = 1 and array_ndims(implemented_weights) = 1) then
+    RAISE 'asset_tickers, strategy_weights and implemented_weights must all be 1 dimensional arrays';
+  elsif not (array_length(asset_tickers, 1) = array_length(strategy_weights, 1) and array_length(strategy_weights, 1) = array_length(implemented_weights, 1)) then
+    RAISE 'asset_tickers, strategy_weights and implemented_weights must all be the same length';
+  end if;
+
   INSERT INTO arp.fund_strategy_asset_weight (
     fund_strategy_id,
     asset_id,
