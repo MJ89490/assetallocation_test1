@@ -54,3 +54,10 @@ def return_ts(sig, future, leverage, costs, cummul):
     return returns, r, positioning
 
 
+def cap_and_redistribute(weight_matrix, cap):
+    # Cap individual weights and redistribute
+    condition = weight_matrix <= cap
+    cap_weight = cap * (condition.count(axis=1) - condition.sum(axis=1))
+    rest_weight = (weight_matrix * condition).sum(axis=1)
+    capped_matrix = weight_matrix.mul((1 - cap_weight) / rest_weight, axis=0).clip(upper=cap)
+    return capped_matrix

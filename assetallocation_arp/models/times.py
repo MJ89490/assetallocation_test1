@@ -17,7 +17,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
     # format data and inputs
     asset_inputs_t = asset_inputs.set_index('asset').T
-    all_data = all_data[ all_data.index.values > np.datetime64(times_inputs['DateFrom'].item())]
+    all_data = all_data[ all_data.index.values > np.datetime64(times_inputs['date_from'].item())]
     times_data = all_data[asset_inputs.signal_ticker]
     futures_data = all_data[asset_inputs.future_ticker].pct_change()
     times_data.columns = asset_inputs.asset
