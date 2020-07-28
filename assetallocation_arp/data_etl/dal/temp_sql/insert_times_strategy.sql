@@ -21,33 +21,9 @@ declare
 BEGIN
 	SELECT insert_execution_state('insert_times_strategy') into execution_state_id;
 	SELECT insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
-	INSERT INTO arp.times (
-	  time_lag,
-	  leverage_type,
-	  volatility_window,
-	  short_signals,
-	  long_signals,
-	  frequency,
-	  day_of_week,
-	  execution_state_id,
-	  strategy_id
-	)
-	VALUES(
-	  time_lag,
-	  leverage_type,
-	  volatility_window,
-	  short_signals,
-	  long_signals,
-	  frequency,
-	  day_of_week,
-	  execution_state_id,
-	  strategy_id
-	)
-	RETURNING arp.times.version into t_version;
-  WITH a (asset_id) as (select id from asset.asset where ticker = ANY(asset_tickers))
-  INSERT INTO arp.times_asset (strategy_id, asset_id, execution_state_id)
-  SELECT strategy_id, a.asset_id, execution_state_id
-  FROM a;
+	SELECT insert_times(time_lag, leverage_type, volatility_window, short_signals, long_signals, frequency, day_of_week,
+	  execution_state_id, strategy_id) into t_version;
+	PERFORM insert_times_asset(strategy_id, asset_tickers, execution_state_id)
 	return;
 END
 $$;
