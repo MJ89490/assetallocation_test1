@@ -38,7 +38,7 @@ def matfile_to_dataframe(file_path, model_date):
     mat_dataframe.set_index('Date', inplace=True)
 
     mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
-    mat_dataframe = mat_dataframe[mat_dataframe.index.values <= model_date]  # remove data after selected date
+    mat_dataframe = mat_dataframe[mat_dataframe.index.values <= np.datetime64(model_date)] # remove data after selected date
     return mat_dataframe
 
 
@@ -103,12 +103,6 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     # load data and inputs
     strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
     asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
-
-    try:
-        if strategy_inputs['date_to'].item() is not None:
-            model_date = np.datetime64(strategy_inputs['date_to'].item())
-    except (RuntimeError, TypeError, NameError):
-        pass
 
     all_data = matfile_to_dataframe(file_path, model_date)
 

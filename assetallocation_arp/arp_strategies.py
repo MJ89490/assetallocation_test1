@@ -17,7 +17,7 @@ def run_model(model_type, mat_file, input_file, model_date=None):
 
     if model_type == models_names.Models.times.name:
         # get inputs from excel and matlab data
-        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
@@ -88,7 +88,6 @@ def write_output_to_excel(model_outputs, input_file):
 
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
 
-        xw.Book(input_file).set_mock_caller()
         sheet_times_output = xw.Book.caller().sheets['times_output']
         sheet_times_inputs = xw.Book.caller().sheets['times_input']
 
@@ -109,9 +108,9 @@ def write_output_to_excel(model_outputs, input_file):
         carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily, \
         return_daily = model_outputs[models_names.Models.fica.name]
         path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
-        wb = xw.Book(path)
-        sheet_fica_output = wb.sheets['fica_output']
-        sheet_fica_input = wb.sheets['fica_input']
+
+        sheet_fica_output = xw.Book.caller().sheets['fica_output']
+        sheet_fica_input = xw.Book.caller().sheets['fica_input']
 
         n_columns = len(carry_roll.columns) + 3
         sheet_fica_output.clear_contents()
@@ -139,9 +138,9 @@ def write_output_to_excel(model_outputs, input_file):
         short_list, returns_maven, asset_class_long, asset_class_short, asset_contribution_long, \
         asset_contribution_short, asset_inputs, maven_inputs = model_outputs[models_names.Models.maven.name]
         path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
-        wb = xw.Book(path)
-        sheet_maven_output = wb.sheets['maven_output']
-        sheet_maven_input = wb.sheets['maven_input']
+
+        sheet_maven_output = xw.Book.caller().sheets['maven_output']
+        sheet_maven_input = xw.Book.caller().sheets['maven_input']
 
         ncol = len(value.columns) + 3
         mcol = len(long_signals_name.columns) + 3
@@ -184,9 +183,9 @@ def write_output_to_excel(model_outputs, input_file):
     if models_names.Models.fxmodels.name in model_outputs.keys():
         fx_model, base_fx, signal, exposure, exposure_agg, returns, contribution, carry_base, fxmodels_inputs, asset_inputs = model_outputs[models_names.Models.fxmodels.name]
         path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
-        wb = xw.Book(path)
-        sheet_fxmodels_output = wb.sheets['fxmodels_output']
-        sheet_fxmodels_input = wb.sheets['fxmodels_input']
+
+        sheet_fxmodels_output = xw.Book.caller().sheets['fxmodels_output']
+        sheet_fxmodels_input = xw.Book.caller().sheets['fxmodels_input']
 
         ncol = len(signal.columns) + 3
         mcol = len(exposure_agg.columns) + 3
@@ -216,10 +215,11 @@ def get_inputs_from_excel():
 
     # select data from excel
     input_file = xw.Range('rng_full_path').value
-    model_date = None
+    model_date = xw.Range('rng_date_to').value
     mat_file = xw.Range('rng_mat_file_path').value
-
     model_type = xw.Range('rng_model_type').value
+
+
     run_model(model_type, mat_file, input_file, model_date)
 
 
@@ -248,5 +248,4 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-   #get_inputs_from_excel()
-    get_inputs_from_python('times', file="arp_dashboard.xlsm")
+    get_inputs_from_python(get_input_user(), file="arp_dashboard.xlsm")
