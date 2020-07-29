@@ -42,27 +42,28 @@ def run_effect():
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
     dates_index = obj_import_data.dates_origin_index
-
-    latest_date = dates_index[-5]
+    latest_date = pd.to_datetime('24-04-2020',  format='%d-%m-%Y')
+    # latest_date = dates_index[-5]
     next_latest_date = dates_index[-4]
     previous_seven_days_latest_date = dates_index[-10]
 
-    from assetallocation_arp.models.effect.compute_aggregate_currencies import compute_total_incl_signals
+    spot_currencies = obj_import_data.process_data_config_effect()
 
-    compute_total_incl_signals('1/N', returns_incl_costs=currencies_calculations['return_incl'],
-                               date=obj_import_data.start_date_calculations)
+    from assetallocation_arp.models.effect.compute_aggregate_currencies import run_aggregate_currencies
 
-
-
-
+    aggregate_currencies = run_aggregate_currencies(weight='1/N', returns_incl_costs=currencies_calculations['return_incl'],
+                                                    date=obj_import_data.start_date_calculations,
+                                                    spot=spot_currencies, window=52, index=dates_index,
+                                                    spot_incl_costs=currencies_calculations['spot_incl'])
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
-    spot_currencies = obj_import_data.process_data_config_effect()
+
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
                       combo=currencies_calculations['combo'],
                       returns_ex_costs=currencies_calculations['return_ex'],
-                      spot=spot_currencies)
+                      spot=spot_currencies, total_incl_signals=aggregate_currencies['total_incl_signals'],
+                      spot_incl_signals=aggregate_currencies['spot_incl_signals'])
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date)
@@ -85,4 +86,3 @@ def run_effect():
 
 if __name__ == '__main__':
     sys.exit(run_effect())
-
