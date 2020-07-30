@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION select_times_assets(
+CREATE OR REPLACE FUNCTION arp.select_times_assets(
   strategy_name varchar,
   strategy_version int,
   business_datetime timestamp with time zone

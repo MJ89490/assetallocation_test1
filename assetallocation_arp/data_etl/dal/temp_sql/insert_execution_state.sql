@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_execution_state(
+CREATE OR REPLACE FUNCTION config.insert_execution_state(
 	execution_name varchar,
 	out execution_state_id int
 )

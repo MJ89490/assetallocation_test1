@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION select_times_strategy(
+CREATE OR REPLACE FUNCTION arp.select_times_strategy(
   strategy_name varchar,
   strategy_version int,
   OUT description varchar,

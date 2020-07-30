@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_fund_strategy_asset_weights(
+CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_asset_weights(
     fund_strategy_id int,
     asset_tickers varchar[],
     strategy_weights numeric[],

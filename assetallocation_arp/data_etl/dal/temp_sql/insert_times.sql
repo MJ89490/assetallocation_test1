@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_times(
+CREATE OR REPLACE FUNCTION arp.insert_times(
   time_lag interval,
   leverage_type char,
   volatility_window int,

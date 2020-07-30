@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_times_asset(
+CREATE OR REPLACE FUNCTION arp.insert_times_asset(
   strategy_id int,
   asset_tickers varchar[],
   execution_state_id int

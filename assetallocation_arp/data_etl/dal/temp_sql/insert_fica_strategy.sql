@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_fica_strategy(
+CREATE OR REPLACE FUNCTION arp.insert_fica_strategy(
   name varchar,
   description varchar,
   user_id varchar,
@@ -17,8 +17,8 @@ declare
 	execution_state_id int;
 	strategy_id int;
 BEGIN
-	SELECT insert_execution_state('insert_times_strategy') into execution_state_id;
-	SELECT insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
+	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
+	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
   INSERT INTO arp.fica (
     strategy_id,
     tenor,

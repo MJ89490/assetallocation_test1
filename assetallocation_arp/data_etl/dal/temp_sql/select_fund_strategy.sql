@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION select_fund_strategy(
+CREATE OR REPLACE FUNCTION arp.select_fund_strategy(
   fund_name varchar,
   strategy_name varchar,
   business_datetime timestamp with time zone,
@@ -38,12 +38,12 @@ FROM
   ON f.currency_id = c.id
   JOIN arp.fund_strategy fs
   ON f.id = fs.fund_id
-  JOIN user.app_user fsu
-  ON fs.user_id = fsu.id
+  JOIN arp.app_user fsu
+  ON fs.app_user_id = fsu.id
   JOIN arp.strategy s
   ON fs.strategy_id = s.id
-  JOIN user.app_user su
-  ON s.user_id = su.id
+  JOIN arp.app_user su
+  ON s.app_user_id = su.id
 WHERE
   f.name = select_fund_strategy.fund_name
   AND s.name = select_fund_strategy.strategy_name

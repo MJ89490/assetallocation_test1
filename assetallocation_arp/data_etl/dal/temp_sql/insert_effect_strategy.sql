@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_effect_strategy(
+CREATE OR REPLACE FUNCTION arp.insert_effect_strategy(
   name varchar,
   description varchar,
   user_id varchar,
@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION insert_effect_strategy(
   moving_average_short_term int,
   realtime_inflation_forecast_flag boolean,
   trend_indicator varchar,
-  OUT version int
+  OUT e_version int
 )
 LANGUAGE plpgsql
 AS
@@ -24,8 +24,8 @@ declare
 	execution_state_id int;
 	strategy_id int;
 BEGIN
-	SELECT insert_execution_state('insert_times_strategy') into execution_state_id;
-	SELECT insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
+	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
+	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
 INSERT INTO arp.effect (
   strategy_id,
   carry_type,
@@ -60,7 +60,7 @@ VALUES(
   trend_indicator,
   execution_state_id
 	)
-	RETURNING arp.effect.version into t_version;
+	RETURNING arp.effect.version into e_version;
 	return;
 END
 $$;

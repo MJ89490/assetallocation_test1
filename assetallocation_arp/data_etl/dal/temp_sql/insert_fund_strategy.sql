@@ -1,45 +1,39 @@
-CREATE OR REPLACE FUNCTION insert_fund_strategy(
+CREATE OR REPLACE FUNCTION arp.insert_fund_strategy(
   business_datetime timestamp with time zone,
-  fund_name varchar,
+  fund_id int,
   save_output_flag boolean,
   strategy_id int,
   weight numeric,
   user_id varchar,
   python_code_version varchar,
+  execution_state_id int,
   OUT fund_strategy_id int
 )
-LANGUAGE SQL
 AS
 $$
-with inserted_es (execution_state_id) as (
-select insert_execution_state('insert_fund_strategy')
-),
-f(fund_id) AS (
-  SELECT f.id
-  FROM fund.fund f
-  WHERE f.name = fund_name
-)
-INSERT INTO arp.fund_strategy (
-  business_datetime,
-  fund_id,
-  save_output_flag,
-  strategy_id,
-  weight,
-  user_id,
-  python_code_version,
-  execution_state_id
-)
-SELECT
-  business_datetime,
-  f.fund_id,
-  save_output_flag,
-  strategy_id,
-  weight,
-  user_id,
-  python_code_version,
-  inserted_es.execution_state_id
-from
-  f
-  cross join inserted_es
-RETURNING arp.fund_strategy.id
-$$;
+BEGIN
+  INSERT INTO arp.fund_strategy (
+    business_datetime,
+    fund_id,
+    save_output_flag,
+    strategy_id,
+    weight,
+    user_id,
+    python_code_version,
+    execution_state_id
+  )
+  VALUES(
+    business_datetime,
+    fund_id,
+    save_output_flag,
+    strategy_id,
+    weight,
+    user_id,
+    python_code_version,
+    execution_state_id
+  )
+  RETURNING arp.fund_strategy.id into fund_strategy_id;
+  RETURN;
+END
+$$
+LANGUAGE PLPGSQL;

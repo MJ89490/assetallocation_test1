@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_strategy(
+CREATE OR REPLACE FUNCTION arp.insert_strategy(
   name varchar,
   description varchar,
   user_id varchar,
