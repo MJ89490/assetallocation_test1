@@ -1,3 +1,4 @@
+DROP FUNCTION arp.select_times_assets(character varying,integer,timestamp with time zone);
 CREATE OR REPLACE FUNCTION arp.select_times_assets(
   strategy_name varchar,
   strategy_version int,
@@ -19,9 +20,7 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets(
     ticker varchar,
     tr_flag boolean,
     asset_type varchar,
-    analytic_type varchar,
-    value numeric(32, 16),
-    source varchar
+    asset_analytic arp.source_type_value[]
   )
 LANGUAGE plpgsql
 AS
@@ -44,10 +43,7 @@ BEGIN
       a.ticker,
       a.tr_flag,
       a.type as asset_type,
-      aa.type as analytic_type,
-      aa.value,
-      s2.source
-    INTO asset_row_set
+      array_agg((s2.source, aa.type, aa.value) :: arp.source_type_value) as asset_analytic
     FROM
       asset.asset a
       JOIN arp.times_asset ta on a.id = ta.asset_id
@@ -60,6 +56,8 @@ BEGIN
     WHERE
       s.name = strategy_name
       AND t.version = strategy_version
-      AND aa.business_tstzrange @> business_datetime;
+      AND aa.business_tstzrange @> business_datetime
+    GROUP BY a.id, c.id, c2.id
+  ;
 END
 $$;
