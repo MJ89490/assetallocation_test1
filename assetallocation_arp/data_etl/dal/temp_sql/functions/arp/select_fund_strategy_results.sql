@@ -11,7 +11,7 @@ RETURNS TABLE(
   asset_ticker varchar,
   strategy_weight numeric,
   implemented_weight numeric,
-  asset_analytics asset_analytic[]
+  asset_analytics arp.type_subtype_value[]
 
 )
 AS
@@ -49,7 +49,7 @@ BEGIN
       a.ticker as asset_ticker,
       fsaw.strategy_weight,
       fsaw.implemented_weight,
-      array_agg((saa.type, saa.subtype, saa.value):: asset_analytic) as asset_analytics
+      array_agg((saa.type, saa.subtype, saa.value):: arp.type_subtype_value) as asset_analytics
     FROM
       arp.fund_strategy_asset_weight fsaw
       JOIN asset.asset a ON fsaw.asset_id = a.id
