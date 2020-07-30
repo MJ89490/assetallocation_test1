@@ -3,16 +3,8 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy(
   strategy_name varchar,
   business_datetime timestamp with time zone,
   system_datetime timestamp with time zone,
-  OUT s_user_email varchar,
-  OUT s_user_id varchar,
-  OUT s_user_name varchar,
-  OUT s_name varchar,
-  OUT description varchar,
-  OUT fs_user_email varchar,
-  OUT fs_user_id varchar,
-  OUT fs_user_name varchar,
+  OUT fund_strategy_id int,
   OUT currency char,
-  OUT f_name varchar,
   OUT save_output_flag boolean,
   OUT weight numeric
 )
@@ -20,16 +12,8 @@ LANGUAGE SQL
 AS
 $$
 SELECT
-  su.email,
-  su.id,
-  su.name,
-  s.name,
-  s.description,
-  fsu.email,
-  fsu.id,
-  fsu.name,
+  fs.id,
   c.currency,
-  f.name,
   fs.save_output_flag,
   fs.weight
 FROM
@@ -38,15 +22,15 @@ FROM
   ON f.currency_id = c.id
   JOIN arp.fund_strategy fs
   ON f.id = fs.fund_id
-  JOIN arp.app_user fsu
-  ON fs.app_user_id = fsu.id
   JOIN arp.strategy s
   ON fs.strategy_id = s.id
-  JOIN arp.app_user su
-  ON s.app_user_id = su.id
 WHERE
   f.name = select_fund_strategy.fund_name
   AND s.name = select_fund_strategy.strategy_name
-  AND fs.business_datetime = select_fund_strategy.business_datetime
-  AND fs.system_datetime = select_fund_strategy.system_datetime
+  AND fs.business_datetime <= select_fund_strategy.business_datetime
+  AND fs.system_datetime <= select_fund_strategy.system_datetime
+ORDER BY
+  fs.system_datetime desc,
+  fs.business_datetime desc
+LIMIT 1
 $$;

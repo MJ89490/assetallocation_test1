@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy(
   save_output_flag boolean,
   strategy_id int,
   weight numeric,
-  user_id varchar,
+  app_user_id varchar,
   python_code_version varchar,
   execution_state_id int,
   OUT fund_strategy_id int
@@ -18,7 +18,7 @@ BEGIN
     save_output_flag,
     strategy_id,
     weight,
-    user_id,
+    app_user_id,
     python_code_version,
     execution_state_id
   )
@@ -28,7 +28,7 @@ BEGIN
     save_output_flag,
     strategy_id,
     weight,
-    user_id,
+    app_user_id,
     python_code_version,
     execution_state_id
   )

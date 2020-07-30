@@ -1,8 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.select_times_strategy(
-  strategy_name varchar,
   strategy_version int,
   OUT description varchar,
-  OUT user_id varchar,
   OUT time_lag varchar,
   OUT leverage_type varchar,
   OUT volatility_window int,
@@ -13,10 +11,13 @@ CREATE OR REPLACE FUNCTION arp.select_times_strategy(
 )
 AS
 $$
+DECLARE
+  strategy_name varchar;
 BEGIN
+  strategy_name := 'times';
+  
 	SELECT
 	  s.description,
-	  s.user_id,
 	  t.time_lag,
 	  t.leverage_type,
 	  t.volatility_window,
@@ -26,7 +27,6 @@ BEGIN
 	  t.day_of_week
   INTO
     description,
-    user_id,
     time_lag,
     leverage_type,
     volatility_window,

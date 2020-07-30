@@ -29,12 +29,12 @@ BEGIN
     execution_state_id
   )
   SELECT
-    arp.insert_strategy_asset_analytics.fund_strategy_id,
+    insert_strategy_asset_analytics.fund_strategy_id,
     a.id,
     aa.type,
     aa.subtype,
     aa.value,
-    arp.insert_strategy_asset_analytics.execution_state_id
+    insert_strategy_asset_analytics.execution_state_id
   FROM
     unnest(asset_tickers, analytic_types, analytic_subtypes, analytic_values) as aa (asset_ticker, type, subtype, value)
     JOIN asset.asset a ON aa.asset_ticker = a.ticker;

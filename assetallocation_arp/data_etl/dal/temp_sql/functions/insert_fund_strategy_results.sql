@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_results(
   business_datetime timestamp with time zone,
   fund_name varchar,
   save_output_flag boolean,
-  strategy_id int,
+  strategy_id int, --TODO change this to name and version
   weight numeric,
   user_id varchar,
   python_code_version varchar,
@@ -21,7 +21,7 @@ DECLARE
   execution_state_id int;
   fund_id int;
 BEGIN
-  select config.insert_execution_state('insert_fund_strategy') into execution_state_id;
+  select config.insert_execution_state('insert_fund_strategy_results') into execution_state_id;
   select select_fund.fund_id from fund.select_fund(fund_name) into fund_id;
   select arp.insert_fund_strategy(business_datetime, fund_id, save_output_flag, strategy_id, weight, user_id,
     python_code_version, execution_state_id) into fund_strategy_id;
