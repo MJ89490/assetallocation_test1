@@ -2,7 +2,7 @@
 import pandas as pd
 import statistics as stats
 import math
-
+import numpy as np
 #todo crceate a class
 
 
@@ -128,29 +128,52 @@ def compute_aggregate_spot_incl_signals(weight, spot_incl_costs, date, index):
     return spot_incl_signals
 
 
-def compute_aggregate_spot_excl_signals():
-    pass
+def compute_aggregate_spot_excl_signals(weight, spot_excl_costs, date, index):
+
+    first_spot_excl_signals = [100]
+    spot_excl_signals = pd.DataFrame()
+
+    if weight == '1/N':
+        average_spot_excl_signals = (spot_excl_costs.loc[date:] / spot_excl_costs.loc[date:].shift(1)).mean(axis=1).iloc[1:].tolist()
+        for value in range(len(average_spot_excl_signals)):
+            first_spot_excl_signals.append(first_spot_excl_signals[value] * average_spot_excl_signals[value])
+
+        spot_excl_signals['Spot_Excl_Signals'] = first_spot_excl_signals
+
+    spot_excl_signals = spot_excl_signals.set_index(index)
+
+    return spot_excl_signals
 
 
-def compute_log_returns_ex_costs():
-    pass
+def compute_log_returns_excl_costs(returns_ex_costs):
+
+    return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
 
-def compute_weighted_performance():
-    pass
+def compute_weighted_performance(index):
+
+    start_date_weighted_performance = pd.to_datetime('24-07-2003', format='%d-%m-%Y')
+    index_weighted_performance = index[start_date_weighted_performance:]
 
 
-def run_aggregate_currencies(weight, returns_incl_costs, returns_excl_costs, spot_incl_costs, date, spot_data, window, index, carry_data):
+
+
+
+
+def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, spot_data, window, index, carry_data):
     inverse_volatilies = compute_inverse_volatility(spot_data=spot_data, window=window, start_date=date, index=index)
-
-    total_incl_signals = compute_aggregate_total_incl_signals(weight=weight, returns_incl_costs=returns_incl_costs, date=date, index=index)
-    total_excl_signals = compute_aggregate_total_excl_signals(weight=weight, returns_excl_costs=returns_excl_costs, date=date, index=index)
-
-    spot_incl_signals = compute_aggregate_spot_incl_signals(weight=weight, spot_incl_costs=spot_incl_costs, date=date, index=index)
 
     excl_signals_total_return = compute_excl_signals_total_return(start_date=date, carry_data=carry_data)
     excl_signals_spot_return = compute_excl_signals_spot_return(start_date=date, spot_data=spot_data)
 
-    return {'total_incl_signals': total_incl_signals, 'total_excl_signals': total_excl_signals,
-            'spot_incl_signals': spot_incl_signals,
-            'excl_signals_total_return': excl_signals_total_return, 'excl_signals_spot_return': excl_signals_spot_return}
+    log_returns_excl_costs = compute_log_returns_excl_costs(returns_ex_costs=excl_signals_total_return)
+
+    aggregate_total_incl_signals = compute_aggregate_total_incl_signals(weight=weight, returns_incl_costs=returns_incl_costs, date=date, index=index)
+    aggregate_total_excl_signals = compute_aggregate_total_excl_signals(weight=weight, returns_excl_costs=excl_signals_total_return, date=date, index=index)
+
+    aggregate_spot_incl_signals = compute_aggregate_spot_incl_signals(weight=weight, spot_incl_costs=spot_incl_costs, date=date, index=index)
+    aggregate_spot_excl_signals = compute_aggregate_spot_excl_signals(weight=weight, spot_excl_costs=excl_signals_spot_return, date=date, index=index)
+
+    return {'agg_total_incl_signals': aggregate_total_incl_signals, 'agg_total_excl_signals': aggregate_total_excl_signals,
+            'agg_spot_incl_signals': aggregate_spot_incl_signals, 'agg_spot_excl_signals': aggregate_spot_excl_signals
+           }

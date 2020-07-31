@@ -53,7 +53,6 @@ def run_effect():
 
     aggregate_currencies = run_aggregate_currencies(weight='1/N', date=obj_import_data.start_date_calculations,
                                                     returns_incl_costs=currencies_calculations['return_incl'],
-                                                    returns_excl_costs=currencies_calculations['return_excl'],
                                                     spot_data=spot_data, window=52, index=dates_index,
                                                     spot_incl_costs=currencies_calculations['spot_incl'],
                                                     carry_data=carry_data)
@@ -64,8 +63,8 @@ def run_effect():
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
                       combo=currencies_calculations['combo'],
                       returns_ex_costs=currencies_calculations['return_excl'],
-                      spot=spot_data, total_incl_signals=aggregate_currencies['total_incl_signals'],
-                      spot_incl_signals=aggregate_currencies['spot_incl_signals'])
+                      spot=spot_data, total_incl_signals=aggregate_currencies['agg_total_incl_signals'],
+                      spot_incl_signals=aggregate_currencies['agg_spot_incl_signals'])
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date)
