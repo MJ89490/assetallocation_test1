@@ -6,60 +6,26 @@ import math
 #todo crceate a class
 
 
-def compute_total_incl_signals(weight, returns_incl_costs, date, index):
-
-    first_total_signals = [100]
-    total_incl_signals = pd.DataFrame()
-
-    if weight == '1/N':
-        average_incl_signals = (returns_incl_costs.loc[date:] / returns_incl_costs.loc[date:].shift(1)).mean(axis=1).iloc[1:].tolist()
-        for value in range(len(average_incl_signals)):
-            first_total_signals.append(first_total_signals[value] * average_incl_signals[value])
-
-        total_incl_signals['Total_Incl_Signals'] = first_total_signals
-
-    total_incl_signals = total_incl_signals.set_index(index)
-
-    return total_incl_signals
-
-
-def compute_spot_incl_signals(weight, spot_incl_costs, date, index):
-
-    first_spot_incl_signals = [100]
-    spot_incl_signals = pd.DataFrame()
-
-    if weight == '1/N':
-        average_spot_incl_signals = (spot_incl_costs.loc[date:] / spot_incl_costs.loc[date:].shift(1)).mean(axis=1).iloc[1:].tolist()
-        for value in range(len(average_spot_incl_signals)):
-            first_spot_incl_signals.append(first_spot_incl_signals[value] * average_spot_incl_signals[value])
-
-        spot_incl_signals['Spot_Incl_Signals'] = first_spot_incl_signals
-
-    spot_incl_signals = spot_incl_signals.set_index(index)
-
-    return spot_incl_signals
-
-
-def compute_inverse_volatility(spot, start_date, window, index):
+def compute_inverse_volatility(spot_data, start_date, window, index):
 
     inverse_volatilities = pd.DataFrame()
 
-    for currency_spot in spot.columns:
+    for currency_spot in spot_data.columns:
 
         tmp_start_date_computations = start_date
-        rows = spot[tmp_start_date_computations:].shape[0]
+        rows = spot_data[tmp_start_date_computations:].shape[0]
 
-        spot_tmp = spot.loc[:, currency_spot]
+        spot_tmp = spot_data.loc[:, currency_spot]
         volatilities = []
 
         for value in range(rows):
             # Set the start date to start the computation
-            start_current_date_index_loc = spot.index.get_loc(tmp_start_date_computations)
-            start_current_date_index = spot.index[start_current_date_index_loc]
+            start_current_date_index_loc = spot_data.index.get_loc(tmp_start_date_computations)
+            start_current_date_index = spot_data.index[start_current_date_index_loc]
 
             # Take previous date depending on the size of the window
-            previous_start_date_index = spot.index[start_current_date_index_loc - window]
-            previous_start_date_index_loc = spot.index.get_loc(previous_start_date_index)
+            previous_start_date_index = spot_data.index[start_current_date_index_loc - window]
+            previous_start_date_index_loc = spot_data.index.get_loc(previous_start_date_index)
 
             # Take the previous values depending on the size of the window
             values_window = spot_tmp[previous_start_date_index:start_current_date_index]
@@ -77,9 +43,9 @@ def compute_inverse_volatility(spot, start_date, window, index):
 
             # Error handling when we reach the end of the dates range
             try:
-                tmp_start_date_computations = spot.index[start_current_date_index_loc + 1]
+                tmp_start_date_computations = spot_data.index[start_current_date_index_loc + 1]
             except IndexError:
-                tmp_start_date_computations = spot.index[start_current_date_index_loc]
+                tmp_start_date_computations = spot_data.index[start_current_date_index_loc]
 
         # Add volatilities into a common dataFrame
         inverse_volatilities['Inverse_Volatility_' + currency_spot] = volatilities
@@ -87,6 +53,83 @@ def compute_inverse_volatility(spot, start_date, window, index):
     inverse_volatilities = inverse_volatilities.set_index(index)
 
     return inverse_volatilities
+
+
+def compute_excl_signals_total_return(carry_data, start_date):
+    """
+    Function computing Excl signals (total return) dividing the current value by the start date value
+    :param carry_data: carry data from Bloomberg for all currencies
+    :param start_date: start date of calculations
+    :return: dataFrame of Excl signals (total return)
+    """
+
+    return (carry_data.loc[start_date:] / carry_data.loc[start_date]).apply(lambda x: x * 100)
+
+
+def compute_excl_signals_spot_return(spot_data, start_date):
+    """
+    Function computing Excl signals (spot return) dividing the current value by the start date value
+    :param spot_data: spot data from Blommberg for all currencies
+    :param start_date: start date of calculations
+    :return: dataFrame of Excl signals (spot return)
+    """
+
+    return (spot_data.loc[start_date:] / spot_data.loc[start_date]).apply(lambda x: x * 100)
+
+
+def compute_aggregate_total_incl_signals(weight, returns_incl_costs, date, index):
+
+    first_total_signals = [100]
+    total_incl_signals = pd.DataFrame()
+
+    if weight == '1/N':
+        average_incl_signals = (returns_incl_costs.loc[date:] / returns_incl_costs.loc[date:].shift(1)).mean(axis=1).iloc[1:].tolist()
+        for value in range(len(average_incl_signals)):
+            first_total_signals.append(first_total_signals[value] * average_incl_signals[value])
+
+        total_incl_signals['Total_Incl_Signals'] = first_total_signals
+
+    total_incl_signals = total_incl_signals.set_index(index)
+
+    return total_incl_signals
+
+
+def compute_aggregate_total_excl_signals(weight, returns_excl_costs, date, index):
+
+    first_total_signals = [100]
+    total_excl_signals = pd.DataFrame()
+
+    if weight == '1/N':
+        average_excl_signals = (returns_excl_costs.loc[date:] / returns_excl_costs.loc[date:].shift(1)).mean(axis=1).iloc[1:].tolist()
+        for value in range(len(average_excl_signals)):
+            first_total_signals.append(first_total_signals[value] * average_excl_signals[value])
+
+        total_excl_signals['Total_Excl_Signals'] = first_total_signals
+
+    total_excl_signals = total_excl_signals.set_index(index)
+
+    return total_excl_signals
+
+
+def compute_aggregate_spot_incl_signals(weight, spot_incl_costs, date, index):
+
+    first_spot_incl_signals = [100]
+    spot_incl_signals = pd.DataFrame()
+
+    if weight == '1/N':
+        average_spot_incl_signals = (spot_incl_costs.loc[date:] / spot_incl_costs.loc[date:].shift(1)).mean(axis=1).iloc[1:].tolist()
+        for value in range(len(average_spot_incl_signals)):
+            first_spot_incl_signals.append(first_spot_incl_signals[value] * average_spot_incl_signals[value])
+
+        spot_incl_signals['Spot_Incl_Signals'] = first_spot_incl_signals
+
+    spot_incl_signals = spot_incl_signals.set_index(index)
+
+    return spot_incl_signals
+
+
+def compute_aggregate_spot_excl_signals():
+    pass
 
 
 def compute_log_returns_ex_costs():
@@ -97,17 +140,17 @@ def compute_weighted_performance():
     pass
 
 
-def compute_total_returns_excl_signals():
-    pass
+def run_aggregate_currencies(weight, returns_incl_costs, returns_excl_costs, spot_incl_costs, date, spot_data, window, index, carry_data):
+    inverse_volatilies = compute_inverse_volatility(spot_data=spot_data, window=window, start_date=date, index=index)
 
+    total_incl_signals = compute_aggregate_total_incl_signals(weight=weight, returns_incl_costs=returns_incl_costs, date=date, index=index)
+    total_excl_signals = compute_aggregate_total_excl_signals(weight=weight, returns_excl_costs=returns_excl_costs, date=date, index=index)
 
-def compute_spot_returns_excl_signals():
-    pass
+    spot_incl_signals = compute_aggregate_spot_incl_signals(weight=weight, spot_incl_costs=spot_incl_costs, date=date, index=index)
 
+    excl_signals_total_return = compute_excl_signals_total_return(start_date=date, carry_data=carry_data)
+    excl_signals_spot_return = compute_excl_signals_spot_return(start_date=date, spot_data=spot_data)
 
-def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, spot, window, index):
-    total_incl_signals = compute_total_incl_signals(weight=weight, returns_incl_costs=returns_incl_costs, date=date, index=index)
-    inverse_volatilies = compute_inverse_volatility(spot=spot, window=window, start_date=date, index=index)
-    spot_incl_signals = compute_spot_incl_signals(weight=weight, spot_incl_costs=spot_incl_costs, date=date, index=index)
-
-    return {'total_incl_signals': total_incl_signals, 'spot_incl_signals':spot_incl_signals}
+    return {'total_incl_signals': total_incl_signals, 'total_excl_signals': total_excl_signals,
+            'spot_incl_signals': spot_incl_signals,
+            'excl_signals_total_return': excl_signals_total_return, 'excl_signals_spot_return': excl_signals_spot_return}

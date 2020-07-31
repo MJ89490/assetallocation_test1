@@ -204,5 +204,6 @@ class ProcessDataEffect:
         self.base_implied_eur = self.data_currencies_eur[preprocess_data['base_implied_eur']]
 
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
+        common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
-        return common_spot
+        return common_spot, common_carry

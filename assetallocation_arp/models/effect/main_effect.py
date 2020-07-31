@@ -47,22 +47,24 @@ def run_effect():
     next_latest_date = dates_index[-4]
     previous_seven_days_latest_date = dates_index[-10]
 
-    spot_currencies = obj_import_data.process_data_config_effect()
+    spot_data, carry_data = obj_import_data.process_data_config_effect()
 
     from assetallocation_arp.models.effect.compute_aggregate_currencies import run_aggregate_currencies
 
-    aggregate_currencies = run_aggregate_currencies(weight='1/N', returns_incl_costs=currencies_calculations['return_incl'],
-                                                    date=obj_import_data.start_date_calculations,
-                                                    spot=spot_currencies, window=52, index=dates_index,
-                                                    spot_incl_costs=currencies_calculations['spot_incl'])
+    aggregate_currencies = run_aggregate_currencies(weight='1/N', date=obj_import_data.start_date_calculations,
+                                                    returns_incl_costs=currencies_calculations['return_incl'],
+                                                    returns_excl_costs=currencies_calculations['return_excl'],
+                                                    spot_data=spot_data, window=52, index=dates_index,
+                                                    spot_incl_costs=currencies_calculations['spot_incl'],
+                                                    carry_data=carry_data)
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
 
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
                       combo=currencies_calculations['combo'],
-                      returns_ex_costs=currencies_calculations['return_ex'],
-                      spot=spot_currencies, total_incl_signals=aggregate_currencies['total_incl_signals'],
+                      returns_ex_costs=currencies_calculations['return_excl'],
+                      spot=spot_data, total_incl_signals=aggregate_currencies['total_incl_signals'],
                       spot_incl_signals=aggregate_currencies['spot_incl_signals'])
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
