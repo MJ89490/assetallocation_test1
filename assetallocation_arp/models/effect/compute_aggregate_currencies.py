@@ -150,23 +150,42 @@ def compute_log_returns_excl_costs(returns_ex_costs):
     return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
 
-def compute_weighted_performance(index):
+def compute_weighted_performance(index, log_returns_excl, combo):
 
     start_date_weighted_performance = pd.to_datetime('24-07-2003', format='%d-%m-%Y')
-    index_weighted_performance = index[start_date_weighted_performance:]
+    index_weighted_performance = pd.DataFrame(index, columns=['Dates_Weighted_Performance'])
+
+    index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >= start_date_weighted_performance]
 
 
+    log_returns_excl = log_returns_excl.loc[start_date_weighted_performance:]
+    combo = combo.loc[start_date_weighted_performance:]
+
+    from configparser import ConfigParser
+    import os
+    import json
+
+    # Instantiate ConfigParser
+    config = ConfigParser()
+    # Parse existing file
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'matr_weights_effect.ini'))
+    config.read(path)
+    json.loads(config.get('weighted_performance', 'weights'))
 
 
+    sum_product = combo.values.dot(log_returns_excl.values)
+
+    return sum_product
 
 
-def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, spot_data, window, index, carry_data):
+def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, spot_data, window, index, carry_data, combo):
     inverse_volatilies = compute_inverse_volatility(spot_data=spot_data, window=window, start_date=date, index=index)
 
     excl_signals_total_return = compute_excl_signals_total_return(start_date=date, carry_data=carry_data)
     excl_signals_spot_return = compute_excl_signals_spot_return(start_date=date, spot_data=spot_data)
 
     log_returns_excl_costs = compute_log_returns_excl_costs(returns_ex_costs=excl_signals_total_return)
+    weighted_performance = compute_weighted_performance(index=index, log_returns_excl=log_returns_excl_costs, combo=combo)
 
     aggregate_total_incl_signals = compute_aggregate_total_incl_signals(weight=weight, returns_incl_costs=returns_incl_costs, date=date, index=index)
     aggregate_total_excl_signals = compute_aggregate_total_excl_signals(weight=weight, returns_excl_costs=excl_signals_total_return, date=date, index=index)
@@ -175,5 +194,6 @@ def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, 
     aggregate_spot_excl_signals = compute_aggregate_spot_excl_signals(weight=weight, spot_excl_costs=excl_signals_spot_return, date=date, index=index)
 
     return {'agg_total_incl_signals': aggregate_total_incl_signals, 'agg_total_excl_signals': aggregate_total_excl_signals,
-            'agg_spot_incl_signals': aggregate_spot_incl_signals, 'agg_spot_excl_signals': aggregate_spot_excl_signals
+            'agg_spot_incl_signals': aggregate_spot_incl_signals, 'agg_spot_excl_signals': aggregate_spot_excl_signals,
+            'weighted_perfomance': weighted_performance
            }

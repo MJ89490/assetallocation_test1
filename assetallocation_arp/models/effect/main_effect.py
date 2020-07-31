@@ -55,7 +55,7 @@ def run_effect():
                                                     returns_incl_costs=currencies_calculations['return_incl'],
                                                     spot_data=spot_data, window=52, index=dates_index,
                                                     spot_incl_costs=currencies_calculations['spot_incl'],
-                                                    carry_data=carry_data)
+                                                    carry_data=carry_data, combo=currencies_calculations['combo'])
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
