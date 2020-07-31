@@ -25,6 +25,7 @@ declare
 	strategy_id int;
 BEGIN
 	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
+  PERFORM arp.close_off_strategy(name);
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
 INSERT INTO arp.effect (
   strategy_id,

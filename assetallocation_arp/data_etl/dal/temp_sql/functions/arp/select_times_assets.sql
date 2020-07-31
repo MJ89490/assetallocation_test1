@@ -1,6 +1,4 @@
-DROP FUNCTION arp.select_times_assets(character varying,integer,timestamp with time zone);
 CREATE OR REPLACE FUNCTION arp.select_times_assets(
-  strategy_name varchar,
   strategy_version int,
   business_datetime timestamp with time zone
 )
@@ -25,7 +23,11 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets(
 LANGUAGE plpgsql
 AS
 $$
+DECLARE
+  strategy_name varchar;
 BEGIN
+  strategy_name := 'times';
+
   return query
     SELECT
       a.asset_class,
