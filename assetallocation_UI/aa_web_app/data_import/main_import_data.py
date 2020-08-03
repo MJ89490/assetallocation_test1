@@ -1,5 +1,5 @@
-from app.data_import.import_data_from_excel import ChartsDataFromExcel
-from app.data_import.charts_data_computations import ChartsDataComputations
+from aa_web_app.data_import.import_data_from_excel import ChartsDataFromExcel
+from aa_web_app.data_import.charts_data_computations import ChartsDataComputations
 
 import sys
 

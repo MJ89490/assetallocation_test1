@@ -1,8 +1,8 @@
 # Contains view functions for various URLs
 import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
-from app.data_import.main_import_data import main_data
-from app.data_import.main_import_data_from_form import main_form
+from aa_web_app.data_import.main_import_data import main_data
+from aa_web_app.data_import.main_import_data_from_form import main_form
 from common_libraries.models_names import Models
 from flask import render_template
 from flask import flash
@@ -10,7 +10,7 @@ from flask import url_for
 from flask import redirect
 from flask import request
 from aa_web_app import app
-from from aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
+from aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
 
 from flask_login import login_required

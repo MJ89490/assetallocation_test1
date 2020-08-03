@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from flask_bootstrap import Bootstrap
-from app import config
+from aa_web_app import config
 from flask_login import LoginManager
 from .models import User
 

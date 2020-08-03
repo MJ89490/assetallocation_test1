@@ -1,4 +1,4 @@
-from app.data_import.assets_names import Assets
+from aa_web_app.data_import.assets_names import Assets
 
 from datetime import timedelta
 
