@@ -9,8 +9,8 @@
 #     app.run(debug=True)
 
 
-from app import app
-from app import routes
+from flask import app
+from aa_web_app import routes
 
 if __name__ == '__main__':
     app.run(debug=True)
