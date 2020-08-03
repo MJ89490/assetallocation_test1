@@ -46,7 +46,7 @@ def run_effect():
     # latest_date = dates_index[-5]
     next_latest_date = dates_index[-4]
     previous_seven_days_latest_date = dates_index[-10]
-
+    position_size_attribution = 0.03 * 1.33
     spot_data, carry_data = obj_import_data.process_data_config_effect()
 
     from assetallocation_arp.models.effect.compute_aggregate_currencies import run_aggregate_currencies
@@ -58,13 +58,16 @@ def run_effect():
                                                     carry_data=carry_data, combo=currencies_calculations['combo'])
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
-    obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date)
+    obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date,
+                                                                position_size_attribution=position_size_attribution,
+                                                                index_dates=dates_index)
 
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
                       combo=currencies_calculations['combo'],
                       returns_ex_costs=currencies_calculations['return_excl'],
                       spot=spot_data, total_incl_signals=aggregate_currencies['agg_total_incl_signals'],
-                      spot_incl_signals=aggregate_currencies['agg_spot_incl_signals'])
+                      spot_incl_signals=aggregate_currencies['agg_spot_incl_signals'],
+                      weighted_perf=aggregate_currencies['weighted_performance'])
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date)

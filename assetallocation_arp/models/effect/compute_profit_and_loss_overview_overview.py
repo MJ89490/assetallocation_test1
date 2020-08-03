@@ -3,8 +3,10 @@ import pandas as pd
 
 class ComputeProfitAndLoss:
 
-    def __init__(self, latest_date):
+    def __init__(self, latest_date, position_size_attribution, index_dates):
         self.latest_date = latest_date
+        self.position_size_attribution = position_size_attribution
+        self.index_dates = index_dates
 
     def compute_profit_and_loss_combo(self, combo):
 
@@ -67,10 +69,38 @@ class ComputeProfitAndLoss:
                 'profit_and_loss_spot_weekly_notional': weekly_spot,
                 'profit_and_loss_carry_weekly_notional': weekly_carry}
 
-    def compute_profit_and_loss_implemented_in_matr(self):
-        pass
+    def compute_profit_and_loss_implemented_in_matr(self, combo_overview, ytd_total_notional,
+                                                    ytd_spot_notional, weekly_total_notional, weekly_spot_notional, weighted_perf):
 
-    def run_profit_and_loss(self, combo, returns_ex_costs, spot, total_incl_signals, spot_incl_signals):
+        # Find the position of the latest date in the index dates
+        latest_date_loc = self.index_dates.get_loc(self.latest_date)
+
+        # Find the value of the latest date in the weighted_performance
+        weighted_perf_value = weighted_perf[latest_date_loc]
+
+        # YTD P&L:: Total (Returns)
+        ytd_total_matr = weighted_perf_value * 10000
+
+        # YTD P&L: Spot
+        ytd_spot_matr = ytd_total_matr * (ytd_spot_notional / ytd_total_notional)
+
+        # YTD P&L: Carry
+        ytd_carry_matr = ytd_total_matr - ytd_spot_matr
+
+        # Weekly P&L: Total (Returns)
+        weekly_returns_matr = combo_overview.shape[0] * weekly_total_notional * self.position_size_attribution
+
+        # Weekly P&L: Spot
+        weekly_spot_matr = combo_overview.shape[0] * weekly_spot_notional * self.position_size_attribution
+
+        # Weekly P&L: Carry
+        weekly_carry_matr = weekly_returns_matr - weekly_spot_matr
+
+        return {'profit_and_loss_total_ytd_matr': ytd_total_matr, 'profit_and_loss_spot_ytd_matr': ytd_spot_matr,
+                'profit_and_loss_carry_ytd_matr': ytd_carry_matr, 'profit_and_loss_total_weekly_matr': weekly_returns_matr,
+                'profit_and_loss_spot_weekly_matr': weekly_spot_matr, 'profit_and_loss_carry_weekly_matr': weekly_carry_matr }
+
+    def run_profit_and_loss(self, combo, returns_ex_costs, spot, total_incl_signals, spot_incl_signals, weighted_perf):
 
         profit_and_loss_combo_overview = self.compute_profit_and_loss_combo(combo=combo)
         profit_and_loss_returns_ex_overview = self.compute_profit_and_loss_returns(returns_ex_costs=returns_ex_costs)
@@ -85,11 +115,19 @@ class ComputeProfitAndLoss:
                                                                          returns=total_incl_signals,
                                                                          spot=spot_incl_signals)
 
+        profit_and_loss_matr = self.compute_profit_and_loss_implemented_in_matr(combo_overview=profit_and_loss_combo_overview,
+                                                                                ytd_total_notional=profit_and_loss_notional['profit_and_loss_total_ytd_notional'],
+                                                                                ytd_spot_notional=profit_and_loss_notional['profit_and_loss_spot_ytd_notional'],
+                                                                                weekly_total_notional=profit_and_loss_notional['profit_and_loss_total_weekly_notional'],
+                                                                                weekly_spot_notional=profit_and_loss_notional['profit_and_loss_spot_weekly_notional'],
+                                                                                weighted_perf=weighted_perf)
+
         profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview,
                                     'profit_and_loss_returns_ex_overview': profit_and_loss_returns_ex_overview,
                                     'profit_and_loss_spot_ex_overview': profit_and_loss_spot_overview,
                                     'profit_and_loss_carry_overview': profit_and_loss_carry_overview,
-                                    'profit_and_loss_returns_notional': profit_and_loss_notional
+                                    'profit_and_loss_returns_notional': profit_and_loss_notional,
+                                    'profit_and_loss_matr': profit_and_loss_matr
                                     }
 
         return profit_and_loss_overview
