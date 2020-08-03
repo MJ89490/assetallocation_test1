@@ -152,7 +152,7 @@ def compute_log_returns_excl_costs(returns_ex_costs):
     return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
 
-def compute_weighted_performance(index, log_returns_excl, combo):
+def compute_weighted_performance(index, log_returns_excl, combo, latest_date):
 
     # Instantiate ConfigParser
     config = ConfigParser()
@@ -163,9 +163,8 @@ def compute_weighted_performance(index, log_returns_excl, combo):
     start_date_perf = config.get('start_date_weighted_performance', 'start_date_weighted_perf')
     start_date_weighted_performance = pd.to_datetime(start_date_perf, format='%d-%m-%Y')
 
-    # index_weighted_performance = pd.DataFrame(index, columns=['Dates_Weighted_Performance'])
-    # index_weighted = index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >=
-    # start_date_weighted_performance]
+    index_weighted_performance = pd.DataFrame(index, columns=['Dates_Weighted_Performance'])
+    index_weighted = index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >= start_date_weighted_performance]
 
     log_returns_excl = log_returns_excl.loc[start_date_weighted_performance:]
     combo = combo.loc[start_date_weighted_performance:]
@@ -182,17 +181,17 @@ def compute_weighted_performance(index, log_returns_excl, combo):
     for value_weight in range(len(weights)):
         weighted_perf.append(sum_prod[value_weight] * float(list(weights.values())[value_weight]))
 
-    return weighted_perf
+    return pd.DataFrame(weighted_perf, columns=['Weighted_Performance'], index=index_weighted.Dates_Weighted_Performance.tolist())
 
 
-def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, spot_data, window, index, carry_data, combo):
+def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, spot_data, window, index, carry_data, combo, latest_date):
     inverse_volatilies = compute_inverse_volatility(spot_data=spot_data, window=window, start_date=date, index=index)
 
     excl_signals_total_return = compute_excl_signals_total_return(start_date=date, carry_data=carry_data)
     excl_signals_spot_return = compute_excl_signals_spot_return(start_date=date, spot_data=spot_data)
 
     log_returns_excl_costs = compute_log_returns_excl_costs(returns_ex_costs=excl_signals_total_return)
-    weighted_performance = compute_weighted_performance(index=index, log_returns_excl=log_returns_excl_costs, combo=combo)
+    weighted_performance = compute_weighted_performance(index=index, log_returns_excl=log_returns_excl_costs, combo=combo, latest_date=latest_date)
 
     aggregate_total_incl_signals = compute_aggregate_total_incl_signals(weight=weight, returns_incl_costs=returns_incl_costs, date=date, index=index)
     aggregate_total_excl_signals = compute_aggregate_total_excl_signals(weight=weight, returns_excl_costs=excl_signals_total_return, date=date, index=index)

@@ -9,10 +9,20 @@ class ComputeProfitAndLoss:
         self.index_dates = index_dates
 
     def compute_profit_and_loss_combo(self, combo):
+        """
+        Function computing the last week of the profit and loss overview
+        :param combo: combo data of all currencies
+        :return: a dataFrame with the combo of all currencies at the latest date
+        """
 
         return combo.loc[self.latest_date]
 
     def compute_profit_and_loss_returns(self, returns_ex_costs):
+        """
+        Function computing the Total (returns) of profit an loss overview
+        :param returns_ex_costs: returns exclude costs of all currencies
+        :return:a dataFrame of the returns of all currencies at the lateste date
+        """
 
         profit_and_loss_returns = returns_ex_costs / returns_ex_costs.shift(1)
         profit_and_loss_returns = profit_and_loss_returns.apply(lambda x: x - 1)
@@ -20,6 +30,12 @@ class ComputeProfitAndLoss:
         return profit_and_loss_returns.apply(lambda x: x * 100).loc[self.latest_date]
 
     def compute_profit_and_loss_spot(self, spot, combo):
+        """
+        Function computing the Spot of profit and loss overview
+        :param spot: spot of all currencies
+        :param combo: combo of all currencies
+        :return: a dataFrame of the spot of all currncies at the lateste date
+        """
         profit_and_loss_spot = spot / spot.shift(1)
         profit_and_loss_spot = profit_and_loss_spot.apply(lambda x: x - 1)
         profit_and_loss_spot = profit_and_loss_spot.apply(lambda x: x * 100).loc[self.latest_date]
@@ -29,12 +45,27 @@ class ComputeProfitAndLoss:
 
     @staticmethod
     def compute_profit_and_loss_carry(profit_and_loss_returns, profit_and_loss_spot):
+        """
+        Function computing the carry of all currencies according to the returns and spot profit and loss overview
+        :param profit_and_loss_returns: returns of profit and loss overview for all currencies
+        :param profit_and_loss_spot: spot of profit and loss overview for all currencies
+        :return: a dataFrame of carry of all currencies
+        """
 
         profit_and_loss_carry = profit_and_loss_returns.values - profit_and_loss_spot.values
 
         return pd.DataFrame(profit_and_loss_carry)[0]
 
     def compute_profit_and_loss_notional(self, spot_overview, returns_overview, combo_overview, returns, spot):
+        """
+        Function calculating the profit and loss notional (bp) of the spot, returns and carry
+        :param spot_overview: spot overview data of all currencies
+        :param returns_overview: returns overview data of all currencies
+        :param combo_overview: combo overview of all currencies
+        :param returns: returns data from aggregate currencies (compute_aggregate_total_incl_signals)
+        :param spot: spot data from aggregate currencies (compute_aggregate_spot_incl_signals)
+        :return: a dictionnary of profit and loss ytd and weekly
+        """
         last_year = pd.to_datetime("31-12-{}".format((self.latest_date - pd.DateOffset(years=1)).year))
 
         # YTD P&L:: Total (Returns)
@@ -69,17 +100,25 @@ class ComputeProfitAndLoss:
                 'profit_and_loss_spot_weekly_notional': weekly_spot,
                 'profit_and_loss_carry_weekly_notional': weekly_carry}
 
-    def compute_profit_and_loss_implemented_in_matr(self, combo_overview, ytd_total_notional,
-                                                    ytd_spot_notional, weekly_total_notional, weekly_spot_notional, weighted_perf):
-
+    def compute_profit_and_loss_implemented_in_matr(self, combo_overview, ytd_total_notional, ytd_spot_notional, weekly_total_notional, weekly_spot_notional, weighted_perf):
+        """
+        Function calculating the profit and loss implemented in matr
+        :param combo_overview: combo overview from profit and loss notional overview
+        :param ytd_total_notional: ytd returns from profit and loss notional overview
+        :param ytd_spot_notional: ytd spot from profit and loss notional overview
+        :param weekly_total_notional: weekly returns from profit and loss notional overview
+        :param weekly_spot_notional: weekly spot from profit and loss notional overview
+        :param weighted_perf: weighted performance data
+        :return: a dictionary of profit and loss implemented in MATR
+        """
         # Find the position of the latest date in the index dates
-        latest_date_loc = self.index_dates.get_loc(self.latest_date)
+        # latest_date_loc = self.index_dates.get_loc(self.latest_date)
 
         # Find the value of the latest date in the weighted_performance
-        weighted_perf_value = weighted_perf[latest_date_loc]
+        # weighted_perf_value = weighted_perf[latest_date_loc]
 
         # YTD P&L:: Total (Returns)
-        ytd_total_matr = weighted_perf_value * 10000
+        ytd_total_matr = (weighted_perf.loc[self.latest_date][0]/100) * 10000
 
         # YTD P&L: Spot
         ytd_spot_matr = ytd_total_matr * (ytd_spot_notional / ytd_total_notional)

@@ -12,6 +12,7 @@ from assetallocation_arp.models.effect.compute_signals_overview import ComputeSi
 from assetallocation_arp.models.effect.compute_trades_overview import compute_trades_overview
 from assetallocation_arp.models.effect.compute_warning_flags_overview import ComputeWarningFlagsOverview
 
+from assetallocation_arp.models.effect.compute_aggregate_currencies import run_aggregate_currencies
 
 """
     Main function to run the EFFECT computations
@@ -49,13 +50,12 @@ def run_effect():
     position_size_attribution = 0.03 * 1.33
     spot_data, carry_data = obj_import_data.process_data_config_effect()
 
-    from assetallocation_arp.models.effect.compute_aggregate_currencies import run_aggregate_currencies
-
     aggregate_currencies = run_aggregate_currencies(weight='1/N', date=obj_import_data.start_date_calculations,
                                                     returns_incl_costs=currencies_calculations['return_incl'],
                                                     spot_data=spot_data, window=52, index=dates_index,
                                                     spot_incl_costs=currencies_calculations['spot_incl'],
-                                                    carry_data=carry_data, combo=currencies_calculations['combo'])
+                                                    carry_data=carry_data, combo=currencies_calculations['combo'],
+                                                    latest_date=latest_date)
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_date,
