@@ -32,29 +32,29 @@ class ComputeProfitAndLoss:
 
         return pd.DataFrame(profit_and_loss_carry)[0]
 
-    def compute_profit_and_loss_notional(self, spot_incl_signals, total_incl_signals, returns, combo, spot):
+    def compute_profit_and_loss_notional(self, spot_overview, returns_overview, combo_overview, returns, spot):
         last_year = pd.to_datetime("31-12-{}".format((self.latest_date - pd.DateOffset(years=1)).year))
 
         # YTD P&L:: Total (Returns)
-        numerator_returns = total_incl_signals.loc[self.latest_date].values
-        denominator_returns = total_incl_signals.loc[last_year].values
+        numerator_returns = returns.loc[self.latest_date].values
+        denominator_returns = returns.loc[last_year].values
         ytd_total = 10000 * ((numerator_returns / denominator_returns) - 1)
 
         # YTD P&L: Spot
-        numerator_spot = spot_incl_signals.loc[self.latest_date].values
-        denominator_spot = spot_incl_signals.loc[last_year].values
+        numerator_spot = spot.loc[self.latest_date].values
+        denominator_spot = spot.loc[last_year].values
         ytd_spot = 10000 * ((numerator_spot / denominator_spot) - 1)
 
         # YTD P&L: Carry
         ytd_carry = ytd_total - ytd_spot
 
         # Weekly P&L: Total (Returns)
-        sum_prod = returns.values.dot(abs(combo.values)) / 100
-        length = combo.shape[0]
+        sum_prod = returns_overview.values.dot(abs(combo_overview.values)) / 100
+        length = combo_overview.shape[0]
         weekly_returns = 10000 * (sum_prod / length)
 
         # Weekly P&L: Spot
-        sum_prod = spot.values.dot(abs(combo.values)) / 100
+        sum_prod = spot_overview.values.dot(abs(combo_overview.values)) / 100
         weekly_spot = 10000 * (sum_prod / length)
 
         # Weekly P&L: Carry
@@ -76,15 +76,14 @@ class ComputeProfitAndLoss:
         profit_and_loss_returns_ex_overview = self.compute_profit_and_loss_returns(returns_ex_costs=returns_ex_costs)
         profit_and_loss_spot_overview = self.compute_profit_and_loss_spot(spot=spot, combo=profit_and_loss_combo_overview)
 
-        profit_and_loss_carry_overview = self.compute_profit_and_loss_carry(
-            profit_and_loss_returns=profit_and_loss_returns_ex_overview,
-            profit_and_loss_spot=profit_and_loss_spot_overview)
+        profit_and_loss_carry_overview = self.compute_profit_and_loss_carry(profit_and_loss_returns=profit_and_loss_returns_ex_overview,
+                                                                            profit_and_loss_spot=profit_and_loss_spot_overview)
 
-        profit_and_loss_notional = self.compute_profit_and_loss_notional(spot_incl_signals=spot_incl_signals,
-                                                                         total_incl_signals=total_incl_signals,
-                                                                         returns=profit_and_loss_returns_ex_overview,
-                                                                         combo=profit_and_loss_combo_overview,
-                                                                         spot=profit_and_loss_spot_overview)
+        profit_and_loss_notional = self.compute_profit_and_loss_notional(spot_overview=profit_and_loss_spot_overview,
+                                                                         returns_overview=profit_and_loss_returns_ex_overview,
+                                                                         combo_overview=profit_and_loss_combo_overview,
+                                                                         returns=total_incl_signals,
+                                                                         spot=spot_incl_signals)
 
         profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview,
                                     'profit_and_loss_returns_ex_overview': profit_and_loss_returns_ex_overview,

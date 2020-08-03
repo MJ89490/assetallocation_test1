@@ -1,4 +1,6 @@
-
+from configparser import ConfigParser
+import os
+import json
 import pandas as pd
 import statistics as stats
 import math
@@ -152,30 +154,35 @@ def compute_log_returns_excl_costs(returns_ex_costs):
 
 def compute_weighted_performance(index, log_returns_excl, combo):
 
-    start_date_weighted_performance = pd.to_datetime('24-07-2003', format='%d-%m-%Y')
-    index_weighted_performance = pd.DataFrame(index, columns=['Dates_Weighted_Performance'])
-
-    index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >= start_date_weighted_performance]
-
-
-    log_returns_excl = log_returns_excl.loc[start_date_weighted_performance:]
-    combo = combo.loc[start_date_weighted_performance:]
-
-    from configparser import ConfigParser
-    import os
-    import json
-
     # Instantiate ConfigParser
     config = ConfigParser()
     # Parse existing file
     path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'matr_weights_effect.ini'))
     config.read(path)
-    json.loads(config.get('weighted_performance', 'weights'))
+    weights = json.loads(config.get('weighted_performance', 'weights'))
+    start_date_perf = config.get('start_date_weighted_performance', 'start_date_weighted_perf')
+    start_date_weighted_performance = pd.to_datetime(start_date_perf, format='%d-%m-%Y')
 
+    # index_weighted_performance = pd.DataFrame(index, columns=['Dates_Weighted_Performance'])
+    # index_weighted = index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >=
+    # start_date_weighted_performance]
 
-    sum_product = combo.values.dot(log_returns_excl.values)
+    log_returns_excl = log_returns_excl.loc[start_date_weighted_performance:]
+    combo = combo.loc[start_date_weighted_performance:]
 
-    return sum_product
+    sum_prod = []
+    weighted_perf = []
+
+    for values_combo, values_log in zip(combo.values, log_returns_excl.values):
+        tmp = []
+        for value_combo, value_log in zip(values_combo, values_log):
+            tmp.append(value_combo * value_log)
+        sum_prod.append(sum(tmp))
+
+    for value_weight in range(len(weights)):
+        weighted_perf.append(sum_prod[value_weight] * float(list(weights.values())[value_weight]))
+
+    return weighted_perf
 
 
 def run_aggregate_currencies(weight, returns_incl_costs, spot_incl_costs, date, spot_data, window, index, carry_data, combo):
