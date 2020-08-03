@@ -1,4 +1,4 @@
-from aa_web_app.data_import.cleaning_data_from_excel import CleaningDataFromExcel
+from assetallocation_UI.aa_web_app.data_import.cleaning_data_from_excel import CleaningDataFromExcel
 import pandas as pd
 
 
