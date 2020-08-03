@@ -1,5 +1,5 @@
-from assetallocation_UI.aa_web_app.data_import.import_data_from_form import TimesInputs
-from assetallocation_UI.aa_web_app.forms import InputsTimesModel
+from aa_web_app.data_import.import_data_from_form import TimesInputs
+from aa_web_app.forms import InputsTimesModel
 
 
 def main_form():

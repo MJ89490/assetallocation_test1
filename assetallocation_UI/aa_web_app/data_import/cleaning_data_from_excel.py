@@ -1,6 +1,6 @@
-from assetallocation_UI.aa_web_app.data_import.read_data_from_excel import ReadDataFromExcel
-from assetallocation_UI.aa_web_app.data_import.assets_names import Assets
-from assetallocation_UI.aa_web_app.data_import import constant
+from aa_web_app.data_import.read_data_from_excel import ReadDataFromExcel
+from aa_web_app.data_import.assets_names import Assets
+from aa_web_app.data_import import constant
 import pandas as pd
 
 
