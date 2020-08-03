@@ -1,18 +1,12 @@
 from typing import Optional
+from abc import ABC
 
-from .user import User
 
-
-class Strategy:
-    def __init__(self, name: str, user: User, description: Optional[str] = None):
+class Strategy(ABC):
+    def __init__(self, name: str, description: Optional[str] = None):
         self._description = description
         self._name = name
         self._version = None
-        self._user = user
-
-    @property
-    def user(self):
-        return self._user
 
     @property
     def description(self):
@@ -25,11 +19,3 @@ class Strategy:
     @property
     def name(self):
         return self._name
-
-    def insert(self, *args):
-        """insert strategy into database"""
-        pass
-
-    def get_id(self, *args) -> Optional[int]:
-        """get strategy id from database"""
-        pass

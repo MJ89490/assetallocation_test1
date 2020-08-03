@@ -1,17 +1,16 @@
 from typing import List, Optional
+from decimal import Decimal
 
-from .strategy import Strategy
-from .user import User
-from .db import Db
+from assetallocation_arp.data_etl.dal.strategy import Strategy
 
 from assetallocation_arp.common_libraries.models_names import Models
 
 
 class Times(Strategy):
-    def __init__(self, user: User, day_of_week: int, frequency: str, leverage_type: str, long_signals: List[float],
-                 short_signals: List[float], time_lag: int, volatility_window: int, description: Optional[str] = None):
+    def __init__(self, day_of_week: int, frequency: str, leverage_type: str, long_signals: List[Decimal],
+                 short_signals: List[Decimal], time_lag: int, volatility_window: int, description: Optional[str] = None):
         name = Models.times.name
-        super().__init__(name, user, description)
+        super().__init__(name, description)
         self._day_of_week = day_of_week
         self._frequency = frequency  # enum
         self._leverage_type = leverage_type
@@ -42,23 +41,8 @@ class Times(Strategy):
 
     @property
     def time_lag(self):
-        return self._time_lag
+        return f'{-self._time_lag} mons'
 
     @property
     def volatility_window(self):
         return self._volatility_window
-
-    def insert(self, db: Db, asset_tickers: List[str]) -> int:
-        strategy_id = db.call_proc('insert_times_strategy',
-                                   [self.name, self.description, self.user.user_id, self.day_of_week, self.frequency,
-                                    self.leverage_type, self.long_signals, self.short_signals, self.time_lag,
-                                    self.volatility_window, asset_tickers])
-
-        return strategy_id[0]
-
-    def get_id(self, db: Db) -> Optional[int]:
-        strategy_id = db.get_times_strategy_id(self.name, self.description, self.day_of_week,
-                                               self.frequency, self.leverage_type, self.long_signals,
-                                               self.short_signals, self.time_lag, self.volatility_window)
-
-        return strategy_id
