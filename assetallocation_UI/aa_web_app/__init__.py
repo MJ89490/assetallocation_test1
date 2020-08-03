@@ -77,25 +77,25 @@ def load_user(user_id):
 # inputs_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\inputs_models"))
 # javascript_charts_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\js"))
 
-# app = Flask(__name__)
+# app_old = Flask(__name__)
 
 # template_folders = [origin_path, modals_icons_path, modals_models_path, inputs_models_path, javascript_charts_path]
 
 
 # # Change the original folder of Flask by adding subfolders
-# app.jinja_loader = jinja2.ChoiceLoader([
-#     app.jinja_loader,
+# app_old.jinja_loader = jinja2.ChoiceLoader([
+#     app_old.jinja_loader,
 #     jinja2.FileSystemLoader(template_folders),
 # ])
 #
-# app.config.from_object(config.DevelopmentConfig)
-# CSRFProtect(app).init_app(app)
-# bootstrap = Bootstrap(app)
+# app_old.config.from_object(config.DevelopmentConfig)
+# CSRFProtect(app_old).init_app(app_old)
+# bootstrap = Bootstrap(app_old)
 #
 # login_manager = LoginManager()
-# login_manager.init_app(app)
+# login_manager.init_app(app_old)
 # login_manager.login_view = 'login'
-# app.config['SECRET_KEY'] = 'secret*'
+# app_old.config['SECRET_KEY'] = 'secret*'
 
 
 # @login_manager.user_loader
