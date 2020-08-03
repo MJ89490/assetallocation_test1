@@ -1,12 +1,12 @@
 # from flask import Flask
 #
-# app = Flask(__name__)
+# app_old = Flask(__name__)
 #
-# from app import app
+# from app_old import app_old
 #
 #
 # if __name__ == '__main__':
-#     app.run(debug=True)
+#     app_old.run(debug=True)
 
 
 from assetallocation_UI.aa_web_app import app
