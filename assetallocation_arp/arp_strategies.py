@@ -32,7 +32,7 @@ def run_model(model_type, mat_file=None, input_file=None, model_date=None):
 											momentum_last, long_list, short_list, volatility = \
 													maven.calculate_signals(maven_inputs, maven_returns)
 		# calculate maven return series, and benchmarks, asset class exposures and contributions
-		returns_maven, asset_class_long, asset_class_short,asset_contribution_long, asset_contribution_short = \
+		returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short = \
 		maven.run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals, short_signals)
 		# write results to output sheet
 		write_output_to_excel({models.Models.maven.name: (momentum, value, long_signals_name, short_signals_name, \
