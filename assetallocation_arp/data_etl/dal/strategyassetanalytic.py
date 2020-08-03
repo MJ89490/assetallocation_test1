@@ -1,13 +1,26 @@
-from .fundstrategy import FundStrategy
-from .asset import Asset
+from decimal import Decimal
 
 
 class StrategyAssetAnalytic:
-    def __init__(self, asset: Asset, fund_strategy: FundStrategy, strategy_asset_analytic_id: int,
-                 strategy_asset_analytic_sub_type: str, strategy_asset_analytic_type: str, value: float):
-        self._asset = asset
-        self._fund_strategy_run_id = fund_strategy
-        self._id = strategy_asset_analytic_id
-        self._sub_type = strategy_asset_analytic_sub_type
-        self._strategy_asset_analytic_type = strategy_asset_analytic_type
+    def __init__(self, asset_ticker: str, analytic_type: str,
+                 analytic_sub_type: str, value: Decimal):
+        self._asset_ticker = asset_ticker
+        self._analytic_type = analytic_type
+        self._analytic_subtype = analytic_sub_type
         self._value = value
+
+    @property
+    def asset_ticker(self):
+        return self._asset_ticker
+
+    @property
+    def analytic_type(self):
+        return self._analytic_type
+
+    @property
+    def analytic_subtype(self):
+        return self._analytic_subtype
+
+    @property
+    def value(self):
+        return self._value
