@@ -9,8 +9,8 @@ from flask import flash
 from flask import url_for
 from flask import redirect
 from flask import request
-from app import app
-from app.forms import LoginForm, ExportDataForm, InputsTimesModel
+from aa_web_app import app
+from from aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
 
 from flask_login import login_required
