@@ -3,7 +3,7 @@ import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import main_form
-from common_libraries.models_names import Models
+from assetallocation_arp.common_libraries.models_names import Models
 from flask import render_template
 from flask import flash
 from flask import url_for
