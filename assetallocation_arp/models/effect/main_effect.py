@@ -45,9 +45,11 @@ def run_effect():
     dates_index = obj_import_data.dates_origin_index
     latest_date = pd.to_datetime('24-04-2020',  format='%d-%m-%Y')
     # latest_date = dates_index[-5]
-    next_latest_date = dates_index[-4]
+    # dates_index[-4]
+    next_latest_date = pd.to_datetime('27-04-2020',  format='%d-%m-%Y')
     previous_seven_days_latest_date = dates_index[-10]
     position_size_attribution = 0.03 * 1.33
+    window_size = 52
     spot_data, carry_data = obj_import_data.process_data_config_effect()
 
     aggregate_currencies = run_aggregate_currencies(weight='1/N', date=obj_import_data.start_date_calculations,
@@ -70,11 +72,15 @@ def run_effect():
                       weighted_perf=aggregate_currencies['weighted_performance'])
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
-    obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date)
+    obj_compute_signals_overview = ComputeSignalsOverview(next_latest_date=next_latest_date, latest_date=latest_date)
 
     signals_overview = obj_compute_signals_overview.run_signals_overview(real_carry=currencies_calculations['carry'],
                                                                          trend=currencies_calculations['trend'],
-                                                                         combo=currencies_calculations['combo'])
+                                                                         combo=currencies_calculations['combo'],
+                                                                         total_incl_signals=aggregate_currencies['agg_total_incl_signals'],
+                                                                         size_attr=position_size_attribution,
+                                                                         log_returns=aggregate_currencies['log_returns_excl_costs'],
+                                                                         window=window_size)
 
     # -------------------------- Trades: Combo ----------------------------------------------------------------------- #
     trades_overview = compute_trades_overview(profit_and_loss_combo_overview=profit_and_loss['profit_and_loss_combo_overview'],

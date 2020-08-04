@@ -111,7 +111,7 @@ class ComputeProfitAndLoss:
         :param weighted_perf: weighted performance data
         :return: a dictionary of profit and loss implemented in MATR
         """
-        
+
         # YTD P&L:: Total (Returns)
         ytd_total_matr = (weighted_perf.loc[self.latest_date][0]/100) * 10000
 
