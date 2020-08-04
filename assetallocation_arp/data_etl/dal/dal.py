@@ -8,7 +8,7 @@ from .times import Times
 from .fund import Fund
 from .currency import Currency
 from .fundstrategy import FundStrategy
-from assetallocation_arp.common_libraries.day_of_week import DayOfWeek
+from common_enums.strategy import DayOfWeek
 from .db import Db
 
 

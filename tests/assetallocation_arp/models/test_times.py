@@ -8,8 +8,9 @@ import pytest
 import os
 import pandas as pd
 
+import common_enums.strategy
 from assetallocation_arp.models.times import format_data_and_calc
-from assetallocation_arp.common_libraries import leverage_types as leverage
+from assetallocation_arp.common_enums import leverage_types as leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 
@@ -23,10 +24,10 @@ Module test_times.py: tests the Times model (times.py) in order to know if it re
 
 
 @pytest.mark.parametrize("leverage_type, signals_output, returns_output, positioning_output, r_output",
-                         [(leverage.Leverage.v.name, "signals_leverage_v", "returns_leverage_v", "positioning_leverage_v", "r_leverage_v"),
-                         (leverage.Leverage.e.name, "signals_leverage_e", "returns_leverage_e", "positioning_leverage_e", "r_leverage_e"),
-                         (leverage.Leverage.n.name, "signals_leverage_n", "returns_leverage_n", "positioning_leverage_n", "r_leverage_n"),
-                         (leverage.Leverage.s.name, "signals_leverage_s", "returns_leverage_s", "positioning_leverage_s", "r_leverage_s")]
+                         [(common_enums.strategy.Leverage.v.name, "signals_leverage_v", "returns_leverage_v", "positioning_leverage_v", "r_leverage_v"),
+                          (common_enums.strategy.Leverage.e.name, "signals_leverage_e", "returns_leverage_e", "positioning_leverage_e", "r_leverage_e"),
+                          (common_enums.strategy.Leverage.n.name, "signals_leverage_n", "returns_leverage_n", "positioning_leverage_n", "r_leverage_n"),
+                          (common_enums.strategy.Leverage.s.name, "signals_leverage_s", "returns_leverage_s", "positioning_leverage_s", "r_leverage_s")]
                          )
 def test_format_data_and_calc(leverage_type, signals_output, returns_output, positioning_output, r_output):
     """

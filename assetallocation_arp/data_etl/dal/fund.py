@@ -1,5 +1,5 @@
-from assetallocation_arp.common_libraries.currency import Currency
-from assetallocation_arp.data_etl.dal.validate import validate_enum
+from assetallocation_arp.common_enums.currency import Currency
+from assetallocation_arp.data_etl.dal.validate import check_value
 
 
 class Fund:
@@ -17,5 +17,5 @@ class Fund:
 
     @currency.setter
     def currency(self, x: Currency):
-        validate_enum(x, Currency.__members__.keys())
+        check_value(x, Currency.__members__.keys())
         self._currency = x

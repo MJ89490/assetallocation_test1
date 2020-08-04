@@ -1,32 +1,35 @@
 from decimal import Decimal
+from abc import ABC
+from typing import List
 
-from assetallocation_arp.common_libraries.asset import Category
-from assetallocation_arp.common_libraries.currency import Currency
-from assetallocation_arp.common_libraries.country import Country, country_region
-from assetallocation_arp.data_etl.dal.validate import validate_enum
+from assetallocation_arp.common_enums.asset import Category
+from assetallocation_arp.common_enums.currency import Currency
+from assetallocation_arp.common_enums.country import Country, country_region
+from assetallocation_arp.data_etl.dal.validate import check_value
+from assetallocation_arp.data_etl.dal.asset_analytic import AssetAnalytic
 
 
 # TODO rename type (+ enum?)
-# TODO builder pattern for asset depending on times vs fica vs effect?
-class Asset:
-    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency,
-                 name: str, type: str):
+class Asset(ABC):
+    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str):
         self.category = category
-        self._cost = None
         self.country = country
         self.currency = currency
         self.description = ''
-        self.future_ticker = ''
-        self.generic_yield_ticker = ''
         self._name = name
-        self.ndf_code = ''
-        self._s_leverage = None
-        self.signal_ticker = ''
-        self.spot_code = ''
         self._ticker = ticker
         self.tr_flag = False
         self._type = type
         self._region = None
+        self._asset_analytics = []
+
+    @property
+    def asset_analytics(self):
+        return self._asset_analytics
+
+    @asset_analytics.setter
+    def asset_analytics(self, x: List[AssetAnalytic]):
+        self._asset_analytics = x
 
     @property
     def category(self):
@@ -34,7 +37,7 @@ class Asset:
 
     @category.setter
     def category(self, x: Category):
-        validate_enum(x, Category.__members__.keys())
+        check_value(x, Category.__members__.keys())
         self._category = x
 
     @property
@@ -43,7 +46,7 @@ class Asset:
 
     @country.setter
     def country(self, x: Country):
-        validate_enum(x, Country.__members__.keys())
+        check_value(x, Country.__members__.keys())
         self._country = x
         self._region = country_region.get(x)
 
@@ -52,52 +55,12 @@ class Asset:
         return self._region
 
     @property
-    def group(self):
-        return self._group
+    def type(self):
+        return self._type
 
-    @group.setter
-    def group(self, x: str):
-        self._group = x
-
-    @property
-    def s_leverage(self):
-        return self._s_leverage
-
-    @s_leverage.setter
-    def s_leverage(self, x: int):
-        self._s_leverage = x
-
-    @property
-    def ndf_code(self):
-        return self._ndf_code
-
-    @ndf_code.setter
-    def ndf_code(self, x):
-        self._ndf_code = x
-
-    @property
-    def future_ticker(self):
-        return self._future_ticker
-
-    @future_ticker.setter
-    def future_ticker(self, x: str):
-        self._future_ticker = x
-
-    @property
-    def generic_yield_ticker(self):
-        return self._generic_yield_ticker
-
-    @generic_yield_ticker.setter
-    def generic_yield_ticker(self, x: str):
-        self._generic_yield_ticker = x
-
-    @property
-    def cost(self):
-        return self._cost
-
-    @cost.setter
-    def cost(self, x: Decimal):
-        self._cost = x
+    @type.setter
+    def type(self, x: str):
+        self._type = x
 
     @property
     def currency(self):
@@ -105,7 +68,7 @@ class Asset:
 
     @currency.setter
     def currency(self, x: Currency):
-        validate_enum(x, Currency.__members__.keys())
+        check_value(x, Currency.__members__.keys())
         self._currency = x
 
     @property
@@ -116,10 +79,58 @@ class Asset:
     def description(self, x: str):
         self._description = x
 
-
     @property
     def ticker(self):
         return self._ticker
+
+    @property
+    def tr_flag(self):
+        return self._tr_flag
+
+    @tr_flag.setter
+    def tr_flag(self, x: bool):
+        self._tr_flag = x
+
+    def add_analytic(self, asset_analytic: AssetAnalytic):
+        if asset_analytic.asset_ticker == self.ticker:
+            self._asset_analytics.append(asset_analytic)
+        else:
+            raise ValueError(f'Tickers do not match. Asset ticker is "{self.ticker}"'
+                             f'but asset_analytic has a ticker of "{asset_analytic.ticker}"')
+
+
+class FicaAsset(Asset):
+    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
+                 future_ticker: str, generic_yield_ticker: str):
+        super().__init__(ticker, category, country, currency, name, type)
+        self._future_ticker = future_ticker
+        self._generic_yield_ticker = generic_yield_ticker
+
+    @property
+    def generic_yield_ticker(self):
+        return self._generic_yield_ticker
+
+    @generic_yield_ticker.setter
+    def generic_yield_ticker(self, x: str):
+        self._generic_yield_ticker = x
+
+
+class TimesAsset(Asset):
+    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
+                 s_leverage: int, signal_ticker: str, future_ticker: str, cost: Decimal):
+        super().__init__(ticker, category, country, currency, name, type)
+        self.signal_ticker = signal_ticker
+        self.future_ticker = future_ticker
+        self.cost = cost
+        self.s_leverage = s_leverage
+
+    @property
+    def s_leverage(self):
+        return self._s_leverage
+
+    @s_leverage.setter
+    def s_leverage(self, x: int):
+        self._s_leverage = x
 
     @property
     def signal_ticker(self):
@@ -130,6 +141,39 @@ class Asset:
         self._signal_ticker = x
 
     @property
+    def future_ticker(self):
+        return self._future_ticker
+
+    @future_ticker.setter
+    def future_ticker(self, x: str):
+        self._future_ticker = x
+
+    @property
+    def cost(self):
+        return self._cost
+
+    @cost.setter
+    def cost(self, x: Decimal):
+        self._cost = x
+
+
+class EffectAsset(Asset):
+    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
+                 ndf_code: str, spot_code: str, position_size: Decimal):
+        super().__init__(ticker, category, country, currency, name, type)
+        self.ndf_code = ndf_code
+        self.spot_code = spot_code
+        self.position_size = position_size
+
+    @property
+    def ndf_code(self):
+        return self._ndf_code
+
+    @ndf_code.setter
+    def ndf_code(self, x):
+        self._ndf_code = x
+
+    @property
     def spot_code(self):
         return self._spot_code
 
@@ -138,9 +182,9 @@ class Asset:
         self._spot_code = x
 
     @property
-    def tr_flag(self):
-        return self._tr_flag
+    def position_size(self):
+        return self._position_size
 
-    @tr_flag.setter
-    def tr_flag(self, x: bool):
-        self._tr_flag = x
+    @position_size.setter
+    def position_size(self, x: Decimal):
+        self._position_size = x

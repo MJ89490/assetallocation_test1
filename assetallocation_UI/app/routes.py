@@ -3,7 +3,7 @@ import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from app.data_import.main_import_data import main_data
 from app.data_import.main_import_data_from_form import main_form
-from common_libraries.models_names import Models
+from common_enums.strategy import Name
 from flask import render_template
 from flask import flash
 from flask import url_for
@@ -90,7 +90,7 @@ def times_page():
                 return render_template(TIMES_PAGE_NEW,
                                        title="Times", form=form, run_model=run_model, message=message)
 
-            ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
+            ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Name.times.name)
 
             return render_template(TIMES_PAGE_NEW, title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok)
 
@@ -102,7 +102,7 @@ def times_page():
             path_excel_times = path_excel + "\\" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={Models.times.name: (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
+                write_output_to_excel(model_outputs={Name.times.name: (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
                                       path_excel_times=path_excel_times)
 
             return render_template(TIMES_PAGE_NEW, title="Times", form=form, save=save, save_file=save_file)

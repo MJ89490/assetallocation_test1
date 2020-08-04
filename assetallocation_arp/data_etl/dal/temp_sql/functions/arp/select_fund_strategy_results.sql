@@ -5,7 +5,6 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy_results(
   system_datetime timestamp with time zone
 )
 RETURNS TABLE(
-  currency char,
   save_output_flag boolean,
   weight numeric,
   asset_ticker varchar,
@@ -17,16 +16,13 @@ AS
 $$
 BEGIN
   RETURN QUERY
-    WITH fsr (fund_strategy_id, currency, save_output_flag, weight) AS (
+    WITH fsr (fund_strategy_id, save_output_flag, weight) AS (
       SELECT
         fs.id,
-        c.currency,
         fs.save_output_flag,
         fs.weight
       FROM
         fund.fund f
-        JOIN lookup.currency c
-        ON f.currency_id = c.id
         JOIN arp.fund_strategy fs
         ON f.id = fs.fund_id
         JOIN arp.strategy s
@@ -42,7 +38,6 @@ BEGIN
       LIMIT 1
     )
     SELECT
-      fsr.currency,
       fsr.save_output_flag,
       fsr.weight,
       a.ticker as asset_ticker,
@@ -58,7 +53,6 @@ BEGIN
           AND saa.asset_id = fsaw.asset_id
           AND saa.asset_id = a.id
     GROUP BY
-      fsr.currency,
       fsr.save_output_flag,
       fsr.weight,
       a.ticker,

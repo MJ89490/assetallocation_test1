@@ -3,18 +3,14 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets(
   business_datetime timestamp with time zone
 )
   RETURNS TABLE(
-    asset_class varchar,
+    category varchar,
     cost numeric(32, 16),
     country char(2),
     currency char(3),
     description varchar,
     future_ticker varchar,
-    generic_yield_ticker varchar,
     name varchar,
-    ndf_code varchar,
-    s_leverage int,
     signal_ticker varchar,
-    spot_code varchar,
     ticker varchar,
     tr_flag boolean,
     asset_type varchar,
@@ -30,18 +26,14 @@ BEGIN
 
   return query
     SELECT
-      a.asset_class,
+      a.category,
       a.cost,
       c2.country,
       c.currency,
       a.description,
       a.future_ticker,
-      a.generic_yield_ticker,
       a.name,
-      a.ndf_code,
-      a.s_leverage,
       a.signal_ticker,
-      a.spot_code,
       a.ticker,
       a.tr_flag,
       a.type as asset_type,
