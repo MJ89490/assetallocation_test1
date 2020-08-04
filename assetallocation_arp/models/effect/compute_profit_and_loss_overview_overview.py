@@ -69,13 +69,13 @@ class ComputeProfitAndLoss:
         last_year = pd.to_datetime("31-12-{}".format((self.latest_date - pd.DateOffset(years=1)).year))
 
         # YTD P&L:: Total (Returns)
-        numerator_returns = returns.loc[self.latest_date].values
-        denominator_returns = returns.loc[last_year].values
+        numerator_returns = returns.loc[self.latest_date].values[0]
+        denominator_returns = returns.loc[last_year].values[0]
         ytd_total = 10000 * ((numerator_returns / denominator_returns) - 1)
 
         # YTD P&L: Spot
-        numerator_spot = spot.loc[self.latest_date].values
-        denominator_spot = spot.loc[last_year].values
+        numerator_spot = spot.loc[self.latest_date].values[0]
+        denominator_spot = spot.loc[last_year].values[0]
         ytd_spot = 10000 * ((numerator_spot / denominator_spot) - 1)
 
         # YTD P&L: Carry
@@ -111,12 +111,7 @@ class ComputeProfitAndLoss:
         :param weighted_perf: weighted performance data
         :return: a dictionary of profit and loss implemented in MATR
         """
-        # Find the position of the latest date in the index dates
-        # latest_date_loc = self.index_dates.get_loc(self.latest_date)
-
-        # Find the value of the latest date in the weighted_performance
-        # weighted_perf_value = weighted_perf[latest_date_loc]
-
+        
         # YTD P&L:: Total (Returns)
         ytd_total_matr = (weighted_perf.loc[self.latest_date][0]/100) * 10000
 
