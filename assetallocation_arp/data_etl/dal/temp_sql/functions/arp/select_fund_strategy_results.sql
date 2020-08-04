@@ -12,7 +12,6 @@ RETURNS TABLE(
   strategy_weight numeric,
   implemented_weight numeric,
   asset_analytics arp.type_subtype_value[]
-
 )
 AS
 $$

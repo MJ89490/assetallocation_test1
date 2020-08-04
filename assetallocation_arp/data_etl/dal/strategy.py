@@ -1,21 +1,25 @@
-from typing import Optional
-from abc import ABC
-
-
-class Strategy(ABC):
-    def __init__(self, name: str, description: Optional[str] = None):
-        self._description = description
+class Strategy:
+    def __init__(self, name: str):
         self._name = name
-        self._version = None
+        self._description = ''
+        self._version = None  # TODO check if valid case for None
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def description(self):
         return self._description
 
-    @property
-    def system_tstzrange(self):
-        return self._version
+    @description.setter
+    def description(self, x):
+        self._description = x
 
     @property
-    def name(self):
-        return self._name
+    def version(self):
+        return self._version
+
+    @version.setter
+    def version(self, x):
+        self._version = x

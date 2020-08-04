@@ -43,7 +43,7 @@ class Fica(Strategy):
         return self._trading_cost
 
     def insert(self, db: Db):
-        self._system_tstzrange = db.call_proc('insert_fica_strategy',
+        self._version = db.call_proc('insert_fica_strategy',
                                               [self.name, self.description, self.user.user_id, self.coupon, self.curve,
                                                self.business_tstzrange, str(self.strategy_weights), self.tenor,
                                                self.trading_cost])

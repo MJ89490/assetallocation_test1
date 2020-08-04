@@ -1,5 +1,6 @@
-from typing import List, Tuple
+from typing import List, Tuple, Any, Optional
 from decimal import Decimal
+from datetime import datetime
 
 from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.times import Times
@@ -26,24 +27,11 @@ class ArpProcCaller(Db):
 
     def select_times_assets(self, times_version, business_datetime) -> List[Tuple[List[AssetAnalytic], Asset]]:
         assets = self.call_proc('arp.select_times_assets', [times_version, business_datetime])
-
-        def prep_aa(r: str) -> List[AssetAnalytic]:
-            aa = []
-
-            for i in eval(r):
-                a = (i[1: -1].split(','))
-                a[-1] = Decimal(a[-1])
-
-                aa.append(AssetAnalytic(*a))
-
-            return aa
-
-        return [(prep_aa(r.pop('asset_analytic')), Asset(**r)) for r in assets]
+        return [(self._prep_composite_value(r.pop('asset_analytic'), AssetAnalytic), Asset(**r)) for r in assets]
 
     def insert_fund_strategy_results(self, fund_name: str, fund_strategy: FundStrategy, strategy_id: int, user_id: str,
-                                     python_code_version: str, asset_weights: List[FundStrategyAssetWeight],
-                                     asset_analytics: List[StrategyAssetAnalytic]) -> bool:
-        asset_weight_tickers, implemented_weights, strategy_weights = self._split_asset_weights(asset_weights)
+                                     python_code_version: str) -> bool:
+        asset_weight_tickers, implemented_weights, strategy_weights = self._split_asset_weights(FundStrategy.assets)
         asset_analytic_tickers, analytic_types, analytic_subtypes, analytic_values = self._split_asset_analytics(
             asset_analytics)
 
@@ -57,24 +45,58 @@ class ArpProcCaller(Db):
         return fund_strategy_id is not None
 
     @staticmethod
-    def _split_asset_analytics(asset_analytics):
+    def _split_asset_analytics(assets: List[Asset]):
         asset_analytic_tickers, analytic_types, analytic_subtypes, analytic_values = [], [], [], []
-        for i in asset_analytics:
-            asset_analytic_tickers.append(i.asset_ticker)
-            analytic_types.append(i.analytic_type)
-            analytic_subtypes.append(i.analytic_subtype)
-            analytic_values.append(i.value)
+        for i in assets:
+            for j in i.strategy_asset_analytics:
+                asset_analytic_tickers.append(i.ticker)
+                analytic_types.append(j.analytic_type)
+                analytic_subtypes.append(j.analytic_subtype)
+                analytic_values.append(j.value)
 
         return asset_analytic_tickers, analytic_types, analytic_subtypes, analytic_values
 
     @staticmethod
-    def _split_asset_weights(asset_weights):
+    def _split_asset_weights(assets: List[Asset]):
         asset_weight_tickers, strategy_weights, implemented_weights = [], [], []
-        for i in asset_weights:
-            asset_weight_tickers.append(i.asset_ticker)
-            strategy_weights.append(i.strategy_weight)
-            implemented_weights.append(i.implemented_weight)
+        for i in assets:
+            for j in i.fund_strategy_asset_weights:
+                asset_weight_tickers.append(i.ticker)
+                strategy_weights.append(j.strategy_weight)
+                implemented_weights.append(j.implemented_weight)
+
         return asset_weight_tickers, implemented_weights, strategy_weights
+
+    def select_fund_strategy_results(self, fund_name: str, strategy_name: str,
+                                     business_datetime: datetime = datetime.today(),
+                                     system_datetime: datetime = datetime.today()) -> Optional[Fund]:
+        res = self.call_proc('arp.select_fund_strategy_results',
+                             [fund_name, strategy_name, business_datetime, system_datetime])
+        assets = []
+        for row in res:
+            fund_strategy_asset_weight = FundStrategyAssetWeight(row.strategy_weight, row.implemented_weight)
+            strategy_asset_analytics = self._prep_composite_value(row.asset_analytics, StrategyAssetAnalytic)
+            assets.append(Asset(row.asset_ticker, fund_strategy_asset_weights=[fund_strategy_asset_weight],
+                                strategy_asset_analytics=strategy_asset_analytics))
+
+        fund_strategy = FundStrategy(res[0]['business_datetime'], res[0]['save_output_flag'], res[0]['weight'], assets)
+        fund = Fund(fund_name, res[0]['currency'], fund_strategies=[fund_strategy])
+
+        return fund
+
+
+
+
+    @staticmethod
+    def _prep_composite_value(value: str, value_type: type) -> List[Any]:
+        x = []
+        for i in eval(value):
+            y = (i[1: -1].split(','))
+            y[-1] = Decimal(y[-1])
+
+            x.append(value_type(*y))
+
+        return x
 
 
 if __name__ == '__main__':
