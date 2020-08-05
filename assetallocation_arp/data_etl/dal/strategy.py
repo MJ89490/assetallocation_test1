@@ -1,15 +1,14 @@
-from typing import List
+from typing import List, Union
 from decimal import Decimal
 from abc import ABC
 
-from assetallocation_arp.data_etl.dal.validate import check_value
 from assetallocation_arp.common_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
 
 from psycopg2.extras import DateTimeTZRange
 
 
 class Strategy(ABC):
-    def __init__(self, name: str):
+    def __init__(self, name: Union[str, Name]):
         self.name = name
         self._description = ''
         self._version = None
@@ -19,9 +18,8 @@ class Strategy(ABC):
         return self._name
 
     @name.setter
-    def name(self, x):
-        check_value(x, Name.__members__.keys())
-        self._name = x
+    def name(self, x: Union[str, Name]):
+        self._name = x if isinstance(x, Name) else Name[x]
 
     @property
     def description(self):
@@ -43,9 +41,9 @@ class Strategy(ABC):
 class Times(Strategy):
     name = Name.times.name
 
-    def __init__(self, day_of_week: DayOfWeek, frequency: Frequency, leverage_type: Leverage,
-                 long_signals: List[Decimal], short_signals: List[Decimal], time_lag_in_months: int,
-                 volatility_window: int):
+    def __init__(self, day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency],
+                 leverage_type: Union[str, Leverage], long_signals: List[Decimal], short_signals: List[Decimal],
+                 time_lag_in_months: int, volatility_window: int):
         super().__init__(self.name)
         self._day_of_week = day_of_week
         self.frequency = frequency
@@ -69,28 +67,24 @@ class Times(Strategy):
         return self._day_of_week
 
     @day_of_week.setter
-    def day_of_week(self, x):
-        # TODO change below to not use Enum values
-        check_value(x, DayOfWeek.__members__.values())
-        self._day_of_week = x
+    def day_of_week(self, x: Union[int, DayOfWeek]):
+        self._day_of_week = x if isinstance(x, DayOfWeek) else DayOfWeek(x)
 
     @property
     def frequency(self):
         return self._frequency
 
     @frequency.setter
-    def frequency(self, x: Frequency):
-        check_value(x, Frequency.__members__.keys())
-        self._frequency = x
+    def frequency(self, x: Union[str, Frequency]):
+        self._frequency = x if isinstance(x, Frequency) else Frequency[x]
 
     @property
     def leverage_type(self):
         return self._leverage_type
 
     @leverage_type.setter
-    def leverage_type(self, x: Leverage):
-        check_value(x, Leverage.__members__.keys())
-        self._leverage_type = x
+    def leverage_type(self, x: Union[str, Leverage]):
+        self._leverage_type = x if isinstance(x, Leverage) else Leverage[x]
 
     @property
     def long_signals(self):
@@ -116,9 +110,9 @@ class Times(Strategy):
 class Fica(Strategy):
     name = Name.fica.name
 
-    def __init__(self, name: str, coupon: float, curve: str, business_tstzrange: DateTimeTZRange,
+    def __init__(self, coupon: Decimal, curve: str, business_tstzrange: DateTimeTZRange,
                  strategy_weights: List[float], tenor: int, trading_cost: int):
-        super().__init__(name)
+        super().__init__(self.name)
         self._coupon = coupon
         self._curve = curve
         self._business_tstzrange = business_tstzrange
@@ -154,11 +148,11 @@ class Fica(Strategy):
 class Effect(Strategy):
     name = Name.effect.name
 
-    def __init__(self, carry_type: str, closing_threshold: Decimal, cost: Decimal, day_of_week: DayOfWeek,
-                 frequency: Frequency, include_shorts: bool, inflation_lag_in_months: int,
+    def __init__(self, carry_type: str, closing_threshold: Decimal, cost: Decimal, day_of_week: Union[int, DayOfWeek],
+                 frequency: Union[str, Frequency], include_shorts: bool, inflation_lag_in_months: int,
                  interest_rate_cut_off_long: Decimal, interest_rate_cut_off_short: Decimal,
                  moving_average_long_term: int, moving_average_short_term: int, is_realtime_inflation_forecast: bool,
-                 trend_indicator: TrendIndicator):
+                 trend_indicator: Union[str, TrendIndicator]):
         super().__init__(self.name)
         self.carry_type = carry_type
         self._closing_threshold = closing_threshold
@@ -179,9 +173,8 @@ class Effect(Strategy):
         return self._carry_type
 
     @carry_type.setter
-    def carry_type(self, x: CarryType):
-        check_value(x, CarryType.__members__.keys())
-        self._carry_type = x
+    def carry_type(self, x: Union[str, CarryType]):
+        self._carry_type = x if isinstance(x, CarryType) else CarryType[x]
 
     @property
     def closing_threshold(self):
@@ -196,19 +189,16 @@ class Effect(Strategy):
         return self._day_of_week
 
     @day_of_week.setter
-    def day_of_week(self, x):
-        # TODO change below to not use Enum values
-        check_value(x, DayOfWeek.__members__.values())
-        self._day_of_week = x
+    def day_of_week(self, x: Union[int, DayOfWeek]):
+        self._day_of_week = x if isinstance(x, DayOfWeek) else DayOfWeek(x)
 
     @property
     def frequency(self):
         return self._frequency
 
     @frequency.setter
-    def frequency(self, x: Frequency):
-        check_value(x, Frequency.__members__.keys())
-        self._frequency = x
+    def frequency(self, x: Union[str, Frequency]):
+        self._frequency = x if isinstance(x, Frequency) else Frequency[x]
 
     @property
     def include_shorts(self):
@@ -247,6 +237,5 @@ class Effect(Strategy):
         return self._trend_indicator
 
     @trend_indicator.setter
-    def trend_indicator(self, x: TrendIndicator):
-        check_value(x, TrendIndicator.__members__.keys())
-        self._trend_indicator = x
+    def trend_indicator(self, x: Union[str, TrendIndicator]):
+        self._trend_indicator = x if isinstance(x, TrendIndicator) else TrendIndicator[x]

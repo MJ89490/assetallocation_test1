@@ -1,13 +1,12 @@
 from decimal import Decimal
+from typing import Union
 
 from assetallocation_arp.common_enums.source import Source
 from assetallocation_arp.common_enums.asset_analytic import Category
-from assetallocation_arp.data_etl.dal.validate import check_value
 
 
-# TODO work out how to correctly type hint enum
 class AssetAnalytic:
-    def __init__(self, asset_ticker: str, source: Source, category: Category, value: Decimal):
+    def __init__(self, asset_ticker: str, source: Union[str, Source], category: Union[str, Category], value: Decimal):
         self._asset_ticker = asset_ticker
         self._source = source
         self._category = category
@@ -26,18 +25,16 @@ class AssetAnalytic:
         return self._category
 
     @category.setter
-    def category(self, x: Category):
-        check_value(x, Category.__members__.keys())
-        self._category = x
+    def category(self, x: Union[str, Category]):
+        self._category = x if isinstance(x, Category) else Category[x]
 
     @property
     def source(self):
         return self._source
 
     @source.setter
-    def source(self, x: Source):
-        check_value(x, Source.__members__.keys())
-        self._source = x
+    def source(self, x: Union[str, Source]):
+        self._source = x if isinstance(x, Source) else Source[x]
 
     @property
     def value(self):

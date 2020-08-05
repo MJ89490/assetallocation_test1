@@ -1,17 +1,17 @@
 from decimal import Decimal
 from abc import ABC
-from typing import List
+from typing import List, Union
 
 from assetallocation_arp.common_enums.asset import Category
 from assetallocation_arp.common_enums.currency import Currency
 from assetallocation_arp.common_enums.country import Country, country_region
-from assetallocation_arp.data_etl.dal.validate import check_value
 from assetallocation_arp.data_etl.dal.asset_analytic import AssetAnalytic
 
 
 # TODO rename type (+ enum?)
 class Asset(ABC):
-    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str):
+    def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
+                 currency: Union[str, Currency], name: str, type: str):
         self.category = category
         self.country = country
         self.currency = currency
@@ -36,19 +36,17 @@ class Asset(ABC):
         return self._category
 
     @category.setter
-    def category(self, x: Category):
-        check_value(x, Category.__members__.keys())
-        self._category = x
+    def category(self, x: Union[str, Category]):
+        self._category = x if isinstance(x, Category) else Category[x]
 
     @property
     def country(self):
         return self._country
 
     @country.setter
-    def country(self, x: Country):
-        check_value(x, Country.__members__.keys())
-        self._country = x
-        self._region = country_region.get(x)
+    def country(self, x: Union[str, Country]):
+        self._country = x if isinstance(x, Country) else Country[x]
+        self._region = country_region.get(x.name)
 
     @property
     def region(self):
@@ -67,9 +65,8 @@ class Asset(ABC):
         return self._currency
 
     @currency.setter
-    def currency(self, x: Currency):
-        check_value(x, Currency.__members__.keys())
-        self._currency = x
+    def currency(self, x: Union[str, Currency]):
+        self._currency = x if isinstance(x, Currency) else Currency[x]
 
     @property
     def description(self):

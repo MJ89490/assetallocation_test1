@@ -3,13 +3,12 @@ from datetime import datetime
 from typing import List, Union
 
 from common_enums.strategy import Name
-from assetallocation_arp.data_etl.dal.validate import check_value
 from common_enums.fund_strategy import Category, Performance, Signal
 
 
 # TODO look into typing class attributes
 class FundStrategy:
-    def __init__(self, fund_name: str, strategy_name: Name, strategy_version: int, weight: Decimal,
+    def __init__(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: Decimal,
                  fund_strategy_asset_analytics: List['FundStrategyAssetAnalytic'] = None,
                  fund_strategy_asset_weights: List['FundStrategyAssetWeight'] = None):
         self._fund_name = fund_name
@@ -59,9 +58,8 @@ class FundStrategy:
         return self._strategy_name
 
     @strategy_name.setter
-    def strategy_name(self, x):
-        check_value(x, Name.__members__.keys())
-        self._strategy_name = x
+    def strategy_name(self, x: Union[str, Name]):
+        self._strategy_name = x if isinstance(x, Name) else Name[x]
 
     @property
     def strategy_version(self):
@@ -130,7 +128,8 @@ class FundStrategyAssetWeight:
 
 
 class FundStrategyAssetAnalytic:
-    def __init__(self,  asset_ticker: str, category: Category, subcategory: Union[Performance, Signal], value: Decimal):
+    def __init__(self,  asset_ticker: str, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
+                 value: Decimal):
         self._asset_ticker = asset_ticker
         self.category = category
         self.subcategory = subcategory
@@ -141,24 +140,19 @@ class FundStrategyAssetAnalytic:
         return self._category
 
     @category.setter
-    def category(self, x):
-        check_value(x, Category.__members__.keys())
-        self._category = x
+    def category(self, x: Union[str, Category]):
+        self._category = x if isinstance(x, Category) else Category[x]
 
     @property
     def subcategory(self):
         return self._subcategory
 
     @subcategory.setter
-    def subcategory(self, x):
-        if self.category == Category.performance.name:
-            valid_values = Performance.__members__.keys()
+    def subcategory(self, x: Union[str, Performance, Signal]):
+        if self.category is Category.performance:
+            self._subcategory = x if isinstance(x, Performance) else Performance[x]
         else:
-            valid_values = Signal.__members__.keys()
-
-        check_value(x, valid_values)
-
-        self._subcategory = x
+            self._subcategory = x if isinstance(x, Signal) else Signal[x]
 
     @property
     def value(self):

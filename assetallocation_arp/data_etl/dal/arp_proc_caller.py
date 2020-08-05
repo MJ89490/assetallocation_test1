@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from decimal import Decimal
 from datetime import datetime
 
@@ -9,15 +9,14 @@ from assetallocation_arp.data_etl.dal.fundstrategy import FundStrategy, FundStra
 from assetallocation_arp.data_etl.dal.type_converter import month_interval_to_int
 from assetallocation_arp.data_etl.dal.asset import TimesAsset
 from assetallocation_arp.common_enums.strategy import Name
-from assetallocation_arp.data_etl.dal.validate import check_value
 
 
 class ArpProcCaller(Db):
     def insert_times_strategy(self, times: Times, user_id, asset_tickers: List[str]) -> int:
         t_version = self.call_proc('arp.insert_times_strategy',
-                                   [times.description, user_id, times.time_lag, times.leverage_type,
-                                    times.volatility_window, times.short_signals, times.long_signals, times.frequency,
-                                    times.day_of_week, asset_tickers])
+                                   [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
+                                    times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
+                                    times.day_of_week.value, asset_tickers])
 
         return t_version[0]
 
@@ -57,7 +56,7 @@ class ArpProcCaller(Db):
 
         fund_strategy_id = self.call_proc('arp.insert_fund_strategy_results',
                                           [fund_strategy.business_datetime, fund_strategy.fund_name,
-                                           fund_strategy.output_is_saved, fund_strategy.strategy_name,
+                                           fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
                                            fund_strategy.strategy_version, fund_strategy.weight, user_id,
                                            fund_strategy.python_code_version, asset_weight_tickers, strategy_weights,
                                            implemented_weights, asset_analytic_tickers, analytic_types,
@@ -88,10 +87,11 @@ class ArpProcCaller(Db):
         return asset_tickers, implemented_weights, strategy_weights
 
     # TODO rename save_output_flag to output_is_saved in table arp.fund_strategy
-    def select_fund_strategy_results(self, fund_name: str, strategy_name: Name,
+    def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
                                      business_datetime: datetime = datetime.today(),
                                      system_datetime: datetime = datetime.today()) -> FundStrategy:
-        check_value(strategy_name, Name.__members__.keys())
+        strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
+
         res = self.call_proc('arp.select_fund_strategy_results',
                              [fund_name, strategy_name, business_datetime, system_datetime])
 
@@ -131,6 +131,9 @@ if __name__ == '__main__':
     fs = d.select_fund_strategy_results('f1', 'times')
 
     print(fs)
+
+    fs2 = d.insert_fund_strategy_results(fs, 'JS89275')
+    print(fs2)
     #
     # fs = FundStrategy(datetime(2020, 1, 2), True, Decimal(1))
     # s_id = 1

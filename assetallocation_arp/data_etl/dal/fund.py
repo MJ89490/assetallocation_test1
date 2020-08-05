@@ -1,9 +1,10 @@
+from typing import Union
+
 from assetallocation_arp.common_enums.currency import Currency
-from assetallocation_arp.data_etl.dal.validate import check_value
 
 
 class Fund:
-    def __init__(self, name: str, currency: Currency):
+    def __init__(self, name: str, currency: Union[str, Currency]):
         self._name = name
         self.currency = currency
 
@@ -16,6 +17,5 @@ class Fund:
         return self._currency
 
     @currency.setter
-    def currency(self, x: Currency):
-        check_value(x, Currency.__members__.keys())
-        self._currency = x
+    def currency(self, x: Union[str, Currency]):
+        self._currency = x if isinstance(x, Currency) else Currency[x]
