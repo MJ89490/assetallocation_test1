@@ -1,12 +1,10 @@
-from typing import List, Tuple, Any, Optional
+from typing import List
 from decimal import Decimal
 from datetime import datetime
 
 from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.strategy import Times
-from assetallocation_arp.data_etl.dal.asset import Asset
 from data_etl.dal.asset_analytic import AssetAnalytic
-from assetallocation_arp.data_etl.dal.fund import Fund
 from assetallocation_arp.data_etl.dal.fundstrategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
 from assetallocation_arp.data_etl.dal.type_converter import month_interval_to_int
 from assetallocation_arp.data_etl.dal.asset import TimesAsset
@@ -53,7 +51,6 @@ class ArpProcCaller(Db):
         return times_assets
 
     # TODO investigate if composite types would be better for passing data to sql function
-    # TODO refactor 'arp.insert_fund_strategy_results' to take strategy_name and strategy_version
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
         asset_weight_tickers, implemented_weights, strategy_weights = self._split_weights(fund_strategy.asset_weights)
         asset_analytic_tickers, analytic_types, analytic_subtypes, analytic_values = self._split_analytics(fund_strategy.asset_analytics)
@@ -90,7 +87,6 @@ class ArpProcCaller(Db):
 
         return asset_tickers, implemented_weights, strategy_weights
 
-    # TODO update arp.select_fund_strategy_results to also return strategy_version, python_code_version
     # TODO rename save_output_flag to output_is_saved in table arp.fund_strategy
     def select_fund_strategy_results(self, fund_name: str, strategy_name: Name,
                                      business_datetime: datetime = datetime.today(),
@@ -111,9 +107,9 @@ class ArpProcCaller(Db):
 
             # TODO find way to remove eval
             for i in eval(row['asset_analytics']):
-                asset_ticker, category, subcategory, value = (i[1: -1].split(','))
+                category, subcategory, value = (i[1: -1].split(','))
                 value = Decimal(value)
-                fund_strategy.add_fund_strategy_asset_analytic(FundStrategyAssetAnalytic(asset_ticker, category,
+                fund_strategy.add_fund_strategy_asset_analytic(FundStrategyAssetAnalytic(row['asset_ticker'], category,
                                                                                          subcategory, value))
 
         return fund_strategy
@@ -125,11 +121,15 @@ if __name__ == '__main__':
     d = ArpProcCaller(c_str)
 
     # d.select_times_strategy(1)
-    ta = d.select_times_assets(1, datetime(2020, 1, 2))
-    print(ta)
-    for i in ta:
-        for j in i.asset_analytics:
-            print(j.asset_ticker, j.source, j.category, j.value)
+    # ta = d.select_times_assets(1, datetime(2020, 1, 2))
+    # print(ta)
+    # for i in ta:
+    #     for j in i.asset_analytics:
+    #         print(j.asset_ticker, j.source, j.category, j.value)
+
+    fs = d.select_fund_strategy_results('f1', 'times')
+
+    print(fs)
     #
     # fs = FundStrategy(datetime(2020, 1, 2), True, Decimal(1))
     # s_id = 1

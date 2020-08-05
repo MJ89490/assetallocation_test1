@@ -10,8 +10,7 @@ Performance = Enum(
     value='Performance',
     names=[
         ('carry', auto()),
-        ('signal', auto()),
-        ('FX', auto()),
+        ('spot', auto()),
         ('total return', auto()),
         ('excess return', auto())
     ]
