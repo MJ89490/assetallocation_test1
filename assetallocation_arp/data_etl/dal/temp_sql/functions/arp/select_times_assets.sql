@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets(
     ticker varchar,
     tr_flag boolean,
     asset_type varchar,
-    asset_analytic arp.source_type_value[]
+    asset_analytics arp.source_type_value[]
   )
 LANGUAGE plpgsql
 AS

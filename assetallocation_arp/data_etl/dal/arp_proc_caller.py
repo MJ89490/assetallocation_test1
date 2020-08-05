@@ -39,8 +39,8 @@ class ArpProcCaller(Db):
                            r['s_leverage'], r['signal_ticker'], r['future_ticker'], r['cost'])
             t.description = r['description']
 
-            # TODO find way to remove eval
-            for i in eval(r['asset_analytic']):
+            # asset_analytics is a str of the format '{"(source1,category1,value1)",..."(sourceN,categoryN,valueN)"}'
+            for i in r['asset_analytics'][2:-2].split('","'):
                 source, category, value = (i[1: -1].split(','))
                 value = Decimal(value)
 
@@ -105,8 +105,9 @@ class ArpProcCaller(Db):
             aw.implemented_weight = row['implemented_weight']
             fund_strategy.add_fund_strategy_asset_weight(aw)
 
-            # TODO find way to remove eval
-            for i in eval(row['asset_analytics']):
+            # asset_analytics is a str of the format
+            # '{"(category1,subcategory1,valu1e)",..."(categoryN,subcategoryN,valueN)"}'
+            for i in row['asset_analytics'][2:-2].split('","'):
                 category, subcategory, value = (i[1: -1].split(','))
                 value = Decimal(value)
                 fund_strategy.add_fund_strategy_asset_analytic(FundStrategyAssetAnalytic(row['asset_ticker'], category,
