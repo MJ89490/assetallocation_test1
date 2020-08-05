@@ -79,25 +79,23 @@ class ComputeAggregateCurrencies:
 
         return inverse_volatilities
 
-    def compute_excl_signals_total_return(self, carry_data):
+    def compute_excl_signals_total_return(self, carry_origin):
         """
         Function computing Excl signals (total return) dividing the current value by the start date value
-        :param carry_data: carry data from Bloomberg for all currencies
-        :param start_date: start date of calculations
+        :param carry_origin: carry data from Bloomberg for all currencies
         :return: dataFrame of Excl signals (total return)
         """
 
-        return (carry_data.loc[self.start_date_calc:] / carry_data.loc[self.start_date_calc]).apply(lambda x: x * 100)
+        return (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
-    def compute_excl_signals_spot_return(self, spot_data):
+    def compute_excl_signals_spot_return(self, spot_origin):
         """
         Function computing Excl signals (spot return) dividing the current value by the start date value
-        :param spot_data: spot data from Blommberg for all currencies
-        :param start_date: start date of calculations
+        :param spot_origin: spot data from Blommberg for all currencies
         :return: dataFrame of Excl signals (spot return)
         """
 
-        return (spot_data.loc[self.start_date_calc:] / spot_data.loc[self.start_date_calc]).apply(lambda x: x * 100)
+        return (spot_origin.loc[self.start_date_calc:] / spot_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
     def compute_aggregate_total_incl_signals(self, returns_incl_costs):
 
@@ -199,12 +197,12 @@ class ComputeAggregateCurrencies:
 
         return pd.DataFrame(weighted_perf, columns=['Weighted_Performance'], index=index_weighted.Dates_Weighted_Performance.tolist())
 
-    def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_data, carry_data, combo_curr):
+    def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr):
 
-        inverse_volatilies = self.compute_inverse_volatility(spot_data=spot_data)
+        inverse_volatilies = self.compute_inverse_volatility(spot_data=spot_origin)
 
-        excl_signals_total_return = self.compute_excl_signals_total_return(carry_data=carry_data)
-        excl_signals_spot_return = self.compute_excl_signals_spot_return(spot_data=spot_data)
+        excl_signals_total_return = self.compute_excl_signals_total_return(carry_origin=carry_origin)
+        excl_signals_spot_return = self.compute_excl_signals_spot_return(spot_origin=spot_origin)
 
         log_returns_excl_costs = self.compute_log_returns_excl_costs(returns_ex_costs=excl_signals_total_return)
         weighted_performance = self.compute_weighted_performance(log_returns_excl=log_returns_excl_costs, combo_curr=combo_curr)

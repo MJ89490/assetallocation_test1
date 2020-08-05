@@ -25,36 +25,36 @@ class ComputeSignalsOverview:
     def window(self, value):
         self._window = value
 
-    def compute_signals_real_carry(self, real_carry):
+    def compute_signals_real_carry(self, real_carry_curr):
 
-        return real_carry.loc[self.next_latest_date]
+        return real_carry_curr.loc[self.next_latest_date]
 
-    def compute_signals_trend(self, trend):
+    def compute_signals_trend(self, trend_curr):
 
-        return trend.loc[self.next_latest_date]
+        return trend_curr.loc[self.next_latest_date]
 
-    def compute_signals_combo(self, combo):
+    def compute_signals_combo(self, combo_curr):
 
-        return combo.loc[self.next_latest_date]
+        return combo_curr.loc[self.next_latest_date]
 
-    def compute_drawdown_position_size_matr(self, total_incl_signals):
+    def compute_drawdown_position_size_matr(self, agg_total_incl_signals):
 
         # Drawdown
-        drawdown = ((total_incl_signals.loc[self.latest_signal_date][0] / total_incl_signals.max()[0]) - 1) * 100
+        drawdown = ((agg_total_incl_signals.loc[self.latest_signal_date][0] / agg_total_incl_signals.max()[0]) - 1) * 100
 
         # Position size in MATR
         size_matr = self.size_attr
 
         return {'drawdown': drawdown, 'size_matr': size_matr}
 
-    def compute_limits_controls(self, signals_combo, log_returns):
+    def compute_limits_controls(self, signals_combo, agg_log_returns):
 
         # Current signals
         current_signals = tuple(list(signals_combo * self.size_attr))
         # Ex-ante volatility
-        latest_signal_date_loc = log_returns.index.get_loc(self.latest_signal_date)
+        latest_signal_date_loc = agg_log_returns.index.get_loc(self.latest_signal_date)
         # Log returns with window lag
-        log_returns_lag = log_returns.iloc[latest_signal_date_loc - self.window:latest_signal_date_loc+1, :]
+        log_returns_lag = agg_log_returns.iloc[latest_signal_date_loc - self.window:latest_signal_date_loc+1, :]
         ex_ante_vol = sqrt(52) * log_returns_lag.dot(current_signals).std() * 100
 
         # MATR notional
@@ -62,13 +62,13 @@ class ComputeSignalsOverview:
 
         return {'ex_ante_vol': ex_ante_vol, 'matr_notional': matr_notional}
 
-    def run_signals_overview(self, real_carry, trend, combo, total_incl_signals, log_returns):
+    def run_signals_overview(self, real_carry_curr, trend_curr, combo_curr, agg_total_incl_signals, agg_log_returns):
 
-        signals_real_carry_overview = self.compute_signals_real_carry(real_carry=real_carry)
-        signals_trend_overview = self.compute_signals_trend(trend=trend)
-        signals_combo_overview = self.compute_signals_combo(combo=combo)
-        signals_drawdown_position_size_matr = self.compute_drawdown_position_size_matr(total_incl_signals=total_incl_signals)
-        signals_limits_controls = self.compute_limits_controls(signals_combo=signals_combo_overview, log_returns=log_returns)
+        signals_real_carry_overview = self.compute_signals_real_carry(real_carry_curr=real_carry_curr)
+        signals_trend_overview = self.compute_signals_trend(trend_curr=trend_curr)
+        signals_combo_overview = self.compute_signals_combo(combo_curr=combo_curr)
+        signals_drawdown_position_size_matr = self.compute_drawdown_position_size_matr(agg_total_incl_signals=agg_total_incl_signals)
+        signals_limits_controls = self.compute_limits_controls(signals_combo=signals_combo_overview, agg_log_returns=agg_log_returns)
 
         signals_overview = {'signals_real_carry': signals_real_carry_overview,
                             'signals_trend_overview': signals_trend_overview,
