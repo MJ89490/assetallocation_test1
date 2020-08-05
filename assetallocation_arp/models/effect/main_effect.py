@@ -103,6 +103,20 @@ def run_effect():
     obj_compute_warning_flags_overview.process_data_effect()
     rates_usd, rates_eur = obj_compute_warning_flags_overview.compute_warning_flags_rates()
 
+    # ---------------------------------------------------------------------------------------------------------------- #
+    #                                            EFFECT RISK RETURN CALCULATIONS                                       #
+    # ---------------------------------------------------------------------------------------------------------------- #
+
+    from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
+
+    obj_compute_risk_return_calculations = ComputeRiskReturnCalculations(
+                                                    start_date=obj_import_data.start_date_calculations,
+                                                    end_date=obj_import_data.dates_origin_index[-1],
+                                                    dates_index=obj_import_data.dates_origin_index)
+
+    obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
+                                                    returns_excl_signals=aggregate_currencies['agg_total_excl_signals'])
+
 
 if __name__ == '__main__':
     sys.exit(run_effect())
