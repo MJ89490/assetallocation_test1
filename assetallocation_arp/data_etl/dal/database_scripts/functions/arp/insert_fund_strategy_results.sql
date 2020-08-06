@@ -7,13 +7,8 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_results(
   weight numeric,
   user_id varchar,
   python_code_version varchar,
-  asset_weight_tickers varchar[],
-  strategy_weights numeric[],
-  implemented_weights numeric[],
-  asset_analytic_tickers varchar[],
-  analytic_types varchar[],
-  analytic_subtypes varchar[],
-  analytic_values numeric[],
+  weights arp.ticker_weight_weight[],
+  analytics arp.ticker_category_subcategory_value[],
   OUT fund_strategy_id int
 )
 AS
@@ -29,8 +24,8 @@ BEGIN
   select arp.insert_fund_strategy(business_datetime, fund_id, output_is_saved, strategy_id, weight,
                                   user_id, python_code_version, execution_state_id) into fund_strategy_id;
 
-  PERFORM arp.insert_fund_strategy_asset_weights(fund_strategy_id, asset_weight_tickers, strategy_weights, implemented_weights, execution_state_id);
-  PERFORM arp.insert_strategy_asset_analytics(fund_strategy_id, asset_analytic_tickers, analytic_types, analytic_subtypes, analytic_values, execution_state_id);
+  PERFORM arp.insert_fund_strategy_asset_weights(fund_strategy_id, weights, execution_state_id);
+  PERFORM arp.insert_strategy_asset_analytics(fund_strategy_id, analytics, execution_state_id);
 
   RETURN;
 END

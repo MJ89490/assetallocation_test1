@@ -56,15 +56,15 @@ BEGIN
       a.ticker as asset_ticker,
       fsaw.strategy_weight,
       fsaw.implemented_weight,
-      array_agg((saa.type, saa.subtype, saa.value):: arp.category_subcategory_value) as asset_analytics
+      array_agg((fsaa.category, fsaa.subcategory, fsaa.value):: arp.category_subcategory_value) as asset_analytics
     FROM
       arp.fund_strategy_asset_weight fsaw
       JOIN asset.asset a ON fsaw.asset_id = a.id
       JOIN fsr ON fsaw.fund_strategy_id = fsr.fund_strategy_id
-      JOIN arp.strategy_asset_analytic saa
-          ON saa.fund_strategy_id = fsr.fund_strategy_id
-          AND saa.asset_id = fsaw.asset_id
-          AND saa.asset_id = a.id
+      JOIN arp.fund_strategy_asset_analytic fsaa
+          ON fsaa.fund_strategy_id = fsr.fund_strategy_id
+          AND fsaa.asset_id = fsaw.asset_id
+          AND fsaa.asset_id = a.id
     GROUP BY
       fsr.strategy_version,
       fsr.business_datetime,

@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 from decimal import Decimal
 from datetime import datetime
 
@@ -28,8 +28,11 @@ class ArpProcCaller(Db):
         t.description = row['description']
         return t
 
-    def select_times_assets(self, times_version, business_datetime) -> List[TimesAsset]:
+    def select_times_assets(self, times_version, business_datetime) -> Optional[List[TimesAsset]]:
         res = self.call_proc('arp.select_times_assets', [times_version, business_datetime])
+
+        if not res:
+            return
 
         times_assets = []
         for r in res:
@@ -48,50 +51,38 @@ class ArpProcCaller(Db):
 
         return times_assets
 
-    # TODO investigate if composite types would be better for passing data to sql function
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
-        asset_weight_tickers, implemented_weights, strategy_weights = self._split_weights(fund_strategy.asset_weights)
-        asset_analytic_tickers, analytic_types, analytic_subtypes, analytic_values = self._split_analytics(fund_strategy.asset_analytics)
+        ticker_weights = self._weights_to_composite(fund_strategy.asset_weights)
+        ticker_analytics = self._analytics_to_composite(fund_strategy.asset_analytics)
 
         fund_strategy_id = self.call_proc('arp.insert_fund_strategy_results',
                                           [fund_strategy.business_datetime, fund_strategy.fund_name,
                                            fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
                                            fund_strategy.strategy_version, fund_strategy.weight, user_id,
-                                           fund_strategy.python_code_version, asset_weight_tickers, strategy_weights,
-                                           implemented_weights, asset_analytic_tickers, analytic_types,
-                                           analytic_subtypes, analytic_values])[
-            0]
+                                           fund_strategy.python_code_version, ticker_weights, ticker_analytics])[0]
 
         return fund_strategy_id is not None
 
     @staticmethod
-    def _split_analytics(analytics: List[FundStrategyAssetAnalytic]):
-        asset_tickers, categories, subcategories, values = [], [], [], []
-        for i in analytics:
-            asset_tickers.append(i.asset_ticker)
-            categories.append(i.category)
-            subcategories.append(i.subcategory)
-            values.append(i.value)
-
-        return asset_tickers, categories, subcategories, values
+    def _analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]):
+        """Format to match database type arp.ticker_category_subcategory_value[]"""
+        return [f'("{i.asset_ticker}","{i.category}","{i.subcategory}",{i.value})' for i in analytics]
 
     @staticmethod
-    def _split_weights(weights: List[FundStrategyAssetWeight]):
-        asset_tickers, strategy_weights, implemented_weights = [], [], []
-        for i in weights:
-            asset_tickers.append(i.asset_ticker)
-            strategy_weights.append(i.strategy_weight)
-            implemented_weights.append(i.implemented_weight)
-
-        return asset_tickers, implemented_weights, strategy_weights
+    def _weights_to_composite(weights: List[FundStrategyAssetWeight]) -> List[str]:
+        """Format to match database type arp.ticker_weight_weight[]"""
+        return [f'("{i.asset_ticker}",{i.strategy_weight},{i.implemented_weight})' for i in weights]
 
     def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
                                      business_datetime: datetime = datetime.today(),
-                                     system_datetime: datetime = datetime.today()) -> FundStrategy:
+                                     system_datetime: datetime = datetime.today()) -> Optional[FundStrategy]:
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
         res = self.call_proc('arp.select_fund_strategy_results',
                              [fund_name, strategy_name, business_datetime, system_datetime])
+
+        if not res:
+            return
 
         fund_strategy = FundStrategy(fund_name, strategy_name, res[0]['strategy_version'], res[0]['weight'])
         fund_strategy.business_datetime = res[0]['business_datetime']
@@ -126,24 +117,23 @@ if __name__ == '__main__':
     #     for j in i.asset_analytics:
     #         print(j.asset_ticker, j.source, j.category, j.value)
 
-    fs = d.select_fund_strategy_results('f1', 'times')
-
-    print(fs)
-
-    fs2 = d.insert_fund_strategy_results(fs, 'JS89275')
-    print(fs2)
+    # fs = d.select_fund_strategy_results('f1', 'times')
     #
-    # fs = FundStrategy(datetime(2020, 1, 2), True, Decimal(1))
-    # s_id = 1
-    # u_id = 'JS89275'
-    # a_ws = [FundStrategyAssetWeight('a1', Decimal(1), Decimal(1)), FundStrategyAssetWeight('a2', Decimal(2), Decimal(2))]
-    # a_as = [
-    #     StrategyAssetAnalytic('a1', 'performance', 'spot', Decimal(1)),
-    #     StrategyAssetAnalytic('a1', 'signal', 'value', Decimal(2)),
-    #     StrategyAssetAnalytic('a2', 'performance', 'spot', Decimal(3)),
-    #     StrategyAssetAnalytic('a2', 'signal', 'value', Decimal(4))
-    # ]
-    # pcv = '0.0'
-    # fsr = d.insert_fund_strategy_results('f1', fs, s_id, u_id, pcv, a_ws, a_as)
-    # print(fsr)
+    # print(fs)
+
+    # fs2 = d.insert_fund_strategy_results(fs, 'JS89275')
+    # print(fs2)
+    #
+    fs = FundStrategy('f1', 'times', 1, Decimal(1))
+    u_id = 'JS89275'
+    a_ws = [FundStrategyAssetWeight('a1', Decimal(1)), FundStrategyAssetWeight('a2', Decimal(2))]
+    a_as = [
+        FundStrategyAssetAnalytic('a1', 'performance', 'spot', Decimal(1)),
+        FundStrategyAssetAnalytic('a1', 'signal', 'value', Decimal(2)),
+        FundStrategyAssetAnalytic('a2', 'performance', 'spot', Decimal(3)),
+        FundStrategyAssetAnalytic('a2', 'signal', 'value', Decimal(4))
+    ]
+    pcv = '0.0'
+    fsr = d.insert_fund_strategy_results(fs, u_id)
+    print(fsr)
 

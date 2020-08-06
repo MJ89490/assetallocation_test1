@@ -25,7 +25,7 @@ CREATE TABLE "arp"."fund_strategy"
 	"weight" numeric(32,16) NOT NULL,
 	"output_is_saved" boolean NOT NULL,
 	"execution_state_id" integer NOT NULL,
-	"user_id" varchar(7)	 NOT NULL,
+	"app_user_id" varchar(7)	 NOT NULL,
 	"python_code_version" varchar(50)	 NOT NULL
 )
 ;
@@ -49,5 +49,5 @@ ALTER TABLE "arp"."fund_strategy" ADD CONSTRAINT "fund_strategy_strategy_fkey"
 ;
 
 ALTER TABLE "arp"."fund_strategy" ADD CONSTRAINT "fund_strategy_user_fkey"
-	FOREIGN KEY ("user_id") REFERENCES "arp"."app_user" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("app_user_id") REFERENCES "arp"."app_user" ("id") ON DELETE No Action ON UPDATE No Action
 ;
