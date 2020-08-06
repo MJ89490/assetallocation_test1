@@ -1,18 +1,29 @@
 class User:
     def __init__(self, user_id: str, name: str):
-        self._user_id = user_id
-        self._name = name
+        self.user_id = user_id
+        self.name = name
         self._email = None
 
     @property
-    def user_id(self):
+    def user_id(self) -> str:
         return self._user_id
+
+    @user_id.setter
+    def user_id(self, x: str) -> None:
+        self._user_id = x
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, x: str) -> None:
+        self._name = x
 
     @property
     def email(self):
         return self._email
 
-    # TODO should there be validation here for lgim.com emails only?
     @email.setter
     def email(self, x: str):
         self._email = x

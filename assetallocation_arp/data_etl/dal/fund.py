@@ -4,18 +4,22 @@ from assetallocation_arp.common_enums.currency import Currency
 
 
 class Fund:
-    def __init__(self, name: str, currency: Union[str, Currency]):
+    def __init__(self, name: str, currency: Union[str, Currency]) -> None:
         self._name = name
         self.currency = currency
 
     @property
-    def name(self):
+    def name(self)  -> str:
         return self._name
 
+    @name.setter
+    def name(self, x: str) -> None:
+        self._name = x
+
     @property
-    def currency(self):
+    def currency(self) -> Currency:
         return self._currency
 
     @currency.setter
-    def currency(self, x: Union[str, Currency]):
+    def currency(self, x: Union[str, Currency]) -> None:
         self._currency = x if isinstance(x, Currency) else Currency[x]

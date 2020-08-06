@@ -8,10 +8,10 @@ from assetallocation_arp.data_etl.dal.proc import Proc
 class Db:
     procs = Proc.__members__.keys()
 
-    def __init__(self, conn_str: str):
+    def __init__(self, conn_str: str) -> None:
         self.engine = create_engine(conn_str)
 
-    def call_proc(self, proc_name: str, proc_params: List[Any]) -> List[Any]:
+    def call_proc(self, proc_name: str, proc_params: List[Any]) -> List[Dict[Any]]:
         # if proc_name not in self.procs:
         #     raise ValueError(f'The stored procedure "{proc_name}" is not defined for the class Db')
 
