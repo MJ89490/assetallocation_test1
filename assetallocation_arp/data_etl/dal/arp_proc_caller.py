@@ -1,6 +1,8 @@
 from typing import List, Union, Optional
 from decimal import Decimal
 from datetime import datetime
+from os import environ
+from json import loads
 
 from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.strategy import Times
@@ -12,6 +14,16 @@ from assetallocation_arp.common_enums.strategy import Name
 
 
 class ArpProcCaller(Db):
+    def __init__(self):
+        config = loads(environ['DATABASE'])
+        user = config['USER']
+        password = config['PASSWORD']
+        host = config['HOST']
+        port = config['PORT']
+        database = config['DATABASE']
+
+        super().__init__(f'postgresql://{user}:{password}@{host}:{port}/{database}')
+
     def insert_times_strategy(self, times: Times, user_id, asset_tickers: List[str]) -> int:
         res = self.call_proc('arp.insert_times_strategy',
                                    [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
@@ -110,8 +122,14 @@ class ArpProcCaller(Db):
 
 if __name__ == '__main__':
     from datetime import datetime
-    c_str = 'postgresql://d00_asset_allocation_data_migration:changeme@n00-pgsql-nexus-businessstore-writer.inv.adroot.lgim.com:54323/d00_asset_allocation_data'
-    d = ArpProcCaller(c_str)
+    from json import dumps
+    environ['DATABASE'] = dumps({"USER": "d00_asset_allocation_data_migration",
+                           'PASSWORD': 'changeme',
+                           'HOST':'n00-pgsql-nexus-businessstore-writer.inv.adroot.lgim.com',
+                           'PORT': 54323,
+                           'DATABASE': 'd00_asset_allocation_data'
+                           })
+    d = ArpProcCaller()
 
     # d.select_times_strategy(1)
     # ta = d.select_times_assets(1, datetime(2020, 1, 2))
