@@ -32,8 +32,8 @@ def before_request():
 @app.route('/')
 @app.route('/home')
 def home():
-    # return render_template('home.html', title='HomePage')
-    return 'Hello World'
+    return render_template('home.html', title='HomePage')
+
 
 @app.route('/login', methods=['GET'])
 def login():
