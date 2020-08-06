@@ -21,6 +21,8 @@ from flask import g
 
 from .userIdentification import random_identification
 
+#todo mock content and test each route to see if they are ok
+#todo fix unit test arp_strategies
 
 @app.before_request
 def before_request():
@@ -64,7 +66,7 @@ def login_post():
 @login_required
 def times_page():
     form = InputsTimesModel()
-
+    #change to lowercase
     global ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
 
     TIMES_PAGE_NEW = 'times_page_new_version_layout.html'
@@ -102,7 +104,7 @@ def times_page():
             path_excel_times = path_excel + "\\" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={Models.times.name: (ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS)},
+                write_output_to_excel(model_outputs={Models.times.name: (POSITIONING, R, SIGNALS)},
                                       path_excel_times=path_excel_times)
 
             return render_template(TIMES_PAGE_NEW, title="Times", form=form, save=save, save_file=save_file)
