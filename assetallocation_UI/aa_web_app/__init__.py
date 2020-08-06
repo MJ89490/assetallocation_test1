@@ -3,7 +3,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_bootstrap import Bootstrap
 from assetallocation_UI.aa_web_app import config
 from flask_login import LoginManager
-from .models import User
+# from assetallocation_UI.aa_web_app.models  import User
 
 from flask_cors import CORS
 import jinja2
@@ -11,7 +11,7 @@ import os
 
 #todo create a function later
 
-CURRENT_PATH = os.path.dirname(__file__)
+# CURRENT_PATH = os.path.dirname(__file__)
 
 
 class ReverseProxied:
@@ -35,34 +35,34 @@ app.debug = True
 CORS(app)
 
 # Set the origin template (templates) of Flask and add subfolders
-origin_path = "templates"
-modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsIcons"))
-modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
-inputs_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\inputs_models"))
-javascript_charts_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\js"))
+# origin_path = "templates"
+# modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsIcons"))
+# modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
+# inputs_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\inputs_models"))
+# javascript_charts_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\js"))
 
-template_folders = [origin_path, modals_icons_path, modals_models_path, inputs_models_path, javascript_charts_path]
+# template_folders = [origin_path, modals_icons_path, modals_models_path, inputs_models_path, javascript_charts_path]
 
 
 # Change the original folder of Flask by adding subfolders
-app.jinja_loader = jinja2.ChoiceLoader([
-    app.jinja_loader,
-    jinja2.FileSystemLoader(template_folders),
-])
+# app.jinja_loader = jinja2.ChoiceLoader([
+#     app.jinja_loader,
+#     jinja2.FileSystemLoader(template_folders),
+# ])
 
-app.config.from_object(config.DevelopmentConfig)
-CSRFProtect(app).init_app(app)
-bootstrap = Bootstrap(app)
+# app.config.from_object(config.DevelopmentConfig)
+# CSRFProtect(app).init_app(app)
+# bootstrap = Bootstrap(app)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-app.config['SECRET_KEY'] = 'secret*'
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
+# login_manager = LoginManager()
+# login_manager.init_app(app)
+# login_manager.login_view = 'login'
+# app.config['SECRET_KEY'] = 'secret*'
+#
+#
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User(user_id)
 
 
 
