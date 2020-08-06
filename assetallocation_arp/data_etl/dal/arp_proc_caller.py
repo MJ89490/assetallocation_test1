@@ -28,7 +28,6 @@ class ArpProcCaller(Db):
         t.description = row['description']
         return t
 
-    # TODO rename database column arp.asset.asset_class to arp.asset.category
     def select_times_assets(self, times_version, business_datetime) -> List[TimesAsset]:
         res = self.call_proc('arp.select_times_assets', [times_version, business_datetime])
 
@@ -86,7 +85,6 @@ class ArpProcCaller(Db):
 
         return asset_tickers, implemented_weights, strategy_weights
 
-    # TODO rename save_output_flag to output_is_saved in table arp.fund_strategy
     def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
                                      business_datetime: datetime = datetime.today(),
                                      system_datetime: datetime = datetime.today()) -> FundStrategy:

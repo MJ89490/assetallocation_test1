@@ -34,7 +34,7 @@ def main():
              ar / 'fund_strategy.sql', ar / 'fund_strategy_asset_weight.sql', ar / 'fund_strategy_asset_analytic.sql']
 
     c_str = 'postgresql://d00_asset_allocation_data_migration:changeme@n00-pgsql-nexus-businessstore-writer.inv.adroot.lgim.com:54323/d00_asset_allocation_data'
-    engine = create_engine(c_str, echo=True)
+    engine = create_engine(c_str, echo=False)
     conn = engine.connect()
 
     for filename in files:

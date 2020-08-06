@@ -14,19 +14,19 @@ RETURNS TABLE(
   asset_ticker varchar,
   strategy_weight numeric,
   implemented_weight numeric,
-  asset_analytics arp.type_subtype_value[]
+  asset_analytics arp.category_subcategory_value[]
 )
 AS
 $$
 BEGIN
   RETURN QUERY
-    WITH fsr (fund_strategy_id, strategy_version, business_datetime, python_code_version, save_output_flag, weight) AS (
+    WITH fsr (fund_strategy_id, strategy_version, business_datetime, python_code_version, output_is_saved, weight) AS (
       SELECT
         fs.id,
         COALESCE(t.version, fi.version, e.version) as strategy_version,
         fs.business_datetime,
         fs.python_code_version,
-        fs.save_output_flag,
+        fs.output_is_saved,
         fs.weight
       FROM
         fund.fund fu
@@ -51,12 +51,12 @@ BEGIN
       fsr.strategy_version,
       fsr.python_code_version,
       fsr.business_datetime,
-      fsr.save_output_flag as output_is_saved,
+      fsr.output_is_saved,
       fsr.weight,
       a.ticker as asset_ticker,
       fsaw.strategy_weight,
       fsaw.implemented_weight,
-      array_agg((saa.type, saa.subtype, saa.value):: arp.type_subtype_value) as asset_analytics
+      array_agg((saa.type, saa.subtype, saa.value):: arp.category_subcategory_value) as asset_analytics
     FROM
       arp.fund_strategy_asset_weight fsaw
       JOIN asset.asset a ON fsaw.asset_id = a.id
@@ -69,7 +69,7 @@ BEGIN
       fsr.strategy_version,
       fsr.business_datetime,
       fsr.python_code_version,
-      fsr.save_output_flag,
+      fsr.output_is_saved,
       fsr.weight,
       a.ticker,
       fsaw.strategy_weight,

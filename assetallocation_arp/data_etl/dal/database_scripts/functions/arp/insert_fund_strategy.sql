@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION arp.insert_fund_strategy(
   business_datetime timestamp with time zone,
   fund_id int,
-  save_output_flag boolean,
+  output_is_saved boolean,
   strategy_id int,
   weight numeric,
   app_user_id varchar,
@@ -15,7 +15,7 @@ BEGIN
   INSERT INTO arp.fund_strategy (
     business_datetime,
     fund_id,
-    save_output_flag,
+    output_is_saved,
     strategy_id,
     weight,
     app_user_id,
@@ -25,7 +25,7 @@ BEGIN
   VALUES(
     business_datetime,
     fund_id,
-    save_output_flag,
+    output_is_saved,
     strategy_id,
     weight,
     app_user_id,

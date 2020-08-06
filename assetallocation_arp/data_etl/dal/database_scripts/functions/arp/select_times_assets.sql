@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets(
     ticker varchar,
     tr_flag boolean,
     asset_type varchar,
-    asset_analytics arp.source_type_value[]
+    asset_analytics arp.source_category_value[]
   )
 LANGUAGE plpgsql
 AS
@@ -37,7 +37,7 @@ BEGIN
       a.ticker,
       a.tr_flag,
       a.type as asset_type,
-      array_agg((s2.source, aa.type, aa.value) :: arp.source_type_value) as asset_analytic
+      array_agg((s2.source, aa.type, aa.value) :: arp.source_category_value) as asset_analytic
     FROM
       asset.asset a
       JOIN arp.times_asset ta on a.id = ta.asset_id

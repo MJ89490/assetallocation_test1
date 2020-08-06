@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy(
   system_datetime timestamp with time zone,
   OUT fund_strategy_id int,
   OUT currency char,
-  OUT save_output_flag boolean,
+  OUT output_is_saved boolean,
   OUT weight numeric
 )
 LANGUAGE SQL
@@ -14,7 +14,7 @@ $$
 SELECT
   fs.id,
   c.currency,
-  fs.save_output_flag,
+  fs.output_is_saved,
   fs.weight
 FROM
   fund.fund f

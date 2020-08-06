@@ -23,7 +23,7 @@ CREATE TABLE "arp"."fund_strategy"
 	"strategy_id" integer NOT NULL,
 	"system_datetime" timestamp with time zone NOT NULL DEFAULT now(),
 	"weight" numeric(32,16) NOT NULL,
-	"save_output_flag" boolean NOT NULL,
+	"output_is_saved" boolean NOT NULL,
 	"execution_state_id" integer NOT NULL,
 	"user_id" varchar(7)	 NOT NULL,
 	"python_code_version" varchar(50)	 NOT NULL
