@@ -1,12 +1,18 @@
 from decimal import Decimal
 from datetime import datetime
 from typing import List, Union
+import configparser
+from pathlib import Path
 
 from common_enums.strategy import Name
 from common_enums.fund_strategy import Category, Performance, Signal
 
 
 class FundStrategy:
+    _config = configparser.ConfigParser()
+    _config.read(Path(__file__).parents[3] / '.bumpversion.cfg')
+    _python_code_version = _config['bumpversion']['current_version']
+
     def __init__(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: Decimal,
                  fund_strategy_asset_analytics: List['FundStrategyAssetAnalytic'] = None,
                  fund_strategy_asset_weights: List['FundStrategyAssetWeight'] = None):
@@ -15,7 +21,6 @@ class FundStrategy:
         self._weight = weight
         self._output_is_saved = True
         self._business_datetime = datetime.now()
-        self._python_code_version = '0'  # TODO set this somewhere to use code wide
         self._strategy_version = strategy_version
         self.asset_weights = fund_strategy_asset_weights or []
         self.asset_analytics = fund_strategy_asset_analytics or []
@@ -31,10 +36,6 @@ class FundStrategy:
     @property
     def python_code_version(self) -> str:
         return self._python_code_version
-
-    @python_code_version.setter
-    def python_code_version(self, x: str) -> None:
-        self._python_code_version = x
 
     @property
     def asset_weights(self) -> List['FundStrategyAssetWeight']:

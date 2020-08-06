@@ -13,15 +13,18 @@ from assetallocation_arp.common_enums.strategy import Name
 
 class ArpProcCaller(Db):
     def insert_times_strategy(self, times: Times, user_id, asset_tickers: List[str]) -> int:
-        t_version = self.call_proc('arp.insert_times_strategy',
+        res = self.call_proc('arp.insert_times_strategy',
                                    [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
                                     times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
                                     times.day_of_week.value, asset_tickers])
+        return res[0]['t_version']
 
-        return t_version[0]
+    def select_times_strategy(self, times_version) -> Optional[Times]:
+        res = self.call_proc('arp.select_times_strategy', [times_version])
+        if not res:
+            return
 
-    def select_times_strategy(self, times_version) -> Times:
-        row = self.call_proc('arp.select_times_strategy', [times_version])[0]
+        row = res[0]
         t = Times(row['day_of_week'], row['frequency'], row['leverage_type'], row['long_signals'], row['short_signals'],
                   -month_interval_to_int(row['time_lag']), row['volatility_window'])
         t.version = times_version
