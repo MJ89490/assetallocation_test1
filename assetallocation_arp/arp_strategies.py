@@ -1,8 +1,7 @@
-import xlwings as xw
+import pandas as pd
 import assetallocation_arp.data_etl.import_all_data as gd
 import assetallocation_arp.models.times as times
 import sys
-import os
 
 from assetallocation_arp.common_libraries.models_names import Models as models
 
@@ -41,60 +40,14 @@ def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
 
 		return asset_inputs, positioning, r, signals, times_inputs
 
+
 def write_output_to_excel(model_outputs, path_excel_times):
-
 	if models.times.name in model_outputs.keys():
-
-		asset_inputs, positioning, returns, signals, times_inputs = model_outputs[models.times.name]
-		# path = os.path.join(os.path.dirname(__file__), "times_model.xls")
-
-		wb = xw.Book()
-
-		wb.sheets.add('signal')
-		wb.sheets.add('returns')
-		wb.sheets.add('positioning')
-
-		sheet_times_signals_output = wb.sheets['signal']
-		sheet_times_returns_output = wb.sheets['returns']
-		sheet_times_positioning_output = wb.sheets['positioning']
-		# sheet_times_input = wb.sheets['input']
-
-		# n_columns = len(signals.columns) + 2
-		n_rows = signals.shape[0]
-		range_str = 'A2:A%s' % n_rows
-
-		sheet_times_signals_output.range('A1').value = "TIMES Signals"
-		sheet_times_signals_output.range(range_str).value = signals
-
-		sheet_times_returns_output.range('A1').value = "TIMES Returns"
-		sheet_times_returns_output.range(range_str).value = returns
-
-		sheet_times_positioning_output.range('A1').value = "TIMES Returns"
-		sheet_times_positioning_output.range(range_str).value = positioning
-
-
-		# sheet_times_output.range('rng_times_output').offset(0, 0).value = "TIMES Signals"
-		# sheet_times_output.range('rng_times_output').value = signals
-		# sheet_times_output.range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
-		# sheet_times_output.range('rng_times_output').offset(0, n_columns + 2).value = returns
-		# sheet_times_output.range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
-		# sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
-		# write inputs used to excel and run time
-		#sheet_times_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-		# sheet_times_input.range('rng_inputs_used').value = asset_inputs
-		# sheet_times_input.range('rng_inputs_used').offset(0, 7).value = times_inputs
-
-		app = xw.apps.active
-		wb.save(path=path_excel_times)
-		app.quit()
-
-
-def get_inputs_from_excel():
-	# select data from excel
-	mat_file = xw.Range('rng_mat_file_path').value
-	model_type = xw.Range('rng_model_type').value
-	# run selected model
-	run_model(model_type, mat_file, xw.Book.caller().fullname)
+		positioning, returns, signals = model_outputs[models.times.name]
+		with pd.ExcelWriter(path_excel_times) as writer:
+			signals.to_excel(writer, sheet_name='signal')
+			returns.to_excel(writer, sheet_name='returns')
+			positioning.to_excel(writer, sheet_name='positioning')
 
 
 def get_inputs_from_python(model):
