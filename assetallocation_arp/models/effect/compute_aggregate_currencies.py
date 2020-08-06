@@ -85,8 +85,10 @@ class ComputeAggregateCurrencies:
         :param carry_origin: carry data from Bloomberg for all currencies
         :return: dataFrame of Excl signals (total return)
         """
+        res = (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
-        return (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
+        res.to_csv('return_excl_agg.csv')
+        return res
 
     def compute_excl_signals_spot_return(self, spot_origin):
         """
