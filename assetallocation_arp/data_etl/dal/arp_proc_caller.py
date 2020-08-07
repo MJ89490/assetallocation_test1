@@ -16,16 +16,16 @@ from assetallocation_arp.common_enums.strategy import Name
 
 class ArpProcCaller(Db):
     def __init__(self):
-        config = loads(environ['DATABASE'])
-        user = config['USER']
-        password = config['PASSWORD']
-        host = config['HOST']
-        port = config['PORT']
-        database = config['DATABASE']
+        config = loads(environ.get('DATABASE', '{}'))
+        user = config.get('USER')
+        password = config.get('PASSWORD')
+        host = config.get('HOST')
+        port = config.get('PORT')
+        database = config.get('DATABASE')
 
         super().__init__(f'postgresql://{user}:{password}@{host}:{port}/{database}')
 
-    def insert_times_strategy(self, times: Times, user_id, asset_tickers: List[str]) -> int:
+    def insert_times_strategy(self, times: Times, user_id: str, asset_tickers: List[str]) -> int:
         res = self.call_proc('arp.insert_times_strategy',
                              [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
                               times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
@@ -71,11 +71,12 @@ class ArpProcCaller(Db):
         ticker_weights = self._weights_to_composite(fund_strategy.asset_weights)
         ticker_analytics = self._analytics_to_composite(fund_strategy.asset_analytics)
 
-        fund_strategy_id = self.call_proc('arp.insert_fund_strategy_results',
+        res = self.call_proc('arp.insert_fund_strategy_results',
                                           [fund_strategy.business_datetime, fund_strategy.fund_name,
                                            fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
                                            fund_strategy.strategy_version, fund_strategy.weight, user_id,
-                                           fund_strategy.python_code_version, ticker_weights, ticker_analytics])[0]
+                                           fund_strategy.python_code_version, ticker_weights, ticker_analytics])
+        fund_strategy_id = res[0].get('fund_strategy_id')
 
         return fund_strategy_id is not None
 

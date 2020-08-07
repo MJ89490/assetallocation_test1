@@ -39,7 +39,7 @@ class Strategy(ABC):
         self._version = x
 
 
-# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
+# noinspection PyAttributeOutsideInit
 class Times(Strategy):
     name = Name.times.name
 
@@ -183,7 +183,7 @@ class Fica(Strategy):
         self._trading_cost = x
 
 
-# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
+# noinspection PyAttributeOutsideInit
 class Effect(Strategy):
     name = Name.effect.name
 
