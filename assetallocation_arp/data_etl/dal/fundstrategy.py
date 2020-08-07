@@ -8,6 +8,7 @@ from common_enums.strategy import Name
 from common_enums.fund_strategy import Category, Performance, Signal
 
 
+# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class FundStrategy:
     _config = configparser.ConfigParser()
     _config.read(Path(__file__).parents[3] / '.bumpversion.cfg')
@@ -36,6 +37,10 @@ class FundStrategy:
     @property
     def python_code_version(self) -> str:
         return self._python_code_version
+
+    @python_code_version.setter
+    def python_code_version(self, x: str) -> None:
+        self._python_code_version = x
 
     @property
     def asset_weights(self) -> List['FundStrategyAssetWeight']:
@@ -131,6 +136,7 @@ class FundStrategyAssetWeight:
         self._asset_ticker = x
 
 
+# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class FundStrategyAssetAnalytic:
     def __init__(self,  asset_ticker: str, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
                  value: Decimal) -> None:

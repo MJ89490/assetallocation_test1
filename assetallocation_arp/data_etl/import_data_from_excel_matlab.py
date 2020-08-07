@@ -11,7 +11,7 @@ import os
 import numpy as np
 from datetime import datetime
 
-#Comments: may be we should the structure of the import data when we will have the database
+# Comments: may be we should the structure of the import data when we will have the database
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
@@ -37,7 +37,7 @@ def matfile_to_dataframe(file_path, model_date):
     mat_dataframe = pd.concat([mat_data, mat_dates], axis=1, sort=True)
     mat_dataframe.set_index('Date', inplace=True)
 
-    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
+    mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]  # remove weekends
     mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date]  # remove data after selected date
     return mat_dataframe
 
@@ -58,16 +58,11 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
         # passed a named range; find the cells in the workbook
         full_range = wb.defined_names[range_name]
         if full_range is None:
-            raise ValueError(
-                'Range "{}" not found in workbook "{}".'.format(range_name, xlsx_file)
-            )
+            raise ValueError('Range "{}" not found in workbook "{}".'.format(range_name, xlsx_file))
         # convert to list
         destinations = list(full_range.destinations)
         if len(destinations) > 1:
-            raise ValueError(
-                'Range "{}" in workbook "{}" contains more than one region.'
-                    .format(range_name, xlsx_file)
-            )
+            raise ValueError('Range "{}" in workbook "{}" contains more than one region.'.format(range_name, xlsx_file))
         ws, reg = destinations[0]
         # convert to worksheet object
         if isinstance(ws, str):
@@ -84,7 +79,6 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 
 
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
-
     if mat_file is None:
         file_path = FILE_PATH
     else:
@@ -109,7 +103,6 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
 
 
 def extract_inputs_from_ui_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
-
     if mat_file is None:
         file_path = FILE_PATH
 

@@ -3,42 +3,42 @@ import sys
 import xlwings as xw
 from time import strftime, gmtime
 
-import common_enums.strategy
+from assetallocation_arp.common_enums.strategy import Name
+from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
+from assetallocation_arp.models import times
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
 sys.path.insert(0, ROOT_DIR)
-from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
-from assetallocation_arp.models import times
 
 
 def run_model(model_type, mat_file, input_file):
 
-    if model_type == common_enums.strategy.Name.times.name:
+    if model_type == Name.times.name:
         # get inputs from excel and matlab data
         times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({common_enums.strategy.Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
+        write_output_to_excel({Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
 
-    if model_type == common_enums.strategy.Name.maven.name:
+    if model_type == Name.maven.name:
         print(model_type)
-    if model_type == common_enums.strategy.Name.effect.name:
+    if model_type == Name.effect.name:
         print(model_type)
-    if model_type == common_enums.strategy.Name.curp.name:
+    if model_type == Name.curp.name:
         print(model_type)
-    if model_type == common_enums.strategy.Name.fica.name:
+    if model_type == Name.fica.name:
         print(model_type)
-    if model_type == common_enums.strategy.Name.factor.name:
+    if model_type == Name.factor.name:
         print(model_type)
-    if model_type == common_enums.strategy.Name.comca.name:
+    if model_type == Name.comca.name:
         print(model_type)
 
 
 def write_output_to_excel(model_outputs, input_file):
 
-    if common_enums.strategy.Name.times.name in model_outputs.keys():
+    if Name.times.name in model_outputs.keys():
 
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
 
@@ -81,15 +81,9 @@ def get_inputs_from_excel():
 
 
 def get_inputs_from_python(model, file):
-
-
     # launch the script from Python
     mat_file = None
-
-    input_file = None
-
-    models_list = [model.name for model in common_enums.strategy.Name]
-
+    models_list = [model.name for model in Name]
 
     xw.Book(file).set_mock_caller()
 

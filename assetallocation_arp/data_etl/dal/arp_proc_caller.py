@@ -7,7 +7,8 @@ from json import loads
 from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.strategy import Times
 from data_etl.dal.asset_analytic import AssetAnalytic
-from assetallocation_arp.data_etl.dal.fundstrategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
+from assetallocation_arp.data_etl.dal.fundstrategy import (FundStrategy, FundStrategyAssetAnalytic,
+                                                           FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import month_interval_to_int
 from assetallocation_arp.data_etl.dal.asset import TimesAsset
 from assetallocation_arp.common_enums.strategy import Name
@@ -26,9 +27,9 @@ class ArpProcCaller(Db):
 
     def insert_times_strategy(self, times: Times, user_id, asset_tickers: List[str]) -> int:
         res = self.call_proc('arp.insert_times_strategy',
-                                   [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
-                                    times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
-                                    times.day_of_week.value, asset_tickers])
+                             [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
+                              times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
+                              times.day_of_week.value, asset_tickers])
         return res[0]['t_version']
 
     def select_times_strategy(self, times_version) -> Optional[Times]:
@@ -114,21 +115,15 @@ class ArpProcCaller(Db):
             for i in row['asset_analytics'][2:-2].split('","'):
                 category, subcategory, value = (i[1: -1].split(','))
                 value = Decimal(value)
-                fund_strategy.add_fund_strategy_asset_analytic(FundStrategyAssetAnalytic(row['asset_ticker'], category,
-                                                                                         subcategory, value))
+                fund_strategy.add_fund_strategy_asset_analytic(
+                    FundStrategyAssetAnalytic(row['asset_ticker'], category, subcategory, value))
 
         return fund_strategy
 
 
 if __name__ == '__main__':
     from datetime import datetime
-    from json import dumps
-    environ['DATABASE'] = dumps({"USER": "d00_asset_allocation_data_migration",
-                           'PASSWORD': 'changeme',
-                           'HOST':'n00-pgsql-nexus-businessstore-writer.inv.adroot.lgim.com',
-                           'PORT': 54323,
-                           'DATABASE': 'd00_asset_allocation_data'
-                           })
+
     d = ArpProcCaller()
 
     # d.select_times_strategy(1)
@@ -148,13 +143,10 @@ if __name__ == '__main__':
     fs = FundStrategy('f1', 'times', 1, Decimal(1))
     u_id = 'JS89275'
     a_ws = [FundStrategyAssetWeight('a1', Decimal(1)), FundStrategyAssetWeight('a2', Decimal(2))]
-    a_as = [
-        FundStrategyAssetAnalytic('a1', 'performance', 'spot', Decimal(1)),
-        FundStrategyAssetAnalytic('a1', 'signal', 'value', Decimal(2)),
-        FundStrategyAssetAnalytic('a2', 'performance', 'spot', Decimal(3)),
-        FundStrategyAssetAnalytic('a2', 'signal', 'value', Decimal(4))
-    ]
+    a_as = [FundStrategyAssetAnalytic('a1', 'performance', 'spot', Decimal(1)),
+            FundStrategyAssetAnalytic('a1', 'signal', 'value', Decimal(2)),
+            FundStrategyAssetAnalytic('a2', 'performance', 'spot', Decimal(3)),
+            FundStrategyAssetAnalytic('a2', 'signal', 'value', Decimal(4))]
     pcv = '0.0'
     fsr = d.insert_fund_strategy_results(fs, u_id)
     print(fsr)
-

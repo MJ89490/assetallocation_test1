@@ -7,6 +7,7 @@ from assetallocation_arp.common_enums.strategy import TrendIndicator, CarryType,
 from psycopg2.extras import DateTimeTZRange
 
 
+# noinspection PyAttributeOutsideInit
 class Strategy(ABC):
     def __init__(self, name: Union[str, Name]):
         self.name = name
@@ -38,6 +39,7 @@ class Strategy(ABC):
         self._version = x
 
 
+# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class Times(Strategy):
     name = Name.times.name
 
@@ -181,6 +183,7 @@ class Fica(Strategy):
         self._trading_cost = x
 
 
+# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class Effect(Strategy):
     name = Name.effect.name
 
@@ -211,7 +214,7 @@ class Effect(Strategy):
 
     @inflation_lag_interval.setter
     def inflation_lag_interval(self, x: int) -> None:
-        self._inflation_lag_interval =  f'{-x} mons'
+        self._inflation_lag_interval = f'{-x} mons'
 
     @property
     def carry_type(self) -> str:
@@ -262,7 +265,7 @@ class Effect(Strategy):
         self._include_shorts = x
 
     @property
-    def inflation_lag_in_months(self) -> str:
+    def inflation_lag_in_months(self) -> int:
         return self._inflation_lag_in_months
 
     @inflation_lag_in_months.setter

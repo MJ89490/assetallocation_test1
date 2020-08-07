@@ -9,6 +9,7 @@ from assetallocation_arp.data_etl.dal.asset_analytic import AssetAnalytic
 
 
 # TODO rename type (+ enum?)
+# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class Asset(ABC):
     def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
                  currency: Union[str, Currency], name: str, type: str):
@@ -93,7 +94,7 @@ class Asset(ABC):
             self._asset_analytics.append(asset_analytic)
         else:
             raise ValueError(f'Tickers do not match. Asset ticker "{self.ticker}",'
-                             f'asset_analytic ticker "{asset_analytic.ticker}"')
+                             f'asset_analytic ticker "{asset_analytic.asset_ticker}"')
 
 
 class FicaAsset(Asset):
@@ -112,6 +113,7 @@ class FicaAsset(Asset):
         self._generic_yield_ticker = x
 
 
+# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class TimesAsset(Asset):
     def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
                  s_leverage: int, signal_ticker: str, future_ticker: str, cost: Decimal) -> None:
@@ -154,6 +156,7 @@ class TimesAsset(Asset):
         self._cost = x
 
 
+# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class EffectAsset(Asset):
     def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
                  ndf_code: str, spot_code: str, position_size: Decimal) -> None:

@@ -19,7 +19,7 @@ begin
 	  and in_use = 't';
 	insert into config.execution_state (system_datetime, execution_id)
 	values (now(), execution_id)
-	RETURNING execution_state.id into execution_state_id
+	RETURNING execution_state.id into execution_state_id;
 	return;
 END
 $$
