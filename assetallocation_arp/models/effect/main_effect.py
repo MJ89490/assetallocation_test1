@@ -115,7 +115,8 @@ def run_effect():
                                                     dates_index=obj_import_data.dates_origin_index)
 
     obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
-                                                    returns_excl_signals=aggregate_currencies['agg_total_excl_signals'])
+                                                    returns_excl_signals=aggregate_currencies['agg_total_excl_signals'],
+                                                    returns_incl_signals=aggregate_currencies['agg_total_incl_signals'])
 
 
 if __name__ == '__main__':

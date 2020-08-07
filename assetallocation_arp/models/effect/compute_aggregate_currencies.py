@@ -61,7 +61,7 @@ class ComputeAggregateCurrencies:
                 try:
                     volatility = 1 / (math.sqrt(52) * stats.stdev(values_rolling_window.iloc[1:]))
                 except ZeroDivisionError:
-                    volatility = float("Nan")
+                    volatility = 0
 
                 # Add the standard deviation results into a list
                 volatilities.append(volatility)

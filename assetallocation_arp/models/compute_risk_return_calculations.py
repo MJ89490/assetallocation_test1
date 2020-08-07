@@ -9,38 +9,56 @@ class ComputeRiskReturnCalculations:
         self.end_date = end_date
         self.dates_index = dates_index
 
-    def compute_no_signals_excess_returns(self, returns_excl_signals):
+    def compute_excess_returns(self, returns_excl_signals, returns_incl_signals):
         exp = 365 / (self.end_date - self.start_date).days
 
-        return (((returns_excl_signals.loc[self.end_date][0]/returns_excl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
+        excess_returns_no_signals = (((returns_excl_signals.loc[self.end_date][0] / returns_excl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
+        excess_returns_with_signals = (((returns_incl_signals.loc[self.end_date][0] / returns_incl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
+
+        return {'excess_returns_no_signals': excess_returns_no_signals,
+                'excess_returns_with_signals': excess_returns_with_signals}
 
     @staticmethod
-    def compute_no_signals_std_dev(returns_excl_signals):
+    def compute_std_dev(returns_excl_signals, returns_incl_signals):
 
-        return (returns_excl_signals / returns_excl_signals.shift(1)).std()[0] * sqrt(52) * 100
+        std_dev_no_signals = (returns_excl_signals / returns_excl_signals.shift(1)).std()[0] * sqrt(52) * 100
+        std_dev_with_signals = (returns_incl_signals / returns_incl_signals.shift(1)).std()[0] * sqrt(52) * 100
+
+        return {'std_dev_no_signals': std_dev_no_signals, 'std_dev_with_signals': std_dev_with_signals}
 
     @staticmethod
-    def compute_no_signals_sharpe_ratio(excess_returns, std_dev):
+    def compute_sharpe_ratio(excess_returns, std_dev):
 
-        return excess_returns / std_dev
+        sharpe_ratio_no_signals = excess_returns['excess_returns_no_signals'] / std_dev['std_dev_no_signals']
+        sharpe_ratio_with_signals = excess_returns['excess_returns_with_signals'] / std_dev['std_dev_with_signals']
 
-    def compute_no_signals_max_drawdown(self, returns_excl_signals):
+        return {'sharpe_ratio_no_signals': sharpe_ratio_no_signals,
+                'sharpe_ratio_with_signals': sharpe_ratio_with_signals}
 
-        # find out the max value between t_start and t_end
-        max_price = (returns_excl_signals[self.start_date:self.end_date]).max()[0]
-        # find out the max date
-        max_price_date = returns_excl_signals[returns_excl_signals.Total_Excl_Signals == max_price].index.values[0]
+    @staticmethod
+    def compute_no_signals_max_drawdown(returns_excl_signals, returns_incl_signals):
 
-        # find out the min value between t_max and date_end
-        min_price = (returns_excl_signals[max_price_date:self.end_date]).min()[0]
+        returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.to_list()
+        returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.tolist()
 
-        # compute the maximum drawdown
-        return ((min_price / max_price) - 1) * 100
+        max_drawdown_excl_values, max_drawdown_incl_values = [], []
+
+        for value in range(len(returns_excl_tmp)):
+
+            max_drawdown_excl_values.append(returns_excl_tmp[value] / max(returns_excl_tmp[0: value+1]) - 1)
+            max_drawdown_incl_values.append(returns_incl_tmp[value] / max(returns_incl_tmp[0: value+1]) - 1)
+
+        return {'max_drawdown_no_signals': abs(min(max_drawdown_excl_values)) * 100,
+                'max_drawdown_with_signals': abs(min(max_drawdown_incl_values)) * 100}
 
     @staticmethod
     def compute_no_signals_calmar_ratio(excess_returns, max_drawdown):
 
-        return excess_returns / max_drawdown
+        calmar_ratio_no_signals = excess_returns['excess_returns_no_signals'] / max_drawdown['max_drawdown_no_signals']
+        calmar_ratio_with_signals = excess_returns['excess_returns_with_signals'] / max_drawdown['max_drawdown_with_signals']
+
+        return {'calmar_ratio_no_sigals': calmar_ratio_no_signals,
+                'calmar_ratio_with_signals': calmar_ratio_with_signals}
 
     def compute_no_signals_equity_correlation(self):
         pass
@@ -48,11 +66,13 @@ class ComputeRiskReturnCalculations:
     def compute_no_signals_gbi_em_correlation(self):
         pass
 
-    def run_compute_risk_return_calculations(self, returns_excl_signals):
-        returns_excl_signals.to_csv('returns_exl_sign.csv')
-        excess_returns = self.compute_no_signals_excess_returns(returns_excl_signals)
-        std_dev = self.compute_no_signals_std_dev(returns_excl_signals)
-        sharpe_ratio = self.compute_no_signals_sharpe_ratio(excess_returns, std_dev)
-        max_drawdown = self.compute_no_signals_max_drawdown(returns_excl_signals)
+    def run_compute_risk_return_calculations(self, returns_excl_signals, returns_incl_signals):
+        excess_returns = self.compute_excess_returns(returns_excl_signals, returns_incl_signals)
+        std_dev = self.compute_std_dev(returns_excl_signals, returns_incl_signals)
+        sharpe_ratio = self.compute_sharpe_ratio(std_dev=std_dev, excess_returns=excess_returns)
+        max_drawdown = self.compute_no_signals_max_drawdown(returns_excl_signals, returns_incl_signals)
         calmar_ratio = self.compute_no_signals_calmar_ratio(excess_returns, max_drawdown)
+
+        return {'excess_returns': excess_returns, 'std_dev': std_dev, 'sharpe_ratio': sharpe_ratio,
+                'max_drawdown': max_drawdown, 'calmar_ratio': calmar_ratio}
 
