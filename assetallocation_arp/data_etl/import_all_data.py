@@ -10,13 +10,15 @@ import openpyxl
 import os
 import numpy as np
 from datetime import datetime
+from pathlib import Path
 
 #Comments: may be we should the structure of the import data when we will have the database
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
 # FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
-FILE_PATH = 'S:\Shared\IT\MultiAsset\Data\Arquive\matlabData.mat'
+FILE_PATH = Path(r'S:\Shared\IT\MultiAsset\Data\Arquive\matlabData.mat')
+
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
