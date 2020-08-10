@@ -5,13 +5,14 @@ from assetallocation_arp.common_enums.source import Source
 from assetallocation_arp.common_enums.asset_analytic import Category
 
 
+# noinspection PyAttributeOutsideInit
 class AssetAnalytic:
     def __init__(self, asset_ticker: str, source: Union[str, Source], category: Union[str, Category],
                  value: Decimal) -> None:
-        self._asset_ticker = asset_ticker
-        self._source = source
-        self._category = category
-        self._value = value
+        self.asset_ticker = asset_ticker
+        self.source = source
+        self.category = category
+        self.value = value
 
     @property
     def asset_ticker(self) -> str:

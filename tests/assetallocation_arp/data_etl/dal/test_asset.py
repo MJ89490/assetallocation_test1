@@ -2,7 +2,7 @@ import mock
 
 from pytest import mark, raises
 
-from assetallocation_arp.data_etl.dal.asset import Asset, TimesAsset, AssetAnalytic
+from assetallocation_arp.data_etl.dal.asset import Asset
 
 
 def test_asset_country_setter_raises_key_error_invalid_country():
