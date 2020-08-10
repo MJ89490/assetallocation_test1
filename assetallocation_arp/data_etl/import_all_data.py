@@ -81,10 +81,11 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
-    if sys.platform == 'linux2':
-        file_path = '/domino/datasets/local/matlab_data.csv'
-    else:
+    if sys.platform == 'win2':
         file_path = 'S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat'
+    else:
+        file_path = '/domino/datasets/local/matlab_data.csv'
+
     # if mat_file is None:
     #     print(sys.platform)
     #     if sys.platform == "Linux":
