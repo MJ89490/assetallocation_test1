@@ -1,5 +1,4 @@
 from decimal import Decimal
-from abc import ABC
 from typing import List, Union
 
 from assetallocation_arp.common_enums.asset import Category
@@ -10,18 +9,18 @@ from assetallocation_arp.data_etl.dal.asset_analytic import AssetAnalytic
 
 # TODO rename type (+ enum?)
 # noinspection PyAttributeOutsideInit
-class Asset(ABC):
+class Asset:
     def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
                  currency: Union[str, Currency], name: str, type: str):
         self.category = category
         self.country = country
+        self.region = self.country
         self.currency = currency
         self.description = ''
         self._name = name
         self._ticker = ticker
         self.tr_flag = False
         self._type = type
-        self._region = None
         self._asset_analytics = []
 
     @property
@@ -47,11 +46,14 @@ class Asset(ABC):
     @country.setter
     def country(self, x: Union[str, Country]) -> None:
         self._country = x if isinstance(x, Country) else Country[x]
-        self._region = country_region.get(x.name)
 
     @property
     def region(self) -> str:
         return self._region
+
+    @region.setter
+    def region(self, x: Country) -> None:
+        self._region = country_region.get(x.name)
 
     @property
     def type(self) -> str:
