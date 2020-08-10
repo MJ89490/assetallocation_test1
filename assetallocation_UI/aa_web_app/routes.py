@@ -1,5 +1,4 @@
 # Contains view functions for various URLs
-import pandas as pd
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import main_form

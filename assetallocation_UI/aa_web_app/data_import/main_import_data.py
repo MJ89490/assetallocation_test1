@@ -1,6 +1,7 @@
 from assetallocation_UI.aa_web_app.data_import.import_data_from_excel import ChartsDataFromExcel
 from assetallocation_UI.aa_web_app.data_import.charts_data_computations import ChartsDataComputations
 
+import os
 import sys
 
 # Check the code with SonarQube
@@ -10,7 +11,8 @@ def main_data():
     :return: dictionary with all the data needed for the Front-End
     """
     obj_charts_data = ChartsDataFromExcel()
-    obj_charts_data.path_file = r'C:\Users\AJ89720\PycharmProjects\assetallocation_arp\assetallocation_UI\aa_web_app\arp_dashboard_charts.xlsm'
+    obj_charts_data.path_file  = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard_charts.xlsm"))
+
     obj_charts_data.import_data()
     obj_charts_data.data_processing()
 
