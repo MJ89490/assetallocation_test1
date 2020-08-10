@@ -12,6 +12,7 @@ from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
 
+import os
 from flask_login import login_required
 from flask_login import logout_user
 from flask_login import login_user
@@ -99,7 +100,8 @@ def times_page():
             save = "save"
             save_file = "save_file"
             name_of_file = form.name_file_times.data + ".xls"
-            path_excel = "C:\\Users\\AJ89720\\PycharmProjects" #todo change the default location later
+            #TODO change the default location later
+            path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
             path_excel_times = path_excel + "\\" + name_of_file
 
             if form.save_excel_outputs.data is True:
