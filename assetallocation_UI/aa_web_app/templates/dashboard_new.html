@@ -24,7 +24,7 @@
                         <!-- NAVBAR
                         ===================================== !-->
                         <nav class="navbar navbar-inverse fixed-top be-top-header">
-                            <a><img width="110px" height="auto" id="icon-lgim" src="{} icon-lgim.png" alt="LGIM_logo"></a>
+                            <a><img width="110px" height="auto" id="icon-lgim" src="{{url_for('static', filename='img/icon-lgim.png')}}" alt="LGIM_logo"></a>
                         </nav>
 
                         <!-- SIDEBAR
@@ -37,7 +37,7 @@
                             <ul class="sub-menu">
                                 <div class="text-left">
                                     <!-- Export Data Form -->
-                                    <form action='', method="POST" novalidate name="ExportDataForm">
+                                    <form action='' method="POST" novalidate name="ExportDataForm">
                                         {{ form.hidden_tag() }}
                                         <div  class="form-group">
                                             <!-- Form: Versions -->
@@ -71,7 +71,7 @@
                             <ul class="sub-menu">
                                 <div class="text-left">
                                     <!-- Export Data Form -->
-                                    <form action='', method="POST" novalidate name="ExportDataForm">
+                                    <form action='' method="POST" novalidate name="ExportDataForm">
                                         {{ form.hidden_tag() }}
                                         <div  class="form-group">
                                             <!-- Form: Versions -->
@@ -135,13 +135,13 @@
                                 </div>
                             </ul>
                             <!-- Support Widget: connect to Outlook -->
-                            <a class="support-icon" href="mailto:NexusQuantDev@lgim.com" target="_blank">Support<span><img class="icon-settings" width="auto" height="38" src="/static/img/icon-settings.png" alt="Outlook_icon"></span></a>
+                            <a class="support-icon" href="mailto:NexusQuantDev@lgim.com" target="_blank">Support<span><img class="icon-settings" width="auto" height="38" src="{{url_for('static', filename='img/icon-settings.png')}}" alt="Outlook_icon"></span></a>
                         </div>
 
                         <!-- CHARTS AREA
                         ===================================== !-->
                         <div class="main">
-                            <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="/static/img/icon-dashboard.png" alt="Dashboard_icon"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2>
+                            <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="{{url_for('static', filename='img/icon-dashboard.png')}}" alt="Dashboard_icon"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2>
                             <!-- Sparklines Charts -->
                             <div class="row">
                                 <div class="col-12 col-lg-6">
