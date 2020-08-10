@@ -5,12 +5,12 @@ from os import environ
 from json import loads
 
 from assetallocation_arp.data_etl.dal.db import Db
-from assetallocation_arp.data_etl.dal.strategy import Times
-from data_etl.dal.asset_analytic import AssetAnalytic
-from assetallocation_arp.data_etl.dal.fundstrategy import (FundStrategy, FundStrategyAssetAnalytic,
-                                                           FundStrategyAssetWeight)
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times
+from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetAnalytic,
+                                                                        FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import month_interval_to_int
-from assetallocation_arp.data_etl.dal.asset import TimesAsset
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAsset
 from assetallocation_arp.common_enums.strategy import Name
 
 

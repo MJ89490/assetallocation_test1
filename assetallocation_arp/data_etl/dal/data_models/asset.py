@@ -4,7 +4,7 @@ from typing import List, Union
 from assetallocation_arp.common_enums.asset import Category
 from assetallocation_arp.common_enums.currency import Currency
 from assetallocation_arp.common_enums.country import Country, country_region
-from assetallocation_arp.data_etl.dal.asset_analytic import AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
 
 
 # TODO rename type (+ enum?)

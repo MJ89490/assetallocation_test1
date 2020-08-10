@@ -2,7 +2,7 @@ import mock
 
 from pytest import mark, raises
 
-from assetallocation_arp.data_etl.dal.asset import Asset
+from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 
 
 def test_asset_country_setter_raises_key_error_invalid_country():
@@ -23,7 +23,7 @@ def test_asset_category_setter_raises_key_error_invalid_category():
         Asset('a', 'invalid_category', 'EU', 'EUR', 'e', 'f')
 
 
-def test_asset_category_setter_sets_country_valid_category():
+def test_asset_category_setter_sets_category_valid_category():
     category = 'FX'
 
     a = Asset('a', category, 'EU', 'EUR', 'e', 'f')
@@ -36,7 +36,7 @@ def test_asset_currency_setter_raises_key_error_invalid_currency():
         Asset('a', 'FX', 'EU', 'invalid_currency', 'e', 'f')
 
 
-def test_asset_currency_setter_sets_country_valid_currency():
+def test_asset_currency_setter_sets_currency_valid_currency():
     currency = 'EUR'
 
     a = Asset('a', 'FX', 'EU', currency, 'e', 'f')
@@ -51,7 +51,7 @@ def test_asset_region_setter_sets_region_based_on_country(country, expected):
 
 
 def test_asset_add_analytic_raises_error_if_tickers_do_not_match():
-    with mock.patch('assetallocation_arp.data_etl.dal.asset.AssetAnalytic', autospec=True) as MockAssetAnalytic:
+    with mock.patch('assetallocation_arp.data_etl.dal.data_models.asset.AssetAnalytic', autospec=True) as MockAssetAnalytic:
         a = Asset('a', 'FX', 'EU', 'EUR', 'e', 'f')
         b = MockAssetAnalytic('not_a', 'b', 'c', 1)
         b.asset_ticker = 'not_a'
@@ -63,7 +63,7 @@ def test_asset_add_analytic_raises_error_if_tickers_do_not_match():
 def test_asset_add_analytic_adds_analytic_if_tickers_match():
     asset_ticker = 'ticker1'
 
-    with mock.patch('assetallocation_arp.data_etl.dal.asset.AssetAnalytic', autospec=True) as MockAssetAnalytic:
+    with mock.patch('assetallocation_arp.data_etl.dal.data_models.asset.AssetAnalytic', autospec=True) as MockAssetAnalytic:
         a = Asset(asset_ticker, 'FX', 'EU', 'EUR', 'e', 'f')
         b = MockAssetAnalytic(asset_ticker, 'b', 'c', 1)
         b.asset_ticker = asset_ticker
