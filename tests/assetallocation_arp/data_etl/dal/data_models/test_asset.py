@@ -45,7 +45,7 @@ def test_asset_currency_setter_sets_currency_valid_currency():
 
 
 @mark.parametrize('country, expected', [('EU', 'Europe'), ('US', 'North America')])
-def test_asset_region_setter_sets_region_based_on_country(country, expected):
+def test_asset_region_property_gets_region_based_on_country(country, expected):
     a = Asset('a', 'FX', country, 'EUR', 'e', 'f')
     assert expected == a.region
 

@@ -14,7 +14,6 @@ class Asset:
                  currency: Union[str, Currency], name: str, type: str):
         self.category = category
         self.country = country
-        self.region = self.country
         self.currency = currency
         self.description = ''
         self._name = name
@@ -49,11 +48,7 @@ class Asset:
 
     @property
     def region(self) -> str:
-        return self._region
-
-    @region.setter
-    def region(self, x: Country) -> None:
-        self._region = country_region.get(x.name)
+        return country_region.get(self.country.name)
 
     @property
     def type(self) -> str:

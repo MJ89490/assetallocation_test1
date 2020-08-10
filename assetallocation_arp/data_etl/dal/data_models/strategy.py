@@ -1,6 +1,5 @@
 from typing import List, Union
 from decimal import Decimal
-from abc import ABC
 
 from assetallocation_arp.common_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
 
@@ -8,7 +7,7 @@ from psycopg2.extras import DateTimeTZRange
 
 
 # noinspection PyAttributeOutsideInit
-class Strategy(ABC):
+class Strategy:
     def __init__(self, name: Union[str, Name]):
         self.name = name
         self._description = ''
@@ -47,22 +46,17 @@ class Times(Strategy):
                  leverage_type: Union[str, Leverage], long_signals: List[Decimal], short_signals: List[Decimal],
                  time_lag_in_months: int, volatility_window: int) -> None:
         super().__init__(self.name)
-        self._day_of_week = day_of_week
+        self.day_of_week = day_of_week
         self.frequency = frequency
         self.leverage_type = leverage_type
         self._long_signals = long_signals
         self._short_signals = short_signals
         self.time_lag_in_months = time_lag_in_months
-        self.time_lag_interval = time_lag_in_months
         self._volatility_window = volatility_window
 
     @property
     def time_lag_interval(self) -> str:
-        return self._time_lag_interval
-
-    @time_lag_interval.setter
-    def time_lag_interval(self, x: int) -> None:
-        self._time_lag_interval = f'{-x} mons'
+        return f'{-self.time_lag_in_months} mons'
 
     @property
     def day_of_week(self) -> DayOfWeek:
@@ -187,7 +181,7 @@ class Fica(Strategy):
 class Effect(Strategy):
     name = Name.effect.name
 
-    def __init__(self, carry_type: str, closing_threshold: Decimal, cost: Decimal, day_of_week: Union[int, DayOfWeek],
+    def __init__(self, carry_type: Union[str, CarryType], closing_threshold: Decimal, cost: Decimal, day_of_week: Union[int, DayOfWeek],
                  frequency: Union[str, Frequency], include_shorts: bool, inflation_lag_in_months: int,
                  interest_rate_cut_off_long: Decimal, interest_rate_cut_off_short: Decimal,
                  moving_average_long_term: int, moving_average_short_term: int, is_realtime_inflation_forecast: bool,
@@ -200,7 +194,6 @@ class Effect(Strategy):
         self.frequency = frequency
         self._include_shorts = include_shorts
         self.inflation_lag_in_months = inflation_lag_in_months
-        self.inflation_lag_interval = inflation_lag_in_months
         self._interest_rate_cut_off_long = interest_rate_cut_off_long
         self._interest_rate_cut_off_short = interest_rate_cut_off_short
         self._moving_average_long_term = moving_average_long_term
@@ -210,14 +203,10 @@ class Effect(Strategy):
 
     @property
     def inflation_lag_interval(self) -> str:
-        return self._inflation_lag_interval
-
-    @inflation_lag_interval.setter
-    def inflation_lag_interval(self, x: int) -> None:
-        self._inflation_lag_interval = f'{-x} mons'
+        return f'{-self.inflation_lag_in_months} mons'
 
     @property
-    def carry_type(self) -> str:
+    def carry_type(self) -> CarryType:
         return self._carry_type
 
     @carry_type.setter
