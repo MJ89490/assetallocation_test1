@@ -13,11 +13,6 @@ import numpy as np
 from datetime import datetime
 
 
-#Comments: may be we should the structure of the import data when we will have the database
-#          we are not going to use the matlab file but grab the data from the database directly
-#          it might be a good idea to create classes?
-
-
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
     mat_file_data = spio.loadmat(file_path)
@@ -87,7 +82,7 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        if is_domino():
+        if is_domino() == True:
             file_path = '/domino/datasets/local/matlab_data.csv'
         else:
             file_path = 'S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat'
@@ -111,7 +106,7 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
 
 
 def is_domino():
-    
+
     if sys.platform == "Linux":
         return True
     return False
