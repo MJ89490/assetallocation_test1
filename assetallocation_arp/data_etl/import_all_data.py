@@ -17,7 +17,10 @@ from datetime import datetime
 #          it might be a good idea to create classes?
 
 # FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
-FILE_PATH = os.path.abspath('S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat')
+import sys
+
+
+FILE_PATH = sys.path('S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat')
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
