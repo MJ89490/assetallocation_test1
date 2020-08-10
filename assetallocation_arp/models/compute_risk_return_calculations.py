@@ -1,6 +1,6 @@
-import pandas as pd
 from math import sqrt
 
+#todo add docstrings
 
 class ComputeRiskReturnCalculations:
 
@@ -36,7 +36,7 @@ class ComputeRiskReturnCalculations:
                 'sharpe_ratio_with_signals': sharpe_ratio_with_signals}
 
     @staticmethod
-    def compute_no_signals_max_drawdown(returns_excl_signals, returns_incl_signals):
+    def compute_max_drawdown(returns_excl_signals, returns_incl_signals):
 
         returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.to_list()
         returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.tolist()
@@ -52,7 +52,7 @@ class ComputeRiskReturnCalculations:
                 'max_drawdown_with_signals': abs(min(max_drawdown_incl_values)) * 100}
 
     @staticmethod
-    def compute_no_signals_calmar_ratio(excess_returns, max_drawdown):
+    def compute_calmar_ratio(excess_returns, max_drawdown):
 
         calmar_ratio_no_signals = excess_returns['excess_returns_no_signals'] / max_drawdown['max_drawdown_no_signals']
         calmar_ratio_with_signals = excess_returns['excess_returns_with_signals'] / max_drawdown['max_drawdown_with_signals']
@@ -60,18 +60,34 @@ class ComputeRiskReturnCalculations:
         return {'calmar_ratio_no_sigals': calmar_ratio_no_signals,
                 'calmar_ratio_with_signals': calmar_ratio_with_signals}
 
-    def compute_no_signals_equity_correlation(self):
+    def compute_equity_correlation(self):
         pass
 
-    def compute_no_signals_gbi_em_correlation(self):
+    def compute_gbi_em_correlation(self):
         pass
 
     def run_compute_risk_return_calculations(self, returns_excl_signals, returns_incl_signals):
-        excess_returns = self.compute_excess_returns(returns_excl_signals, returns_incl_signals)
-        std_dev = self.compute_std_dev(returns_excl_signals, returns_incl_signals)
+        excess_returns = self.compute_excess_returns(returns_excl_signals=returns_excl_signals,
+                                                     returns_incl_signals=returns_incl_signals)
+
+        std_dev = self.compute_std_dev(returns_excl_signals=returns_excl_signals,
+                                       returns_incl_signals=returns_incl_signals)
+
         sharpe_ratio = self.compute_sharpe_ratio(std_dev=std_dev, excess_returns=excess_returns)
-        max_drawdown = self.compute_no_signals_max_drawdown(returns_excl_signals, returns_incl_signals)
-        calmar_ratio = self.compute_no_signals_calmar_ratio(excess_returns, max_drawdown)
+
+        max_drawdown = self.compute_max_drawdown(returns_excl_signals=returns_excl_signals,
+                                                 returns_incl_signals=returns_incl_signals)
+
+        calmar_ratio = self.compute_calmar_ratio(excess_returns=excess_returns, max_drawdown=max_drawdown)
+
+        import pandas as pd
+
+        c = [excess_returns, std_dev, sharpe_ratio, max_drawdown, calmar_ratio]
+
+        pd.DataFrame(c).to_csv('risk_return_calculations.csv')
+
+
+
 
         return {'excess_returns': excess_returns, 'std_dev': std_dev, 'sharpe_ratio': sharpe_ratio,
                 'max_drawdown': max_drawdown, 'calmar_ratio': calmar_ratio}

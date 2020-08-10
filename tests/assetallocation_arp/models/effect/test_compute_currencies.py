@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import pytest
 
+
 @pytest.fixture
 def currencies():
     return ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR', 'PHP',

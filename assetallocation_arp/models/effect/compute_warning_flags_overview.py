@@ -1,6 +1,6 @@
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 
-
+#todo write docstrings for every fct
 class ComputeWarningFlagsOverview(ProcessDataEffect):
 
     def __init__(self, latest_signal_date, previous_seven_days_latest_date):
@@ -23,4 +23,5 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
         return rates_usd, rates_eur
 
     def compute_warning_flags_inflation(self):
+        #todo write doctstrings and specify why it will be done later
         pass

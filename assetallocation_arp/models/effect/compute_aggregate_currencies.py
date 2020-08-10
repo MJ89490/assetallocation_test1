@@ -85,10 +85,7 @@ class ComputeAggregateCurrencies:
         :param carry_origin: carry data from Bloomberg for all currencies
         :return: dataFrame of Excl signals (total return)
         """
-        res = (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
-
-        res.to_csv('return_excl_agg.csv')
-        return res
+        return (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
     def compute_excl_signals_spot_return(self, spot_origin):
         """
@@ -214,6 +211,18 @@ class ComputeAggregateCurrencies:
 
         aggregate_spot_incl_signals = self.compute_aggregate_spot_incl_signals(spot_incl_costs=spot_incl_costs)
         aggregate_spot_excl_signals = self.compute_aggregate_spot_excl_signals(spot_excl_costs=excl_signals_spot_return)
+
+
+
+
+        log_returns_excl_costs.to_csv('log_returns_excl_costs.csv')
+        weighted_performance.to_csv('weighted_performance.csv')
+        aggregate_total_incl_signals.to_csv('aggregate_total_incl_signals.csv')
+        aggregate_total_excl_signals.to_csv('aggregate_total_excl_signals.csv')
+        aggregate_spot_incl_signals.to_csv('aggregate_spot_incl_signals.csv')
+        aggregate_spot_excl_signals.to_csv('aggregate_spot_excl_signals.csv')
+
+
 
         return {'agg_total_incl_signals': aggregate_total_incl_signals,
                 'agg_total_excl_signals': aggregate_total_excl_signals,

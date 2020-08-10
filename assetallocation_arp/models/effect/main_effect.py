@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
-from assetallocation_arp.models.effect.compute_profit_and_loss_overview_overview import ComputeProfitAndLoss
+from assetallocation_arp.models.effect.compute_profit_and_loss_overview import ComputeProfitAndLoss
 from assetallocation_arp.models.effect.compute_signals_overview import ComputeSignalsOverview
 from assetallocation_arp.models.effect.compute_trades_overview import compute_trades_overview
 from assetallocation_arp.models.effect.compute_warning_flags_overview import ComputeWarningFlagsOverview
@@ -27,6 +27,7 @@ def run_effect():
     bid_ask_spread = 10
     obj_import_data = ComputeCurrencies(bid_ask_spread=bid_ask_spread)
     obj_import_data.process_data_effect()
+    #TODO read from the config file ; ask to Simone if the date will change
     obj_import_data.start_date_calculations = '2000-01-11'
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #

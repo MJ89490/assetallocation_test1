@@ -11,7 +11,7 @@ class ComputeProfitAndLoss:
     def compute_profit_and_loss_combo(self, combo_curr):
         """
         Function computing the last week of the profit and loss overview
-        :param combo: combo data of all currencies
+        :param combo_curr: combo data of all currencies from compute_currencies.py
         :return: a dataFrame with the combo of all currencies at the latest date
         """
 
@@ -20,8 +20,8 @@ class ComputeProfitAndLoss:
     def compute_profit_and_loss_total(self, returns_ex_costs):
         """
         Function computing the Total (returns) of profit an loss overview
-        :param returns_ex_costs: returns exclude costs of acombo_currll currencies
-        :return:a dataFrame of the returns of all currencies at the lateste date
+        :param returns_ex_costs: returns exclude costs of all currencies
+        :return:a dataFrame of the returns of all currencies at the latest date
         """
 
         profit_and_loss_returns = returns_ex_costs / returns_ex_costs.shift(1)
@@ -32,9 +32,9 @@ class ComputeProfitAndLoss:
     def compute_profit_and_loss_spot(self, spot_origin, combo_overview):
         """
         Function computing the Spot of profit and loss overview
-        :param spot_origin_data: spot of all currencies
+        :param spot_origin: spot of all currencies
         :param combo_overview: combo from compute_profit_and_loss_combo function
-        :return: a dataFrame of the spot of all currncies at the lateste date
+        :return: a dataFrame of the spot of all currencies at the latest date
         """
         profit_and_loss_spot = spot_origin / spot_origin.shift(1)
         profit_and_loss_spot = profit_and_loss_spot.apply(lambda x: x - 1)
@@ -60,12 +60,13 @@ class ComputeProfitAndLoss:
         """
         Function calculating the profit and loss notional (bp) of the spot, returns and carry
         :param spot_overview: spot overview data of all currencies
-        :param returns_overview: returns overview data of all currencies
+        :param total_overview: returns overview data of all currencies
         :param combo_overview: combo overview of all currencies
-        :param returns: returns data from aggregate currencies (compute_aggregate_total_incl_signals)
-        :param spot: spot data from aggregate currencies (compute_aggregate_spot_incl_signals)
-        :return: a dictionnary of profit and loss ytd and weekly
+        :param total_incl_signals: returns data from aggregate currencies (compute_aggregate_total_incl_signals)
+        :param spot_incl_signals: spot data from aggregate currencies (compute_aggregate_spot_incl_signals)
+        :return: a dictionary of profit and loss ytd and weekly
         """
+        #todo ajouter fct Laura pour work day
         last_year = pd.to_datetime("31-12-{}".format((self.latest_date - pd.DateOffset(years=1)).year))
 
         # YTD P&L:: Total (Returns)
@@ -155,6 +156,10 @@ class ComputeProfitAndLoss:
                                                                                 weekly_total_notional=profit_and_loss_notional['profit_and_loss_total_weekly_notional'],
                                                                                 weekly_spot_notional=profit_and_loss_notional['profit_and_loss_spot_weekly_notional'],
                                                                                 weighted_perf=weighted_perf)
+
+        pd.DataFrame([profit_and_loss_notional]).to_csv('profit_and_loss_notional.csv')
+        pd.DataFrame([profit_and_loss_matr]).to_csv('profit_and_loss_matr.csv')
+
 
         profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview,
                                     'profit_and_loss_total_overview': profit_and_loss_total_overview,

@@ -12,6 +12,7 @@ from assetallocation_arp.models import arp_signals as arp
 from pandas.tseries.offsets import BDay
 from assetallocation_arp.common_libraries import leverage_types as leverage_name
 
+#todo move times model into folder
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
