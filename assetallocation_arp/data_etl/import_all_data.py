@@ -82,7 +82,7 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        if is_domino() == True:
+        if sys.platform == "Linux":
             file_path = '/domino/datasets/local/matlab_data.csv'
         else:
             file_path = 'S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat'
@@ -103,10 +103,3 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     all_data = matfile_to_dataframe(file_path, model_date)
 
     return strategy_inputs, asset_inputs, all_data
-
-
-def is_domino():
-
-    if sys.platform == "Linux":
-        return True
-    return False
