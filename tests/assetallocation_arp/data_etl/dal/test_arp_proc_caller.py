@@ -2,7 +2,8 @@ import mock
 import pytest
 from decimal import Decimal
 
-from assetallocation_arp.data_etl.dal.arp_proc_caller import ArpProcCaller, Times, TimesAsset, FundStrategyAssetAnalytic
+from assetallocation_arp.data_etl.dal.arp_proc_caller import (ArpProcCaller, Times, TimesAsset, FundStrategy,
+                                                              FundStrategyAssetAnalytic, FundStrategyAssetWeight)
 from datetime import datetime
 
 
@@ -140,11 +141,8 @@ def test_analytics_to_composite_returns_expected_value():
     expected = ['("a","b","c",1)', '("d","e","f",2)']
     assert expected == returns
 
-# TODO test _weights_to_composite
-# TODO test select_fund_strategy_results
 
-
-def mock_fund_strategy_asset_analytic(asset_ticker, category, subcategory, value):
+def mock_fund_strategy_asset_analytic(asset_ticker: str, category: str, subcategory: str, value: Decimal):
     MockFundStrategyAssetAnalytic = mock.create_autospec(FundStrategyAssetAnalytic)
     mock_fsaa = MockFundStrategyAssetAnalytic(asset_ticker, category, subcategory, value)
     mock_fsaa.asset_ticker = asset_ticker
@@ -152,3 +150,50 @@ def mock_fund_strategy_asset_analytic(asset_ticker, category, subcategory, value
     mock_fsaa.subcategory = subcategory
     mock_fsaa.value = value
     return mock_fsaa
+
+
+def test_weight_to_composite_returns_expected_value():
+    mock_fsaa1 = mock_fund_strategy_asset_weights('a', Decimal(1), Decimal(2))
+    mock_fsaa2 = mock_fund_strategy_asset_weights('c', Decimal(4), Decimal(3))
+
+    returns = ArpProcCaller._weights_to_composite([mock_fsaa1, mock_fsaa2])
+
+    expected = ['("a",1,2)', '("c",4,3)']
+    assert expected == returns
+
+
+def mock_fund_strategy_asset_weights(asset_ticker: str, strategy_weight: Decimal, implemented_weight: Decimal):
+    MockFundStrategyAssetWeight = mock.create_autospec(FundStrategyAssetWeight)
+    mock_fsaw = MockFundStrategyAssetWeight(asset_ticker, strategy_weight)
+    mock_fsaw.asset_ticker = asset_ticker
+    mock_fsaw.strategy_weight = strategy_weight
+    mock_fsaw.implemented_weight = implemented_weight
+    return mock_fsaw
+
+
+def test_select_fund_strategy_results_calls_call_proc(mock_call_proc):
+    fund_name = 'b'
+    strategy_name = 'times'
+    business_datetime = datetime(2020, 2, 1)
+    system_datetime = datetime(2021, 3, 4)
+    mock_call_proc.return_value = []
+
+    a = ArpProcCaller()
+    a.select_fund_strategy_results(fund_name, strategy_name, business_datetime, system_datetime)
+
+    mock_call_proc.assert_called_once_with(a, 'arp.select_fund_strategy_results',
+                                           [fund_name, strategy_name, business_datetime, system_datetime])
+
+
+def test_select_times_assets_returns_fund_strategy(mock_call_proc):
+    fund_name = 'b'
+    strategy_name = 'times'
+    business_datetime = datetime(2020, 2, 1)
+    system_datetime = datetime(2021, 3, 4)
+    mock_call_proc.return_value = [mock.MagicMock(), mock.MagicMock(), mock.MagicMock()]
+
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FundStrategy', autospec=True):
+        a = ArpProcCaller()
+        returns = a.select_fund_strategy_results(fund_name, strategy_name, business_datetime, system_datetime)
+
+    assert isinstance(returns, FundStrategy)

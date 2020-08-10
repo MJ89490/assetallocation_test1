@@ -72,10 +72,9 @@ class ArpProcCaller(Db):
         ticker_analytics = self._analytics_to_composite(fund_strategy.asset_analytics)
 
         res = self.call_proc('arp.insert_fund_strategy_results',
-                                          [fund_strategy.business_datetime, fund_strategy.fund_name,
-                                           fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
-                                           fund_strategy.strategy_version, fund_strategy.weight, user_id,
-                                           fund_strategy.python_code_version, ticker_weights, ticker_analytics])
+                             [fund_strategy.business_datetime, fund_strategy.fund_name, fund_strategy.output_is_saved,
+                              fund_strategy.strategy_name.name, fund_strategy.strategy_version, fund_strategy.weight,
+                              user_id, fund_strategy.python_code_version, ticker_weights, ticker_analytics])
         fund_strategy_id = res[0].get('fund_strategy_id')
 
         return fund_strategy_id is not None
