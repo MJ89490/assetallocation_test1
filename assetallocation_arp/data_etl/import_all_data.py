@@ -8,6 +8,7 @@ import scipy.io as spio
 import pandas as pd
 import openpyxl
 import os
+import sys
 import numpy as np
 from datetime import datetime
 
@@ -16,11 +17,6 @@ from datetime import datetime
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
-# FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
-import sys
-
-
-FILE_PATH = sys.path('S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat')
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
@@ -43,6 +39,7 @@ def matfile_to_dataframe(file_path, model_date):
 
     mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
     mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date]  # remove data after selected date
+
     return mat_dataframe
 
 
@@ -90,9 +87,10 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
-        file_path = FILE_PATH
-    else:
-        file_path = mat_file
+        if is_domino():
+            file_path = '/domino/datasets/local/matlab_data.csv'
+        else:
+            file_path = 'S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat'
 
     if input_file is None:
         input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
@@ -112,18 +110,8 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     return strategy_inputs, asset_inputs, all_data
 
 
-def extract_inputs_from_ui_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
-
-    if mat_file is None:
-        file_path = FILE_PATH
-
-    if model_date is None:
-        model_date = np.datetime64(datetime.today())
-
-    if input_file is None:
-        input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
-
-    asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
-    all_data = matfile_to_dataframe(file_path, model_date)
-
-    return asset_inputs, all_data
+def is_domino():
+    
+    if sys.platform == "Linux":
+        return True
+    return False
