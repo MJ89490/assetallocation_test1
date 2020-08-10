@@ -50,9 +50,15 @@
                     <div class="collapse navbar-collapse pull-right" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                                 <li class="nav-link active">
-                                    <a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
+                                    <a class="nav-link" href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a>
+                                </li>
+
+                                <li class="nav-link active">
+                                    <a class="nav-link" href="#">Models Consolidation</a>
+                                </li>
+
                                     <!-- User is log-in -->
-                                    {% if g.user.is_authenticated %}
+                                    <!--{% if g.user.is_authenticated %}-->
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Models
@@ -67,13 +73,13 @@
                                             <a class="dropdown-item" href="#">COMCA</a>
                                         </div>
                                     </li>
-                                <li class="nav-link"><a class="nav-link" href="#">Models Consolidation</a></li>
-                                <li class="nav-link"><a class="nav-link" href="{{ url_for('logout') }}">LogOut</a></li>
-                                {% endif %}
+                                <!--<li class="nav-link"><a class="nav-link" href="#">Models Consolidation</a></li>-->
+                                <!--<li class="nav-link"><a class="nav-link" href="{{ url_for('logout') }}">LogOut</a></li>-->
+                                <!--{% endif %}-->
                                 <!-- User is log-off -->
-                                {% if not g.user.is_authenticated %}
-                                    <li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-                                {% endif %}
+                                <!--{% if not g.user.is_authenticated %}-->
+                                    <!--<li class="nav-link"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>-->
+                                <!--{% endif %}-->
 
                         </ul>
                     </div>

@@ -63,7 +63,7 @@ def login_post():
 
 
 @app.route('/times_page',  methods=['GET', 'POST'])
-@login_required
+# @login_required
 def times_page():
     form = InputsTimesModel()
     #change to lowercase
@@ -113,7 +113,7 @@ def times_page():
 
 
 @app.route('/times_dashboard', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def times_dashboard():
     title = "Dashboard"
     form = ExportDataForm()
@@ -204,11 +204,11 @@ def times_dashboard():
     return render_template('dashboard_new.html', title=title, form=form, m=m, **template_data)
 
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
+# @app.route('/logout')
+# @login_required
+# def logout():
+#     logout_user()
+#     return redirect(url_for('home'))
 
 
 
