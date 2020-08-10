@@ -82,10 +82,11 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
     if mat_file is None:
+        print(sys.platform)
         if sys.platform == "Linux":
             file_path = '/domino/datasets/local/matlab_data.csv'
-        else:
-            file_path = 'S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat'
+        # else:
+        #     file_path = 'S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat'
 
     if input_file is None:
         input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
