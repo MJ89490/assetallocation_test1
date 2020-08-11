@@ -2,6 +2,7 @@ from typing import List, Union
 from decimal import Decimal
 
 from assetallocation_arp.common_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
+from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -56,7 +57,7 @@ class Times(Strategy):
 
     @property
     def time_lag_interval(self) -> str:
-        return f'{-self.time_lag_in_months} mons'
+        return DbTypeConverter.month_lag_int_to_interval(self.time_lag_in_months)
 
     @property
     def day_of_week(self) -> DayOfWeek:
@@ -188,22 +189,22 @@ class Effect(Strategy):
                  trend_indicator: Union[str, TrendIndicator]) -> None:
         super().__init__(self.name)
         self.carry_type = carry_type
-        self._closing_threshold = closing_threshold
-        self._cost = cost
+        self.closing_threshold = closing_threshold
+        self.cost = cost
         self.day_of_week = day_of_week
         self.frequency = frequency
-        self._include_shorts = include_shorts
+        self.include_shorts = include_shorts
         self.inflation_lag_in_months = inflation_lag_in_months
-        self._interest_rate_cut_off_long = interest_rate_cut_off_long
-        self._interest_rate_cut_off_short = interest_rate_cut_off_short
-        self._moving_average_long_term = moving_average_long_term
-        self._moving_average_short_term = moving_average_short_term
-        self._is_realtime_inflation_forecast = is_realtime_inflation_forecast
+        self.interest_rate_cut_off_long = interest_rate_cut_off_long
+        self.interest_rate_cut_off_short = interest_rate_cut_off_short
+        self.moving_average_long_term = moving_average_long_term
+        self.moving_average_short_term = moving_average_short_term
+        self.is_realtime_inflation_forecast = is_realtime_inflation_forecast
         self.trend_indicator = trend_indicator
 
     @property
     def inflation_lag_interval(self) -> str:
-        return f'{-self.inflation_lag_in_months} mons'
+        return DbTypeConverter.month_lag_int_to_interval(self.inflation_lag_in_months)
 
     @property
     def carry_type(self) -> CarryType:

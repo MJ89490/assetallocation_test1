@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION arp.insert_strategy_asset_analytics(
+CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_asset_analytics(
     fund_strategy_id int,
     analytics arp.ticker_category_subcategory_value[],
     execution_state_id int
@@ -16,12 +16,12 @@ BEGIN
     execution_state_id
   )
   SELECT
-    insert_strategy_asset_analytics.fund_strategy_id,
+    insert_fund_strategy_asset_analytics.fund_strategy_id,
     a.id,
     (aa).category,
     (aa).subcategory,
     (aa).value,
-    insert_strategy_asset_analytics.execution_state_id
+    insert_fund_strategy_asset_analytics.execution_state_id
   FROM
     unnest(analytics) as aa
     JOIN asset.asset a ON (aa).ticker = a.ticker;

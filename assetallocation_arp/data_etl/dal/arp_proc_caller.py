@@ -9,7 +9,7 @@ from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
-from assetallocation_arp.data_etl.dal.type_converter import month_interval_to_int
+from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAsset
 from assetallocation_arp.common_enums.strategy import Name
 
@@ -39,7 +39,7 @@ class ArpProcCaller(Db):
 
         row = res[0]
         t = Times(row['day_of_week'], row['frequency'], row['leverage_type'], row['long_signals'], row['short_signals'],
-                  -month_interval_to_int(row['time_lag']), row['volatility_window'])
+                  -DbTypeConverter.month_interval_to_int(row['time_lag']), row['volatility_window'])
         t.version = times_version
         t.description = row['description']
         return t
@@ -55,6 +55,7 @@ class ArpProcCaller(Db):
             t = TimesAsset(r['ticker'], r['category'], r['country'], r['currency'], r['name'], r['asset_type'],
                            r['s_leverage'], r['signal_ticker'], r['future_ticker'], r['cost'])
             t.description = r['description']
+            t.is_tr = r['is_tr']
 
             # asset_analytics is a str of the format '{"(source1,category1,value1)",..."(sourceN,categoryN,valueN)"}'
             for i in r['asset_analytics'][2:-2].split('","'):

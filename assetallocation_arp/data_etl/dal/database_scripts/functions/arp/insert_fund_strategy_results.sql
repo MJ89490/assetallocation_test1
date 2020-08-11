@@ -18,7 +18,7 @@ DECLARE
   fund_id int;
   strategy_id int;
 BEGIN
-  select config.insert_execution_state('insert_fund_strategy_results') into execution_state_id;
+  select config.insert_execution_state('arp.insert_fund_strategy_results') into execution_state_id;
   select select_fund.fund_id from fund.select_fund(fund_name) into fund_id;
   select select_strategy_id.strategy_id from arp.select_strategy_id(strategy_name, strategy_version) into strategy_id;
   select arp.insert_fund_strategy(business_datetime, fund_id, output_is_saved, strategy_id, weight,

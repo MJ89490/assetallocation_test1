@@ -18,7 +18,7 @@ class Asset:
         self.description = ''
         self._name = name
         self._ticker = ticker
-        self.tr_flag = False
+        self.is_tr = False
         self._type = type
         self._asset_analytics = []
 
@@ -79,12 +79,12 @@ class Asset:
         return self._ticker
 
     @property
-    def tr_flag(self) -> bool:
-        return self._tr_flag
+    def is_tr(self) -> bool:
+        return self._is_tr
 
-    @tr_flag.setter
-    def tr_flag(self, x: bool) -> None:
-        self._tr_flag = x
+    @is_tr.setter
+    def is_tr(self, x: bool) -> None:
+        self._is_tr = x
 
     def add_analytic(self, asset_analytic: AssetAnalytic) -> None:
         if asset_analytic.asset_ticker == self.ticker:
