@@ -101,8 +101,9 @@ def times_page():
             save_file = "save_file"
             name_of_file = form.name_file_times.data + ".xls"
             #TODO change the default location later
-            path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
-            path_excel_times = path_excel + "\\" + name_of_file
+            path_excel = '/mnt/models_results'
+            # path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
+            path_excel_times = path_excel + "/" + name_of_file
 
             if form.save_excel_outputs.data is True:
                 write_output_to_excel(model_outputs={Models.times.name: (POSITIONING, R, SIGNALS)},
