@@ -212,10 +212,6 @@ class ComputeAggregateCurrencies:
         aggregate_spot_incl_signals = self.compute_aggregate_spot_incl_signals(spot_incl_costs=spot_incl_costs)
         aggregate_spot_excl_signals = self.compute_aggregate_spot_excl_signals(spot_excl_costs=excl_signals_spot_return)
 
-
-
-
-        weighted_performance.to_csv('weighted_performance_results.csv')
         return {'agg_total_incl_signals': aggregate_total_incl_signals,
                 'agg_total_excl_signals': aggregate_total_excl_signals,
                 'agg_spot_incl_signals': aggregate_spot_incl_signals,

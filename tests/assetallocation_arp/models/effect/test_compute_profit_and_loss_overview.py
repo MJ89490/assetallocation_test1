@@ -28,3 +28,14 @@ def test_compute_profit_and_loss_spot():
 def test_compute_profit_and_loss_carry():
     assert np.allclose(np.array(PROFIT_AND_LOSS_RESULTS.Carry.tolist()),
                        np.array(PROFIT_AND_LOSS_ORIGIN.Carry.tolist())) is True
+
+
+def test_compute_profit_and_loss_notional():
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "profit_and_loss_notional_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "profit_and_loss_notional_results.csv"))
+
+    notional_results = pd.read_csv(path_result, sep=',', engine='python')
+    notional_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(notional_origin.values),
+                       np.array(notional_results.values)) is True
