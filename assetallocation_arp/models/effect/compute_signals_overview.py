@@ -70,10 +70,7 @@ class ComputeSignalsOverview:
         signals_drawdown_position_size_matr = self.compute_drawdown_position_size_matr(agg_total_incl_signals=agg_total_incl_signals)
         signals_limits_controls = self.compute_limits_controls(signals_combo=signals_combo_overview, agg_log_returns=agg_log_returns)
 
-        import pandas as pd
 
-        pd.DataFrame([signals_drawdown_position_size_matr]).to_csv('drawdown_position_size_matr.csv')
-        pd.DataFrame([signals_limits_controls]).to_csv('signals_limits_controls.csv')
 
         signals_overview = {'signals_real_carry': signals_real_carry_overview,
                             'signals_trend_overview': signals_trend_overview,

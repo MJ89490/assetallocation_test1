@@ -157,9 +157,6 @@ class ComputeProfitAndLoss:
                                                                                 weekly_spot_notional=profit_and_loss_notional['profit_and_loss_spot_weekly_notional'],
                                                                                 weighted_perf=weighted_perf)
 
-        pd.DataFrame([profit_and_loss_notional]).to_csv('profit_and_loss_notional.csv')
-        pd.DataFrame([profit_and_loss_matr]).to_csv('profit_and_loss_matr.csv')
-
 
         profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview,
                                     'profit_and_loss_total_overview': profit_and_loss_total_overview,

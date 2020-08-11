@@ -215,12 +215,7 @@ class ComputeAggregateCurrencies:
 
 
 
-        log_returns_excl_costs.to_csv('log_returns_excl_costs.csv')
-        weighted_performance.to_csv('weighted_performance.csv')
-        aggregate_total_incl_signals.to_csv('aggregate_total_incl_signals.csv')
-        aggregate_total_excl_signals.to_csv('aggregate_total_excl_signals.csv')
-        aggregate_spot_incl_signals.to_csv('aggregate_spot_incl_signals.csv')
-        aggregate_spot_excl_signals.to_csv('aggregate_spot_excl_signals.csv')
+        aggregate_spot_incl_signals.to_csv('aggregate_spot_incl_signals_results.csv')
 
 
 

@@ -80,11 +80,7 @@ class ComputeRiskReturnCalculations:
 
         calmar_ratio = self.compute_calmar_ratio(excess_returns=excess_returns, max_drawdown=max_drawdown)
 
-        import pandas as pd
 
-        c = [excess_returns, std_dev, sharpe_ratio, max_drawdown, calmar_ratio]
-
-        pd.DataFrame(c).to_csv('risk_return_calculations.csv')
 
 
 
