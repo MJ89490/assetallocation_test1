@@ -101,7 +101,7 @@ def times_page():
             save_file = "save_file"
             name_of_file = form.name_file_times.data + ".xls"
             #TODO change the default location later
-            path_excel = 'Asset_Allocation_Web_App/aa_model_results'
+            path_excel = '/mnt/results'
             # path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
             path_excel_times = path_excel + "/" + name_of_file
 
