@@ -34,7 +34,7 @@ def matfile_to_dataframe(file_path, model_date):
 
     mat_dataframe = mat_dataframe[mat_dataframe.index.dayofweek < 5]        # remove weekends
     mat_dataframe = mat_dataframe[mat_dataframe.index.values < model_date]  # remove data after selected date
-
+    mat_dataframe.to_csv('matlab_data.csv')
     return mat_dataframe
 
 
@@ -81,24 +81,27 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
 
+    if model_date is None:
+        model_date = np.datetime64(datetime.today())
+    else:
+        model_date = model_date
+
     if sys.platform == 'linux':
         file_path = '/domino/datasets/local/matlab_data_assetallocation/matlab_data.csv'
+        all_data = pd.read_csv(file_path, sep=',', engine='python')
+        all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
+        del all_data['Date']
     else:
-        file_path = 'S:/Shared/IT/MultiAsset/Data/Arquive/matlabData.mat'
+        file_path = r'S:\Shared\IT\MultiAsset\Data\Arquive\New folder\matlabData.mat'
+        all_data = matfile_to_dataframe(file_path, model_date)
 
     if input_file is None:
         input_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard.xlsm"))
     else:
         input_path = input_file
 
-    if model_date is None:
-        model_date = np.datetime64(datetime.today())
-    else:
-        model_date = model_date
-
     # load data and inputs
     strategy_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_inputs', 1)
     asset_inputs = data_frame_from_xlsx(input_path, 'rng_' + model_type + '_assets', 1)
-    # all_data = matfile_to_dataframe(file_path, model_date)
-    all_data = pd.read_csv(file_path, sep=',', engine='python')
+
     return strategy_inputs, asset_inputs, all_data
