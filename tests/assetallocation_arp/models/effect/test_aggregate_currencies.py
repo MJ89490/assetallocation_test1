@@ -64,16 +64,47 @@ def test_compute_aggregate_total_excl_signals():
 
 
 def test_compute_aggregate_spot_incl_signals():
-    pass
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_spot_incl_signals_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "aggregate_spot_incl_signals_results.csv"))
+
+    agg_results = pd.read_csv(path_result, sep=',', engine='python')
+    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(agg_origin.Spot_Incl_Signals.tolist()),
+                       np.array(agg_results.Spot_Incl_Signals.tolist())) is True
+
 
 def test_compute_aggregate_spot_excl_signals():
-    pass
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_spot_excl_signals_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "aggregate_spot_excl_signals_results.csv"))
+
+    agg_results = pd.read_csv(path_result, sep=',', engine='python')
+    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(agg_origin.Spot_Excl_Signals.tolist()),
+                       np.array(agg_results.Spot_Excl_Signals.tolist())) is True
+
 
 def test_compute_log_returns_excl_costs(currencies):
-    pass
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "log_returns_excl_costs_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "log_returns_excl_costs_results.csv"))
+
+    log_results = pd.read_csv(path_result, sep=',', engine='python')
+    log_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    for currency in currencies:
+        assert np.allclose(np.array(log_origin[currency].tolist()),
+                           np.array(log_results[currency].tolist())) is True
 
 def test_compute_weighted_performance():
-    pass
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "weighted_performance_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "weighted_performance_results.csv"))
+
+    weighted_results = pd.read_csv(path_result, sep=',', engine='python')
+    weighted_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(weighted_origin.Weighted_Performance.tolist()),
+                       np.array(weighted_results.Weighted_Performance.tolist())) is True
 
 
 

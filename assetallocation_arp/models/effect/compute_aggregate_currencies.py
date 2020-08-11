@@ -215,10 +215,7 @@ class ComputeAggregateCurrencies:
 
 
 
-        aggregate_spot_incl_signals.to_csv('aggregate_spot_incl_signals_results.csv')
-
-
-
+        weighted_performance.to_csv('weighted_performance_results.csv')
         return {'agg_total_incl_signals': aggregate_total_incl_signals,
                 'agg_total_excl_signals': aggregate_total_excl_signals,
                 'agg_spot_incl_signals': aggregate_spot_incl_signals,
