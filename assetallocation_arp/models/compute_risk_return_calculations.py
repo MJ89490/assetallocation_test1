@@ -57,8 +57,8 @@ class ComputeRiskReturnCalculations:
         calmar_ratio_no_signals = excess_returns['excess_returns_no_signals'] / max_drawdown['max_drawdown_no_signals']
         calmar_ratio_with_signals = excess_returns['excess_returns_with_signals'] / max_drawdown['max_drawdown_with_signals']
 
-        return {'calmar_ratio_no_sigals': calmar_ratio_no_signals / 100,
-                'calmar_ratio_with_signals': calmar_ratio_with_signals / 100}
+        return {'calmar_ratio_no_sigals': calmar_ratio_no_signals,
+                'calmar_ratio_with_signals': calmar_ratio_with_signals}
 
     def compute_equity_correlation(self):
         pass
