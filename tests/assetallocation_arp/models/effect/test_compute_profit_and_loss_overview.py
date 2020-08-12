@@ -39,3 +39,15 @@ def test_compute_profit_and_loss_notional():
 
     assert np.allclose(np.array(notional_origin.values),
                        np.array(notional_results.values)) is True
+
+
+def test_compute_profit_and_loss_implemented_in_matr():
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "profit_and_loss_matr_results_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "profit_and_loss_matr_results.csv"))
+
+    matr_results = pd.read_csv(path_result, sep=',', engine='python')
+    matr_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(matr_origin.values),
+                       np.array(matr_results.values)) is True
+
