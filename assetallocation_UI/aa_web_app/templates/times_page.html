@@ -87,7 +87,12 @@
                                             <form class="center" action="" method="POST" novalidate>
                                                 {{ form.hidden_tag() }}
                                                 <div align="center">
-                                                    {% block inputs %} {% block runModel%} {% endblock %} {% endblock %}
+
+                                                    {% block inputs %}
+                                                        {% block save %} {% endblock %}
+                                                        {% block runModel%} {% endblock %}
+                                                    {% endblock %}
+
                                                 </div>
                                             </form>
                                         </div>
@@ -98,23 +103,6 @@
                         {% if run_model_ok=="run_times_model_ok" %}
                              {% include 'pop_up_model.html' %}
                         {% endif%}
-
-                        <div class="row" id="row-inputs-save">
-                            <div class="col-12 col-lg-6"></div>
-                                <div class="col-12 col-lg-4">
-                                    <div class="widget widget-fullwidth-save be-loading">
-                                        <div class="widget-chart-container">
-                                            <form class="center" action="" method="POST" novalidate>
-                                                {{ form.hidden_tag() }}
-                                                <div align="center">
-                                                    {% block save %} {% endblock %}
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="col-12 col-lg-6"></div>
-                        </div>
 
                         {% if save_file=="save_file" %}
                              {% include 'pop_up_save.html' %}

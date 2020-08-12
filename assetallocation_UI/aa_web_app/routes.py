@@ -12,6 +12,7 @@ from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
 
+import sys
 import os
 from flask_login import login_required
 from flask_login import logout_user
@@ -65,6 +66,8 @@ def login_post():
 @app.route('/times_page',  methods=['GET', 'POST'])
 # @login_required
 def times_page():
+    #TODO put save results box in the same row as Model Inputs: Excel or Db
+    # if Excel ---> box to write title
     form = InputsTimesModel()
     #change to lowercase
     global ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
@@ -81,6 +84,7 @@ def times_page():
         elif request.form['submit_button'] == 'runTimesModel':
             run_model = "run_times_model"
             run_model_ok = "run_times_model_ok"
+            save_file = "save_file"
 
             try:
                 # 1. Read the input from the form
@@ -94,22 +98,37 @@ def times_page():
 
             ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
 
-            return render_template(TIMES_PAGE_NEW, title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok)
-
-        elif request.form['submit_button'] == 'selectTimesPath':
-            save = "save"
-            save_file = "save_file"
             name_of_file = form.name_file_times.data + ".xls"
-            #TODO change the default location later
-            path_excel = '/mnt/aa_model_results'
-            # path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
+
+            if sys.platform == 'linux':
+                path_excel = '/mnt/aa_model_results'
+            else:
+                path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
+
             path_excel_times = path_excel + "/" + name_of_file
 
             if form.save_excel_outputs.data is True:
                 write_output_to_excel(model_outputs={Models.times.name: (POSITIONING, R, SIGNALS)},
                                       path_excel_times=path_excel_times)
 
-            return render_template(TIMES_PAGE_NEW, title="Times", form=form, save=save, save_file=save_file)
+            return render_template(TIMES_PAGE_NEW, title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
+
+        # elif request.form['submit_button'] == 'selectTimesPath':
+        #     save = "save"
+        #     save_file = "save_file"
+        #     name_of_file = form.name_file_times.data + ".xls"
+        #
+        #     if sys.platform == 'linux':
+        #         path_excel = '/mnt/aa_model_results'
+        #     else:
+        #         path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
+        #     path_excel_times = path_excel + "/" + name_of_file
+        #
+        #     if form.save_excel_outputs.data is True:
+        #         write_output_to_excel(model_outputs={Models.times.name: (POSITIONING, R, SIGNALS)},
+        #                               path_excel_times=path_excel_times)
+        #
+        #     return render_template(TIMES_PAGE_NEW, title="Times", form=form, save=save, save_file=save_file)
 
     return render_template('times_page.html', title="Times", form=form)
 

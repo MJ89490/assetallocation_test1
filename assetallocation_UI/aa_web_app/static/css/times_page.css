@@ -151,7 +151,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 /* widgets */
 .widget.widget-fullwidth-inputs {
                                     background-color: #EBF4FA;
-                                    height: 530px;
+                                    height: 680px;
                                 }
 
 .widget.widget-fullwidth-save{
@@ -173,7 +173,7 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 #btn-group-inputs-model-leverage {padding-left: 85px; }
 #btn-group-inputs-model-frequency {text-align: center; color: #D3D3D3; padding-left: 65px; }
 #btn-group-inputs-model-week {text-align: center; color: #D3D3D3; padding-left: 65px; }
-#RunTheModelSubmit2{margin-top: 10px; }
+#RunTheModelSubmit2{margin-top: 10px; width: 398px; }
 #text-field-name-file{padding-bottom: 5px; }
 #check-box-save-excel{padding-bottom: 5px; }
 #check-box-save-db {padding-left: 46.5px; }

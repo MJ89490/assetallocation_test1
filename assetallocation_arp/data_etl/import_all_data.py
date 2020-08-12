@@ -92,7 +92,7 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
         all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
         del all_data['Date']
     else:
-        file_path = r'S:\Shared\IT\MultiAsset\Data\Arquive\New folder\matlabData.mat'
+        file_path = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
         all_data = matfile_to_dataframe(file_path, model_date)
 
     if input_file is None:

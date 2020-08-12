@@ -14,6 +14,9 @@ from assetallocation_arp.common_libraries import leverage_types as leverage_name
 
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
+    # Remove the index below in the dashboard: they are not in the all_data col
+    # "['RX1 R:00_0_R Comdty', 'CN1 R:00_0_R Comdty', 'G 1 R:00_0_R Comdty'] not in index"
+
 
     # format data and inputs
     asset_inputs_t = asset_inputs.set_index('asset').T
