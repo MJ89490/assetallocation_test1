@@ -1,0 +1,2 @@
+excess_returns_with_signals,std_dev_with_signals,sharpe_with_signals,max_drawdown_with_signals,calmar_ratio_with_signals,excess_returns_no_signals,std_dev_no_signals,sharpe_no_signals,max_drawdown_no_signals,calmar_ratio_no_signals
+1.941567238,0.855384678,2.269817649,3.610097234,0.537815774,3.140442218,2.280761539,1.376927033,19.01394862,0.165165178

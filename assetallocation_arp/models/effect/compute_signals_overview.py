@@ -48,7 +48,7 @@ class ComputeSignalsOverview:
         return {'drawdown': drawdown, 'size_matr': size_matr}
 
     def compute_limits_controls(self, signals_combo, agg_log_returns):
-
+        #TODO redo the computations
         # Current signals
         current_signals = tuple(list(signals_combo * self.size_attr))
         # Ex-ante volatility
@@ -56,7 +56,6 @@ class ComputeSignalsOverview:
         # Log returns with window lag
         log_returns_lag = agg_log_returns.iloc[latest_signal_date_loc - self.window:latest_signal_date_loc+1, :]
         ex_ante_vol = sqrt(52) * log_returns_lag.dot(current_signals).std() * 100
-
         # MATR notional
         matr_notional = signals_combo.sum() * self.size_attr * 100
 
@@ -69,8 +68,6 @@ class ComputeSignalsOverview:
         signals_combo_overview = self.compute_signals_combo(combo_curr=combo_curr)
         signals_drawdown_position_size_matr = self.compute_drawdown_position_size_matr(agg_total_incl_signals=agg_total_incl_signals)
         signals_limits_controls = self.compute_limits_controls(signals_combo=signals_combo_overview, agg_log_returns=agg_log_returns)
-
-
 
         signals_overview = {'signals_real_carry': signals_real_carry_overview,
                             'signals_trend_overview': signals_trend_overview,

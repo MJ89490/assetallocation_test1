@@ -23,3 +23,21 @@ def test_compute_signals_trend():
 def test_compute_signals_combo():
     assert np.allclose(np.array(SIGNALS_RESULTS.This_week.tolist()),
                        np.array(SIGNALS_ORIGIN.This_week.tolist())) is True
+
+
+def test_compute_drawdown_position_size_matr():
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "drawdown_position_size_matr_origin.csv"))
+    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "drawdown_position_size_matr_results.csv"))
+    drawdown_size_results = pd.read_csv(path_results, sep=',', engine='python')
+    drawdown_size_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(drawdown_size_results.values.tolist()), np.array(drawdown_size_origin.values.tolist())) is True
+
+
+def test_compute_limits_controls():
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "limits_controls_origin.csv"))
+    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "limits_controls_results.csv"))
+    limits_results = pd.read_csv(path_results, sep=',', engine='python')
+    limits_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(limits_results.values.tolist()), np.array(limits_origin.values.tolist())) is True
