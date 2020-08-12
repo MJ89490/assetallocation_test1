@@ -70,7 +70,7 @@ def times_page():
     # if Excel ---> box to write title
     form = InputsTimesModel()
     #change to lowercase
-    global ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
+    # global ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
 
     TIMES_PAGE_NEW = 'times_page_new_version_layout.html'
 
@@ -96,19 +96,20 @@ def times_page():
                 return render_template(TIMES_PAGE_NEW,
                                        title="Times", form=form, run_model=run_model, message=message)
 
-            ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS = run_model_from_web_interface(model_type=Models.times.name)
+            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
 
             name_of_file = form.name_file_times.data + ".xls"
 
             if sys.platform == 'linux':
-                path_excel = '/mnt/aa_model_results'
+                path_excel = '/mnt/results'
             else:
                 path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
 
             path_excel_times = path_excel + "/" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={Models.times.name: (POSITIONING, R, SIGNALS)},
+                print(positioning)
+                write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
                                       path_excel_times=path_excel_times)
 
             return render_template(TIMES_PAGE_NEW, title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
