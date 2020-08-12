@@ -97,7 +97,7 @@ def times_page():
                                        title="Times", form=form, run_model=run_model, message=message)
 
             asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
-
+            print('hellooooooo')
             name_of_file = form.name_file_times.data + ".xls"
 
             if sys.platform == 'linux':
