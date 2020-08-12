@@ -96,17 +96,28 @@ class ComputeAggregateCurrencies:
 
         return (spot_origin.loc[self.start_date_calc:] / spot_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
-    def compute_aggregate_total_incl_signals(self, returns_incl_costs):
+    def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
 
-        first_total_signals = [100]
         total_incl_signals = pd.DataFrame()
 
         if self.weight == '1/N':
+            total_signals = [100]
             average_incl_signals = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_incl_signals)):
-                first_total_signals.append(first_total_signals[value] * average_incl_signals[value])
+                total_signals.append(total_signals[value] * average_incl_signals[value])
+        else:
+            returns_shift = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
+            total_signals = []
 
-            total_incl_signals['Total_Incl_Signals'] = first_total_signals
+            for values_returns, values_volatility in zip(returns_shift.values, inverse_volatility.values):
+                tmp = []
+                sum_tmp_volatility = []
+                for value_returns, value_volatility in zip(values_returns, values_volatility):
+                    tmp.append(value_returns * value_volatility)
+                    sum_tmp_volatility = sum(values_volatility)
+                total_signals.append(sum(tmp) / sum_tmp_volatility)
+
+        total_incl_signals['Total_Incl_Signals'] = total_signals
 
         total_incl_signals = total_incl_signals.set_index(self.dates_index)
 
@@ -206,7 +217,8 @@ class ComputeAggregateCurrencies:
         log_returns_excl_costs = self.compute_log_returns_excl_costs(returns_ex_costs=excl_signals_total_return)
         weighted_performance = self.compute_weighted_performance(log_returns_excl=log_returns_excl_costs, combo_curr=combo_curr)
 
-        aggregate_total_incl_signals = self.compute_aggregate_total_incl_signals(returns_incl_costs=returns_incl_costs)
+        aggregate_total_incl_signals = self.compute_aggregate_total_incl_signals(returns_incl_costs=returns_incl_costs,
+                                                                                 inverse_volatility=inverse_volatilies)
         aggregate_total_excl_signals = self.compute_aggregate_total_excl_signals(returns_excl_costs=excl_signals_total_return)
 
         aggregate_spot_incl_signals = self.compute_aggregate_spot_incl_signals(spot_incl_costs=spot_incl_costs)

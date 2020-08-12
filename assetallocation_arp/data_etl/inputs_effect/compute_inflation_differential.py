@@ -19,7 +19,7 @@ class ComputeInflationDifferential:
     def __init__(self, dates_index):
         self.dates_index = dates_index
 
-    def compute_inflation_release(self):
+    def compute_inflation_release(self, realtime_inflation_forecast):
         """
         Function computing the inflation release depending on the publications IMF dates
         :return: separate dataFrames inflation_release, years_zero_inflation, months_inflation
@@ -39,31 +39,36 @@ class ComputeInflationDifferential:
         dates_imf_publishing = json.loads(config.get('dates_imf_publishing', 'dates_imf_publication'))
 
         for date_index in self.dates_index:
-            counter = 0
-            date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
-            date_tmp = date_index
-            if date_tmp < pd.to_datetime(latest_date, format='%d-%m-%Y'):
-                weo_date = "Latest"
-            else:
-                while date_tmp > date_publication:
-                    counter += 1
-                    if counter >= len(dates_imf_publishing):
-                        # Reach the end of the dates publishing dates
-                        flag = True
-                        break
-                    date_publication = pd.to_datetime(list(dates_imf_publishing)[counter], format='%d-%m-%Y')
-                else:
-                    if date_tmp == date_publication:
-                        weo_date = list(dates_imf_publishing)[counter]
-                        weo_date = dates_imf_publishing[weo_date]
-                    else:
-                        weo_date = list(dates_imf_publishing)[counter - 1]
-                        weo_date = dates_imf_publishing[weo_date]
 
-            if flag:
-                weo_date = list(dates_imf_publishing)[-1]
-                weo_date = dates_imf_publishing[weo_date]
-                flag = False
+            if realtime_inflation_forecast.lower() != 'yes':
+                weo_date = "Latest"
+                # weo_dates.append(weo_date)
+            else:
+                counter = 0
+                date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
+                date_tmp = date_index
+                if date_tmp < pd.to_datetime(latest_date, format='%d-%m-%Y'):
+                    weo_date = "Latest"
+                else:
+                    while date_tmp > date_publication:
+                        counter += 1
+                        if counter >= len(dates_imf_publishing):
+                            # Reach the end of the dates publishing dates
+                            flag = True
+                            break
+                        date_publication = pd.to_datetime(list(dates_imf_publishing)[counter], format='%d-%m-%Y')
+                    else:
+                        if date_tmp == date_publication:
+                            weo_date = list(dates_imf_publishing)[counter]
+                            weo_date = dates_imf_publishing[weo_date]
+                        else:
+                            weo_date = list(dates_imf_publishing)[counter - 1]
+                            weo_date = dates_imf_publishing[weo_date]
+
+                if flag:
+                    weo_date = list(dates_imf_publishing)[-1]
+                    weo_date = dates_imf_publishing[weo_date]
+                    flag = False
 
             weo_dates.append(weo_date)
 
@@ -178,7 +183,7 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-    def compute_inflation_differential(self):
+    def compute_inflation_differential(self, realtime_inflation_forecast):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
@@ -186,7 +191,7 @@ class ComputeInflationDifferential:
 
         inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
-        inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release()
+        inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
 
         # Grab the latest inflation differential data
         # scrape_imf_data()

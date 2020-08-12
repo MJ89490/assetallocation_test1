@@ -31,8 +31,9 @@ def run_effect():
     obj_import_data.start_date_calculations = '2000-01-11'
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
+    realtime_inflation_forecast = 'yes'
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
-    inflation_differential = obj_inflation_differential.compute_inflation_differential()
+    inflation_differential = obj_inflation_differential.compute_inflation_differential(realtime_inflation_forecast)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     carry_inputs = {'type': 'real', 'inflation': inflation_differential}
@@ -50,7 +51,7 @@ def run_effect():
     previous_seven_days_latest_date = obj_import_data.dates_origin_index[-10]
     position_size_attribution = 0.03 * 1.33
     window_size = 52
-    weight = '1/N'
+    weight = 'inverse_vol'
     spot_origin, carry_origin = obj_import_data.process_data_config_effect()
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
