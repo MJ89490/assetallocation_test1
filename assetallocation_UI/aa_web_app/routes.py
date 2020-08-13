@@ -97,7 +97,8 @@ def times_page():
 
             print("*********check the platform****************", sys.platform)
             if sys.platform == 'linux':
-                path_excel = os.path.abspath(os.path.join("/","domino","datasets","results-output"))
+                #path_excel = os.path.abspath(os.path.join("/","domino","datasets","results-output"))
+                path_excel = os.path.abspath(os.path.join("/", "domino", "datasets", "local", "results"))
             else:
                 path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
 
