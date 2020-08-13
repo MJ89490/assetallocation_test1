@@ -89,17 +89,17 @@ def times_page():
                 message = "error parameters"
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
 
-            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=str(Models.times.name))
+            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
 
             name_of_file = form.name_file_times.data + ".xls"
 
             print("*********check the platform****************", sys.platform)
             if sys.platform == 'linux':
-                print("Inside the linux platform",sys.platform)
                 path_excel = os.path.abspath(os.path.join("results"))
             else:
                 path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
 
+            print("Inside the linux platform the path is", path_excel)
             path_excel_times = os.path.abspath(os.path.join(path_excel, name_of_file))
 
             if form.save_excel_outputs.data is True:
