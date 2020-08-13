@@ -93,7 +93,7 @@ def times_page():
 
             name_of_file = form.name_file_times.data + ".xls"
 
-            print("*********check the platform***********", sys.platform)
+            print("*********check the platform****************", sys.platform)
             if sys.platform == 'linux':
                 print("Inside the linux platform",sys.platform)
                 path_excel = os.path.abspath(os.path.join("results"))
