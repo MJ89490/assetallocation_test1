@@ -1,27 +1,7 @@
-from decimal import Decimal
-from collections import namedtuple
-
-from pytest import raises, mark, fixture
+from pytest import raises, mark
 
 from assetallocation_arp.data_etl.dal.data_models.strategy import Strategy, Times, Effect
-
-
-@fixture
-def valid_times():
-    TimesInput = namedtuple('TimesInput', ['day_of_week', 'frequency', 'leverage_type', 'long_signals', 'short_signals',
-                                           'time_lag_in_months', 'volatility_window'])
-    return TimesInput(0, 'weekly', 'e', [], [], 1, 1)
-
-
-@fixture
-def valid_effect():
-    EffectInput = namedtuple('EffectInput',
-                             ['carry_type', 'closing_threshold', 'cost', 'day_of_week', 'frequency', 'include_shorts',
-                              'inflation_lag_in_months', 'interest_rate_cut_off_long', 'interest_rate_cut_off_short',
-                              'moving_average_long_term', 'moving_average_short_term', 'is_realtime_inflation_forecast',
-                              'trend_indicator'])
-    return EffectInput('Nominal', Decimal(1), Decimal(1), 0, 'weekly', True, 1, Decimal(1), Decimal(1), 1, 1, True,
-                       'TotalReturn')
+from tests.assetallocation_arp.data_etl.dal.resources import valid_effect, valid_times
 
 
 def test_name_setter_raises_key_error_invalid_name():
