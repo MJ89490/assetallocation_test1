@@ -73,7 +73,7 @@ def times_page():
         # Selection of a model's version
         if request.form['submit_button'] == 'selectVersions':
             version_type = form.versions.data
-            return render_template('times_page_new_version_layout.html', title="Times", form=form, version_type=version_type)
+            return render_template('times_page.html', title="Times", form=form, version_type=version_type)
 
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
@@ -108,7 +108,7 @@ def times_page():
                 write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
                                       path_excel_times=path_excel_times)
 
-            return render_template('times_page.html', title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
 
     # return render_template('times_page.html', title="Times", form=form)
     return render_template('times_page.html', title="Times", form=form)
