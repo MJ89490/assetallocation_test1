@@ -33,6 +33,7 @@ def before_request():
 @app.route('/')
 @app.route('/home')
 def home():
+    print('hello home')
     return render_template('home.html', title='HomePage')
 
 
@@ -66,11 +67,7 @@ def login_post():
 @app.route('/times_page',  methods=['GET', 'POST'])
 # @login_required
 def times_page():
-    #TODO put save results box in the same row as Model Inputs: Excel or Db
-    # if Excel ---> box to write title
     form = InputsTimesModel()
-    #change to lowercase
-    # global ASSET_INPUTS, POSITIONING, R, SIGNALS, TIMES_INPUTS
 
     TIMES_PAGE_NEW = 'times_page_new_version_layout.html'
 
@@ -78,7 +75,9 @@ def times_page():
         # Selection of a model's version
         if request.form['submit_button'] == 'selectVersions':
             version_type = form.versions.data
-            return render_template(TIMES_PAGE_NEW, title="Times", form=form, version_type=version_type)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, version_type=version_type)
+
+            # return render_template(TIMES_PAGE_NEW, title="Times", form=form, version_type=version_type)
 
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
@@ -93,10 +92,13 @@ def times_page():
 
             except ValueError:
                 message = "error parameters"
-                return render_template(TIMES_PAGE_NEW,
-                                       title="Times", form=form, run_model=run_model, message=message)
+                return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
+                # return render_template(TIMES_PAGE_NEW,
+                #                        title="Times", form=form, run_model=run_model, message=message)
 
-            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
+            # asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
+            import pandas as pd
+            positioning, r, signals = pd.DataFrame([1,1,1]), pd.DataFrame([1,1,1]), pd.DataFrame([1,1,1])
             print('hellooooooo')
             name_of_file = form.name_file_times.data + ".xls"
 
@@ -112,27 +114,11 @@ def times_page():
                 write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
                                       path_excel_times=path_excel_times)
 
-            return render_template(TIMES_PAGE_NEW, title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
+            # return render_template(TIMES_PAGE_NEW, title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
 
-        # elif request.form['submit_button'] == 'selectTimesPath':
-        #     save = "save"
-        #     save_file = "save_file"
-        #     name_of_file = form.name_file_times.data + ".xls"
-        #
-        #     if sys.platform == 'linux':
-        #         path_excel = '/mnt/aa_model_results'
-        #     else:
-        #         path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
-        #     path_excel_times = path_excel + "/" + name_of_file
-        #
-        #     if form.save_excel_outputs.data is True:
-        #         write_output_to_excel(model_outputs={Models.times.name: (POSITIONING, R, SIGNALS)},
-        #                               path_excel_times=path_excel_times)
-        #
-        #     return render_template(TIMES_PAGE_NEW, title="Times", form=form, save=save, save_file=save_file)
-
+    # return render_template('times_page.html', title="Times", form=form)
     return render_template('times_page.html', title="Times", form=form)
-
 
 @app.route('/times_dashboard', methods=['GET', 'POST'])
 # @login_required
