@@ -69,7 +69,7 @@ def login_post():
 def times_page():
     form = InputsTimesModel()
 
-    TIMES_PAGE_NEW = 'times_page_new_version_layout.html'
+    # TIMES_PAGE_NEW = 'times_page_new_version_layout.html'
 
     if request.method == "POST":
         # Selection of a model's version
