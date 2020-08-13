@@ -87,8 +87,8 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
         model_date = model_date
 
     if sys.platform == 'linux':
-        #file_path = '/domino/datasets/input-data/matlab_data.csv'
-        file_path = '/domino/datasets/local/matlab_data_assetallocation/matlab_data.csv'
+        file_path = '/domino/datasets/input-data/matlab_data.csv'
+        #file_path = '/domino/datasets/local/matlab_data_assetallocation/matlab_data.csv'
         all_data = pd.read_csv(file_path, sep=',', engine='python')
         all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
         del all_data['Date']
