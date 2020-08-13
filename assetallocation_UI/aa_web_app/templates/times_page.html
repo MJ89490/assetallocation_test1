@@ -8,7 +8,6 @@
         <title> {{title }} </title>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <link rel="stylesheet" href="{{url_for('static', filename='css/times_page.css')}}">
-
     </head>
 
     <!-- Body of the Dashboard Page -->
@@ -56,7 +55,8 @@
                       <div class="col-12 col-lg-5"></div>
                   </div>
 
-                  {% if version_type == "New Version"  or  save == "save"  or run_model == "run_times_model" %}
+                  {% if version_type == "New Version" or run_model_ok == "run_times_model_ok" or run_model == "run_model"%}
+
                       <div class="row">
                           <div class="col-12 col-lg-1"></div>
                           <div class="col-12 col-lg-10">
@@ -100,10 +100,6 @@
 
                         {% if run_model_ok=="run_times_model_ok" %}
                              {% include 'pop_up_model.html' %}
-                        {% endif%}
-
-                        {% if save_file=="save_file" %}
-                             {% include 'pop_up_save.html' %}
                         {% endif%}
 
                   {% endif %}

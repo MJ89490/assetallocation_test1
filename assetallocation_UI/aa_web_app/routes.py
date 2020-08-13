@@ -79,13 +79,12 @@ def times_page():
         elif request.form['submit_button'] == 'runTimesModel':
             run_model = "run_times_model"
             run_model_ok = "run_times_model_ok"
-            save_file = "save_file"
 
             try:
+                #TODO insert in run_model because it is currently reading the inputs from the Excel
                 # 1. Read the input from the form
                 # 2. Return the inputs
-                strategy_inputs_times = main_form() #todo insert in run_model because it is currently reading the inputs from the Excel
-
+                strategy_inputs_times = main_form()
             except ValueError:
                 message = "error parameters"
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
@@ -104,14 +103,13 @@ def times_page():
             path_excel_times = path_excel + "/" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                print(positioning)
                 write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
                                       path_excel_times=path_excel_times)
 
-            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, run_model_ok=run_model_ok, save_file=save_file)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model_ok=run_model_ok)
 
-    # return render_template('times_page.html', title="Times", form=form)
     return render_template('times_page.html', title="Times", form=form)
+
 
 @app.route('/times_dashboard', methods=['GET', 'POST'])
 # @login_required
