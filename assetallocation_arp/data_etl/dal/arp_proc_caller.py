@@ -187,7 +187,7 @@ if __name__ == '__main__':
     d = ArpProcCaller()
 
     t = Times(0, 'weekly', 'e', [], [], 0, 0)
-    t_v = d._insert_times_strategy(t, 'JS89275', [])
+    t_v = d._insert_times_strategy(t, 'JS89275')
 
     ta1 = TimesAsset('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
     ta2 = TimesAsset('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))

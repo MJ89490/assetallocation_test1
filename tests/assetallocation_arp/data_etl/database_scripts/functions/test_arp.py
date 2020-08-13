@@ -126,5 +126,3 @@ def test_insert_times_strategy_closes_previous_record_so_only_one_record_has_upp
     cursor.close()
 
     assert 1 == len(results)
-
-# TODO test_insert_times_assets_inserts_times_assets

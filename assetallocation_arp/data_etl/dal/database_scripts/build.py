@@ -31,6 +31,7 @@ def create_all(engine):
     sql_files.extend(get_table_sql_files())
     sql_files.extend(get_function_sql_files())
     sql_files.extend(get_static_data_sql_files())
+    sql_files.extend(get_trigger_sql_files())
 
     execute_script_files(engine, sql_files)
 

@@ -26,10 +26,10 @@ CREATE TABLE "audit"."logged_action"
 	"action_tstamp_stm" time with time zone NOT NULL,
 	"transaction_id" bigint NULL,
 	"application_name" text NULL,
-	"client_query " text NULL,
+	"client_query" text NULL,
 	"action" text NOT NULL,
--- 	"row_data" hstore NULL, TODO get hstore extension or refactor this!
--- 	"changed_fields" hstore NULL,
+	"row_data" jsonb NULL,
+	"changed_fields" jsonb NULL,
 	"statement_only" boolean NOT NULL
 )
 ;
