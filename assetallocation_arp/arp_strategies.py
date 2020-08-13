@@ -47,7 +47,6 @@ def write_output_to_excel(model_outputs, path_excel_times):
         print("===models.times.name===", models.times.name)
         print("=======model output keys===", model_outputs.keys())
         positioning, returns, signals = model_outputs[models.times.name]
-        print("==========Position, signals, values, path======", positioning, returns, signals, path_excel_times)
         print("===========current _path ===========", os.getcwd())
         with pd.ExcelWriter(path_excel_times) as writer:
             signals.to_excel(writer, sheet_name='signal', encoding='utf8')
