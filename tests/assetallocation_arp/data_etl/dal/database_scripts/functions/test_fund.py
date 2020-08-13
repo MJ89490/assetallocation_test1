@@ -3,7 +3,7 @@ from os import environ
 
 from sqlalchemy import create_engine
 
-from tests.assetallocation_arp.data_etl.database_scripts.helper import run_proc
+from tests.assetallocation_arp.data_etl.dal.database_scripts.helper import run_proc
 
 config = loads(environ['DATABASE'])
 c_str = f"postgresql://{config['USER']}:{config['PASSWORD']}@{config['HOST']}:{config['PORT']}/{config['DATABASE']}"
