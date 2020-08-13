@@ -50,8 +50,7 @@ def write_output_to_excel(model_outputs, path_excel_times):
 			returns.to_excel(writer, sheet_name='returns', encoding='utf8')
 			positioning.to_excel(writer, sheet_name='positioning', encoding='utf8')
 			writer.save()
-			writer.close()
-		writer.save()
+			
 
 def get_inputs_from_python(model):
 	#launch the script from Python
