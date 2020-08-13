@@ -101,11 +101,13 @@ def times_page():
             path_excel_times = path_excel + "/" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
+                write_output_to_excel(model_outputs={str(Models.times.name): (positioning, r, signals)},
                                       path_excel_times=path_excel_times)
 
+            #TODO in any case save the model output into database
             return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model_ok=run_model_ok)
 
+    print("VALUES IN FORM:", form.frequency, form.leverage_type, form.name_file_times)
     return render_template('times_page.html', title="Times", form=form)
 
 
