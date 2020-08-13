@@ -73,7 +73,7 @@ def times_page():
         # Selection of a model's version
         if request.form['submit_button'] == 'selectVersions':
             version_type = form.versions.data
-            return render_template('times_page.html', title="Times", form=form, version_type=version_type)
+            return render_template('times_page_new_version_layout.html', title="Times", form=form, version_type=version_type)
 
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
