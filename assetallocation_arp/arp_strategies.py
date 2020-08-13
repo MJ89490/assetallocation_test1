@@ -5,6 +5,7 @@ import sys
 
 from assetallocation_arp.common_libraries.models_names import Models as models
 
+import os
 
 def run_model(model_type, mat_file=None, input_file=None):
 
