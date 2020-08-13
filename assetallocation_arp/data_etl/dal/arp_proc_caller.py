@@ -25,14 +25,38 @@ class ArpProcCaller(Db):
 
         super().__init__(f'postgresql://{user}:{password}@{host}:{port}/{database}')
 
-    def insert_times_strategy(self, times: Times, user_id: str, asset_tickers: List[str]) -> int:
+    def insert_times(self, times: Times, user_id: str) -> int:
+        t_version = self._insert_times_strategy(times, user_id)
+        if times.assets:
+            self._insert_times_assets(t_version, times.assets)
+
+        return t_version
+
+    def select_times(self, times_version) -> Optional[Times]:
+        times = self._select_times_strategy(times_version)
+
+        if times is not None:
+            times.assets = self._select_times_assets(times_version)
+
+        return times
+
+    def select_times_with_asset_analytics(self, times_version, business_datetime) -> Optional[Times]:
+        times = self._select_times_strategy(times_version)
+
+        if times is not None:
+            times.assets = self._select_times_assets_with_analytics(times_version, business_datetime)
+
+        return times
+
+    def _insert_times_strategy(self, times: Times, user_id: str) -> int:
         res = self.call_proc('arp.insert_times_strategy',
                              [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
                               times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
-                              times.day_of_week.value, asset_tickers])
+                              times.day_of_week.value])
+
         return res[0]['t_version']
 
-    def select_times_strategy(self, times_version) -> Optional[Times]:
+    def _select_times_strategy(self, times_version) -> Optional[Times]:
         res = self.call_proc('arp.select_times_strategy', [times_version])
         if not res:
             return
@@ -44,8 +68,14 @@ class ArpProcCaller(Db):
         t.description = row['description']
         return t
 
-    def select_times_assets(self, times_version, business_datetime) -> Optional[List[TimesAsset]]:
-        res = self.call_proc('arp.select_times_assets', [times_version, business_datetime])
+    def _insert_times_assets(self, times_version: int, times_assets: List[TimesAsset]) -> bool:
+        times_assets = self._times_assets_to_composite(times_assets)
+        res = self.call_proc('arp.insert_times_assets', [times_version, times_assets])
+        asset_ids = res[0].get('asset_ids')
+        return bool(asset_ids)
+
+    def _select_times_assets_with_analytics(self, times_version, business_datetime) -> Optional[List[TimesAsset]]:
+        res = self.call_proc('arp.select_times_assets_with_analytics', [times_version, business_datetime])
 
         if not res:
             return
@@ -68,6 +98,23 @@ class ArpProcCaller(Db):
 
         return times_assets
 
+    def _select_times_assets(self, times_version) -> Optional[List[TimesAsset]]:
+        res = self.call_proc('arp.select_times_assets', [times_version])
+
+        if not res:
+            return
+
+        times_assets = []
+        for r in res:
+            t = TimesAsset(r['ticker'], r['category'], r['country'], r['currency'], r['name'], r['asset_type'],
+                           r['s_leverage'], r['signal_ticker'], r['future_ticker'], r['cost'])
+            t.description = r['description']
+            t.is_tr = r['is_tr']
+
+            times_assets.append(t)
+
+        return times_assets
+
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
         ticker_weights = self._weights_to_composite(fund_strategy.asset_weights)
         ticker_analytics = self._analytics_to_composite(fund_strategy.asset_analytics)
@@ -81,7 +128,14 @@ class ArpProcCaller(Db):
         return fund_strategy_id is not None
 
     @staticmethod
-    def _analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]):
+    def _times_assets_to_composite(times_assets: List[TimesAsset]) -> List[str]:
+        """Format to match database type asset.times_asset[]"""
+        return [f'("{i.category.name}","{i.country.name}","{i.currency.name}","{i.description}","{i.name}",' 
+                f'"{i.ticker}","{"t" if i.is_tr else "f"}","{i.type}","{i.signal_ticker}","{i.future_ticker}",' 
+                f'{i.cost},{i.s_leverage})' for i in times_assets]
+
+    @staticmethod
+    def _analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]) -> List[str]:
         """Format to match database type arp.ticker_category_subcategory_value[]"""
         return [f'("{i.asset_ticker}","{i.category}","{i.subcategory}",{i.value})' for i in analytics]
 
@@ -127,27 +181,14 @@ if __name__ == '__main__':
 
     d = ArpProcCaller()
 
-    # d.select_times_strategy(1)
-    # ta = d.select_times_assets(1, datetime(2020, 1, 2))
-    # print(ta)
-    # for i in ta:
-    #     for j in i.asset_analytics:
-    #         print(j.asset_ticker, j.source, j.category, j.value)
+    t = Times(0, 'weekly', 'e', [], [], 0, 0)
+    t_v = d._insert_times_strategy(t, 'JS89275', [])
 
-    # fs = d.select_fund_strategy_results('f1', 'times')
-    #
-    # print(fs)
+    ta1 = TimesAsset('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
+    ta2 = TimesAsset('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
 
-    # fs2 = d.insert_fund_strategy_results(fs, 'JS89275')
-    # print(fs2)
-    #
-    fs = FundStrategy('f1', 'times', 1, Decimal(1))
-    u_id = 'JS89275'
-    a_ws = [FundStrategyAssetWeight('a1', Decimal(1)), FundStrategyAssetWeight('a2', Decimal(2))]
-    a_as = [FundStrategyAssetAnalytic('a1', 'performance', 'spot', Decimal(1)),
-            FundStrategyAssetAnalytic('a1', 'signal', 'value', Decimal(2)),
-            FundStrategyAssetAnalytic('a2', 'performance', 'spot', Decimal(3)),
-            FundStrategyAssetAnalytic('a2', 'signal', 'value', Decimal(4))]
-    pcv = '0.0'
-    fsr = d.insert_fund_strategy_results(fs, u_id)
-    print(fsr)
+    ins = d._insert_times_assets(t_v, [ta1])
+    print(ins)
+
+    ins = d._insert_times_assets(t_v, [ta2])
+    print(ins)

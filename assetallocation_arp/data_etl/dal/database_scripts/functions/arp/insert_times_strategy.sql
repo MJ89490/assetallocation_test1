@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION arp.insert_times_strategy(
   long_signals numeric[],
   frequency frequency,
   day_of_week int,
-  asset_tickers varchar[],
   OUT t_version int
 )
 LANGUAGE plpgsql
@@ -25,7 +24,6 @@ BEGIN
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
 	SELECT arp.insert_times(time_lag, leverage_type, volatility_window, short_signals, long_signals, frequency, day_of_week,
 	  execution_state_id, strategy_id) into t_version;
-	PERFORM arp.insert_times_asset(strategy_id, asset_tickers, execution_state_id)
 	return;
 END
 $$;

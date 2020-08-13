@@ -1,8 +1,14 @@
-from sqlalchemy import text, create_engine
+from sqlalchemy import text
 
 
-def execute_script_files(conn_str, files):
-    engine = create_engine(conn_str, echo=False)
+from assetallocation_arp.data_etl.dal.database_scripts.schemas.build import get_schema_sql_files
+from assetallocation_arp.data_etl.dal.database_scripts.types.build import get_type_sql_files
+from assetallocation_arp.data_etl.dal.database_scripts.tables.build import get_table_sql_files
+from assetallocation_arp.data_etl.dal.database_scripts.functions.build import get_function_sql_files
+from assetallocation_arp.data_etl.dal.database_scripts.static_data.build import get_static_data_sql_files
+
+
+def execute_script_files(engine, files):
     conn = engine.connect()
 
     for filename in files:
@@ -18,25 +24,29 @@ def execute_script_files(conn_str, files):
     conn.close()
 
 
-# Imported after execute_script_files to avoid circular imports
-from assetallocation_arp.data_etl.dal.database_scripts.schemas.build import create_schemas
-from assetallocation_arp.data_etl.dal.database_scripts.types.build import create_types
-from assetallocation_arp.data_etl.dal.database_scripts.tables.build import create_tables
-from assetallocation_arp.data_etl.dal.database_scripts.functions.build import create_functions
-from assetallocation_arp.data_etl.dal.database_scripts.static_data.build import insert_static_data
+def create_all(engine):
+    sql_files = []
+    sql_files.extend(get_schema_sql_files())
+    sql_files.extend(get_type_sql_files())
+    sql_files.extend(get_table_sql_files())
+    sql_files.extend(get_function_sql_files())
+    sql_files.extend(get_static_data_sql_files())
 
-
-def create_all(conn_str):
-    create_schemas(conn_str)
-    create_types(conn_str)
-    create_tables(conn_str)
-    create_functions(conn_str)
-    insert_static_data(conn_str)
+    execute_script_files(engine, sql_files)
 
 
 if __name__ == '__main__':
+    from json import dumps
+    from os import environ
+
+    environ['DATABASE'] = dumps({"USER": "d00_asset_allocation_data_migration", 'PASSWORD': 'changeme',
+                                 'HOST': 'n00-pgsql-nexus-businessstore-writer.inv.adroot.lgim.com', 'PORT': 54323,
+                                 'DATABASE': 'd00_asset_allocation_data'})
+
     from json import loads
     from os import environ
+
+    from sqlalchemy import create_engine
 
     config = loads(environ['DATABASE'])
     user = config['USER']
@@ -46,4 +56,5 @@ if __name__ == '__main__':
     database = config['DATABASE']
 
     c_str = f'postgresql://{user}:{password}@{host}:{port}/{database}'
-    create_all(c_str)
+    en = create_engine(c_str)
+    create_all(en)

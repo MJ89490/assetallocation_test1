@@ -16,11 +16,19 @@ class Asset:
         self.country = country
         self.currency = currency
         self.description = ''
-        self._name = name
+        self.name = name
         self._ticker = ticker
         self.is_tr = False
         self._type = type
         self._asset_analytics = []
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, x: str) -> None:
+        self._name = x
 
     @property
     def asset_analytics(self) -> List[AssetAnalytic]:

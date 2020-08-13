@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS "config"."execution_state" CASCADE
 CREATE TABLE "config"."execution_state"
 (
 	"id" serial NOT NULL,
-	"system_datetime" time with time zone NOT NULL,
+	"system_datetime" timestamp with time zone NOT NULL DEFAULT now(),
 	"execution_id" integer NOT NULL
 )
 ;

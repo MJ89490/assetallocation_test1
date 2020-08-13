@@ -20,3 +20,10 @@ def valid_effect():
                               'trend_indicator'])
     return EffectInput('Nominal', Decimal(1), Decimal(1), 0, 'weekly', True, 1, Decimal(1), Decimal(1), 1, 1, True,
                        'TotalReturn')
+
+
+@fixture
+def valid_times_asset():
+    TimesAssetInput = namedtuple('TimesAssetInput', ['ticker', 'category', 'country', 'currency', 'name',
+                                           'type', 's_leverage', 'signal_ticker', 'future_ticker', 'cost'])
+    return TimesAssetInput('test_ticker', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
