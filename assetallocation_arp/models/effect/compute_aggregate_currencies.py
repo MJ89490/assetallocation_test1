@@ -99,23 +99,22 @@ class ComputeAggregateCurrencies:
     def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
 
         total_incl_signals = pd.DataFrame()
+        total_signals = [100]
 
         if self.weight == '1/N':
-            total_signals = [100]
             average_incl_signals = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_incl_signals)):
                 total_signals.append(total_signals[value] * average_incl_signals[value])
         else:
             returns_shift = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            total_signals = []
-
+            counter = 0
             for values_returns, values_volatility in zip(returns_shift.values, inverse_volatility.values):
                 tmp = []
-                sum_tmp_volatility = []
                 for value_returns, value_volatility in zip(values_returns, values_volatility):
                     tmp.append(value_returns * value_volatility)
-                    sum_tmp_volatility = sum(values_volatility)
-                total_signals.append(sum(tmp) / sum_tmp_volatility)
+                sum_tmp_volatility = sum(values_volatility)
+                total_signals.append(total_signals[counter] * (sum(tmp) / sum_tmp_volatility))
+                counter += 1
 
         total_incl_signals['Total_Incl_Signals'] = total_signals
 
