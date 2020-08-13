@@ -6,6 +6,7 @@ from assetallocation_arp.data_etl.dal.database_scripts.types.build import get_ty
 from assetallocation_arp.data_etl.dal.database_scripts.tables.build import get_table_sql_files
 from assetallocation_arp.data_etl.dal.database_scripts.functions.build import get_function_sql_files
 from assetallocation_arp.data_etl.dal.database_scripts.static_data.build import get_static_data_sql_files
+from assetallocation_arp.data_etl.dal.database_scripts.triggers.build import get_trigger_sql_files
 
 
 def execute_script_files(engine, files):
@@ -29,7 +30,7 @@ def create_all(engine):
     sql_files.extend(get_schema_sql_files())
     sql_files.extend(get_type_sql_files())
     sql_files.extend(get_table_sql_files())
-    sql_files.extend(get_function_sql_files())
+    sql_files.extend(get_function_sql_files()) # TODO fix audit functions not working
     sql_files.extend(get_static_data_sql_files())
     sql_files.extend(get_trigger_sql_files())
 
@@ -37,13 +38,6 @@ def create_all(engine):
 
 
 if __name__ == '__main__':
-    from json import dumps
-    from os import environ
-
-    environ['DATABASE'] = dumps({"USER": "d00_asset_allocation_data_migration", 'PASSWORD': 'changeme',
-                                 'HOST': 'n00-pgsql-nexus-businessstore-writer.inv.adroot.lgim.com', 'PORT': 54323,
-                                 'DATABASE': 'd00_asset_allocation_data'})
-
     from json import loads
     from os import environ
 

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION jsonb_minus ( arg1 jsonb, arg2 jsonb )
+CREATE OR REPLACE FUNCTION audit.jsonb_minus ( arg1 jsonb, arg2 jsonb )
  RETURNS jsonb
 AS $$
 
@@ -9,7 +9,7 @@ SELECT
             -- if the value is an object and the value of the second argument is
             -- not null, we do a recursion
             WHEN jsonb_typeof(value) = 'object' AND arg2 -> key IS NOT NULL
-			THEN jsonb_minus(value, arg2 -> key)
+			THEN audit.jsonb_minus(value, arg2 -> key)
             -- for all the other types, we just return the value
             ELSE value
         END
