@@ -2,11 +2,11 @@ from typing import Optional
 
 
 # noinspection PyAttributeOutsideInit
-class User:
+class AppUser:
     def __init__(self, user_id: str, name: str):
         self.user_id = user_id
         self.name = name
-        self._email = None
+        self.email = None
 
     @property
     def user_id(self) -> str:
@@ -29,5 +29,5 @@ class User:
         return self._email
 
     @email.setter
-    def email(self, x: str):
+    def email(self, x: Optional[str]):
         self._email = x

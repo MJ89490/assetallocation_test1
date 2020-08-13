@@ -12,6 +12,7 @@ from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStra
 from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAsset
 from assetallocation_arp.common_enums.strategy import Name
+from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
 
 
 class ArpProcCaller(Db):
@@ -24,6 +25,10 @@ class ArpProcCaller(Db):
         database = config.get('DATABASE')
 
         super().__init__(f'postgresql://{user}:{password}@{host}:{port}/{database}')
+
+    def insert_app_user(self, app_user: AppUser) -> bool:
+        self.call_proc('arp.insert_app_user', [app_user.user_id, app_user.name, app_user.email])
+        return True
 
     def insert_times(self, times: Times, user_id: str) -> int:
         t_version = self._insert_times_strategy(times, user_id)
