@@ -42,10 +42,11 @@ def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
 
 
 def write_output_to_excel(model_outputs, path_excel_times):
-
+    import os
 	if models.times.name in model_outputs.keys():
 		positioning, returns, signals = model_outputs[str(models.times.name)]
-        print("==========Position, signals, values====", positioning, returns, signals)
+        print("==========Position, signals, values, path======", positioning, returns, signals, path_excel_times)
+        print("===========current _path ===========", os.getcwd())
         with pd.ExcelWriter(path_excel_times) as writer:
             signals.to_excel(writer, sheet_name='signal', encoding='utf8')
 			returns.to_excel(writer, sheet_name='returns', encoding='utf8')
