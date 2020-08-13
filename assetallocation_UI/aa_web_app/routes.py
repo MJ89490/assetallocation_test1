@@ -89,8 +89,8 @@ def times_page():
                 message = "error parameters"
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
 
-            # asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
-            print('hellooooooo')
+            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
+        
             name_of_file = form.name_file_times.data + ".xls"
 
             if sys.platform == 'linux':
@@ -98,25 +98,11 @@ def times_page():
             else:
                 path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
 
-            # path_excel_times = path_excel + "/" + name_of_file
+            path_excel_times = path_excel + "/" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                import pandas as pd
-                path_excel_times = '/mnt/results/output_test_2.xls'
-                signals = pd.DataFrame([12, 2, 3])
-                returns = pd.DataFrame(['a', 'b', 'd'])
-                positioning = pd.DataFrame([6, 7, 9])
-
-                with pd.ExcelWriter(path_excel_times) as writer:
-                    signals.to_excel(writer, sheet_name='signal', encoding='utf8')
-                    returns.to_excel(writer, sheet_name='returns', encoding='utf8')
-                    positioning.to_excel(writer, sheet_name='positioning', encoding='utf8')
-                    writer.save()
-
-
-
-                # write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
-                #                       path_excel_times=path_excel_times)
+                write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
+                                      path_excel_times=path_excel_times)
 
             return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model_ok=run_model_ok)
 
