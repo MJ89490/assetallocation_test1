@@ -90,8 +90,6 @@ def times_page():
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
 
             # asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
-            import pandas as pd
-            positioning, returns, signals = pd.DataFrame([1,1,1]), pd.DataFrame([1,1,1]), pd.DataFrame([1,1,1])
             print('hellooooooo')
             name_of_file = form.name_file_times.data + ".xls"
 
@@ -100,15 +98,21 @@ def times_page():
             else:
                 path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
 
-            path_excel_times = path_excel + "/" + name_of_file
+            # path_excel_times = path_excel + "/" + name_of_file
 
             if form.save_excel_outputs.data is True:
-                # positioning, returns, signals = model_outputs[models.times.name]
+                import pandas as pd
+                path_excel_times = '/mnt/results/output_test_2.xls'
+                signals = pd.DataFrame([12, 2, 3])
+                returns = pd.DataFrame(['a', 'b', 'd'])
+                positioning = pd.DataFrame([6, 7, 9])
+
                 with pd.ExcelWriter(path_excel_times) as writer:
                     signals.to_excel(writer, sheet_name='signal', encoding='utf8')
                     returns.to_excel(writer, sheet_name='returns', encoding='utf8')
                     positioning.to_excel(writer, sheet_name='positioning', encoding='utf8')
                     writer.save()
+
 
 
                 # write_output_to_excel(model_outputs={Models.times.name: (positioning, r, signals)},
