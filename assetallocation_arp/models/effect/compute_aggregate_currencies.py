@@ -98,7 +98,6 @@ class ComputeAggregateCurrencies:
 
     def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
 
-        total_incl_signals = pd.DataFrame()
         total_signals = [100]
 
         if self.weight == '1/N':
@@ -116,11 +115,8 @@ class ComputeAggregateCurrencies:
                 total_signals.append(total_signals[counter] * (sum(tmp) / sum_tmp_volatility))
                 counter += 1
 
-        total_incl_signals['Total_Incl_Signals'] = total_signals
-
-        total_incl_signals = total_incl_signals.set_index(self.dates_index)
-
-        return total_incl_signals
+        pd.DataFrame(total_signals, columns=['Res'], index=list(self.dates_index)).to_csv('aggregate_total_incl_signals_inv_vol_origin.csv')
+        return pd.DataFrame(total_signals, columns=['Res'], index=list(self.dates_index))
 
     def compute_aggregate_total_excl_signals(self, returns_excl_costs):
 
@@ -134,7 +130,7 @@ class ComputeAggregateCurrencies:
 
             total_excl_signals['Total_Excl_Signals'] = first_total_signals
 
-        total_excl_signals = total_excl_signals.set_index(self.dates_index)
+        # total_excl_signals = total_excl_signals.set_index(self.dates_index)
 
         return total_excl_signals
 
