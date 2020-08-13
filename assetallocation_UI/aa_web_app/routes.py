@@ -86,16 +86,18 @@ def times_page():
                 # 2. Return the inputs
                 strategy_inputs_times = main_form()
             except ValueError:
+                print("VALYUE ERRROOROROOOROROO")
                 message = "error parameters"
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
 
+            print("======CALLING THE MODEL======")
             asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
 
             name_of_file = form.name_file_times.data + ".xls"
 
             print("*********check the platform****************", sys.platform)
             if sys.platform == 'linux':
-                path_excel = os.path.abspath(os.path.join("results"))
+                path_excel = os.path.abspath(os.path.join("domino","datasets","results"))
             else:
                 path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
 
