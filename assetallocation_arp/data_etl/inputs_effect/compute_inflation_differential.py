@@ -32,7 +32,7 @@ class ComputeInflationDifferential:
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file
-        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'dates_effect.ini'))
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'dates_effect.ini'))
         config.read(path)
         # Read values from the dates_effect.ini file
         latest_date = config.get('latest_date_inflation_differential', 'latest_date_inflation')

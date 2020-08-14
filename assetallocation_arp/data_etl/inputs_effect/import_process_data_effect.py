@@ -73,7 +73,7 @@ class ProcessDataEffect:
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file
-        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'dates_effect.ini'))
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'dates_effect.ini'))
         config.read(path)
         # Read values from the dates_effect.ini file
         start_common_date = config.get('common_start_date_effect', 'start_common_data')
@@ -135,7 +135,7 @@ class ProcessDataEffect:
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file
-        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'all_currencies_effect.ini'))
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'all_currencies_effect.ini'))
         config.read(path)
         # Read values from the all_currencies_effect.ini file
         currencies_spot_config = json.loads(config.get('currencies_spot', 'currencies_spot_data'))

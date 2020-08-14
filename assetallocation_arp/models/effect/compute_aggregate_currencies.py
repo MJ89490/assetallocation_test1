@@ -1,3 +1,5 @@
+from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
+
 from configparser import ConfigParser
 import os
 import json
@@ -5,8 +7,6 @@ import pandas as pd
 import statistics as stats
 import math
 import numpy as np
-
-
 
 
 class ComputeAggregateCurrencies:

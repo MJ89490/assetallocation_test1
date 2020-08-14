@@ -16,6 +16,10 @@ class CurrencySpot(enum.Enum):
     Spot_Incl_Costs = 'Spot_Incl_Costs_'
 
 
+class CurrencyAggregate(enum.Enum):
+    Total_Incl_Signals = 'Total_Incl_Signals'
+
+
 
 
 
