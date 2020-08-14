@@ -43,54 +43,64 @@ def test_compute_excl_signals_spot_return(currencies):
         assert np.allclose(np.array(signals_origin[currency].tolist()), np.array(signals_results[currency].tolist())) is True
 
 
-@pytest.mark.parametrize("agg_spot_incl_signals_origin, agg_spot_incl_signals_results, name_column",
+@pytest.mark.parametrize("agg_total_incl_signals_origin, agg_total_incl_signals_results, name_col",
                         [("aggregate_total_incl_signals_origin.csv",
                           "aggregate_total_incl_signals_results.csv", "Total_Incl_Signals"),
                          ("aggregate_total_incl_signals_inv_vol_origin.csv",
                           "aggregate_total_incl_signals_inv_vol_results.csv", "Total_Incl_Signals_Inv_Vol")])
-def test_compute_aggregate_total_incl_signals(agg_spot_incl_signals_origin, agg_spot_incl_signals_results, name_column):
+def test_compute_aggregate_total_incl_signals(agg_total_incl_signals_origin, agg_total_incl_signals_results, name_col):
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", agg_total_incl_signals_origin))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", agg_total_incl_signals_results))
+
+    agg_results = pd.read_csv(path_result, sep=',', engine='python')
+    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
+
+
+@pytest.mark.parametrize("agg_total_excl_signals_origin, agg_total_excl_signals_results, name_col",
+                        [("aggregate_total_excl_signals_origin.csv",
+                          "aggregate_total_excl_signals_results.csv", "Total_Excl_Signals"),
+                         ("aggregate_total_excl_signals_inv_vol_origin.csv",
+                          "aggregate_total_excl_signals_inv_vol_results.csv", "Total_Excl_Signals_Inv_Vol")])
+def test_compute_aggregate_total_excl_signals(agg_total_excl_signals_origin, agg_total_excl_signals_results, name_col):
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", agg_total_excl_signals_origin))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", agg_total_excl_signals_results))
+
+    agg_results = pd.read_csv(path_result, sep=',', engine='python')
+    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+
+    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
+
+
+@pytest.mark.parametrize("agg_spot_incl_signals_origin, agg_spot_incl_signals_results, name_col",
+                        [("aggregate_spot_incl_signals_origin.csv",
+                          "aggregate_spot_incl_signals_results.csv", "Spot_Incl_Signals"),
+                         ("aggregate_spot_incl_signals_inv_vol_origin.csv",
+                          "aggregate_spot_incl_signals_inv_vol_results.csv", "Spot_Incl_Signals_Inv_Vol")])
+def test_compute_aggregate_spot_incl_signals(agg_spot_incl_signals_origin, agg_spot_incl_signals_results, name_col):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", agg_spot_incl_signals_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", agg_spot_incl_signals_results))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", agg_spot_incl_signals_results ))
 
     agg_results = pd.read_csv(path_result, sep=',', engine='python')
     agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    assert np.allclose(np.array(agg_origin[name_column].tolist()), np.array(agg_results[name_column].tolist())) is True
+    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
 
 
-def test_compute_aggregate_total_excl_signals():
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_total_excl_signals_origin.csv"))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "aggregate_total_excl_signals_results.csv"))
-
-    agg_results = pd.read_csv(path_result, sep=',', engine='python')
-    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
-
-    assert np.allclose(np.array(agg_origin.Total_Excl_Signals.tolist()), np.array(agg_results.Total_Excl_Signals.tolist())) is True
-
-
-# @pytest.mark.parametrize("aggregate_spot_incl_signals_origin, aggregate_spot_incl_signals_results, name_column",
-#                         [("aggregate_spot_incl_signals_origin.csv", "aggregate_spot_incl_signals_results.csv"),
-#                          ("aggregate_total_incl_signals_inv_vol_origin.csv", "aggregate_total_incl_signals_inv_vol_results.csv", "Total_Incl_Signals_Inv_Vol")])
-# def test_compute_aggregate_spot_incl_signals(aggregate_spot_incl_signals_origin, aggregate_spot_incl_signals_results):
-#     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", aggregate_spot_incl_signals_origin))
-#     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", aggregate_spot_incl_signals_results ))
-#
-#     agg_results = pd.read_csv(path_result, sep=',', engine='python')
-#     agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
-#
-#     assert np.allclose(np.array(agg_origin.values),
-#                        np.array(agg_results.values)) is True
-
-
-def test_compute_aggregate_spot_excl_signals():
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_spot_excl_signals_origin.csv"))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "aggregate_spot_excl_signals_results.csv"))
+@pytest.mark.parametrize("agg_spot_excl_signals_origin, agg_spot_excl_signals_results, name_col",
+                        [("aggregate_spot_excl_signals_origin.csv",
+                          "aggregate_spot_excl_signals_results.csv", "Spot_Excl_Signals"),
+                         ("aggregate_spot_excl_signals_inv_vol_origin.csv",
+                          "aggregate_spot_excl_signals_inv_vol_results.csv", "Spot_Excl_Signals_Inv_Vol")])
+def test_compute_aggregate_spot_excl_signals(agg_spot_excl_signals_origin, agg_spot_excl_signals_results, name_col):
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", agg_spot_excl_signals_origin))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", agg_spot_excl_signals_results))
 
     agg_results = pd.read_csv(path_result, sep=',', engine='python')
     agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    assert np.allclose(np.array(agg_origin.Spot_Excl_Signals.tolist()),
-                       np.array(agg_results.Spot_Excl_Signals.tolist())) is True
+    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
 
 
 def test_compute_log_returns_excl_costs(currencies):

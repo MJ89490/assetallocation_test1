@@ -9,7 +9,7 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
         self.seven_previous_latest_date = previous_seven_days_latest_date
 
     def compute_warning_flags_rates(self):
-
+        print('compute_warning_flags_rates')
         three_month_implied_usd_latest_date = self.three_month_implied_usd.loc[self.latest_signal_date]
         three_month_implied_usd_previous_seven_days_latest_date = self.three_month_implied_usd.loc[self.seven_previous_latest_date]
 

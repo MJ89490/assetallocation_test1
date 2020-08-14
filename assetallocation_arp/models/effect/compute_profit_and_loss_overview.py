@@ -14,7 +14,7 @@ class ComputeProfitAndLoss:
         :param combo_curr: combo data of all currencies from compute_currencies.py
         :return: a dataFrame with the combo of all currencies at the latest date
         """
-
+        print('compute_profit_and_loss_combo')
         return combo_curr.loc[self.latest_date]
 
     def compute_profit_and_loss_total(self, returns_ex_costs):
@@ -23,7 +23,7 @@ class ComputeProfitAndLoss:
         :param returns_ex_costs: returns exclude costs of all currencies
         :return:a dataFrame of the returns of all currencies at the latest date
         """
-
+        print('compute_profit_and_loss_total')
         profit_and_loss_returns = returns_ex_costs / returns_ex_costs.shift(1)
         profit_and_loss_returns = profit_and_loss_returns.apply(lambda x: x - 1)
 
@@ -36,6 +36,7 @@ class ComputeProfitAndLoss:
         :param combo_overview: combo from compute_profit_and_loss_combo function
         :return: a dataFrame of the spot of all currencies at the latest date
         """
+        print('compute_profit_and_loss_spot')
         profit_and_loss_spot = spot_origin / spot_origin.shift(1)
         profit_and_loss_spot = profit_and_loss_spot.apply(lambda x: x - 1)
         profit_and_loss_spot = profit_and_loss_spot.apply(lambda x: x * 100).loc[self.latest_date]
@@ -51,7 +52,7 @@ class ComputeProfitAndLoss:
         :param profit_and_loss_spot: spot of profit and loss overview for all currencies
         :return: a dataFrame of carry of all currencies
         """
-
+        print('compute_profit_and_loss_carry')
         profit_and_loss_carry = profit_and_loss_total.values - profit_and_loss_spot.values
 
         return pd.DataFrame(profit_and_loss_carry)[0]
@@ -66,6 +67,7 @@ class ComputeProfitAndLoss:
         :param spot_incl_signals: spot data from aggregate currencies (compute_aggregate_spot_incl_signals)
         :return: a dictionary of profit and loss ytd and weekly
         """
+        print('compute_profit_and_loss_notional')
         #todo ajouter fct Laura pour work day
         last_year = pd.to_datetime("31-12-{}".format((self.latest_date - pd.DateOffset(years=1)).year))
 
@@ -112,7 +114,7 @@ class ComputeProfitAndLoss:
         :param weighted_perf: weighted performance data
         :return: a dictionary of profit and loss implemented in MATR
         """
-
+        print('compute_profit_and_loss_implemented_in_matr')
         # YTD P&L:: Total (Returns)
         ytd_total_matr = (weighted_perf.loc[self.latest_date][0]/100) * 10000
 

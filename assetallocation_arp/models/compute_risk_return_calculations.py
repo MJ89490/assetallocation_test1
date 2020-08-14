@@ -10,6 +10,7 @@ class ComputeRiskReturnCalculations:
         self.dates_index = dates_index
 
     def compute_excess_returns(self, returns_excl_signals, returns_incl_signals):
+        print('compute_excess_returns')
         exp = 365 / (self.end_date - self.start_date).days
 
         excess_returns_no_signals = (((returns_excl_signals.loc[self.end_date][0] / returns_excl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
@@ -20,7 +21,7 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_std_dev(returns_excl_signals, returns_incl_signals):
-
+        print('compute_std_dev')
         std_dev_no_signals = (returns_excl_signals / returns_excl_signals.shift(1)).std()[0] * sqrt(52) * 100
         std_dev_with_signals = (returns_incl_signals / returns_incl_signals.shift(1)).std()[0] * sqrt(52) * 100
 
@@ -28,7 +29,7 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_sharpe_ratio(excess_returns, std_dev):
-
+        print('compute_sharpe_ratio')
         sharpe_ratio_no_signals = excess_returns['excess_returns_no_signals'] / std_dev['std_dev_no_signals']
         sharpe_ratio_with_signals = excess_returns['excess_returns_with_signals'] / std_dev['std_dev_with_signals']
 
@@ -37,7 +38,7 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_max_drawdown(returns_excl_signals, returns_incl_signals):
-
+        print('compute_max_drawdown')
         returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.to_list()
         returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.tolist()
 
@@ -53,7 +54,7 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_calmar_ratio(excess_returns, max_drawdown):
-
+        print('compute_calmar_ratio')
         calmar_ratio_no_signals = excess_returns['excess_returns_no_signals'] / max_drawdown['max_drawdown_no_signals']
         calmar_ratio_with_signals = excess_returns['excess_returns_with_signals'] / max_drawdown['max_drawdown_with_signals']
 
