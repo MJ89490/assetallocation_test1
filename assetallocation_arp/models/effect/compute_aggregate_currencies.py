@@ -1,4 +1,4 @@
-from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
+from assetallocation_arp.common_libraries.names_columns_calculations import CurrencyAggregate
 
 from configparser import ConfigParser
 import os
@@ -53,7 +53,6 @@ class ComputeAggregateCurrencies:
 
                 # Take previous date depending on the size of the window
                 previous_start_date_index = spot_data.index[start_current_date_index_loc - self.window]
-                previous_start_date_index_loc = spot_data.index.get_loc(previous_start_date_index)
 
                 # Take the previous values depending on the size of the window
                 values_window = spot_tmp[previous_start_date_index:start_current_date_index]
@@ -76,7 +75,7 @@ class ComputeAggregateCurrencies:
                     tmp_start_date_computations = spot_data.index[start_current_date_index_loc]
 
             # Add volatilities into a common dataFrame
-            inverse_volatilities['Inverse_Volatility_' + currency_spot] = volatilities
+            inverse_volatilities[CurrencyAggregate.Inverse_Volatility.name + currency_spot] = volatilities
 
         inverse_volatilities = inverse_volatilities.set_index(self.dates_index)
 
@@ -129,7 +128,8 @@ class ComputeAggregateCurrencies:
             returns_shift = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
             self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(ComputeAggregateCurrencies.AGG_FIRST_VALUE, columns=['Total_Incl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(ComputeAggregateCurrencies.AGG_FIRST_VALUE,
+                            columns=[CurrencyAggregate.Total_Incl_Signals.name], index=list(self.dates_index))
 
     def compute_aggregate_total_excl_signals(self, returns_excl_costs, inverse_volatility):
         print('compute_aggregate_total_excl_signals')
@@ -142,7 +142,8 @@ class ComputeAggregateCurrencies:
             returns_shift = (returns_excl_costs.loc[self.start_date_calc:] / returns_excl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
             self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=['Total_Excl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Total_Excl_Signals.name],
+                            index=list(self.dates_index))
 
     def compute_aggregate_spot_incl_signals(self, spot_incl_costs, inverse_volatility):
         print('compute_aggregate_spot_incl_signals')
@@ -155,7 +156,8 @@ class ComputeAggregateCurrencies:
             returns_shift = (spot_incl_costs.loc[self.start_date_calc:] / spot_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
             self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=['Spot_Incl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Spot_Incl_Signals.name],
+                            index=list(self.dates_index))
 
     def compute_aggregate_spot_excl_signals(self, spot_excl_costs, inverse_volatility):
         print('compute_aggregate_spot_excl_signals')
@@ -168,7 +170,8 @@ class ComputeAggregateCurrencies:
             returns_shift = (spot_excl_costs.loc[self.start_date_calc:] / spot_excl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
             self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=['Spot_Excl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Spot_Excl_Signals],
+                            index=list(self.dates_index))
 
     @staticmethod
     def compute_log_returns_excl_costs(returns_ex_costs):
@@ -180,7 +183,7 @@ class ComputeAggregateCurrencies:
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file
-        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'matr_weights_effect.ini'))
+        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'matr_weights_effect.ini')
         config.read(path)
         weights = json.loads(config.get('weighted_performance', 'weights'))
         start_date_perf = config.get('start_date_weighted_performance', 'start_date_weighted_perf')
@@ -204,7 +207,8 @@ class ComputeAggregateCurrencies:
         for value_weight in range(len(weights)):
             weighted_perf.append(sum_prod[value_weight] * float(list(weights.values())[value_weight]))
 
-        return pd.DataFrame(weighted_perf, columns=['Weighted_Performance'], index=index_weighted.Dates_Weighted_Performance.tolist())
+        return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name],
+                            index=index_weighted.Dates_Weighted_Performance.tolist())
 
     def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr):
 

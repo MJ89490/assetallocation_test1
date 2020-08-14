@@ -18,6 +18,11 @@ class CurrencySpot(enum.Enum):
 
 class CurrencyAggregate(enum.Enum):
     Total_Incl_Signals = 'Total_Incl_Signals'
+    Total_Excl_Signals = 'Total_Excl_Signals'
+    Spot_Incl_Signals = 'Spot_Incl_Signals'
+    Spot_Excl_Signals = 'Spot_Excl_Signals'
+    Weighted_Performance = 'Weighted_Performance'
+    Inverse_Volatility = 'Inverse_Volatility_'
 
 
 
