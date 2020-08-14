@@ -106,9 +106,9 @@ class ComputeInflationDifferential:
 
         # Read the data rom the inflation csv files
         inflation_values = pd.read_csv(
-            os.path.abspath(os.path.join(os.path.dirname(__file__),  '..', '..', '..', 'data_effect', 'data_imf', data_country)))
+            os.path.abspath(os.path.join(os.path.dirname(__file__),  '..', '..', '..', 'data', 'raw', 'data_imf', data_country)))
         inflation_eur_values = pd.read_csv(
-            os.path.abspath(os.path.join(os.path.dirname(__file__),  '..', '..', '..', 'data_effect', 'data_imf', data_group_country)))
+            os.path.abspath(os.path.join(os.path.dirname(__file__),  '..', '..', '..', 'data', 'raw', 'data_imf', data_group_country)))
 
         countries_currencies = {'Brazil': 'BRLUSD Curncy', 'Argentina': 'ARSUSD Curncy',
                                 'Mexico': 'MXNUSD Curncy', 'Colombia': 'COPUSD Curncy',
@@ -153,7 +153,7 @@ class ComputeInflationDifferential:
 
         # Processing Bloomberg data
         inflation_values = pd.read_csv(os.path.abspath(
-            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data_effect', 'bloomberg_data', 'bbg_data.csv' )))
+            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'raw', 'bloomberg_data', 'bbg_data.csv')))
 
         # Remove the first two rows
         inflation_values = inflation_values.iloc[2:]

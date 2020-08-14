@@ -61,8 +61,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-data_effect/data_imf/
-data_effect/bloomberg_data/
 env/
 build/
 develop-eggs/

@@ -53,7 +53,7 @@ class ComputeSignalsOverview:
         # Ex-ante volatility
         latest_signal_date_loc = agg_log_returns.index.get_loc(self.latest_signal_date)
         # Log returns with window lag
-        log_returns_lag = agg_log_returns.iloc[latest_signal_date_loc - self.window:latest_signal_date_loc+1, :]
+        log_returns_lag = agg_log_returns.iloc[latest_signal_date_loc - (self.window-1):latest_signal_date_loc+1, :]
         ex_ante_vol = sqrt(52) * log_returns_lag.dot(current_signals).std() * 100
         # MATR notional
         matr_notional = signals_combo.sum() * self.size_attr * 100
