@@ -7,7 +7,10 @@ import math
 import numpy as np
 
 
+
+
 class ComputeAggregateCurrencies:
+    AGG_FIRST_VALUE = [100]
 
     def __init__(self, window, start_date_calculations, weight, dates_index):
         self.start_date_calc = start_date_calculations
@@ -97,94 +100,75 @@ class ComputeAggregateCurrencies:
         print('compute_excl_signals_spot_return')
         return (spot_origin.loc[self.start_date_calc:] / spot_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
+    @staticmethod
+    def compute_aggregate_inverse_volatility(returns_spot_values, inverse_volatility):
+
+        if len(ComputeAggregateCurrencies.AGG_FIRST_VALUE) != 1:
+            ComputeAggregateCurrencies.AGG_FIRST_VALUE = [100]
+
+        counter = 0
+        for values_returns, values_volatility in zip(returns_spot_values.values, inverse_volatility.values):
+            tmp = []
+            for value_returns, value_volatility in zip(values_returns, values_volatility):
+                tmp.append(value_returns * value_volatility)
+            sum_tmp_volatility = sum(values_volatility)
+            ComputeAggregateCurrencies.AGG_FIRST_VALUE.append(ComputeAggregateCurrencies.AGG_FIRST_VALUE[counter] * (sum(tmp) / sum_tmp_volatility))
+            counter += 1
+
+        return ComputeAggregateCurrencies.AGG_FIRST_VALUE
+
     def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
         print('compute_aggregate_total_incl_signals')
-        total_signals = [100]
+        # total_signals = [100]
 
         if self.weight == '1/N':
             average_incl_signals = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_incl_signals)):
-                total_signals.append(total_signals[value] * average_incl_signals[value])
+                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_incl_signals[value])
         else:
             returns_shift = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            counter = 0
-            for values_returns, values_volatility in zip(returns_shift.values, inverse_volatility.values):
-                tmp = []
-                for value_returns, value_volatility in zip(values_returns, values_volatility):
-                    tmp.append(value_returns * value_volatility)
-                sum_tmp_volatility = sum(values_volatility)
-                total_signals.append(total_signals[counter] * (sum(tmp) / sum_tmp_volatility))
-                counter += 1
+            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(total_signals, columns=['Total_Incl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(ComputeAggregateCurrencies.AGG_FIRST_VALUE, columns=['Total_Incl_Signals'], index=list(self.dates_index))
 
     def compute_aggregate_total_excl_signals(self, returns_excl_costs, inverse_volatility):
         print('compute_aggregate_total_excl_signals')
-        total_signals = [100]
 
         if self.weight == '1/N':
             average_excl_signals = (returns_excl_costs.loc[self.start_date_calc:] / returns_excl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_excl_signals)):
-                total_signals.append(total_signals[value] * average_excl_signals[value])
+                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_excl_signals[value])
         else:
             returns_shift = (returns_excl_costs.loc[self.start_date_calc:] / returns_excl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            counter = 0
-            for values_returns, values_volatility in zip(returns_shift.values, inverse_volatility.values):
-                tmp = []
-                for value_returns, value_volatility in zip(values_returns, values_volatility):
-                    tmp.append(value_returns * value_volatility)
-                sum_tmp_volatility = sum(values_volatility)
-                total_signals.append(total_signals[counter] * (sum(tmp) / sum_tmp_volatility))
-                counter += 1
+            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(total_signals, columns=['Total_Excl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=['Total_Excl_Signals'], index=list(self.dates_index))
 
     def compute_aggregate_spot_incl_signals(self, spot_incl_costs, inverse_volatility):
         print('compute_aggregate_spot_incl_signals')
-        #TODO create a static fct to compute the inv
-        spot_incl_signals = [100]
 
         if self.weight == '1/N':
             average_spot_incl_signals = (spot_incl_costs.loc[self.start_date_calc:] / spot_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_spot_incl_signals)):
-                spot_incl_signals.append(spot_incl_signals[value] * average_spot_incl_signals[value])
+                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_spot_incl_signals[value])
         else:
             returns_shift = (spot_incl_costs.loc[self.start_date_calc:] / spot_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            counter = 0
-            for values_returns, values_volatility in zip(returns_shift.values, inverse_volatility.values):
-                tmp = []
-                for value_returns, value_volatility in zip(values_returns, values_volatility):
-                    tmp.append(value_returns * value_volatility)
-                sum_tmp_volatility = sum(values_volatility)
-                spot_incl_signals.append(spot_incl_signals[counter] * (sum(tmp) / sum_tmp_volatility))
-                counter += 1
+            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(spot_incl_signals, columns=['Spot_Incl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=['Spot_Incl_Signals'], index=list(self.dates_index))
 
     def compute_aggregate_spot_excl_signals(self, spot_excl_costs, inverse_volatility):
         print('compute_aggregate_spot_excl_signals')
-        spot_excl_signals = [100]
 
         if self.weight == '1/N':
             average_spot_excl_signals = (spot_excl_costs.loc[self.start_date_calc:] / spot_excl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_spot_excl_signals)):
-                spot_excl_signals.append(spot_excl_signals[value] * average_spot_excl_signals[value])
+                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_spot_excl_signals[value])
         else:
             returns_shift = (spot_excl_costs.loc[self.start_date_calc:] / spot_excl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            counter = 0
-            for values_returns, values_volatility in zip(returns_shift.values, inverse_volatility.values):
-                tmp = []
-                for value_returns, value_volatility in zip(values_returns, values_volatility):
-                    tmp.append(value_returns * value_volatility)
-                sum_tmp_volatility = sum(values_volatility)
-                spot_excl_signals.append(spot_excl_signals[counter] * (sum(tmp) / sum_tmp_volatility))
-                counter += 1
+            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        pd.DataFrame(spot_excl_signals, columns=['Spot_Excl_Signals'], index=list(self.dates_index)).to_csv(
-            'aggregate_spot_excl_signals_inv_vol_results.csv')
-
-
-        return pd.DataFrame(spot_excl_signals, columns=['Spot_Excl_Signals'], index=list(self.dates_index))
+        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=['Spot_Excl_Signals'], index=list(self.dates_index))
 
     @staticmethod
     def compute_log_returns_excl_costs(returns_ex_costs):
