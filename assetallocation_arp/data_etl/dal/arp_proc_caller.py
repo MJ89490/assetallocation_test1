@@ -9,7 +9,7 @@ from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
-from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
+from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAsset
 from common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
@@ -74,14 +74,14 @@ class ArpProcCaller(Db):
 
         row = res[0]
         t = Times(row['day_of_week'], row['frequency'], row['leverage_type'], row['long_signals'], row['short_signals'],
-                  -DbTypeConverter.month_interval_to_int(row['time_lag']), row['volatility_window'])
+                  -ArpTypeConverter.month_interval_to_int(row['time_lag']), row['volatility_window'])
         t.version = times_version
         t.description = row['description']
         return t
 
     def _insert_times_assets(self, times_version: int, times_assets: List[TimesAsset]) -> bool:
         """Insert asset data for a version of times"""
-        times_assets = self._times_assets_to_composite(times_assets)
+        times_assets = ArpTypeConverter.times_assets_to_composite(times_assets)
         res = self.call_proc('arp.insert_times_assets', [times_version, times_assets])
         asset_ids = res[0].get('asset_ids')
         return bool(asset_ids)
@@ -131,8 +131,8 @@ class ArpProcCaller(Db):
 
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
         """Insert data from an instance of FundStrategy into database"""
-        ticker_weights = self._weights_to_composite(fund_strategy.asset_weights)
-        ticker_analytics = self._analytics_to_composite(fund_strategy.asset_analytics)
+        ticker_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
+        ticker_analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.asset_analytics)
 
         res = self.call_proc('arp.insert_fund_strategy_results',
                              [fund_strategy.business_datetime, fund_strategy.fund_name, fund_strategy.output_is_saved,
@@ -141,23 +141,6 @@ class ArpProcCaller(Db):
         fund_strategy_id = res[0].get('fund_strategy_id')
 
         return fund_strategy_id is not None
-
-    @staticmethod
-    def _times_assets_to_composite(times_assets: List[TimesAsset]) -> List[str]:
-        """Format to match database type asset.times_asset[]"""
-        return [f'("{i.category.name}","{i.country.name}","{i.currency.name}","{i.description}","{i.name}",' 
-                f'"{i.ticker}","{"t" if i.is_tr else "f"}","{i.type}","{i.signal_ticker}","{i.future_ticker}",' 
-                f'{i.cost},{i.s_leverage})' for i in times_assets]
-
-    @staticmethod
-    def _analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]) -> List[str]:
-        """Format to match database type arp.ticker_category_subcategory_value[]"""
-        return [f'("{i.asset_ticker}","{i.category}","{i.subcategory}",{i.value})' for i in analytics]
-
-    @staticmethod
-    def _weights_to_composite(weights: List[FundStrategyAssetWeight]) -> List[str]:
-        """Format to match database type arp.ticker_weight_weight[]"""
-        return [f'("{i.asset_ticker}",{i.strategy_weight},{i.implemented_weight})' for i in weights]
 
     def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
                                      business_datetime: datetime = datetime.today(),
@@ -197,8 +180,8 @@ if __name__ == '__main__':
 
     d = ArpProcCaller()
 
-    t = Times(0, 'weekly', 'e', [], [], 0, 0)
-    t_v = d._insert_times_strategy(t, 'JS89275')
+    t1 = Times(0, 'weekly', 'e', [], [], 0, 0)
+    t_v = d._insert_times_strategy(t1, 'JS89275')
 
     ta1 = TimesAsset('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
     ta2 = TimesAsset('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))

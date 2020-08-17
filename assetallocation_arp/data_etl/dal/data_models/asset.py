@@ -104,8 +104,9 @@ class Asset:
 
 
 class FicaAsset(Asset):
-    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
-                 future_ticker: str, generic_yield_ticker: str) -> None:
+    def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
+                 currency: Union[str, Currency], name: str, type: str, future_ticker: str,
+                 generic_yield_ticker: str) -> None:
         """FicaAsset class to hold data from database"""
         super().__init__(ticker, category, country, currency, name, type)
         self._future_ticker = future_ticker
@@ -122,8 +123,9 @@ class FicaAsset(Asset):
 
 # noinspection PyAttributeOutsideInit
 class TimesAsset(Asset):
-    def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
-                 s_leverage: int, signal_ticker: str, future_ticker: str, cost: Decimal) -> None:
+    def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
+                 currency: Union[str, Currency], name: str, type: str, s_leverage: int, signal_ticker: str,
+                 future_ticker: str, cost: Decimal) -> None:
         """TimesAsset class to hold data from database"""
         super().__init__(ticker, category, country, currency, name, type)
         self.signal_ticker = signal_ticker

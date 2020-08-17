@@ -1,10 +1,11 @@
 from typing import List, Union
 from decimal import Decimal
 
+from psycopg2.extras import DateTimeTZRange
+
 from common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
 from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
-
-from psycopg2.extras import DateTimeTZRange
+from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 
 
 # noinspection PyAttributeOutsideInit
@@ -14,6 +15,7 @@ class Strategy:
         self.name = name
         self._description = ''
         self._version = None
+        self.assets = []
 
     @property
     def name(self) -> Name:
@@ -38,6 +40,14 @@ class Strategy:
     @version.setter
     def version(self, x: int) -> None:
         self._version = x
+
+    @property
+    def assets(self) -> List[Asset]:
+        return self._assets
+
+    @assets.setter
+    def assets(self, x: List[Asset]) -> None:
+        self._assets = x
 
 
 # noinspection PyAttributeOutsideInit
