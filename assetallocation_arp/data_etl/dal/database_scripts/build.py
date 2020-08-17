@@ -9,7 +9,8 @@ from assetallocation_arp.data_etl.dal.database_scripts.static_data.build import 
 from assetallocation_arp.data_etl.dal.database_scripts.triggers.build import get_trigger_sql_files
 
 
-def execute_script_files(engine, files):
+def execute_script_files(engine, files) -> None:
+    """Read sql from file and execute against database"""
     conn = engine.connect()
 
     for filename in files:
@@ -25,12 +26,13 @@ def execute_script_files(engine, files):
     conn.close()
 
 
-def create_all(engine):
+def create_all(engine) -> None:
+    """Create schemas, types, tables, functions, static data and triggers in database"""
     sql_files = []
     sql_files.extend(get_schema_sql_files())
     sql_files.extend(get_type_sql_files())
     sql_files.extend(get_table_sql_files())
-    sql_files.extend(get_function_sql_files()) # TODO fix audit functions not working
+    sql_files.extend(get_function_sql_files())  # TODO fix audit functions not working
     sql_files.extend(get_static_data_sql_files())
     sql_files.extend(get_trigger_sql_files())
 

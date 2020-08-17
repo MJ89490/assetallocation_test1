@@ -1,7 +1,9 @@
 from pathlib import Path
+from typing import List
 
 
-def get_table_sql_files():
+def get_table_sql_files() -> List[str]:
+    """Return ordered list of sql files required to build tables"""
     p = Path(__file__).parent
     a = p / 'asset'
     ar = p / 'arp'
