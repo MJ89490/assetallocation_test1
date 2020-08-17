@@ -9,6 +9,7 @@ from assetallocation_arp.common_enums.asset_analytic import Category
 class AssetAnalytic:
     def __init__(self, asset_ticker: str, source: Union[str, Source], category: Union[str, Category],
                  value: Decimal) -> None:
+        """AssetAnalytic class to hold data from database"""
         self.asset_ticker = asset_ticker
         self.source = source
         self.category = category

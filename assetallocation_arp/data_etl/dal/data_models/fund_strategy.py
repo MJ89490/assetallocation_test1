@@ -17,6 +17,7 @@ class FundStrategy:
     def __init__(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: Decimal,
                  fund_strategy_asset_analytics: List['FundStrategyAssetAnalytic'] = None,
                  fund_strategy_asset_weights: List['FundStrategyAssetWeight'] = None):
+        """FundStrategy class to hold data from database"""
         self._fund_name = fund_name
         self.strategy_name = strategy_name
         self._weight = weight
@@ -107,6 +108,7 @@ class FundStrategy:
 
 class FundStrategyAssetWeight:
     def __init__(self, asset_ticker: str, strategy_weight: Decimal):
+        """FundStrategyAssetWeight class to hold data from database"""
         self._asset_ticker = asset_ticker
         self._strategy_weight = strategy_weight
         self._implemented_weight = Decimal(0)
@@ -140,6 +142,7 @@ class FundStrategyAssetWeight:
 class FundStrategyAssetAnalytic:
     def __init__(self,  asset_ticker: str, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
                  value: Decimal) -> None:
+        """FundStrategyAssetAnalytic class to hold data from database"""
         self.asset_ticker = asset_ticker
         self.category = category
         self.subcategory = subcategory

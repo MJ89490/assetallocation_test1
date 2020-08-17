@@ -12,6 +12,7 @@ from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAna
 class Asset:
     def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
                  currency: Union[str, Currency], name: str, type: str):
+        """Asset class to hold data from database"""
         self.category = category
         self.country = country
         self.currency = currency
@@ -105,6 +106,7 @@ class Asset:
 class FicaAsset(Asset):
     def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
                  future_ticker: str, generic_yield_ticker: str) -> None:
+        """FicaAsset class to hold data from database"""
         super().__init__(ticker, category, country, currency, name, type)
         self._future_ticker = future_ticker
         self._generic_yield_ticker = generic_yield_ticker
@@ -122,6 +124,7 @@ class FicaAsset(Asset):
 class TimesAsset(Asset):
     def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
                  s_leverage: int, signal_ticker: str, future_ticker: str, cost: Decimal) -> None:
+        """TimesAsset class to hold data from database"""
         super().__init__(ticker, category, country, currency, name, type)
         self.signal_ticker = signal_ticker
         self.future_ticker = future_ticker
@@ -165,6 +168,7 @@ class TimesAsset(Asset):
 class EffectAsset(Asset):
     def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
                  ndf_code: str, spot_code: str, position_size: Decimal) -> None:
+        """EffectAsset class to hold data from database"""
         super().__init__(ticker, category, country, currency, name, type)
         self.ndf_code = ndf_code
         self.spot_code = spot_code

@@ -6,6 +6,7 @@ from assetallocation_arp.common_enums.currency import Currency
 # noinspection PyAttributeOutsideInit
 class Fund:
     def __init__(self, name: str, currency: Union[str, Currency]) -> None:
+        """Fund class to hold data from database"""
         self._name = name
         self.currency = currency
 

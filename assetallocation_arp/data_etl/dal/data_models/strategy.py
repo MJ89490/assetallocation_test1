@@ -10,6 +10,7 @@ from psycopg2.extras import DateTimeTZRange
 # noinspection PyAttributeOutsideInit
 class Strategy:
     def __init__(self, name: Union[str, Name]):
+        """Strategy class to hold data from database"""
         self.name = name
         self._description = ''
         self._version = None
@@ -46,6 +47,7 @@ class Times(Strategy):
     def __init__(self, day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency],
                  leverage_type: Union[str, Leverage], long_signals: List[Decimal], short_signals: List[Decimal],
                  time_lag_in_months: int, volatility_window: int) -> None:
+        """Times class to hold data from database"""
         super().__init__(self.name)
         self.day_of_week = day_of_week
         self.frequency = frequency
@@ -121,6 +123,7 @@ class Fica(Strategy):
 
     def __init__(self, coupon: Decimal, curve: str, business_tstzrange: DateTimeTZRange,
                  strategy_weights: List[Decimal], tenor: int, trading_cost: int) -> None:
+        """Fica class to hold data from database"""
         super().__init__(self.name)
         self._coupon = coupon
         self._curve = curve
@@ -187,6 +190,7 @@ class Effect(Strategy):
                  interest_rate_cut_off_long: Decimal, interest_rate_cut_off_short: Decimal,
                  moving_average_long_term: int, moving_average_short_term: int, is_realtime_inflation_forecast: bool,
                  trend_indicator: Union[str, TrendIndicator]) -> None:
+        """Effect class to hold data from database"""
         super().__init__(self.name)
         self.carry_type = carry_type
         self.closing_threshold = closing_threshold

@@ -2,6 +2,7 @@ class Ticker:
     def __init__(self, ticker_10y: str, ticker_15y: str, ticker_1y: str, ticker_20y: str, ticker_2y: str,
                  ticker_30y: str, ticker_3m: str, ticker_3y: str, ticker_4y: str, ticker_5y: str, ticker_6y: str,
                  ticker_7y: str, ticker_8y: str, ticker_9y: str, ticker_type: str):
+        """Ticker class to hold data from database"""
         self._ticker_10y = ticker_10y
         self._ticker_15y = ticker_15y
         self._ticker_1y = ticker_1y
