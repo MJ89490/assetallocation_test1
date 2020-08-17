@@ -3,7 +3,7 @@ import sys
 import xlwings as xw
 from time import strftime, gmtime
 
-from assetallocation_arp.common_enums.strategy import Name
+from common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times
 

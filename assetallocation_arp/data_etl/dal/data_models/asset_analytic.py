@@ -1,8 +1,8 @@
 from decimal import Decimal
 from typing import Union
 
-from assetallocation_arp.common_enums.source import Source
-from assetallocation_arp.common_enums.asset_analytic import Category
+from common_libraries.dal_enums.source import Source
+from common_libraries.dal_enums.asset_analytic import Category
 
 
 # noinspection PyAttributeOutsideInit

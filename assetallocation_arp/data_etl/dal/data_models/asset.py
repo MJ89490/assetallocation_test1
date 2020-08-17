@@ -1,9 +1,9 @@
 from decimal import Decimal
 from typing import List, Union
 
-from assetallocation_arp.common_enums.asset import Category
-from assetallocation_arp.common_enums.currency import Currency
-from assetallocation_arp.common_enums.country import Country, country_region
+from common_libraries.dal_enums import Category
+from common_libraries.dal_enums.currency import Currency
+from common_libraries.dal_enums import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
 
 

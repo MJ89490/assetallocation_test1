@@ -1,7 +1,7 @@
 from typing import List, Union
 from decimal import Decimal
 
-from assetallocation_arp.common_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
+from common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
 from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
 
 from psycopg2.extras import DateTimeTZRange

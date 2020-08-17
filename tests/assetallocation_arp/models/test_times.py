@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 from assetallocation_arp.models.times import format_data_and_calc
-from assetallocation_arp.common_enums.strategy import Leverage
+from common_libraries.dal_enums.strategy import Leverage
 
 CURRENT_PATH = os.path.dirname(__file__)
 

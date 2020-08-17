@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
-from common_enums.strategy import Frequency, Leverage
+from common_libraries.dal_enums.strategy import Frequency, Leverage
 
 """
 User login form

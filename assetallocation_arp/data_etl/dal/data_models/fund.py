@@ -1,6 +1,6 @@
 from typing import Union
 
-from assetallocation_arp.common_enums.currency import Currency
+from common_libraries.dal_enums.currency import Currency
 
 
 # noinspection PyAttributeOutsideInit

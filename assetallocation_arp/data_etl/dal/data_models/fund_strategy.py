@@ -4,8 +4,8 @@ from typing import List, Union
 import configparser
 from pathlib import Path
 
-from common_enums.strategy import Name
-from common_enums.fund_strategy import Category, Performance, Signal
+from common_libraries.dal_enums.strategy import Name
+from common_libraries.dal_enums import Category, Performance, Signal
 
 
 # noinspection PyAttributeOutsideInit

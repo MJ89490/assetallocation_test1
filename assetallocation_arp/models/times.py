@@ -7,7 +7,7 @@ TIMES
 import numpy as np
 import pandas as pd
 
-from assetallocation_arp.common_enums.strategy import Leverage
+from common_libraries.dal_enums.strategy import Leverage
 from assetallocation_arp.models import portfolio_construction as pc
 from assetallocation_arp.models import arp_signals as arp
 from pandas.tseries.offsets import BDay

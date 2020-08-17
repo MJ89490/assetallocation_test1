@@ -11,7 +11,7 @@ from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStra
                                                                         FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAsset
-from assetallocation_arp.common_enums.strategy import Name
+from common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
 
 

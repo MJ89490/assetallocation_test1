@@ -6,7 +6,7 @@ DATA MANIPULATION
 
 import pandas as pd
 
-from assetallocation_arp.common_enums.strategy import Frequency
+from common_libraries.dal_enums.strategy import Frequency
 
 
 def set_data_frequency(data, freq, week_day='SUN'):
