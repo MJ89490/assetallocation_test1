@@ -21,7 +21,7 @@ def test_insert_fund_inserts_values_into_fund_table():
     assert 'EUR' == results[0].get('currency')
 
 
-def test_insert_fund_has_execution_with_name_function_name():
+def test_insert_fund_creates_execution_state_with_name_function_name():
     proc_name = 'fund.insert_fund'
     proc_params = ['test_fund_name', 'EUR']
     select_res = """

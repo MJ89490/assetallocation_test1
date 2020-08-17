@@ -9,7 +9,7 @@ config = loads(environ['DATABASE'])
 c_str = f"postgresql://{config['USER']}:{config['PASSWORD']}@{config['HOST']}:{config['PORT']}/{config['DATABASE']}"
 
 
-def test_insert_times_strategy_inserts_values_into_times(valid_times):
+def test_insert_times_strategy_inserts_values_into_times_table(valid_times):
     # setup
     conn = create_engine(c_str).raw_connection()
     cursor = conn.cursor()
@@ -56,7 +56,7 @@ def test_insert_times_strategy_inserts_values_into_times(valid_times):
     assert valid_times.day_of_week == results[0].get('day_of_week')
 
 
-def test_insert_times_strategy_has_execution_with_function_name(valid_times):
+def test_insert_times_strategy_creates_execution_state_with_function_name(valid_times):
     # setup
     conn = create_engine(c_str).raw_connection()
     cursor = conn.cursor()

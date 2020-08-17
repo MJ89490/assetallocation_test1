@@ -3,8 +3,8 @@ from decimal import Decimal
 
 from psycopg2.extras import DateTimeTZRange
 
-from common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
-from assetallocation_arp.data_etl.dal.type_converter import DbTypeConverter
+from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
+from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 
 
@@ -69,7 +69,7 @@ class Times(Strategy):
 
     @property
     def time_lag_interval(self) -> str:
-        return DbTypeConverter.month_lag_int_to_interval(self.time_lag_in_months)
+        return ArpTypeConverter.month_lag_int_to_interval(self.time_lag_in_months)
 
     @property
     def day_of_week(self) -> DayOfWeek:
@@ -218,7 +218,7 @@ class Effect(Strategy):
 
     @property
     def inflation_lag_interval(self) -> str:
-        return DbTypeConverter.month_lag_int_to_interval(self.inflation_lag_in_months)
+        return ArpTypeConverter.month_lag_int_to_interval(self.inflation_lag_in_months)
 
     @property
     def carry_type(self) -> CarryType:
