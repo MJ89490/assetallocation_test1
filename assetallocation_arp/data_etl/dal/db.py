@@ -9,9 +9,13 @@ class Db:
     procs = Proc.__members__.keys()
 
     def __init__(self, conn_str: str) -> None:
+        """Db class for interacting with a database"""
         self.engine = create_engine(conn_str)
 
     def call_proc(self, proc_name: str, proc_params: List[Any]) -> List[Dict[str, Any]]:
+        """Call database stored procedure and return results.
+        Raises ValueError if stored procedure is not in self.procs
+        """
         if proc_name not in self.procs:
             raise ValueError(f'The stored procedure "{proc_name}" is not defined for class {self.__class__}')
 

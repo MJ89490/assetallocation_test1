@@ -17,6 +17,7 @@ from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
 
 class ArpProcCaller(Db):
     def __init__(self):
+        """ArpProcCaller class to interact with ARP database through calling stored procedures"""
         config = loads(environ.get('DATABASE', '{}'))
         user = config.get('USER')
         password = config.get('PASSWORD')
@@ -31,6 +32,7 @@ class ArpProcCaller(Db):
         return True
 
     def insert_times(self, times: Times, user_id: str) -> int:
+        """Insert data from an instance of Times into database"""
         t_version = self._insert_times_strategy(times, user_id)
         if times.assets:
             self._insert_times_assets(t_version, times.assets)
@@ -38,6 +40,7 @@ class ArpProcCaller(Db):
         return t_version
 
     def select_times(self, times_version) -> Optional[Times]:
+        """Select strategy and asset data for a version of times"""
         times = self._select_times_strategy(times_version)
 
         if times is not None:
@@ -46,6 +49,7 @@ class ArpProcCaller(Db):
         return times
 
     def select_times_with_asset_analytics(self, times_version, business_datetime) -> Optional[Times]:
+        """Select strategy, assets and asset analytics data for a version of times, as at business_datetime"""
         times = self._select_times_strategy(times_version)
 
         if times is not None:
@@ -54,6 +58,7 @@ class ArpProcCaller(Db):
         return times
 
     def _insert_times_strategy(self, times: Times, user_id: str) -> int:
+        """Insert data from an instance of Times into database"""
         res = self.call_proc('arp.insert_times_strategy',
                              [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
                               times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
@@ -62,6 +67,7 @@ class ArpProcCaller(Db):
         return res[0]['t_version']
 
     def _select_times_strategy(self, times_version) -> Optional[Times]:
+        """Select strategy data for a version of times"""
         res = self.call_proc('arp.select_times_strategy', [times_version])
         if not res:
             return
@@ -74,12 +80,14 @@ class ArpProcCaller(Db):
         return t
 
     def _insert_times_assets(self, times_version: int, times_assets: List[TimesAsset]) -> bool:
+        """Insert asset data for a version of times"""
         times_assets = self._times_assets_to_composite(times_assets)
         res = self.call_proc('arp.insert_times_assets', [times_version, times_assets])
         asset_ids = res[0].get('asset_ids')
         return bool(asset_ids)
 
     def _select_times_assets_with_analytics(self, times_version, business_datetime) -> Optional[List[TimesAsset]]:
+        """Select assets and asset analytics data for a version of times, as at business_datetime"""
         res = self.call_proc('arp.select_times_assets_with_analytics', [times_version, business_datetime])
 
         if not res:
@@ -104,6 +112,7 @@ class ArpProcCaller(Db):
         return times_assets
 
     def _select_times_assets(self, times_version) -> Optional[List[TimesAsset]]:
+        """Select asset data for a version of times"""
         res = self.call_proc('arp.select_times_assets', [times_version])
 
         if not res:
@@ -121,6 +130,7 @@ class ArpProcCaller(Db):
         return times_assets
 
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
+        """Insert data from an instance of FundStrategy into database"""
         ticker_weights = self._weights_to_composite(fund_strategy.asset_weights)
         ticker_analytics = self._analytics_to_composite(fund_strategy.asset_analytics)
 
@@ -152,6 +162,7 @@ class ArpProcCaller(Db):
     def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
                                      business_datetime: datetime = datetime.today(),
                                      system_datetime: datetime = datetime.today()) -> Optional[FundStrategy]:
+        """Select the most recent FundStrategy data for a strategy as at business_datetime and system_datetime"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
         res = self.call_proc('arp.select_fund_strategy_results',
