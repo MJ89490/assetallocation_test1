@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+# noinspection PyArgumentList
 Proc = Enum(
     value='Proc',
     names=[
