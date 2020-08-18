@@ -84,7 +84,6 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 
 
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
-
     if mat_file is None:
         file_path = FILE_PATH
     else:
@@ -110,7 +109,6 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
 
 
 def extract_inputs_from_ui_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
-
     if mat_file is None:
         file_path = FILE_PATH
 

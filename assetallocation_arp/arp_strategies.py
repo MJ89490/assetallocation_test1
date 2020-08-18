@@ -1,29 +1,31 @@
 import os
 import sys
 import xlwings as xw
+from time import strftime, gmtime
+
+from common_libraries.dal_enums.strategy import Name
+
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
 sys.path.insert(0, ROOT_DIR)
-from time import strftime, gmtime
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.models import fica
 from assetallocation_arp.models import maven
 from assetallocation_arp.models import fxmodels
-from assetallocation_arp.common_libraries import models_names
 
 
 def run_model(model_type, mat_file, input_file, model_date=None):
 
-    if model_type == models_names.Models.times.name:
+    if model_type == Name.times.name:
         # get inputs from excel and matlab data
         times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
+        write_output_to_excel({Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
 
-    if model_type == models_names.Models.maven.name:
+    if model_type == Name.maven.name:
         # get inputs from excel and matlab data
         maven_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
                                                                               model_date)
@@ -37,15 +39,15 @@ def run_model(model_type, mat_file, input_file, model_date=None):
             maven.run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals,
                                         short_signals)
         # write results to output sheet
-        write_output_to_excel({models_names.Models.maven.name: (momentum, value, long_signals_name, short_signals_name,
+        write_output_to_excel({Name.maven.name: (momentum, value, long_signals_name, short_signals_name,
                                                           value_last, momentum_last, long_list, short_list,
                                                           returns_maven, asset_class_long,
                                                           asset_class_short, asset_contribution_long,
                                                           asset_contribution_short, asset_inputs, maven_inputs)}, input_file)
-    if model_type == models_names.Models.effect.name:
+    if model_type == Name.effect.name:
         print(model_type)
 
-    if model_type == models_names.Models.fxmodels.name:
+    if model_type == Name.fxmodels.name:
         # get inputs from excel and matlab data
         fxmodels_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
         # create the input series for the signal types
@@ -58,10 +60,10 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(fxmodels_inputs, carry, signal,
                                                                                 exposure, exposure_agg)
         # write results to output sheet
-        write_output_to_excel({models_names.Models.fxmodels.name: (fx_model, base_fx, signal, exposure, exposure_agg,
+        write_output_to_excel({Name.fxmodels.name: (fx_model, base_fx, signal, exposure, exposure_agg,
                                                              returns, contribution, carry_base, fxmodels_inputs,
                                                              asset_inputs)}, input_file)
-    if model_type == models_names.Models.fica.name:
+    if model_type == Name.fica.name:
         # get inputs from excel and matlab data
         fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
                                                                              model_date)
@@ -74,17 +76,17 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         # run daily attributions
         carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
         # write results to output sheet
-        write_output_to_excel({models_names.Models.fica.name: (carry_roll, signals, country_returns, cum_contribution,
+        write_output_to_excel({Name.fica.name: (carry_roll, signals, country_returns, cum_contribution,
                                                          returns, asset_inputs, fica_inputs, carry_daily,
                                                          return_daily)}, input_file)
         print(model_type)
-    if model_type == models_names.Models.comca.name:
+    if model_type == Name.comca.name:
         print(model_type)
 
 
 def write_output_to_excel(model_outputs, input_file):
 
-    if models_names.Models.times.name in model_outputs.keys():
+    if Name.times.name in model_outputs.keys():
 
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
 
@@ -104,9 +106,9 @@ def write_output_to_excel(model_outputs, input_file):
         sheet_times_inputs.range('rng_inputs_used').offset(0, 0).value = times_inputs
         sheet_times_inputs.range('rng_inputs_used').offset(3, 0).value = asset_inputs
 
-    if models_names.Models.fica.name in model_outputs.keys():
+    if Name.fica.name in model_outputs.keys():
         carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily, \
-        return_daily = model_outputs[models_names.Models.fica.name]
+        return_daily = model_outputs[Name.fica.name]
         path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
 
         sheet_fica_output = xw.Book.caller().sheets['fica_output']
@@ -133,10 +135,10 @@ def write_output_to_excel(model_outputs, input_file):
         sheet_fica_input.range('rng_input_fica_used').value = fica_inputs
         sheet_fica_input.range('rng_input_fica_used').offset(3, 0).value = asset_inputs
 
-    if models_names.Models.maven.name in model_outputs.keys():
+    if Name.maven.name in model_outputs.keys():
         momentum, value, long_signals_name, short_signals_name, value_last, momentum_last, long_list, \
         short_list, returns_maven, asset_class_long, asset_class_short, asset_contribution_long, \
-        asset_contribution_short, asset_inputs, maven_inputs = model_outputs[models_names.Models.maven.name]
+        asset_contribution_short, asset_inputs, maven_inputs = model_outputs[Name.maven.name]
         path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
 
         sheet_maven_output = xw.Book.caller().sheets['maven_output']
@@ -180,8 +182,8 @@ def write_output_to_excel(model_outputs, input_file):
         sheet_maven_input.range('rng_input_maven_used').value = maven_inputs
         sheet_maven_input.range('rng_input_maven_used').offset(3, 0).value = asset_inputs
 
-    if models_names.Models.fxmodels.name in model_outputs.keys():
-        fx_model, base_fx, signal, exposure, exposure_agg, returns, contribution, carry_base, fxmodels_inputs, asset_inputs = model_outputs[models_names.Models.fxmodels.name]
+    if Name.fxmodels.name in model_outputs.keys():
+        fx_model, base_fx, signal, exposure, exposure_agg, returns, contribution, carry_base, fxmodels_inputs, asset_inputs = model_outputs[Name.fxmodels.name]
         path = os.path.join(os.path.dirname(__file__), "arp_dashboard.xlsm")
 
         sheet_fxmodels_output = xw.Book.caller().sheets['fxmodels_output']
@@ -230,7 +232,7 @@ def get_inputs_from_python(model, file):
 
     input_file = None
 
-    models_list = [model.name for model in models_names.Models]
+    models_list = [model.name for model in Name]
 
     xw.Book(file).set_mock_caller()
 
