@@ -1,39 +1,89 @@
-import pandas as pd
-import assetallocation_arp.data_etl.import_all_data as gd
-import assetallocation_arp.models.times as times
+import os
 import sys
 
-from assetallocation_arp.common_libraries.models_names import Models as models
+import pandas as pd
 
-import os
+from common_libraries.dal_enums.strategy import Name
+import assetallocation_arp.data_etl.import_all_data as gd
+from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
+from assetallocation_arp.models import times, fica, maven, fxmodels
 
-def run_model(model_type, mat_file=None, input_file=None):
+ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+print(ROOT_DIR)
+sys.path.insert(0, ROOT_DIR)
 
-    if model_type == models.times.name:
+
+def run_model(model_type, mat_file, input_file, model_date=None):
+
+    if model_type == Name.times.name:
         # get inputs from excel and matlab data
-        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({models.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)})
+        write_output_to_excel({Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
 
-    if model_type == models.Models.maven.name:
+    if model_type == Name.maven.name:
+        # get inputs from excel and matlab data
+        maven_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
+                                                                              model_date)
+        # calculate asset return index series and and maven's excess return index series
+        asset_returns = maven.format_data(maven_inputs, asset_inputs, all_data)
+        maven_returns = maven.calculate_excess_returns(maven_inputs, asset_inputs, asset_returns)
+        # calculate value and momentum scores, and the top/bottom countries on the combination score
+        momentum, value, long_signals, short_signals, long_signals_name, short_signals_name, value_last, momentum_last, long_list, short_list, volatility =  maven.calculate_signals(maven_inputs, maven_returns)
+        # calculate maven return series, and benchmarks, asset class exposures and contributions
+        returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short = \
+            maven.run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals,
+                                        short_signals)
+        # write results to output sheet
+        write_output_to_excel({Name.maven.name: (momentum, value, long_signals_name, short_signals_name,
+                                                          value_last, momentum_last, long_list, short_list,
+                                                          returns_maven, asset_class_long,
+                                                          asset_class_short, asset_contribution_long,
+                                                          asset_contribution_short, asset_inputs, maven_inputs)}, input_file)
+    if model_type == Name.effect.name:
         print(model_type)
-    if model_type == models.Models.effect.name:
+
+    if model_type == Name.fxmodels.name:
+        # get inputs from excel and matlab data
+        fxmodels_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+        # create the input series for the signal types
+        spot, carry, cash, ppp = fxmodels.format_data(fxmodels_inputs, asset_inputs, all_data)
+        # calculate signals
+        signal, volatility = fxmodels.calculate_signals(fxmodels_inputs, spot, carry, cash, ppp)
+        # determine exposures
+        fx_model, exposure, exposure_agg = fxmodels.determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility)
+        # calculate returns
+        base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(fxmodels_inputs, carry, signal,
+                                                                                exposure, exposure_agg)
+        # write results to output sheet
+        write_output_to_excel({Name.fxmodels.name: (fx_model, base_fx, signal, exposure, exposure_agg,
+                                                             returns, contribution, carry_base, fxmodels_inputs,
+                                                             asset_inputs)}, input_file)
+    if model_type == Name.fica.name:
+        # get inputs from excel and matlab data
+        fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
+                                                                             model_date)
+        # create yield curves and calculate carry & roll down
+        curve = fica.format_data(fica_inputs, asset_inputs, all_data)
+        carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
+        # run strategy
+        signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll,
+                                                                                country_returns)
+        # run daily attributions
+        carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
+        # write results to output sheet
+        write_output_to_excel({Name.fica.name: (carry_roll, signals, country_returns, cum_contribution,
+                                                         returns, asset_inputs, fica_inputs, carry_daily,
+                                                         return_daily)}, input_file)
         print(model_type)
-    if model_type == models.Models.curp.name:
-        print(model_type)
-    if model_type == models.Models.fica.name:
-        print(model_type)
-    if model_type == models.Models.factor.name:
-        print(model_type)
-    if model_type == models.Models.comca.name:
+    if model_type == Name.comca.name:
         print(model_type)
 
 
 def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
-
-    if model_type == models.times.name:
+    if model_type == Name.times.name:
         # get inputs from excel and matlab data
         times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
         # run strategy
@@ -43,10 +93,10 @@ def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
 
 
 def write_output_to_excel(model_outputs, path_excel_times):
-    if models.times.name in model_outputs.keys():
-        print("===models.times.name===", models.times.name)
+    if Name.times.name in model_outputs.keys():
+        print("===models.times.name===", Name.times.name)
         print("=======model output keys===", model_outputs.keys())
-        positioning, returns, signals = model_outputs[models.times.name]
+        positioning, returns, signals = model_outputs[Name.times.name]
         print("===========current _path, excel path ===========", os.getcwd(), path_excel_times)
         with pd.ExcelWriter(path_excel_times) as writer:
             signals.to_excel(writer, sheet_name='signal', encoding='utf8')
@@ -60,7 +110,7 @@ def get_inputs_from_python(model):
     # launch the script from Python
     mat_file = None
     input_file = None
-    models_list = [model.name for model in models.Models]
+    models_list = [model.name for model in Name]
 
     if model in models_list:
         model_type = model

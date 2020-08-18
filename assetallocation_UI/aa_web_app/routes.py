@@ -2,7 +2,7 @@
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import main_form
-from assetallocation_arp.common_libraries.models_names import Models
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from flask import render_template
 from flask import flash
 from flask import url_for
@@ -91,7 +91,7 @@ def times_page():
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
 
             print("======CALLING THE MODEL======")
-            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Models.times.name)
+            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Name.times.name)
 
             name_of_file = form.name_file_times.data + ".xls"
 
@@ -107,7 +107,7 @@ def times_page():
             path_excel_times = os.path.abspath(os.path.join(path_excel, name_of_file))
 
             if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={str(Models.times.name): (positioning, r, signals)},
+                write_output_to_excel(model_outputs={str(Name.times.name): (positioning, r, signals)},
                                       path_excel_times=path_excel_times)
 
             print("VALUES IN new version FORM:", form.frequency, form.leverage_type, form.name_file_times)

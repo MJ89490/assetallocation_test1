@@ -1,0 +1,2 @@
+,model,date_from,date_to,signal,vol window,value window,sharpe cutoff,mean reversion,historical base,currency,top crosses,response function,exposure,momentum_weight_1m,momentum_weight_2m,momentum_weight_3m,momentum_weight_4m,momentum_weight_5m,momentum_weight_6m,transaction costs
+1,CURP,2010-06-30 00:00:00,2020-06-30 00:00:00,dynamic hedge,,72,,10,24,,,False,1.83,0,0,0,0,0,0,3
