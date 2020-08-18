@@ -105,7 +105,7 @@ class ArpProcCaller(Db):
         effect = self._select_effect_strategy(effect_version)
 
         if effect is not None:
-            effect.assets = self._select_times_effect_with_analytics(effect_version, business_datetime)
+            effect.assets = self._select_effect_assets_with_analytics(effect_version, business_datetime)
 
         return effect
 

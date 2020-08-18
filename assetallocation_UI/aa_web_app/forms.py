@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
-from assetallocation_arp.common_libraries.leverage_types import Leverage
-from assetallocation_arp.common_libraries.frequency_types import Frequency
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Frequency
 
 """
 User login form
