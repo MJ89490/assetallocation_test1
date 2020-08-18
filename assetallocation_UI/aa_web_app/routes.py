@@ -1,7 +1,7 @@
 # Contains view functions for various URLs
 from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
-from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import main_form
+from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import get_times_inputs
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from flask import render_template
 from flask import flash
@@ -84,9 +84,10 @@ def times_page():
                 #TODO insert in run_model because it is currently reading the inputs from the Excel
                 # 1. Read the input from the form
                 # 2. Return the inputs
-                strategy_inputs_times = main_form()
-            except ValueError:
-                print("VALYUE ERRROOROROOOROROO")
+                times = get_times_inputs(form)
+                print(times)
+            except ValueError as e:
+                print(e)
                 message = "error parameters"
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
 

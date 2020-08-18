@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
-from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Frequency
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Frequency, DayOfWeek
 
 """
 User login form
@@ -93,13 +93,13 @@ class InputsTimesModel(FlaskForm):
                                      ])
 
     week_day = SelectField('Week Day',
-                           choices=[("MON", "MON"),
-                                    ("TUE", "TUE"),
-                                    ("WED", "WED"),
-                                    ("THU", "THU"),
-                                    ("FRI", "FRI"),
-                                    ("SUN", "SUN"),
-                                    ("SAT", "SAT")]
+                           choices=[(DayOfWeek.MON.value, DayOfWeek.MON.name),
+                                    (DayOfWeek.TUE.value, DayOfWeek.TUE.name),
+                                    (DayOfWeek.WED.value, DayOfWeek.WED.name),
+                                    (DayOfWeek.THU.value, DayOfWeek.THU.name),
+                                    (DayOfWeek.FRI.value, DayOfWeek.FRI.name),
+                                    (DayOfWeek.SAT.value, DayOfWeek.SAT.name),
+                                    (DayOfWeek.SUN.value, DayOfWeek.SUN.name)]
                            )
 
     name_file_times = StringField(u'Name of the File')
