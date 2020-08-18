@@ -5,6 +5,7 @@ class Category(Enum):
     performance = auto()
     signal = auto()
 
+
 # noinspection PyArgumentList
 Performance = Enum(
     value='Performance',

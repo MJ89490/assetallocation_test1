@@ -21,7 +21,7 @@ class Asset:
         self._ticker = ticker
         self.is_tr = False
         self._type = type
-        self._asset_analytics = []
+        self.asset_analytics = []
 
     @property
     def name(self) -> str:

@@ -195,9 +195,9 @@ class Fica(Strategy):
 class Effect(Strategy):
     name = Name.effect.name
 
-    def __init__(self, carry_type: Union[str, CarryType], closing_threshold: Decimal, cost: Decimal, day_of_week: Union[int, DayOfWeek],
-                 frequency: Union[str, Frequency], include_shorts: bool, inflation_lag_in_months: int,
-                 interest_rate_cut_off_long: Decimal, interest_rate_cut_off_short: Decimal,
+    def __init__(self, carry_type: Union[str, CarryType], closing_threshold: Decimal, cost: Decimal,
+                 day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency], include_shorts: bool,
+                 inflation_lag_in_months: int, interest_rate_cut_off_long: Decimal, interest_rate_cut_off_short: Decimal,
                  moving_average_long_term: int, moving_average_short_term: int, is_realtime_inflation_forecast: bool,
                  trend_indicator: Union[str, TrendIndicator]) -> None:
         """Effect class to hold data from database"""
