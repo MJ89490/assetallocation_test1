@@ -88,8 +88,7 @@ def times_page():
                 print(times)
             except ValueError as e:
                 print(e)
-                message = "error parameters"
-                return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=message)
+                return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=e)
 
             print("======CALLING THE MODEL======")
             asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Name.times.name)
