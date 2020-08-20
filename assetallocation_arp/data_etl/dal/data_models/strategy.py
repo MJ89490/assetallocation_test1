@@ -5,7 +5,7 @@ from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import Asset
+from assetallocation_arp.data_etl.dal.data_models.asset import Asset, TimesAssetInput
 
 
 # noinspection PyAttributeOutsideInit
@@ -66,6 +66,15 @@ class Times(Strategy):
         self._short_signals = short_signals
         self.time_lag_in_months = time_lag_in_months
         self._volatility_window = volatility_window
+        self._asset_inputs = []
+
+    @property
+    def asset_inputs(self) -> List[TimesAssetInput]:
+        return self._asset_inputs
+
+    @asset_inputs.setter
+    def asset_inputs(self, x: List[TimesAssetInput]) -> None:
+        self._asset_inputs = x
 
     @property
     def time_lag_interval(self) -> str:

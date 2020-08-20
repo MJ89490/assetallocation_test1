@@ -122,16 +122,40 @@ class FicaAsset(Asset):
 
 
 # noinspection PyAttributeOutsideInit
-class TimesAsset(Asset):
-    def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
-                 currency: Union[str, Currency], name: str, type: str, s_leverage: int, signal_ticker: str,
+class TimesAssetInput:
+    def __init__(self, s_leverage: int, signal_ticker: str,
                  future_ticker: str, cost: Decimal) -> None:
-        """TimesAsset class to hold data from database"""
-        super().__init__(ticker, category, country, currency, name, type)
+        """TimesAssetInput class to hold data from database"""
         self.signal_ticker = signal_ticker
         self.future_ticker = future_ticker
         self.cost = cost
         self.s_leverage = s_leverage
+        self._signal_asset = None
+        self._future_asset = None
+
+    @property
+    def signal_asset(self) -> Asset:
+        return self._signal_asset
+
+    @signal_asset.setter
+    def signal_asset(self, x: Asset) -> None:
+        if x.ticker == self.signal_ticker:
+            self._signal_asset = x
+        else:
+            raise ValueError(f'Tickers do not match. Asset ticker "{x.ticker}",'
+                             f'signal ticker "{self.signal_ticker}"')
+
+    @property
+    def future_asset(self) -> Asset:
+        return self._future_asset
+
+    @future_asset.setter
+    def future_asset(self, x: Asset) -> None:
+        if x.ticker == self.future_ticker:
+            self._future_asset = x
+        else:
+            raise ValueError(f'Tickers do not match. Asset ticker "{x.ticker}",'
+                             f'signal ticker "{self.future_ticker}"')
 
     @property
     def s_leverage(self) -> int:
