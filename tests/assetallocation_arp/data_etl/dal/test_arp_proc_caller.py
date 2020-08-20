@@ -2,7 +2,7 @@ import mock
 import pytest
 from decimal import Decimal
 
-from assetallocation_arp.data_etl.dal.arp_proc_caller import ArpProcCaller, Times, TimesAsset, FundStrategy
+from assetallocation_arp.data_etl.dal.arp_proc_caller import ArpProcCaller, Times, TimesAssetInput, FundStrategy
 from datetime import datetime
 
 
@@ -73,7 +73,7 @@ def test_select_times_assets_with_analytics_calls_call_proc(mock_call_proc):
     mock_call_proc.return_value = []
 
     a = ArpProcCaller()
-    a._select_times_assets_with_analytics(times_version, business_datetime)
+    a.select_times_assets_with_analytics(times_version, business_datetime)
 
     mock_call_proc.assert_called_once_with(a, 'arp.select_times_assets_with_analytics', [times_version, business_datetime])
 
@@ -85,10 +85,10 @@ def test_select_times_assets_returns_list_of_times_asset_objects(mock_call_proc)
 
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.TimesAsset', autospec=True):
         a = ArpProcCaller()
-        returns = a._select_times_assets_with_analytics(times_version, business_datetime)
+        returns = a.select_times_assets_with_analytics(times_version, business_datetime)
 
     assert isinstance(returns, list)
-    assert all([isinstance(i, TimesAsset) for i in returns])
+    assert all([isinstance(i, TimesAssetInput) for i in returns])
 
 
 @mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FundStrategy', autospec=True)

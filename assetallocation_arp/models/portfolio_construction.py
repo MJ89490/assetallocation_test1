@@ -4,22 +4,27 @@ PORTFOLIO CONSTRUCTION
 @author: SN69248
 """
 import math
-import pandas as pd
+from typing import Union
 
+import pandas as pd
 from pandas.tseries.offsets import BDay
 
 from common_libraries.dal_enums.strategy import Leverage
 
 
-def apply_leverage(futures_data, leverage_type, leverage):
+def apply_leverage(futures_data: Union[pd.Series, pd.DataFrame], leverage_type: Leverage, leverage: pd.Series
+                   ) -> Union[pd.Series, pd.DataFrame]:
     # leverage_type: Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
-    if leverage_type == Leverage.e.name or leverage_type == Leverage.s.name:
+    if leverage_type in (Leverage.e, Leverage.s):
         leverage_data = 0 * futures_data + 1
         leverage_data[leverage.index[leverage > 0]] = 1
-    elif leverage_type == Leverage.n.name:
+
+    elif leverage_type == Leverage.n:
         leverage_data = 0 * futures_data + leverage
-    elif leverage_type == Leverage.v.name:
+
+    elif leverage_type == Leverage.v:
         leverage_data = 1 / futures_data.ewm(alpha=1/150, min_periods=10).std()
+
     else:
         raise Exception('Invalid entry')
     return leverage_data

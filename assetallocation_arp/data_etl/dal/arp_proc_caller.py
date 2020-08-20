@@ -9,7 +9,7 @@ from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import TimesAsset, EffectAsset
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAsset, Asset
 from common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
 
@@ -105,11 +105,11 @@ class ArpProcCaller(Db):
         effect = self._select_effect_strategy(effect_version)
 
         if effect is not None:
-            effect.assets = self._select_effect_assets_with_analytics(effect_version, business_datetime)
+            effect.assets = self.select_effect_assets_with_analytics(effect_version, business_datetime)
 
         return effect
 
-    def _select_effect_assets_with_analytics(self, effect_version, business_datetime) -> Optional[List[EffectAsset]]:
+    def select_effect_assets_with_analytics(self, effect_version, business_datetime) -> Optional[List[EffectAsset]]:
         """Select assets and asset analytics data for a version of times, as at business_datetime"""
         res = self.call_proc('arp.select_effect_assets_with_analytics', [effect_version, business_datetime])
 
@@ -129,10 +129,10 @@ class ArpProcCaller(Db):
         return effect_assets
 
     def insert_times(self, times: Times, user_id: str) -> int:
-        """Insert data from an instance of Times into database"""
+        """Insert data from an instance of Times into database. Return strategy version."""
         t_version = self._insert_times_strategy(times, user_id)
         if times.assets:
-            self._insert_times_assets(t_version, times.assets)
+            self._insert_times_assets(t_version, times.asset_inputs)
 
         return t_version
 
@@ -145,12 +145,11 @@ class ArpProcCaller(Db):
 
         return res[0]['t_version']
 
-    def _insert_times_assets(self, times_version: int, times_assets: List[TimesAsset]) -> bool:
+    def _insert_times_assets(self, times_version: int, times_assets: List[TimesAssetInput]) -> bool:
         """Insert asset data for a version of times"""
         times_assets = ArpTypeConverter.times_assets_to_composite(times_assets)
-        res = self.call_proc('arp.insert_times_assets', [times_version, times_assets])
-        asset_ids = res[0].get('asset_ids')
-        return bool(asset_ids)
+        self.call_proc('arp.insert_times_assets', [times_version, times_assets])
+        return True
 
     def select_times(self, times_version) -> Optional[Times]:
         """Select strategy and asset data for a version of times"""
@@ -174,7 +173,7 @@ class ArpProcCaller(Db):
         t.description = row['description']
         return t
 
-    def _select_times_assets(self, times_version) -> Optional[List[TimesAsset]]:
+    def _select_times_assets(self, times_version) -> Optional[List[TimesAssetInput]]:
         """Select asset data for a version of times"""
         res = self.call_proc('arp.select_times_assets', [times_version])
 
@@ -183,10 +182,7 @@ class ArpProcCaller(Db):
 
         times_assets = []
         for r in res:
-            t = TimesAsset(r['ticker'], r['category'], r['country'], r['currency'], r['name'], r['asset_type'],
-                           r['s_leverage'], r['signal_ticker'], r['future_ticker'], r['cost'])
-            t.description = r['description']
-            t.is_tr = r['is_tr']
+            t = self._construct_times_asset_input(r)
 
             times_assets.append(t)
 
@@ -197,11 +193,11 @@ class ArpProcCaller(Db):
         times = self._select_times_strategy(times_version)
 
         if times is not None:
-            times.assets = self._select_times_assets_with_analytics(times_version, business_datetime)
+            times.assets = self.select_times_assets_with_analytics(times_version, business_datetime)
 
         return times
 
-    def _select_times_assets_with_analytics(self, times_version, business_datetime) -> Optional[List[TimesAsset]]:
+    def select_times_assets_with_analytics(self, times_version, business_datetime) -> Optional[List[TimesAssetInput]]:
         """Select assets and asset analytics data for a version of times, as at business_datetime"""
         res = self.call_proc('arp.select_times_assets_with_analytics', [times_version, business_datetime])
 
@@ -210,15 +206,30 @@ class ArpProcCaller(Db):
 
         times_assets = []
         for r in res:
-            t = TimesAsset(r['ticker'], r['category'], r['country'], r['currency'], r['name'], r['asset_type'],
-                           r['s_leverage'], r['signal_ticker'], r['future_ticker'], r['cost'])
-            t.description = r['description']
-            t.is_tr = r['is_tr']
-            t.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['ticker'], r['asset_analytics'])
+            t = self._construct_times_asset_input(r)
+
+            t.signal_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['signal_ticker'],
+                                                                                             r['s_asset_analytics'])
+            t.future_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['future_ticker'],
+                                                                                             r['f_asset_analytics'])
 
             times_assets.append(t)
 
         return times_assets
+
+    @staticmethod
+    def _construct_times_asset_input(row) -> TimesAssetInput:
+        t = TimesAssetInput(row['s_leverage'], row['signal_ticker'], row['future_ticker'], row['cost'])
+        t.signal_asset = Asset(row['signal_ticker'], row['s_category'], row['s_country'], row['s_currency'],
+                               row['s_name'], row['s_asset_type'])
+        t.signal_asset.description = row['s_description']
+        t.signal_asset.is_tr = row['s_is_tr']
+
+        t.future_asset = Asset(row['future_ticker'], row['f_category'], row['f_country'], row['f_currency'],
+                               row['f_name'], row['f_asset_type'])
+        t.future_asset.description = row['f_description']
+        t.future_asset.is_tr = row['f_is_tr']
+        return t
 
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
         """Insert data from an instance of FundStrategy into database"""
@@ -274,8 +285,8 @@ if __name__ == '__main__':
     t1 = Times(0, 'weekly', 'e', [], [], 0, 0)
     t_v = d._insert_times_strategy(t1, 'JS89275')
 
-    ta1 = TimesAsset('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
-    ta2 = TimesAsset('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
+    ta1 = TimesAssetInput('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
+    ta2 = TimesAssetInput('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
 
     ins = d._insert_times_assets(t_v, [ta1])
     print(ins)

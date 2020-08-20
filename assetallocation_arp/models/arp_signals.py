@@ -3,32 +3,35 @@ Created on Fri Nov  15 17:27:51 2019
 ARP
 @author: SN69248
 """
-
 import math
+from decimal import Decimal
+
 import pandas as pd
 import numpy as np
+
 import assetallocation_arp.data_etl.data_manipulation as dm
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 
 
-def momentum(index_data, inputs, week_day):
+def momentum(index_data: pd.DataFrame, times: Times):
     sig = pd.DataFrame()
-    for column in index_data:
+    for col in index_data:
         # Calculate intermediate signals
-        sig1 = calc_int_mom_signal(column, index_data, inputs, 'sig1')
-        sig2 = calc_int_mom_signal(column, index_data, inputs, 'sig2')
-        sig3 = calc_int_mom_signal(column, index_data, inputs, 'sig3')
-        sig[column] = (sig1 + sig2 + sig3) / 3
-        # S-curve cutout for large movement, alternative curve w/out cutoff:sig[column]=2/(1+math.exp(-2*sig[column]))-1
-        sig[column] = sig[column] * np.exp(-1 * sig[column].pow(2) / 6) / (math.sqrt(3) * math.exp(-0.5))
+        sig1 = calc_int_mom_signal(index_data[col], times.short_signals[0], times.long_signals[0], times.volatility_window)
+        sig2 = calc_int_mom_signal(index_data[col], times.short_signals[1], times.long_signals[1], times.volatility_window)
+        sig3 = calc_int_mom_signal(index_data[col], times.short_signals[2], times.long_signals[2], times.volatility_window)
+        sig[col] = (sig1 + sig2 + sig3) / 3
+        # S-curve cutout for large movement, alternative curve w/out cutoff:sig[col]=2/(1+math.exp(-2*sig[col]))-1
+        sig[col] = sig[col] * np.exp(-1 * sig[col].pow(2) / 6) / (math.sqrt(3) * math.exp(-0.5))
 
-    sig = dm.set_data_frequency(sig, inputs['frequency'].item(), week_day)
-    sig = sig.shift(inputs['time_lag'].item(), freq="D")
+    sig = dm.set_data_frequency(sig, times.frequency, times.day_of_week)
+    sig = sig.shift(times.time_lag_in_months, freq="D")
     return sig
 
 
-def calc_int_mom_signal(column, index_data, inputs, signal_name):
-    sig_i = (index_data[column].ewm(alpha=2 / inputs[f'{signal_name}_short'].item()).mean()
-             / index_data[column].ewm(alpha=2 / inputs[f'{signal_name}_long'].item()).mean() - 1)
+def calc_int_mom_signal(index_data: pd.Series, short_signal: Decimal, long_signal: Decimal, volatility_window: int):
+    sig_i = (index_data.ewm(alpha=2 / short_signal).mean()
+             / index_data.ewm(alpha=2 / long_signal).mean() - 1)
     # Normalise signal
-    sig_i = sig_i/sig_i.rolling(window=inputs['volatility_window'].item()).std()
+    sig_i = sig_i/sig_i.rolling(window=volatility_window).std()
     return sig_i

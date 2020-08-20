@@ -1,4 +1,4 @@
--- TODO refactor
+-- TODO refactor to return signals_assets and future_assets
 CREATE OR REPLACE FUNCTION arp.select_times_assets(
   strategy_version int
 )

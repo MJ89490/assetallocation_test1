@@ -1,5 +1,6 @@
 import os
 import sys
+from decimal import Decimal
 
 import pandas as pd
 
@@ -7,6 +8,9 @@ from common_libraries.dal_enums.strategy import Name
 import assetallocation_arp.data_etl.import_all_data as gd
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times, fica, maven, fxmodels
+from assetallocation_arp.models.times import create_times_fund_strategy, calculate_signals_returns_r_positioning
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategy
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
@@ -14,10 +18,10 @@ sys.path.insert(0, ROOT_DIR)
 
 
 def run_model(model_type, mat_file, input_file, model_date=None):
-
     if model_type == Name.times.name:
         # get inputs from excel and matlab data
-        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date)
+        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
+                                                                              model_date)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
@@ -31,17 +35,16 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         asset_returns = maven.format_data(maven_inputs, asset_inputs, all_data)
         maven_returns = maven.calculate_excess_returns(maven_inputs, asset_inputs, asset_returns)
         # calculate value and momentum scores, and the top/bottom countries on the combination score
-        momentum, value, long_signals, short_signals, long_signals_name, short_signals_name, value_last, momentum_last, long_list, short_list, volatility =  maven.calculate_signals(maven_inputs, maven_returns)
+        momentum, value, long_signals, short_signals, long_signals_name, short_signals_name, value_last, momentum_last, long_list, short_list, volatility = maven.calculate_signals(
+            maven_inputs, maven_returns)
         # calculate maven return series, and benchmarks, asset class exposures and contributions
-        returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short = \
-            maven.run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility, long_signals,
-                                        short_signals)
+        returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short = maven.run_performance_stats(
+            maven_inputs, asset_inputs, maven_returns, volatility, long_signals, short_signals)
         # write results to output sheet
-        write_output_to_excel({Name.maven.name: (momentum, value, long_signals_name, short_signals_name,
-                                                          value_last, momentum_last, long_list, short_list,
-                                                          returns_maven, asset_class_long,
-                                                          asset_class_short, asset_contribution_long,
-                                                          asset_contribution_short, asset_inputs, maven_inputs)}, input_file)
+        write_output_to_excel({Name.maven.name: (
+            momentum, value, long_signals_name, short_signals_name, value_last, momentum_last, long_list, short_list,
+            returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short,
+            asset_inputs, maven_inputs)}, input_file)
     if model_type == Name.effect.name:
         print(model_type)
 
@@ -58,9 +61,9 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(fxmodels_inputs, carry, signal,
                                                                                 exposure, exposure_agg)
         # write results to output sheet
-        write_output_to_excel({Name.fxmodels.name: (fx_model, base_fx, signal, exposure, exposure_agg,
-                                                             returns, contribution, carry_base, fxmodels_inputs,
-                                                             asset_inputs)}, input_file)
+        write_output_to_excel({Name.fxmodels.name: (
+            fx_model, base_fx, signal, exposure, exposure_agg, returns, contribution, carry_base, fxmodels_inputs,
+            asset_inputs)}, input_file)
     if model_type == Name.fica.name:
         # get inputs from excel and matlab data
         fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
@@ -74,12 +77,18 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         # run daily attributions
         carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
         # write results to output sheet
-        write_output_to_excel({Name.fica.name: (carry_roll, signals, country_returns, cum_contribution,
-                                                         returns, asset_inputs, fica_inputs, carry_daily,
-                                                         return_daily)}, input_file)
+        write_output_to_excel({Name.fica.name: (
+            carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily,
+            return_daily)}, input_file)
         print(model_type)
     if model_type == Name.comca.name:
         print(model_type)
+
+
+def run_times(fund_name: str, strategy: Times, strategy_weight: Decimal, times_version: int) -> FundStrategy:
+    signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
+    fs = create_times_fund_strategy(fund_name, strategy_weight, times_version, signals, returns, r, positioning)
+    return fs
 
 
 def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
@@ -106,7 +115,7 @@ def write_output_to_excel(model_outputs, path_excel_times):
 
 
 def get_inputs_from_python(model):
-    #launch the script from Python
+    # launch the script from Python
     # launch the script from Python
     mat_file = None
     input_file = None

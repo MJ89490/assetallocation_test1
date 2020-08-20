@@ -1,9 +1,11 @@
 from typing import List
 from decimal import Decimal
 
+from psycopg2.extras import DateTimeTZRange
+
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
-from assetallocation_arp.data_etl.dal.data_models.asset import TimesAsset, EffectAsset, AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAsset, AssetAnalytic
 
 
 class DbTypeConverter:
@@ -20,11 +22,9 @@ class DbTypeConverter:
 class ArpTypeConverter(DbTypeConverter):
     """Convert between python and ARP database types"""
     @staticmethod
-    def times_assets_to_composite(times_assets: List[TimesAsset]) -> List[str]:
-        """Format to match database type asset.times_asset[]"""
-        return [f'("{i.category.name}","{i.country.name}","{i.currency.name}","{i.description}","{i.name}",'
-                f'"{i.ticker}","{"t" if i.is_tr else "f"}","{i.type}","{i.signal_ticker}","{i.future_ticker}",'
-                f'{i.cost},{i.s_leverage})' for i in times_assets]
+    def times_assets_to_composite(times_assets: List[TimesAssetInput]) -> List[str]:
+        """Format to match database type arp.ticker_ticker_cost_leverage[]"""
+        return [f'("{i.signal_ticker}","{i.future_ticker}","{i.cost}","{i.s_leverage}")' for i in times_assets]
 
     @staticmethod
     def analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]) -> List[str]:
@@ -43,12 +43,15 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def asset_analytics_str_to_objects(asset_ticker: str, asset_analytics_str: str) -> List[AssetAnalytic]:
-        # asset_analytics is a str of the format '{"(source1,category1,value1)",..."(sourceN,categoryN,valueN)"}'
+        """asset_analytics is a str of the format
+        '{"(source1,category1,business_tstzrange1,value1)",..."(sourceN,categoryN,business_tstzrangeN,valueN)"}'
+        """
         asset_analytics = []
         for i in asset_analytics_str[2:-2].split('","'):
-            source, category, value = (i[1: -1].split(','))
+            source, category, business_tstzrange, value = (i[1: -1].split(','))
+            business_tstzrange = DateTimeTZRange(business_tstzrange)
             value = Decimal(value)
 
-            asset_analytics.append(AssetAnalytic(asset_ticker, source, category, value))
+            asset_analytics.append(AssetAnalytic(asset_ticker, source, category, business_tstzrange, value))
 
         return asset_analytics
