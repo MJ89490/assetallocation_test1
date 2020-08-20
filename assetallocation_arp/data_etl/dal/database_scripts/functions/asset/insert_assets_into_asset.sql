@@ -1,6 +1,6 @@
-CREATE OR REPLACE FUNCTION asset.insert_times_assets_into_asset(
+CREATE OR REPLACE FUNCTION asset.insert_assets_into_asset(
   execution_state_id int,
-  times_assets asset.times_asset[]
+  assets asset.generic_asset[]
 )
   RETURNS TABLE (id int)
 AS
@@ -16,33 +16,25 @@ BEGIN
       ticker,
       is_tr,
       type,
-      signal_ticker,
-      future_ticker,
-      cost,
-      s_leverage,
       execution_state_id
     )
     SELECT
-      (ta).category,
+      (ga).category,
       co.id,
       cu.id,
-      (ta).description,
-      (ta).name,
-      (ta).ticker,
-      (ta).is_tr,
-      (ta).type,
-      (ta).signal_ticker,
-      (ta).future_ticker,
-      (ta).cost,
-      (ta).s_leverage,
-      insert_times_assets_into_asset.execution_state_id
+      (ga).description,
+      (ga).name,
+      (ga).ticker,
+      (ga).is_tr,
+      (ga).type,
+      insert_assets_into_asset.execution_state_id
     FROM
-      unnest(insert_times_assets_into_asset.times_assets) as ta
-      JOIN lookup.currency cu on (ta).currency = cu.currency
-      JOIN lookup.country co on (ta).country = co.country
+      unnest(insert_assets_into_asset.assets) as ga
+      JOIN lookup.currency cu on (ga).currency = cu.currency
+      JOIN lookup.country co on (ga).country = co.country
     ON CONFLICT (ticker) DO UPDATE
       SET
-        category = excluded.category,
+        category = EXCLUDED.category,
         country_id = EXCLUDED.country_id,
         currency_id = EXCLUDED.currency_id,
         description = EXCLUDED.description,

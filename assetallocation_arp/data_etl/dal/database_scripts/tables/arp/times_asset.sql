@@ -19,8 +19,11 @@ DROP TABLE IF EXISTS "arp"."times_asset" CASCADE
 CREATE TABLE "arp"."times_asset"
 (
 	"id" serial NOT NULL,
-	"asset_id" integer NOT NULL,
+	"signal_asset_id" integer NOT NULL,
+	"future_asset_id" integer NOT NULL,
+	"s_leverage" integer NULL,
 	"strategy_id" integer NOT NULL,
+	"cost" numeric(32,16) NULL,
 	"execution_state_id" integer NOT NULL
 )
 ;
@@ -36,8 +39,12 @@ ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_asset_id_strategy_id
 
 /* Create Foreign Key Constraints */
 
-ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_asset_fkey"
-	FOREIGN KEY ("asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
+ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_asset_signal_fkey"
+	FOREIGN KEY ("signal_asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
+ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_asset_future_fkey"
+	FOREIGN KEY ("future_asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
 ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_execution_state_fkey"
