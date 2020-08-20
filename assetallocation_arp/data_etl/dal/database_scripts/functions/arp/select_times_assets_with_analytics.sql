@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets_with_analytics(
     is_tr boolean,
     asset_type varchar,
     s_leverage integer,
-    asset_analytics arp.source_category_value[]
+    asset_analytics arp.source_category_tstzrange_value[]
   )
 LANGUAGE plpgsql
 AS
@@ -39,7 +39,7 @@ BEGIN
       a.is_tr,
       a.type as asset_type,
       a.s_leverage,
-      array_agg((s2.source, aa.category, aa.value) :: arp.source_category_value) as asset_analytic
+      array_agg((s2.source, aa.category, aa.business_tstzrange, aa.value)::arp.source_category_tstzrange_value) as asset_analytic
     FROM
       asset.asset a
       JOIN arp.times_asset ta on a.id = ta.asset_id
@@ -52,7 +52,7 @@ BEGIN
     WHERE
       s.name = strategy_name
       AND t.version = strategy_version
-      AND aa.business_tstzrange @> business_datetime
+      AND aa.business_tstzrange && tstzrange(business_datetime, 'infinity', '[)')
     GROUP BY a.id, c.id, c2.id
   ;
 END

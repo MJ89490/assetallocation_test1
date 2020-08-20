@@ -1,3 +1,4 @@
+-- TODO refactor
 CREATE OR REPLACE FUNCTION arp.select_times_assets(
   strategy_version int
 )

@@ -1,6 +1,8 @@
 from decimal import Decimal
 from typing import Union
 
+from psycopg2.extras import DateTimeTZRange
+
 from common_libraries.dal_enums.source import Source
 from common_libraries.dal_enums.asset_analytic import Category
 
@@ -8,12 +10,21 @@ from common_libraries.dal_enums.asset_analytic import Category
 # noinspection PyAttributeOutsideInit
 class AssetAnalytic:
     def __init__(self, asset_ticker: str, source: Union[str, Source], category: Union[str, Category],
-                 value: Decimal) -> None:
+                 business_tstzrange: DateTimeTZRange, value: Decimal) -> None:
         """AssetAnalytic class to hold data from database"""
         self.asset_ticker = asset_ticker
         self.source = source
         self.category = category
+        self.business_tstzrange = business_tstzrange
         self.value = value
+
+    @property
+    def business_tstzrange(self) -> DateTimeTZRange:
+        return self._business_tstzrange
+
+    @business_tstzrange.setter
+    def business_tstzrange(self, x: DateTimeTZRange) -> None:
+        self._business_tstzrange = x
 
     @property
     def asset_ticker(self) -> str:
