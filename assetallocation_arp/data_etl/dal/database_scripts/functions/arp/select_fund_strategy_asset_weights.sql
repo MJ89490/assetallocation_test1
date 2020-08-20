@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy_asset_weights(
 )
 RETURNS TABLE(
   asset_ticker varchar,
+  business_date date,
   strategy_weight numeric,
   implemented_weight numeric
 )
@@ -12,8 +13,9 @@ BEGIN
   RETURN QUERY
     SELECT
       a.ticker as asset_ticker,
-      strategy_weight,
-      implemented_weight
+      fsaw.business_date,
+      fsaw.strategy_weight,
+      fsaw.implemented_weight
     FROM
       arp.fund_strategy_asset_weight fsaw
       JOIN asset.asset a ON fsaw.asset_id = a.id

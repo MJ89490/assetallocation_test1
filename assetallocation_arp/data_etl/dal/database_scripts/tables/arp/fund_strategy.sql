@@ -19,7 +19,6 @@ CREATE TABLE "arp"."fund_strategy"
 (
 	"fund_id" integer NOT NULL,
 	"id" serial NOT NULL,
-	"business_datetime" timestamp with time zone NOT NULL,
 	"strategy_id" integer NOT NULL,
 	"system_datetime" timestamp with time zone NOT NULL DEFAULT now(),
 	"weight" numeric(32,16) NOT NULL,
@@ -35,7 +34,7 @@ ALTER TABLE "arp"."fund_strategy" ADD CONSTRAINT "fund_strategy_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "arp"."fund_strategy" ADD CONSTRAINT "fund_strategy_fund_id_strategy_id_business_datetime_system_datetime_key" UNIQUE ("fund_id","strategy_id","business_datetime","system_datetime")
+ALTER TABLE "arp"."fund_strategy" ADD CONSTRAINT "fund_strategy_fund_id_strategy_id_system_datetime_key" UNIQUE ("fund_id","strategy_id","system_datetime")
 ;
 
 /* Create Foreign Key Constraints */
