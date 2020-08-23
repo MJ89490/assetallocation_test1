@@ -1,6 +1,6 @@
 from decimal import Decimal
 from datetime import date
-from typing import List, Union
+from typing import List, Union, Optional
 import configparser
 from pathlib import Path
 
@@ -104,7 +104,7 @@ class FundStrategyAssetWeight:
         self._asset_ticker = asset_ticker
         self.business_date = business_date
         self.strategy_weight = strategy_weight
-        self.implemented_weight = Decimal(0)
+        self.implemented_weight = None
 
     @property
     def business_date(self) -> date:
@@ -115,11 +115,11 @@ class FundStrategyAssetWeight:
         self._business_date = x
 
     @property
-    def implemented_weight(self) -> Decimal:
+    def implemented_weight(self) -> Optional[Decimal]:
         return self._implemented_weight
 
     @implemented_weight.setter
-    def implemented_weight(self, x: Decimal) -> None:
+    def implemented_weight(self, x: Optional[Decimal]) -> None:
         self._implemented_weight = x
 
     @property

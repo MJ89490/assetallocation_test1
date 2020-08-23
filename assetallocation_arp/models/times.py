@@ -4,7 +4,7 @@ TIMES
 @author: SN69248
 """
 from _pydecimal import Decimal
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -17,6 +17,7 @@ from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 from data_etl.dal.data_models.fund_strategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Signal, Performance
 
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
@@ -90,20 +91,34 @@ def get_asset_data_as_data_frames(asset_inputs: List[TimesAssetInput]) -> Tuple[
     return asset_inputs, future_assets, signal_assets
 
 
-def create_times_fund_strategy(fund_name: str, strategy_weight: Decimal, times_version: int, signals: pd.DataFrame,
-                               returns: pd.DataFrame, r: pd.DataFrame, positioning: pd.DataFrame) -> FundStrategy:
-    fs = FundStrategy(fund_name, Name.times, times_version, strategy_weight)
-    fs.asset_analytics = create_times_asset_analytics(signals, returns, r, positioning)
-    fs.asset_weights = create_times_asset_weights(signals, returns, r, positioning)
+def create_times_asset_analytics(signals: pd.DataFrame, returns: pd.DataFrame,
+                                 r: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
+    """
+    :param signals: columns named after tickers, index of dates
+    :param returns: columns named after tickers, index of dates
+    :param r: columns named after tickers, index of dates
+    :return:
+    """
+    asset_analytics = []
 
-    return fs
+    # TODO check subcategories for the below three
+    asset_analytics.extend(df_to_asset_analytics(signals, Category.signal, Signal.value))
+    asset_analytics.extend(df_to_asset_analytics(returns, Category.performance, Performance["total return"]))
+    asset_analytics.extend(df_to_asset_analytics(r, Category.performance, Performance["total return"]))
+
+    return asset_analytics
 
 
-def create_times_asset_analytics(signals: pd.DataFrame, returns: pd.DataFrame, r: pd.DataFrame,
-                                 positioning: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
-    pass
+def df_to_asset_analytics(analytics: pd.DataFrame, category: Union[str, Category],
+                          subcategory: Union[str, Performance, Signal]) -> List[FundStrategyAssetAnalytic]:
+    """Transform DataFrame with index of business_date and columns of asset tickers to list of
+    FundStrategyAssetAnalytics
+    """
+    return [FundStrategyAssetAnalytic(c.name, r.index, category, subcategory, Decimal(r)) for c in analytics for r in c]
 
 
-def create_times_asset_weights(signals: pd.DataFrame, returns: pd.DataFrame, r: pd.DataFrame,
-                               positioning: pd.DataFrame) -> List[FundStrategyAssetWeight]:
-    pass
+def df_to_asset_weights(positioning: pd.DataFrame) -> List[FundStrategyAssetWeight]:
+    """Transform DataFrame with index of business_date and columns of asset tickers to list of FundStrategyAssetWeights
+    """
+    return [FundStrategyAssetWeight(c.name, r.index, Decimal(r)) for c in positioning for r in c]
+

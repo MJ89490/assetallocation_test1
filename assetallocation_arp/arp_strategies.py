@@ -1,6 +1,6 @@
 import os
 import sys
-from decimal import Decimal
+from typing import Tuple, List
 
 import pandas as pd
 
@@ -8,9 +8,11 @@ from common_libraries.dal_enums.strategy import Name
 import assetallocation_arp.data_etl.import_all_data as gd
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times, fica, maven, fxmodels
-from assetallocation_arp.models.times import create_times_fund_strategy, calculate_signals_returns_r_positioning
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategy
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
+from assetallocation_arp.models.times import create_times_asset_analytics, df_to_asset_weights,\
+    calculate_signals_returns_r_positioning
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, \
+    FundStrategyAssetWeight
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
@@ -85,10 +87,12 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         print(model_type)
 
 
-def run_times(fund_name: str, strategy: Times, strategy_weight: Decimal, times_version: int) -> FundStrategy:
+def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
+    """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
     signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
-    fs = create_times_fund_strategy(fund_name, strategy_weight, times_version, signals, returns, r, positioning)
-    return fs
+    asset_analytics = create_times_asset_analytics(signals, returns, r)
+    asset_weights = df_to_asset_weights(positioning)
+    return asset_analytics, asset_weights
 
 
 def run_model_from_web_interface(model_type, mat_file=None, input_file=None):

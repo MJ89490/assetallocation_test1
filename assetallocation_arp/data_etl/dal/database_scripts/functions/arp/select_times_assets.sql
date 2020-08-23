@@ -45,7 +45,6 @@ BEGIN
       JOIN arp.strategy s on t.strategy_id = s.id
       JOIN lookup.currency c on a.currency_id = c.id
       JOIN lookup.country c2 on a.country_id = c2.id
-      JOIN lookup.source s2 on aa.source_id = s2.id
     WHERE
       s.name = strategy_name
       AND t.version = strategy_version
