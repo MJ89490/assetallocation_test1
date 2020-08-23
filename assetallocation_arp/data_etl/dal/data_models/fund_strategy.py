@@ -4,8 +4,8 @@ from typing import List, Union, Optional
 import configparser
 from pathlib import Path
 
-from common_libraries.dal_enums.strategy import Name
-from common_libraries.dal_enums.fund_strategy import Category, Performance, Signal
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Performance, Signal
 
 
 # noinspection PyAttributeOutsideInit
@@ -64,6 +64,7 @@ class FundStrategy:
 
     @strategy_name.setter
     def strategy_name(self, x: Union[str, Name]) -> None:
+        print(x)
         self._strategy_name = x if isinstance(x, Name) else Name[x]
 
     @property
