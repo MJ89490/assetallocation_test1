@@ -13,7 +13,7 @@ def run_strategy(fund_name: str, strategy_weight: Decimal, strategy: Strategy, u
     if isinstance(strategy, Times):
         apc = ArpProcCaller()
         times_version = apc.insert_times(strategy, user_id)
-        strategy.assets = apc.select_times_assets_with_analytics(times_version, business_datetime)
+        strategy.asset_inputs = apc.select_times_assets_with_analytics(times_version, business_datetime)
 
         fs = FundStrategy(fund_name, Name.times, times_version, strategy_weight)
         fsaa, fsaw = run_times(strategy)

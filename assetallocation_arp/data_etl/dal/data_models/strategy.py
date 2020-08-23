@@ -15,7 +15,6 @@ class Strategy:
         self.name = name
         self._description = ''
         self._version = None
-        self.assets = []
 
     @property
     def name(self) -> Name:
@@ -40,14 +39,6 @@ class Strategy:
     @version.setter
     def version(self, x: int) -> None:
         self._version = x
-
-    @property
-    def assets(self) -> List[Asset]:
-        return self._assets
-
-    @assets.setter
-    def assets(self, x: List[Asset]) -> None:
-        self._assets = x
 
 
 # noinspection PyAttributeOutsideInit

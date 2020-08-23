@@ -3,19 +3,14 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets_with_analytics(
   business_datetime timestamp with time zone
 )
   RETURNS TABLE(
-    category varchar,
-    cost numeric(32, 16),
-    country char(2),
-    currency char(3),
-    description varchar,
+    future_name varchar,
     future_ticker varchar,
-    name varchar,
+    signal_name varchar,
     signal_ticker varchar,
-    ticker varchar,
-    is_tr boolean,
-    asset_type varchar,
+    cost numeric(32, 16),
     s_leverage integer,
-    asset_analytics arp.source_category_tstzrange_value[]
+    future_asset_analytics arp.category_datetime_value[],
+    signal_asset_analytics arp.category_datetime_value[]
   )
 LANGUAGE plpgsql
 AS
@@ -27,33 +22,28 @@ BEGIN
 
   return query
     SELECT
-      a.category,
-      a.cost,
-      c2.country,
-      c.currency,
-      a.description,
-      a.future_ticker,
-      a.name,
-      a.signal_ticker,
-      a.ticker,
-      a.is_tr,
-      a.type as asset_type,
-      a.s_leverage,
-      array_agg((s2.source, aa.category, aa.business_tstzrange, aa.value)::arp.source_category_tstzrange_value) as asset_analytic
+      a1.name as future_name,
+      a1.ticker as future_ticker,
+      a2.name as signal_name,
+      a2.ticker as signal_ticker,
+      ta.cost,
+      ta.s_leverage,
+      array_agg((aa1.category, aa1.business_datetime, aa1.value)::arp.category_datetime_value) as future_asset_analytics,
+      array_agg((aa2.category, aa2.business_datetime, aa2.value)::arp.category_datetime_value) as signal_asset_analytics
     FROM
-      asset.asset a
-      JOIN arp.times_asset ta on a.id = ta.asset_id
+      arp.times_asset ta
+      JOIN asset.asset a1 on ta.future_asset_id = a1.id
+      JOIN asset.asset a2 on ta.signal_asset_id = a2.id
       JOIN arp.times t on ta.strategy_id = t.strategy_id
       JOIN arp.strategy s on t.strategy_id = s.id
-      JOIN lookup.currency c on a.currency_id = c.id
-      JOIN lookup.country c2 on a.country_id = c2.id
-      JOIN asset.asset_analytic aa on a.id = aa.asset_id
-      JOIN lookup.source s2 on aa.source_id = s2.id
+      JOIN asset.asset_analytic aa1 on a1.id = aa1.asset_id
+      JOIN asset.asset_analytic aa2 on a2.id = aa2.asset_id
     WHERE
       s.name = strategy_name
       AND t.version = strategy_version
-      AND aa.business_tstzrange && tstzrange(business_datetime, 'infinity', '[)')
-    GROUP BY a.id, c.id, c2.id
+      AND aa1.business_datetime >= select_times_assets_with_analytics.business_datetime
+      AND aa2.business_datetime >= select_times_assets_with_analytics.business_datetime
+    GROUP BY a1.id, a2.id, ta.cost, ta.s_leverage
   ;
 END
 $$;

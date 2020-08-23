@@ -131,7 +131,7 @@ class ArpProcCaller(Db):
     def insert_times(self, times: Times, user_id: str) -> int:
         """Insert data from an instance of Times into database. Return strategy version."""
         t_version = self._insert_times_strategy(times, user_id)
-        if times.assets:
+        if times.asset_inputs:
             self._insert_times_assets(t_version, times.asset_inputs)
 
         return t_version
@@ -209,9 +209,9 @@ class ArpProcCaller(Db):
             t = self._construct_times_asset_input(r)
 
             t.signal_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['signal_ticker'],
-                                                                                             r['s_asset_analytics'])
+                                                                                             r['signal_asset_analytics'])
             t.future_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['future_ticker'],
-                                                                                             r['f_asset_analytics'])
+                                                                                             r['future_asset_analytics'])
 
             times_assets.append(t)
 
@@ -220,15 +220,8 @@ class ArpProcCaller(Db):
     @staticmethod
     def _construct_times_asset_input(row) -> TimesAssetInput:
         t = TimesAssetInput(row['s_leverage'], row['signal_ticker'], row['future_ticker'], row['cost'])
-        t.signal_asset = Asset(row['signal_ticker'], row['s_category'], row['s_country'], row['s_currency'],
-                               row['s_name'], row['s_asset_type'])
-        t.signal_asset.description = row['s_description']
-        t.signal_asset.is_tr = row['s_is_tr']
-
-        t.future_asset = Asset(row['future_ticker'], row['f_category'], row['f_country'], row['f_currency'],
-                               row['f_name'], row['f_asset_type'])
-        t.future_asset.description = row['f_description']
-        t.future_asset.is_tr = row['f_is_tr']
+        t.signal_asset = Asset(row['signal_ticker'], row['signal_name'])
+        t.future_asset = Asset(row['future_ticker'], row['future_name'])
         return t
 
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:

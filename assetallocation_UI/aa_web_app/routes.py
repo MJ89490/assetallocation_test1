@@ -1,21 +1,20 @@
 # Contains view functions for various URLs
-from assetallocation_arp.arp_strategies import run_model_from_web_interface, write_output_to_excel
 from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import get_times_inputs
-from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from flask import render_template
 from flask import flash
 from flask import url_for
 from flask import redirect
 from flask import request
+from datetime import datetime
+
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
+from assetallocation_UI.aa_web_app.service.strategy_service import run_strategy
+from assetallocation_arp.data_etl.dal.data_models.strategy import TimesAssetInput
 
-import sys
 import os
-from flask_login import login_required
-from flask_login import logout_user
 from flask_login import login_user
 from flask_login import current_user
 from flask import g
@@ -24,6 +23,7 @@ from .userIdentification import random_identification
 
 #todo mock content and test each route to see if they are ok
 #todo fix unit test arp_strategies
+
 
 @app.before_request
 def before_request():
@@ -85,33 +85,20 @@ def times_page():
                 # 1. Read the input from the form
                 # 2. Return the inputs
                 times = get_times_inputs(form)
+                # TODO work with Anais to get the asset inputs from front end and set here!
+                times.asset_inputs = [TimesAssetInput(1, 'AD1 A:00_0_R Curncy', 'AD1 A:00_0_R Curncy', 0.0002)]
                 print(times)
+
             except ValueError as e:
                 print(e)
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=e)
 
-            print("======CALLING THE MODEL======")
-            asset_inputs, positioning, r, signals, times_inputs = run_model_from_web_interface(model_type=Name.times.name)
+            # TODO ask fund_name and strategy_weight to be added to front end
+            fund_strategy = run_strategy('foo', 1, times, os.environ.get('USERNAME'), datetime(2020, 1, 1))
 
-            name_of_file = form.name_file_times.data + ".xls"
+            # TODO ask excel related buttons to be removed
+            # TODO should redirect to dashboard after running of a model, with the strategy_version
 
-            print("*********check the platform****************", sys.platform)
-            if sys.platform == 'linux':
-                path_excel = os.path.abspath(os.path.join("/","domino","datasets","results-output"))
-                path_excel = os.path.abspath(os.path.join("/", "mnt", "results"))
-                #path_excel = os.path.abspath(os.path.join("/", "domino", "datasets", "local", "results"))
-            else:
-                path_excel = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..', '..'))
-
-            print("Inside the linux platform the path is", path_excel)
-            path_excel_times = os.path.abspath(os.path.join(path_excel, name_of_file))
-
-            if form.save_excel_outputs.data is True:
-                write_output_to_excel(model_outputs={str(Name.times.name): (positioning, r, signals)},
-                                      path_excel_times=path_excel_times)
-
-            print("VALUES IN new version FORM:", form.frequency, form.leverage_type, form.name_file_times)
-            #TODO in any case save the model output into database
             return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model_ok=run_model_ok)
 
     return render_template('times_page.html', title="Times", form=form)
@@ -207,13 +194,3 @@ def times_dashboard():
 
     # put the data in dict or create a class to handle the data nicer (later with the db?)
     return render_template('dashboard_new.html', title=title, form=form, m=m, **template_data)
-
-
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     return redirect(url_for('home'))
-
-
-

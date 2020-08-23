@@ -1,7 +1,6 @@
 from typing import List
 from decimal import Decimal
-
-from psycopg2.extras import DateTimeTZRange
+from datetime import datetime
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
@@ -44,14 +43,14 @@ class ArpTypeConverter(DbTypeConverter):
     @staticmethod
     def asset_analytics_str_to_objects(asset_ticker: str, asset_analytics_str: str) -> List[AssetAnalytic]:
         """asset_analytics is a str of the format
-        '{"(source1,category1,business_tstzrange1,value1)",..."(sourceN,categoryN,business_tstzrangeN,valueN)"}'
+        '{"(category1,business_datetime1,value1)",..."(categoryN,business_datetimeN,valueN)"}'
         """
         asset_analytics = []
         for i in asset_analytics_str[2:-2].split('","'):
-            source, category, business_tstzrange, value = (i[1: -1].split(','))
-            business_tstzrange = DateTimeTZRange(business_tstzrange)
+            category, business_datetime, value = (i[1: -1].split(','))
+            business_datetime = datetime.strptime(business_datetime, '\\"%Y-%m-%d %H:%M:%S+00\\"')
             value = Decimal(value)
 
-            asset_analytics.append(AssetAnalytic(asset_ticker, source, category, business_tstzrange, value))
+            asset_analytics.append(AssetAnalytic(asset_ticker, category, business_datetime, value))
 
         return asset_analytics

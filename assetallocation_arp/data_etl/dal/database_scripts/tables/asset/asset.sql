@@ -20,16 +20,15 @@ CREATE TABLE "asset"."asset"
 (
 	"id" serial NOT NULL,
 	"spot_code" varchar(50)	 NULL,
-	"name" varchar(50)	 NOT NULL,
+	"name" varchar(50)	 NULL,
 	"ndf_code" varchar(50)	 NULL,
 	"description" varchar(100)	 NULL,
-	"generic_yield_ticker" varchar(50)	 NULL,
-	"currency_id" integer NOT NULL,
-	"country_id" integer NOT NULL,
-	"category" varchar(50)	 NOT NULL,
-	"execution_state_id" integer NOT NULL,
-	"type" varchar(50)	 NOT NULL,
-	"is_tr" boolean NOT NULL,
+	"currency_id" integer NULL,
+	"country_id" integer NULL,
+	"category" varchar(50)	 NULL,
+	"execution_state_id" integer NULL,
+	"type" varchar(50)	 NULL,
+	"is_tr" boolean NULL,
 	"ticker" varchar(50)	 NOT NULL
 )
 ;

@@ -10,18 +10,25 @@ from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAna
 # TODO rename type (+ enum?)
 # noinspection PyAttributeOutsideInit
 class Asset:
-    def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
-                 currency: Union[str, Currency], name: str, type: str):
+    def __init__(self, ticker: str, name: str):
         """Asset class to hold data from database"""
-        self.category = category
-        self.country = country
-        self.currency = currency
+        self._category = None
+        self._country = None
+        self._currency = None
         self.description = ''
         self.name = name
-        self._ticker = ticker
-        self.is_tr = False
-        self._type = type
+        self.ticker = ticker
+        self._is_tr = None
+        self._type = None
         self.asset_analytics = []
+
+    @property
+    def ticker(self) -> str:
+        return self._ticker
+
+    @ticker.setter
+    def ticker(self, x: str) -> None:
+        self._ticker = x
 
     @property
     def name(self) -> str:
@@ -84,10 +91,6 @@ class Asset:
         self._description = x
 
     @property
-    def ticker(self) -> str:
-        return self._ticker
-
-    @property
     def is_tr(self) -> bool:
         return self._is_tr
 
@@ -108,7 +111,7 @@ class FicaAsset(Asset):
                  currency: Union[str, Currency], name: str, type: str, future_ticker: str,
                  generic_yield_ticker: str) -> None:
         """FicaAsset class to hold data from database"""
-        super().__init__(ticker, category, country, currency, name, type)
+        super().__init__(ticker, name)
         self._future_ticker = future_ticker
         self._generic_yield_ticker = generic_yield_ticker
 
@@ -195,7 +198,7 @@ class EffectAsset(Asset):
     def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
                  ndf_code: str, spot_code: str, position_size: Decimal) -> None:
         """EffectAsset class to hold data from database"""
-        super().__init__(ticker, category, country, currency, name, type)
+        super().__init__(ticker, name)
         self.ndf_code = ndf_code
         self.spot_code = spot_code
         self.position_size = position_size

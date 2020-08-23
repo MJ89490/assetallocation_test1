@@ -7,7 +7,7 @@ RETURNS void
 AS
 $$
 BEGIN
-  INSERT INTO arp.times_asset (
+  INSERT INTO arp.times_asset(
     strategy_id,
     signal_asset_id,
     future_asset_id,
@@ -21,7 +21,7 @@ BEGIN
     a2.id,
     (ta).s_leverage,
     (ta).cost,
-    execution_state_id
+    insert_times_assets_into_times_asset.execution_state_id
   FROM
     unnest(times_assets) as ta
     JOIN asset.asset a1 ON (ta).signal_ticker = a1.ticker

@@ -1,30 +1,27 @@
 from decimal import Decimal
 from typing import Union
+from datetime import datetime
 
-from psycopg2.extras import DateTimeTZRange
-
-from common_libraries.dal_enums.source import Source
-from common_libraries.dal_enums.asset_analytic import Category
+from assetallocation_arp.common_libraries.dal_enums.asset_analytic import Category
 
 
 # noinspection PyAttributeOutsideInit
 class AssetAnalytic:
-    def __init__(self, asset_ticker: str, source: Union[str, Source], category: Union[str, Category],
-                 business_tstzrange: DateTimeTZRange, value: Decimal) -> None:
+    def __init__(self, asset_ticker: str, category: Union[str, Category],
+                 business_datetime: datetime, value: Decimal) -> None:
         """AssetAnalytic class to hold data from database"""
         self.asset_ticker = asset_ticker
-        self.source = source
         self.category = category
-        self.business_tstzrange = business_tstzrange
+        self.business_datetime = business_datetime
         self.value = value
 
     @property
-    def business_tstzrange(self) -> DateTimeTZRange:
-        return self._business_tstzrange
+    def business_datetime(self) -> datetime:
+        return self._business_datetime
 
-    @business_tstzrange.setter
-    def business_tstzrange(self, x: DateTimeTZRange) -> None:
-        self._business_tstzrange = x
+    @business_datetime.setter
+    def business_datetime(self, x: datetime) -> None:
+        self._business_datetime = x
 
     @property
     def asset_ticker(self) -> str:
@@ -41,14 +38,6 @@ class AssetAnalytic:
     @category.setter
     def category(self, x: Union[str, Category]) -> None:
         self._category = x if isinstance(x, Category) else Category[x]
-
-    @property
-    def source(self) -> Source:
-        return self._source
-
-    @source.setter
-    def source(self, x: Union[str, Source]) -> None:
-        self._source = x if isinstance(x, Source) else Source[x]
 
     @property
     def value(self) -> Decimal:
