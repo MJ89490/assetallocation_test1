@@ -121,6 +121,5 @@ def df_to_asset_analytics(analytics: pd.DataFrame, category: Union[str, Category
 def df_to_asset_weights(positioning: pd.DataFrame) -> List[FundStrategyAssetWeight]:
     """Transform DataFrame with index of business_date and columns of asset tickers to list of FundStrategyAssetWeights
     """
-    print(positioning)
     return [FundStrategyAssetWeight(ticker, index, float(val)) for ticker, data in positioning.items() for index, val in
             data.iteritems()]

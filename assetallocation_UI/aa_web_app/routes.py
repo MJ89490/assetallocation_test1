@@ -33,7 +33,6 @@ def before_request():
 @app.route('/')
 @app.route('/home')
 def home():
-    print('hello home')
     return render_template('home.html', title='HomePage')
 
 
@@ -87,7 +86,6 @@ def times_page():
                 times = get_times_inputs(form)
                 # TODO work with Anais to get the asset inputs from front end and set here!
                 times.asset_inputs = [TimesAssetInput(1, 'AD1 A:00_0_R Curncy', 'AD1 A:00_0_R Curncy', 0.0002)]
-                print(times)
 
             except ValueError as e:
                 print(e)

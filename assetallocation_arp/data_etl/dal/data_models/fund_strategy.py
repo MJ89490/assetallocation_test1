@@ -67,7 +67,6 @@ class FundStrategy:
 
     @strategy_name.setter
     def strategy_name(self, x: Union[str, Name]) -> None:
-        print(x)
         self._strategy_name = x if isinstance(x, Name) else Name[x]
 
     @property
