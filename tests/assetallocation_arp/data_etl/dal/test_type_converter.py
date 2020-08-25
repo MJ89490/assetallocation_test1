@@ -1,11 +1,10 @@
 import mock
-from decimal import Decimal
 
 from assetallocation_arp.data_etl.dal.type_converter import (ArpTypeConverter, FundStrategyAssetAnalytic,
                                                              FundStrategyAssetWeight)
 
 
-def mock_fund_strategy_asset_weights(asset_ticker: str, strategy_weight: Decimal, implemented_weight: Decimal):
+def mock_fund_strategy_asset_weights(asset_ticker: str, strategy_weight: float, implemented_weight: float):
     MockFundStrategyAssetWeight = mock.create_autospec(FundStrategyAssetWeight)
     mock_fsaw = MockFundStrategyAssetWeight(asset_ticker, strategy_weight)
     mock_fsaw.asset_ticker = asset_ticker
@@ -14,7 +13,7 @@ def mock_fund_strategy_asset_weights(asset_ticker: str, strategy_weight: Decimal
     return mock_fsaw
 
 
-def mock_fund_strategy_asset_analytic(asset_ticker: str, category: str, subcategory: str, value: Decimal):
+def mock_fund_strategy_asset_analytic(asset_ticker: str, category: str, subcategory: str, value: float):
     MockFundStrategyAssetAnalytic = mock.create_autospec(FundStrategyAssetAnalytic)
     mock_fsaa = MockFundStrategyAssetAnalytic(asset_ticker, category, subcategory, value)
     mock_fsaa.asset_ticker = asset_ticker
@@ -25,8 +24,8 @@ def mock_fund_strategy_asset_analytic(asset_ticker: str, category: str, subcateg
 
 
 def test_analytics_to_composite_returns_expected_value():
-    mock_fsaa1 = mock_fund_strategy_asset_analytic('a', 'b', 'c', Decimal(1))
-    mock_fsaa2 = mock_fund_strategy_asset_analytic('d', 'e', 'f', Decimal(2))
+    mock_fsaa1 = mock_fund_strategy_asset_analytic('a', 'b', 'c', float(1))
+    mock_fsaa2 = mock_fund_strategy_asset_analytic('d', 'e', 'f', float(2))
 
     returns = ArpTypeConverter.analytics_to_composite([mock_fsaa1, mock_fsaa2])
 
@@ -35,8 +34,8 @@ def test_analytics_to_composite_returns_expected_value():
 
 
 def test_weight_to_composite_returns_expected_value():
-    mock_fsaa1 = mock_fund_strategy_asset_weights('a', Decimal(1), Decimal(2))
-    mock_fsaa2 = mock_fund_strategy_asset_weights('c', Decimal(4), Decimal(3))
+    mock_fsaa1 = mock_fund_strategy_asset_weights('a', float(1), float(2))
+    mock_fsaa2 = mock_fund_strategy_asset_weights('c', float(4), float(3))
 
     returns = ArpTypeConverter.weights_to_composite([mock_fsaa1, mock_fsaa2])
 

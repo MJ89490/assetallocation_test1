@@ -1,7 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.select_fund_strategy(
   fund_name varchar,
   strategy_name varchar,
-  business_datetime timestamp with time zone,
   system_datetime timestamp with time zone,
   OUT fund_strategy_id int,
   OUT currency char,
@@ -27,10 +26,8 @@ FROM
 WHERE
   f.name = select_fund_strategy.fund_name
   AND s.name = select_fund_strategy.strategy_name
-  AND fs.business_datetime <= select_fund_strategy.business_datetime
   AND fs.system_datetime <= select_fund_strategy.system_datetime
 ORDER BY
-  fs.system_datetime desc,
-  fs.business_datetime desc
+  fs.system_datetime desc
 LIMIT 1
 $$;

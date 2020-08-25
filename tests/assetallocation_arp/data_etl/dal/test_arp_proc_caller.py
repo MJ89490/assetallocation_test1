@@ -1,6 +1,5 @@
 import mock
 import pytest
-from decimal import Decimal
 
 from assetallocation_arp.data_etl.dal.arp_proc_caller import ArpProcCaller, Times, TimesAssetInput, FundStrategy
 from datetime import datetime
@@ -25,7 +24,7 @@ def MockTimes():
 
 
 def test_insert_times_strategy_calls_call_proc(MockTimes, mock_call_proc):
-    mock_times = MockTimes(1, 'weekly', 'e', [Decimal(2)], [Decimal(3)], 4, 5)
+    mock_times = MockTimes(1, 'weekly', 'e', [float(2)], [float(3)], 4, 5)
     user_id = 'a'
 
     a = ArpProcCaller()
@@ -39,7 +38,7 @@ def test_insert_times_strategy_calls_call_proc(MockTimes, mock_call_proc):
 
 
 def test_insert_times_strategy_returns_t_version(MockTimes, mock_call_proc):
-    mock_times = MockTimes(1, 'weekly', 'e', [Decimal(2)], [Decimal(3)], 4, 5)
+    mock_times = MockTimes(1, 'weekly', 'e', [float(2)], [float(3)], 4, 5)
     expected = 5
     mock_call_proc.return_value = [{'t_version': expected}]
 

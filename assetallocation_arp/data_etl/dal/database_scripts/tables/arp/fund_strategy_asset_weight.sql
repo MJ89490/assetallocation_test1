@@ -33,7 +33,12 @@ ALTER TABLE "arp"."fund_strategy_asset_weight" ADD CONSTRAINT "fund_strategy_ass
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "arp"."fund_strategy_asset_weight" ADD CONSTRAINT "fund_strategy_asset_weight_fund_strategy_id_asset_id_key" UNIQUE ("fund_strategy_id","asset_id")
+ALTER TABLE
+	"arp"."fund_strategy_asset_weight"
+ADD CONSTRAINT
+	"fund_strategy_asset_weight_fund_strategy_id_asset_id_business_date_key"
+UNIQUE
+	("fund_strategy_id","asset_id", "business_date")
 ;
 
 /* Create Foreign Key Constraints */

@@ -1,4 +1,3 @@
-from _pydecimal import Decimal
 from collections import namedtuple
 
 from _pytest.fixtures import fixture
@@ -18,7 +17,7 @@ def valid_effect():
                               'inflation_lag_in_months', 'interest_rate_cut_off_long', 'interest_rate_cut_off_short',
                               'moving_average_long_term', 'moving_average_short_term', 'is_realtime_inflation_forecast',
                               'trend_indicator'])
-    return EffectInput('Nominal', Decimal(1), Decimal(1), 0, 'weekly', True, 1, Decimal(1), Decimal(1), 1, 1, True,
+    return EffectInput('Nominal', float(1), float(1), 0, 'weekly', True, 1, float(1), float(1), 1, 1, True,
                        'TotalReturn')
 
 
@@ -26,4 +25,4 @@ def valid_effect():
 def valid_times_asset():
     TimesAssetInput = namedtuple('TimesAssetInput', ['ticker', 'category', 'country', 'currency', 'name',
                                            'type', 's_leverage', 'signal_ticker', 'future_ticker', 'cost'])
-    return TimesAssetInput('test_ticker', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
+    return TimesAssetInput('test_ticker', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', float(1))

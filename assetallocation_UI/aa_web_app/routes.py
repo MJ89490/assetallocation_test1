@@ -93,8 +93,8 @@ def times_page():
                 print(e)
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=e)
 
-            # TODO ask fund_name and strategy_weight to be added to front end
-            fund_strategy = run_strategy('foo', 1, times, os.environ.get('USERNAME'), datetime(2020, 1, 1))
+            # TODO ask fund_name (drop_down) and strategy_weight to be added to front end
+            fund_strategy = run_strategy('f1', 1, times, os.environ.get('USERNAME'), datetime(2020, 8, 16))
 
             # TODO ask excel related buttons to be removed
             # TODO should redirect to dashboard after running of a model, with the strategy_version

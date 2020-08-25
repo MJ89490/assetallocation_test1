@@ -1,5 +1,4 @@
 from typing import List
-from decimal import Decimal
 from datetime import datetime
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
@@ -27,13 +26,13 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]) -> List[str]:
-        """Format to match database type arp.ticker_category_subcategory_value[]"""
-        return [f'("{i.asset_ticker}","{i.category}","{i.subcategory}",{i.value})' for i in analytics]
+        """Format to match database type arp.ticker_date_category_subcategory_value[]"""
+        return [f'("{i.asset_ticker}","{i.business_date}","{i.category.name}","{i.subcategory.name}",{i.value})' for i in analytics]
 
     @staticmethod
     def weights_to_composite(weights: List[FundStrategyAssetWeight]) -> List[str]:
-        """Format to match database type arp.ticker_weight_weight[]"""
-        return [f'("{i.asset_ticker}",{i.strategy_weight},{i.implemented_weight})' for i in weights]
+        """Format to match database type arp.ticker_date_weight_weight[]"""
+        return [f'("{i.asset_ticker}","{i.business_date}",{i.strategy_weight},{i.implemented_weight})' for i in weights]
 
     @staticmethod
     def effect_assets_to_composite(effect_assets: List[EffectAsset]) -> List[str]:
@@ -49,7 +48,7 @@ class ArpTypeConverter(DbTypeConverter):
         for i in asset_analytics_str[2:-2].split('","'):
             category, business_datetime, value = (i[1: -1].split(','))
             business_datetime = datetime.strptime(business_datetime, '\\"%Y-%m-%d %H:%M:%S+00\\"')
-            value = Decimal(value)
+            value = float(value)
 
             asset_analytics.append(AssetAnalytic(asset_ticker, category, business_datetime, value))
 

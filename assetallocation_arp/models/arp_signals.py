@@ -4,7 +4,6 @@ ARP
 @author: SN69248
 """
 import math
-from decimal import Decimal
 
 import pandas as pd
 import numpy as np
@@ -29,7 +28,7 @@ def momentum(index_data: pd.DataFrame, times: Times):
     return sig
 
 
-def calc_int_mom_signal(index_data: pd.Series, short_signal: Decimal, long_signal: Decimal, volatility_window: int):
+def calc_int_mom_signal(index_data: pd.Series, short_signal: float, long_signal: float, volatility_window: int):
     sig_i = (index_data.ewm(alpha=2 / short_signal).mean()
              / index_data.ewm(alpha=2 / long_signal).mean() - 1)
     # Normalise signal

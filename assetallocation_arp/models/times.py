@@ -3,20 +3,19 @@ Created on Fri Nov  15 17:27:51 2019
 TIMES
 @author: SN69248
 """
-from _pydecimal import Decimal
 from typing import List, Tuple, Union
 
 import numpy as np
 import pandas as pd
 from pandas.tseries.offsets import BDay
 
-from common_libraries.dal_enums.strategy import Leverage, Name
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Name
 from assetallocation_arp.models import portfolio_construction as pc
 from assetallocation_arp.models import arp_signals as arp
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
-from data_etl.dal.data_models.fund_strategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Signal, Performance
 
 
@@ -46,9 +45,9 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
                                                                                                            method='pad')
     # calculate leveraged positions and returns
     if leverage_type == Leverage.s.name:
-        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 0)
+        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, False)
     else:
-        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
+        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, True)
         (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
     return signals, returns, r, positioning
 
@@ -66,11 +65,12 @@ def calculate_signals_returns_r_positioning(times: Times) -> \
                                                                                                     method='pad')
 
     # calculate leveraged positions and returns
+    cost = pd.Series(asset_inputs['cost'], index=asset_inputs['signal_ticker'])
     if times.leverage_type == Leverage.s:
-        returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, asset_inputs['cost'], 0)
+        returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, False)
 
     else:
-        returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, asset_inputs['cost'], 1)
+        returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, True)
         returns, r, positioning = pc.rescale(returns, r, positioning, "Total", 0.01)
 
     return signals, returns, r, positioning
@@ -85,7 +85,7 @@ def get_asset_data_as_data_frames(asset_inputs: List[TimesAssetInput]) -> Tuple[
         future_assets.append(i.future_asset)
 
     signal_assets = DataFrameConverter.assets_to_dataframe(signal_assets)
-    future_assets = DataFrameConverter.assets_to_dataframe(signal_assets)
+    future_assets = DataFrameConverter.assets_to_dataframe(future_assets)
     asset_inputs = DataFrameConverter.times_asset_inputs_to_dataframe(asset_inputs)
 
     return asset_inputs, future_assets, signal_assets
@@ -104,7 +104,7 @@ def create_times_asset_analytics(signals: pd.DataFrame, returns: pd.DataFrame,
     # TODO check subcategories for the below three
     asset_analytics.extend(df_to_asset_analytics(signals, Category.signal, Signal.value))
     asset_analytics.extend(df_to_asset_analytics(returns, Category.performance, Performance["total return"]))
-    asset_analytics.extend(df_to_asset_analytics(r, Category.performance, Performance["total return"]))
+    asset_analytics.extend(df_to_asset_analytics(r, Category.performance, Performance["excess return"]))
 
     return asset_analytics
 
@@ -114,11 +114,13 @@ def df_to_asset_analytics(analytics: pd.DataFrame, category: Union[str, Category
     """Transform DataFrame with index of business_date and columns of asset tickers to list of
     FundStrategyAssetAnalytics
     """
-    return [FundStrategyAssetAnalytic(c.name, r.index, category, subcategory, Decimal(r)) for c in analytics for r in c]
+    return [FundStrategyAssetAnalytic(ticker, index, category, subcategory, float(val)) for ticker, data in
+            analytics.items() for index, val in data.iteritems()]
 
 
 def df_to_asset_weights(positioning: pd.DataFrame) -> List[FundStrategyAssetWeight]:
     """Transform DataFrame with index of business_date and columns of asset tickers to list of FundStrategyAssetWeights
     """
-    return [FundStrategyAssetWeight(c.name, r.index, Decimal(r)) for c in positioning for r in c]
-
+    print(positioning)
+    return [FundStrategyAssetWeight(ticker, index, float(val)) for ticker, data in positioning.items() for index, val in
+            data.iteritems()]

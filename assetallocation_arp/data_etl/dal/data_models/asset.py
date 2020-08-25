@@ -1,4 +1,3 @@
-from decimal import Decimal
 from typing import List, Union
 
 from assetallocation_arp.common_libraries.dal_enums.asset import Category
@@ -126,8 +125,7 @@ class FicaAsset(Asset):
 
 # noinspection PyAttributeOutsideInit
 class TimesAssetInput:
-    def __init__(self, s_leverage: int, signal_ticker: str,
-                 future_ticker: str, cost: Decimal) -> None:
+    def __init__(self, s_leverage: int, signal_ticker: str, future_ticker: str, cost: float) -> None:
         """TimesAssetInput class to hold data from database"""
         self.signal_ticker = signal_ticker
         self.future_ticker = future_ticker
@@ -185,18 +183,18 @@ class TimesAssetInput:
         self._future_ticker = x
 
     @property
-    def cost(self) -> Decimal:
+    def cost(self) -> float:
         return self._cost
 
     @cost.setter
-    def cost(self, x: Decimal) -> None:
+    def cost(self, x: float) -> None:
         self._cost = x
 
 
 # noinspection PyAttributeOutsideInit
 class EffectAsset(Asset):
     def __init__(self, ticker: str, category: Category, country: Country, currency: Currency, name: str, type: str,
-                 ndf_code: str, spot_code: str, position_size: Decimal) -> None:
+                 ndf_code: str, spot_code: str, position_size: float) -> None:
         """EffectAsset class to hold data from database"""
         super().__init__(ticker, name)
         self.ndf_code = ndf_code
@@ -220,9 +218,9 @@ class EffectAsset(Asset):
         self._spot_code = x
 
     @property
-    def position_size(self) -> Decimal:
+    def position_size(self) -> float:
         return self._position_size
 
     @position_size.setter
-    def position_size(self, x: Decimal) -> None:
+    def position_size(self, x: float) -> None:
         self._position_size = x

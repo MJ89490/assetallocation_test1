@@ -1,5 +1,4 @@
 from typing import List, Union, Optional
-from decimal import Decimal
 from datetime import datetime
 from os import environ
 from json import loads
@@ -230,7 +229,7 @@ class ArpProcCaller(Db):
         ticker_analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.asset_analytics)
 
         res = self.call_proc('arp.insert_fund_strategy_results',
-                             [fund_strategy.business_datetime, fund_strategy.fund_name, fund_strategy.output_is_saved,
+                             [fund_strategy.fund_name, fund_strategy.output_is_saved,
                               fund_strategy.strategy_name.name, fund_strategy.strategy_version, fund_strategy.weight,
                               user_id, fund_strategy.python_code_version, ticker_weights, ticker_analytics])
         fund_strategy_id = res[0].get('fund_strategy_id')
@@ -263,7 +262,7 @@ class ArpProcCaller(Db):
             # '{"(category1,subcategory1,valu1e)",..."(categoryN,subcategoryN,valueN)"}'
             for i in row['asset_analytics'][2:-2].split('","'):
                 category, subcategory, value = (i[1: -1].split(','))
-                value = Decimal(value)
+                value = float(value)
                 fund_strategy.add_fund_strategy_asset_analytic(
                     FundStrategyAssetAnalytic(row['asset_ticker'], category, subcategory, value))
 
@@ -278,8 +277,8 @@ if __name__ == '__main__':
     t1 = Times(0, 'weekly', 'e', [], [], 0, 0)
     t_v = d._insert_times_strategy(t1, 'JS89275')
 
-    ta1 = TimesAssetInput('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
-    ta2 = TimesAssetInput('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', Decimal(1))
+    ta1 = TimesAssetInput('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', float(1))
+    ta2 = TimesAssetInput('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', float(1))
 
     ins = d._insert_times_assets(t_v, [ta1])
     print(ins)

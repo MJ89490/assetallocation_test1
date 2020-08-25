@@ -1,5 +1,4 @@
 from typing import List, Union
-from decimal import Decimal
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -46,7 +45,7 @@ class Times(Strategy):
     name = Name.times.name
 
     def __init__(self, day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency],
-                 leverage_type: Union[str, Leverage], long_signals: List[Decimal], short_signals: List[Decimal],
+                 leverage_type: Union[str, Leverage], long_signals: List[float], short_signals: List[float],
                  time_lag_in_months: int, volatility_window: int) -> None:
         """Times class to hold data from database"""
         super().__init__(self.name)
@@ -96,19 +95,19 @@ class Times(Strategy):
         self._leverage_type = x if isinstance(x, Leverage) else Leverage[x]
 
     @property
-    def long_signals(self) -> List[Decimal]:
+    def long_signals(self) -> List[float]:
         return self._long_signals
 
     @long_signals.setter
-    def long_signals(self, x: List[Decimal]) -> None:
+    def long_signals(self, x: List[float]) -> None:
         self._long_signals = x
     
     @property
-    def short_signals(self) -> List[Decimal]:
+    def short_signals(self) -> List[float]:
         return self._short_signals
     
     @short_signals.setter
-    def short_signals(self, x: List[Decimal]) -> None:
+    def short_signals(self, x: List[float]) -> None:
         self._short_signals = x
     
     @property
@@ -131,8 +130,8 @@ class Times(Strategy):
 class Fica(Strategy):
     name = Name.fica.name
 
-    def __init__(self, coupon: Decimal, curve: str, business_tstzrange: DateTimeTZRange,
-                 strategy_weights: List[Decimal], tenor: int, trading_cost: int) -> None:
+    def __init__(self, coupon: float, curve: str, business_tstzrange: DateTimeTZRange,
+                 strategy_weights: List[float], tenor: int, trading_cost: int) -> None:
         """Fica class to hold data from database"""
         super().__init__(self.name)
         self._coupon = coupon
@@ -143,11 +142,11 @@ class Fica(Strategy):
         self._trading_cost = trading_cost
 
     @property
-    def coupon(self) -> Decimal:
+    def coupon(self) -> float:
         return self._coupon
     
     @coupon.setter
-    def coupon(self, x: Decimal) -> None:
+    def coupon(self, x: float) -> None:
         self._coupon = x
     
     @property
@@ -167,11 +166,11 @@ class Fica(Strategy):
         self._business_tstzrange = x
     
     @property
-    def strategy_weights(self) -> List[Decimal]:
+    def strategy_weights(self) -> List[float]:
         return self._strategy_weights
     
     @strategy_weights.setter
-    def strategy_weights(self, x: List[Decimal]) -> None:
+    def strategy_weights(self, x: List[float]) -> None:
         self._strategy_weights = x
     
     @property
@@ -195,9 +194,9 @@ class Fica(Strategy):
 class Effect(Strategy):
     name = Name.effect.name
 
-    def __init__(self, carry_type: Union[str, CarryType], closing_threshold: Decimal, cost: Decimal,
+    def __init__(self, carry_type: Union[str, CarryType], closing_threshold: float, cost: float,
                  day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency], include_shorts: bool,
-                 inflation_lag_in_months: int, interest_rate_cut_off_long: Decimal, interest_rate_cut_off_short: Decimal,
+                 inflation_lag_in_months: int, interest_rate_cut_off_long: float, interest_rate_cut_off_short: float,
                  moving_average_long_term: int, moving_average_short_term: int, is_realtime_inflation_forecast: bool,
                  trend_indicator: Union[str, TrendIndicator]) -> None:
         """Effect class to hold data from database"""
@@ -229,19 +228,19 @@ class Effect(Strategy):
         self._carry_type = x if isinstance(x, CarryType) else CarryType[x]
 
     @property
-    def closing_threshold(self) -> Decimal:
+    def closing_threshold(self) -> float:
         return self._closing_threshold
 
     @closing_threshold.setter
-    def closing_threshold(self, x: Decimal) -> None:
+    def closing_threshold(self, x: float) -> None:
         self._closing_threshold = x
 
     @property
-    def cost(self) -> Decimal:
+    def cost(self) -> float:
         return self._cost
 
     @cost.setter
-    def cost(self, x: Decimal) -> None:
+    def cost(self, x: float) -> None:
         self._cost = x
 
     @property
@@ -277,19 +276,19 @@ class Effect(Strategy):
         self._inflation_lag_in_months = x
 
     @property
-    def interest_rate_cut_off_long(self) -> Decimal:
+    def interest_rate_cut_off_long(self) -> float:
         return self._interest_rate_cut_off_long
 
     @interest_rate_cut_off_long.setter
-    def interest_rate_cut_off_long(self, x: Decimal) -> None:
+    def interest_rate_cut_off_long(self, x: float) -> None:
         self._interest_rate_cut_off_long = x
 
     @property
-    def interest_rate_cut_off_short(self) -> Decimal:
+    def interest_rate_cut_off_short(self) -> float:
         return self._interest_rate_cut_off_short
 
     @interest_rate_cut_off_short.setter
-    def interest_rate_cut_off_short(self, x: Decimal) -> None:
+    def interest_rate_cut_off_short(self, x: float) -> None:
         self._interest_rate_cut_off_short = x
 
     @property

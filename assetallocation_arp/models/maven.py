@@ -93,7 +93,7 @@ def calculate_excess_returns(maven_inputs, asset_inputs, asset_returns):
     asset_excess = asset_excess.to_numpy()
     maven_assets = asset_inputs['asset'][0: m]
     maven_weight = asset_inputs['asset_weight']
-    asset_unique = np.ones([n, len(maven_assets.unique())])
+    asset_unique = np.ones([n, len(maven_assets.check_unique())])
     count = 0
     asset_unique[:, 0] = asset_excess[:, 0] * maven_weight[1]
     for i in range(1, m):
@@ -104,7 +104,7 @@ def calculate_excess_returns(maven_inputs, asset_inputs, asset_returns):
             count = count + 1
     # replacing nan with start index value of 100
     asset_unique[0, :] = 100
-    maven_returns = pd.DataFrame(data=asset_unique, index=asset_returns.index, columns=maven_assets.unique()).cumprod()
+    maven_returns = pd.DataFrame(data=asset_unique, index=asset_returns.index, columns=maven_assets.check_unique()).cumprod()
     return maven_returns
 
 

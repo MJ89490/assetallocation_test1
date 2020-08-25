@@ -9,7 +9,7 @@ from typing import Union
 import pandas as pd
 from pandas.tseries.offsets import BDay
 
-from common_libraries.dal_enums.strategy import Leverage
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage
 
 
 def apply_leverage(futures_data: Union[pd.Series, pd.DataFrame], leverage_type: Leverage, leverage: pd.Series
@@ -26,7 +26,7 @@ def apply_leverage(futures_data: Union[pd.Series, pd.DataFrame], leverage_type: 
         leverage_data = 1 / futures_data.ewm(alpha=1/150, min_periods=10).std()
 
     else:
-        raise Exception('Invalid entry')
+        raise Exception(f'leverage type {leverage_type} is not a valid Leverage')
     return leverage_data
 
 
@@ -39,12 +39,13 @@ def rescale(ret, r, positioning, column, vol):
     return return_scaled, r_scaled, positioning_scaled
 
 
-def return_ts(sig, future, leverage, costs, cummul):
+def return_ts(sig: pd.DataFrame, future: pd.DataFrame, leverage: float, costs: pd.Series, cummul: bool):
+    """asset_inputs has index of 'signal_ticker'"""
     # Implement trading signal in a time-series context and as standalone for every series
     returns = pd.DataFrame()
     r = pd.DataFrame()
     sig = sig.reindex(future.append(pd.DataFrame(index=future.iloc[[-1]].index + BDay(2)), sort=True).index, method='pad') 
-    if cummul == 1:
+    if cummul:
         positioning = sig.divide(future.multiply(leverage).count(axis=1), axis=0)
         positioning.iloc[-1:] = sig.iloc[-1:]/sig.iloc[-1].multiply(leverage.iloc[-1]).count()
     else:
@@ -53,6 +54,10 @@ def return_ts(sig, future, leverage, costs, cummul):
         positioning[column] = leverage[column]*positioning[column]
         returns[column] = future[column]*positioning[column]
         # Trading costs
+        print(column)
+        print('returns\n', returns.head())
+        print('positioning\n', positioning.head())
+        print('costs\n', costs.head())
         returns[column].iloc[1:] = returns[column].iloc[1:]-costs[column]*pd.DataFrame.abs(positioning[column].diff(periods=1))
         r[column] = returns[column].cumsum()
     returns['Total'] = returns.sum(axis=1)

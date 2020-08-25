@@ -34,7 +34,12 @@ ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_a
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_asset_analytic_fund_strategy_id_asset_id_category_subcategory_key" UNIQUE ("fund_strategy_id","asset_id","category","subcategory")
+ALTER TABLE
+	"arp"."fund_strategy_asset_analytic"
+ADD CONSTRAINT
+	"fund_strategy_asset_analytic_fund_strategy_id_asset_id_business_date_category_subcategory_key"
+UNIQUE
+	("fund_strategy_id","asset_id","business_date", "category","subcategory")
 ;
 
 ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_asset_analytic_category_subcategory_check"CHECK (
