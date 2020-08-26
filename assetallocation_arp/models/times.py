@@ -40,8 +40,8 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 0)
     else:
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
-        (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
-    return signals, returns, r, positioning
+        (returns, r, positioning_scaled) = pc.rescale(returns, r, positioning, "Total", 0.01)
+    return signals, returns, r, positioning_scaled, positioning
 
 
 
