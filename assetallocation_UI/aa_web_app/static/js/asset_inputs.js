@@ -77,20 +77,54 @@ function getNumberOfRows() {
     return count;
 }
 
-// Get the data from the table ==> TO CALL FROM PYTHON TO GET THE INPUTS
-function getDataFromTable(){
-    var tmpArr = [];
-    var assetsArr = [];
-    var rowNum = this.getNumberOfRows();
+function onBtForEachNode() {
+  console.log('### api.forEachNode() ###');
+  gridOptions.api.forEachNode(this.printNode)
+}
 
-    for (var i = 0; i < rowNum ; i++){
-        var rowNode = gridOptions.api.getDisplayedRowAtIndex(i);
-        assetsArr.push(rowNode.data);
-    }
-    return assetsArr;
+function printNode(node, index) {
+    console.log(index + ' -> data: ' + node.data.asset + ', ' + node.data.signal_ticker);
 }
 
 
+// Get the data from the table ==> TO CALL FROM PYTHON TO GET THE INPUTS
+function getDataFromTable(){
+    alert('getDataFromTable')
+    var tmpArr = [];
+    var assetsArr = [];
+    var assetsArrTicker = [];
+    var assetsDict = {};
+    var rowNum = this.getNumberOfRows();
+    console.log('rows', rowNum);
+
+    gridOptions.api.forEachNode(function(rowNode, index) {
+    console.log('node ' + rowNode.data.asset + ' is in the griiiiid');
+    var v =  rowNode.data.asset;
+
+    console.log(v);
+    assetsArr.push(rowNode.data.asset);
+    assetsArrTicker.push(rowNode.data.signal_ticker);
+    });
+
+    console.log(assetsArrTicker);
+
+    for (var i = 0; i < assetsArr.length; i++) {
+        assetsDict[assetsArr[i]] = assetsArrTicker[i];
+    }
+
+    console.log(assetsDict);
+
+    return assetsArr;
+}
+
+// create a new fct which calls getDataFromTable
+// send the return value (assetsArr) in json as a post request to python to the route times
+function sendDataFromTable(){
+    alert('sendDataFromTable')
+    var data = this.getDataFromTable();
+    console.log('ARRAY OOOOOH', data);
+    return data;
+}
 //Print the rows in the console of the Browser (checking errors)
 function printResult(res) {
     console.log('---------------------------------------')

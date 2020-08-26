@@ -63,6 +63,13 @@ def login_post():
     return redirect(url_for('login'))
 
 
+@app.route('/receive_times_data', methods=['POST'])
+def receive_times_data():
+
+    if request.method == "POST":
+        if request.form['submit_button'] == 'runTimesModel':
+            data = request.values.get_json()
+
 @app.route('/times_page',  methods=['GET', 'POST'])
 # @login_required
 def times_page():
@@ -80,6 +87,10 @@ def times_page():
             run_model_ok = "run_times_model_ok"
 
             try:
+                data = request.values.get_json()
+                receive_times_data()
+
+
                 #TODO insert in run_model because it is currently reading the inputs from the Excel
                 # 1. Read the input from the form
                 # 2. Return the inputs

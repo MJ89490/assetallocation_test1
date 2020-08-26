@@ -21,7 +21,7 @@
         <div style="width: 1030px; height: 350px; ">
             <div id="myGrid" style="height: 100%; margin-top: 20px; " class="ag-theme-balham"></div>
         </div>
-        <script src="{{ url_for('static', filename='js/asset_inputs.js') }}"></script>
+
 
   {% endblock %}
 
@@ -72,8 +72,10 @@
         </div><br>
 
         {% block runModel%}
+            <!--onclick = "fct of js()"-->
+            <script type="text/javascript" src="{{ url_for('static', filename='js/asset_inputs.js') }}"></script>
 
-            <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+            <button class="btn btn-lg btn-primary" onclick="sendDataFromTable()" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
 
         {% endblock %}
 
