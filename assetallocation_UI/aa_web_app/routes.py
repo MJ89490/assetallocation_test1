@@ -11,7 +11,7 @@ from datetime import datetime
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
 from .models import User
-from assetallocation_UI.aa_web_app.service.strategy_service import run_strategy
+from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.dal.data_models.strategy import TimesAssetInput
 
 import os

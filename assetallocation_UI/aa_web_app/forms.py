@@ -1,7 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
-from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Frequency, DayOfWeek
+
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Frequency, DayOfWeek, Name
+from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
+from assetallocation_UI.aa_web_app.service.formatter import format_versions
 
 """
 User login form
@@ -19,8 +22,8 @@ class ExportDataForm(FlaskForm):
     START_DATE = 'Start Date'
     END_DATE = 'End Date'
 
-    # todo link to the DB to grap the different versions automatically
-    versions = SelectField('Versions', choices=[('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3','Version3')])
+    existing_versions = get_strategy_versions(Name.times)
+    versions = SelectField('Versions', choices=list(zip(existing_versions, format_versions(existing_versions))))
 
     submit_ok_versions = SubmitField('Ok')
 
@@ -65,10 +68,11 @@ class ExportDataForm(FlaskForm):
 
 
 class InputsTimesModel(FlaskForm):
+    existing_versions = get_strategy_versions(Name.times)
+    version_choices = [('New Version', 'New Version')]
+    version_choices.extend(list(zip(existing_versions, format_versions(existing_versions))))
+    versions = SelectField('Versions', choices=version_choices)
 
-    # todo link to the DB to grap the different versions automatically
-    versions = SelectField('Versions',
-                           choices=[('New Version', 'New Version'),('Version1', 'Version1'), ('Version2', 'Version2'), ('Version3', 'Version3')])
     submit_versions = SubmitField('Select this version')
 
     strategy_weight = StringField(u'Strategy Notional', [DataRequired(message="The strategy weight is required")])
@@ -102,9 +106,6 @@ class InputsTimesModel(FlaskForm):
                                     (DayOfWeek.SUN.value, DayOfWeek.SUN.name)]
                            )
 
-    name_file_times = StringField(u'Name of the File')
-    save_excel_outputs = BooleanField('Save on Excel')
-    save_db_outputs = BooleanField('Save in the DataBase')
     submit_save = SubmitField('Save')
 
 

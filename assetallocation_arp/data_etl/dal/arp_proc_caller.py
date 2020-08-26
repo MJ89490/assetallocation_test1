@@ -9,7 +9,7 @@ from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStra
                                                                         FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAsset, Asset
-from common_libraries.dal_enums.strategy import Name
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
 
 
@@ -271,8 +271,8 @@ class ArpProcCaller(Db):
     def select_strategy_versions(self, strategy_name: Union[str, Name]) -> List[int]:
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
-        res = self.call_proc('arp.select_strategy_version', [strategy_name])
-        return res[0].get('strategy_version') or []
+        res = self.call_proc('arp.select_strategy_versions', [strategy_name])
+        return res[0].get('strategy_versions') or []
 
 
 if __name__ == '__main__':

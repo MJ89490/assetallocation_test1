@@ -71,24 +71,6 @@
              {{ form.sig3_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Long"))}}
         </div><br>
 
-          {% block save %}
-
-            <div class="text-field-path" id="text-field-name-file">
-                {{form.name_file_times.label(id="label_text")}}
-                <em>{{ form.name_file_times(class="form-control", id="btn-group-inputs-model", placeholder=("Name of the file"))}}</em>
-
-            </div>
-            <!--Form: Check Boxes to save the results-->
-            <div class="check-box-save" id="check-box-save-excel">
-                {{ form.save_excel_outputs(id="radio-box-save-excel") }} {{ form.save_excel_outputs.label(id="label_text") }}
-            </div>
-
-            <div class="check-box-save" id="check-box-save-db">
-                {{ form.save_db_outputs(id="radio-box-save-db") }} {{ form.save_db_outputs.label(id="label_text") }}
-            </div>
-
-          {% endblock %}
-
         {% block runModel%}
 
             <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>

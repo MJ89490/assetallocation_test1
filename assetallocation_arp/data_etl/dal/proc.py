@@ -17,6 +17,6 @@ Proc = Enum(
         ('arp.insert_times_assets', auto()),
         ('arp.select_times_assets_with_analytics', auto()),
         ('arp.insert_app_user', auto()),
-        ('arp.select_strategy_version', auto()),
+        ('arp.select_strategy_versions', auto()),
     ]
 )
