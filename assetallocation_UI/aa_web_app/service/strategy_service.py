@@ -1,3 +1,5 @@
+from typing import Union, List
+
 from datetime import datetime
 
 from assetallocation_arp.arp_strategies import run_times
@@ -25,3 +27,8 @@ def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, use
     apc.insert_fund_strategy_results(fs, user_id)
 
     return fs
+
+
+def get_strategy_versions(strategy_name: Union[str, Name]) -> List[int]:
+    apc = ArpProcCaller()
+    return apc.select_strategy_versions(strategy_name)
