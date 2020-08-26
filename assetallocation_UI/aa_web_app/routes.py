@@ -89,17 +89,17 @@ def times_page():
             fund_strategy = run_strategy('f1', strategy_weight, times, os.environ.get('USERNAME'), datetime(2020, 8, 16))
 
             # TODO should redirect to dashboard after running of a model, with the strategy_version
-            return redirect(url_for('times_dashboard'))
+            return redirect(url_for(f'times_dashboard/{fund_strategy.strategy_version}'))
 
     return render_template('times_page.html', title="Times", form=form)
 
 
-@app.route('/times_dashboard', methods=['GET', 'POST'])
+@app.route('/times_dashboard/<int:times_version>', methods=['GET', 'POST'])
 # @login_required
-def times_dashboard():
+def times_dashboard(times_version: int):
     title = "Dashboard"
     form = ExportDataForm()
-    template_data = main_data()
+    template_data = main_data(times_version)
 
     m = ""
     if request.method == "POST":

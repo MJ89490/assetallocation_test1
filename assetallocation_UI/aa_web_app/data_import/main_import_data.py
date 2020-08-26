@@ -5,7 +5,7 @@ import os
 import sys
 
 
-def main_data():
+def main_data(times_version: int):
     """
     Function main to run the ChartsDataFromExcel class
     :return: dictionary with all the data needed for the Front-End
@@ -22,6 +22,10 @@ def main_data():
 
     data = obj_charts_data.data_charts()
 
+    print('times_signals', data['times_signals'].head())
+    print('times_positions', data['times_positions'].head())
+    print('times_returns', data['times_returns'].head())
+
     obj_charts_comp = ChartsDataComputations(times_signals=data['times_signals'],
                                              times_positions=data['times_positions'],
                                              times_returns=data['times_returns'])
@@ -36,9 +40,7 @@ def main_data():
     data_comp = obj_charts_comp.data_computations(signal_off=signal_off, returns_off=returns_off, positions_off=positions_off,
                                                   returns_weekly_off=returns_weekly_off)
 
-    data_comp_sum = obj_charts_comp.data_computations_sum(times_returns_ytd=data_comp['times_returns_ytd'],
-                                                          times_positions_comp=data_comp['times_positions_comp'],
-                                                          times_returns=data_comp['times_returns_comp'])
+    data_comp_sum = obj_charts_comp.data_computations_sum()
 
     # use map, map data to values: first way
     # json: second way
