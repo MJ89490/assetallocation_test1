@@ -21,9 +21,9 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         # get inputs from excel and matlab data
         times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date)
         # run strategy
-        signals, returns, r, positioning_scaled, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
+        signals, returns, r,  positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({Name.times.name: (asset_inputs, positioning_scaled, positioning, r, signals, times_inputs)}, input_file)
+        write_output_to_excel({Name.times.name: (asset_inputs,  positioning, r, signals, times_inputs)}, input_file)
 
     if model_type == Name.maven.name:
         # get inputs from excel and matlab data
@@ -88,7 +88,7 @@ def write_output_to_excel(model_outputs, input_file):
 
     if Name.times.name in model_outputs.keys():
 
-        asset_inputs, positioning_scaled, positioning, returns, signals, times_inputs = model_outputs['times']
+        asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
 
         sheet_times_output = xw.Book.caller().sheets['times_output']
         sheet_times_inputs = xw.Book.caller().sheets['times_input']
@@ -99,10 +99,9 @@ def write_output_to_excel(model_outputs, input_file):
         sheet_times_output.range('rng_times_output').value = signals
         sheet_times_output.range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
         sheet_times_output.range('rng_times_output').offset(0, n_columns + 2).value = returns
-        sheet_times_output.range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions Scaled"
-        sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning_scaled
-        sheet_times_output.range('rng_times_output').offset(-1, 3 * n_columns + 4).value = "TIMES Positions "
-        sheet_times_output.range('rng_times_output').offset(0, 3 * n_columns + 4).value = positioning
+        sheet_times_output.range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
+        sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
+
         # write inputs used to excel and run time
         sheet_times_inputs.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         sheet_times_inputs.range('rng_inputs_used').offset(0, 0).value = times_inputs
