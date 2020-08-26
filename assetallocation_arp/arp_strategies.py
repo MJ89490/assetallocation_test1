@@ -3,11 +3,11 @@ import sys
 import xlwings as xw
 from time import strftime, gmtime
 
-from common_libraries.dal_enums.strategy import Name
-
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
 sys.path.insert(0, ROOT_DIR)
+
+from common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.models import fica
