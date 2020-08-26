@@ -58,6 +58,8 @@ class ComputeSignalsOverview:
         # MATR notional
         matr_notional = signals_combo.sum() * self.size_attr * 100
 
+
+
         return {'ex_ante_vol': ex_ante_vol, 'matr_notional': matr_notional}
 
     def run_signals_overview(self, real_carry_curr, trend_curr, combo_curr, agg_total_incl_signals, agg_log_returns):

@@ -357,4 +357,15 @@ class ComputeCurrencies(ProcessDataEffect):
                                    'return_excl_curr': return_ex, 'return_incl_curr': return_incl,
                                    'spot_excl_curr': spot_ex, 'spot_incl_curr': spot_incl}
 
+
+        carry.to_csv('carry_nominal_results.csv')
+        trend.to_csv('trend_new.csv')
+        combo.to_csv('combo_new.csv')
+        return_ex.to_csv('return_ex_new.csv')
+        return_incl.to_csv('return_incl_new.csv')
+        spot_ex.to_csv('spot_ex_new.csv')
+        spot_incl.to_csv('spot_incl_new.csv')
+
+
+
         return currencies_calculations

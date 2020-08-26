@@ -36,9 +36,9 @@ def run_effect():
     inflation_differential = obj_inflation_differential.compute_inflation_differential(realtime_inflation_forecast)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
-    carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'}  # could be Spot or Total Return
-    combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
+    carry_inputs = {'type': 'nominal', 'inflation': inflation_differential}
+    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}  # could be Spot or Total Return
+    combo_inputs = {'cut_off': 2, 'incl_shorts': 'no', 'cut_off_s': 0.00, 'threshold': 0.25}
     currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
     # ---------------------------------------------------------------------------------------------------------------- #

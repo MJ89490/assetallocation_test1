@@ -12,9 +12,9 @@ def currencies():
 
 def test_compute_carry(currencies):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "carry_origin.csv"))
+                                               "carry_nominal_origin.csv"))
     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "carry_results.csv"))
+                                               "carry_nominal_results.csv"))
 
     carry_results = pd.read_csv(path_result, sep=',', engine='python')
     carry_origin = pd.read_csv(path_origin, sep=',', engine='python')
