@@ -76,27 +76,20 @@ def times_page():
 
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
-            run_model = "run_times_model"
-            run_model_ok = "run_times_model_ok"
-
             try:
-                #TODO insert in run_model because it is currently reading the inputs from the Excel
-                # 1. Read the input from the form
-                # 2. Return the inputs
-                times = get_times_inputs(form)
+                strategy_weight, times = get_times_inputs(form)
                 # TODO work with Anais to get the asset inputs from front end and set here!
                 times.asset_inputs = [TimesAssetInput(1, 'AD1 A:00_0_R Curncy', 'AD1 A:00_0_R Curncy', 0.0002)]
 
             except ValueError as e:
                 print(e)
-                return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=e)
+                return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model="run_times_model", message=e)
 
-            # TODO ask fund_name (drop_down) and strategy_weight to be added to front end
-            fund_strategy = run_strategy('f1', 1, times, os.environ.get('USERNAME'), datetime(2020, 8, 16))
+            # TODO ask fund_name (drop_down) to be added to front end
+            fund_strategy = run_strategy('f1', strategy_weight, times, os.environ.get('USERNAME'), datetime(2020, 8, 16))
 
             # TODO should redirect to dashboard after running of a model, with the strategy_version
-
-            return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model_ok=run_model_ok)
+            return redirect(url_for('times_dashboard'))
 
     return render_template('times_page.html', title="Times", form=form)
 
