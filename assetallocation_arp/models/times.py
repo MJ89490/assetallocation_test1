@@ -84,9 +84,9 @@ def get_asset_data_as_data_frames(asset_inputs: List[TimesAssetInput]) -> Tuple[
         signal_assets.append(i.signal_asset)
         future_assets.append(i.future_asset)
 
-    signal_assets = DataFrameConverter.assets_to_dataframe(signal_assets)
-    future_assets = DataFrameConverter.assets_to_dataframe(future_assets)
-    asset_inputs = DataFrameConverter.times_asset_inputs_to_dataframe(asset_inputs)
+    signal_assets = DataFrameConverter.assets_to_df(signal_assets)
+    future_assets = DataFrameConverter.assets_to_df(future_assets)
+    asset_inputs = DataFrameConverter.times_asset_inputs_to_df(asset_inputs)
 
     return asset_inputs, future_assets, signal_assets
 

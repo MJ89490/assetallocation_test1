@@ -1,12 +1,10 @@
 from typing import List, Union, Optional
-from datetime import datetime
 from os import environ
 from json import loads
 
 from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetAnalytic,
-                                                                        FundStrategyAssetWeight)
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAsset, Asset
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
@@ -237,34 +235,27 @@ class ArpProcCaller(Db):
         return fund_strategy_id is not None
 
     def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
-                                     business_datetime: datetime = datetime.today(),
-                                     system_datetime: datetime = datetime.today()) -> Optional[FundStrategy]:
+                                     strategy_version: int) -> Optional[FundStrategy]:
         """Select the most recent FundStrategy data for a strategy as at business_datetime and system_datetime"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
-        res = self.call_proc('arp.select_fund_strategy_results',
-                             [fund_name, strategy_name, business_datetime, system_datetime])
+        res = self.call_proc('arp.select_fund_strategy_results', [fund_name, strategy_name, strategy_version])
 
         if not res:
             return
 
-        fund_strategy = FundStrategy(fund_name, strategy_name, res[0]['strategy_version'], res[0]['weight'])
-        fund_strategy.business_datetime = res[0]['business_datetime']
+        fund_strategy = FundStrategy(fund_name, strategy_name, strategy_version, float(res[0]['weight']))
         fund_strategy.output_is_saved = res[0]['output_is_saved']
         fund_strategy.python_code_version = res[0]['python_code_version']
 
         for row in res:
-            aw = FundStrategyAssetWeight(row['asset_ticker'], row['strategy_weight'])
-            aw.implemented_weight = row['implemented_weight']
+            aw = FundStrategyAssetWeight(row['asset_ticker'], row['business_date'], float(row['strategy_weight']))
+            aw.implemented_weight = float(row['implemented_weight'])
             fund_strategy.add_fund_strategy_asset_weight(aw)
 
-            # asset_analytics is a str of the format
-            # '{"(category1,subcategory1,valu1e)",..."(categoryN,subcategoryN,valueN)"}'
-            for i in row['asset_analytics'][2:-2].split('","'):
-                category, subcategory, value = (i[1: -1].split(','))
-                value = float(value)
-                fund_strategy.add_fund_strategy_asset_analytic(
-                    FundStrategyAssetAnalytic(row['asset_ticker'], category, subcategory, value))
+            fund_strategy.add_fund_strategy_asset_analytics(
+                ArpTypeConverter.fund_strategy_asset_analytics_str_to_objects(
+                    row['asset_ticker'], row['business_date'], row['asset_analytics']))
 
         return fund_strategy
 
@@ -276,8 +267,6 @@ class ArpProcCaller(Db):
 
 
 if __name__ == '__main__':
-    from datetime import datetime
-
     d = ArpProcCaller()
 
     t1 = Times(0, 'weekly', 'e', [], [], 0, 0)

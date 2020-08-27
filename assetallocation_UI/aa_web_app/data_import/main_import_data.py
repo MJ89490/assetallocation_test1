@@ -1,43 +1,33 @@
-from assetallocation_UI.aa_web_app.data_import.import_data_from_excel import ChartsDataFromExcel
-from assetallocation_UI.aa_web_app.data_import.charts_data_computations import ChartsDataComputations
-
-import os
 import sys
 
+from assetallocation_UI.aa_web_app.data_import.charts_data_computations import TimesChartsDataComputations
+from assetallocation_arp.data_etl.dal.arp_proc_caller import ArpProcCaller
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
+from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
-def main_data(times_version: int):
+
+def main_data(fund_name: str, times_version: int):
     """
-    Function main to run the ChartsDataFromExcel class
+    Function main to run the TimesChartsDataComputations class
     :return: dictionary with all the data needed for the Front-End
     """
-    obj_charts_data = ChartsDataFromExcel()
-    obj_charts_data.path_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "arp_dashboard_charts.xlsm"))
+    apc = ArpProcCaller()
+    fs = apc.select_fund_strategy_results(fund_name, Name.times, times_version)
+    weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+    analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.asset_analytics)
 
-    obj_charts_data.import_data()
-    obj_charts_data.data_processing()
+    data = {'times_signals': analytic_df.xs(Signal.momentum, level='subcategory'),
+            'times_returns': analytic_df.xs(Performance['excess return'], level='subcategory'),
+            'times_positions': weight_df}
 
-    obj_charts_data.start_date_chart = "2018-09-06"  # default start date
-    obj_charts_data.end_date_chart = "2019-11-28"    # default end date
-    obj_charts_data.data_charts()
+    obj_charts_comp = TimesChartsDataComputations(times_signals=data['times_signals'],
+                                                  times_positions=data['times_positions'],
+                                                  times_returns=data['times_returns'])
 
-    data = obj_charts_data.data_charts()
-
-    print('times_signals', data['times_signals'].head())
-    print('times_positions', data['times_positions'].head())
-    print('times_returns', data['times_returns'].head())
-
-    obj_charts_comp = ChartsDataComputations(times_signals=data['times_signals'],
-                                             times_positions=data['times_positions'],
-                                             times_returns=data['times_returns'])
-
-    obj_charts_comp.end_year_date = '2018-12-31'
     data_comp = obj_charts_comp.data_computations()
     data_comp_sum = obj_charts_comp.data_computations_sum()
 
-    # use map, map data to values: first way
-    # json: second way
-    # meta classes : third way
-    # collections : fourth way
     template_data = {"times_data": data, "times_sum": data_comp_sum, "times_data_comp": data_comp}
 
     return template_data

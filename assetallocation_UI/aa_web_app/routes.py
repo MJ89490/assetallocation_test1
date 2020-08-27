@@ -93,21 +93,22 @@ def times_page():
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model="run_times_model", message=e)
 
             # TODO ask fund_name (drop_down) to be added to front end
-            fund_strategy = run_strategy('f1', strategy_weight, times, os.environ.get('USERNAME'), datetime(2020, 8, 16))
+            fund_name = 'f1'
+            fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), datetime(2019, 12, 1))
 
             # TODO should redirect to dashboard after running of a model, with the strategy_version
-            return redirect(url_for(f'times_dashboard/{fund_strategy.strategy_version}'))
+            return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
 
     return render_template('times_page.html', title="Times", form=form)
 
 
-@app.route('/times_dashboard', defaults={'times_version': None}, methods=['GET', 'POST'])
-@app.route('/times_dashboard/<int:times_version>', methods=['GET', 'POST'])
+@app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
+@app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 # @login_required
-def times_dashboard(times_version: int):
+def times_dashboard(fund_name: str, times_version: int):
     title = "Dashboard"
     form = ExportDataForm()
-    template_data = main_data(times_version)
+    template_data = main_data(fund_name, times_version)
 
     m = ""
     if request.method == "POST":

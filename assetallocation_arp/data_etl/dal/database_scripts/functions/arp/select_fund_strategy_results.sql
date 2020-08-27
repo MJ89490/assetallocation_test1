@@ -1,10 +1,9 @@
 CREATE OR REPLACE FUNCTION arp.select_fund_strategy_results(
   fund_name varchar,
   strategy_name varchar,
-  max_system_datetime timestamp with time zone
+  strategy_version int
 )
 RETURNS TABLE(
-  strategy_version int,
   python_code_version varchar,
   output_is_saved boolean,
   weight numeric,
@@ -18,10 +17,9 @@ AS
 $$
 BEGIN
   RETURN QUERY
-    WITH fsr (fund_strategy_id, strategy_version, python_code_version, output_is_saved, weight) AS (
+    WITH fsr (fund_strategy_id, python_code_version, output_is_saved, weight) AS (
       SELECT
         fs.id,
-        COALESCE(t.version, fi.version, e.version) as strategy_version,
         fs.python_code_version,
         fs.output_is_saved,
         fs.weight
@@ -37,13 +35,11 @@ BEGIN
       WHERE
         fu.name = select_fund_strategy_results.fund_name
         AND s.name = select_fund_strategy_results.strategy_name
-        AND fs.system_datetime <= select_fund_strategy_results.max_system_datetime
+        AND COALESCE(t.version, fi.version, e.version) = select_fund_strategy_results.strategy_version
       ORDER BY
         fs.system_datetime desc
-      LIMIT 1
     )
     SELECT
-      fsr.strategy_version,
       fsr.python_code_version,
       fsr.output_is_saved,
       fsr.weight,
@@ -62,7 +58,6 @@ BEGIN
           AND fsaa.asset_id = a.id
           AND fsaa.business_date = fsaw.business_date
     GROUP BY
-      fsr.strategy_version,
       fsr.python_code_version,
       fsr.output_is_saved,
       fsr.weight,

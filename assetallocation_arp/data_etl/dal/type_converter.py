@@ -1,5 +1,5 @@
 from typing import List
-from datetime import datetime
+from datetime import datetime, date
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
@@ -51,5 +51,19 @@ class ArpTypeConverter(DbTypeConverter):
             value = float(value)
 
             asset_analytics.append(AssetAnalytic(asset_ticker, category, business_datetime, value))
+
+        return asset_analytics
+
+    @staticmethod
+    def fund_strategy_asset_analytics_str_to_objects(asset_ticker: str, business_date: date,
+                                                     asset_analytics_str: str) -> List[FundStrategyAssetAnalytic]:
+        """asset_analytics is a str of the format
+        '{"(category1,subcategory1,value1)",..."(categoryN,subcategoryN,valueN)"}'
+        """
+        asset_analytics = []
+        for i in asset_analytics_str[2:-2].split('","'):
+            category, subcategory, value = (j.strip('\\"') for j in i[1: -1].split(','))
+            value = float(value)
+            asset_analytics.append(FundStrategyAssetAnalytic(asset_ticker, business_date, category, subcategory, value))
 
         return asset_analytics

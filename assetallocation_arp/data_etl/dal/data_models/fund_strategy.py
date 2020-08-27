@@ -93,6 +93,10 @@ class FundStrategy:
     def weight(self, x: float) -> None:
         self._weight = x
 
+    def add_fund_strategy_asset_analytics(self, asset_analytics: List['FundStrategyAssetAnalytic']) -> None:
+        FundStrategyAssetAnalytic.check_unique(self.asset_analytics + asset_analytics)
+        self._asset_analytics.extend(asset_analytics)
+
     def add_fund_strategy_asset_analytic(self, asset_analytic: 'FundStrategyAssetAnalytic') -> None:
         FundStrategyAssetAnalytic.check_unique(self.asset_analytics + [asset_analytic])
         self._asset_analytics.append(asset_analytic)
