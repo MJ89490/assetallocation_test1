@@ -120,8 +120,10 @@ function sendJsonDataFromTable(){
     console.log(jsonData);
     $.ajax({
       type : 'POST',
-      url : "{{url_for('receive_times_data')}}",
-      data : {'data':jsonData}
+      url : "/receive_times_data",
+      data : jsonData,
+      contentType : "application/json",
+      dataType: "JSON"
     });
 
     return jsonData

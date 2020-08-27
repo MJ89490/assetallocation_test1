@@ -169,16 +169,27 @@ background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;
 
 /*buttons */
 #dashboard-btn {margin-top: 55px; }
-#btn-group-inputs-model{text-align: center; color: #D3D3D3; }
-#btn-group-inputs-model-leverage {padding-left: 85px; }
-#btn-group-inputs-model-frequency {text-align: center; color: #D3D3D3; padding-left: 65px; }
-#btn-group-inputs-model-week {text-align: center; color: #D3D3D3; padding-left: 65px; }
+
+
+#fund-names-inputs-model{width: 160px; padding-left: 65px; margin-right: 140px; color: #A9A9A9;}
+
+#btn-group-inputs-model{text-align: center;}
+
+.form-control{color: #A9A9A9;}
+
+#btn-group-inputs-model-leverage {padding-left: 85px; color:#A9A9A9;}
+
+#btn-group-inputs-model-frequency {text-align: center; padding-left: 65px; color:#A9A9A9;}
+#btn-group-inputs-model-week {text-align: center; padding-left: 65px; color:#A9A9A9;}
+
+
 #RunTheModelSubmit2{margin-top: 10px; width: 398px; }
 #text-field-name-file{padding-bottom: 5px; }
 #check-box-save-excel{padding-bottom: 5px; }
 #check-box-save-db {padding-left: 46.5px; }
 #btn-group-signals{margin-left: 20px; }
 #SelectSaveSubmit4 {margin-bottom: 20px; }
+#btn-group-inputs-model{color: pink; }
 /* text-title */
 #label_text{color:#007faa;}
 #form-control-path-save {color: #808080}

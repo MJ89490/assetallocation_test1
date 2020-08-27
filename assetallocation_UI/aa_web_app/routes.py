@@ -24,6 +24,7 @@ from .userIdentification import random_identification
 #todo mock content and test each route to see if they are ok
 #todo fix unit test arp_strategies
 
+#TODO create blueprints to avoid having single routes
 
 @app.before_request
 def before_request():
@@ -67,8 +68,10 @@ def login_post():
 def receive_times_data():
 
     if request.method == "POST":
-        # if request.form['submit_button'] == 'runTimesModel':
-            data = request.form['data']
+        #TODO write data in the database directly because it is directly linked to the runmodel button
+        data = request.json
+        print(data)
+
 
 @app.route('/times_page',  methods=['GET', 'POST'])
 # @login_required

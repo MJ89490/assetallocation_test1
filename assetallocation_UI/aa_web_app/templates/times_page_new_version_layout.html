@@ -30,28 +30,33 @@
     <div class="title-inputs"><h2>Model Inputs</h2></div>
 
     <div class="form-group">
+        {{form.fund_names.label(id="label_text")}}
+        <div class="btn-fund-names text-center" id="fund-names-inputs-model">
+            {{form.fund_names(class="form-control", id="fund-names-inputs-model", placeholder=("Fund Names"))}}
+        </div>
 
-        <div class="btn-group" id="btn-group-inputs">
+        <div class="btn-group">
            {{form.strategy_weight.label(id="label_text")}}
-           {{ form.strategy_weight(class="form-control", id="btn-group-inputs-model", placeholder=("Strategy Weight"))}}
+
+           {{form.strategy_weight(class="form-control", id="btn-group-inputs-model", placeholder=("Strategy Weight"))}}
 
             {{form.time_lag.label(id="label_text")}}
-            {{ form.time_lag(class="form-control", id="btn-group-inputs-model", placeholder=("Time Lag"))}}
+            {{form.time_lag(class="form-control", id="btn-group-inputs-model", placeholder=("Time Lag"))}}
 
             {{form.leverage_type.label(id="label_text")}}
             {{form.leverage_type(class="form-control", id="btn-group-inputs-model-leverage")}}
 
             {{form.volatility_window.label(id="label_text")}}
-            {{ form.volatility_window(class="form-control", id="btn-group-inputs-model", placeholder=("Volatility Window"))}}
+            {{form.volatility_window(class="form-control", id="btn-group-inputs-model", placeholder=("Volatility Window"))}}
 
             {{form.frequency.label(id="label_text")}}
-            {{ form.frequency(class="form-control", id="btn-group-inputs-model-frequency", placeholder=("Frequency"))}}
+            {{form.frequency(class="form-control", id="btn-group-inputs-model-frequency", placeholder=("Frequency"))}}
 
             {{form.week_day.label(id="label_text")}}
-            {{ form.week_day(class="form-control", id="btn-group-inputs-model-week", placeholder=("Week Day"))}}
+            {{form.week_day(class="form-control", id="btn-group-inputs-model-week", placeholder=("Week Day"))}}
         </div>
 
-        <div class="btn-group"  id="btn-group-signals">
+        <div class="btn-group text-center"  id="btn-group-signals">
              {{form.sig1_short.label(id="label_text")}}
              {{ form.sig1_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Short"))}}
 

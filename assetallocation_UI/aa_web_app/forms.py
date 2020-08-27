@@ -75,13 +75,14 @@ class InputsTimesModel(FlaskForm):
 
     submit_versions = SubmitField('Select this version')
 
-    strategy_weight = StringField(u'Strategy Notional', [DataRequired(message="The strategy weight is required")])
+    fund_names = SelectField('Fund Names', choices=[('f1', 'f1'), ('f2', 'f2')])
+    strategy_weight = StringField(u'Strategy Weight', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
     leverage_type = SelectField('Leverage Type',
                                 choices=[(Leverage.v.name, Leverage.v.name),
-                                        (Leverage.n.name, Leverage.n.name),
-                                        (Leverage.s.name, Leverage.s.name),
-                                        (Leverage.e.name, Leverage.e.name)])
+                                         (Leverage.n.name, Leverage.n.name),
+                                         (Leverage.s.name, Leverage.s.name),
+                                         (Leverage.e.name, Leverage.e.name)])
     volatility_window = StringField(u'Volatility Window', validators=[DataRequired(message="The volatility window is required")])
     sig1_short = StringField(u'Sigma1 short', validators=[DataRequired(message="The Sigma1 short is required")])
     sig1_long = StringField(u'Sigma1 long', validators=[DataRequired(message="The Sigma1 long is required")])
