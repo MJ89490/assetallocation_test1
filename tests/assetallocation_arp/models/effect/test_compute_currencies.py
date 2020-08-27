@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def currencies():
-    return ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'MYR', 'IDR', 'INR', 'PHP',
+    return ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'IDR', 'INR', 'PHP',
             'THB', 'TWD', 'CZK', 'HUF', 'PLN', 'PEN']
 
 
