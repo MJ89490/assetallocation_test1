@@ -89,42 +89,44 @@ function printNode(node, index) {
 
 // Get the data from the table ==> TO CALL FROM PYTHON TO GET THE INPUTS
 function getDataFromTable(){
-    alert('getDataFromTable')
-    var tmpArr = [];
-    var assetsArr = [];
-    var assetsArrTicker = [];
-    var assetsDict = {};
-    var rowNum = this.getNumberOfRows();
-    console.log('rows', rowNum);
+
+    var assetsNames = []
+    var assetsTicker = [];
+    var assetsFutureTicker = [];
+    var assetsCosts = [];
+    var assetsLeverage = [];
 
     gridOptions.api.forEachNode(function(rowNode, index) {
-    console.log('node ' + rowNode.data.asset + ' is in the griiiiid');
-    var v =  rowNode.data.asset;
-
-    console.log(v);
-    assetsArr.push(rowNode.data.asset);
-    assetsArrTicker.push(rowNode.data.signal_ticker);
+        assetsNames.push(rowNode.data.asset);
+        assetsTicker.push(rowNode.data.signal_ticker);
+        assetsFutureTicker.push(rowNode.data.future_ticker);
+        assetsCosts.push(rowNode.data.costs);
+        assetsLeverage.push(rowNode.data.s_leverage);
     });
 
-    console.log(assetsArrTicker);
-
-    for (var i = 0; i < assetsArr.length; i++) {
-        assetsDict[assetsArr[i]] = assetsArrTicker[i];
-    }
-
-    console.log(assetsDict);
-
-    return assetsArr;
+    return {assetsNames: assetsNames, assetsTicker: assetsTicker, assetsFutureTicker: assetsFutureTicker,
+            assetsCosts: assetsCosts, assetsLeverage: assetsLeverage};
 }
 
 // create a new fct which calls getDataFromTable
 // send the return value (assetsArr) in json as a post request to python to the route times
-function sendDataFromTable(){
-    alert('sendDataFromTable')
-    var data = this.getDataFromTable();
-    console.log('ARRAY OOOOOH', data);
-    return data;
+function sendJsonDataFromTable(){
+
+    var results = this.getDataFromTable();
+
+    var jsonData = JSON.stringify({"assetsNames": results.assetsNames, "assetsTicker": results.assetsTicker,
+                                   "assetsFutureTicker": results.assetsFutureTicker, "assetsCosts": results.assetsCosts,
+                                   "assetsLeverage": results.assetsLeverage});
+    $.ajax({
+      type : 'POST',
+      url : "{{url_for('receive_times_data')}}",
+      data : {'data':jsonData}
+    });
+
+    return jsonData
+
 }
+
 //Print the rows in the console of the Browser (checking errors)
 function printResult(res) {
     console.log('---------------------------------------')

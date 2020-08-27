@@ -67,8 +67,8 @@ def login_post():
 def receive_times_data():
 
     if request.method == "POST":
-        if request.form['submit_button'] == 'runTimesModel':
-            data = request.values.get_json()
+        # if request.form['submit_button'] == 'runTimesModel':
+            data = request.form['data']
 
 @app.route('/times_page',  methods=['GET', 'POST'])
 # @login_required
@@ -87,7 +87,6 @@ def times_page():
             run_model_ok = "run_times_model_ok"
 
             try:
-                data = request.values.get_json()
                 receive_times_data()
 
 
