@@ -13,7 +13,8 @@ Performance = Enum(
         ('carry', auto()),
         ('spot', auto()),
         ('total return', auto()),
-        ('excess return', auto())
+        ('excess return', auto()),
+        ('excess return index', auto())
     ]
 )
 

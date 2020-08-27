@@ -83,13 +83,8 @@ def times_page():
 
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
-            run_model = "run_times_model"
-            run_model_ok = "run_times_model_ok"
-
             try:
                 receive_times_data()
-
-
                 #TODO insert in run_model because it is currently reading the inputs from the Excel
                 # 1. Read the input from the form
                 # 2. Return the inputs
@@ -99,7 +94,7 @@ def times_page():
 
             except ValueError as e:
                 print(e)
-                return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model=run_model, message=e)
+                return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model="run_times_model", message=e)
 
             # TODO ask fund_name (drop_down) and strategy_weight to be added to front end
             fund_strategy = run_strategy('f1', 1, times, os.environ.get('USERNAME'), datetime(2020, 8, 16))
@@ -113,10 +108,10 @@ def times_page():
 
 @app.route('/times_dashboard', methods=['GET', 'POST'])
 # @login_required
-def times_dashboard():
+def times_dashboard(times_version: int):
     title = "Dashboard"
     form = ExportDataForm()
-    template_data = main_data()
+    template_data = main_data(times_version)
 
     m = ""
     if request.method == "POST":

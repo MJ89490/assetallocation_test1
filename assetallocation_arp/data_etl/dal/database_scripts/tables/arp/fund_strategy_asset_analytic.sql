@@ -46,7 +46,7 @@ ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_a
 	(category IN ('performance', 'signal'))
 AND
 	(CASE
-		WHEN category = 'performance' THEN subcategory in ('carry', 'spot', 'total return', 'excess return')
+		WHEN category = 'performance' THEN subcategory in ('carry', 'spot', 'total return', 'excess return', 'excess return index')
 		ELSE subcategory in ('carry', 'momentum', 'value')
 	END)
 )

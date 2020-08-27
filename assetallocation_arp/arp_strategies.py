@@ -87,7 +87,6 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         print(model_type)
 
 
-# TODO fix strategy_weight and asset_analytic value coming out as NaN!
 def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
     signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)

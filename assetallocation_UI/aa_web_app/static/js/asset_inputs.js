@@ -117,6 +117,7 @@ function sendJsonDataFromTable(){
     var jsonData = JSON.stringify({"assetsNames": results.assetsNames, "assetsTicker": results.assetsTicker,
                                    "assetsFutureTicker": results.assetsFutureTicker, "assetsCosts": results.assetsCosts,
                                    "assetsLeverage": results.assetsLeverage});
+    console.log(jsonData);
     $.ajax({
       type : 'POST',
       url : "{{url_for('receive_times_data')}}",
