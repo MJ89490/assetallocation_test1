@@ -8,6 +8,7 @@ RETURNS TABLE(
   output_is_saved boolean,
   weight numeric,
   asset_ticker varchar,
+  asset_subcategory varchar,
   business_date date,
   strategy_weight numeric,
   implemented_weight numeric,
@@ -44,6 +45,7 @@ BEGIN
       fsr.output_is_saved,
       fsr.weight,
       a.ticker as asset_ticker,
+      a.subcategory as asset_subcategory,
       fsaw.business_date,
       fsaw.strategy_weight,
       fsaw.implemented_weight,
@@ -62,6 +64,7 @@ BEGIN
       fsr.output_is_saved,
       fsr.weight,
       a.ticker,
+      a.subcategory,
       fsaw.business_date,
       fsaw.strategy_weight,
       fsaw.implemented_weight

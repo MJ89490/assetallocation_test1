@@ -27,7 +27,7 @@ CREATE TABLE "asset"."asset"
 	"country_id" integer NULL,
 	"category" varchar(50)	 NULL,
 	"execution_state_id" integer NULL,
-	"type" varchar(50)	 NULL,
+	"subcategory" varchar(50)	 NULL,
 	"is_tr" boolean NULL,
 	"ticker" varchar(50)	 NOT NULL
 )
@@ -43,6 +43,17 @@ ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_ticker_key" UNIQUE ("ticker")
 ;
 
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_category_check" CHECK (category in ('Equity', 'Fixed Income', 'FX', 'Commodity', 'Credit'))
+;
+
+ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_category_subcategory_check"CHECK (
+	(category in ('Equity', 'Fixed Income', 'FX', 'Commodity', 'Credit'))
+AND
+	(CASE
+		WHEN category = 'Equity' THEN subcategory in ('US_Equities', 'EU_Equities', 'JP_Equities', 'HK_Equities')
+		WHEN category = 'Fixed Income' THEN subcategory in ('US_10_y_Bonds', 'UK_10_y_Bonds', 'EU_10_y_Bonds', 'CA_10_y_Bonds')
+		WHEN category = 'FX' THEN subcategory in ('JPY', 'EUR', 'AUD', 'CAD', 'GBP')
+	END)
+)
 ;
 
 /* Create Foreign Key Constraints */

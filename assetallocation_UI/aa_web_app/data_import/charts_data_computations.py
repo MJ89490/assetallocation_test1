@@ -3,7 +3,7 @@ from typing import Dict, Optional
 
 import pandas as pd
 
-from assetallocation_UI.aa_web_app.data_import.assets_names import Assets
+from assetallocation_arp.common_libraries.dal_enums.asset import Equity, FixedIncome, FX
 
 
 class TimesChartsDataComputations(object):
@@ -94,20 +94,16 @@ class TimesChartsDataComputations(object):
                 'sum_performance_ytd_fx': sum_performance_ytd_fx}
 
     def sum_equities_bonds_fx(self, equities_bonds_fx_data):
-        equities1 = Assets.US_Equities.name
-        equities2 = Assets.HK_Equities.name
+        print(equities_bonds_fx_data.head())
+        equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index]
+        bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index]
+        fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index]
 
-        position_bond1 = Assets.US_10_y_Bonds.name
-        position_bond2 = Assets.CA_10_y_Bonds.name
-
-        positions_fx1 = Assets.JPY.name
-        positions_fx2 = Assets.GBP.name
-
-        equities = self.round_sum(equities1, equities2, equities_bonds_fx_data)
-        bonds = self.round_sum(position_bond1, position_bond2, equities_bonds_fx_data)
-        fx = self.round_sum(positions_fx1, positions_fx2, equities_bonds_fx_data)
+        equities = self.round_sum(equities_bonds_fx_data.loc[equities])
+        bonds = self.round_sum(equities_bonds_fx_data.loc[bonds])
+        fx = self.round_sum(equities_bonds_fx_data.loc[fx])
         return bonds, equities, fx
 
     @staticmethod
-    def round_sum(a1, a2, times_positions_comp):
-        return round(sum(times_positions_comp.loc[a1:a2]), 2)
+    def round_sum(df):
+        return round(sum(df), 2)

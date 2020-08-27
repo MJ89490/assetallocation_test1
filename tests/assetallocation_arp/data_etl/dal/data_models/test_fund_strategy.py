@@ -1,6 +1,7 @@
 import mock
 
 from pytest import raises
+from datetime import date
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategy, FundStrategyAssetAnalytic
 
@@ -22,7 +23,7 @@ def test_add_fund_strategy_asset_analytic_adds_analytic():
     fsaa_path = 'assetallocation_arp.data_etl.dal.data_models.fund_strategy.FundStrategyAssetAnalytic'
     with mock.patch(fsaa_path, autospec=True) as MockFundStrategyAssetAnalytic:
         fs = FundStrategy('a', 'times', 1, float(1))
-        fsaa = MockFundStrategyAssetAnalytic('a', 'b', 'c', float(1))
+        fsaa = MockFundStrategyAssetAnalytic('a', date(2020, 1, 1), 'b', 'c', float(1))
 
         fs.add_fund_strategy_asset_analytic(fsaa)
 
@@ -33,7 +34,7 @@ def test_add_fund_strategy_asset_weight_adds_weight():
     fsaw_path = 'assetallocation_arp.data_etl.dal.data_models.fund_strategy.FundStrategyAssetWeight'
     with mock.patch(fsaw_path, autospec=True) as MockFundStrategyAssetWeight:
         fs = FundStrategy('a', 'times', 1, float(1))
-        fsaw = MockFundStrategyAssetWeight('a', float(1))
+        fsaw = MockFundStrategyAssetWeight('a', date(2020, 1, 1), float(1))
 
         fs.add_fund_strategy_asset_weight(fsaw)
 
@@ -42,32 +43,32 @@ def test_add_fund_strategy_asset_weight_adds_weight():
 
 def test_category_setter_raises_key_error_invalid_category():
     with raises(KeyError):
-        FundStrategyAssetAnalytic('a', 'invalid_category', 'carry', float(1))
+        FundStrategyAssetAnalytic('a', date(2020, 1, 1), 'invalid_category', 'carry', float(1))
 
 
 def test_category_setter_sets_category_valid_category():
     category = 'performance'
 
-    fass = FundStrategyAssetAnalytic('a', category, 'carry', float(1))
+    fass = FundStrategyAssetAnalytic('a', date(2020, 1, 1), category, 'carry', float(1))
 
     assert fass.category.name == category
 
 
 def test_subcategory_setter_raises_key_error_invalid_subcategory_for_performance():
     with raises(KeyError):
-        FundStrategyAssetAnalytic('a', 'performance', 'momentum', float(1))
+        FundStrategyAssetAnalytic('a', date(2020, 1, 1), 'performance', 'momentum', float(1))
 
 
 def test_subcategory_setter_raises_key_error_invalid_subcategory_for_signal():
     with raises(KeyError):
-        FundStrategyAssetAnalytic('a', 'signal', 'spot', float(1))
+        FundStrategyAssetAnalytic('a', date(2020, 1, 1), 'signal', 'spot', float(1))
 
 
 def test_subcategory_setter_sets_subcategory_valid_subcategory_for_performance():
     category = 'performance'
     subcategory = 'spot'
 
-    fass = FundStrategyAssetAnalytic('a', category, subcategory, float(1))
+    fass = FundStrategyAssetAnalytic('a', date(2020, 1, 1), category, subcategory, float(1))
 
     assert fass.subcategory.name == subcategory
 
@@ -76,6 +77,6 @@ def test_subcategory_setter_sets_subcategory_valid_subcategory_for_signal():
     category = 'signal'
     subcategory = 'momentum'
 
-    fass = FundStrategyAssetAnalytic('a', category, subcategory, float(1))
+    fass = FundStrategyAssetAnalytic('a', date(2020, 1, 1), category, subcategory, float(1))
 
     assert fass.subcategory.name == subcategory

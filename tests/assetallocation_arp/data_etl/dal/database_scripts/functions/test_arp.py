@@ -21,7 +21,7 @@ def test_insert_times_strategy_inserts_values_into_times_table(valid_times):
     cursor.callproc('arp.insert_times_strategy',
                     [valid_times.description, 'test_u', valid_times.time_lag_interval, valid_times.leverage_type,
                      valid_times.volatility_window, valid_times.short_signals, valid_times.long_signals,
-                     valid_times.frequency, valid_times.day_of_week, []])
+                     valid_times.frequency, valid_times.day_of_week])
 
     # get results
     cursor.execute("""
@@ -69,7 +69,7 @@ def test_insert_times_strategy_creates_execution_state_with_function_name(valid_
     cursor.callproc(proc_name,
                     [valid_times.description, 'test_u', valid_times.time_lag_interval, valid_times.leverage_type,
                      valid_times.volatility_window, valid_times.short_signals, valid_times.long_signals,
-                     valid_times.frequency, valid_times.day_of_week, []])
+                     valid_times.frequency, valid_times.day_of_week])
 
     # get results
     cursor.execute("""
@@ -108,7 +108,7 @@ def test_insert_times_strategy_closes_previous_record_so_only_one_record_has_upp
     cursor.callproc(proc_name,
                     [valid_times.description, 'test_u', valid_times.time_lag_interval, valid_times.leverage_type,
                      valid_times.volatility_window, valid_times.short_signals, valid_times.long_signals,
-                     valid_times.frequency, valid_times.day_of_week, []])
+                     valid_times.frequency, valid_times.day_of_week])
 
     # get results
     cursor.execute("""

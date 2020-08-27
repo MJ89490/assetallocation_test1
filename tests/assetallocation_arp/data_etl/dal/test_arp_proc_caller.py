@@ -82,7 +82,7 @@ def test_select_times_assets_returns_list_of_times_asset_objects(mock_call_proc)
     business_datetime = datetime(2020, 9, 1)
     mock_call_proc.return_value = [mock.MagicMock(), mock.MagicMock(), mock.MagicMock()]
 
-    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.TimesAsset', autospec=True):
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.TimesAssetInput', autospec=True):
         a = ArpProcCaller()
         returns = a.select_times_assets_with_analytics(times_version, business_datetime)
 
@@ -99,7 +99,7 @@ def test_insert_fund_strategy_results_calls_call_proc(MockFundStrategy, mock_cal
     a.insert_fund_strategy_results(fund_strategy, user_id)
 
     mock_call_proc.assert_called_once_with(a, 'arp.insert_fund_strategy_results',
-                                          [fund_strategy.business_datetime, fund_strategy.fund_name,
+                                          [fund_strategy.fund_name,
                                            fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
                                            fund_strategy.strategy_version, fund_strategy.weight, user_id,
                                            fund_strategy.python_code_version, [], []])
@@ -132,26 +132,24 @@ def test_insert_fund_strategy_results_returns_false_when_res_is_empty(MockFundSt
 def test_select_fund_strategy_results_calls_call_proc(mock_call_proc):
     fund_name = 'b'
     strategy_name = 'times'
-    business_datetime = datetime(2020, 2, 1)
-    system_datetime = datetime(2021, 3, 4)
+    strategy_version = 2
     mock_call_proc.return_value = []
 
     a = ArpProcCaller()
-    a.select_fund_strategy_results(fund_name, strategy_name, business_datetime, system_datetime)
+    a.select_fund_strategy_results(fund_name, strategy_name, strategy_version)
 
     mock_call_proc.assert_called_once_with(a, 'arp.select_fund_strategy_results',
-                                           [fund_name, strategy_name, business_datetime, system_datetime])
+                                           [fund_name, strategy_name, strategy_version])
 
 
 def test_select_times_assets_returns_fund_strategy(mock_call_proc):
     fund_name = 'b'
     strategy_name = 'times'
-    business_datetime = datetime(2020, 2, 1)
-    system_datetime = datetime(2021, 3, 4)
+    strategy_version = 1
     mock_call_proc.return_value = [mock.MagicMock(), mock.MagicMock(), mock.MagicMock()]
 
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FundStrategy', autospec=True):
         a = ArpProcCaller()
-        returns = a.select_fund_strategy_results(fund_name, strategy_name, business_datetime, system_datetime)
+        returns = a.select_fund_strategy_results(fund_name, strategy_name, strategy_version)
 
     assert isinstance(returns, FundStrategy)

@@ -86,7 +86,7 @@ def times_page():
             try:
                 strategy_weight, times = get_times_inputs(form)
                 # TODO work with Anais to get the asset inputs from front end and set here!
-                times.asset_inputs = [TimesAssetInput(1, 'AD1 A:00_0_R Curncy', 'AD1 A:00_0_R Curncy', 0.0002)]
+                times.asset_inputs = [TimesAssetInput(3, 'RX1 A:00_0_R Comdty', 'RX1 A:00_0_R Comdty', 0.0002)]
 
             except ValueError as e:
                 print(e)
