@@ -1,8 +1,9 @@
-from assetallocation_UI.aa_web_app.data_import.assets_names import Assets
-
 from datetime import timedelta
+from typing import Dict
 
 import pandas as pd
+
+from assetallocation_UI.aa_web_app.data_import.assets_names import Assets
 
 
 class ChartsDataComputations(object):
@@ -76,13 +77,16 @@ class ChartsDataComputations(object):
     def times_returns_ytd(self, x: pd.DataFrame) -> None:
         self._times_returns_ytd = x
 
-    def data_computations(self, signal_off: int, returns_off: int, positions_off: int, returns_weekly_off: int) -> None:
-        self.times_signals_comp = round(self.times_signals.loc[signal_off], 2)
-        self.times_positions_comp = round(self.times_positions.loc[positions_off] * 100, 2)
-        self.times_returns_comp = round((self.times_returns.loc[returns_off] - self.times_returns.loc[returns_weekly_off]) * 100, 3)
-        self.times_returns_ytd = round((self.times_returns.loc[returns_off] - self.times_returns.loc[self.end_year]) * 100, 3)
+    def data_computations(self) -> Dict[str, pd.DataFrame]:
+        self.times_signals_comp = round(self.times_signals.loc[self.signals_dates_off], 2)
+        self.times_positions_comp = round(self.times_positions.loc[self.positions_dates_off] * 100, 2)
+        self.times_returns_comp = round((self.times_returns.loc[self.returns_dates_off] - self.times_returns.loc[self.returns_dates_weekly_off]) * 100, 3)
+        self.times_returns_ytd = round((self.times_returns.loc[self.returns_dates_off] - self.times_returns.loc[self.end_year]) * 100, 3)
 
-    def data_computations_sum(self):
+        return {'times_signals_comp': self.times_signals_comp, 'times_positions_comp': self.times_positions_comp,
+                'times_returns_comp': self.times_returns_comp, 'times_returns_ytd': self.times_returns_ytd}
+
+    def data_computations_sum(self) -> Dict[str, pd.DataFrame]:
         """
         :return: dictionary with all the computations such as the sum of the equities positions, sum of the bonds positions
         """

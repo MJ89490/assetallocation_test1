@@ -101,10 +101,9 @@ def create_times_asset_analytics(signals: pd.DataFrame, returns: pd.DataFrame,
     """
     asset_analytics = []
 
-    # TODO check subcategories for the below three
-    asset_analytics.extend(df_to_asset_analytics(signals, Category.signal, Signal.value))
-    asset_analytics.extend(df_to_asset_analytics(returns, Category.performance, Performance["total return"]))
-    asset_analytics.extend(df_to_asset_analytics(r, Category.performance, Performance["excess return"]))
+    asset_analytics.extend(df_to_asset_analytics(signals, Category.signal, Signal.momentum))
+    asset_analytics.extend(df_to_asset_analytics(returns, Category.performance, Performance["excess return"]))
+    asset_analytics.extend(df_to_asset_analytics(r, Category.performance, Performance["excess return index"]))
 
     return asset_analytics
 

@@ -30,16 +30,8 @@ def main_data(times_version: int):
                                              times_positions=data['times_positions'],
                                              times_returns=data['times_returns'])
 
-    signal_off = ChartsDataComputations.signals_dates_off.__get__(obj_charts_comp)
-    returns_off = ChartsDataComputations.returns_dates_off.__get__(obj_charts_comp)
-    positions_off = ChartsDataComputations.positions_dates_off.__get__(obj_charts_comp)
-    returns_weekly_off = ChartsDataComputations.returns_dates_weekly_off.__get__(obj_charts_comp)
-
     obj_charts_comp.end_year_date = '2018-12-31'
-
-    data_comp = obj_charts_comp.data_computations(signal_off=signal_off, returns_off=returns_off, positions_off=positions_off,
-                                                  returns_weekly_off=returns_weekly_off)
-
+    data_comp = obj_charts_comp.data_computations()
     data_comp_sum = obj_charts_comp.data_computations_sum()
 
     # use map, map data to values: first way
