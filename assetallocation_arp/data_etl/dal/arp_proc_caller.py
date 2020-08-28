@@ -265,6 +265,10 @@ class ArpProcCaller(Db):
         res = self.call_proc('arp.select_strategy_versions', [strategy_name])
         return res[0].get('strategy_versions') or []
 
+    def select_fund_names(self) -> List[str]:
+        res = self.call_proc('fund.select_fund_names', [])
+        return res[0].get('fund_names') or []
+
 
 if __name__ == '__main__':
     d = ArpProcCaller()

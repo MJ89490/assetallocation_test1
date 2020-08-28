@@ -4,6 +4,7 @@ from wtforms.validators import DataRequired
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Frequency, DayOfWeek, Name
 from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
+from assetallocation_UI.aa_web_app.service.fund import get_fund_names
 from assetallocation_UI.aa_web_app.service.formatter import format_versions
 
 """
@@ -75,7 +76,9 @@ class InputsTimesModel(FlaskForm):
 
     submit_versions = SubmitField('Select this version')
 
-    fund_names = SelectField('Fund Names', choices=[('f1', 'f1'), ('f2', 'f2')])
+    existing_funds = get_fund_names()
+    fund_name = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
+
     strategy_weight = StringField(u'Strategy Weight', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])
     leverage_type = SelectField('Leverage Type',

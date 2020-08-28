@@ -87,7 +87,7 @@ def times_page():
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
             try:
-                strategy_weight, times = get_times_inputs(form)
+                fund_name, strategy_weight, times = get_times_inputs(form)
                 # TODO work with Anais to get the asset inputs from front end and set here!
                 times.asset_inputs = [TimesAssetInput(3, 'RX1 A:00_0_R Comdty', 'RX1 A:00_0_R Comdty', 0.0002)]
 
@@ -95,12 +95,11 @@ def times_page():
                 print(e)
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model="run_times_model", message=e)
 
-            # TODO ask fund_name (drop_down) to be added to front end
-            fund_name = 'f1'
-            fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), datetime(2019, 12, 1))
+            else:
+                fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), datetime(2019, 12, 1))
 
-            # TODO should redirect to dashboard after running of a model, with the strategy_version
-            return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
+                # TODO should redirect to dashboard after running of a model, with the strategy_version
+                return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
 
     return render_template('times_page.html', title="Times", form=form)
 
