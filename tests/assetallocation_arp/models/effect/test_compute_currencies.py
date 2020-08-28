@@ -6,15 +6,18 @@ import pytest
 
 @pytest.fixture
 def currencies():
-    return ['BRL', 'ARS', 'MXN', 'COP', 'CLP', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'IDR', 'INR', 'PHP',
-            'THB', 'TWD', 'CZK', 'HUF', 'PLN', 'PEN']
+    return ['HUF', 'PLN', 'PEN', 'BRL', 'ARS', 'MXN', 'COP', 'CLP', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'IDR', 'INR', 'PHP',
+            'THB', 'CZK']
 
 
-def test_compute_carry(currencies):
+@pytest.mark.parametrize("carry_origin, carry_results",
+                         [("carry_nominal_origin.csv", "carry_nominal_results.csv"),
+                          ("carry_origin.csv", "carry_results.csv")])
+def test_compute_carry(currencies, carry_origin, carry_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "carry_nominal_origin.csv"))
+                                               carry_origin))
     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "carry_nominal_results.csv"))
+                                               carry_results))
 
     carry_results = pd.read_csv(path_result, sep=',', engine='python')
     carry_origin = pd.read_csv(path_origin, sep=',', engine='python')
@@ -26,10 +29,10 @@ def test_compute_carry(currencies):
 def test_compute_trend(currencies):
 
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "trend_origin.csv"))
+                                               "trend_total_returns_origin.csv"))
 
     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "trend_results.csv"))
+                                               "trend_total_returns_results.csv"))
 
     trend_origin = pd.read_csv(path_origin, sep=',', engine='python')
     trend_results = pd.read_csv(path_result, sep=',', engine='python')
