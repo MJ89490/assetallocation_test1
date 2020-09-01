@@ -1,5 +1,4 @@
 CREATE OR REPLACE FUNCTION arp.insert_effect_strategy(
-  name varchar,
   description varchar,
   user_id varchar,
   carry_type varchar,
@@ -21,9 +20,12 @@ LANGUAGE plpgsql
 AS
 $$
 declare
+  name varchar;
 	execution_state_id int;
 	strategy_id int;
 BEGIN
+  name := 'effect';
+  
 	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;

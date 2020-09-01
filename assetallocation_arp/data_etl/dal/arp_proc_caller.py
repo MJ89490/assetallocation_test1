@@ -6,7 +6,7 @@ from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAsset, Asset
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, Asset
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
 
@@ -26,104 +26,6 @@ class ArpProcCaller(Db):
     def insert_app_user(self, app_user: AppUser) -> bool:
         self.call_proc('arp.insert_app_user', [app_user.user_id, app_user.name, app_user.email])
         return True
-
-    def insert_effect(self, effect: Effect, user_id: str) -> int:
-        """Insert data from an instance of Effect into database"""
-        e_version = self._insert_effect_strategy(effect, user_id)
-        if effect.assets:
-            self._insert_effect_assets(e_version, effect.assets)
-
-        return e_version
-
-    def _insert_effect_strategy(self, effect: Effect, user_id: str) -> int:
-        """Insert data from an instance of Effect into database"""
-        res = self.call_proc('arp.insert_effect_strategy',
-                             [effect.description, user_id, effect.carry_type.name, effect.closing_threshold,
-                              effect.cost, effect.day_of_week.value, effect.frequency.name, effect.include_shorts,
-                              effect.inflation_lag_interval, effect.interest_rate_cut_off_long,
-                              effect.interest_rate_cut_off_short, effect.moving_average_long_term,
-                              effect.moving_average_short_term, effect.is_realtime_inflation_forecast,
-                              effect.trend_indicator.name])
-
-        return res[0]['e_version']
-
-    def _insert_effect_assets(self, effect_version: int, effect_assets: List[EffectAsset]) -> bool:
-        """Insert asset data for a version of Effect"""
-        effect_assets = ArpTypeConverter.effect_assets_to_composite(effect_assets)
-        res = self.call_proc('arp.insert_effect_assets', [effect_version, effect_assets])
-        asset_ids = res[0].get('asset_ids')
-        return bool(asset_ids)
-
-    def select_effect(self, effect_version) -> Optional[Effect]:
-        """Select strategy and asset data for a version of effect"""
-        effect = self._select_effect_strategy(effect_version)
-
-        if effect is not None:
-            effect.assets = self._select_effect_assets(effect_version)
-
-        return effect
-
-    def _select_effect_strategy(self, effect_version) -> Optional[Effect]:
-        """Select strategy data for a version of Effect"""
-        res = self.call_proc('arp.select_effect_strategy', [effect_version])
-        if not res:
-            return
-
-        row = res[0]
-        e = Effect(row['carry_type'], row['closing_threshold'], row['cost'], row['day_of_week'], row['frequency'],
-                   row['include_shorts'], -ArpTypeConverter.month_interval_to_int(row['inflation_lag']),
-                   row['interest_rate_cut_off_long'], row['interest_rate_cut_off_short'],
-                   row['moving_average_long_term'], row['moving_average_short_term'],
-                   row['is_realtime_inflation_forecast'], row['trend_indicator'])
-        e.version = effect_version
-        e.description = row['description']
-        return e
-
-    def _select_effect_assets(self, effect_version) -> Optional[List[EffectAsset]]:
-        """Select asset data for a version of times"""
-        res = self.call_proc('arp.select_times_assets', [effect_version])
-
-        if not res:
-            return
-
-        effect_assets = []
-        for r in res:
-            e = EffectAsset(r['ticker'], r['category'], r['country'], r['currency'], r['name'], r['asset_type'],
-                           r['ndf_code'], r['spot_code'], r['position_size'])
-            e.description = r['description']
-            e.is_tr = r['is_tr']
-
-            effect_assets.append(e)
-
-        return effect_assets
-
-    def select_effect_with_asset_analytics(self, effect_version, business_datetime) -> Optional[Effect]:
-        """Select strategy, assets and asset analytics data for a version of effect, as at business_datetime"""
-        effect = self._select_effect_strategy(effect_version)
-
-        if effect is not None:
-            effect.assets = self.select_effect_assets_with_analytics(effect_version, business_datetime)
-
-        return effect
-
-    def select_effect_assets_with_analytics(self, effect_version, business_datetime) -> Optional[List[EffectAsset]]:
-        """Select assets and asset analytics data for a version of times, as at business_datetime"""
-        res = self.call_proc('arp.select_effect_assets_with_analytics', [effect_version, business_datetime])
-
-        if not res:
-            return
-
-        effect_assets = []
-        for r in res:
-            e = EffectAsset(r['ticker'], r['category'], r['country'], r['currency'], r['name'], r['asset_type'],
-                            r['ndf_code'], r['spot_code'], r['position_size'])
-            e.description = r['description']
-            e.is_tr = r['is_tr']
-            e.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['ticker'], r['asset_analytics'])
-
-            effect_assets.append(e)
-
-        return effect_assets
 
     def insert_times(self, times: Times, user_id: str) -> int:
         """Insert data from an instance of Times into database. Return strategy version."""
@@ -268,6 +170,100 @@ class ArpProcCaller(Db):
     def select_fund_names(self) -> List[str]:
         res = self.call_proc('fund.select_fund_names', [])
         return res[0].get('fund_names') or []
+
+
+class EffectProcCaller(ArpProcCaller):
+    def insert_effect(self, effect: Effect, user_id: str) -> int:
+        """Insert data from an instance of Effect into database"""
+        e_version = self._insert_effect_strategy(effect, user_id)
+        if effect.asset_inputs:
+            self._insert_effect_assets(e_version, effect.asset_inputs)
+
+        return e_version
+
+    def _insert_effect_strategy(self, effect: Effect, user_id: str) -> int:
+        """Insert data from an instance of Effect into database"""
+        res = self.call_proc('arp.insert_effect_strategy',
+                             [effect.description, user_id, effect.carry_type.name, effect.closing_threshold,
+                              effect.cost, effect.day_of_week.value, effect.frequency.name, effect.include_shorts,
+                              effect.inflation_lag_interval, effect.interest_rate_cut_off_long,
+                              effect.interest_rate_cut_off_short, effect.moving_average_long_term,
+                              effect.moving_average_short_term, effect.is_realtime_inflation_forecast,
+                              effect.trend_indicator.name])
+
+        return res[0]['e_version']
+
+    def _insert_effect_assets(self, effect_version: int, effect_assets: List[EffectAssetInput]) -> bool:
+        """Insert asset data for a version of Effect"""
+        effect_assets = ArpTypeConverter.effect_assets_to_composite(effect_assets)
+        res = self.call_proc('arp.insert_effect_assets', [effect_version, effect_assets])
+        asset_ids = res[0].get('asset_ids')
+        return bool(asset_ids)
+
+    def select_effect(self, effect_version) -> Optional[Effect]:
+        """Select strategy and asset data for a version of effect"""
+        effect = self._select_effect_strategy(effect_version)
+
+        if effect is not None:
+            effect.assets = self._select_effect_assets(effect_version)
+
+        return effect
+
+    def _select_effect_strategy(self, effect_version) -> Optional[Effect]:
+        """Select strategy data for a version of Effect"""
+        res = self.call_proc('arp.select_effect_strategy', [effect_version])
+        if not res:
+            return
+
+        row = res[0]
+        e = Effect(row['carry_type'], row['closing_threshold'], row['cost'], row['day_of_week'], row['frequency'],
+                   row['include_shorts'], -ArpTypeConverter.month_interval_to_int(row['inflation_lag']),
+                   row['interest_rate_cut_off_long'], row['interest_rate_cut_off_short'],
+                   row['moving_average_long_term'], row['moving_average_short_term'],
+                   row['is_realtime_inflation_forecast'], row['trend_indicator'])
+        e.version = effect_version
+        e.description = row['description']
+        return e
+
+    def _select_effect_assets(self, effect_version) -> Optional[List[EffectAssetInput]]:
+        """Select asset data for a version of times"""
+        res = self.call_proc('arp.select_effect_assets', [effect_version])
+
+        if not res:
+            return
+
+        effect_assets = []
+        for r in res:
+            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
+            effect_assets.append(e)
+
+        return effect_assets
+
+    def select_effect_with_asset_analytics(self, effect_version, business_datetime) -> Optional[Effect]:
+        """Select strategy, assets and asset analytics data for a version of effect, as at business_datetime"""
+        effect = self._select_effect_strategy(effect_version)
+
+        if effect is not None:
+            effect.assets = self.select_effect_assets_with_analytics(effect_version, business_datetime)
+
+        return effect
+
+    def select_effect_assets_with_analytics(self, effect_version, business_datetime) -> Optional[
+        List[EffectAssetInput]]:
+        """Select assets and asset analytics data for a version of times, as at business_datetime"""
+        res = self.call_proc('arp.select_effect_assets_with_analytics', [effect_version, business_datetime])
+
+        if not res:
+            return
+
+        effect_assets = []
+        for r in res:
+            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
+            e.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
+
+            effect_assets.append(e)
+
+        return effect_assets
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ from datetime import datetime, date
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
-from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAsset, AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, AssetAnalytic
 
 
 class DbTypeConverter:
@@ -35,9 +35,9 @@ class ArpTypeConverter(DbTypeConverter):
         return [f'("{i.asset_ticker}","{i.business_date}",{i.strategy_weight},{i.implemented_weight})' for i in weights]
 
     @staticmethod
-    def effect_assets_to_composite(effect_assets: List[EffectAsset]) -> List[str]:
-        """Format to match database type asset.effect_asset[]"""
-        pass  # TODO add database type asset.effect_asset
+    def effect_assets_to_composite(effect_assets: List[EffectAssetInput]) -> List[str]:
+        """Format to match database type arp.ticker_code_code_size[]"""
+        return [f'("{i.ticker}","{i.ndf_code}","{i.spot_code}",{i.position_size})' for i in effect_assets]
 
     @staticmethod
     def asset_analytics_str_to_objects(asset_ticker: str, asset_analytics_str: str) -> List[AssetAnalytic]:

@@ -22,6 +22,8 @@ CREATE TABLE "arp"."effect_asset"
 	"id" serial NOT NULL,
 	"strategy_id" integer NOT NULL,
 	"asset_id" integer NOT NULL,
+	"ndf_code" varchar(50) NOT NULL,
+	"spot_code" varchar(50)	NOT NULL,
 	"execution_state_id" integer NOT NULL
 )
 ;

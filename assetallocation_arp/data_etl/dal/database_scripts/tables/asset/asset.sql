@@ -19,9 +19,7 @@ DROP TABLE IF EXISTS "asset"."asset" CASCADE
 CREATE TABLE "asset"."asset"
 (
 	"id" serial NOT NULL,
-	"spot_code" varchar(50)	 NULL,
 	"name" varchar(50)	 NULL,
-	"ndf_code" varchar(50)	 NULL,
 	"description" varchar(100)	 NULL,
 	"currency_id" integer NULL,
 	"country_id" integer NULL,

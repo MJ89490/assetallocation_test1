@@ -4,7 +4,7 @@ from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import Asset, TimesAssetInput
+from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput
 
 
 # noinspection PyAttributeOutsideInit
@@ -214,6 +214,15 @@ class Effect(Strategy):
         self.moving_average_short_term = moving_average_short_term
         self.is_realtime_inflation_forecast = is_realtime_inflation_forecast
         self.trend_indicator = trend_indicator
+        self._asset_inputs = []
+
+    @property
+    def asset_inputs(self) -> List[EffectAssetInput]:
+        return self._asset_inputs
+
+    @asset_inputs.setter
+    def asset_inputs(self, x: List[EffectAssetInput]) -> None:
+        self._asset_inputs = x
 
     @property
     def inflation_lag_interval(self) -> str:
