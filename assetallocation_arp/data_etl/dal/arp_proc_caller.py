@@ -80,7 +80,7 @@ class ArpProcCaller(Db):
 
 
 class TimesProcCaller(ArpProcCaller):
-    procs = Proc.__members__.keys() + TimesProc.__members__.keys()
+    procs = list(Proc.__members__.keys()) + list(TimesProc.__members__.keys())
 
     def insert_times(self, times: Times, user_id: str) -> int:
         """Insert data from an instance of Times into database. Return strategy version."""
@@ -180,7 +180,7 @@ class TimesProcCaller(ArpProcCaller):
 
 
 class EffectProcCaller(ArpProcCaller):
-    procs = Proc.__members__.keys() + EffectProc.__members__.keys()
+    procs = list(Proc.__members__.keys()) + list(EffectProc.__members__.keys())
 
     def insert_effect(self, effect: Effect, user_id: str) -> int:
         """Insert data from an instance of Effect into database"""
