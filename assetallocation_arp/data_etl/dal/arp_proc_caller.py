@@ -9,9 +9,12 @@ from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, Asset
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
+from assetallocation_arp.data_etl.dal.proc import Proc, TimesProc, EffectProc
 
 
 class ArpProcCaller(Db):
+    procs = Proc.__members__.keys()
+
     def __init__(self):
         """ArpProcCaller class to interact with ARP database through calling stored procedures"""
         config = loads(environ.get('DATABASE', '{}'))
@@ -26,6 +29,58 @@ class ArpProcCaller(Db):
     def insert_app_user(self, app_user: AppUser) -> bool:
         self.call_proc('arp.insert_app_user', [app_user.user_id, app_user.name, app_user.email])
         return True
+
+    def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
+        """Insert data from an instance of FundStrategy into database"""
+        ticker_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
+        ticker_analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.asset_analytics)
+
+        res = self.call_proc('arp.insert_fund_strategy_results',
+                             [fund_strategy.fund_name, fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
+                              fund_strategy.strategy_version, fund_strategy.weight, user_id,
+                              fund_strategy.python_code_version, ticker_weights, ticker_analytics])
+        fund_strategy_id = res[0].get('fund_strategy_id')
+
+        return fund_strategy_id is not None
+
+    def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
+                                     strategy_version: int) -> Optional[FundStrategy]:
+        """Select the most recent FundStrategy data for a strategy as at business_datetime and system_datetime"""
+        strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
+
+        res = self.call_proc('arp.select_fund_strategy_results', [fund_name, strategy_name, strategy_version])
+
+        if not res:
+            return
+
+        fund_strategy = FundStrategy(fund_name, strategy_name, strategy_version, float(res[0]['weight']))
+        fund_strategy.output_is_saved = res[0]['output_is_saved']
+        fund_strategy.python_code_version = res[0]['python_code_version']
+
+        for row in res:
+            aw = FundStrategyAssetWeight(row['asset_ticker'], row['business_date'], float(row['strategy_weight']))
+            aw.implemented_weight = float(row['implemented_weight'])
+            fund_strategy.add_fund_strategy_asset_weight(aw)
+
+            fund_strategy.add_fund_strategy_asset_analytics(
+                ArpTypeConverter.fund_strategy_asset_analytics_str_to_objects(row['asset_ticker'], row['business_date'],
+                    row['asset_analytics']))
+
+        return fund_strategy
+
+    def select_strategy_versions(self, strategy_name: Union[str, Name]) -> List[int]:
+        strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
+
+        res = self.call_proc('arp.select_strategy_versions', [strategy_name])
+        return res[0].get('strategy_versions') or []
+
+    def select_fund_names(self) -> List[str]:
+        res = self.call_proc('fund.select_fund_names', [])
+        return res[0].get('fund_names') or []
+
+
+class TimesProcCaller(ArpProcCaller):
+    procs = Proc.__members__.keys() + TimesProc.__members__.keys()
 
     def insert_times(self, times: Times, user_id: str) -> int:
         """Insert data from an instance of Times into database. Return strategy version."""
@@ -123,56 +178,10 @@ class ArpProcCaller(Db):
         t.future_asset = Asset(row['future_ticker'], row['future_name'])
         return t
 
-    def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
-        """Insert data from an instance of FundStrategy into database"""
-        ticker_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
-        ticker_analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.asset_analytics)
-
-        res = self.call_proc('arp.insert_fund_strategy_results',
-                             [fund_strategy.fund_name, fund_strategy.output_is_saved,
-                              fund_strategy.strategy_name.name, fund_strategy.strategy_version, fund_strategy.weight,
-                              user_id, fund_strategy.python_code_version, ticker_weights, ticker_analytics])
-        fund_strategy_id = res[0].get('fund_strategy_id')
-
-        return fund_strategy_id is not None
-
-    def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
-                                     strategy_version: int) -> Optional[FundStrategy]:
-        """Select the most recent FundStrategy data for a strategy as at business_datetime and system_datetime"""
-        strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
-
-        res = self.call_proc('arp.select_fund_strategy_results', [fund_name, strategy_name, strategy_version])
-
-        if not res:
-            return
-
-        fund_strategy = FundStrategy(fund_name, strategy_name, strategy_version, float(res[0]['weight']))
-        fund_strategy.output_is_saved = res[0]['output_is_saved']
-        fund_strategy.python_code_version = res[0]['python_code_version']
-
-        for row in res:
-            aw = FundStrategyAssetWeight(row['asset_ticker'], row['business_date'], float(row['strategy_weight']))
-            aw.implemented_weight = float(row['implemented_weight'])
-            fund_strategy.add_fund_strategy_asset_weight(aw)
-
-            fund_strategy.add_fund_strategy_asset_analytics(
-                ArpTypeConverter.fund_strategy_asset_analytics_str_to_objects(
-                    row['asset_ticker'], row['business_date'], row['asset_analytics']))
-
-        return fund_strategy
-
-    def select_strategy_versions(self, strategy_name: Union[str, Name]) -> List[int]:
-        strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
-
-        res = self.call_proc('arp.select_strategy_versions', [strategy_name])
-        return res[0].get('strategy_versions') or []
-
-    def select_fund_names(self) -> List[str]:
-        res = self.call_proc('fund.select_fund_names', [])
-        return res[0].get('fund_names') or []
-
 
 class EffectProcCaller(ArpProcCaller):
+    procs = Proc.__members__.keys() + EffectProc.__members__.keys()
+
     def insert_effect(self, effect: Effect, user_id: str) -> int:
         """Insert data from an instance of Effect into database"""
         e_version = self._insert_effect_strategy(effect, user_id)
@@ -267,7 +276,7 @@ class EffectProcCaller(ArpProcCaller):
 
 
 if __name__ == '__main__':
-    d = ArpProcCaller()
+    d = TimesProcCaller()
 
     t1 = Times(0, 'weekly', 'e', [], [], 0, 0)
     t_v = d._insert_times_strategy(t1, 'JS89275')

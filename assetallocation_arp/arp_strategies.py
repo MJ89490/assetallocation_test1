@@ -12,7 +12,7 @@ from assetallocation_arp.models.times import calculate_signals_returns_r_positio
 from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, \
     FundStrategyAssetWeight
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
@@ -93,6 +93,12 @@ def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[Fu
     asset_analytics = TimesDataFrameConverter.create_times_asset_analytics(signals, returns, r)
     asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning)
     return asset_analytics, asset_weights
+
+
+def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
+    """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
+    # TODO add code to run effect, using Effect object, here
+    pass
 
 
 def write_output_to_excel(model_outputs, path_excel_times):

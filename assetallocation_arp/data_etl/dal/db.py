@@ -2,11 +2,9 @@ from typing import List, Any, Dict
 
 from sqlalchemy import create_engine
 
-from assetallocation_arp.data_etl.dal.proc import Proc
-
 
 class Db:
-    procs = Proc.__members__.keys()
+    procs = []
 
     def __init__(self, conn_str: str) -> None:
         """Db class for interacting with a database"""
