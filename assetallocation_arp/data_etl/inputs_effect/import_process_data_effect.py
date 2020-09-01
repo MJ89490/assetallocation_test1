@@ -81,10 +81,10 @@ class ProcessDataEffect:
         if value == '':
             self._start_date_calculations = None
         else:
-            if pd.to_datetime(value, format='%Y-%m-%d') < pd.to_datetime(start_common_date, format='%Y-%m-%d'):
+            if pd.to_datetime(value, format='%d-%m-%Y') < pd.to_datetime(start_common_date, format='%d-%m-%Y'):
                 raise ValueError(f'Start date is lesser than {start_common_date}')
             else:
-                start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%Y-%m-%d'))
+                start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
                 self._start_date_calculations = start_date
 
     @staticmethod
