@@ -23,10 +23,10 @@ def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, use
 
     elif isinstance(strategy, Effect):
         pc = EffectProcCaller()
-        effect_verion = pc.insert_effect(strategy, user_id)
-        strategy.asset_inputs = pc.select_effect_assets_with_analytics(effect_verion, business_datetime)
+        effect_version = pc.insert_effect(strategy, user_id)
+        strategy.asset_inputs = pc.select_effect_assets_with_analytics(effect_version, business_datetime)
 
-        fs = FundStrategy(fund_name, Name.effect, effect_verion, strategy_weight)
+        fs = FundStrategy(fund_name, Name.effect, effect_version, strategy_weight)
         fsaa, fsaw = run_effect(strategy)
         fs.asset_weights = fsaw
         fs.asset_analytics = fsaa

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField, FieldList, FormField
 from wtforms.validators import DataRequired
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, Frequency, DayOfWeek, Name
@@ -68,6 +68,10 @@ class ExportDataForm(FlaskForm):
     submit1 = SubmitField('ok')
 
 
+class AssetInputForm(FlaskForm):
+    signal_ticker = StringField('signal_ticker')
+
+
 class InputsTimesModel(FlaskForm):
     existing_versions = get_strategy_versions(Name.times)
     version_choices = [('New Version', 'New Version')]
@@ -110,7 +114,6 @@ class InputsTimesModel(FlaskForm):
                                     (DayOfWeek.SUN.value, DayOfWeek.SUN.name)]
                            )
 
+    asset_input_set = FieldList(FormField(AssetInputForm), min_entries=0)
+
     submit_save = SubmitField('Save')
-
-
-

@@ -96,7 +96,8 @@ def times_page():
                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model="run_times_model", message=e)
 
             else:
-                fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), datetime(2019, 12, 1))
+                date_from = datetime(2019, 12, 1)  # TODO replace this hardcoding - get this from UI
+                fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), date_from)
 
                 # TODO should redirect to dashboard after running of a model, with the strategy_version
                 return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
