@@ -27,8 +27,10 @@ def run_effect():
     bid_ask_spread = 10
     obj_import_data = ComputeCurrencies(bid_ask_spread=bid_ask_spread)
     obj_import_data.process_data_effect()
-    #TODO read from the config file ; ask to Simone if the date will change
-    obj_import_data.start_date_calculations = '2000-01-11'
+
+    #TODO link to Excel set a defaut in excel with IF statement
+    user_start_date = '2000-01-11'
+    obj_import_data.start_date_calculations = user_start_date
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     realtime_inflation_forecast = 'yes'
