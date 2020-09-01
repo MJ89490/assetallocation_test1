@@ -8,8 +8,8 @@ from common_libraries.dal_enums.strategy import Name
 import assetallocation_arp.data_etl.import_all_data as gd
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times, fica, maven, fxmodels
-from assetallocation_arp.models.times import create_times_asset_analytics, df_to_asset_weights,\
-    calculate_signals_returns_r_positioning
+from assetallocation_arp.models.times import calculate_signals_returns_r_positioning
+from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, \
     FundStrategyAssetWeight
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times
@@ -90,19 +90,9 @@ def run_model(model_type, mat_file, input_file, model_date=None):
 def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
     signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
-    asset_analytics = create_times_asset_analytics(signals, returns, r)
-    asset_weights = df_to_asset_weights(positioning)
+    asset_analytics = TimesDataFrameConverter.create_times_asset_analytics(signals, returns, r)
+    asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning)
     return asset_analytics, asset_weights
-
-
-def run_model_from_web_interface(model_type, mat_file=None, input_file=None):
-    if model_type == Name.times.name:
-        # get inputs from excel and matlab data
-        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
-        # run strategy
-        signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
-
-        return asset_inputs, positioning, r, signals, times_inputs
 
 
 def write_output_to_excel(model_outputs, path_excel_times):

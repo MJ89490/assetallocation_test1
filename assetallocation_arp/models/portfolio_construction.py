@@ -14,15 +14,22 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage
 
 def apply_leverage(futures_data: Union[pd.Series, pd.DataFrame], leverage_type: Leverage, leverage: pd.Series
                    ) -> Union[pd.Series, pd.DataFrame]:
+    """
+
+    :param futures_data: with columns of asset ticker
+    :param leverage_type:
+    :param leverage: with index of asset ticker
+    :return:
+    """
     # leverage_type: Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
-    if leverage_type in (Leverage.e, Leverage.s):
+    if leverage_type in (Leverage.e, Leverage.s, 'e', 's'):
         leverage_data = 0 * futures_data + 1
         leverage_data[leverage.index[leverage > 0]] = 1
 
-    elif leverage_type == Leverage.n:
+    elif leverage_type in (Leverage.n, 'n'):
         leverage_data = 0 * futures_data + leverage
 
-    elif leverage_type == Leverage.v:
+    elif leverage_type in (Leverage.v, 'v'):
         leverage_data = 1 / futures_data.ewm(alpha=1/150, min_periods=10).std()
 
     else:
@@ -39,8 +46,8 @@ def rescale(ret, r, positioning, column, vol):
     return return_scaled, r_scaled, positioning_scaled
 
 
-def return_ts(sig: pd.DataFrame, future: pd.DataFrame, leverage: float, costs: pd.Series, cummul: bool):
-    """asset_inputs has index of 'signal_ticker'"""
+def return_ts(sig: pd.DataFrame, future: pd.DataFrame, leverage: pd.DataFrame, costs: pd.Series, cummul: bool):
+    """DataFrames have columns of 'signal_ticker'"""
     # Implement trading signal in a time-series context and as standalone for every series
     returns = pd.DataFrame()
     r = pd.DataFrame()
@@ -50,6 +57,7 @@ def return_ts(sig: pd.DataFrame, future: pd.DataFrame, leverage: float, costs: p
         positioning.iloc[-1:] = sig.iloc[-1:]/sig.iloc[-1].multiply(leverage.iloc[-1]).count()
     else:
         positioning = sig
+
     for column in sig:
         positioning[column] = leverage[column]*positioning[column]
         returns[column] = future[column]*positioning[column]
