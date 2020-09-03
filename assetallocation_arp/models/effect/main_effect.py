@@ -1,10 +1,8 @@
 import sys
-import os
-import json
 import pandas as pd
-from configparser import ConfigParser
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
+
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
 from assetallocation_arp.models.effect.compute_profit_and_loss_overview import ComputeProfitAndLoss
@@ -14,12 +12,16 @@ from assetallocation_arp.models.effect.compute_warning_flags_overview import Com
 
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 
+from assetallocation_arp.models.effect.write_logs_computations import remove_logs_effect
 """
     Main function to run the EFFECT computations
 """
 
 
-def run_effect(user_start_date='11-01-2000'):
+def run_effect(trend_inputs, combo_inputs, user_start_date='11-01-2000'):
+
+    remove_logs_effect()
+
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
@@ -36,8 +38,8 @@ def run_effect(user_start_date='11-01-2000'):
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'}  # could be Spot or Total Return
-    combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
+    # trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'}  # could be Spot or Total Return
+    # combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
     currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
     # ---------------------------------------------------------------------------------------------------------------- #
@@ -50,7 +52,7 @@ def run_effect(user_start_date='11-01-2000'):
     previous_seven_days_latest_date = obj_import_data.dates_origin_index[-10]
     position_size_attribution = 0.03 * 1.33
     window_size = 52
-    weight = 'inverse_vol'
+    weight = '1/N'
     spot_origin, carry_origin = obj_import_data.process_data_config_effect()
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
@@ -78,13 +80,6 @@ def run_effect(user_start_date='11-01-2000'):
                                                    total_incl_signals=aggregate_currencies['agg_total_incl_signals'],
                                                    spot_incl_signals=aggregate_currencies['agg_spot_incl_signals'],
                                                    weighted_perf=aggregate_currencies['weighted_performance'])
-
-    return profit_and_loss
-
-
-
-
-
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(
@@ -126,6 +121,9 @@ def run_effect(user_start_date='11-01-2000'):
                                                     returns_excl_signals=aggregate_currencies['agg_total_excl_signals'],
                                                     returns_incl_signals=aggregate_currencies['agg_total_incl_signals'])
 
+    return profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur
+
 
 if __name__ == '__main__':
     sys.exit(run_effect())
+

@@ -6,6 +6,8 @@ Created on 12/05/2020
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_implied import CurrencyBaseImplied
+from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
+
 import common_libraries.listing_names_all_currencies as constants
 import pandas as pd
 import numpy as np
@@ -45,7 +47,7 @@ class ComputeCurrencies(ProcessDataEffect):
         :param inflation_differential: dataFrame with inflation differential data
         :return: a dataFrame self.carry_currencies of carry data for usd and eur currencies
         """
-        print('compute_carry')
+        write_logs_effect("Computing carry...", "logs_carry")
         for currency_spot, currency_implied, currency_carry in \
                 zip(constants.CURRENCIES_SPOT, constants.CURRENCIES_IMPLIED, constants.CURRENCIES_CARRY):
 
@@ -131,7 +133,7 @@ class ComputeCurrencies(ProcessDataEffect):
         :param long_term: integer user input required to compute the long moving average
         :return: a dataFrame self.trend_currencies of trend data for usd and eur currencies
         """
-        print('compute_trend')
+        write_logs_effect("Computing trend...", "logs_trend")
         if trend_ind.lower() == 'total return':
             currencies = constants.CURRENCIES_CARRY
         else:
@@ -166,7 +168,7 @@ class ComputeCurrencies(ProcessDataEffect):
         :param threshold_for_closing: integer user input
         :return: a dataFrame self.combo_currencies of combo data for usd and eur currencies
         """
-        print('compute_combo')
+        write_logs_effect("Computing combo...", "logs_combo")
         tmp_start_date_computations = self.start_date_calculations
         rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0]
 
@@ -206,7 +208,7 @@ class ComputeCurrencies(ProcessDataEffect):
         Function calculating return exclude costs for usd and eur currencies
         :return: a dataFrame self.return_ex_costs of return exclude costs data for usd and eur currencies
         """
-        print('compute_return_ex_costs')
+        write_logs_effect("Computing return exclude costs...", "logs_ret_ex")
         for currency_carry, currency_spot in zip(constants.CURRENCIES_CARRY, constants.CURRENCIES_SPOT):
 
             first_returns = [100]
@@ -240,7 +242,7 @@ class ComputeCurrencies(ProcessDataEffect):
         Function calculating the return included costs for usd and eur currencies
         :return: a dataFrame self.return_incl_costs of return included costs for usd and eur currencies
         """
-        print('compute_return_incl_costs')
+        write_logs_effect("Computing return include costs...", "logs_ret_inc")
         returns_division_tmp = self.return_ex_costs / self.return_ex_costs.shift(1)
 
         returns_division_tmp = returns_division_tmp.iloc[1:]
@@ -272,7 +274,7 @@ class ComputeCurrencies(ProcessDataEffect):
         Function calculating the spot excluded costs
         :return: a dataFrame self.spot_ex_costs of spot excluded costs data for usd and eur currencies
         """
-        print('compute_spot_ex_costs')
+        write_logs_effect("Computing spot exclude costs...", "logs_spot_ex")
         start_date_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations) - 1
         tmp_start_date = self.data_currencies_usd.index[start_date_loc]
 
@@ -310,7 +312,7 @@ class ComputeCurrencies(ProcessDataEffect):
         Function calculating spot included costs for usd and eur currencies
         :return: a dataFrame self.spot_incl_costs of spot included costs for usd and eur currencies
         """
-        print('compute_spot_incl_costs')
+        write_logs_effect("Computing spot include costs...", "logs_spot_inc")
         spot_division_tmp = self.spot_ex_costs / self.spot_ex_costs.shift(1)
 
         spot_division_tmp = spot_division_tmp.iloc[1:]
@@ -358,14 +360,12 @@ class ComputeCurrencies(ProcessDataEffect):
                                    'spot_excl_curr': spot_ex, 'spot_incl_curr': spot_incl}
 
 
-        carry.to_csv('carry_nominal_results.csv')
-        trend.to_csv('trend_new.csv')
-        combo.to_csv('combo_new.csv')
-        return_ex.to_csv('return_ex_new.csv')
-        return_incl.to_csv('return_incl_new.csv')
-        spot_ex.to_csv('spot_ex_new.csv')
-        spot_incl.to_csv('spot_incl_new.csv')
-
-
+        # carry.to_csv('carry_nominal_results.csv')
+        # trend.to_csv('trend_new.csv')
+        # combo.to_csv('combo_new.csv')
+        # return_ex.to_csv('return_ex_new.csv')
+        # return_incl.to_csv('return_incl_new.csv')
+        # spot_ex.to_csv('spot_ex_new.csv')
+        # spot_incl.to_csv('spot_incl_new.csv')
 
         return currencies_calculations

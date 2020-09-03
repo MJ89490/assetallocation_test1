@@ -159,10 +159,10 @@ class ComputeProfitAndLoss:
                                                                                 weekly_spot_notional=profit_and_loss_notional['profit_and_loss_spot_weekly_notional'],
                                                                                 weighted_perf=weighted_perf)
 
-        profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview,
-                                    'profit_and_loss_total_overview': profit_and_loss_total_overview,
-                                    'profit_and_loss_spot_ex_overview': profit_and_loss_spot_overview,
-                                    'profit_and_loss_carry_overview': profit_and_loss_carry_overview,
+        profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview.values,
+                                    'profit_and_loss_total_overview': profit_and_loss_total_overview.values,
+                                    'profit_and_loss_spot_ex_overview': profit_and_loss_spot_overview.values,
+                                    'profit_and_loss_carry_overview': profit_and_loss_carry_overview.values,
                                     'profit_and_loss_notional': profit_and_loss_notional,
                                     'profit_and_loss_matr': profit_and_loss_matr
                                     }

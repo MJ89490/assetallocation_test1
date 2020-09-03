@@ -9,6 +9,7 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
         self.seven_previous_latest_date = previous_seven_days_latest_date
 
     def compute_warning_flags_rates(self):
+        #TODO CHECK AGAIN
         print('compute_warning_flags_rates')
         three_month_implied_usd_latest_date = self.three_month_implied_usd.loc[self.latest_signal_date]
         three_month_implied_usd_previous_seven_days_latest_date = self.three_month_implied_usd.loc[self.seven_previous_latest_date]
@@ -20,7 +21,7 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
 
         rates_eur = three_month_implied_eur_latest_date - three_month_implied_eur_previous_seven_days_latest_date
 
-        return rates_usd, rates_eur
+        return rates_usd.values, rates_eur.values
 
     def compute_warning_flags_inflation(self):
         #todo write doctstrings and specify why it will be done later

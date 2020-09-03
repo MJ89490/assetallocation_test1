@@ -58,8 +58,6 @@ class ComputeSignalsOverview:
         # MATR notional
         matr_notional = signals_combo.sum() * self.size_attr * 100
 
-
-
         return {'ex_ante_vol': ex_ante_vol, 'matr_notional': matr_notional}
 
     def run_signals_overview(self, real_carry_curr, trend_curr, combo_curr, agg_total_incl_signals, agg_log_returns):
@@ -70,9 +68,9 @@ class ComputeSignalsOverview:
         signals_drawdown_position_size_matr = self.compute_drawdown_position_size_matr(agg_total_incl_signals=agg_total_incl_signals)
         signals_limits_controls = self.compute_limits_controls(signals_combo=signals_combo_overview, agg_log_returns=agg_log_returns)
 
-        signals_overview = {'signals_real_carry': signals_real_carry_overview,
-                            'signals_trend_overview': signals_trend_overview,
-                            'signals_combo_overview': signals_combo_overview,
+        signals_overview = {'signals_real_carry': signals_real_carry_overview.values,
+                            'signals_trend_overview': signals_trend_overview.values,
+                            'signals_combo_overview': signals_combo_overview.values,
                             'signals_drawdown_position_size_matr': signals_drawdown_position_size_matr,
                             'signals_limits_controls': signals_limits_controls}
 

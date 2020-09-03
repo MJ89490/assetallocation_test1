@@ -1,4 +1,5 @@
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencyAggregate
+from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
 
 from configparser import ConfigParser
 import os
@@ -35,7 +36,7 @@ class ComputeAggregateCurrencies:
         self._weight = value
 
     def compute_inverse_volatility(self, spot_data):
-        print('compute_inverse_volatility')
+        write_logs_effect("Computing inverse volatility", "logs_inverse_volatility")
         inverse_volatilities = pd.DataFrame()
 
         for currency_spot in spot_data.columns:
@@ -87,7 +88,7 @@ class ComputeAggregateCurrencies:
         :param carry_origin: carry data from Bloomberg for all currencies
         :return: dataFrame of Excl signals (total return)
         """
-        print('compute_excl_signals_total_return')
+        write_logs_effect("Computing exclude signals total return", "logs_excl_signals_total")
         return (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
     def compute_excl_signals_spot_return(self, spot_origin):
@@ -96,14 +97,14 @@ class ComputeAggregateCurrencies:
         :param spot_origin: spot data from Blommberg for all currencies
         :return: dataFrame of Excl signals (spot return)
         """
-        print('compute_excl_signals_spot_return')
+        write_logs_effect("Computing exclude signals spot return", "logs_excl_signals_spot_ret")
         return (spot_origin.loc[self.start_date_calc:] / spot_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
     @staticmethod
     def compute_aggregate_inverse_volatility(returns_spot_values, inverse_volatility):
 
         if len(ComputeAggregateCurrencies.AGG_FIRST_VALUE) != 1:
-            ComputeAggregateCurrencies.AGG_FIRST_VALUE = [100]
+            ComputeAggregateCurrencies.update_agg_value()
 
         counter = 0
         for values_returns, values_volatility in zip(returns_spot_values.values, inverse_volatility.values):
@@ -116,12 +117,15 @@ class ComputeAggregateCurrencies:
 
         return ComputeAggregateCurrencies.AGG_FIRST_VALUE
 
-    def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
-        print('compute_aggregate_total_incl_signals')
-        # total_signals = [100]
+    @staticmethod
+    def update_agg_value():
+        ComputeAggregateCurrencies.AGG_FIRST_VALUE = [100]
 
+    def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
+        write_logs_effect("Computing aggregate total include signals", "logs_agg_total_incl_signals")
         if self.weight == '1/N':
             average_incl_signals = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
+            self.update_agg_value()
             for value in range(len(average_incl_signals)):
                 self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_incl_signals[value])
         else:
@@ -132,10 +136,10 @@ class ComputeAggregateCurrencies:
                             columns=[CurrencyAggregate.Total_Incl_Signals.name], index=list(self.dates_index))
 
     def compute_aggregate_total_excl_signals(self, returns_excl_costs, inverse_volatility):
-        print('compute_aggregate_total_excl_signals')
-
+        write_logs_effect("Computing aggregate total exclude signals", "logs_agg_total_ex_signals")
         if self.weight == '1/N':
             average_excl_signals = (returns_excl_costs.loc[self.start_date_calc:] / returns_excl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
+            self.update_agg_value()
             for value in range(len(average_excl_signals)):
                 self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_excl_signals[value])
         else:
@@ -146,10 +150,11 @@ class ComputeAggregateCurrencies:
                             index=list(self.dates_index))
 
     def compute_aggregate_spot_incl_signals(self, spot_incl_costs, inverse_volatility):
-        print('compute_aggregate_spot_incl_signals')
+        write_logs_effect("Computing aggregate spot include signals", "logs_agg_spot_inc_signals")
 
         if self.weight == '1/N':
             average_spot_incl_signals = (spot_incl_costs.loc[self.start_date_calc:] / spot_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
+            self.update_agg_value()
             for value in range(len(average_spot_incl_signals)):
                 self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_spot_incl_signals[value])
         else:
@@ -160,10 +165,10 @@ class ComputeAggregateCurrencies:
                             index=list(self.dates_index))
 
     def compute_aggregate_spot_excl_signals(self, spot_excl_costs, inverse_volatility):
-        print('compute_aggregate_spot_excl_signals')
-
+        write_logs_effect("Computing aggregate spot exclude signals", "logs_agg_spot_ex_signals")
         if self.weight == '1/N':
             average_spot_excl_signals = (spot_excl_costs.loc[self.start_date_calc:] / spot_excl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
+            self.update_agg_value()
             for value in range(len(average_spot_excl_signals)):
                 self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_spot_excl_signals[value])
         else:
@@ -175,11 +180,11 @@ class ComputeAggregateCurrencies:
 
     @staticmethod
     def compute_log_returns_excl_costs(returns_ex_costs):
-        print('compute_log_returns_excl_costs')
+        write_logs_effect("Computing log returns exclude costs", "logs_log_ret")
         return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
     def compute_weighted_performance(self, log_returns_excl, combo_curr):
-        print('compute_weighted_performance')
+        write_logs_effect("Computing weighted performance", "logs_weighted_perf")
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file
@@ -212,7 +217,11 @@ class ComputeAggregateCurrencies:
 
     def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr):
 
-        inverse_volatilies = self.compute_inverse_volatility(spot_data=spot_origin)
+        if self.weight != '1/N':
+            inverse_volatilies = self.compute_inverse_volatility(spot_data=spot_origin)
+        else:
+            inverse_volatilies = None
+            write_logs_effect("Not computing inverse volatility: weight == 1/N", "logs_inverse_volatility")
 
         excl_signals_total_return = self.compute_excl_signals_total_return(carry_origin=carry_origin)
         excl_signals_spot_return = self.compute_excl_signals_spot_return(spot_origin=spot_origin)

@@ -13,6 +13,7 @@ import common_libraries.listing_names_all_currencies as constants
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
+from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
 
 
 class ComputeInflationDifferential:
@@ -24,7 +25,7 @@ class ComputeInflationDifferential:
         Function computing the inflation release depending on the publications IMF dates
         :return: separate dataFrames inflation_release, years_zero_inflation, months_inflation
         """
-        print('compute_inflation_release')
+        write_logs_effect("Computing inflation release...", "logs_inflation_release")
         weo_dates = []
         inflation_release = pd.DataFrame()
         flag = False
@@ -188,7 +189,7 @@ class ComputeInflationDifferential:
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
         """
-        print('compute_inflation_differential')
+        write_logs_effect("Computing inflation differential...", "logs_inflation_differential")
         inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
@@ -210,6 +211,7 @@ class ComputeInflationDifferential:
 
         inflation_differential = pd.DataFrame()
 
+        counter = 8
         for currency in constants.CURRENCIES_SPOT:
             inflation_year_zero_value = []
             inflation_year_one_value = []
@@ -218,6 +220,8 @@ class ComputeInflationDifferential:
 
             flag_imf = ''
             print(currency)
+            write_logs_effect(currency, counter, True)
+
             for inflation, year_zero, year_one in zip(inflation_release_values, years_zero_inflation, years_one_inflation):
 
                 if inflation != 'Latest':
@@ -280,6 +284,8 @@ class ComputeInflationDifferential:
 
             inflation_three = inflation_one.sub(inflation_two).apply(lambda x: x * 100)
             inflation_differential[CurrencySpot.Inflation_Differential.value + currency] = inflation_three.tolist()
+
+            counter += 1
 
         # Set the index with dates
         new_index = np.delete(self.dates_index, 0)
