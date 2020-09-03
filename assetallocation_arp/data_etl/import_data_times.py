@@ -18,7 +18,7 @@ from common_libraries.models_names import Models
 
 # FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
 # FILE_PATH = 'S:\Shared\IT\MultiAsset\Data\Arquive\matlabData.mat'
-FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\Arquive\New folder\matlabData.mat'
+FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\Arquive\Newfolder\matlabData.mat'
 
 
 def matfile_to_dataframe(file_path, model_date):

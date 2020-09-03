@@ -16,9 +16,19 @@ from assetallocation_arp.models.effect.write_logs_computations import remove_log
 """
     Main function to run the EFFECT computations
 """
+#TODO
+# - regarder inv vol car calculs ne changent pas! avec spot
+# - ajouter risk/returns tableaux
+# - ajouter input MATR + SPX
+# - ajouter latest_signal_date
+# - tout vérifier
+# - envoyer première version à Simone
+# - ajouter les graphiques
+# - envoyer seconde version à Simnone
+# - réviser code + finir excel pour derniers tests
 
 
-def run_effect(trend_inputs, combo_inputs, user_start_date='11-01-2000'):
+def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, user_start_date='11-01-2000'):
 
     remove_logs_effect()
 
@@ -26,20 +36,17 @@ def run_effect(trend_inputs, combo_inputs, user_start_date='11-01-2000'):
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
     # moving_average= {"short": input("Short: "), "long": input("Long: ")}
-    bid_ask_spread = 10
-    obj_import_data = ComputeCurrencies(bid_ask_spread=bid_ask_spread)
+    # bid_ask_spread = 10
+    obj_import_data = ComputeCurrencies(bid_ask_spread=weighting_costs['bid_ask'])
     obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_start_date
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
-    realtime_inflation_forecast = 'yes'
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
     inflation_differential = obj_inflation_differential.compute_inflation_differential(realtime_inflation_forecast)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
-    carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-    # trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'}  # could be Spot or Total Return
-    # combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
+    carry_inputs['inflation'] = inflation_differential
     currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
     # ---------------------------------------------------------------------------------------------------------------- #
@@ -50,14 +57,11 @@ def run_effect(trend_inputs, combo_inputs, user_start_date='11-01-2000'):
     # dates_index[-4]
     next_latest_date = pd.to_datetime('27-04-2020',  format='%d-%m-%Y')
     previous_seven_days_latest_date = obj_import_data.dates_origin_index[-10]
-    position_size_attribution = 0.03 * 1.33
-    window_size = 52
-    weight = '1/N'
     spot_origin, carry_origin = obj_import_data.process_data_config_effect()
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
-    obj_compute_agg_currencies = ComputeAggregateCurrencies(window=window_size,
-                                                            weight=weight,
+    obj_compute_agg_currencies = ComputeAggregateCurrencies(window=weighting_costs['window'],
+                                                            weight=weighting_costs['weight'],
                                                             dates_index=obj_import_data.dates_origin_index,
                                                             start_date_calculations=obj_import_data.start_date_calculations)
 
@@ -70,7 +74,7 @@ def run_effect(trend_inputs, combo_inputs, user_start_date='11-01-2000'):
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_signal_date,
-                                                                position_size_attribution=position_size_attribution,
+                                                                position_size_attribution=weighting_costs['pos_size_attr'],
                                                                 index_dates=obj_import_data.dates_origin_index)
 
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
@@ -85,8 +89,8 @@ def run_effect(trend_inputs, combo_inputs, user_start_date='11-01-2000'):
     obj_compute_signals_overview = ComputeSignalsOverview(
                                                     next_latest_date=next_latest_date,
                                                     latest_signal_date=latest_signal_date,
-                                                    size_attr=position_size_attribution,
-                                                    window=window_size)
+                                                    size_attr=weighting_costs['pos_size_attr'],
+                                                    window=weighting_costs['window'])
 
     signals_overview = obj_compute_signals_overview.run_signals_overview(
                                                     real_carry_curr=currencies_calculations['carry_curr'],
@@ -125,5 +129,16 @@ def run_effect(trend_inputs, combo_inputs, user_start_date='11-01-2000'):
 
 
 if __name__ == '__main__':
-    sys.exit(run_effect())
+    carry_inputs = {'type': 'real', 'inflation': ''}
+    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'}  # could be Spot or Total Return
+    combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
+
+    position_size_attribution = 0.03 * 1.33
+    window_size = 52
+    weight = '1/N'
+
+    realtime_inflation_forecast = 'yes'
+
+    weighting_costs = {'window': 52, 'weight': weight, 'pos_size_attr': position_size_attribution, 'bid_ask': 10}
+    sys.exit(run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs))
 

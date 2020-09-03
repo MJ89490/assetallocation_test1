@@ -36,7 +36,7 @@ class ComputeAggregateCurrencies:
         self._weight = value
 
     def compute_inverse_volatility(self, spot_data):
-        write_logs_effect("Computing inverse volatility", "logs_inverse_volatility")
+        write_logs_effect("Computing inverse volatility...", "logs_inverse_volatility")
         inverse_volatilities = pd.DataFrame()
 
         for currency_spot in spot_data.columns:
