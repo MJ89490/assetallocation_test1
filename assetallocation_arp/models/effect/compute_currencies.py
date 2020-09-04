@@ -82,9 +82,8 @@ class ComputeCurrencies(ProcessDataEffect):
                 previous_start_four_date_loc = self.data_currencies_usd.index.get_loc(previous_start_four_date_index)
 
                 # Do the averages
-                # We use nanmean because we do average with nan and integers values sometimes
-                average_implied = np.nanmean(data_all_currencies_implied[previous_start_four_date_loc:previous_start_date_index_loc+1])
-                average_index = np.nanmean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
+                average_implied = np.mean(data_all_currencies_implied[previous_start_four_date_loc:previous_start_date_index_loc+1])
+                average_index = np.mean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
 
                 # Depending on the carry type, if it is real, we take off the inflation, otherwise, we don't
                 if carry_type.lower() == 'real':
@@ -360,7 +359,7 @@ class ComputeCurrencies(ProcessDataEffect):
                                    'spot_excl_curr': spot_ex, 'spot_incl_curr': spot_incl}
 
 
-        # carry.to_csv('carry_nominal_results.csv')
+        # carry.to_csv('carry_new.csv')
         # trend.to_csv('trend_new.csv')
         # combo.to_csv('combo_new.csv')
         # return_ex.to_csv('return_ex_new.csv')

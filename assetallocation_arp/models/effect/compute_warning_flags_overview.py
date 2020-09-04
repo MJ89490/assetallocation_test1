@@ -1,5 +1,8 @@
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 
+from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
+
+
 #todo write docstrings for every fct
 class ComputeWarningFlagsOverview(ProcessDataEffect):
 
@@ -9,8 +12,7 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
         self.seven_previous_latest_date = previous_seven_days_latest_date
 
     def compute_warning_flags_rates(self):
-        #TODO CHECK AGAIN
-        print('compute_warning_flags_rates')
+        write_logs_effect("Computing warnings flags rates...", "logs_warnings_rates")
         three_month_implied_usd_latest_date = self.three_month_implied_usd.loc[self.latest_signal_date]
         three_month_implied_usd_previous_seven_days_latest_date = self.three_month_implied_usd.loc[self.seven_previous_latest_date]
 

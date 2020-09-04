@@ -175,16 +175,16 @@ class ComputeAggregateCurrencies:
             returns_shift = (spot_excl_costs.loc[self.start_date_calc:] / spot_excl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
             self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Spot_Excl_Signals],
+        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Spot_Excl_Signals.name],
                             index=list(self.dates_index))
 
     @staticmethod
     def compute_log_returns_excl_costs(returns_ex_costs):
-        write_logs_effect("Computing log returns exclude costs", "logs_log_ret")
+        write_logs_effect("Computing log returns exclude costs...", "logs_log_ret")
         return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
     def compute_weighted_performance(self, log_returns_excl, combo_curr):
-        write_logs_effect("Computing weighted performance", "logs_weighted_perf")
+        write_logs_effect("Computing weighted performance...", "logs_weighted_perf")
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file

@@ -17,7 +17,6 @@ from assetallocation_arp.models.effect.write_logs_computations import remove_log
     Main function to run the EFFECT computations
 """
 #TODO
-# - regarder inv vol car calculs ne changent pas! avec spot
 # - ajouter risk/returns tableaux
 # - ajouter input MATR + SPX
 # - ajouter latest_signal_date
@@ -25,7 +24,8 @@ from assetallocation_arp.models.effect.write_logs_computations import remove_log
 # - envoyer première version à Simone
 # - ajouter les graphiques
 # - envoyer seconde version à Simnone
-# - réviser code + finir excel pour derniers tests
+# - réviser code + finir excel pour derniers tests (refaire tests pour qql devise + tab controls)
+# - ajouter doctrings
 
 
 def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, user_start_date='11-01-2000'):
@@ -53,10 +53,11 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
     latest_signal_date = pd.to_datetime('24-04-2020',  format='%d-%m-%Y')
-    # latest_date = dates_index[-5]
-    # dates_index[-4]
     next_latest_date = pd.to_datetime('27-04-2020',  format='%d-%m-%Y')
-    previous_seven_days_latest_date = obj_import_data.dates_origin_index[-10]
+
+    prev_7_days_from_latest_signal_date_loc = obj_import_data.dates_origin_index.get_loc(latest_signal_date) - 5
+    prev_7_days_from_latest_signal_date = obj_import_data.dates_origin_index[prev_7_days_from_latest_signal_date_loc]
+
     spot_origin, carry_origin = obj_import_data.process_data_config_effect()
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
@@ -106,7 +107,7 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(
                                               latest_signal_date=latest_signal_date,
-                                              previous_seven_days_latest_date=previous_seven_days_latest_date)
+                                              previous_seven_days_latest_date=prev_7_days_from_latest_signal_date)
     obj_compute_warning_flags_overview.process_data_effect()
     rates_usd, rates_eur = obj_compute_warning_flags_overview.compute_warning_flags_rates()
 
@@ -114,16 +115,16 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
     #                                            EFFECT RISK RETURN CALCULATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
 
-    from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
-
-    obj_compute_risk_return_calculations = ComputeRiskReturnCalculations(
-                                                    start_date=obj_import_data.start_date_calculations,
-                                                    end_date=obj_import_data.dates_origin_index[-1],
-                                                    dates_index=obj_import_data.dates_origin_index)
-
-    obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
-                                                    returns_excl_signals=aggregate_currencies['agg_total_excl_signals'],
-                                                    returns_incl_signals=aggregate_currencies['agg_total_incl_signals'])
+    # from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
+    #
+    # obj_compute_risk_return_calculations = ComputeRiskReturnCalculations(
+    #                                                 start_date=obj_import_data.start_date_calculations,
+    #                                                 end_date=obj_import_data.dates_origin_index[-1],
+    #                                                 dates_index=obj_import_data.dates_origin_index)
+    #
+    # obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
+    #                                                 returns_excl_signals=aggregate_currencies['agg_total_excl_signals'],
+    #                                                 returns_incl_signals=aggregate_currencies['agg_total_incl_signals'])
 
     return profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur
 

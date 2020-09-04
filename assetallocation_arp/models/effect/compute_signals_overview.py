@@ -1,5 +1,7 @@
 from math import sqrt
 
+from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
+
 
 class ComputeSignalsOverview:
 
@@ -26,19 +28,16 @@ class ComputeSignalsOverview:
         self._window = value
 
     def compute_signals_real_carry(self, real_carry_curr):
-        print('compute_signals_real_carry')
         return real_carry_curr.loc[self.next_latest_date]
 
     def compute_signals_trend(self, trend_curr):
-        print('compute_signals_trend')
         return trend_curr.loc[self.next_latest_date]
 
     def compute_signals_combo(self, combo_curr):
-        print('compute_signals_combo')
         return combo_curr.loc[self.next_latest_date]
 
     def compute_drawdown_position_size_matr(self, agg_total_incl_signals):
-        print(' compute_drawdown_position_size_matr')
+        write_logs_effect("Computing drawdown and position size in matr...", "logs_signals_drawdown_size_matr")
         # Drawdown
         drawdown = ((agg_total_incl_signals.loc[self.latest_signal_date][0] / agg_total_incl_signals.max()[0]) - 1) * 100
 
@@ -48,7 +47,7 @@ class ComputeSignalsOverview:
         return {'drawdown': drawdown, 'size_matr': size_matr}
 
     def compute_limits_controls(self, signals_combo, agg_log_returns):
-        print('compute_limits_controls')
+        write_logs_effect("Computing limits controls...", "logs_signals_limits")
         current_signals = tuple(list(signals_combo * self.size_attr))
         # Ex-ante volatility
         latest_signal_date_loc = agg_log_returns.index.get_loc(self.latest_signal_date)
