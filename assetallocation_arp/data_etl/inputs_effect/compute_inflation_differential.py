@@ -230,6 +230,7 @@ class ComputeInflationDifferential:
                     if flag_imf != inflation:
                         inflation_data_merged = self.process_inflation_differential_imf(inflation=inflation)
 
+                    #TODO improve later with DB to speed up the calculation of the inflation ; maybe put all the data in one DF?
                     index_currency = inflation_data_merged[inflation_data_merged.Currency.str.contains(currency)].index[0]
 
                     # Select the base currency (USD or EUR) depending on the currency
