@@ -1,4 +1,5 @@
 import sys
+import xlwings as xw
 import pandas as pd
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
@@ -11,14 +12,13 @@ from assetallocation_arp.models.effect.compute_trades_overview import compute_tr
 from assetallocation_arp.models.effect.compute_warning_flags_overview import ComputeWarningFlagsOverview
 
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
-
+from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
 from assetallocation_arp.models.effect.write_logs_computations import remove_logs_effect
 """
     Main function to run the EFFECT computations
 """
+
 #TODO
-# - ajouter risk/returns tableaux
-# - ajouter input MATR + SPX
 # - ajouter latest_signal_date
 # - tout vérifier
 # - envoyer première version à Simone
@@ -28,17 +28,17 @@ from assetallocation_arp.models.effect.write_logs_computations import remove_log
 # - ajouter doctrings
 
 
-def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, user_start_date='11-01-2000'):
+def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs,
+               input_file, latest_signal_date, user_start_date='11-01-2000'):
 
+    xw.Book(input_file).set_mock_caller()
     remove_logs_effect()
 
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
-    # moving_average= {"short": input("Short: "), "long": input("Long: ")}
-    # bid_ask_spread = 10
     obj_import_data = ComputeCurrencies(bid_ask_spread=weighting_costs['bid_ask'])
-    obj_import_data.process_data_effect()
+    spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_start_date
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
@@ -52,8 +52,8 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
-    latest_signal_date = pd.to_datetime('24-04-2020',  format='%d-%m-%Y')
-    next_latest_date = pd.to_datetime('27-04-2020',  format='%d-%m-%Y')
+    next_latest_date_loc = obj_import_data.dates_origin_index.get_loc(latest_signal_date) + 1
+    next_latest_date = obj_import_data.dates_origin_index[next_latest_date_loc]
 
     prev_7_days_from_latest_signal_date_loc = obj_import_data.dates_origin_index.get_loc(latest_signal_date) - 5
     prev_7_days_from_latest_signal_date = obj_import_data.dates_origin_index[prev_7_days_from_latest_signal_date_loc]
@@ -114,19 +114,17 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                            EFFECT RISK RETURN CALCULATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
+    obj_compute_risk_return_calculations = ComputeRiskReturnCalculations(
+                                                    start_date=obj_import_data.start_date_calculations,
+                                                    end_date=obj_import_data.dates_origin_index[-1],
+                                                    dates_index=obj_import_data.dates_origin_index)
 
-    # from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
-    #
-    # obj_compute_risk_return_calculations = ComputeRiskReturnCalculations(
-    #                                                 start_date=obj_import_data.start_date_calculations,
-    #                                                 end_date=obj_import_data.dates_origin_index[-1],
-    #                                                 dates_index=obj_import_data.dates_origin_index)
-    #
-    # obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
-    #                                                 returns_excl_signals=aggregate_currencies['agg_total_excl_signals'],
-    #                                                 returns_incl_signals=aggregate_currencies['agg_total_incl_signals'])
+    risk_returns = obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
+                                                    returns_excl_signals=aggregate_currencies['agg_total_excl_signals'],
+                                                    returns_incl_signals=aggregate_currencies['agg_total_incl_signals'],
+                                                    spxt_index_values=spx_index_values.loc[pd.to_datetime(user_start_date, format='%d-%m-%Y'):])
 
-    return profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur
+    return profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur, risk_returns
 
 
 if __name__ == '__main__':
@@ -138,8 +136,14 @@ if __name__ == '__main__':
     window_size = 52
     weight = '1/N'
 
-    realtime_inflation_forecast = 'yes'
+    realtime_inflation_forecast = 'no'
+
+    input_file = "arp_dashboard_effect.xlsm"
+
+    latest_signal_date = pd.to_datetime('24-04-2020',  format='%d-%m-%Y')
 
     weighting_costs = {'window': 52, 'weight': weight, 'pos_size_attr': position_size_attribution, 'bid_ask': 10}
-    sys.exit(run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs))
+    run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, input_file,
+               latest_signal_date)
+    sys.exit()
 

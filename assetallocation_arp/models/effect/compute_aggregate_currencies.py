@@ -1,13 +1,10 @@
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencyAggregate
 from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
-
-from configparser import ConfigParser
-import os
-import json
 import pandas as pd
 import statistics as stats
 import math
 import numpy as np
+import xlwings as xw
 
 
 class ComputeAggregateCurrencies:
@@ -185,13 +182,22 @@ class ComputeAggregateCurrencies:
 
     def compute_weighted_performance(self, log_returns_excl, combo_curr):
         write_logs_effect("Computing weighted performance...", "logs_weighted_perf")
-        # Instantiate ConfigParser
-        config = ConfigParser()
-        # Parse existing file
-        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'matr_weights_effect.ini')
-        config.read(path)
-        weights = json.loads(config.get('weighted_performance', 'weights'))
-        start_date_perf = config.get('start_date_weighted_performance', 'start_date_weighted_perf')
+        # # Instantiate ConfigParser
+        # config = ConfigParser()
+        # # Parse existing file
+        # path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'matr_weights_effect.ini')
+        # config.read(path)
+        # weights = json.loads(config.get('weighted_performance', 'weights'))
+        # start_date_perf = config.get('start_date_weighted_performance', 'start_date_weighted_perf')
+
+        sheet_effect_input = xw.Book.caller().sheets['effect_input']
+
+        last_row = sheet_effect_input.range("B8").end('down').row
+
+        weights = sheet_effect_input.range(f"B8:B{last_row}").value
+
+        start_date_perf = sheet_effect_input.range("start_date_weighted_perf").value
+
         start_date_weighted_performance = pd.to_datetime(start_date_perf, format='%d-%m-%Y')
 
         index_weighted_performance = pd.DataFrame(self.dates_index, columns=['Dates_Weighted_Performance'])
@@ -210,7 +216,8 @@ class ComputeAggregateCurrencies:
             sum_prod.append(sum(tmp))
 
         for value_weight in range(len(weights)):
-            weighted_perf.append(sum_prod[value_weight] * float(list(weights.values())[value_weight]))
+            # weighted_perf.append(sum_prod[value_weight] * float(list(weights.values())[value_weight]))
+            weighted_perf.append(sum_prod[value_weight] * (weights[value_weight]*100))
 
         return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name],
                             index=index_weighted.Dates_Weighted_Performance.tolist())

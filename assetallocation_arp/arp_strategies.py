@@ -1,6 +1,7 @@
 import os
 import sys
 import xlwings as xw
+import pandas as pd
 from time import strftime, gmtime
 from configparser import ConfigParser
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -24,17 +25,21 @@ def run_model(model_type, mat_file, input_file):
 
     if model_type == models_names.Models.maven.name:
         print(model_type)
+
     if model_type == models_names.Models.effect.name:
-        user_date, trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs = write_input_effect_excel(input_file)
+        user_date, trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, \
+        latest_signal_date = write_input_effect_excel(input_file)
 
-        profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur = run_effect(user_start_date=user_date,
-                                                                                              trend_inputs=trend_inputs,
-                                                                                              combo_inputs=combo_inputs,
-                                                                                              carry_inputs=carry_inputs,
-                                                                                              weighting_costs=weighting_costs,
-                                                                                              realtime_inflation_forecast=realtime_inflation_forecast)
+        profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur, risk_returns \
+            = run_effect(user_start_date=user_date,
+                         trend_inputs=trend_inputs,
+                         combo_inputs=combo_inputs,
+                         carry_inputs=carry_inputs,
+                         weighting_costs=weighting_costs,
+                         realtime_inflation_forecast=realtime_inflation_forecast,
+                         input_file=input_file, latest_signal_date=latest_signal_date)
 
-        write_output_to_excel({models_names.Models.effect.name: (profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur)}, input_file)
+        write_output_to_excel({models_names.Models.effect.name: (profit_and_loss, signals_overview, trades_overview, rates_usd, rates_eur, risk_returns)}, input_file)
 
     if model_type == models_names.Models.curp.name:
         print(model_type)
@@ -55,6 +60,8 @@ def write_input_effect_excel(input_file):
 
     user_date = sheet_effect_input.range('start_date_calculations_effect').value
 
+    latest_signal_date = sheet_effect_input.range('latest_signal_date').value
+
     if user_date is None:
         # Instantiate ConfigParser
         config = ConfigParser()
@@ -64,6 +71,9 @@ def write_input_effect_excel(input_file):
         # Read values from the dates_effect.ini file
         default_start_date = config.get('start_date_computations', 'start_date_calculations')
         user_date = default_start_date
+
+    if latest_signal_date is None:
+        latest_signal_date = pd.to_datetime('24-04-2020',  format='%d-%m-%Y')
 
     # EFFECT inputs
     realtime_inflation_forecast = sheet_effect_input.range('real_time_inf').value.strip().lower()
@@ -92,7 +102,7 @@ def write_input_effect_excel(input_file):
     weighting_costs = {'window': int(window_size), 'weight': weight, 'pos_size_attr': float(position_size_attribution),
                        'bid_ask': int(bid_ask_spread)}
 
-    return user_date, trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs
+    return user_date, trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, latest_signal_date
 
 
 def write_output_to_excel(model_outputs, input_file):
@@ -130,7 +140,7 @@ def write_output_to_excel(model_outputs, input_file):
 
     else:
 
-        p_and_l_overview, signals_overview, trades_overview, rates_usd, rates_eur = model_outputs['effect']
+        p_and_l_overview, signals_overview, trades_overview, rates_usd, rates_eur, risk_returns = model_outputs['effect']
 
         weekly_total_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']
         weekly_spot_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']
@@ -188,6 +198,27 @@ def write_output_to_excel(model_outputs, input_file):
         sheet_effect_input.range('warning_rates_usd').options(transpose=True).value = rates_usd
         sheet_effect_input.range('warning_rates_eur').options(transpose=True).value = rates_eur
 
+        # Risk Returns overview
+        sheet_risk_returns = xw.Book.caller().sheets['RiskReturns']
+
+        sheet_risk_returns.range('logs_excess_ret_no_signals').options(transpose=True).value = risk_returns['excess_returns']['excess_returns_no_signals']
+        sheet_risk_returns.range('logs_excess_ret_signals').options(transpose=True).value = risk_returns['excess_returns']['excess_returns_with_signals']
+
+        sheet_risk_returns.range('logs_std_dev_no_signals').options(transpose=True).value = risk_returns['std_dev']['std_dev_no_signals']
+        sheet_risk_returns.range('logs_std_dev_signals').options(transpose=True).value = risk_returns['std_dev']['std_dev_with_signals']
+
+        sheet_risk_returns.range('logs_sharpe_ratio_no_signals').options(transpose=True).value = risk_returns['sharpe_ratio']['sharpe_ratio_no_signals']
+        sheet_risk_returns.range('logs_sharpe_ratio_signals').options(transpose=True).value = risk_returns['sharpe_ratio']['sharpe_ratio_with_signals']
+
+        sheet_risk_returns.range('logs_max_drawdown_no_signals').options(transpose=True).value = risk_returns['max_drawdown']['max_drawdown_no_signals']
+        sheet_risk_returns.range('logs_max_drawdown_signals').options(transpose=True).value = risk_returns['max_drawdown']['max_drawdown_with_signals']
+
+        sheet_risk_returns.range('logs_calmar_no_signals').options(transpose=True).value = risk_returns['calmar_ratio']['calmar_ratio_no_signals']
+        sheet_risk_returns.range('logs_calmar_signals').options(transpose=True).value = risk_returns['calmar_ratio']['calmar_ratio_with_signals']
+
+        sheet_risk_returns.range('logs_equity_corr_no_signals').options(transpose=True).value = risk_returns['equity_corr']['equity_corr_no_signals']
+        sheet_risk_returns.range('logs_equity_corr_signals').options(transpose=True).value = risk_returns['equity_corr']['equity_corr_with_signals']
+
 
 def get_inputs_from_excel():
 
@@ -225,6 +256,4 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-
-    # get_inputs_from_excel()
     get_inputs_from_python(get_input_user(), "arp_dashboard_effect.xlsm")

@@ -120,7 +120,8 @@ class ProcessDataEffect:
         """
 
         preprocess_data = self.preprocess_data_config_effect()
-        currencies_usd, currencies_eur = preprocess_data['currencies_usd_config'], preprocess_data['currencies_eur_config']
+        currencies_usd, currencies_eur, spxt_index = \
+            preprocess_data['currencies_usd_config'], preprocess_data['currencies_eur_config'], preprocess_data['spxt_index_values_config']
 
         data_currencies = self.obj_import_data.import_data_matlab()
 
@@ -128,7 +129,12 @@ class ProcessDataEffect:
         self.data_currencies_usd = data_currencies[currencies_usd.currencies_usd_tickers].loc[:]
         self.data_currencies_eur = data_currencies[currencies_eur.currencies_eur_tickers].loc[:]
 
+        # SPXT Index
+        spxt_index_values = data_currencies[spxt_index]
+
         self.process_data_config_effect()
+
+        return spxt_index_values
 
     @staticmethod
     def parse_data_config_effect():
@@ -146,18 +152,21 @@ class ProcessDataEffect:
 
         currencies_3M_implied_config = json.loads(config.get('currencies_three_month_implied', '3M_implied_data'))
 
+        spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
+
         config_data = {'spot_config': currencies_spot_config,
                        'carry_config': currencies_carry_config,
                        'base_implied_config': currencies_base_implied_config,
-                       '3M_implied': currencies_3M_implied_config}
+                       '3M_implied_config': currencies_3M_implied_config,
+                       'spxt_index_config': spxt_index_config}
 
         return config_data
 
     def preprocess_data_config_effect(self):
         config_data = self.parse_data_config_effect()
 
-        currencies_3M_implied_usd = config_data['3M_implied']['three_month_implied_usd']
-        currencies_3M_implied_eur = config_data['3M_implied']['three_month_implied_eur']
+        currencies_3M_implied_usd = config_data['3M_implied_config']['three_month_implied_usd']
+        currencies_3M_implied_eur = config_data['3M_implied_config']['three_month_implied_eur']
 
         currencies_spot_usd = config_data['spot_config']['currencies_spot_usd']
         currencies_spot_eur = config_data['spot_config']['currencies_spot_eur']
@@ -167,6 +176,8 @@ class ProcessDataEffect:
 
         currencies_base_implied_usd = config_data['base_implied_config']['currencies_base_implied_usd']
         currencies_base_implied_eur = config_data['base_implied_config']['currencies_base_implied_eur']
+
+        spxt_index = config_data['spxt_index_config']
 
         currencies_usd = pd.DataFrame({"currencies_usd_tickers": currencies_spot_usd + currencies_carry_usd +
                                         currencies_3M_implied_usd + currencies_base_implied_usd})
@@ -183,7 +194,8 @@ class ProcessDataEffect:
                            'base_implied_usd': currencies_base_implied_usd,
                            'base_implied_eur': currencies_base_implied_eur,
                            'currencies_usd_config': currencies_usd,
-                           'currencies_eur_config': currencies_eur}
+                           'currencies_eur_config': currencies_eur,
+                           'spxt_index_values_config': spxt_index}
 
         return preprocess_data
 

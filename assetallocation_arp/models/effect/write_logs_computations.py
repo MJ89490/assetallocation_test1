@@ -3,8 +3,6 @@ import xlwings as xw
 
 def write_logs_effect(current_calc: str, cell: str or int, flag_curr=None):
 
-    xw.Book("arp_dashboard_effect.xlsm").set_mock_caller() #TODO do an input for dashboard
-
     sheet_effect_input = xw.Book.caller().sheets['EFFECT']
 
     if flag_curr:
@@ -15,7 +13,6 @@ def write_logs_effect(current_calc: str, cell: str or int, flag_curr=None):
 
 def remove_logs_effect():
 
-    xw.Book("arp_dashboard_effect.xlsm").set_mock_caller()  # TODO do an input for dashboard
     sheet_effect_input = xw.Book.caller().sheets['EFFECT']
 
     if sheet_effect_input.range("logs_inflation_release").value is not None:

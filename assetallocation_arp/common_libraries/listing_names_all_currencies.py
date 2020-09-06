@@ -10,7 +10,7 @@ length = len(config_data['spot_config'].values())
 
 spot_config = list(config_data['spot_config'].values())
 carry_config = list(config_data['carry_config'].values())
-three_month_implied_config = list(config_data['3M_implied'].values())
+three_month_implied_config = list(config_data['3M_implied_config'].values())
 
 CURRENCIES_SPOT, CURRENCIES_CARRY, CURRENCIES_IMPLIED = [], [], []
 
