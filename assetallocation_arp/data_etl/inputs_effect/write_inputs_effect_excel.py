@@ -50,7 +50,10 @@ def get_inputs_effect_excel(input_file):
     weighting_costs = {'window': int(window_size), 'weight': weight, 'pos_size_attr': float(position_size_attribution),
                        'bid_ask': int(bid_ask_spread)}
 
-    return user_date, trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs
+    inputs_effect = {'user_start_date': user_date, 'trend_inputs': trend_inputs, 'combo_inputs': combo_inputs,
+                     'carry_inputs': carry_inputs, 'realtime_inflation_forecast': realtime_inflation_forecast,
+                     'weighting_costs': weighting_costs}
+    return inputs_effect
 
 
 def get_latest_date_signal_excel(obj_import_data: object):
