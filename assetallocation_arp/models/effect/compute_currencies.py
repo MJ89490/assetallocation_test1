@@ -6,7 +6,7 @@ Created on 12/05/2020
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_implied import CurrencyBaseImplied
-from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
+from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
 import common_libraries.listing_names_all_currencies as constants
 import pandas as pd
@@ -357,14 +357,5 @@ class ComputeCurrencies(ProcessDataEffect):
         currencies_calculations = {'carry_curr': carry, 'trend_curr': trend, 'combo_curr': combo,
                                    'return_excl_curr': return_ex, 'return_incl_curr': return_incl,
                                    'spot_excl_curr': spot_ex, 'spot_incl_curr': spot_incl}
-
-
-        # carry.to_csv('carry_new.csv')
-        # trend.to_csv('trend_new.csv')
-        # combo.to_csv('combo_new.csv')
-        # return_ex.to_csv('return_ex_new.csv')
-        # return_incl.to_csv('return_incl_new.csv')
-        # spot_ex.to_csv('spot_ex_new.csv')
-        # spot_incl.to_csv('spot_incl_new.csv')
 
         return currencies_calculations

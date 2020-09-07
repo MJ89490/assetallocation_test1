@@ -10,10 +10,9 @@ import json
 from configparser import ConfigParser
 
 import common_libraries.listing_names_all_currencies as constants
-from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
-from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
+from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
 
 class ComputeInflationDifferential:

@@ -1,4 +1,4 @@
-from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
+from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
 
 def compute_trades_overview(profit_and_loss_combo_overview, signals_combo_overview):

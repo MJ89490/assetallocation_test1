@@ -1,4 +1,3 @@
-import sys
 import xlwings as xw
 import pandas as pd
 
@@ -13,7 +12,7 @@ from assetallocation_arp.models.effect.compute_warning_flags_overview import Com
 
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
-from assetallocation_arp.models.effect.write_logs_computations import remove_logs_effect
+from data_etl.outputs_effect.write_logs_computations_effect import remove_logs_effect
 
 from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_latest_date_signal_excel
 
@@ -22,9 +21,9 @@ from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import
 """
 
 #TODO
-# - envoyer seconde version à Simnone
-# - réviser code + finir excel pour derniers tests (refaire tests pour qql devise + tab controls)
+# - derniers tests (refaire tests pour qql devise + tab controls)
 # - ajouter doctrings
+# - envoyer version à Simone
 
 
 def run_effect(inputs_effect, input_file):
@@ -128,21 +127,3 @@ def run_effect(inputs_effect, input_file):
                       'spot_excl_signals': agg_currencies['agg_spot_excl_signals']}
 
     return effect_outputs
-
-# if __name__ == '__main__':
-#     carry_inputs = {'type': 'real', 'inflation': ''}
-#     trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'spot'}  # could be Spot or Total Return
-#     combo_inputs = {'cut_off': 2, 'incl_shorts': 'yes', 'cut_off_s': 0.00, 'threshold': 0.25}
-#
-#     position_size_attribution = 0.03 * 1.33
-#     window_size = 52
-#     weight = '1/N'
-#
-#     realtime_inflation_forecast = 'no'
-#
-#     input_file = "arp_dashboard_effect.xlsm"
-#
-#     weighting_costs = {'window': 52, 'weight': weight, 'pos_size_attr': position_size_attribution, 'bid_ask': 10}
-#     run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, input_file)
-#     sys.exit()
-

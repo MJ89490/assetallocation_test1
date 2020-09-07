@@ -1,6 +1,6 @@
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 
-from assetallocation_arp.models.effect.write_logs_computations import write_logs_effect
+from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
 
 class ComputeWarningFlagsOverview(ProcessDataEffect):

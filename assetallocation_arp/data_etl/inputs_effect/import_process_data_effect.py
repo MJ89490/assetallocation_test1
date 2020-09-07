@@ -1,12 +1,15 @@
 from data_etl.import_data_times import extract_inputs_and_mat_data as data_matlab_effect
-# from common_libraries.names_all_currencies_data import Currencies
 from common_libraries.models_names import Models
 
 from configparser import ConfigParser
 
 import pandas as pd
 import os
+import sys
 import json
+
+import xlwings as xw
+import win32api
 
 """
     Class to import data from matlab file
@@ -82,7 +85,10 @@ class ProcessDataEffect:
             self._start_date_calculations = None
         else:
             if pd.to_datetime(value, format='%d-%m-%Y') < pd.to_datetime(start_common_date, format='%d-%m-%Y'):
-                raise ValueError(f'Start date is lesser than {start_common_date}')
+                wb = xw.Book.caller()
+                win32api.MessageBox(wb.app.hwnd, f'Start date is lesser than {start_common_date}')
+                sys.exit()
+                # raise ValueError(f'Start date is lesser than {start_common_date}')
             else:
                 start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
                 self._start_date_calculations = start_date
