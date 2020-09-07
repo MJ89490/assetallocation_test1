@@ -14,22 +14,24 @@ from assetallocation_arp.models.effect.compute_warning_flags_overview import Com
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
 from assetallocation_arp.models.effect.write_logs_computations import remove_logs_effect
+
+from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_latest_date_signal_excel
+
 """
     Main function to run the EFFECT computations
 """
 
 #TODO
-# - ajouter latest_signal_date
 # - tout vérifier
 # - envoyer première version à Simone
-# - ajouter les graphiques
+# - ajouter les outputs
 # - envoyer seconde version à Simnone
 # - réviser code + finir excel pour derniers tests (refaire tests pour qql devise + tab controls)
 # - ajouter doctrings
 
 
 def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs,
-               input_file, latest_signal_date, user_start_date='11-01-2000'):
+               input_file, user_start_date='11-01-2000'):
 
     xw.Book(input_file).set_mock_caller()
     remove_logs_effect()
@@ -52,11 +54,7 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
-    next_latest_date_loc = obj_import_data.dates_origin_index.get_loc(latest_signal_date) + 1
-    next_latest_date = obj_import_data.dates_origin_index[next_latest_date_loc]
-
-    prev_7_days_from_latest_signal_date_loc = obj_import_data.dates_origin_index.get_loc(latest_signal_date) - 5
-    prev_7_days_from_latest_signal_date = obj_import_data.dates_origin_index[prev_7_days_from_latest_signal_date_loc]
+    latest_signal_date = get_latest_date_signal_excel(obj_import_data)
 
     spot_origin, carry_origin = obj_import_data.process_data_config_effect()
 
@@ -87,11 +85,10 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
                                                    weighted_perf=aggregate_currencies['weighted_performance'])
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
-    obj_compute_signals_overview = ComputeSignalsOverview(
-                                                    next_latest_date=next_latest_date,
-                                                    latest_signal_date=latest_signal_date,
-                                                    size_attr=weighting_costs['pos_size_attr'],
-                                                    window=weighting_costs['window'])
+    obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=latest_signal_date,
+                                                          size_attr=weighting_costs['pos_size_attr'],
+                                                          window=weighting_costs['window'],
+                                                          next_latest_date=obj_import_data)
 
     signals_overview = obj_compute_signals_overview.run_signals_overview(
                                                     real_carry_curr=currencies_calculations['carry_curr'],
@@ -105,9 +102,8 @@ def run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_fore
                                               signals_combo_overview=signals_overview['signals_combo_overview'])
 
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
-    obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(
-                                              latest_signal_date=latest_signal_date,
-                                              previous_seven_days_latest_date=prev_7_days_from_latest_signal_date)
+    obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
+                                                                     prev_7_days_from_latest_signal_date=obj_import_data)
     obj_compute_warning_flags_overview.process_data_effect()
     rates_usd, rates_eur = obj_compute_warning_flags_overview.compute_warning_flags_rates()
 
@@ -140,10 +136,7 @@ if __name__ == '__main__':
 
     input_file = "arp_dashboard_effect.xlsm"
 
-    latest_signal_date = pd.to_datetime('24-04-2020',  format='%d-%m-%Y')
-
     weighting_costs = {'window': 52, 'weight': weight, 'pos_size_attr': position_size_attribution, 'bid_ask': 10}
-    run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, input_file,
-               latest_signal_date)
+    run_effect(trend_inputs, combo_inputs, carry_inputs, realtime_inflation_forecast, weighting_costs, input_file)
     sys.exit()
 

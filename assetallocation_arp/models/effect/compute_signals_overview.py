@@ -5,11 +5,11 @@ from assetallocation_arp.models.effect.write_logs_computations import write_logs
 
 class ComputeSignalsOverview:
 
-    def __init__(self, next_latest_date, latest_signal_date, size_attr, window):
-        self.next_latest_date = next_latest_date
+    def __init__(self, latest_signal_date, size_attr, window, next_latest_date):
         self.latest_signal_date = latest_signal_date
         self.size_attr = size_attr
         self.window = window
+        self.next_latest_date = next_latest_date
 
     @property
     def size_attr(self):
@@ -27,6 +27,15 @@ class ComputeSignalsOverview:
     def window(self, value):
         self._window = value
 
+    @property
+    def next_latest_date(self):
+        return self._next_latest_date
+
+    @next_latest_date.setter
+    def next_latest_date(self, value):
+        next_latest_date_loc = value.dates_origin_index.get_loc(self.latest_signal_date) + 1
+        self._next_latest_date = value.dates_origin_index[next_latest_date_loc]
+
     def compute_signals_real_carry(self, real_carry_curr):
         return real_carry_curr.loc[self.next_latest_date]
 
@@ -38,6 +47,7 @@ class ComputeSignalsOverview:
 
     def compute_drawdown_position_size_matr(self, agg_total_incl_signals):
         write_logs_effect("Computing drawdown and position size in matr...", "logs_signals_drawdown_size_matr")
+
         # Drawdown
         drawdown = ((agg_total_incl_signals.loc[self.latest_signal_date][0] / agg_total_incl_signals.max()[0]) - 1) * 100
 
