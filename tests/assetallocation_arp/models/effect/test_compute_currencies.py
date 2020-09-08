@@ -3,16 +3,20 @@ import pandas as pd
 import numpy as np
 import pytest
 
+"""
+Notes: 
+carry_one, trend_one: total return; 4 ;16; Yes; 2.0; 0.0; real; yes; 0.25; 1/N; 52; 10; 4
+
+"""
+
 
 @pytest.fixture
 def currencies():
-    return ['HUF', 'PLN', 'PEN', 'BRL', 'ARS', 'MXN', 'COP', 'CLP', 'TRY', 'RUB', 'ZAR', 'CNY', 'KRW', 'IDR', 'INR', 'PHP',
-            'THB', 'CZK']
+    return ['BRL', 'TRY', 'THB']
 
 
 @pytest.mark.parametrize("carry_origin, carry_results",
-                         [("carry_nominal_origin.csv", "carry_nominal_results.csv"),
-                          ("carry_origin.csv", "carry_results.csv")])
+                         [("carry_one_origin.csv", "carry_one_results.csv")])
 def test_compute_carry(currencies, carry_origin, carry_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                carry_origin))
@@ -26,13 +30,14 @@ def test_compute_carry(currencies, carry_origin, carry_results):
         assert np.allclose(np.array(carry_results[currency].tolist()), np.array(carry_origin[currency].tolist())) is True
 
 
-def test_compute_trend(currencies):
-
+@pytest.mark.parametrize("trend_origin, trend_results",
+                         [("trend_one_origin.csv", "trend_one_results.csv")])
+def test_compute_trend(currencies, trend_origin, trend_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "trend_total_returns_origin.csv"))
+                                               trend_origin))
 
     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "trend_total_returns_results.csv"))
+                                               trend_results))
 
     trend_origin = pd.read_csv(path_origin, sep=',', engine='python')
     trend_results = pd.read_csv(path_result, sep=',', engine='python')
@@ -41,73 +46,73 @@ def test_compute_trend(currencies):
         assert np.allclose(np.array(trend_results[currency].tolist()), np.array(trend_origin[currency].tolist())) is True
 
 
-def test_compute_combo(currencies):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "combo_origin.csv"))
-
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "combo_results.csv"))
-
-    combo_origin = pd.read_csv(path_origin, sep=',', engine='python')
-    combo_results = pd.read_csv(path_result, sep=',', engine='python')
-
-    for currency in currencies:
-        assert np.allclose(np.array(combo_results[currency].tolist()), np.array(combo_origin[currency].tolist())) is True
-
-
-def test_compute_returns_ex_costs(currencies):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "returns_ex_costs_origin.csv"))
-
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "returns_ex_costs_results.csv"))
-
-    returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
-    returns_results = pd.read_csv(path_result, sep=',', engine='python')
-
-    for currency in currencies:
-        assert np.allclose(np.array(returns_results[currency].tolist()), np.array(returns_origin[currency].tolist())) is True
-
-
-def test_compute_return_incl_costs(currencies):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "returns_incl_costs_origin.csv"))
-
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "returns_incl_costs_results.csv"))
-
-    returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
-    returns_results = pd.read_csv(path_result, sep=',', engine='python')
-
-    for currency in currencies:
-        assert np.allclose(np.array(returns_results[currency].tolist()), np.array(returns_origin[currency].tolist())) is True
-
-
-def test_compute_spot_ex_costs(currencies):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "spot_ex_costs_origin.csv"))
-
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "spot_ex_costs_results.csv"))
-
-    spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
-    spot_results = pd.read_csv(path_result, sep=',', engine='python')
-
-    for currency in currencies:
-
-        assert np.allclose(np.array(spot_results[currency].tolist()), np.array(spot_origin[currency].tolist())) is True
-
-
-def test_compute_spot_incl_costs(currencies):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "spot_incl_costs_origin.csv"))
-
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                               "spot_incl_costs_results.csv"))
-
-    spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
-    spot_results = pd.read_csv(path_result, sep=',', engine='python')
-
-    for currency in currencies:
-
-        assert np.allclose(np.array(spot_results[currency].tolist()), np.array(spot_origin[currency].tolist())) is True
+# def test_compute_combo(currencies):
+#     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+#                                                "combo_origin.csv"))
+#
+#     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+#                                                "combo_results.csv"))
+#
+#     combo_origin = pd.read_csv(path_origin, sep=',', engine='python')
+#     combo_results = pd.read_csv(path_result, sep=',', engine='python')
+#
+#     for currency in currencies:
+#         assert np.allclose(np.array(combo_results[currency].tolist()), np.array(combo_origin[currency].tolist())) is True
+#
+#
+# def test_compute_returns_ex_costs(currencies):
+#     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+#                                                "returns_ex_costs_origin.csv"))
+#
+#     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+#                                                "returns_ex_costs_results.csv"))
+#
+#     returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+#     returns_results = pd.read_csv(path_result, sep=',', engine='python')
+#
+#     for currency in currencies:
+#         assert np.allclose(np.array(returns_results[currency].tolist()), np.array(returns_origin[currency].tolist())) is True
+#
+#
+# def test_compute_return_incl_costs(currencies):
+#     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+#                                                "returns_incl_costs_origin.csv"))
+#
+#     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+#                                                "returns_incl_costs_results.csv"))
+#
+#     returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+#     returns_results = pd.read_csv(path_result, sep=',', engine='python')
+#
+#     for currency in currencies:
+#         assert np.allclose(np.array(returns_results[currency].tolist()), np.array(returns_origin[currency].tolist())) is True
+#
+#
+# def test_compute_spot_ex_costs(currencies):
+#     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+#                                                "spot_ex_costs_origin.csv"))
+#
+#     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+#                                                "spot_ex_costs_results.csv"))
+#
+#     spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
+#     spot_results = pd.read_csv(path_result, sep=',', engine='python')
+#
+#     for currency in currencies:
+#
+#         assert np.allclose(np.array(spot_results[currency].tolist()), np.array(spot_origin[currency].tolist())) is True
+#
+#
+# def test_compute_spot_incl_costs(currencies):
+#     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+#                                                "spot_incl_costs_origin.csv"))
+#
+#     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+#                                                "spot_incl_costs_results.csv"))
+#
+#     spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
+#     spot_results = pd.read_csv(path_result, sep=',', engine='python')
+#
+#     for currency in currencies:
+#
+#         assert np.allclose(np.array(spot_results[currency].tolist()), np.array(spot_origin[currency].tolist())) is True

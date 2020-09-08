@@ -182,13 +182,6 @@ class ComputeAggregateCurrencies:
 
     def compute_weighted_performance(self, log_returns_excl, combo_curr):
         write_logs_effect("Computing weighted performance...", "logs_weighted_perf")
-        # # Instantiate ConfigParser
-        # config = ConfigParser()
-        # # Parse existing file
-        # path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'matr_weights_effect.ini')
-        # config.read(path)
-        # weights = json.loads(config.get('weighted_performance', 'weights'))
-        # start_date_perf = config.get('start_date_weighted_performance', 'start_date_weighted_perf')
 
         sheet_effect_input = xw.Book.caller().sheets['effect_input']
 

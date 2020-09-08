@@ -56,6 +56,17 @@ def get_inputs_effect_excel(input_file):
     return inputs_effect
 
 
+def get_inputs_matlab_effect():
+
+    sheet_effect_input = xw.Book.caller().sheets['effect_input']
+    signal_day_effect = sheet_effect_input.range('signal_day_effect').value
+    start_date_effect = sheet_effect_input.range('start_date_effect').value
+    frequency_effect = sheet_effect_input.range('frequency_effect').value
+
+    return {'signal_day_effect': signal_day_effect,
+            'start_date_effect': start_date_effect, 'frequency_effect': frequency_effect}
+
+
 def get_latest_date_signal_excel(obj_import_data: object):
 
     sheet_effect_input = xw.Book.caller().sheets['effect_input']

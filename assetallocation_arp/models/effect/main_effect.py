@@ -22,6 +22,7 @@ from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import
 
 #TODO
 # - derniers tests (refaire tests pour qql devise + tab controls)
+# - ajouter fct pour matlab
 # - ajouter doctrings
 # - envoyer version à Simone
 

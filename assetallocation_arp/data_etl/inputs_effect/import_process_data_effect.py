@@ -15,6 +15,8 @@ import win32api
     Class to import data from matlab file
 """
 
+from assetallocation_arp.data_etl.data_manipulation import set_data_frequency
+from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_inputs_matlab_effect
 
 class ImportDataEffect:
 
@@ -28,6 +30,13 @@ class ImportDataEffect:
         """
         self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
                                                   input_file=None, date=None)
+
+        matlab_inputs = get_inputs_matlab_effect()
+
+        self.data_currencies = self.data_currencies.loc[matlab_inputs['start_date_effect']:]
+
+        self.data_currencies = set_data_frequency(self.data_currencies, matlab_inputs['frequency_effect'],
+                                                  matlab_inputs['signal_day_effect'])
 
         return self.data_currencies
 
