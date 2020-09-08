@@ -5,7 +5,7 @@ import pytest
 
 """
 Notes: 
-carry_one, trend_one: total return; 4 ;16; Yes; 2.0; 0.0; real; yes; 0.25; 1/N; 52; 10; 4
+carry_one, trend_one, combo_one: total return; 4 ;16; Yes; 2.0; 0.0; real; yes; 0.25; 1/N; 52; 10; 4
 
 """
 
@@ -46,19 +46,21 @@ def test_compute_trend(currencies, trend_origin, trend_results):
         assert np.allclose(np.array(trend_results[currency].tolist()), np.array(trend_origin[currency].tolist())) is True
 
 
-# def test_compute_combo(currencies):
-#     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-#                                                "combo_origin.csv"))
-#
-#     path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-#                                                "combo_results.csv"))
-#
-#     combo_origin = pd.read_csv(path_origin, sep=',', engine='python')
-#     combo_results = pd.read_csv(path_result, sep=',', engine='python')
-#
-#     for currency in currencies:
-#         assert np.allclose(np.array(combo_results[currency].tolist()), np.array(combo_origin[currency].tolist())) is True
-#
+@pytest.mark.parametrize("combo_origin, combo_results",
+                         [("combo_one_origin.csv", "combo_one_results.csv")])
+def test_compute_combo(currencies, combo_origin, combo_results):
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
+                                               "combo_origin.csv"))
+
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                               "combo_results.csv"))
+
+    combo_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    combo_results = pd.read_csv(path_result, sep=',', engine='python')
+
+    for currency in currencies:
+        assert np.allclose(np.array(combo_results[currency].tolist()), np.array(combo_origin[currency].tolist())) is True
+
 #
 # def test_compute_returns_ex_costs(currencies):
 #     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
