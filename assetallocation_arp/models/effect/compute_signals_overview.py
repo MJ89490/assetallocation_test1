@@ -74,6 +74,7 @@ class ComputeSignalsOverview:
         signals_real_carry_overview = self.compute_signals_real_carry(real_carry_curr=real_carry_curr)
         signals_trend_overview = self.compute_signals_trend(trend_curr=trend_curr)
         signals_combo_overview = self.compute_signals_combo(combo_curr=combo_curr)
+
         signals_drawdown_position_size_matr = self.compute_drawdown_position_size_matr(agg_total_incl_signals=agg_total_incl_signals)
         signals_limits_controls = self.compute_limits_controls(signals_combo=signals_combo_overview, agg_log_returns=agg_log_returns)
 

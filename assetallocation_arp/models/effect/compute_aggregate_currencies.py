@@ -86,6 +86,7 @@ class ComputeAggregateCurrencies:
         :return: dataFrame of Excl signals (total return)
         """
         write_logs_effect("Computing exclude signals total return", "logs_excl_signals_total")
+
         return (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
 
     def compute_excl_signals_spot_return(self, spot_origin):
@@ -224,18 +225,24 @@ class ComputeAggregateCurrencies:
             write_logs_effect("Not computing inverse volatility: weight == 1/N", "logs_inverse_volatility")
 
         excl_signals_total_return = self.compute_excl_signals_total_return(carry_origin=carry_origin)
+
         excl_signals_spot_return = self.compute_excl_signals_spot_return(spot_origin=spot_origin)
 
         log_returns_excl_costs = self.compute_log_returns_excl_costs(returns_ex_costs=excl_signals_total_return)
+
         weighted_performance = self.compute_weighted_performance(log_returns_excl=log_returns_excl_costs, combo_curr=combo_curr)
 
         aggregate_total_incl_signals = self.compute_aggregate_total_incl_signals(returns_incl_costs=returns_incl_costs,
                                                                                  inverse_volatility=inverse_volatilies)
+
         aggregate_total_excl_signals = self.compute_aggregate_total_excl_signals(returns_excl_costs=excl_signals_total_return,
                                                                                  inverse_volatility=inverse_volatilies)
 
         aggregate_spot_incl_signals = self.compute_aggregate_spot_incl_signals(spot_incl_costs=spot_incl_costs,
                                                                                inverse_volatility=inverse_volatilies)
+
+
+
         aggregate_spot_excl_signals = self.compute_aggregate_spot_excl_signals(spot_excl_costs=excl_signals_spot_return,
                                                                                inverse_volatility=inverse_volatilies)
 
