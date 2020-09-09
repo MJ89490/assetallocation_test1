@@ -241,8 +241,6 @@ class ComputeAggregateCurrencies:
         aggregate_spot_incl_signals = self.compute_aggregate_spot_incl_signals(spot_incl_costs=spot_incl_costs,
                                                                                inverse_volatility=inverse_volatilies)
 
-
-
         aggregate_spot_excl_signals = self.compute_aggregate_spot_excl_signals(spot_excl_costs=excl_signals_spot_return,
                                                                                inverse_volatility=inverse_volatilies)
 

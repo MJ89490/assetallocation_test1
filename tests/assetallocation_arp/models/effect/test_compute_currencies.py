@@ -6,6 +6,7 @@ import pytest
 """
 Notes: 
 one: total return; 4 ;16; Yes; 2.0; 0.0; real; yes; 0.25; 1/N; 52; 10; 4
+two: spot; 4 ;16; No; 2.0; 0.0; real; yes; 0.25 ;1/N ;52 ;10 ;4
 
 """
 
@@ -16,7 +17,8 @@ def currencies():
 
 
 @pytest.mark.parametrize("carry_origin, carry_results",
-                         [("carry_one_origin.csv", "carry_one_results.csv")])
+                         [("carry_one_origin.csv", "carry_one_results.csv"),
+                          ("carry_two_origin.csv", "carry_two_results.csv")])
 def test_compute_carry(currencies, carry_origin, carry_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                carry_origin))
@@ -31,7 +33,8 @@ def test_compute_carry(currencies, carry_origin, carry_results):
 
 
 @pytest.mark.parametrize("trend_origin, trend_results",
-                         [("trend_one_origin.csv", "trend_one_results.csv")])
+                         [("trend_one_origin.csv", "trend_one_results.csv"),
+                          ("trend_two_origin.csv", "trend_two_results.csv")])
 def test_compute_trend(currencies, trend_origin, trend_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                trend_origin))
@@ -47,7 +50,8 @@ def test_compute_trend(currencies, trend_origin, trend_results):
 
 
 @pytest.mark.parametrize("combo_origin, combo_results",
-                         [("combo_one_origin.csv", "combo_one_results.csv")])
+                         [("combo_one_origin.csv", "combo_one_results.csv"),
+                          ("combo_two_origin.csv", "combo_two_results.csv")])
 def test_compute_combo(currencies, combo_origin, combo_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                combo_origin))
@@ -63,7 +67,8 @@ def test_compute_combo(currencies, combo_origin, combo_results):
 
 
 @pytest.mark.parametrize("returns_ex_origin, returns_ex_results",
-                         [("returns_ex_costs_one_origin.csv", "returns_ex_costs_one_results.csv")])
+                         [("returns_ex_costs_one_origin.csv", "returns_ex_costs_one_results.csv"),
+                          ("returns_ex_costs_two_origin.csv", "returns_ex_costs_two_results.csv")])
 def test_compute_returns_ex_costs(currencies, returns_ex_origin, returns_ex_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                returns_ex_origin))
@@ -79,7 +84,8 @@ def test_compute_returns_ex_costs(currencies, returns_ex_origin, returns_ex_resu
 
 
 @pytest.mark.parametrize("returns_incl_origin, returns_incl_results",
-                         [("returns_incl_costs_one_origin.csv", "returns_incl_costs_one_results.csv")])
+                         [("returns_incl_costs_one_origin.csv", "returns_incl_costs_one_results.csv"),
+                          ("returns_incl_costs_two_origin.csv", "return_incl_costs_two_results.csv")])
 def test_compute_return_incl_costs(currencies, returns_incl_origin, returns_incl_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                returns_incl_origin))
@@ -95,7 +101,8 @@ def test_compute_return_incl_costs(currencies, returns_incl_origin, returns_incl
 
 
 @pytest.mark.parametrize("spot_ex_origin, spot_ex_results",
-                         [("spot_ex_costs_one_origin.csv.", "spot_ex_costs_one_results.csv")])
+                         [("spot_ex_costs_one_origin.csv.", "spot_ex_costs_one_results.csv"),
+                          ("spot_ex_costs_two_origin.csv.", "spot_ex_costs_two_results.csv")])
 def test_compute_spot_ex_costs(currencies, spot_ex_origin, spot_ex_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                spot_ex_origin))
@@ -112,7 +119,8 @@ def test_compute_spot_ex_costs(currencies, spot_ex_origin, spot_ex_results):
 
 
 @pytest.mark.parametrize("spot_incl_origin, spot_incl_results",
-                         [("spot_incl_costs_one_origin.csv.", "spot_incl_costs_one_results.csv")])
+                         [("spot_incl_costs_one_origin.csv.", "spot_incl_costs_one_results.csv"),
+                          ("spot_incl_costs_two_origin.csv.", "spot_incl_costs_two_results.csv")])
 def test_compute_spot_incl_costs(currencies, spot_incl_origin, spot_incl_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                spot_incl_origin))
