@@ -3,5 +3,5 @@ serverUrl=https://n00-sonar/sonar
 serverVersion=8.1.0.31237
 branch=feature/effect_new
 dashboardUrl=https://n00-sonar/sonar/dashboard?id=%27assetallocation_arp%27%3Aproject&branch=feature%2Feffect_new
-ceTaskId=AXR3EJfAy3N9bzQhYoy3
-ceTaskUrl=https://n00-sonar/sonar/api/ce/task?id=AXR3EJfAy3N9bzQhYoy3
+ceTaskId=AXR3GCNyy3N9bzQhYoy8
+ceTaskUrl=https://n00-sonar/sonar/api/ce/task?id=AXR3GCNyy3N9bzQhYoy8
