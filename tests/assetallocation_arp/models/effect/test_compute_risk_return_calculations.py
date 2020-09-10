@@ -16,9 +16,8 @@ two: spot; 4 ;16; No; 2.0; 0.0; real; yes; 0.25 ;1/N ;52 ;10 ;4
 def test_compute_excess_returns(risk_returns_table_origin, risk_returns_table_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                     "risk_returns_table_one_results.csv"))
+    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                                "risk_returns_table_one_results.csv"))
     risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
     risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
@@ -35,9 +34,8 @@ def test_compute_excess_returns(risk_returns_table_origin, risk_returns_table_re
 def test_compute_std_dev(risk_returns_table_origin, risk_returns_table_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                     "risk_returns_table_one_results.csv"))
+    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                                "risk_returns_table_one_results.csv"))
     risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
     risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
@@ -54,9 +52,8 @@ def test_compute_std_dev(risk_returns_table_origin, risk_returns_table_results):
 def test_compute_sharpe_ratio(risk_returns_table_origin, risk_returns_table_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                     "risk_returns_table_one_results.csv"))
+    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                                "risk_returns_table_one_results.csv"))
 
     risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
     risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
@@ -74,9 +71,8 @@ def test_compute_sharpe_ratio(risk_returns_table_origin, risk_returns_table_resu
 def test_compute_max_drawdown(risk_returns_table_origin, risk_returns_table_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                     "risk_returns_table_one_results.csv"))
+    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                                "risk_returns_table_one_results.csv"))
 
     risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
     risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
@@ -94,9 +90,8 @@ def test_compute_max_drawdown(risk_returns_table_origin, risk_returns_table_resu
 def test_compute_calmar_ratio(risk_returns_table_origin, risk_returns_table_results):
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
                                                "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                     "risk_returns_table_one_results.csv"))
+    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
+                                                "risk_returns_table_one_results.csv"))
 
     risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
     risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')

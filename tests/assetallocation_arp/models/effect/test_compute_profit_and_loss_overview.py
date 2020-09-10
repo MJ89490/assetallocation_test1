@@ -22,7 +22,8 @@ def test_compute_profit_and_loss_combo(profit_and_loss_overview_origin, profit_a
     profit_and_loss_results = pd.read_csv(path_results, sep=',', engine='python')
     profit_and_loss_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    assert np.allclose(np.array(profit_and_loss_results.Last_week.tolist()), np.array(profit_and_loss_origin.Last_week.tolist())) is True
+    assert np.allclose(np.array(profit_and_loss_results.Last_week.tolist()),
+                       np.array(profit_and_loss_origin.Last_week.tolist())) is True
 
 
 @pytest.mark.parametrize("profit_and_loss_overview_origin, profit_and_loss_overview_results",
@@ -37,7 +38,8 @@ def test_compute_profit_and_loss_returns(profit_and_loss_overview_origin, profit
     profit_and_loss_results = pd.read_csv(path_results, sep=',', engine='python')
     profit_and_loss_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    assert np.allclose(np.array(profit_and_loss_results.Total.tolist()), np.array(profit_and_loss_origin.Total.tolist())) is True
+    assert np.allclose(np.array(profit_and_loss_results.Total.tolist()),
+                       np.array(profit_and_loss_origin.Total.tolist())) is True
 
 
 @pytest.mark.parametrize("profit_and_loss_overview_origin, profit_and_loss_overview_results",
@@ -52,7 +54,8 @@ def test_compute_profit_and_loss_spot(profit_and_loss_overview_origin, profit_an
     profit_and_loss_results = pd.read_csv(path_results, sep=',', engine='python')
     profit_and_loss_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    assert np.allclose(np.array(profit_and_loss_results.Spot.tolist()), np.array(profit_and_loss_origin.Spot.tolist())) is True
+    assert np.allclose(np.array(profit_and_loss_results.Spot.tolist()),
+                       np.array(profit_and_loss_origin.Spot.tolist())) is True
 
 
 @pytest.mark.parametrize("profit_and_loss_overview_origin, profit_and_loss_overview_results",
@@ -67,7 +70,8 @@ def test_compute_profit_and_loss_carry(profit_and_loss_overview_origin, profit_a
     profit_and_loss_results = pd.read_csv(path_results, sep=',', engine='python')
     profit_and_loss_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    assert np.allclose(np.array(profit_and_loss_results.Carry.tolist()), np.array(profit_and_loss_origin.Carry.tolist())) is True
+    assert np.allclose(np.array(profit_and_loss_results.Carry.tolist()),
+                       np.array(profit_and_loss_origin.Carry.tolist())) is True
 
 
 @pytest.mark.parametrize("profit_and_loss_overview_origin, profit_and_loss_overview_results",

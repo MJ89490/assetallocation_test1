@@ -6,6 +6,11 @@ import os
 
 
 def get_inputs_effect_excel(input_file):
+    """
+    Function getting the different inputs from excel dashboard
+    :param input_file: the name of the excel file
+    :return: a dictionary
+    """
     xw.Book(input_file).set_mock_caller()
 
     sheet_effect_input = xw.Book.caller().sheets['effect_input']
@@ -57,7 +62,10 @@ def get_inputs_effect_excel(input_file):
 
 
 def get_inputs_matlab_effect():
-
+    """
+    Function getting the inputs for the matlab file from excel dashboard
+    :return: a dictionary
+    """
     sheet_effect_input = xw.Book.caller().sheets['effect_input']
     signal_day_effect = sheet_effect_input.range('signal_day_effect').value
     start_date_effect = sheet_effect_input.range('start_date_effect').value
@@ -68,6 +76,11 @@ def get_inputs_matlab_effect():
 
 
 def get_latest_date_signal_excel(obj_import_data: object):
+    """
+    Function getting the latest date signal from excel dashboard
+    :param obj_import_data: object from compute_currencies class
+    :return: a string
+    """
 
     sheet_effect_input = xw.Book.caller().sheets['effect_input']
     latest_signal_date = sheet_effect_input.range('latest_signal_date').value

@@ -18,6 +18,7 @@ import win32api
 from assetallocation_arp.data_etl.data_manipulation import set_data_frequency
 from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_inputs_matlab_effect
 
+
 class ImportDataEffect:
 
     def __init__(self):
@@ -153,6 +154,10 @@ class ProcessDataEffect:
 
     @staticmethod
     def parse_data_config_effect():
+        """
+        Function parsing the data from the config file
+        :return: a dictionary
+        """
         # Instantiate ConfigParser
         config = ConfigParser()
         # Parse existing file
@@ -178,6 +183,10 @@ class ProcessDataEffect:
         return config_data
 
     def preprocess_data_config_effect(self):
+        """
+        Function preprocessing the data from the config file
+        :return: a dictionary
+        """
         config_data = self.parse_data_config_effect()
 
         currencies_3M_implied_usd = config_data['3M_implied_config']['three_month_implied_usd']
@@ -215,6 +224,10 @@ class ProcessDataEffect:
         return preprocess_data
 
     def process_data_config_effect(self):
+        """
+        Function processing the data from the config file
+        :return: dataFrames for spot and carry
+        """
 
         preprocess_data = self.preprocess_data_config_effect()
 

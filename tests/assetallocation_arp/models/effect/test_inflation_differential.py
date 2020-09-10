@@ -22,8 +22,10 @@ def test_compute_inflation_release():
 
 
 def test_compute_inflation_differential(currencies):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "inflation_differential_origin.csv"))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "inflation_differential_results.csv"))
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
+                                               "outputs_origin", "inflation_differential_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
+                                               "outputs_to_test", "inflation_differential_results.csv"))
 
     inflation_results = pd.read_csv(path_result, sep=',', engine='python')
     inflation_origin = pd.read_csv(path_origin, sep=',', engine='python')

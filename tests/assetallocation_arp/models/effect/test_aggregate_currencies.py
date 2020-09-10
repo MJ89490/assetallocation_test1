@@ -19,8 +19,10 @@ def test_compute_inverse_volatility(currencies):
     """
     Notes: spot; 4 ;16; No; 2.0; 0.0; real; yes; 0.25 ;1/N ;52 ;10 ;4
     """
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "inverse_volatilities_origin.csv"))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test", "inverse_volatilities_results.csv"))
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
+                                               "outputs_origin", "inverse_volatilities_origin.csv"))
+    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources",
+                                               "effect", "outputs_to_test", "inverse_volatilities_results.csv"))
 
     volatility_results = pd.read_csv(path_result, sep=',', engine='python')
     volatility_origin = pd.read_csv(path_origin, sep=',', engine='python')

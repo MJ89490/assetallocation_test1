@@ -20,6 +20,10 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
         self._prev_7_days_from_latest_signal_date = value.dates_origin_index[prev_7_days_from_latest_signal_date_loc]
 
     def compute_warning_flags_rates(self):
+        """
+        Function computing the warning flags rates
+        :return: dataFrames with rates usd and rates eur
+        """
         write_logs_effect("Computing warnings flags rates...", "logs_warnings_rates")
 
         three_month_implied_usd_latest_date = self.three_month_implied_usd.loc[self.latest_signal_date]
@@ -35,6 +39,9 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
         return rates_usd.values, rates_eur.values
 
     def compute_warning_flags_inflation(self):
-        #todo write doctstrings and specify why it will be done later
+        """
+        The function will be completed later
+        :return:
+        """
         pass
 

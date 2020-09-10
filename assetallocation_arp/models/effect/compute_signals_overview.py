@@ -37,15 +37,35 @@ class ComputeSignalsOverview:
         self._next_latest_date = value.dates_origin_index[next_latest_date_loc]
 
     def compute_signals_real_carry(self, real_carry_curr):
+        """
+        Function computing the real carry of signals
+        :param real_carry_curr: real_carry_curr values from compute_currencies class
+        :return: a dataFrame with real carry of signals values
+        """
         return real_carry_curr.loc[self.next_latest_date]
 
     def compute_signals_trend(self, trend_curr):
+        """
+         Function computing the signals trend
+         :param trend_curr: trend_curr values from compute_currencies class
+         :return: a dataFrame with signals trend values
+         """
         return trend_curr.loc[self.next_latest_date]
 
     def compute_signals_combo(self, combo_curr):
+        """
+         Function computing the signals combo
+         :param combo_curr: combo_curr values from compute_currencies class
+         :return: a dataFrame with signals combo values
+         """
         return combo_curr.loc[self.next_latest_date]
 
     def compute_drawdown_position_size_matr(self, agg_total_incl_signals):
+        """
+        Function computing the drawdown and the position size in MATR
+        :param agg_total_incl_signals: agg_total_incl_signals values
+        :return: a dictionary with drawdown and size values
+        """
         write_logs_effect("Computing drawdown and position size in matr...", "logs_signals_drawdown_size_matr")
 
         # Drawdown
@@ -57,6 +77,12 @@ class ComputeSignalsOverview:
         return {'drawdown': drawdown, 'size_matr': size_matr}
 
     def compute_limits_controls(self, signals_combo, agg_log_returns):
+        """
+        Function comuting the limits controls
+        :param signals_combo: signals_combo values
+        :param agg_log_returns: agg_log_returns values
+        :return: a dictionary with ex ante vol and matr notional values
+        """
         write_logs_effect("Computing limits controls...", "logs_signals_limits")
         current_signals = tuple(list(signals_combo * self.size_attr))
         # Ex-ante volatility
@@ -70,7 +96,15 @@ class ComputeSignalsOverview:
         return {'ex_ante_vol': ex_ante_vol, 'matr_notional': matr_notional}
 
     def run_signals_overview(self, real_carry_curr, trend_curr, combo_curr, agg_total_incl_signals, agg_log_returns):
-
+        """
+        Function calling all the functions above
+        :param real_carry_curr: real_carry_curr values from compute_currencies class
+        :param trend_curr: trend_curr values from compute_currencies class
+        :param combo_curr: combo_curr values from compute_currencies class
+        :param agg_total_incl_signals: agg_total_incl_signals values
+        :param agg_log_returns: agg_log_returns values
+        :return: a dictionary
+        """
         signals_real_carry_overview = self.compute_signals_real_carry(real_carry_curr=real_carry_curr)
         signals_trend_overview = self.compute_signals_trend(trend_curr=trend_curr)
         signals_combo_overview = self.compute_signals_combo(combo_curr=combo_curr)

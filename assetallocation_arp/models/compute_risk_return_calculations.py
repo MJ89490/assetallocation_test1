@@ -1,7 +1,6 @@
 from math import sqrt
 
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
-#todo add docstrings
 
 
 class ComputeRiskReturnCalculations:
@@ -12,6 +11,12 @@ class ComputeRiskReturnCalculations:
         self.dates_index = dates_index
 
     def compute_excess_returns(self, returns_excl_signals, returns_incl_signals):
+        """
+        Function computing the excess returns
+        :param returns_excl_signals: returns_excl_signals values
+        :param returns_incl_signals: returns_incl_signals values
+        :return: a dictionary with excess returns having no signals and with signal
+        """
         write_logs_effect("Computing risk/return excess returns...", "logs_excess_returns")
         exp = 365 / (self.end_date - self.start_date).days
 
@@ -23,6 +28,12 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_std_dev(returns_excl_signals, returns_incl_signals):
+        """
+        Function computing the standard deviation
+        :param returns_excl_signals: returns_excl_signals values
+        :param returns_incl_signals: returns_incl_signals values
+        :return: a dictionary with standard deviation having no signals and with signal
+        """
         write_logs_effect("Computing risk/return std dev...", "logs_std_dev")
         std_dev_no_signals = (returns_excl_signals / returns_excl_signals.shift(1)).std()[0] * sqrt(52) * 100
         std_dev_with_signals = (returns_incl_signals / returns_incl_signals.shift(1)).std()[0] * sqrt(52) * 100
@@ -31,6 +42,12 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_sharpe_ratio(excess_returns, std_dev):
+        """
+        Function computing the sharpe ratio
+        :param excess_returns: excess_returns values
+        :param std_dev: std_dev values
+        :return: a dictionary with sharpe ratio having no signals and with signal
+        """
         write_logs_effect("Computing risk/return sharpe ratio...", "logs_sharpe_ratio")
         sharpe_ratio_no_signals = excess_returns['excess_returns_no_signals'] / std_dev['std_dev_no_signals']
         sharpe_ratio_with_signals = excess_returns['excess_returns_with_signals'] / std_dev['std_dev_with_signals']
@@ -40,6 +57,12 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_max_drawdown(returns_excl_signals, returns_incl_signals):
+        """
+        Function computing the max drawdown
+        :param returns_excl_signals: returns_excl_signals values
+        :param returns_incl_signals: returns_incl_signals values
+        :return: a dictionary with max drawdown having no signals and with signal
+        """
         write_logs_effect("Computing risk/return max drawdown...", "logs_max_drawdown")
         returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.to_list()
         returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.tolist()
@@ -56,6 +79,12 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_calmar_ratio(excess_returns, max_drawdown):
+        """
+        Function computing the calmar ratio
+        :param excess_returns: excess_returns values
+        :param max_drawdown: max_drawdown values
+        :return: a dictionary with calmar ratio having no signals and with signal
+        """
         write_logs_effect("Computing risk/return calmar ratio...", "logs_calmar_ratio")
         calmar_ratio_no_signals = excess_returns['excess_returns_no_signals'] / max_drawdown['max_drawdown_no_signals']
         calmar_ratio_with_signals = excess_returns['excess_returns_with_signals'] / max_drawdown['max_drawdown_with_signals']
@@ -65,6 +94,13 @@ class ComputeRiskReturnCalculations:
 
     @staticmethod
     def compute_equity_correlation(spx_index_values, returns_excl_signals, returns_incl_signals):
+        """
+        Function computing the equity correlation
+        :param spx_index_values: excess_returns values
+        :param returns_excl_signals: returns_excl_signals values
+        :param returns_incl_signals: returns_incl_signals values
+        :return: a dictionary with equity correlation having no signals and with signal
+        """
         write_logs_effect("Computing risk/return equity correlation...", "logs_equity_correlation")
         ret_excl_shift = (returns_excl_signals / returns_excl_signals.shift(1)).iloc[1:]
         ret_incl_shift = (returns_incl_signals / returns_incl_signals.shift(1)).iloc[1:]
@@ -77,9 +113,20 @@ class ComputeRiskReturnCalculations:
                 'equity_corr_with_signals': equity_corr_with_signals.values}
 
     def compute_gbi_em_correlation(self):
+        """
+        Function will be added later
+        :return:
+        """
         pass
 
     def run_compute_risk_return_calculations(self, returns_excl_signals, returns_incl_signals, spxt_index_values):
+        """
+        Function calling the functions above
+        :param returns_excl_signals: returns_excl_returns_excl_signals values
+        :param returns_incl_signals: returns_incl_signals values
+        :param spxt_index_values: spxt_index_values values
+        :return: a dictionary
+        """
         excess_returns = self.compute_excess_returns(returns_excl_signals=returns_excl_signals,
                                                      returns_incl_signals=returns_incl_signals)
 

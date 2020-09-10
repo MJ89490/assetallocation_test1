@@ -339,6 +339,13 @@ class ComputeCurrencies(ProcessDataEffect):
         return self.spot_incl_costs
 
     def run_compute_currencies(self, carry_inputs, trend_inputs, combo_inputs):
+        """
+        Function calling all the functions above
+        :param carry_inputs: carry_inputs inputs from the dashboard
+        :param trend_inputs: trend_inputs inputs from the dashboard
+        :param combo_inputs: combo_inputs inputs from the dashboard
+        :return: a dictionary
+        """
         carry = self.compute_carry(carry_type=carry_inputs['type'], inflation_differential=carry_inputs['inflation'])
 
         trend = self.compute_trend(trend_ind=trend_inputs['trend'], short_term=trend_inputs['short_term'],

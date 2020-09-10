@@ -140,7 +140,16 @@ class ComputeProfitAndLoss:
                 'profit_and_loss_spot_weekly_matr': weekly_spot_matr, 'profit_and_loss_carry_weekly_matr': weekly_carry_matr }
 
     def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals, weighted_perf):
-
+        """
+        Function calling all the functions above
+        :param combo_curr: combo_curr values from compute_currencies class
+        :param returns_ex_costs: returns_ex_costs values
+        :param spot_origin: spot_origin values from Bloomberg
+        :param total_incl_signals: total_incl_signals values
+        :param spot_incl_signals: spot_incl_signals values
+        :param weighted_perf: weighted_perf values
+        :return: a dictionary
+        """
         profit_and_loss_combo_overview = self.compute_profit_and_loss_combo(combo_curr=combo_curr)
         profit_and_loss_total_overview = self.compute_profit_and_loss_total(returns_ex_costs=returns_ex_costs)
         profit_and_loss_spot_overview = self.compute_profit_and_loss_spot(spot_origin=spot_origin,
