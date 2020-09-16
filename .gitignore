@@ -461,4 +461,4 @@ OpenCover/
 .cache/v/cache/lastfailed
 tests/.cache/v/cache/lastfailed
 
- .scannerwork/*
+.scannerwork/*
