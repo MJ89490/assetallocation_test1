@@ -8,7 +8,7 @@ print(ROOT_DIR)
 sys.path.insert(0, ROOT_DIR)
 
 from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_inputs_effect_excel
-from assetallocation_arp.data_etl import import_data_times as gd
+from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times
 from assetallocation_arp.common_libraries import models_names
 from assetallocation_arp.models.effect.main_effect import run_effect
@@ -29,9 +29,12 @@ def run_model(model_type, mat_file, input_file):
         print(model_type)
 
     if model_type == models_names.Models.effect.name:
+        #TODO remove that later + changer dans import data pour matfile!!!
         inputs_effect = get_inputs_effect_excel(input_file)
 
-        outputs_effect = run_effect(inputs_effect, input_file=input_file)
+        strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+
+        outputs_effect = run_effect(strategy_inputs, inputs_effect, input_file=input_file)
 
         write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
                                                                  outputs_effect['signals_overview'],

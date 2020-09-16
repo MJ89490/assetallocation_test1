@@ -20,12 +20,8 @@ from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import
     Main function to run the EFFECT computations
 """
 
-#TODO
-# - ajouter doctrings
-# - relire code
 
-
-def run_effect(inputs_effect, input_file):
+def run_effect(strategy_inputs, inputs_effect, input_file):
 
     xw.Book(input_file).set_mock_caller()
     remove_logs_effect()
@@ -33,13 +29,14 @@ def run_effect(inputs_effect, input_file):
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
-    obj_import_data = ComputeCurrencies(bid_ask_spread=inputs_effect['weighting_costs']['bid_ask'])
+    obj_import_data = ComputeCurrencies(bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'])
     spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = inputs_effect['user_start_date']
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
-    inflation_differential = obj_inflation_differential.compute_inflation_differential(inputs_effect['realtime_inflation_forecast'])
+
+    inflation_differential = obj_inflation_differential.compute_inflation_differential(strategy_inputs['Realtime Inflation Forecast'])
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     inputs_effect['carry_inputs']['inflation'] = inflation_differential
