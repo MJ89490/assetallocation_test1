@@ -1,0 +1,14 @@
+,asset,signal_ticker,future_ticker,costs,s_leverage
+1,US Equities,SPXT Index,SP1 A:00_0_R Index,0.0002,1
+2,EU Equities,SX5T Index,VG1 A:00_0_R Index,0.0002,1
+3,JP Equities,TPXDDVD Index,TP1 A:00_0_R Index,0.0002,1
+4,HK Equities,HSI 1 A:00_0_R Index,HI1 A:00_0_R Index,0.0002,1
+5,US 10y Bonds,MLT1US10 Index,TY1 A:00_0_R Comdty,0.0002,3
+6,UK 10y Bonds,G 1 A:00_0_R Comdty,G 1 A:00_0_R Comdty,0.0002,3
+7,Eu 10y Bonds,RX1 A:00_0_R Comdty,RX1 A:00_0_R Comdty,0.0002,3
+8,CA 10y Bonds,CN1 A:00_0_R Comdty,CN1 A:00_0_R Comdty,0.0002,3
+9,JPY,JPYUSD Curncy,JY1 A:00_0_R Curncy,0.0002,2
+10,EUR,EURUSD Curncy,EC1 A:00_0_R Curncy,0.0002,2
+11,AUD,AUDUSD Curncy,AD1 A:00_0_R Curncy,0.0002,2
+12,CAD,CADUSD Curncy,CD1 A:00_0_R Curncy,0.0002,2
+13,EURGBP,EURGBP Curncy,RP1 A:00_0_R Curncy,0.0002,2

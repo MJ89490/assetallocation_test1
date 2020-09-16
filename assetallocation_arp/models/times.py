@@ -20,8 +20,6 @@ from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Categor
 
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
-    # Remove the index below in the dashboard: they are not in the all_data col
-    # "['RX1 R:00_0_R Comdty', 'CN1 R:00_0_R Comdty', 'G 1 R:00_0_R Comdty'] not in index"
 
     # format data and inputs
     asset_inputs_t = asset_inputs.set_index('asset').T
@@ -54,6 +52,12 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     else:
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, True)
         (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
+
+        signals.to_csv('signals_leverage_e.csv')
+        returns.to_csv('returns_leverage_e.csv')
+        r.to_csv('r_leverage_e.csv')
+        positioning.to_csv('positioning_leverage_e.csv')
+
     return signals, returns, r, positioning
 
 

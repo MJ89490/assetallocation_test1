@@ -27,7 +27,7 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
+        # write_output_to_excel({Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
 
     if model_type == Name.maven.name:
         # get inputs from excel and matlab data
