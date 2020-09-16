@@ -53,10 +53,10 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, True)
         (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
 
-        signals.to_csv('signals_leverage_e.csv')
-        returns.to_csv('returns_leverage_e.csv')
-        r.to_csv('r_leverage_e.csv')
-        positioning.to_csv('positioning_leverage_e.csv')
+        signals.to_csv('signals_leverage_n.csv')
+        returns.to_csv('returns_leverage_n.csv')
+        r.to_csv('r_leverage_n.csv')
+        positioning.to_csv('positioning_leverage_n.csv')
 
     return signals, returns, r, positioning
 

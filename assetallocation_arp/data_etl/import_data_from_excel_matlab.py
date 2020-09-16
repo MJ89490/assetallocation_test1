@@ -106,7 +106,7 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
     all_data = matfile_to_dataframe(file_path, model_date)
 
 
-    strategy_inputs.to_csv('strategy_inputs_leverage_e.csv')
+    strategy_inputs.to_csv('strategy_inputs_leverage_n.csv')
 
 
     return strategy_inputs, asset_inputs, all_data

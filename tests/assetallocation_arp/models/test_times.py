@@ -29,8 +29,8 @@ PUT PARAMETERS USED
 #                          )
 @pytest.mark.parametrize("leverage_type, signals_output, returns_output, positioning_output, r_output",
                          [(Leverage.v.name, "signals_leverage_v.csv", "returns_leverage_v.csv", "positioning_leverage_v.csv", "r_leverage_v.csv"),
-                          (Leverage.e.name, "signals_leverage_e", "returns_leverage_e", "positioning_leverage_e", "r_leverage_e")
-
+                          (Leverage.e.name, "signals_leverage_e.csv", "returns_leverage_e.csv", "positioning_leverage_e.csv", "r_leverage_e.csv"),
+                          (Leverage.n.name, "signals_leverage_n.csv", "returns_leverage_n.csv", "positioning_leverage_n.csv", "r_leverage_n.csv")
 
                          ]
                          )
