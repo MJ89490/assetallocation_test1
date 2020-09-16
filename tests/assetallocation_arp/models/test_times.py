@@ -21,19 +21,12 @@ CURRENT_PATH = os.path.dirname(__file__)
 PUT PARAMETERS USED
 """
 
-# @pytest.mark.parametrize("leverage_type, signals_output, returns_output, positioning_output, r_output",
-#                          [(Leverage.v.name, "signals_leverage_v.csv", "returns_leverage_v", "positioning_leverage_v", "r_leverage_v"),
-#                          (Leverage.e.name, "signals_leverage_e", "returns_leverage_e", "positioning_leverage_e", "r_leverage_e"),
-#                          (Leverage.n.name, "signals_leverage_n", "returns_leverage_n", "positioning_leverage_n", "r_leverage_n"),
-#                          (Leverage.s.name, "signals_leverage_s", "returns_leverage_s", "positioning_leverage_s", "r_leverage_s")]
-#                          )
+
 @pytest.mark.parametrize("leverage_type, signals_output, returns_output, positioning_output, r_output",
                          [(Leverage.v.name, "signals_leverage_v.csv", "returns_leverage_v.csv", "positioning_leverage_v.csv", "r_leverage_v.csv"),
                           (Leverage.e.name, "signals_leverage_e.csv", "returns_leverage_e.csv", "positioning_leverage_e.csv", "r_leverage_e.csv"),
-                          (Leverage.n.name, "signals_leverage_n.csv", "returns_leverage_n.csv", "positioning_leverage_n.csv", "r_leverage_n.csv")
-
-                         ]
-                         )
+                          (Leverage.n.name, "signals_leverage_n.csv", "returns_leverage_n.csv", "positioning_leverage_n.csv", "r_leverage_n.csv"),
+                          (Leverage.s.name, "signals_leverage_s.csv", "returns_leverage_s.csv", "positioning_leverage_s.csv", "r_leverage_s.csv")])
 def test_format_data_and_calc(leverage_type, signals_output, returns_output, positioning_output, r_output):
     """
     Function which tests the format_data_and_calc function in order to know if it returns th correct results
@@ -51,10 +44,10 @@ def test_format_data_and_calc(leverage_type, signals_output, returns_output, pos
                                                             times_inputs_data)), index_col=0)
 
     asset_inputs_data = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "inputs_leverages_origin",
-                                                                 "asset_inputs_new.csv")), index_col=0)
+                                                                 "asset_inputs.csv")), index_col=0)
 
     all_data = pd.read_csv(os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "inputs_leverages_origin",
-                                                        "all_data_new.csv")), index_col=0)
+                                                        "all_data.csv")), index_col=0)
 
     index_all_data = [pd.Timestamp(date) for date in all_data.index.values]
 
