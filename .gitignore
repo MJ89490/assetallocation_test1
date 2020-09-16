@@ -460,3 +460,5 @@ __pycache__/
 OpenCover/
 .cache/v/cache/lastfailed
 tests/.cache/v/cache/lastfailed
+
+ .scannerwork/*
