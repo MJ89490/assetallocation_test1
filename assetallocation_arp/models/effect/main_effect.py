@@ -29,17 +29,20 @@ def run_effect(strategy_inputs, inputs_effect, input_file):
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
-    obj_import_data = ComputeCurrencies(bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'])
+    obj_import_data = ComputeCurrencies(bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'][1])
     spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = inputs_effect['user_start_date']
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
-    inflation_differential = obj_inflation_differential.compute_inflation_differential(strategy_inputs['Realtime Inflation Forecast'])
+    inflation_differential = obj_inflation_differential.compute_inflation_differential(strategy_inputs['Realtime Inflation Forecast'][1])
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
-    inputs_effect['carry_inputs']['inflation'] = inflation_differential
+    carry_inputs = {'type': strategy_inputs['Real/Nominal'][1].strip().lower(), 'inflation': inflation_differential}
+    trend_inputs = {'short_term': int(strategy_inputs['Short-term MA'][1]), 'long_term': int(strategy_inputs['Long-term MA'][1]), 'trend': strategy_inputs['TrendIndicator'][1].strip().lower()}
+    combo_inputs = {'cut_off': float(strategy_inputs['Interest rate cut-off (long)'][1]), 'incl_shorts': float(strategy_inputs['Include Shorts'][1]), 'cut_off_s': float(strategy_inputs['Interest rate cut-off (long)'][1]), 'threshold': float(strategy_inputs['Threshold for closing'][1])}
+
     currencies_calculations = obj_import_data.run_compute_currencies(inputs_effect['carry_inputs'],
                                                                      inputs_effect['trend_inputs'],
                                                                      inputs_effect['combo_inputs'])
