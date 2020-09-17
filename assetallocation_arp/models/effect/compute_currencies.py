@@ -19,8 +19,8 @@ import numpy as np
 
 class ComputeCurrencies(ProcessDataEffect):
 
-    def __init__(self, bid_ask_spread=10):
-        super().__init__()
+    def __init__(self, frequency_mat, start_date_mat, signal_day_mat, bid_ask_spread=10):
+        super().__init__(frequency_mat, start_date_mat, signal_day_mat)
 
         self.carry_currencies = pd.DataFrame()
         self.trend_currencies = pd.DataFrame()

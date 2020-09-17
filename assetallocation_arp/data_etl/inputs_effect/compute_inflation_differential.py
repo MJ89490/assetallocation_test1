@@ -9,7 +9,7 @@ import os
 import json
 from configparser import ConfigParser
 
-import common_libraries.listing_names_all_currencies as constants
+from common_libraries.listing_names_all_currencies import create_list_names_all_currencies as names_all_currencies
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
@@ -183,7 +183,8 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-    def compute_inflation_differential(self, realtime_inflation_forecast):
+
+    def compute_inflation_differential(self, realtime_inflation_forecast, assets_inputs):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
@@ -209,6 +210,8 @@ class ComputeInflationDifferential:
         multiplier_two = pd.Series(months_inflation).apply(lambda m: m/12)
 
         inflation_differential = pd.DataFrame()
+
+        all_names_currencies = names_all_currencies(assets_inputs)
 
         counter = 8
         for currency in constants.CURRENCIES_SPOT:

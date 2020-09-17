@@ -1,7 +1,7 @@
 import xlwings as xw
 
 
-def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates_usd, rates_eur):
+def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview, rates):
     weekly_total_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']
     weekly_spot_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']
     weekly_carry_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']
@@ -62,8 +62,7 @@ def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overvi
 
     sheet_effect_input.range('trades_combo').options(transpose=True).value = trades_overview
 
-    sheet_effect_input.range('warning_rates_usd').options(transpose=True).value = rates_usd
-    sheet_effect_input.range('warning_rates_eur').options(transpose=True).value = rates_eur
+    sheet_effect_input.range('warning_flags_rates').options(transpose=True).value = rates
 
 
 def write_outputs_risk_return_overview(risk_returns):
@@ -122,10 +121,10 @@ def write_outputs_effect(combo, total_excl_signals, total_incl_signals, spot_inc
 
 
 def run_write_outputs_effect_model(model_outputs: dict):
-    p_and_l_overview, signals_overview, trades_overview, rates_usd, rates_eur, risk_returns, combo, \
+    p_and_l_overview, signals_overview, trades_overview, rates, risk_returns, combo, \
     total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals = model_outputs['effect']
 
-    write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates_usd, rates_eur)
+    write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates)
     write_outputs_risk_return_overview(risk_returns)
     write_outputs_effect(combo, total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals)
 

@@ -1,3 +1,5 @@
+import pandas as pd
+
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
@@ -36,7 +38,9 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
 
         rates_eur = three_month_implied_eur_latest_date - three_month_implied_eur_previous_seven_days_latest_date
 
-        return rates_usd.values, rates_eur.values
+        rates = pd.concat([rates_usd, rates_eur], axis=0)
+
+        return rates.values
 
     def compute_warning_flags_inflation(self):
         """

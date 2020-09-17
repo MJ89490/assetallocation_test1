@@ -16,13 +16,39 @@ import win32api
 """
 
 from assetallocation_arp.data_etl.data_manipulation import set_data_frequency
-from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_inputs_matlab_effect
 
 
 class ImportDataEffect:
 
-    def __init__(self):
+    def __init__(self, frequency_mat, start_date_mat, signal_day_mat):
         self.data_currencies = pd.DataFrame()
+        self.frequency_mat = frequency_mat
+        self.start_date_mat = start_date_mat
+        self.signal_day_mat = signal_day_mat
+
+    @property
+    def frequency_mat(self):
+        return self._frequency_mat
+
+    @frequency_mat.setter
+    def frequency_mat(self, value):
+        self._frequency_mat = value
+
+    @property
+    def start_date_mat(self):
+        return self._start_date_mat
+
+    @start_date_mat.setter
+    def start_date_mat(self, value):
+        self._start_date_mat = value
+
+    @property
+    def signal_day_mat(self):
+        return self._signal_day_mat
+
+    @signal_day_mat.setter
+    def signal_day_mat(self, value):
+        self._signal_day_mat = value
 
     def import_data_matlab(self):
         """
@@ -32,12 +58,9 @@ class ImportDataEffect:
         self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
                                                   input_file=None, date=None)
 
-        matlab_inputs = get_inputs_matlab_effect()
+        self.data_currencies = self.data_currencies.loc[self.start_date_mat:]
 
-        self.data_currencies = self.data_currencies.loc[matlab_inputs['start_date_effect']:]
-
-        self.data_currencies = set_data_frequency(self.data_currencies, matlab_inputs['frequency_effect'],
-                                                  matlab_inputs['signal_day_effect'])
+        self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
 
         return self.data_currencies
 
@@ -49,8 +72,8 @@ class ImportDataEffect:
 
 class ProcessDataEffect:
 
-    def __init__(self):
-        self.obj_import_data = ImportDataEffect()
+    def __init__(self, frequency_mat='daily', start_date_mat='06/01/1999', signal_day_mat='Wed'):
+        self.obj_import_data = ImportDataEffect(frequency_mat, start_date_mat, signal_day_mat)
 
         self.data_currencies_usd = pd.DataFrame()
         self.data_currencies_eur = pd.DataFrame()
@@ -129,13 +152,13 @@ class ProcessDataEffect:
 
         return t_start
 
-    def process_data_effect(self):
+    def process_data_effect(self, assets_inputs):
         """
         Function processing data from the matlab file to get the required data
         :return: two dataFrames self.data_currencies_usd, self.data_currencies_eur for usd and eur currencies
         """
 
-        preprocess_data = self.preprocess_data_config_effect()
+        preprocess_data = self.preprocess_data_config_effect(assets_inputs)
         currencies_usd, currencies_eur, spxt_index = \
             preprocess_data['currencies_usd_config'], preprocess_data['currencies_eur_config'], preprocess_data['spxt_index_values_config']
 
@@ -148,60 +171,77 @@ class ProcessDataEffect:
         # SPXT Index
         spxt_index_values = data_currencies[spxt_index]
 
-        self.process_data_config_effect()
+        self.process_data_config_effect(assets_inputs)
 
         return spxt_index_values
 
     @staticmethod
-    def parse_data_config_effect():
+    def parse_data_excel_effect(assets_inputs):
+        #TODO LIRE DONNEES TABLEAU EXCEL!!!!!
         """
         Function parsing the data from the config file
         :return: a dictionary
         """
-        # Instantiate ConfigParser
+        # # Instantiate ConfigParser
         config = ConfigParser()
-        # Parse existing file
+        # # Parse existing file
         path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'all_currencies_effect.ini'))
         config.read(path)
-        # Read values from the all_currencies_effect.ini file
-        currencies_spot_config = json.loads(config.get('currencies_spot', 'currencies_spot_data'))
-
-        currencies_carry_config = json.loads(config.get('currencies_carry', 'currencies_carry_data'))
-
+        # # Read values from the all_currencies_effect.ini file
+        # currencies_spot_config = json.loads(config.get('currencies_spot', 'currencies_spot_data'))
+        #
+        # currencies_carry_config = json.loads(config.get('currencies_carry', 'currencies_carry_data'))
+        #
         currencies_base_implied_config = json.loads(config.get('currencies_base_implied', 'currencies_base_implied_data'))
+        #
+        # currencies_3M_implied_config = json.loads(config.get('currencies_three_month_implied', '3M_implied_data'))
 
-        currencies_3M_implied_config = json.loads(config.get('currencies_three_month_implied', '3M_implied_data'))
+        # Read value from Excel and sort data depending on its base currency
+        currencies_eur = assets_inputs.loc[assets_inputs['EUR/USD base'] == 'EUR']
+        currencies_usd = assets_inputs.loc[assets_inputs['EUR/USD base'] == 'USD']
 
+        currencies_spot, currencies_carry, currencies_3M_implied = dict(), dict(), dict()
+
+        currencies_spot['currencies_spot_usd'] = currencies_usd['Spot ticker'].tolist()
+        currencies_spot['currencies_spot_eur'] = currencies_eur['Spot ticker'].tolist()
+
+        currencies_carry['currencies_carry_usd'] = currencies_usd['Carry ticker'].tolist()
+        currencies_carry['currencies_carry_eur'] = currencies_eur['Carry ticker'].tolist()
+
+        currencies_3M_implied['three_month_implied_usd'] = currencies_usd['3M implied ticker'].tolist()
+        currencies_3M_implied['three_month_implied_eur'] = currencies_eur['3M implied ticker'].tolist()
+
+        # SPX Index
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
 
-        config_data = {'spot_config': currencies_spot_config,
-                       'carry_config': currencies_carry_config,
+        config_data = {'spot_config': currencies_spot,
+                       'carry_config': currencies_carry,
                        'base_implied_config': currencies_base_implied_config,
-                       '3M_implied_config': currencies_3M_implied_config,
+                       '3M_implied_config': currencies_3M_implied,
                        'spxt_index_config': spxt_index_config}
 
         return config_data
 
-    def preprocess_data_config_effect(self):
+    def preprocess_data_config_effect(self, assets_inputs):
         """
         Function preprocessing the data from the config file
         :return: a dictionary
         """
-        config_data = self.parse_data_config_effect()
+        assets_table = self.parse_data_excel_effect(assets_inputs)
 
-        currencies_3M_implied_usd = config_data['3M_implied_config']['three_month_implied_usd']
-        currencies_3M_implied_eur = config_data['3M_implied_config']['three_month_implied_eur']
+        currencies_3M_implied_usd = assets_table['3M_implied_config']['three_month_implied_usd']
+        currencies_3M_implied_eur = assets_table['3M_implied_config']['three_month_implied_eur']
 
-        currencies_spot_usd = config_data['spot_config']['currencies_spot_usd']
-        currencies_spot_eur = config_data['spot_config']['currencies_spot_eur']
+        currencies_spot_usd = assets_table['spot_config']['currencies_spot_usd']
+        currencies_spot_eur = assets_table['spot_config']['currencies_spot_eur']
 
-        currencies_carry_usd = config_data['carry_config']['currencies_carry_usd']
-        currencies_carry_eur = config_data['carry_config']['currencies_carry_eur']
+        currencies_carry_usd = assets_table['carry_config']['currencies_carry_usd']
+        currencies_carry_eur = assets_table['carry_config']['currencies_carry_eur']
 
-        currencies_base_implied_usd = config_data['base_implied_config']['currencies_base_implied_usd']
-        currencies_base_implied_eur = config_data['base_implied_config']['currencies_base_implied_eur']
+        currencies_base_implied_usd = assets_table['base_implied_config']['currencies_base_implied_usd']
+        currencies_base_implied_eur = assets_table['base_implied_config']['currencies_base_implied_eur']
 
-        spxt_index = config_data['spxt_index_config']
+        spxt_index = assets_table['spxt_index_config']
 
         currencies_usd = pd.DataFrame({"currencies_usd_tickers": currencies_spot_usd + currencies_carry_usd +
                                         currencies_3M_implied_usd + currencies_base_implied_usd})
@@ -223,13 +263,13 @@ class ProcessDataEffect:
 
         return preprocess_data
 
-    def process_data_config_effect(self):
+    def process_data_config_effect(self, assets_inputs):
         """
         Function processing the data from the config file
         :return: dataFrames for spot and carry
         """
 
-        preprocess_data = self.preprocess_data_config_effect()
+        preprocess_data = self.preprocess_data_config_effect(assets_inputs)
 
         self.three_month_implied_usd = self.data_currencies_usd[preprocess_data['3M_implied_usd_config']]
         self.three_month_implied_eur = self.data_currencies_eur[preprocess_data['3M_implied_eur_config']]
