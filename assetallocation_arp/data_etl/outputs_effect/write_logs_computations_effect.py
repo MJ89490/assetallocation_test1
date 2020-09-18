@@ -7,7 +7,7 @@ def write_logs_effect(current_calc: str, cell: str or int, flag_curr=None):
 
     if flag_curr:
         sheet_effect_input.range(f'C{cell}').value = current_calc
-        sheet_effect_input.range(f'I{cell+11}').value = current_calc[:3]
+        sheet_effect_input.range(f'G{cell+11}').value = current_calc[:3]
     else:
         sheet_effect_input.range(cell).value = current_calc
 
@@ -25,4 +25,4 @@ def remove_logs_effect():
         for cell in range(8, last_row_curr+1):
             sheet_effect_input.range(f"C{cell}").value = float('NaN')
         for cell in range(19, last_row_tables+1):
-            sheet_effect_input.range(f"H{cell}:U{cell}").value = float('NaN')
+            sheet_effect_input.range(f"G{cell}:U{cell}").value = float('NaN')
