@@ -26,15 +26,10 @@ from .userIdentification import random_identification
 
 #TODO create blueprints to avoid having single routes
 
-@app.before_request
-def before_request():
-    g.user = current_user
-
 
 @app.route('/')
-@app.route('/home')
 def home():
-    return render_template('home.html', title='HomePage')
+    return render_template('home_new.html', title='HomePage')
 
 
 # @app.route('/login', methods=['GET'])
