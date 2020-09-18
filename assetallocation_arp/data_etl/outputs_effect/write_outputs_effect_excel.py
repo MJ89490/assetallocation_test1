@@ -37,32 +37,28 @@ def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overvi
     sheet_effect_input.range('profit_and_loss_spot_ytd_matr').value = ytd_spot_matr
     sheet_effect_input.range('profit_and_loss_carry_ytd_matr').value = ytd_carry_matr
 
-    sheet_effect_input.range('profit_and_loss_combo').options(transpose=True).value = p_and_l_overview[
-        'profit_and_loss_combo_overview']
-    sheet_effect_input.range('profit_and_loss_total').options(transpose=True).value = p_and_l_overview[
-        'profit_and_loss_total_overview']
-    sheet_effect_input.range('profit_and_loss_spot').options(transpose=True).value = p_and_l_overview[
-        'profit_and_loss_spot_ex_overview']
-    sheet_effect_input.range('profit_and_loss_carry').options(transpose=True).value = p_and_l_overview[
-        'profit_and_loss_carry_overview']
+    # ---- Profit and Loss table ---- #
+    sheet_effect_input.range('profit_and_loss_combo').options(transpose=True).offset(1, 0).value = p_and_l_overview['profit_and_loss_combo_overview']
+    sheet_effect_input.range('profit_and_loss_total').options(transpose=True).offset(1, 0).value = p_and_l_overview['profit_and_loss_total_overview']
+    sheet_effect_input.range('profit_and_loss_spot').options(transpose=True).offset(1, 0).value = p_and_l_overview['profit_and_loss_spot_ex_overview']
+    sheet_effect_input.range('profit_and_loss_carry').options(transpose=True).offset(1, 0).value = p_and_l_overview['profit_and_loss_carry_overview']
 
-    sheet_effect_input.range('signals_real_carry').options(transpose=True).value = signals_overview[
-        'signals_real_carry']
-    sheet_effect_input.range('signals_trend').options(transpose=True).value = signals_overview['signals_trend_overview']
-    sheet_effect_input.range('signals_combo').options(transpose=True).value = signals_overview['signals_combo_overview']
+    # ---- Signals table ---- #
+    sheet_effect_input.range('signals_real_carry').options(transpose=True).offset(1, 0).value = signals_overview['signals_real_carry']
+    sheet_effect_input.range('signals_trend').options(transpose=True).offset(1, 0).value = signals_overview['signals_trend_overview']
+    sheet_effect_input.range('signals_combo').options(transpose=True).offset(1, 0).value = signals_overview['signals_combo_overview']
 
-    sheet_effect_input.range('drawdown').options(transpose=True).value = \
-    signals_overview['signals_drawdown_position_size_matr']['drawdown']
-    sheet_effect_input.range('position_matr').options(transpose=True).value = \
-    signals_overview['signals_drawdown_position_size_matr']['size_matr']
-    sheet_effect_input.range('ex_ante_vol').options(transpose=True).value = signals_overview['signals_limits_controls'][
-        'ex_ante_vol']
-    sheet_effect_input.range('matr_notional').options(transpose=True).value = \
-    signals_overview['signals_limits_controls']['matr_notional']
+    # ---- Drawdown and limits controls ----#
+    sheet_effect_input.range('drawdown').options(transpose=True).value = signals_overview['signals_drawdown_position_size_matr']['drawdown']
+    sheet_effect_input.range('position_matr').options(transpose=True).value = signals_overview['signals_drawdown_position_size_matr']['size_matr']
+    sheet_effect_input.range('ex_ante_vol').options(transpose=True).value = signals_overview['signals_limits_controls']['ex_ante_vol']
+    sheet_effect_input.range('matr_notional').options(transpose=True).value = signals_overview['signals_limits_controls']['matr_notional']
 
-    sheet_effect_input.range('trades_combo').options(transpose=True).value = trades_overview
+    # ---- Trades ----#
+    sheet_effect_input.range('trades_combo').options(transpose=True).offset(1, 0).value = trades_overview
 
-    sheet_effect_input.range('warning_flags_rates').options(transpose=True).value = rates
+    # ---- Warning flags ----#
+    sheet_effect_input.range('warning_flags_rates').options(transpose=True).offset(1, 0).value = rates
 
 
 def write_outputs_risk_return_overview(risk_returns):

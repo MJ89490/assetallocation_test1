@@ -9,7 +9,6 @@ import os
 import json
 from configparser import ConfigParser
 
-from common_libraries.listing_names_all_currencies import create_list_names_all_currencies as names_all_currencies
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
@@ -183,8 +182,7 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-
-    def compute_inflation_differential(self, realtime_inflation_forecast, assets_inputs):
+    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
@@ -211,10 +209,9 @@ class ComputeInflationDifferential:
 
         inflation_differential = pd.DataFrame()
 
-        all_names_currencies = names_all_currencies(assets_inputs)
-
         counter = 8
-        for currency in constants.CURRENCIES_SPOT:
+
+        for currency in currencies_spot:
             inflation_year_zero_value = []
             inflation_year_one_value = []
             inflation_year_zero_value_base = []
@@ -236,7 +233,7 @@ class ComputeInflationDifferential:
                     index_currency = inflation_data_merged[inflation_data_merged.Currency.str.contains(currency)].index[0]
 
                     # Select the base currency (USD or EUR) depending on the currency
-                    if currency in constants.CURRENCIES_USD:
+                    if currency in currencies_usd:
                         index_currency_base = \
                             inflation_data_merged[inflation_data_merged.Currency.str.contains(CurrencyBaseSpot.USD_Base.name)].index[0]
                     else:
@@ -257,7 +254,7 @@ class ComputeInflationDifferential:
 
                 else:
                     # Select the base currency (USD or EUR) depending on the currency
-                    if currency in constants.CURRENCIES_USD:
+                    if currency in currencies_usd:
                         base_currency = CurrencyBaseSpot.USD.name
                     else:
                         base_currency = CurrencyBaseSpot.EUR.name

@@ -2,15 +2,14 @@
 Created on 12/05/2020
 @author: AJ89720
 """
+import pandas as pd
+import numpy as np
 
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_implied import CurrencyBaseImplied
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
-import common_libraries.listing_names_all_currencies as constants
-import pandas as pd
-import numpy as np
 
 """
     Class to compute the different calculations for usd and eur currencies
@@ -19,8 +18,8 @@ import numpy as np
 
 class ComputeCurrencies(ProcessDataEffect):
 
-    def __init__(self, frequency_mat, start_date_mat, signal_day_mat, bid_ask_spread=10):
-        super().__init__(frequency_mat, start_date_mat, signal_day_mat)
+    def __init__(self, asset_inputs, frequency_mat, start_date_mat, signal_day_mat, bid_ask_spread=10):
+        super().__init__(asset_inputs, frequency_mat, start_date_mat, signal_day_mat)
 
         self.carry_currencies = pd.DataFrame()
         self.trend_currencies = pd.DataFrame()
@@ -49,7 +48,7 @@ class ComputeCurrencies(ProcessDataEffect):
         """
         write_logs_effect("Computing carry...", "logs_carry")
         for currency_spot, currency_implied, currency_carry in \
-                zip(constants.CURRENCIES_SPOT, constants.CURRENCIES_IMPLIED, constants.CURRENCIES_CARRY):
+                zip(self.all_currencies_spot, self.all_currencies_3M_implied, self.all_currencies_carry):
 
             tmp_start_date_computations = self.start_date_calculations
 
@@ -134,12 +133,12 @@ class ComputeCurrencies(ProcessDataEffect):
         """
         write_logs_effect("Computing trend...", "logs_trend")
         if trend_ind.lower() == 'total return':
-            currencies = constants.CURRENCIES_CARRY
+            currencies = self.all_currencies_carry
         else:
-            currencies = constants.CURRENCIES_SPOT
+            currencies = self.all_currencies_spot
 
         # Loop through each date
-        for currency, currency_name_col in zip(currencies, constants.CURRENCIES_SPOT):
+        for currency, currency_name_col in zip(currencies, self.all_currencies_spot):
             if currency in self.data_currencies_usd.columns:
                 trend_short_tmp = self.data_currencies_usd.loc[:, currency].rolling(short_term).mean()
                 trend_long_tmp = self.data_currencies_usd.loc[:, currency].rolling(long_term).mean()
@@ -171,7 +170,7 @@ class ComputeCurrencies(ProcessDataEffect):
         tmp_start_date_computations = self.start_date_calculations
         rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0]
 
-        for currency_spot in constants.CURRENCIES_SPOT:
+        for currency_spot in self.all_currencies_spot:
             # Set the combo to zero as first value
             combo = [0]
             trend = self.trend_currencies.loc[tmp_start_date_computations:, CurrencySpot.Trend.value + currency_spot].tolist()
@@ -208,7 +207,7 @@ class ComputeCurrencies(ProcessDataEffect):
         :return: a dataFrame self.return_ex_costs of return exclude costs data for usd and eur currencies
         """
         write_logs_effect("Computing return exclude costs...", "logs_ret_ex")
-        for currency_carry, currency_spot in zip(constants.CURRENCIES_CARRY, constants.CURRENCIES_SPOT):
+        for currency_carry, currency_spot in zip(self.all_currencies_carry, self.all_currencies_spot):
 
             first_returns = [100]
 
@@ -278,7 +277,7 @@ class ComputeCurrencies(ProcessDataEffect):
         tmp_start_date = self.data_currencies_usd.index[start_date_loc]
 
         # Loop to get through each currency
-        for currency in constants.CURRENCIES_SPOT:
+        for currency in self.all_currencies_spot:
             # Reset the Spot list for the next currency
             spot = [100]  # The Spot is set 100
             if currency in self.data_currencies_usd.columns:

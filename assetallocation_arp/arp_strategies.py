@@ -28,7 +28,7 @@ def run_model(model_type, mat_file, input_file):
         print(model_type)
 
     if model_type == models_names.Models.effect.name:
-        #TODO remove that later + changer dans import data pour matfile!!!
+
         strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
         outputs_effect = run_effect(strategy_inputs, input_file=input_file, asset_inputs=asset_inputs)

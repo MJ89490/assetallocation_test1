@@ -14,9 +14,9 @@ from assetallocation_arp.models.effect.compute_aggregate_currencies import Compu
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
 from data_etl.outputs_effect.write_logs_computations_effect import remove_logs_effect
 
-from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_latest_date_signal_excel
+from assetallocation_arp.data_etl.inputs_effect.get_inputs_effect_excel import get_latest_date_signal_excel
 
-from assetallocation_arp.data_etl.inputs_effect.write_inputs_effect_excel import get_user_date_effect_excel
+from assetallocation_arp.data_etl.inputs_effect.get_inputs_effect_excel import get_user_date_effect_excel
 
 """
     Main function to run the EFFECT computations
@@ -35,14 +35,16 @@ def run_effect(strategy_inputs, input_file, asset_inputs):
     # ---------------------------------------------------------------------------------------------------------------- #
     obj_import_data = ComputeCurrencies(bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'][1],
                                         frequency_mat=strategy_inputs['Frequency'][1], start_date_mat=strategy_inputs['StartDate'][1],
-                                        signal_day_mat=strategy_inputs['SignalDay'][1])
-    spx_index_values = obj_import_data.process_data_effect(asset_inputs)
+                                        signal_day_mat=strategy_inputs['SignalDay'][1], asset_inputs=asset_inputs)
+    spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_date
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
-    inflation_differential = obj_inflation_differential.compute_inflation_differential(strategy_inputs['Realtime Inflation Forecast'][1], asset_inputs)
+    inflation_differential = obj_inflation_differential.compute_inflation_differential(
+                             strategy_inputs['Realtime Inflation Forecast'][1], obj_import_data.all_currencies_spot,
+                             obj_import_data.currencies_spot['currencies_spot_usd'])
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     carry_inputs = {'type': strategy_inputs['Real/Nominal'][1].strip().lower(), 'inflation': inflation_differential}
@@ -87,7 +89,7 @@ def run_effect(strategy_inputs, input_file, asset_inputs):
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=latest_signal_date,
                                                           size_attr=float(strategy_inputs['Position size (for attribution)'][1]),
-                                                          window= int(strategy_inputs['STDev window (weeks)'][1]),
+                                                          window=int(strategy_inputs['STDev window (weeks)'][1]),
                                                           next_latest_date=obj_import_data)
 
     signals_overview = obj_compute_signals_overview.run_signals_overview(
@@ -103,7 +105,8 @@ def run_effect(strategy_inputs, input_file, asset_inputs):
 
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
-                                                                     prev_7_days_from_latest_signal_date=obj_import_data)
+                                                                     prev_7_days_from_latest_signal_date=obj_import_data,
+                                                                     asset_inputs=asset_inputs)
     obj_compute_warning_flags_overview.process_data_effect()
     rates = obj_compute_warning_flags_overview.compute_warning_flags_rates()
 

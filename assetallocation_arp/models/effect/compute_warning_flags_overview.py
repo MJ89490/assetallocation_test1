@@ -7,8 +7,8 @@ from data_etl.outputs_effect.write_logs_computations_effect import write_logs_ef
 
 class ComputeWarningFlagsOverview(ProcessDataEffect):
 
-    def __init__(self, latest_signal_date,  prev_7_days_from_latest_signal_date):
-        super().__init__()
+    def __init__(self, latest_signal_date,  prev_7_days_from_latest_signal_date, asset_inputs):
+        super().__init__(asset_inputs)
         self.latest_signal_date = latest_signal_date
         self.prev_7_days_from_latest_signal_date = prev_7_days_from_latest_signal_date
 
