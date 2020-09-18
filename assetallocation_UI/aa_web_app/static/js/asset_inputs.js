@@ -108,15 +108,31 @@ function getDataFromTable(){
             assetsCosts: assetsCosts, assetsLeverage: assetsLeverage};
 }
 
+
+$(function (){
+	$('button').click(function(){
+		var user = $('#inputUsername').val();
+		var pass = $('#inputPassword').val();
+
+
+		var res =  sendJsonDataFromTable(user, pass);
+
+
+	});
+});
+
+
 // create a new fct which calls getDataFromTable
 // send the return value (assetsArr) in json as a post request to python to the route times
-function sendJsonDataFromTable(){
+function sendJsonDataFromTable(user, pass){
 
     var results = this.getDataFromTable();
 
     var jsonData = JSON.stringify({"assetsNames": results.assetsNames, "assetsTicker": results.assetsTicker,
                                    "assetsFutureTicker": results.assetsFutureTicker, "assetsCosts": results.assetsCosts,
-                                   "assetsLeverage": results.assetsLeverage});
+                                   "assetsLeverage": results.assetsLeverage, "user": user, 'pass': pass});
+
+    console.log(user);
     console.log(jsonData);
     $.ajax({
       type : 'POST',

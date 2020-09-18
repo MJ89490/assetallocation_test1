@@ -67,13 +67,15 @@ def login_post():
 @app.route('/receive_times_data', methods=['POST'])
 def receive_times_data():
 
+    #TODO SEPARER RUN MODEL ET VERSION COMME CA ON MET TOUT ICI!
+
     if request.method == "POST":
         #TODO write data in the database directly because it is directly linked to the runmodel button
-        data = request.json
-        print(data)
+        data = request.data
 
 
 @app.route('/times_page',  methods=['GET', 'POST'])
+
 # @login_required
 def times_page():
     form = InputsTimesModel()
@@ -86,10 +88,12 @@ def times_page():
 
         # Run the model
         elif request.form['submit_button'] == 'runTimesModel':
+
             try:
                 fund_name, strategy_weight, times = get_times_inputs(form)
                 # TODO work with Anais to get the asset inputs from front end and set here!
-                times.asset_inputs = [TimesAssetInput(3, 'RX1 A:00_0_R Comdty', 'RX1 A:00_0_R Comdty', 0.0002)]
+                # data = request.data
+                # times.asset_inputs = [TimesAssetInput(3, 'RX1 A:00_0_R Comdty', 'RX1 A:00_0_R Comdty', 0.0002)]
 
             except ValueError as e:
                 print(e)

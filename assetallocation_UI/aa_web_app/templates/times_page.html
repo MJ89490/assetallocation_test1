@@ -7,6 +7,8 @@
         ================================================== -->
         <title> {{title }} </title>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="static/js/asset_inputs.js"></script>
         <link rel="stylesheet" href="{{url_for('static', filename='css/times_page.css')}}">
     </head>
 
@@ -82,7 +84,7 @@
                                                  {% include 'pop_up_error_model.html' %}
                                             {% endif %}
 
-                                            <form class="center" action="" method="POST" novalidate>
+                                            <form class="center" action="/times_page" id="contact-form" method="POST" novalidate>
                                                 {{ form.hidden_tag() }}
                                                 <div align="center">
 
@@ -91,8 +93,11 @@
                                                         {% block runModel%} {% endblock %}
                                                     {% endblock %}
 
+
+
+
                                                 </div>
-                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
