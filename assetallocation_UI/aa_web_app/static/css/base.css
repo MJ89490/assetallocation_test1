@@ -1,4 +1,16 @@
 .navbar-default {
-    background-color: #007faa !important;;
-    border-color: #007faa  !important;;
+    background-color: #007faa !important;
+    border-color: #007faa  !important;
+}
+
+.navbar-default .navbar-nav .nav-link {color: #fff;}
+
+.navbar-default .nav-item:hover .nav-link {color: #FFEBCD;}
+
+
+.jumbotron-image {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 300px !important;
 }
