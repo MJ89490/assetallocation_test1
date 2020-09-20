@@ -21,6 +21,10 @@
                              font-size: 3rem;
                              font-weight: 800;}
 
+.container .link-model {color: #005774 !important; }
+
+
+/* FOOTER */
 #sticky-footer {
   flex-shrink: none;
 }
