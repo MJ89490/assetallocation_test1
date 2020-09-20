@@ -1,2 +1,74 @@
-{% extends "b.html" %}
+{% extends "base.html" %}
 
+<html>
+
+<head>
+    <title>HomePage</title>
+</head>
+
+<body>
+    {% block homepage %}
+    <div class="jumbotron jumbotron-fluid jumbotron-image shadow" style="background-image: url(static/img/home_banner.jpg);">
+        <div class="container"><h1 class="display-4">Asset Allocation ARP</h1></div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2"></div>
+
+            <div class="col-lg-2">
+                <h3>TIMES MODEL</h3>
+                <p class="text-muted mb-6 mb-md-0">Time-series momentum strategy</p>
+            </div>
+
+            <div class="col-lg-2">
+                <h3>MAVEN MODEL</h3>
+                 <p class="text-muted mb-6 mb-md-0">Multi-asset momentum and value strategy</p>
+            </div>
+
+            <div class="col-lg-2">
+                <h3>EFFECT MODEL</h3>
+                <p class="text-muted mb-6 mb-md-0">FX carry and trend strategy</p>
+            </div>
+
+             <div class="col-lg-2">
+                <h3>COMCA MODEL</h3>
+                <p class="text-muted mb-6 mb-md-0">Equity risk factor composite strategy</p>
+            </div>
+
+             <div class="col-lg-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2"></div>
+
+            <div class="col-lg-2">
+                <h3>CURP MODEL</h3>
+                <p class="text-muted mb-6 mb-md-0">FX carry and value strategy</p>
+            </div>
+
+            <div class="col-lg-2">
+                <h3>FICA MODEL</h3>
+                 <p class="text-muted mb-6 mb-md-0">Fixed income carry strategy</p>
+            </div>
+
+            <div class="col-lg-2">
+                <h3>FACTOR MODEL</h3>
+                <p class="text-muted mb-6 mb-md-0">Equity risk factor composite strategy</p>
+            </div>
+
+            <div class="col-lg-2">
+                <h3>MODELS CONSOLIDATION</h3>
+                <p class="text-muted mb-6 mb-md-0">Matrix gathering each position for all the models</p>
+            </div>
+
+            <div class="col-lg-2"></div>
+        </div>
+
+    </div>
+    {% endblock %}
+
+
+</body>
+
+</html>
