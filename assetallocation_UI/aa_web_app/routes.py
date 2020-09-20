@@ -34,7 +34,8 @@ def home():
 
 @app.route('/times_model',  methods=['GET', 'POST'])
 def times_model():
-    return render_template('times_model.html', title='TimesPage')
+    form = InputsTimesModel()
+    return render_template('times_model.html', form=form, title='TimesPage')
 
 
 
