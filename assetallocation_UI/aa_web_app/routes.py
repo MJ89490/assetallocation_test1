@@ -32,6 +32,13 @@ def home():
     return render_template('home_new.html', title='HomePage')
 
 
+@app.route('/times_model',  methods=['GET', 'POST'])
+def times_model():
+    return render_template('times_model.html', title='TimesPage')
+
+
+
+
 # @app.route('/login', methods=['GET'])
 # def login():
 #     form = LoginForm()
