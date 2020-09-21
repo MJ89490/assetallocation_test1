@@ -3,6 +3,10 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
 
 .sidenav {
@@ -40,8 +44,10 @@
   .sidenav a {font-size: 18px;}
 }
 
-.title-dashboard {color: #005774;}
+.title-dashboard {color: #005774; margin-top: 20px; font-size: 3rem;
+                             font-weight: 800;}
 .sidenav-home {margin-top: 20px;}
+#selectVersion {color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 38px; margin-left: 10px;}
 </style>
 </head>
 <body>
@@ -52,6 +58,19 @@
         </a>
         <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
         <a class="sidenav-item" href="#">Charts Data</a>
+
+        <form class="center" action="" method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    <!-- Form: select the version for the model -->
+                    <div class="btn-group">
+                        {{ form.versions(class="form-control", id="selectVersion")}}
+                    </div>
+                </form>
+
+
+
+
+
         <a class="sidenav-item" href="#">Export Data</a>
         <a href="mailto:NexusQuantDev@lgim.com" target="">Support</a>
     </div>

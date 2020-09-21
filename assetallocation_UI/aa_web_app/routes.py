@@ -63,8 +63,8 @@ def received_data_run_model():
 
 @app.route('/times_dashboard',  methods=['GET', 'POST'])
 def times_dashboard():
-
-    return render_template('times_dashboard.html', title='Dashboard')
+    form = InputsTimesModel()
+    return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
