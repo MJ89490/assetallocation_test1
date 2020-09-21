@@ -22,7 +22,6 @@ from flask import g
 from .userIdentification import random_identification
 
 # todo mock content and test each route to see if they are ok
-# todo fix unit test arp_strategies
 # TODO create blueprints to avoid having single routes
 
 
@@ -49,59 +48,27 @@ def times_model():
 def received_data_run_model():
     form = InputsTimesModel()
     if request.method == "POST":
-        data = request.data
-        print(data)
+        times_data = request.data
+        print(times_data)
+        # -------- All the data are in the times_data (form + ag grd) in a dict --------
+        # fund_name, strategy_weight, times
+        # date_from = datetime(2019, 12, 1)
+        # times.asset_inputs = [TimesAssetInput(3, 'RX1 A:00_0_R Comdty', 'RX1 A:00_0_R Comdty', 0.0002)]
+        # fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), date_from)
+        # TODO should redirect to dashboard after running of a model, with the strategy_version
+        # return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
         return render_template('times_model_mirror.html', form=form, title='TimesPage')
     return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
-# @app.route('/receive_times_data', methods=['POST'])
-# def receive_times_data():
-#
-#     #TODO SEPARER RUN MODEL ET VERSION COMME CA ON MET TOUT ICI!
-#
-#     if request.method == "POST":
-#         #TODO write data in the database directly because it is directly linked to the runmodel button
-#         data = request.data
-#
-#
-# @app.route('/times_page',  methods=['GET', 'POST'])
-#
-# # @login_required
-# def times_page():
-#     form = InputsTimesModel()
-#
-#     if request.method == "POST":
-#         # Selection of a model's version
-#         if request.form['submit_button'] == 'selectVersions':
-#             version_type = form.versions.data
-#             return render_template('times_page_new_version_layout.html', title="Times", form=form, version_type=version_type)
-#
-#         # Run the model
-#         elif request.form['submit_button'] == 'runTimesModel':
-#
-#             try:
-#                 fund_name, strategy_weight, times = get_times_inputs(form)
-#                 # TODO work with Anais to get the asset inputs from front end and set here!
-#                 # data = request.data
-#                 # times.asset_inputs = [TimesAssetInput(3, 'RX1 A:00_0_R Comdty', 'RX1 A:00_0_R Comdty', 0.0002)]
-#
-#             except ValueError as e:
-#                 print(e)
-#                 return render_template('times_page_new_version_layout.html', title="Times", form=form, run_model="run_times_model", message=e)
-#
-#             else:
-#                 date_from = datetime(2019, 12, 1)  # TODO replace this hardcoding - get this from UI
-#                 fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), date_from)
-#
-#                 # TODO should redirect to dashboard after running of a model, with the strategy_version
-#                 return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
-#
-#     return render_template('times_page.html', title="Times", form=form)
-#
-#
+
+@app.route('/times_dashboard',  methods=['GET', 'POST'])
+def times_dashboard():
+
+    return render_template('times_dashboard.html', title='Dashboard')
+
+
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
 # @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
-# # @login_required
 # def times_dashboard(fund_name: str, times_version: int):
 #     title = "Dashboard"
 #     form = ExportDataForm()
