@@ -21,10 +21,9 @@ from flask import g
 
 from .userIdentification import random_identification
 
-#todo mock content and test each route to see if they are ok
-#todo fix unit test arp_strategies
-
-#TODO create blueprints to avoid having single routes
+# todo mock content and test each route to see if they are ok
+# todo fix unit test arp_strategies
+# TODO create blueprints to avoid having single routes
 
 
 @app.route('/')
@@ -35,38 +34,16 @@ def home():
 @app.route('/times_model',  methods=['GET', 'POST'])
 def times_model():
     form = InputsTimesModel()
-    return render_template('times_model.html', form=form, title='TimesPage')
+    run_model_page = 'run_model_page'
 
+    if request.method == "POST":
+        version_type = form.versions.data
+        print(version_type)
 
+        return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
+    return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
-# @app.route('/login', methods=['GET'])
-# def login():
-#     form = LoginForm()
-#     return render_template('login.html', title='LoginPage', form=form)
-#
-#
-# @app.route('/login', methods=['POST'])
-# def login_post():
-#     username_origin = "database"
-#     password_origin = "1234*"
-#     form = LoginForm()
-#
-#     if form.validate_on_submit():
-#         username = form.username.data
-#         password = form.password.data
-#
-#         if username != username_origin or password != password_origin or username == ' ' or password == ' ':
-#             flash('Please check your login details and try again.')
-#             return redirect(url_for('login'))
-#         else:
-#             track_id = random_identification()
-#             login_user(User(track_id))
-#             return redirect(url_for('home'))
-#     # when the user click on the submit button without adding credentials
-#     return redirect(url_for('login'))
-#
-#
 # @app.route('/receive_times_data', methods=['POST'])
 # def receive_times_data():
 #

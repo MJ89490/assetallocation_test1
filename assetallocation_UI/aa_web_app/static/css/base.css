@@ -17,7 +17,6 @@
   height: 550px !important;
 }
 
-
 .jumbotron-image-models {
   background-position: center center;
   background-repeat: no-repeat;
@@ -34,8 +33,6 @@
 .container .link-model {color: #005774 !important;}
 
 .btn {background-color:  #007faa !important; border-color: #007faa !important; width: 200px; }
-
-
 
 /* TIMES PAGE */
 .container .title-times-page {padding-top:100px; color: #005774 !important;}

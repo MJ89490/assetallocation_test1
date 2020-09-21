@@ -14,11 +14,11 @@
         <div class="row">
             <h1 class="title-times-page">TIMES STRATEGY</h1>
         </div>
+
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
                 <a href="#"><button type="button" class="btn btn-secondary btn-lg">Dashboard</button></a>
-
                 <form class="center" action="" method="POST" novalidate>
                     {{ form.hidden_tag() }}
                     <!-- Form: select the version for the model -->
@@ -31,10 +31,10 @@
             <div class="col-lg-4"></div>
         </div>
 
+        {% if run_model_page=='run_model_page' %}
+            <div class="jumbotron jumbotron-fluid jumbotron-image-models" style="background-image: url(static/img/model_image.png);"></div>
 
-
-        <div class="jumbotron jumbotron-fluid jumbotron-image-models" style="background-image: url(static/img/model_image.png);"></div>
-
+        {% endif %}
 
 
 
