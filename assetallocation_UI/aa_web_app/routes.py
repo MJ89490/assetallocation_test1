@@ -37,12 +37,22 @@ def times_model():
     run_model_page = 'run_model_page'
 
     if request.method == "POST":
+        # TODO set a specific layout depending on the version!
         version_type = form.versions.data
-        print(version_type)
 
         return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
+
+
+@app.route('/received_data_run_model',  methods=['GET', 'POST'])
+def received_data_run_model():
+    form = InputsTimesModel()
+    if request.method == "POST":
+        data = request.data
+        print(data)
+        return render_template('times_model_mirror.html', form=form, title='TimesPage')
+    return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
 # @app.route('/receive_times_data', methods=['POST'])
 # def receive_times_data():

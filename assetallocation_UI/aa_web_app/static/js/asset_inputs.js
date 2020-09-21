@@ -111,32 +111,50 @@ function getDataFromTable(){
 
 $(function (){
 	$('button').click(function(){
-		var user = $('#inputUsername').val();
-		var pass = $('#inputPassword').val();
+		var fund = $('#inputFundname').val();
+		var date = $('#inputdatefrom').val();
+		var lag = $('#inputtimelag').val()
+		var weight = $('#inputstrategyweight').val()
+		var leverage = $('#inputleverage').val();
+		var volwindow = $('#inputvolwindow').val();
 
+		var frequency = $('#inputfrequency').val();
+		var weekday = $('#inputweekday').val();
 
-		var res =  sendJsonDataFromTable(user, pass);
+		var signaloneshort = $('#inputsignaloneshort').val();
+		var signalonelong = $('#inputsignalonelong').val();
 
+        var signaltwoshort = $('#inputsignaltwoshort').val();
+		var signaltwolong = $('#inputsignaltwolong').val();
 
+		var signalthreeshort = $('#inputsignalthreeshort').val();
+		var signalthreelong = $('#inputsignalthreelong').val();
+
+		var res =  sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, frequency, weekday,
+		           signaloneshort, signalonelong, signaltwoshort, signaltwolong, signalthreeshort, signalthreelong);
 	});
 });
 
 
 // create a new fct which calls getDataFromTable
 // send the return value (assetsArr) in json as a post request to python to the route times
-function sendJsonDataFromTable(user, pass){
+function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, frequency, weekday, signaloneshort,
+                               signalonelong, signaltwoshort, signaltwolong, signalthreeshort, signalthreelong){
 
     var results = this.getDataFromTable();
 
     var jsonData = JSON.stringify({"assetsNames": results.assetsNames, "assetsTicker": results.assetsTicker,
                                    "assetsFutureTicker": results.assetsFutureTicker, "assetsCosts": results.assetsCosts,
-                                   "assetsLeverage": results.assetsLeverage, "user": user, 'pass': pass});
-
-    console.log(user);
+                                   "assetsLeverage": results.assetsLeverage, "fund": fund, "date": date,
+                                   "weight": weight, "lag": lag, "leverage": leverage, "volwindow": volwindow,
+                                   "frequency": frequency, "weekday": weekday, "signaloneshort": signaloneshort,
+                                   "signalonelong": signalonelong, "signaltwoshort": signaltwoshort,
+                                   "signaltwolong":signaltwolong,"signalthreeshort": signalthreeshort,
+                                   "signalthreelong": signalthreelong });
     console.log(jsonData);
     $.ajax({
       type : 'POST',
-      url : "/receive_times_data",
+      url : "/received_data_run_model",
       data : jsonData,
       contentType : "application/json",
       dataType: "JSON"
