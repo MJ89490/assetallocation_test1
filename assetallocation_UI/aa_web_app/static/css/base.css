@@ -17,6 +17,15 @@
   height: 550px !important;
 }
 
+
+.jumbotron-image-models {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 550px !important;
+  margin-top: 40px;
+}
+
 .jumbotron-image .display-4 {color: #005774 !important;
                              font-size: 3rem;
                              font-weight: 800;}
