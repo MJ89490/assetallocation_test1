@@ -38,8 +38,9 @@
 .container .title-times-page {padding-top:100px; color: #005774 !important;}
 #selectVersion {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 20px; height: 48px;}
 .btn-select {margin-top: 20px; margin-left: 15px;}
+.btn-ag-grid {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; background-color: #fff !important;}
+.title-models-ag-grid {color: #005774 !important;}
+.row-ag-grid {margin-top: 70px;}
 
 /* FOOTER */
-#sticky-footer {
-  flex-shrink: none;
-}
+#sticky-footer {flex-shrink: none;}

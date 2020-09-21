@@ -1,1 +1,34 @@
 {% extends "times_model.html" %}
+
+<html>
+
+<head>
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    {% block timespagemirror %}
+
+    <div class="row row-ag-grid">
+         <div class="col-lg-1"></div>
+         <div class="col-lg-10">
+            <div class="title-models-ag-grid"><h2>Model Assets</h2></div>
+
+            <div>
+                <button class="btn btn-secondary btn-lg btn-ag-grid" onclick="onAddRow()" id="onAddRow"><strong>Add Row</strong></button>
+                <button class="btn btn-secondary btn-lg btn-ag-grid" onclick="onRemoveSelected()" id="onRemoveSelected"><strong>Remove Selected</strong></button>
+                <button class="btn btn-secondary btn-lg btn-ag-grid" onclick="clearData()" id="clearData"><strong>Clear Data</strong></button>
+            </div>
+
+            <div style="width: 1030px; height: 350px; ">
+                <div id="myGrid" style="height: 100%; margin-top: 20px; " class="ag-theme-balham"></div>
+            </div>
+         </div>
+         <div class="col-lg-1"></div>
+    </div>
+
+    {% endblock %}
+
+</body>
+
+</html>

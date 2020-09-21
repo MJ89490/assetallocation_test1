@@ -33,12 +33,9 @@
 
         {% if run_model_page=='run_model_page' %}
             <div class="jumbotron jumbotron-fluid jumbotron-image-models" style="background-image: url(static/img/model_image.png);"></div>
-
+        {% else %}
+            {% block timespagemirror %} {% endblock %}
         {% endif %}
-
-
-
     </div>
-
     {% endblock %}
 </body>
