@@ -63,9 +63,9 @@ def test_build_weo_url_by_dataset_code(date_user, expected_weo_url_dict):
     assert weo_url == expected_weo_url_dict
 
 @pytest.mark.parametrize("test_args, expected_date",
-                         [(["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw"))
+                         [(["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "data"))
                             , "--date", "17-11-2019"], "17-11-2019"),
-                          (["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw"))
+                          (["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "data"))
                            ], date.today().strftime("%d-%m-%Y"))
                           ])
 def test_parser_data(test_args, expected_date):
@@ -74,7 +74,7 @@ def test_parser_data(test_args, expected_date):
     :param expected_date: str
     :return: tuple of target directory, date and log
     """
-    expected_target_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw"))
+    expected_target_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "data"))
     expected_log = "INFO"  # set to default in the parser
     expected_parser_tuple = (expected_target_directory, expected_date, expected_log)
 
@@ -114,7 +114,7 @@ def test_download_weo_data_from_imf_website(date_user, expected_dataset_name):
     :param expected_dataset_name: str
     :return: the name of the csv file we save
     """
-    target_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw"))
+    target_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "data"))
     test_args = ["prog", target_directory]
 
     with patch.object(sys, 'argv', test_args):
@@ -134,7 +134,7 @@ def test_download_weo_data_from_imf_website_exception(date_user):
     :return: exception raises
     """
 
-    test_args = ["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "raw")),
+    test_args = ["prog", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", "data")),
                  "--date", date_user]
 
     with patch.object(sys, 'argv', test_args):

@@ -27,7 +27,7 @@ log = logging.getLogger(__name__)
 filter_attributes = {'Subject Descriptor': 'Inflation, end of period consumer prices', 'Units': 'Index'}
 
 # it turns out the xls (url_2014) is in fact a tsv file ...
-root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw", "imf_data"))
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data", "data", "imf_data"))
 
 # Specifying the locale of the source
 import locale
