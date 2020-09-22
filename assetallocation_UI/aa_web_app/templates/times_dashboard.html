@@ -3,10 +3,13 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 
 .sidenav {
@@ -44,10 +47,12 @@
   .sidenav a {font-size: 18px;}
 }
 
-.title-dashboard {color: #005774; margin-top: 20px; font-size: 3rem;
-                             font-weight: 800;}
+.title-dashboard {color: #005774; margin-top: 20px; font-size: 3rem; font-weight: 800;}
 .sidenav-home {margin-top: 20px;}
 #selectVersion {color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 38px; margin-left: 10px;}
+.form-models-select-sidebar {color: #005774 !important; border-color: #007faa !important; width: 140px; height: 38px; margin-left: 10px; padding-top:0px;}
+.label-models-select-sidebar {color: #fff;  padding-left: 16px; margin-top: 10px;}
+.btn-select-sidebar {font-size: 1rem; width: 125px;height: 38px}
 </style>
 </head>
 <body>
@@ -57,32 +62,56 @@
             <img alt="Legal and General" width="auto" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
         </a>
         <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
+
+        <!-- ============================= CHARTS DATA ============================= -->
         <a class="sidenav-item" href="#">Charts Data</a>
-
         <form class="center" action="" method="POST" novalidate>
-                    {{ form.hidden_tag() }}
-                    <!-- Form: select the version for the model -->
-                    <div class="btn-group">
-                        {{ form.versions(class="form-control", id="selectVersion")}}
-                    </div>
-                </form>
+            {{ form.hidden_tag() }}
+            <!-- Form: select the version for the model -->
+            <div class="btn-group">
+                {{ form.versions(class="form-control", id="selectVersion")}}
+            </div>
+           <div class="form-group">
+               <label class="label-models-select-sidebar">Leverage type</label>
+               <select id="inputleveragesidebar" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
+                   <option>v</option>
+                   <option>e</option>
+                   <option>n</option>
+                   <option>s</option>
+               </select>
+           </div>
+            <a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>
+        </form>
 
-
-
-
-
+        <!-- ============================= EXPORT DATA ============================= -->
         <a class="sidenav-item" href="#">Export Data</a>
+        <form class="center" action="" method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            <!-- Form: select the version for the model -->
+            <div class="btn-group">
+                {{ form.versions(class="form-control", id="selectVersion")}}
+            </div>
+            <div class="form-group">
+               <label class="label-models-select-sidebar">Leverage type</label>
+               <select id="inputleveragesidebardexcel" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
+                   <option>v</option>
+                   <option>e</option>
+                   <option>n</option>
+                   <option>s</option>
+               </select>
+           </div>
+            <a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>
+        </form>
+
+        <!-- ============================= SUPPORT ============================= -->
         <a href="mailto:NexusQuantDev@lgim.com" target="">Support</a>
     </div>
 
+    <!-- ============================= CHARTS AREA ============================= -->
     <div class="container">
       <h2 class="title-dashboard">TIMES Dashboard</h2>
-      <p>This sidebar is of full height (100%) and always shown.</p>
-      <p>Scroll down the page to see the result.</p>
-      <p>Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset concludaturque et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
-      <p>Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset concludaturque et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
-      <p>Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset concludaturque et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
-      <p>Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum definitiones no quo, maluisset concludaturque et eum, altera fabulas ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum. Affert laboramus repudiandae nec et. Inciderint efficiantur his ad. Eum no molestiae voluptatibus.</p>
+        
+
     </div>
 
 </body>

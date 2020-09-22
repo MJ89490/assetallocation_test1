@@ -23,6 +23,8 @@ from .userIdentification import random_identification
 
 # todo mock content and test each route to see if they are ok
 # TODO create blueprints to avoid having single routes
+# TODO check with Jess for dashboard regarding inputs in the sidebar
+
 
 
 @app.route('/')
@@ -64,6 +66,9 @@ def received_data_run_model():
 @app.route('/times_dashboard',  methods=['GET', 'POST'])
 def times_dashboard():
     form = InputsTimesModel()
+    # form = ExportDataForm()
+    # template_data = main_data('f1', 1)
+
     return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
