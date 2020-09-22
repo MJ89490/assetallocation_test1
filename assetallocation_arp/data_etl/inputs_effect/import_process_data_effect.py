@@ -20,11 +20,12 @@ from assetallocation_arp.data_etl.data_manipulation import set_data_frequency
 
 class ImportDataEffect:
 
-    def __init__(self, frequency_mat, start_date_mat, signal_day_mat):
+    def __init__(self, end_date_mat, start_date_mat, frequency_mat, signal_day_mat):
         self.data_currencies = pd.DataFrame()
         self.frequency_mat = frequency_mat
         self.start_date_mat = start_date_mat
         self.signal_day_mat = signal_day_mat
+        self.end_date_mat = end_date_mat
 
     @property
     def frequency_mat(self):
@@ -43,6 +44,14 @@ class ImportDataEffect:
         self._start_date_mat = value
 
     @property
+    def end_date_mat(self):
+        return self._end_date_mat
+
+    @end_date_mat.setter
+    def end_date_mat(self, value):
+        self._end_date_mat = value
+
+    @property
     def signal_day_mat(self):
         return self._signal_day_mat
 
@@ -58,7 +67,7 @@ class ImportDataEffect:
         self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
                                                   input_file=None, date=None)
 
-        self.data_currencies = self.data_currencies.loc[self.start_date_mat:]
+        self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
 
         self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
 
@@ -72,8 +81,8 @@ class ImportDataEffect:
 
 class ProcessDataEffect:
 
-    def __init__(self, asset_inputs, frequency_mat='daily', start_date_mat='06/01/1999', signal_day_mat='Wed'):
-        self.obj_import_data = ImportDataEffect(frequency_mat, start_date_mat, signal_day_mat)
+    def __init__(self, asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat):
+        self.obj_import_data = ImportDataEffect(frequency_mat=frequency_mat, start_date_mat=start_date_mat, end_date_mat=end_date_mat, signal_day_mat=signal_day_mat)
 
         self.data_currencies_usd = pd.DataFrame()
         self.data_currencies_eur = pd.DataFrame()

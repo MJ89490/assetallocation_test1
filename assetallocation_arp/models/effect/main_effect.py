@@ -1,5 +1,8 @@
 import xlwings as xw
 import pandas as pd
+import os
+from configparser import ConfigParser
+from datetime import timedelta
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 
@@ -12,30 +15,36 @@ from assetallocation_arp.models.effect.compute_warning_flags_overview import Com
 
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
-from data_etl.outputs_effect.write_logs_computations_effect import remove_logs_effect
 
-from assetallocation_arp.data_etl.inputs_effect.get_inputs_effect_excel import get_latest_date_signal_excel
-
-from assetallocation_arp.data_etl.inputs_effect.get_inputs_effect_excel import get_user_date_effect_excel
 
 """
     Main function to run the EFFECT computations
 """
 
 
-def run_effect(strategy_inputs, input_file, asset_inputs):
+def run_effect(strategy_inputs, asset_inputs):
 
-    xw.Book(input_file).set_mock_caller()
-    remove_logs_effect()
+    user_date = strategy_inputs['userdate'][1]
 
-    user_date = get_user_date_effect_excel(input_file)
+    if user_date is None:
+        # Instantiate ConfigParser
+        config = ConfigParser()
+        # Parse existing file
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'dates_effect.ini'))
+        config.read(path)
+        # Read values from the dates_effect.ini file
+        default_start_date = config.get('start_date_computations', 'start_date_calculations')
+        user_date = default_start_date
 
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
-    obj_import_data = ComputeCurrencies(bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'][1],
-                                        frequency_mat=strategy_inputs['Frequency'][1], start_date_mat=strategy_inputs['StartDate'][1],
-                                        signal_day_mat=strategy_inputs['SignalDay'][1], asset_inputs=asset_inputs)
+    obj_import_data = ComputeCurrencies(asset_inputs=asset_inputs,
+                                        bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'][1],
+                                        frequency_mat=strategy_inputs['Frequency'][1],
+                                        start_date_mat=strategy_inputs['StartDate'][1],
+                                        end_date_mat=strategy_inputs['EndDate'][1],
+                                        signal_day_mat=strategy_inputs['SignalDay'][1])
     spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_date
 
@@ -56,7 +65,11 @@ def run_effect(strategy_inputs, input_file, asset_inputs):
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
-    latest_signal_date = get_latest_date_signal_excel(obj_import_data)
+    latest_signal_date = strategy_inputs['latest signal date'][1]
+    if latest_signal_date is None:
+        latest_signal_date = obj_import_data.dates_origin_index[-1]
+        offset = (latest_signal_date.weekday() - 2) % 7
+        latest_signal_date = pd.to_datetime(latest_signal_date - timedelta(days=offset), format='%d-%m-%Y')
 
     spot_origin, carry_origin = obj_import_data.process_data_config_effect()
 
@@ -106,7 +119,12 @@ def run_effect(strategy_inputs, input_file, asset_inputs):
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
                                                                      prev_7_days_from_latest_signal_date=obj_import_data,
-                                                                     asset_inputs=asset_inputs)
+                                                                     asset_inputs=asset_inputs,
+                                                                     end_date_mat=strategy_inputs['EndDate'][1],
+                                                                     frequency_mat=strategy_inputs['Frequency'][1],
+                                                                     start_date_mat=strategy_inputs['StartDate'][1],
+                                                                     signal_day_mat=strategy_inputs['SignalDay'][1]
+                                                                     )
     obj_compute_warning_flags_overview.process_data_effect()
     rates = obj_compute_warning_flags_overview.compute_warning_flags_rates()
 

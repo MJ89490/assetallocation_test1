@@ -18,8 +18,8 @@ from data_etl.outputs_effect.write_logs_computations_effect import write_logs_ef
 
 class ComputeCurrencies(ProcessDataEffect):
 
-    def __init__(self, asset_inputs, frequency_mat, start_date_mat, signal_day_mat, bid_ask_spread=10):
-        super().__init__(asset_inputs, frequency_mat, start_date_mat, signal_day_mat)
+    def __init__(self, asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, bid_ask_spread=10):
+        super().__init__(asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat)
 
         self.carry_currencies = pd.DataFrame()
         self.trend_currencies = pd.DataFrame()

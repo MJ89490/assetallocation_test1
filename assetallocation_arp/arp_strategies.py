@@ -31,7 +31,7 @@ def run_model(model_type, mat_file, input_file):
 
         strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
-        outputs_effect = run_effect(strategy_inputs, input_file=input_file, asset_inputs=asset_inputs)
+        outputs_effect = run_effect(strategy_inputs, asset_inputs=asset_inputs)
 
         write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
                                                                  outputs_effect['signals_overview'],
@@ -128,4 +128,5 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-    get_inputs_from_python(get_input_user(), "arp_dashboard_effect.xlsm")
+    # get_inputs_from_python(get_input_user(), "arp_dashboard_effect.xlsm"
+    get_inputs_from_excel()
