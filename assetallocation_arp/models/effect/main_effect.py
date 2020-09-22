@@ -22,7 +22,7 @@ from assetallocation_arp.models.compute_risk_return_calculations import ComputeR
 """
 
 
-def run_effect(strategy_inputs, asset_inputs):
+def run_effect(strategy_inputs, asset_inputs, all_data):
 
     user_date = strategy_inputs['userdate'][1]
 
@@ -44,7 +44,7 @@ def run_effect(strategy_inputs, asset_inputs):
                                         frequency_mat=strategy_inputs['Frequency'][1],
                                         start_date_mat=strategy_inputs['StartDate'][1],
                                         end_date_mat=strategy_inputs['EndDate'][1],
-                                        signal_day_mat=strategy_inputs['SignalDay'][1])
+                                        signal_day_mat=strategy_inputs['SignalDay'][1], all_data=all_data)
     spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_date
 
@@ -123,8 +123,8 @@ def run_effect(strategy_inputs, asset_inputs):
                                                                      end_date_mat=strategy_inputs['EndDate'][1],
                                                                      frequency_mat=strategy_inputs['Frequency'][1],
                                                                      start_date_mat=strategy_inputs['StartDate'][1],
-                                                                     signal_day_mat=strategy_inputs['SignalDay'][1]
-                                                                     )
+                                                                     signal_day_mat=strategy_inputs['SignalDay'][1],
+                                                                     all_data=all_data)
     obj_compute_warning_flags_overview.process_data_effect()
     rates = obj_compute_warning_flags_overview.compute_warning_flags_rates()
 

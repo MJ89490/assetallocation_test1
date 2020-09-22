@@ -1,4 +1,4 @@
-from data_etl.import_data_times_to_delete import extract_inputs_and_mat_data as data_matlab_effect
+from data_etl.import_data_from_excel_matlab import extract_inputs_and_mat_data as data_matlab_effect
 from common_libraries.models_names import Models
 
 from configparser import ConfigParser
@@ -20,12 +20,13 @@ from assetallocation_arp.data_etl.data_manipulation import set_data_frequency
 
 class ImportDataEffect:
 
-    def __init__(self, end_date_mat, start_date_mat, frequency_mat, signal_day_mat):
+    def __init__(self, end_date_mat, start_date_mat, frequency_mat, signal_day_mat, all_data):
         self.data_currencies = pd.DataFrame()
         self.frequency_mat = frequency_mat
         self.start_date_mat = start_date_mat
         self.signal_day_mat = signal_day_mat
         self.end_date_mat = end_date_mat
+        self.all_data = all_data
 
     @property
     def frequency_mat(self):
@@ -64,9 +65,9 @@ class ImportDataEffect:
         Function importing the data from matlab file
         :return: a dataFrame self.data_currencies with matlab data
         """
-        self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
-                                                  input_file=None, date=None)
-
+        # self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
+        #                                           input_file=None, model_date=None)
+        self.data_currencies = self.all_data
         self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
 
         self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
@@ -81,8 +82,8 @@ class ImportDataEffect:
 
 class ProcessDataEffect:
 
-    def __init__(self, asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat):
-        self.obj_import_data = ImportDataEffect(frequency_mat=frequency_mat, start_date_mat=start_date_mat, end_date_mat=end_date_mat, signal_day_mat=signal_day_mat)
+    def __init__(self, asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, all_data):
+        self.obj_import_data = ImportDataEffect(frequency_mat=frequency_mat, start_date_mat=start_date_mat, end_date_mat=end_date_mat, signal_day_mat=signal_day_mat, all_data=all_data)
 
         self.data_currencies_usd = pd.DataFrame()
         self.data_currencies_eur = pd.DataFrame()
