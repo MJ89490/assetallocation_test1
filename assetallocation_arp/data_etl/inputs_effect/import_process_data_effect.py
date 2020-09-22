@@ -302,7 +302,7 @@ class ProcessDataEffect:
 
         inflaton_bbg = self.data_currencies[assets_table['inflation_config_bbg']]
 
-        rng = pd.date_range(start=inflaton_bbg.index[0], freq='Y')
+        rng = pd.date_range(start=inflaton_bbg.index[0], end=inflaton_bbg.index[-1], freq='Y')
         sig = inflaton_bbg.reindex(rng, method='pad')
 
 
