@@ -85,6 +85,7 @@ class ProcessDataEffect:
     def __init__(self, asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, all_data):
         self.obj_import_data = ImportDataEffect(frequency_mat=frequency_mat, start_date_mat=start_date_mat, end_date_mat=end_date_mat, signal_day_mat=signal_day_mat, all_data=all_data)
 
+        self.data_currencies = pd.DataFrame()
         self.data_currencies_usd = pd.DataFrame()
         self.data_currencies_eur = pd.DataFrame()
 
@@ -223,14 +224,14 @@ class ProcessDataEffect:
                                                                  parse_data['3M_implied_config']['three_month_implied_eur'] +
                                                                  parse_data['base_implied_config']['currencies_base_implied_eur']})
 
-        data_currencies = self.obj_import_data.import_data_matlab()
+        self.data_currencies = self.obj_import_data.import_data_matlab()
 
         # start_date = '1999-01-06'
-        self.data_currencies_usd = data_currencies[currencies_usd.currencies_usd_tickers].loc[:]
-        self.data_currencies_eur = data_currencies[currencies_eur.currencies_eur_tickers].loc[:]
+        self.data_currencies_usd = self.data_currencies[currencies_usd.currencies_usd_tickers].loc[:]
+        self.data_currencies_eur = self.data_currencies[currencies_eur.currencies_eur_tickers].loc[:]
 
         # SPXT Index
-        spxt_index_values = data_currencies[parse_data['spxt_index_config']]
+        spxt_index_values = self.data_currencies[parse_data['spxt_index_config']]
 
         self.process_data_config_effect()
 
@@ -262,6 +263,8 @@ class ProcessDataEffect:
         self.currencies_3M_implied['three_month_implied_usd'] = currencies_usd['3M implied ticker'].tolist()
         self.currencies_3M_implied['three_month_implied_eur'] = currencies_eur['3M implied ticker'].tolist()
 
+        inflation_config_bbg = pd.concat([self.asset_inputs['Inflation currency ticker'], self.asset_inputs['inflation base currency ticker'].iloc[:3]], axis=0)
+
         # SPX Index
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
 
@@ -269,7 +272,8 @@ class ProcessDataEffect:
                        'carry_config': self.currencies_carry,
                        'base_implied_config': currencies_base_implied_config,
                        '3M_implied_config': self.currencies_3M_implied,
-                       'spxt_index_config': spxt_index_config}
+                       'spxt_index_config': spxt_index_config,
+                       'inflation_config_bbg': inflation_config_bbg}
 
         return config_data
 
@@ -296,4 +300,12 @@ class ProcessDataEffect:
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
-        return common_spot, common_carry
+        inflaton_bbg = self.data_currencies[assets_table['inflation_config_bbg']]
+
+        rng = pd.date_range(start=inflaton_bbg.index[0], freq='Y')
+        sig = inflaton_bbg.reindex(rng, method='pad')
+
+
+        inflaton_bbg.columns = pd.concat([self.asset_inputs['Spot ticker'], pd.Series(['EUR', 'GBP', 'USD'])], axis=0)
+        inflaton_bbg = inflaton_bbg.set_index(inflaton_bbg.index.year)
+        return common_spot, common_carry, inflaton_bbg

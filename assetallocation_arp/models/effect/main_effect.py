@@ -47,13 +47,13 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                         signal_day_mat=strategy_inputs['SignalDay'][1], all_data=all_data)
     spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_date
-
+    spot_origin, carry_origin, inflation_bbg = obj_import_data.process_data_config_effect()
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
     inflation_differential = obj_inflation_differential.compute_inflation_differential(
                              strategy_inputs['Realtime Inflation Forecast'][1], obj_import_data.all_currencies_spot,
-                             obj_import_data.currencies_spot['currencies_spot_usd'])
+                             obj_import_data.currencies_spot['currencies_spot_usd'], inflation_bbg=inflation_bbg)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     carry_inputs = {'type': strategy_inputs['Real/Nominal'][1].strip().lower(), 'inflation': inflation_differential}
@@ -70,8 +70,6 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
         latest_signal_date = obj_import_data.dates_origin_index[-1]
         offset = (latest_signal_date.weekday() - 2) % 7
         latest_signal_date = pd.to_datetime(latest_signal_date - timedelta(days=offset), format='%d-%m-%Y')
-
-    spot_origin, carry_origin = obj_import_data.process_data_config_effect()
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
     obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['STDev window (weeks)'][1]),
