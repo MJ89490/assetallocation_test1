@@ -53,7 +53,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     inflation_differential = obj_inflation_differential.compute_inflation_differential(
                              strategy_inputs['Realtime Inflation Forecast'][1], obj_import_data.all_currencies_spot,
-                             obj_import_data.currencies_spot['currencies_spot_usd'], inflation_bbg=inflation_bbg)
+                             obj_import_data.currencies_spot['currencies_spot_usd'], inflation_bloomberg_values=inflation_bbg)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     carry_inputs = {'type': strategy_inputs['Real/Nominal'][1].strip().lower(), 'inflation': inflation_differential}

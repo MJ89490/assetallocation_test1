@@ -301,10 +301,9 @@ class ProcessDataEffect:
 
         inflaton_bbg = self.data_currencies[assets_table['inflation_config_bbg']]
 
-        inflation_bbg_yearly = pd.date_range(start=inflaton_bbg.index[0], end=inflaton_bbg.index[-1], freq='Y')
-        inflation_bbg_yearly = inflation_bbg_yearly.reindex(inflation_bbg_yearly, method='pad')
+        inflation_bbg_years = pd.date_range(start=inflaton_bbg.index[0], end=inflaton_bbg.index[-1], freq='Y')
+        inflation_bbg_yearly = inflaton_bbg.reindex(inflation_bbg_years, method='pad')
 
         inflation_bbg_yearly.columns = pd.concat([self.asset_inputs['Spot ticker'], pd.Series(['EUR', 'GBP', 'USD'])], axis=0)
-        inflation_bbg_yearly = inflation_bbg_yearly.set_index(inflaton_bbg.index.year)
-
+        inflation_bbg_yearly = inflation_bbg_yearly.set_index(inflation_bbg_yearly.index.year)
         return common_spot, common_carry, inflation_bbg_yearly
