@@ -65,8 +65,7 @@ class ImportDataEffect:
         Function importing the data from matlab file
         :return: a dataFrame self.data_currencies with matlab data
         """
-        # self.data_currencies = data_matlab_effect(model_type=Models.effect.name, mat_file=None,
-        #                                           input_file=None, model_date=None)
+
         self.data_currencies = self.all_data
         self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
 
