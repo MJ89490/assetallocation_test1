@@ -4,7 +4,7 @@ from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.country import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
-
+from assetallocation_arp.data_etl.dal.data_models.custom_error import IncorrectTickerError
 
 # TODO rename type (+ enum?)
 # noinspection PyAttributeOutsideInit
@@ -101,8 +101,7 @@ class Asset:
         if asset_analytic.asset_ticker == self.ticker:
             self._asset_analytics.append(asset_analytic)
         else:
-            raise ValueError(f'Tickers do not match. Asset ticker "{self.ticker}",'
-                             f'asset_analytic ticker "{asset_analytic.asset_ticker}"')
+            raise IncorrectTickerError({'asset': self.ticker, 'asset_analytic': asset_analytic.asset_ticker})
 
 
 class FicaAsset(Asset):
@@ -143,8 +142,7 @@ class TimesAssetInput:
         if x.ticker == self.signal_ticker:
             self._signal_asset = x
         else:
-            raise ValueError(f'Tickers do not match. Asset ticker "{x.ticker}",'
-                             f'signal ticker "{self.signal_ticker}"')
+            raise IncorrectTickerError({'asset': x.ticker, 'signal': self.signal_ticker})
 
     @property
     def future_asset(self) -> Asset:
@@ -155,8 +153,7 @@ class TimesAssetInput:
         if x.ticker == self.future_ticker:
             self._future_asset = x
         else:
-            raise ValueError(f'Tickers do not match. Asset ticker "{x.ticker}",'
-                             f'signal ticker "{self.future_ticker}"')
+            raise IncorrectTickerError({'asset': x.ticker, 'future': self.future_ticker})
 
     @property
     def s_leverage(self) -> int:

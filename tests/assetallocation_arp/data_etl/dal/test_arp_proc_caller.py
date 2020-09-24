@@ -232,4 +232,3 @@ def test_select_effect_assets_returns_list_of_effect_asset_objects(mock_call_pro
 
     assert isinstance(returns, list)
     assert all([isinstance(i, EffectAssetInput) for i in returns])
-
