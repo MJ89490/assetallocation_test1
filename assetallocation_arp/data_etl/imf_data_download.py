@@ -230,7 +230,8 @@ def parser_data():
                                                  ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
     parser.add_argument('--log', default='INFO', help='level of logging messages')
     args = parser.parse_args()
-    target_value = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data_effect', 'data_imf'))
+    target_value = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data_effect', 'data', 'data_imf'))
+
     args.target_dir = Path(target_value)
 
     if args.date is None:

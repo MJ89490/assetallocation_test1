@@ -12,6 +12,7 @@ from configparser import ConfigParser
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
+from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 
 
 class ComputeInflationDifferential:
@@ -192,7 +193,8 @@ class ComputeInflationDifferential:
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
 
         # Grab the latest inflation differential data
-        # scrape_imf_data()
+        # if update_imf_data:
+        #     scrape_imf_data()
 
         years_one_inflation = years_zero_inflation.apply(lambda y: y + 1)
         years_zero_inflation = years_zero_inflation['Years'].tolist()
