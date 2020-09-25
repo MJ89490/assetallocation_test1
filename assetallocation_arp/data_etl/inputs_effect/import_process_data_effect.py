@@ -262,8 +262,6 @@ class ProcessDataEffect:
         self.currencies_3M_implied['three_month_implied_usd'] = currencies_usd['3M implied ticker'].tolist()
         self.currencies_3M_implied['three_month_implied_eur'] = currencies_eur['3M implied ticker'].tolist()
 
-        inflation_config_bbg = pd.concat([self.asset_inputs['Inflation currency ticker'], self.asset_inputs['inflation base currency ticker'].iloc[:3]], axis=0)
-
         # SPX Index
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
 
@@ -271,8 +269,7 @@ class ProcessDataEffect:
                        'carry_config': self.currencies_carry,
                        'base_implied_config': currencies_base_implied_config,
                        '3M_implied_config': self.currencies_3M_implied,
-                       'spxt_index_config': spxt_index_config,
-                       'inflation_config_bbg': inflation_config_bbg}
+                       'spxt_index_config': spxt_index_config}
 
         return config_data
 
@@ -299,11 +296,4 @@ class ProcessDataEffect:
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
-        inflaton_bbg = self.data_currencies[assets_table['inflation_config_bbg']]
-
-        inflation_bbg_years = pd.date_range(start=inflaton_bbg.index[0], end=inflaton_bbg.index[-1], freq='Y')
-        inflation_bbg_yearly = inflaton_bbg.reindex(inflation_bbg_years, method='pad')
-
-        inflation_bbg_yearly.columns = pd.concat([self.asset_inputs['Spot ticker'], pd.Series(['EUR', 'GBP', 'USD'])], axis=0)
-        inflation_bbg_yearly = inflation_bbg_yearly.set_index(inflation_bbg_yearly.index.year)
-        return common_spot, common_carry, inflation_bbg_yearly
+        return common_spot, common_carry

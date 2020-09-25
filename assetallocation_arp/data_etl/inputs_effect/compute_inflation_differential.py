@@ -144,7 +144,7 @@ class ComputeInflationDifferential:
         return inflation_data_merged
 
     @staticmethod
-    def process_inflation_differential_bloomberg(inflation_bbg):
+    def process_inflation_differential_bloomberg():
         """
         Function processing the Bloomberg inflation differential data fom csv files
         :return: a dataFrame inflation_bloomberg_values with inflation data inside for usd and eur countries
@@ -181,13 +181,13 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd, inflation_bloomberg_values):
+    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
         """
         write_logs_effect("Computing inflation differential...", "logs_inflation_differential")
-        # inflation_bloomberg_values = self.process_inflation_differential_bloomberg(inflation_bbg)
+        inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
 
