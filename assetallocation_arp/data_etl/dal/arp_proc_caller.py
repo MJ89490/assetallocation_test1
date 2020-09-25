@@ -173,7 +173,7 @@ class TimesProcCaller(ArpProcCaller):
 
     @staticmethod
     def _construct_times_asset_input(row) -> TimesAssetInput:
-        t = TimesAssetInput(row['s_leverage'], row['signal_ticker'], row['future_ticker'], row['cost'])
+        t = TimesAssetInput(row['s_leverage'], row['signal_ticker'], row['future_ticker'], float(row['cost']))
         t.signal_asset = Asset(row['signal_ticker'], row['signal_name'])
         t.future_asset = Asset(row['future_ticker'], row['future_name'])
         return t

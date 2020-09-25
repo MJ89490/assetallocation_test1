@@ -1,3 +1,5 @@
+import json
+
 # Contains view functions for various URLs
 from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import get_times_inputs
@@ -12,7 +14,7 @@ from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
 # from .models import User
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
-from assetallocation_arp.data_etl.dal.data_models.strategy import TimesAssetInput
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
 
 import os
 # from flask_login import login_user
@@ -49,16 +51,19 @@ def times_model():
 def received_data_run_model():
     form = InputsTimesModel()
     if request.method == "POST":
-        times_data = request.data
-        print(times_data)
-        # -------- All the data are in the times_data (form + ag grd) in a dict --------
-        # fund_name, strategy_weight, times
-        # date_from = datetime(2019, 12, 1)
-        # times.asset_inputs = [TimesAssetInput(3, 'RX1 A:00_0_R Comdty', 'RX1 A:00_0_R Comdty', 0.0002)]
-        # fund_strategy = run_strategy(fund_name, strategy_weight, times, os.environ.get('USERNAME'), date_from)
-        # TODO should redirect to dashboard after running of a model, with the strategy_version
-        # return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
-        return render_template('times_model_mirror.html', form=form, title='TimesPage')
+        t = json.loads(request.data)
+        fund_name = t['fund']
+        long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+        short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+
+        times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
+                      short_signals, int(t['lag']), int(t['volwindow']))
+        times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
+                              zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
+        fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+
+        return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
+
     return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
 

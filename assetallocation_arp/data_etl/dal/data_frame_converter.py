@@ -4,9 +4,8 @@ import pandas as pd
 
 from assetallocation_arp.data_etl.dal.data_models.asset import Asset, TimesAssetInput
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetWeight, FundStrategyAssetAnalytic
-from common_libraries.dal_enums.fund_strategy import Category, Signal, Performance
-from data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, FundStrategyAssetWeight
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Signal, Performance
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, FundStrategyAssetWeight
 
 
 class DataFrameConverter:
