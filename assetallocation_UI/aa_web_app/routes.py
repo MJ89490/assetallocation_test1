@@ -57,12 +57,12 @@ def received_data_run_model():
         # t = json.loads(request.data)
         t = request.data
 
-        fund_name = t['fund']
-        long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-        short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+        # fund_name = t['fund']
+        # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+        # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
 
 
-        
+
 
 
         # times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
@@ -72,17 +72,17 @@ def received_data_run_model():
         # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
         #
         # return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
-        return redirect(url_for('times_times'))
+        return redirect(url_for('times_dashboard'))
     return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
 
-# @app.route('/times_dashboard',  methods=['GET', 'POST'])
-# def times_dashboard():
-#     form = InputsTimesModel()
-#     # form = ExportDataForm()
-#     # template_data = main_data('f1', 1)
-#
-#     return render_template('times_dashboard.html', form=form, title='Dashboard')
+@app.route('/times_dashboard',  methods=['GET', 'POST'])
+def times_dashboard():
+    form = InputsTimesModel()
+    # form = ExportDataForm()
+    # template_data = main_data('f1', 1)
+
+    return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
