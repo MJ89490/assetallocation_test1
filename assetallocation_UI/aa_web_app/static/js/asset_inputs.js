@@ -110,7 +110,7 @@ function getDataFromTable(){
 
 
 $(function (){
-	$('button').click(function(){
+	$('#contact-form-button').click(function(){
 		var fund = $('#inputFundname').val();
 		var date = $('#inputdatefrom').val();
 		var lag = $('#inputtimelag').val()

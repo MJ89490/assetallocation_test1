@@ -46,12 +46,16 @@ def times_model():
 
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
+@app.route('/times_times')
+def times_times():
+    return 'Helloooow World'
 
 @app.route('/received_data_run_model',  methods=['GET', 'POST'])
 def received_data_run_model():
     form = InputsTimesModel()
-    if request.method == "POST":
+    if request.method == 'POST':
         t = json.loads(request.data)
+        print(t)
         # fund_name = t['fund']
         # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
         # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
@@ -63,7 +67,7 @@ def received_data_run_model():
         # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
         #
         # return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
-        return render_template('times_model_mirror.html', form=form, title='TimesPage')
+        return redirect(url_for('times_times'))
     return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
 
