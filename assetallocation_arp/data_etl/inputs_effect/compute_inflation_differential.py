@@ -182,7 +182,7 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd):
+    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd, imf_data_update):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
@@ -193,8 +193,8 @@ class ComputeInflationDifferential:
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
 
         # Grab the latest inflation differential data
-        # if update_imf_data:
-        #     scrape_imf_data()
+        if imf_data_update:
+            scrape_imf_data()
 
         years_one_inflation = years_zero_inflation.apply(lambda y: y + 1)
         years_zero_inflation = years_zero_inflation['Years'].tolist()
