@@ -54,12 +54,17 @@ def times_times():
 def received_data_run_model():
     form = InputsTimesModel()
     if request.method == 'POST':
-        t = json.loads(request.data)
-        print(t)
-        # fund_name = t['fund']
-        # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-        # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-        #
+        # t = json.loads(request.data)
+        t = request.data
+
+        fund_name = t['fund']
+        long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+        short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+
+
+        
+
+
         # times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
         #               short_signals, int(t['lag']), int(t['volwindow']))
         # times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
