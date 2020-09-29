@@ -154,9 +154,9 @@ function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, fre
     console.log(jsonData);
     $.ajax({
       type : 'POST',
-      url : '/received_data_run_model',
+      url : "http://127.0.0.1:5000/received_data_run_model",
       data : jsonData,
-      contentType : 'application/json;charset=utf-8'
+      contentType : 'application/json',
       dataType: 'json'
     });
 

@@ -47,14 +47,16 @@ def times_model():
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
 
-@app.route('/received_data_run_model',  methods=['GET', 'POST'])
+@app.route('/received_data_run_model',  methods=['POST'])
 def received_data_run_model():
     form = InputsTimesModel()
     if request.method == 'POST':
-        t = json.loads(request.data)
-
+        from flask import jsonify
+        # t = json.loads(request.data)
+        t = request.get_json()
+        print(jsonify(t))
         # t = request.data
-        print(t)
+
         fund_name = t['fund']
         # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
         # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
