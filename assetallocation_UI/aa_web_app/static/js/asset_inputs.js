@@ -154,10 +154,10 @@ function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, fre
     console.log(jsonData);
     $.ajax({
       type : 'POST',
-      url : "/received_data_run_model",
+      url : '/received_data_run_model',
       data : jsonData,
-      contentType : "application/json",
-      dataType: "JSON"
+      contentType : 'application/json;charset=utf-8'
+      dataType: 'json'
     });
 
     return jsonData

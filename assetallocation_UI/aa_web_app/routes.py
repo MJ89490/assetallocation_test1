@@ -52,9 +52,10 @@ def received_data_run_model():
     form = InputsTimesModel()
     if request.method == 'POST':
         t = json.loads(request.data)
+
         # t = request.data
         print(t)
-        fund_name = t["fund"]
+        fund_name = t['fund']
         # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
         # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
 
