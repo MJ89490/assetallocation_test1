@@ -33,9 +33,20 @@ def run_model(model_type, mat_file, input_file):
 
         outputs_effect = run_effect(strategy_inputs, asset_inputs=asset_inputs, all_data=all_data)
 
+        # write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
+        #                                                          outputs_effect['signals_overview'],
+        #                                                          outputs_effect['trades_overview'],
+        #                                                          outputs_effect['rates'],
+        #                                                          outputs_effect['risk_returns'],
+        #                                                          outputs_effect['combo'],
+        #                                                          outputs_effect['total_excl_signals'],
+        #                                                          outputs_effect['total_incl_signals'],
+        #                                                          outputs_effect['spot_incl_signals'],
+        #                                                          outputs_effect['spot_excl_signals'])}, input_file)
+
         write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
-                                                                 outputs_effect['signals_overview'],
-                                                                 outputs_effect['trades_overview'],
+
+
                                                                  outputs_effect['rates'],
                                                                  outputs_effect['risk_returns'],
                                                                  outputs_effect['combo'],

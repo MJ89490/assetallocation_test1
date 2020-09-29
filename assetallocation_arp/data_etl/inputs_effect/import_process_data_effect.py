@@ -69,7 +69,8 @@ class ImportDataEffect:
 
         self.data_currencies = self.all_data
         self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
-        self.data_currencies_no_end_date = self.all_data.loc[self.start_date_mat:]
+
+        self.data_currencies_no_end_date = set_data_frequency(self.all_data.loc[self.start_date_mat:],  self.frequency_mat, self.signal_day_mat)
 
         self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
 
