@@ -46,21 +46,21 @@ def times_model():
 
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
-@app.route('/times_times')
-def times_times():
-    return 'Helloooow World'
 
 @app.route('/received_data_run_model',  methods=['GET', 'POST'])
 def received_data_run_model():
     form = InputsTimesModel()
     if request.method == 'POST':
-        # t = json.loads(request.data)
-        t = request.data
-
-        # fund_name = t['fund']
+        t = json.loads(request.data)
+        # t = request.data
+        print(t)
+        fund_name = t["fund"]
         # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
         # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
 
+        print(fund_name)
+        # print(long_signals)
+        # print(short_signals)
 
 
 
