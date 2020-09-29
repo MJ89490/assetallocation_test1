@@ -174,7 +174,7 @@ def setup_times(leverage_type):
 
         for ticker, data in all_data.items():
             if ticker in (ta.signal_ticker, ta.future_ticker):
-                a = Asset(ticker, ticker)
+                a = Asset(ticker)
                 for index, val in data.iteritems():
                     a.add_analytic(AssetAnalytic(ticker, 'PX_LAST', index, float(val)))
 

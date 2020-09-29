@@ -30,6 +30,12 @@ def MockEffect():
         yield _MockEffect
 
 
+@pytest.fixture()
+def MockAsset():
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.Asset', autospec=True) as _MockAsset:
+        yield _MockAsset
+
+
 def test_insert_times_strategy_calls_call_proc(MockTimes, mock_call_proc):
     mock_times = MockTimes(1, 'weekly', 'e', [float(2)], [float(3)], 4, 5)
     user_id = 'a'
@@ -149,7 +155,7 @@ def test_select_fund_strategy_results_calls_call_proc(mock_call_proc):
                                            [fund_name, strategy_name, strategy_version])
 
 
-def test_select_fund_strategy_results_returns_fund_strategy(mock_call_proc):
+def test_select_fund_strategy_results_returns_fund_strategy(mock_call_proc, MockAsset):
     fund_name = 'b'
     strategy_name = 'times'
     strategy_version = 1

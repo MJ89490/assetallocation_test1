@@ -58,13 +58,18 @@ class ArpProcCaller(Db):
         fund_strategy.python_code_version = res[0]['python_code_version']
 
         for row in res:
+            a = Asset(row['asset_ticker'])
+            a.category = row['asset_category']
+            a.subcategory = row['asset_subcategory']
+            fund_strategy.add_asset_if_not_exists(a)
+
             aw = FundStrategyAssetWeight(row['asset_ticker'], row['business_date'], float(row['strategy_weight']))
             aw.implemented_weight = float(row['implemented_weight'])
             fund_strategy.add_fund_strategy_asset_weight(aw)
 
             fund_strategy.add_fund_strategy_asset_analytics(
                 ArpTypeConverter.fund_strategy_asset_analytics_str_to_objects(row['asset_ticker'], row['business_date'],
-                    row['asset_analytics']))
+                                                                              row['asset_analytics']))
 
         return fund_strategy
 
@@ -174,8 +179,8 @@ class TimesProcCaller(ArpProcCaller):
     @staticmethod
     def _construct_times_asset_input(row) -> TimesAssetInput:
         t = TimesAssetInput(row['s_leverage'], row['signal_ticker'], row['future_ticker'], float(row['cost']))
-        t.signal_asset = Asset(row['signal_ticker'], row['signal_name'])
-        t.future_asset = Asset(row['future_ticker'], row['future_name'])
+        t.signal_asset = Asset(row['signal_ticker'])
+        t.future_asset = Asset(row['future_ticker'])
         return t
 
 
@@ -243,7 +248,7 @@ class EffectProcCaller(ArpProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
+            e = EffectAssetInput(r['asset_ticker'])
             effect_assets.append(e)
 
         return effect_assets
@@ -267,7 +272,7 @@ class EffectProcCaller(ArpProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
+            e = EffectAssetInput(r['asset_ticker'])
             e.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
 
             effect_assets.append(e)

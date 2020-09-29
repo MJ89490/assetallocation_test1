@@ -6,19 +6,19 @@ from assetallocation_arp.common_libraries.dal_enums.country import Country, coun
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
 from assetallocation_arp.data_etl.dal.data_models.custom_error import IncorrectTickerError
 
-# TODO rename type (+ enum?)
+
 # noinspection PyAttributeOutsideInit
 class Asset:
-    def __init__(self, ticker: str, name: str):
+    def __init__(self, ticker: str):
         """Asset class to hold data from database"""
         self._category = None
         self._country = None
         self._currency = None
         self.description = ''
-        self.name = name
+        self._name = None
         self.ticker = ticker
         self._is_tr = None
-        self._type = None
+        self._subcategory = None
         self.asset_analytics = []
 
     @property
@@ -66,12 +66,12 @@ class Asset:
         return country_region.get(self.country.name)
 
     @property
-    def type(self) -> str:
-        return self._type
+    def subcategory(self) -> str:
+        return self._subcategory
 
-    @type.setter
-    def type(self, x: str):
-        self._type = x
+    @subcategory.setter
+    def subcategory(self, x: str):
+        self._subcategory = x
 
     @property
     def currency(self) -> Currency:
@@ -103,13 +103,20 @@ class Asset:
         else:
             raise IncorrectTickerError({'asset': self.ticker, 'asset_analytic': asset_analytic.asset_ticker})
 
+    def __eq__(self, other: 'Asset'):
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__
+        else:
+            return False
+
 
 class FicaAsset(Asset):
     def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
                  currency: Union[str, Currency], name: str, type: str, future_ticker: str,
                  generic_yield_ticker: str) -> None:
         """FicaAsset class to hold data from database"""
-        super().__init__(ticker, name)
+        super().__init__(ticker)
+        super().name = name
         self._future_ticker = future_ticker
         self._generic_yield_ticker = generic_yield_ticker
 
@@ -192,7 +199,8 @@ class TimesAssetInput:
 class EffectAssetInput(Asset):
     def __init__(self, ticker: str, name: str, ndf_code: str, spot_code: str, position_size: float) -> None:
         """EffectAsset class to hold data from database"""
-        super().__init__(ticker, name)
+        super().__init__(ticker)
+        super().name = name
         self.ndf_code = ndf_code
         self.spot_code = spot_code
         self.position_size = position_size

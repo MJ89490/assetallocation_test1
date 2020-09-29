@@ -7,6 +7,7 @@ from numpy import nan
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Performance, Signal
+from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 
 
 # noinspection PyAttributeOutsideInit
@@ -26,6 +27,24 @@ class FundStrategy:
         self.strategy_version = strategy_version
         self.asset_weights = fund_strategy_asset_weights or []
         self.asset_analytics = fund_strategy_asset_analytics or []
+        self._assets = None
+
+    @property
+    def assets(self) -> List[Asset]:
+        return self._assets
+
+    @assets.setter
+    def assets(self, x: List[Asset]) -> None:
+        unique_x = []
+        for i in x:
+            if i not in unique_x:
+                unique_x.append(i)
+
+        self._assets = unique_x
+
+    def add_asset_if_not_exists(self, x: Asset) -> None:
+        if x not in self.assets:
+            self.assets.append(x)
 
     @property
     def fund_name(self) -> str:

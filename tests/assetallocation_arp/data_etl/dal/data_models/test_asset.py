@@ -8,14 +8,14 @@ from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 
 def test_asset_country_setter_raises_key_error_invalid_country():
     with raises(KeyError):
-        a = Asset('a', 'b')
+        a = Asset('a')
         a.country = 'invalid_country'
 
 
 def test_asset_country_setter_sets_country_valid_country():
     country = 'EU'
 
-    a = Asset('a', 'b')
+    a = Asset('a')
     a.country = country
 
     assert a.country.name == country
@@ -23,13 +23,13 @@ def test_asset_country_setter_sets_country_valid_country():
 
 def test_asset_category_setter_raises_key_error_invalid_category():
     with raises(KeyError):
-        a = Asset('a', 'b')
+        a = Asset('a')
         a.category = 'invalid_category'
 
 
 def test_asset_category_setter_sets_category_valid_category():
     category = 'FX'
-    a = Asset('a', 'b')
+    a = Asset('a')
     a.category = category
 
     assert a.category.name == category
@@ -37,14 +37,14 @@ def test_asset_category_setter_sets_category_valid_category():
 
 def test_asset_currency_setter_raises_key_error_invalid_currency():
     with raises(KeyError):
-        a = Asset('a', 'b')
+        a = Asset('a')
         a.currency = 'invalid_currency'
 
 
 def test_asset_currency_setter_sets_currency_valid_currency():
     currency = 'EUR'
 
-    a = Asset('a', 'b')
+    a = Asset('a')
     a.currency = currency
 
     assert a.currency.name == currency
@@ -52,14 +52,14 @@ def test_asset_currency_setter_sets_currency_valid_currency():
 
 @mark.parametrize('country, expected', [('EU', 'Europe'), ('US', 'North America')])
 def test_asset_region_property_gets_region_based_on_country(country, expected):
-    a = Asset('a', 'b')
+    a = Asset('a')
     a.country = country
     assert expected == a.region
 
 
 def test_asset_add_analytic_raises_error_if_tickers_do_not_match():
     with mock.patch('assetallocation_arp.data_etl.dal.data_models.asset.AssetAnalytic', autospec=True) as MockAssetAnalytic:
-        a = Asset('a', 'FX')
+        a = Asset('a')
         b = MockAssetAnalytic('not_a', 'b', datetime(2020, 1, 1), 1)
         b.asset_ticker = 'not_a'
 
@@ -71,7 +71,7 @@ def test_asset_add_analytic_adds_analytic_if_tickers_match():
     asset_ticker = 'ticker1'
 
     with mock.patch('assetallocation_arp.data_etl.dal.data_models.asset.AssetAnalytic', autospec=True) as MockAssetAnalytic:
-        a = Asset(asset_ticker, 'FX')
+        a = Asset(asset_ticker)
         b = MockAssetAnalytic(asset_ticker, 'b', datetime(2020, 1, 1), 1)
         b.asset_ticker = asset_ticker
 
