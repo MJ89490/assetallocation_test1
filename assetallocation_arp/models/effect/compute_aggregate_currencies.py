@@ -225,7 +225,7 @@ class ComputeAggregateCurrencies:
         write_logs_effect("Computing log returns exclude costs...", "logs_log_ret")
         return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
-    def compute_weighted_performance(self, log_returns_excl, combo_curr):
+    def compute_weighted_performance(self, log_returns_excl, combo_curr, weight_value):
         """
         Function comptuing the weighted performancen
         :param log_returns_excl: log of retuns excl costs values
@@ -236,19 +236,21 @@ class ComputeAggregateCurrencies:
 
         sheet_effect_input = xw.Book.caller().sheets['effect_input']
 
-        last_row = sheet_effect_input.range("B8").end('down').row
+        # last_row = sheet_effect_input.range("B8").end('down').row
+        #
+        # weights = sheet_effect_input.range(f"B8:B{last_row}").value
+        #
+        # start_date_perf = sheet_effect_input.range("start_date_weighted_perf").value
+        #
+        # start_date_weighted_performance = pd.to_datetime(start_date_perf, format='%d-%m-%Y')
+        #
+        # index_weighted_performance = pd.DataFrame(self.dates_index, columns=['Dates_Weighted_Performance'])
+        # index_weighted = index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >= start_date_weighted_performance]
 
-        weights = sheet_effect_input.range(f"B8:B{last_row}").value
-
-        start_date_perf = sheet_effect_input.range("start_date_weighted_perf").value
-
-        start_date_weighted_performance = pd.to_datetime(start_date_perf, format='%d-%m-%Y')
-
-        index_weighted_performance = pd.DataFrame(self.dates_index, columns=['Dates_Weighted_Performance'])
-        index_weighted = index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >= start_date_weighted_performance]
-
-        log_returns_excl = log_returns_excl.loc[start_date_weighted_performance:]
-        combo = combo_curr.loc[start_date_weighted_performance:]
+        log_returns_excl = log_returns_excl
+        # We remove two lines to fit with log_returns_excl. It is due to the shift(1) in log_returns_excl
+        # and to combo calculations with the first value set to 100
+        combo = combo_curr.iloc[2:]
 
         sum_prod = []
         weighted_perf = []
@@ -259,14 +261,17 @@ class ComputeAggregateCurrencies:
                 tmp.append(value_combo * value_log)
             sum_prod.append(sum(tmp))
 
-        for value_weight in range(len(weights)):
+        for value_weight in range(len(sum_prod)):
             # weighted_perf.append(sum_prod[value_weight] * float(list(weights.values())[value_weight]))
-            weighted_perf.append(sum_prod[value_weight] * (weights[value_weight]*100))
+            # weighted_perf.append(sum_prod[value_weight] * (weights[value_weight]*100))
+            weighted_perf.append(sum_prod[value_weight] * (weight_value * 100))
 
+        # return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name],
+        #                     index=index_weighted.Dates_Weighted_Performance.tolist())
         return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name],
-                            index=index_weighted.Dates_Weighted_Performance.tolist())
+                            index=combo.index.values)
 
-    def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr):
+    def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr, weight_value):
         """
         Function running the different function above
         :param returns_incl_costs: returns_incl_costs values
@@ -288,7 +293,8 @@ class ComputeAggregateCurrencies:
 
         log_returns_excl_costs = self.compute_log_returns_excl_costs(returns_ex_costs=excl_signals_total_return)
 
-        weighted_performance = self.compute_weighted_performance(log_returns_excl=log_returns_excl_costs, combo_curr=combo_curr)
+        weighted_performance = self.compute_weighted_performance(log_returns_excl=log_returns_excl_costs,
+                                                                 combo_curr=combo_curr, weight_value=weight_value)
 
         aggregate_total_incl_signals = self.compute_aggregate_total_incl_signals(returns_incl_costs=returns_incl_costs,
                                                                                  inverse_volatility=inverse_volatilies)

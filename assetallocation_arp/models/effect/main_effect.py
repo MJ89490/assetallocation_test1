@@ -67,10 +67,14 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
     latest_signal_date = strategy_inputs['latest signal date'][1]
+
     if latest_signal_date is None:
+
         latest_signal_date = obj_import_data.dates_origin_index[-1]
-        offset = (latest_signal_date.weekday() - 2) % 7
-        latest_signal_date = pd.to_datetime(latest_signal_date - timedelta(days=offset), format='%d-%m-%Y')
+
+        delta = (latest_signal_date.weekday() + 4) % 7 + 1
+
+        latest_signal_date = pd.to_datetime(latest_signal_date - timedelta(days=delta), format='%d-%m-%Y')
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
     obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['STDev window (weeks)'][1]),
@@ -83,11 +87,12 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                                    spot_origin=spot_origin,
                                                    spot_incl_costs=currencies_calculations['spot_incl_curr'],
                                                    carry_origin=carry_origin,
-                                                   combo_curr=currencies_calculations['combo_curr'])
+                                                   combo_curr=currencies_calculations['combo_curr'],
+                                                   weight_value=strategy_inputs['Position size'][1])
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_signal_date,
-                                                                position_size_attribution=float(strategy_inputs['Position size (for attribution)'][1]),
+                                                                position_size_attribution=float(strategy_inputs['Position size'][1]),
                                                                 index_dates=obj_import_data.dates_origin_index)
 
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
@@ -100,7 +105,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=latest_signal_date,
-                                                          size_attr=float(strategy_inputs['Position size (for attribution)'][1]),
+                                                          size_attr=float(strategy_inputs['Position size'][1]),
                                                           window=int(strategy_inputs['STDev window (weeks)'][1]),
                                                           next_latest_date=obj_import_data)
 
