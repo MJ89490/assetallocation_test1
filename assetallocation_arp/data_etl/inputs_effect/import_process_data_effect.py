@@ -225,7 +225,6 @@ class ProcessDataEffect:
 
         self.data_currencies = self.obj_import_data.import_data_matlab()
 
-        # start_date = '1999-01-06'
         self.data_currencies_usd = self.data_currencies[currencies_usd.currencies_usd_tickers].loc[:]
         self.data_currencies_eur = self.data_currencies[currencies_eur.currencies_eur_tickers].loc[:]
 
