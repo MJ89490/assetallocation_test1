@@ -80,7 +80,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['STDev window (weeks)'][1]),
                                                             weight=strategy_inputs['Risk-weighting'][1].strip(),
                                                             dates_index=obj_import_data.dates_origin_index,
-                                                            start_date_calculations=obj_import_data.start_date_calculations)
+                                                            start_date_calculations=obj_import_data.start_date_calculations,
+                                                            prev_start_date_calc=obj_import_data.previous_start_date_calc)
 
     agg_currencies = obj_compute_agg_currencies.run_aggregate_currencies(
                                                    returns_incl_costs=currencies_calculations['return_incl_curr'],

@@ -7,6 +7,7 @@ import pandas as pd
 import os
 import sys
 import json
+import datetime
 
 import xlwings as xw
 import win32api
@@ -23,6 +24,7 @@ class ImportDataEffect:
     def __init__(self, end_date_mat, start_date_mat, frequency_mat, signal_day_mat, all_data):
         self.data_currencies = pd.DataFrame()
         self.data_currencies_no_end_date = pd.DataFrame()
+        self.data_currencies_no_start_date = pd.DataFrame()
         self.frequency_mat = frequency_mat
         self.start_date_mat = start_date_mat
         self.signal_day_mat = signal_day_mat
@@ -68,13 +70,41 @@ class ImportDataEffect:
         """
 
         self.data_currencies = self.all_data
+
         self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
 
+        self.data_currencies_no_start_date = set_data_frequency(self.all_data, self.frequency_mat, self.signal_day_mat)
         self.data_currencies_no_end_date = set_data_frequency(self.all_data.loc[self.start_date_mat:],  self.frequency_mat, self.signal_day_mat)
 
         self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
 
+        next_date_values, next_date = self.add_next_date(self.frequency_mat)
+
+        df_length = len(self.data_currencies)
+        self.data_currencies.loc[df_length] = next_date_values
+
+        self.data_currencies.rename({self.data_currencies.index[-1]: next_date}, inplace=True)
+
         return self.data_currencies
+
+    def add_next_date(self, frequency):
+        """
+        Function adding the next day from the last day in the all_data dataFrame
+        That is mandatory for combo, trend and carry for the Signals overview
+        :return: a list of values for the next date and the next date
+        """
+        #TODO APPLY WORKING DAY FCT JUSTIN CASE
+        #TODO PUT THE OTHER FREQUENCY
+        last_date = pd.to_datetime(self.data_currencies.index.values[-1], format='%d-%m-%Y')
+
+        if frequency == 'weekly':
+            next_date = pd.to_datetime(last_date + datetime.timedelta(days=7), format='%d-%m-%Y')
+
+        # Set the new date with values equal to zero
+        return [0]*self.data_currencies.shape[1], next_date
+
+
+
 
 
 """
@@ -147,10 +177,10 @@ class ProcessDataEffect:
 
     @property
     def dates_index(self):
-        start_current_date_index_loc = self.data_currencies_usd.index.get_loc(self.start_date_calculations)
-        new_start_date_index = self.data_currencies_usd.index[start_current_date_index_loc - 1]
+        start_current_date_index_loc = self.obj_import_data.data_currencies.index.get_loc(self.start_date_calculations)
+        new_start_date_index = self.obj_import_data.data_currencies.index[start_current_date_index_loc - 1]
 
-        return pd.to_datetime(self.data_currencies_usd.loc[new_start_date_index:].index.values, format='%d-%m-%Y')
+        return pd.to_datetime(self.obj_import_data.data_currencies.loc[new_start_date_index:].index.values, format='%d-%m-%Y')
 
     @property
     def dates_origin_index(self):
@@ -185,6 +215,11 @@ class ProcessDataEffect:
             else:
                 start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
                 self._start_date_calculations = start_date
+
+    @property
+    def previous_start_date_calc(self):
+        start_current_date_index_loc = self.obj_import_data.data_currencies_no_start_date.index.get_loc(self.start_date_calculations)
+        return self.obj_import_data.data_currencies_no_start_date.index[start_current_date_index_loc - 1]
 
     @staticmethod
     def find_date(dates_set, pivot):

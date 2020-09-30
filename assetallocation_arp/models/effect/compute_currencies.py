@@ -52,7 +52,7 @@ class ComputeCurrencies(ProcessDataEffect):
 
             tmp_start_date_computations = self.start_date_calculations
 
-            rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0]
+            rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0] + 1
 
             carry = []
 
@@ -81,8 +81,8 @@ class ComputeCurrencies(ProcessDataEffect):
                 previous_start_four_date_loc = self.data_currencies_usd.index.get_loc(previous_start_four_date_index)
 
                 # Do the averages
-                average_implied = np.mean(data_all_currencies_implied[previous_start_four_date_loc:previous_start_date_index_loc+1])
-                average_index = np.mean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
+                average_implied = np.nanmean(data_all_currencies_implied[previous_start_four_date_loc:previous_start_date_index_loc+1])
+                average_index = np.nanmean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
 
                 # Depending on the carry type, if it is real, we take off the inflation, otherwise, we don't
                 if carry_type.lower() == 'real':
@@ -116,6 +116,7 @@ class ComputeCurrencies(ProcessDataEffect):
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc + 1]
                 except IndexError:
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc]
+                    tmp_start_date_computations = pd.to_datetime('24/09/2020', format='%d/%m/%Y')
 
             self.carry_currencies[CurrencySpot.Carry.value + currency_spot] = carry
 

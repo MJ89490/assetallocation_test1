@@ -10,11 +10,12 @@ import xlwings as xw
 class ComputeAggregateCurrencies:
     AGG_FIRST_VALUE = [100]
 
-    def __init__(self, window, start_date_calculations, weight, dates_index):
+    def __init__(self, window, start_date_calculations, weight, dates_index, prev_start_date_calc):
         self.start_date_calc = start_date_calculations
         self.dates_index = dates_index
         self.window = window
         self.weight = weight
+        self.prev_start_date_calc = prev_start_date_calc
 
     @property
     def window(self):
@@ -91,8 +92,7 @@ class ComputeAggregateCurrencies:
         :return: dataFrame of Excl signals (total return)
         """
         write_logs_effect("Computing exclude signals total return", "logs_excl_signals_total")
-
-        return (carry_origin.loc[self.start_date_calc:] / carry_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
+        return (carry_origin.loc[self.prev_start_date_calc:] / carry_origin.loc[self.prev_start_date_calc]).apply(lambda x: x * 100)
 
     def compute_excl_signals_spot_return(self, spot_origin):
         """
@@ -101,7 +101,7 @@ class ComputeAggregateCurrencies:
         :return: dataFrame of Excl signals (spot return)
         """
         write_logs_effect("Computing exclude signals spot return", "logs_excl_signals_spot_ret")
-        return (spot_origin.loc[self.start_date_calc:] / spot_origin.loc[self.start_date_calc]).apply(lambda x: x * 100)
+        return (spot_origin.loc[self.prev_start_date_calc:] / spot_origin.loc[self.prev_start_date_calc]).apply(lambda x: x * 100)
 
     @staticmethod
     def compute_aggregate_inverse_volatility(returns_spot_values, inverse_volatility):
@@ -142,17 +142,18 @@ class ComputeAggregateCurrencies:
         :return: a dataFrame with Total Incl Signals values
         """
         write_logs_effect("Computing aggregate total include signals", "logs_agg_total_incl_signals")
-        if self.weight == '1/N':
-            average_incl_signals = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
-            self.update_agg_value()
-            for value in range(len(average_incl_signals)):
-                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_incl_signals[value])
-        else:
-            returns_shift = (returns_incl_costs.loc[self.start_date_calc:] / returns_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
+        total_incl_signals_values = [100]
 
-        return pd.DataFrame(ComputeAggregateCurrencies.AGG_FIRST_VALUE,
-                            columns=[CurrencyAggregate.Total_Incl_Signals.name], index=list(self.dates_index))
+        if self.weight == '1/N':
+            average_incl_signals = (returns_incl_costs / returns_incl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
+            for value in range(len(average_incl_signals)):
+                total_incl_signals_values.append(total_incl_signals_values[value] * average_incl_signals[value])
+            total_incl_signals_values.pop(0)
+        else:
+            returns_shift = (returns_incl_costs / returns_incl_costs.shift(1)).iloc[1:]
+            total_incl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
+
+        return pd.DataFrame(total_incl_signals_values, columns=[CurrencyAggregate.Total_Incl_Signals.name], index=list(self.dates_index))
 
     def compute_aggregate_total_excl_signals(self, returns_excl_costs, inverse_volatility):
         """
@@ -162,17 +163,18 @@ class ComputeAggregateCurrencies:
         :return: a dataFrame with Total Excl Signals values
         """
         write_logs_effect("Computing aggregate total exclude signals", "logs_agg_total_ex_signals")
-        if self.weight == '1/N':
-            average_excl_signals = (returns_excl_costs.loc[self.start_date_calc:] / returns_excl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
-            self.update_agg_value()
-            for value in range(len(average_excl_signals)):
-                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_excl_signals[value])
-        else:
-            returns_shift = (returns_excl_costs.loc[self.start_date_calc:] / returns_excl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
+        total_excl_signals_values = [100]
 
-        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Total_Excl_Signals.name],
-                            index=list(self.dates_index))
+        if self.weight == '1/N':
+            average_excl_signals = (returns_excl_costs / returns_excl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
+            for value in range(len(average_excl_signals)):
+                total_excl_signals_values.append(total_excl_signals_values[value] * average_excl_signals[value])
+            total_excl_signals_values.pop(0)
+        else:
+            returns_shift = (returns_excl_costs / returns_excl_costs.shift(1)).iloc[1:]
+            total_excl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
+
+        return pd.DataFrame(total_excl_signals_values, columns=[CurrencyAggregate.Total_Excl_Signals.name], index=list(self.dates_index))
 
     def compute_aggregate_spot_incl_signals(self, spot_incl_costs, inverse_volatility):
         """
@@ -182,18 +184,18 @@ class ComputeAggregateCurrencies:
         :return: a dataFrame with Spot Incl Signals  values
         """
         write_logs_effect("Computing aggregate spot include signals", "logs_agg_spot_inc_signals")
+        spot_incl_signals_values = [100]
 
         if self.weight == '1/N':
-            average_spot_incl_signals = (spot_incl_costs.loc[self.start_date_calc:] / spot_incl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
-            self.update_agg_value()
+            average_spot_incl_signals = (spot_incl_costs / spot_incl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_spot_incl_signals)):
-                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_spot_incl_signals[value])
+                spot_incl_signals_values.append(spot_incl_signals_values[value] * average_spot_incl_signals[value])
+            spot_incl_signals_values.pop(0)
         else:
-            returns_shift = (spot_incl_costs.loc[self.start_date_calc:] / spot_incl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
+            returns_shift = (spot_incl_costs / spot_incl_costs.shift(1)).iloc[1:]
+            spot_incl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Spot_Incl_Signals.name],
-                            index=list(self.dates_index))
+        return pd.DataFrame(spot_incl_signals_values, columns=[CurrencyAggregate.Spot_Incl_Signals.name], index=list(self.dates_index))
 
     def compute_aggregate_spot_excl_signals(self, spot_excl_costs, inverse_volatility):
         """
@@ -203,17 +205,18 @@ class ComputeAggregateCurrencies:
         :return: a dataFrame with Spot Excl Signals values
         """
         write_logs_effect("Computing aggregate spot exclude signals", "logs_agg_spot_ex_signals")
-        if self.weight == '1/N':
-            average_spot_excl_signals = (spot_excl_costs.loc[self.start_date_calc:] / spot_excl_costs.loc[self.start_date_calc:].shift(1)).mean(axis=1).iloc[1:].tolist()
-            self.update_agg_value()
-            for value in range(len(average_spot_excl_signals)):
-                self.AGG_FIRST_VALUE.append(self.AGG_FIRST_VALUE[value] * average_spot_excl_signals[value])
-        else:
-            returns_shift = (spot_excl_costs.loc[self.start_date_calc:] / spot_excl_costs.loc[self.start_date_calc:].shift(1)).iloc[1:]
-            self.AGG_FIRST_VALUE = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
+        spot_excl_signals_values = [100]
 
-        return pd.DataFrame(self.AGG_FIRST_VALUE, columns=[CurrencyAggregate.Spot_Excl_Signals.name],
-                            index=list(self.dates_index))
+        if self.weight == '1/N':
+            average_spot_excl_signals = (spot_excl_costs / spot_excl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
+            for value in range(len(average_spot_excl_signals)):
+                spot_excl_signals_values.append(spot_excl_signals_values[value] * average_spot_excl_signals[value])
+            spot_excl_signals_values.pop(0)
+        else:
+            returns_shift = (spot_excl_costs / spot_excl_costs.shift(1)).iloc[1:]
+            spot_excl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
+
+        return pd.DataFrame(spot_excl_signals_values , columns=[CurrencyAggregate.Spot_Excl_Signals.name], index=list(self.dates_index))
 
     @staticmethod
     def compute_log_returns_excl_costs(returns_ex_costs):
@@ -230,22 +233,10 @@ class ComputeAggregateCurrencies:
         Function comptuing the weighted performancen
         :param log_returns_excl: log of retuns excl costs values
         :param combo_curr: combo of currencies from compute_currencies class
+        :param weight_value: weight value (pos attr from the inputs)
         :return: a dataFrame with weighted performance values
         """
         write_logs_effect("Computing weighted performance...", "logs_weighted_perf")
-
-        sheet_effect_input = xw.Book.caller().sheets['effect_input']
-
-        # last_row = sheet_effect_input.range("B8").end('down').row
-        #
-        # weights = sheet_effect_input.range(f"B8:B{last_row}").value
-        #
-        # start_date_perf = sheet_effect_input.range("start_date_weighted_perf").value
-        #
-        # start_date_weighted_performance = pd.to_datetime(start_date_perf, format='%d-%m-%Y')
-        #
-        # index_weighted_performance = pd.DataFrame(self.dates_index, columns=['Dates_Weighted_Performance'])
-        # index_weighted = index_weighted_performance[index_weighted_performance.Dates_Weighted_Performance >= start_date_weighted_performance]
 
         log_returns_excl = log_returns_excl
         # We remove two lines to fit with log_returns_excl. It is due to the shift(1) in log_returns_excl
@@ -262,14 +253,9 @@ class ComputeAggregateCurrencies:
             sum_prod.append(sum(tmp))
 
         for value_weight in range(len(sum_prod)):
-            # weighted_perf.append(sum_prod[value_weight] * float(list(weights.values())[value_weight]))
-            # weighted_perf.append(sum_prod[value_weight] * (weights[value_weight]*100))
             weighted_perf.append(sum_prod[value_weight] * (weight_value * 100))
 
-        # return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name],
-        #                     index=index_weighted.Dates_Weighted_Performance.tolist())
-        return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name],
-                            index=combo.index.values)
+        return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name], index=combo.index.values)
 
     def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr, weight_value):
         """

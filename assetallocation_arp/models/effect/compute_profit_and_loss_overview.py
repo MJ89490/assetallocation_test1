@@ -70,7 +70,6 @@ class ComputeProfitAndLoss:
                 wednesdays.append(date)
         return wednesdays[-1]
 
-
     def compute_profit_and_loss_notional(self, spot_overview, total_overview, combo_overview, total_incl_signals, spot_incl_signals):
         """
         Function calculating the profit and loss notional (bp) of the spot, returns and carry
@@ -135,6 +134,7 @@ class ComputeProfitAndLoss:
         :return: a dictionary of profit and loss implemented in MATR
         """
         write_logs_effect("Computing profit and loss implemented in matr...", "logs_p_and_l_matr")
+        #TODO REDO CALC!!!!
         # YTD P&L:: Total (Returns)
         ytd_total_matr = (weighted_perf.loc[self.latest_date][0]/100) * 10000
 
