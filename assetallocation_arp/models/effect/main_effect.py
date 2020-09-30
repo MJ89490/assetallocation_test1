@@ -106,21 +106,21 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                                    weighted_perf=agg_currencies['weighted_performance'])
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
-    # obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=latest_signal_date,
-    #                                                       size_attr=float(strategy_inputs['Position size'][1]),
-    #                                                       window=int(strategy_inputs['STDev window (weeks)'][1]),
-    #                                                       next_latest_date=obj_import_data)
-    #
-    # signals_overview = obj_compute_signals_overview.run_signals_overview(
-    #                                                 real_carry_curr=currencies_calculations['carry_curr'],
-    #                                                 trend_curr=currencies_calculations['trend_curr'],
-    #                                                 combo_curr=currencies_calculations['combo_curr'],
-    #                                                 agg_total_incl_signals=agg_currencies['agg_total_incl_signals'],
-    #                                                 agg_log_returns=agg_currencies['log_returns_excl_costs'])
+    obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=latest_signal_date,
+                                                          size_attr=float(strategy_inputs['Position size'][1]),
+                                                          window=int(strategy_inputs['STDev window (weeks)'][1]),
+                                                          next_latest_date=obj_import_data)
+
+    signals_overview = obj_compute_signals_overview.run_signals_overview(
+                                                    real_carry_curr=currencies_calculations['carry_curr'],
+                                                    trend_curr=currencies_calculations['trend_curr'],
+                                                    combo_curr=currencies_calculations['combo_curr'],
+                                                    agg_total_incl_signals=agg_currencies['agg_total_incl_signals'],
+                                                    agg_log_returns=agg_currencies['log_returns_excl_costs'])
 
     # -------------------------- Trades: Combo ----------------------------------------------------------------------- #
-    # trades_overview = compute_trades_overview(profit_and_loss_combo_overview=profit_and_loss['profit_and_loss_combo_overview'],
-    #                                           signals_combo_overview=signals_overview['signals_combo_overview'])
+    trades_overview = compute_trades_overview(profit_and_loss_combo_overview=profit_and_loss['profit_and_loss_combo_overview'],
+                                              signals_combo_overview=signals_overview['signals_combo_overview'])
 
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,

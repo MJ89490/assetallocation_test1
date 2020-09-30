@@ -74,7 +74,7 @@ class ImportDataEffect:
         self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
 
         self.data_currencies_no_start_date = set_data_frequency(self.all_data, self.frequency_mat, self.signal_day_mat)
-        self.data_currencies_no_end_date = set_data_frequency(self.all_data.loc[self.start_date_mat:],  self.frequency_mat, self.signal_day_mat)
+        # self.data_currencies_no_end_date = set_data_frequency(self.all_data.loc[self.start_date_mat:],  self.frequency_mat, self.signal_day_mat)
 
         self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
 
@@ -186,9 +186,9 @@ class ProcessDataEffect:
     def dates_origin_index(self):
         return pd.to_datetime(self.data_currencies_usd.loc[self.start_date_calculations:].index.values, format='%d-%m-%Y')
 
-    @property
-    def dates_origin_no_end_date_index(self):
-        return pd.to_datetime(self.obj_import_data.data_currencies_no_end_date.loc[self.start_date_calculations:].index.values, format='%d-%m-%Y')
+    # @property
+    # def dates_origin_no_end_date_index(self):
+    #     return pd.to_datetime(self.obj_import_data.data_currencies_no_end_date.loc[self.start_date_calculations:].index.values, format='%d-%m-%Y')
 
     @property
     def start_date_calculations(self):

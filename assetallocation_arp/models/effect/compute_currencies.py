@@ -52,7 +52,7 @@ class ComputeCurrencies(ProcessDataEffect):
 
             tmp_start_date_computations = self.start_date_calculations
 
-            rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0] + 1
+            rows = self.data_currencies_usd[tmp_start_date_computations:].shape[0]
 
             carry = []
 
@@ -116,7 +116,6 @@ class ComputeCurrencies(ProcessDataEffect):
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc + 1]
                 except IndexError:
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc]
-                    tmp_start_date_computations = pd.to_datetime('24/09/2020', format='%d/%m/%Y')
 
             self.carry_currencies[CurrencySpot.Carry.value + currency_spot] = carry
 
@@ -227,8 +226,10 @@ class ComputeCurrencies(ProcessDataEffect):
             return_division_tmp = return_division_tmp.iloc[1:].tolist()
 
             for values in range(len(return_division_tmp)):
-                first_returns.append(round(first_returns[values] * return_division_tmp[values] ** combo[values], 12))
-
+                try:
+                    first_returns.append(round(first_returns[values] * return_division_tmp[values] ** combo[values], 12))
+                except ZeroDivisionError:
+                    first_returns.append(0)
             self.return_ex_costs[CurrencySpot.Return_Ex_Costs.value + currency_spot] = first_returns
 
         # Set the index with dates by taking into account the 100
@@ -259,7 +260,10 @@ class ComputeCurrencies(ProcessDataEffect):
             multiplier_combo = [(1 - self.bid_ask_spread / 20000) ** value for value in combo_values_tmp]
 
             for value in range(len(return_tmp)):
-                return_incl_costs.append(return_incl_costs[value] * return_tmp[value] * multiplier_combo[value])
+                try:
+                    return_incl_costs.append(return_incl_costs[value] * return_tmp[value] * multiplier_combo[value])
+                except ZeroDivisionError:
+                    return_incl_costs.append(0)
 
             self.return_incl_costs[name.replace(CurrencySpot.Return_Ex_Costs.value,
                                                 CurrencySpot.Return_Incl_Costs.value)] = return_incl_costs
@@ -296,7 +300,10 @@ class ComputeCurrencies(ProcessDataEffect):
 
             # Compute with the previous Spot
             for value in range(len(spot_division_tmp)):
-                spot.append(spot[value] * spot_division_tmp[value] ** combo[value])
+                try:
+                    spot.append(spot[value] * spot_division_tmp[value] ** combo[value])
+                except ZeroDivisionError:
+                    spot.append(0)
 
             # Store all the spot for each currency
             self.spot_ex_costs[CurrencySpot.Spot_Ex_Costs.value + currency] = spot
@@ -329,7 +336,10 @@ class ComputeCurrencies(ProcessDataEffect):
             multiplier_combo = [(1 - self.bid_ask_spread / 20000) ** value for value in combo_values_tmp]
 
             for value in range(len(spot_tmp)):
-                spot_incl_costs.append(spot_incl_costs[value] * spot_tmp[value] * multiplier_combo[value])
+                try:
+                    spot_incl_costs.append(spot_incl_costs[value] * spot_tmp[value] * multiplier_combo[value])
+                except ZeroDivisionError:
+                    spot_incl_costs.append(0)
 
             self.spot_incl_costs[name.replace(CurrencySpot.Spot_Ex_Costs.value,
                                               CurrencySpot.Spot_Incl_Costs.value)] = spot_incl_costs

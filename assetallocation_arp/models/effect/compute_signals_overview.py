@@ -33,8 +33,8 @@ class ComputeSignalsOverview:
 
     @next_latest_date.setter
     def next_latest_date(self, value):
-        next_latest_date_loc = value.dates_origin_no_end_date_index.get_loc(self.latest_signal_date) + 1
-        self._next_latest_date = value.dates_origin_no_end_date_index[next_latest_date_loc]
+        next_latest_date_loc = value.dates_index.get_loc(self.latest_signal_date) + 1
+        self._next_latest_date = value.dates_index[next_latest_date_loc]
 
     def compute_signals_real_carry(self, real_carry_curr):
         """
