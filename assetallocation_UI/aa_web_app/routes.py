@@ -49,12 +49,15 @@ def times_model():
 
 @app.route('/received_data_run_model',  methods=['POST'])
 def received_data_run_model():
+    #TODO convert this route into API (1): nicer solution
+    #TODO AJAX request: successfull = take the data and redirect to dashboard (2)
+    #There are 2 solutions
     form = InputsTimesModel()
     if request.method == 'POST':
         from flask import jsonify
         # t = json.loads(request.data)
         t = request.get_json()
-        print(jsonify(t))
+        print(t)
         # t = request.data
 
         fund_name = t['fund']
@@ -75,7 +78,7 @@ def received_data_run_model():
         # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
         #
         # return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
-        return redirect(url_for('times_dashboard'))
+        # return redirect(url_for('times_dashboard'))
     return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
 
