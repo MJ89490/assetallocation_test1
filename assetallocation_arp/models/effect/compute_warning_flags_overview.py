@@ -1,26 +1,20 @@
 import pandas as pd
+import datetime
 
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
-
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
 
 class ComputeWarningFlagsOverview(ProcessDataEffect):
 
-    def __init__(self, latest_signal_date, frequency_mat, start_date_mat, end_date_mat, signal_day_mat,
-                 prev_7_days_from_latest_signal_date, asset_inputs, all_data):
+    def __init__(self, latest_signal_date, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, asset_inputs, all_data):
         super().__init__(asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, all_data)
         self.latest_signal_date = latest_signal_date
-        self.prev_7_days_from_latest_signal_date = prev_7_days_from_latest_signal_date
 
     @property
     def prev_7_days_from_latest_signal_date(self):
-        return self._prev_7_days_from_latest_signal_date
-
-    @ prev_7_days_from_latest_signal_date.setter
-    def prev_7_days_from_latest_signal_date(self, value):
-        prev_7_days_from_latest_signal_date_loc = value.dates_origin_index.get_loc(self.latest_signal_date) - 5
-        self._prev_7_days_from_latest_signal_date = value.dates_origin_index[prev_7_days_from_latest_signal_date_loc]
+        #TODO APPLY LAURA FCT
+        return self.latest_signal_date - datetime.timedelta(days=7)
 
     def compute_warning_flags_rates(self):
         """

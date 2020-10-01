@@ -2,7 +2,7 @@ import xlwings as xw
 
 
 # def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview, rates):
-def write_outputs_controls_tab(p_and_l_overview, rates):
+def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates):
     weekly_total_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']
     weekly_spot_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']
     weekly_carry_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']
@@ -45,18 +45,18 @@ def write_outputs_controls_tab(p_and_l_overview, rates):
     sheet_effect_input.range('profit_and_loss_carry').options(transpose=True).offset(1, 0).value = p_and_l_overview['profit_and_loss_carry_overview']
 
     # ---- Signals table ---- #
-    # sheet_effect_input.range('signals_real_carry').options(transpose=True).offset(1, 0).value = signals_overview['signals_real_carry']
-    # sheet_effect_input.range('signals_trend').options(transpose=True).offset(1, 0).value = signals_overview['signals_trend_overview']
-    # sheet_effect_input.range('signals_combo').options(transpose=True).offset(1, 0).value = signals_overview['signals_combo_overview']
-    #
-    # # ---- Drawdown and limits controls ----#
-    # sheet_effect_input.range('drawdown').options(transpose=True).value = signals_overview['signals_drawdown_position_size_matr']['drawdown']
-    # sheet_effect_input.range('position_matr').options(transpose=True).value = signals_overview['signals_drawdown_position_size_matr']['size_matr']
-    # sheet_effect_input.range('ex_ante_vol').options(transpose=True).value = signals_overview['signals_limits_controls']['ex_ante_vol']
-    # sheet_effect_input.range('matr_notional').options(transpose=True).value = signals_overview['signals_limits_controls']['matr_notional']
-    #
-    # # ---- Trades ----#
-    # sheet_effect_input.range('trades_combo').options(transpose=True).offset(1, 0).value = trades_overview
+    sheet_effect_input.range('signals_real_carry').options(transpose=True).offset(1, 0).value = signals_overview['signals_real_carry']
+    sheet_effect_input.range('signals_trend').options(transpose=True).offset(1, 0).value = signals_overview['signals_trend_overview']
+    sheet_effect_input.range('signals_combo').options(transpose=True).offset(1, 0).value = signals_overview['signals_combo_overview']
+
+    # ---- Drawdown and limits controls ----#
+    sheet_effect_input.range('drawdown').options(transpose=True).value = signals_overview['signals_drawdown_position_size_matr']['drawdown']
+    sheet_effect_input.range('position_matr').options(transpose=True).value = signals_overview['signals_drawdown_position_size_matr']['size_matr']
+    sheet_effect_input.range('ex_ante_vol').options(transpose=True).value = signals_overview['signals_limits_controls']['ex_ante_vol']
+    sheet_effect_input.range('matr_notional').options(transpose=True).value = signals_overview['signals_limits_controls']['matr_notional']
+
+    # ---- Trades ----#
+    sheet_effect_input.range('trades_combo').options(transpose=True).offset(1, 0).value = trades_overview
 
     # ---- Warning flags ----#
     sheet_effect_input.range('warning_flags_rates').options(transpose=True).offset(1, 0).value = rates
@@ -118,18 +118,11 @@ def write_outputs_effect(combo, total_excl_signals, total_incl_signals, spot_inc
 
 
 def run_write_outputs_effect_model(model_outputs: dict):
-    # p_and_l_overview, signals_overview, trades_overview, rates, risk_returns, combo, \
-    # total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals = model_outputs['effect']
-    p_and_l_overview, rates, risk_returns, combo, \
+    p_and_l_overview, signals_overview, trades_overview, rates, risk_returns, combo, \
     total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals = model_outputs['effect']
 
-    write_outputs_controls_tab(p_and_l_overview, rates)
+    write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates)
     write_outputs_risk_return_overview(risk_returns)
     write_outputs_effect(combo, total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals)
-
-
-    # write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates)
-    # write_outputs_risk_return_overview(risk_returns)
-    # write_outputs_effect(combo, total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals)
 
 

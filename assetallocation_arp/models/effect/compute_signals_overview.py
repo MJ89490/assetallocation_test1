@@ -78,7 +78,7 @@ class ComputeSignalsOverview:
 
     def compute_limits_controls(self, signals_combo, agg_log_returns):
         """
-        Function comuting the limits controls
+        Function computing the limits controls
         :param signals_combo: signals_combo values
         :param agg_log_returns: agg_log_returns values
         :return: a dictionary with ex ante vol and matr notional values
