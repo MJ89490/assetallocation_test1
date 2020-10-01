@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from configparser import ConfigParser
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 
@@ -43,7 +44,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                         bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'].item(),
                                         frequency_mat=strategy_inputs['Frequency'].item(),
                                         start_date_mat=strategy_inputs['StartDate'].item(),
-                                        end_date_mat=strategy_inputs['EndDate'].item(),
+                                        end_date_mat=strategy_inputs['latest signal date'].item(),
                                         signal_day_mat=strategy_inputs['SignalDay'].item(), all_data=all_data)
     spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_date
@@ -69,15 +70,16 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     latest_signal_date = strategy_inputs['latest signal date'].item()
 
     if latest_signal_date is None:
-        # TODO IF OTHER DAY ADAPT IT + apply fct laura
-        latest_signal_date = strategy_inputs['EndDate'].item()
-
-        if strategy_inputs['Frequency'].item() == 'weekly':
+        # TODO apply fct laura
+        latest_signal_date = obj_import_data.dates_origin_index[-2]
+        # Previous Wednesday
+        if strategy_inputs['Frequency'].item() == 'weekly' or strategy_inputs['Frequency'].item() == 'daily':
             delta = (latest_signal_date.weekday() + 4) % 7 + 1
-        elif strategy_inputs['Frequency'].item() == 'daily':
-            delta = (latest_signal_date.weekday() + 4) % 7 + 1
-
-        latest_signal_date = pd.to_datetime(latest_signal_date - timedelta(days=delta), format='%d-%m-%Y')
+            latest_signal_date = pd.to_datetime(latest_signal_date - timedelta(days=delta), format='%d-%m-%Y')
+        # Previous month
+        else:
+            # TODO redo with a loop
+            latest_signal_date = pd.to_datetime(latest_signal_date - relativedelta(months=1), format='%d-%m-%Y')
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
     obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['STDev window (weeks)'].item()),
@@ -128,7 +130,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
                                                                      asset_inputs=asset_inputs,
-                                                                     end_date_mat=strategy_inputs['EndDate'].item(),
+                                                                     end_date_mat=strategy_inputs['latest signal date'].item(),
                                                                      frequency_mat=strategy_inputs['Frequency'].item(),
                                                                      start_date_mat=strategy_inputs['StartDate'].item(),
                                                                      signal_day_mat=strategy_inputs['SignalDay'].item(),

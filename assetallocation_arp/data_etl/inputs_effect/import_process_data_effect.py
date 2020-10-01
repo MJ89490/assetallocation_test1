@@ -2,12 +2,16 @@ from data_etl.import_data_from_excel_matlab import extract_inputs_and_mat_data a
 from common_libraries.models_names import Models
 
 from configparser import ConfigParser
+from datetime import date
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import pandas as pd
 import os
 import sys
 import json
 import datetime
+import calendar
 
 import xlwings as xw
 import win32api
@@ -88,24 +92,24 @@ class ImportDataEffect:
 
     def add_next_date(self, frequency):
         """
-        Function adding the next day from the last day in the all_data dataFrame
+        Function adding the next day from the last day in the data_currencies dataFrame
         That is mandatory for combo, trend and carry for the Signals overview
         :return: a list of values for the next date and the next date
         """
         #TODO APPLY WORKING DAY FCT JUSTIN CASE
-        #TODO PUT THE OTHER FREQUENCY
+
         last_date = pd.to_datetime(self.data_currencies.index.values[-1], format='%d-%m-%Y')
 
         if frequency == 'weekly':
             next_date = pd.to_datetime(last_date + datetime.timedelta(days=7), format='%d-%m-%Y')
         elif frequency == 'daily':
             next_date = pd.to_datetime(last_date + datetime.timedelta(days=1), format='%d-%m-%Y')
+        else:
+            #TODO REDO WITH A LOOP
+            next_date = pd.to_datetime(last_date + relativedelta(months=1), format='%d-%m-%Y')
 
         # Set the new date with values equal to zero
         return [0]*self.data_currencies.shape[1], next_date
-
-
-
 
 
 """
