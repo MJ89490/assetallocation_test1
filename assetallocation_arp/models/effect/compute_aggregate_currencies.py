@@ -4,7 +4,6 @@ import pandas as pd
 import statistics as stats
 import math
 import numpy as np
-import xlwings as xw
 
 
 class ComputeAggregateCurrencies:
@@ -226,6 +225,7 @@ class ComputeAggregateCurrencies:
         :return: a dataFrame with log of returns excl costs
         """
         write_logs_effect("Computing log returns exclude costs...", "logs_log_ret")
+        np.seterr(divide='ignore')
         return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
     def compute_weighted_performance(self, log_returns_excl, combo_curr, weight_value):

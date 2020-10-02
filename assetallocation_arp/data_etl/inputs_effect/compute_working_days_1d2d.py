@@ -67,28 +67,6 @@ class ComputeWorkingDays1D2D:
                                date_generation,
                                end_of_week)
 
-        for i, d in enumerate(schedule):
-            df.append(d)
-
-        df = pd.DataFrame(df, columns=['Date'])  # convert to dataframe
-        df['Date'] = df['Date'].apply(ComputeWorkingDays1D2D.ql_to_dt)  # convert date to datetime
-
-        return df
-
-    @staticmethod
-    def date_add_yr(start_date, n):
-        start_date = ComputeWorkingDays1D2D.dt_to_ql(start_date)
-        new_date = start_date + ql.Period(n, ql.Years)
-        new_date = ComputeWorkingDays1D2D.ql_to_dt(new_date)
-        return new_date
-
-    @staticmethod
-    def date_add_month(start_date, n):
-        start_date = ComputeWorkingDays1D2D.dt_to_ql(start_date)
-        new_date = start_date + ql.Period(n, ql.Months)
-        new_date = ComputeWorkingDays1D2D.ql_to_dt(new_date)
-        return new_date
-
     @staticmethod
     def convert_to_working_date_uk(dt_date):
         """
@@ -102,23 +80,3 @@ class ComputeWorkingDays1D2D:
         ql_date = uk_calendar.advance(ql_date, ql.Period(-1, ql.Days))
         dt_date = ComputeWorkingDays1D2D.ql_to_dt(ql_date)
         return dt_date
-
-    @staticmethod
-    def convert_to_working_ql_date_uk(ql_date):
-        """
-
-        :param dt_date: datetime date
-        :return: datetime date, the working day version, according to the UK bank holiday calendar;
-        if enter non-working day, will find previous working day
-        """
-        uk_calendar = ql.UnitedKingdom()
-        ql_date = uk_calendar.advance(ql_date, ql.Period(1, ql.Days))
-        ql_date = uk_calendar.advance(ql_date, ql.Period(-1, ql.Days))
-        return ql_date
-
-    @staticmethod
-    def get_previous_month_end(today):
-        first_of_month = dt.date(today.year, today.month, 1)
-        month_end = first_of_month - dt.timedelta(days=1)
-
-        return ComputeWorkingDays1D2D.convert_to_working_date_uk(month_end)

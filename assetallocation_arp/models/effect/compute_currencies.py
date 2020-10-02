@@ -2,10 +2,11 @@
 Created on 12/05/2020
 @author: AJ89720
 """
+import warnings
 import pandas as pd
 import numpy as np
 
-from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
+from data_etl.inputs_effect.process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_implied import CurrencyBaseImplied
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
@@ -80,9 +81,11 @@ class ComputeCurrencies(ProcessDataEffect):
                 previous_start_four_date_index = self.data_currencies_usd.index[previous_start_date_index_loc - 3]
                 previous_start_four_date_loc = self.data_currencies_usd.index.get_loc(previous_start_four_date_index)
 
-                # Do the averages
-                average_implied = np.nanmean(data_all_currencies_implied[previous_start_four_date_loc:previous_start_date_index_loc+1])
-                average_index = np.nanmean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
+                # Do the averages and avoid RuntimeWarning: Mean of empty slice message on the Python console
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", category=RuntimeWarning)
+                    average_implied = np.nanmean(data_all_currencies_implied[previous_start_four_date_loc:previous_start_date_index_loc+1])
+                    average_index = np.nanmean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
 
                 # Depending on the carry type, if it is real, we take off the inflation, otherwise, we don't
                 if carry_type.lower() == 'real':

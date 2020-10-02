@@ -2,7 +2,6 @@ import pandas as pd
 from calendar import monthrange
 
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
-from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import ComputeWorkingDays1D2D
 
 
 class ComputeProfitAndLoss:
@@ -68,10 +67,13 @@ class ComputeProfitAndLoss:
         for d in range(1, monthrange(y, m)[1] + 1):
             date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
             if frequency == 'weekly' or frequency == 'daily':
+                # Wednesday = 2
                 if date.weekday() == 2:
                     wednesdays.append(date)
             else:
-                wednesdays.append(date)
+                # For monthly frequency, we select the last day of December
+                if date.weekday() <= 4:
+                    wednesdays.append(date)
         return wednesdays[-1]
 
     def compute_profit_and_loss_notional(self, spot_overview, total_overview, combo_overview, total_incl_signals, spot_incl_signals):
@@ -89,8 +91,6 @@ class ComputeProfitAndLoss:
         last_year = (self.latest_date - pd.DateOffset(years=1)).year
         last_month = 12
         last_day = self.last_wednesday_of_last_year(last_year, last_month, self.frequency)
-        obj_compute_uk_working_days = ComputeWorkingDays1D2D()
-        last_day = obj_compute_uk_working_days.convert_to_working_date_uk(last_day)
 
         # YTD P&L:: Total (Returns)
         numerator_returns = total_incl_signals.loc[self.latest_date].values[0]
@@ -136,6 +136,12 @@ class ComputeProfitAndLoss:
         :return: a dictionary of profit and loss implemented in MATR
         """
         write_logs_effect("Computing profit and loss implemented in matr...", "logs_p_and_l_matr")
+        import numpy as np
+
+        cumulative_ret = np.cumprod(1 + weighted_perf['Weighted_Performance'].values) - 1
+
+
+
         #TODO REDO CALC!!!!
         # YTD P&L:: Total (Returns)
         ytd_total_matr = (weighted_perf.loc[self.latest_date][0]/100) * 10000
