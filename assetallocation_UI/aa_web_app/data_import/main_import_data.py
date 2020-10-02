@@ -17,8 +17,8 @@ def main_data(fund_name: str, times_version: int):
     weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.assets, fs.asset_weights)
     analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.assets, fs.asset_analytics)
 
-    data = {'times_signals': analytic_df.xs(Signal.momentum, level='subcategory'),
-            'times_returns': analytic_df.xs(Performance['excess return'], level='subcategory'),
+    data = {'times_signals': analytic_df.xs(Signal.momentum, level='analytic_subcategory'),
+            'times_returns': analytic_df.xs(Performance['excess return'], level='analytic_subcategory'),
             'times_positions': weight_df}
 
     obj_charts_comp = TimesChartsDataComputations(times_signals=data['times_signals'],

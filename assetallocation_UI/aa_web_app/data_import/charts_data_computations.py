@@ -7,7 +7,7 @@ from assetallocation_arp.common_libraries.dal_enums.asset import Equity, FixedIn
 
 
 class TimesChartsDataComputations(object):
-    """Class doing computations for the data of the timees dashboard"""
+    """Class doing computations for the data of the times dashboard"""
 
     def __init__(self, times_signals, times_positions, times_returns):
         self.signals = times_signals
@@ -84,7 +84,7 @@ class TimesChartsDataComputations(object):
         :return: dictionary with all the computations such as the sum of the equities positions, sum of the bonds positions
         """
         sum_positions_bonds, sum_positions_equities, sum_positions_fx = self.sum_equities_bonds_fx(self.positions_comp)
-        sum_performance_weekly_equities, sum_performance_weekly_bonds, sum_performance_weekly_fx = self.sum_equities_bonds_fx(self.returns)
+        sum_performance_weekly_equities, sum_performance_weekly_bonds, sum_performance_weekly_fx = self.sum_equities_bonds_fx(self.returns_comp)
         sum_performance_ytd_equities, sum_performance_ytd_bonds, sum_performance_ytd_fx = self.sum_equities_bonds_fx(self.returns_ytd)
 
         return {'sum_positions_equities': sum_positions_equities, 'sum_positions_bonds': sum_positions_bonds,
@@ -94,14 +94,13 @@ class TimesChartsDataComputations(object):
                 'sum_performance_ytd_fx': sum_performance_ytd_fx}
 
     def sum_equities_bonds_fx(self, equities_bonds_fx_data):
-        print(equities_bonds_fx_data.head())
-        equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index]
-        bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index]
-        fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index]
+        equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index.levels[1]]
+        bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index.levels[1]]
+        fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index.levels[1]]
 
-        equities = self.round_sum(equities_bonds_fx_data.loc[equities])
-        bonds = self.round_sum(equities_bonds_fx_data.loc[bonds])
-        fx = self.round_sum(equities_bonds_fx_data.loc[fx])
+        equities = self.round_sum(equities_bonds_fx_data.loc[(slice(None), equities)])
+        bonds = self.round_sum(equities_bonds_fx_data.loc[(slice(None), bonds)])
+        fx = self.round_sum(equities_bonds_fx_data.loc[(slice(None), fx)])
         return bonds, equities, fx
 
     @staticmethod
