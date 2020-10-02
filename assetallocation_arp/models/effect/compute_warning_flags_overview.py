@@ -7,6 +7,8 @@ from dateutil.relativedelta import relativedelta
 from data_etl.inputs_effect.import_process_data_effect import ProcessDataEffect
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
+from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import ComputeWorkingDays1D2D
+
 
 class ComputeWarningFlagsOverview(ProcessDataEffect):
 
@@ -17,17 +19,21 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
 
     @property
     def prev_7_days_from_latest_signal_date(self):
-        #TODO APPLY LAURA FCT
+        # Call  ComputeWorkingDays1D2D to check working date
+        obj_compute_uk_working_days = ComputeWorkingDays1D2D()
+
         if self.frequency == 'weekly' or self.frequency == 'daily':
-            return self.latest_signal_date - datetime.timedelta(days=7)
+            prev_7_days_date = self.latest_signal_date - datetime.timedelta(days=7)
         else:
             # Get the previous month
             days = []
             y, m = self.latest_signal_date.year, (self.latest_signal_date - relativedelta(months=1)).month
             for d in range(1, monthrange(y, m)[1] + 1):
-                date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
-                days.append(date)
-            return days[-1]
+                tmp_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+                days.append(tmp_date)
+            prev_7_days_date = days[-1]
+
+        return obj_compute_uk_working_days.convert_to_working_date_uk(prev_7_days_date)
 
     def compute_warning_flags_rates(self):
         """

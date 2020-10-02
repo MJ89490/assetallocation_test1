@@ -1,6 +1,7 @@
 import xlwings as xw
 import pandas as pd
 import os
+import calendar
 from configparser import ConfigParser
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -16,6 +17,8 @@ from assetallocation_arp.models.effect.compute_warning_flags_overview import Com
 
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
+
+from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import ComputeWorkingDays1D2D
 
 
 """
@@ -68,18 +71,26 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
     latest_signal_date = strategy_inputs['latest signal date'].item()
+    # obj_compute_uk_working_days = ComputeWorkingDays1D2D()
 
     if latest_signal_date is None:
-        # TODO apply fct laura
         latest_signal_date = obj_import_data.dates_origin_index[-2]
         # Previous Wednesday
         if strategy_inputs['Frequency'].item() == 'weekly' or strategy_inputs['Frequency'].item() == 'daily':
             delta = (latest_signal_date.weekday() + 4) % 7 + 1
-            latest_signal_date = pd.to_datetime(latest_signal_date - timedelta(days=delta), format='%d-%m-%Y')
+            latest_signal_date_tmp = pd.to_datetime(latest_signal_date - timedelta(days=delta), format='%d-%m-%Y')
         # Previous month
         else:
-            # TODO redo with a loop
-            latest_signal_date = pd.to_datetime(latest_signal_date - relativedelta(months=1), format='%d-%m-%Y')
+            days = []
+            y, m = latest_signal_date.year, (latest_signal_date - relativedelta(months=1)).month
+            for d in range(1, calendar.monthrange(y, m)[1] + 1):
+                tmp_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+                days.append(tmp_date)
+            latest_signal_date_tmp = pd.to_datetime(days[-1], format='%d-%m-%Y')
+
+        # Check if the next date is a working date in UK calendar
+        # latest_signal_date = obj_compute_uk_working_days.convert_to_working_date_uk(latest_signal_date_tmp)
+        latest_signal_date = latest_signal_date_tmp
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
     obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['STDev window (weeks)'].item()),

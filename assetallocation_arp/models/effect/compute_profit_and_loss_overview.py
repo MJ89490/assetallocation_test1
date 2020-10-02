@@ -2,6 +2,7 @@ import pandas as pd
 from calendar import monthrange
 
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
+from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import ComputeWorkingDays1D2D
 
 
 class ComputeProfitAndLoss:
@@ -85,10 +86,11 @@ class ComputeProfitAndLoss:
         """
         write_logs_effect("Computing profit and loss notional...", "logs_p_and_l_notional")
 
-        # TODO ADD LAURA FCT
         last_year = (self.latest_date - pd.DateOffset(years=1)).year
         last_month = 12
         last_day = self.last_wednesday_of_last_year(last_year, last_month, self.frequency)
+        obj_compute_uk_working_days = ComputeWorkingDays1D2D()
+        last_day = obj_compute_uk_working_days.convert_to_working_date_uk(last_day)
 
         # YTD P&L:: Total (Returns)
         numerator_returns = total_incl_signals.loc[self.latest_date].values[0]

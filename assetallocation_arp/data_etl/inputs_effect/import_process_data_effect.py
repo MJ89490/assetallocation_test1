@@ -16,6 +16,8 @@ import calendar
 import xlwings as xw
 import win32api
 
+from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import ComputeWorkingDays1D2D
+
 """
     Class to import data from matlab file
 """
@@ -96,7 +98,8 @@ class ImportDataEffect:
         That is mandatory for combo, trend and carry for the Signals overview
         :return: a list of values for the next date and the next date
         """
-        #TODO APPLY WORKING DAY FCT JUSTIN CASE
+
+        obj_compute_uk_working_days = ComputeWorkingDays1D2D()
 
         last_date = pd.to_datetime(self.data_currencies.index.values[-1], format='%d-%m-%Y')
 
@@ -105,11 +108,18 @@ class ImportDataEffect:
         elif frequency == 'daily':
             next_date = pd.to_datetime(last_date + datetime.timedelta(days=1), format='%d-%m-%Y')
         else:
-            #TODO REDO WITH A LOOP
-            next_date = pd.to_datetime(last_date + relativedelta(months=1), format='%d-%m-%Y')
+            dates = []
+            y, m = last_date.year, (last_date + relativedelta(months=1)).month
+            for d in range(1, calendar.monthrange(y, m)[1] + 1):
+                tmp_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+                dates.append(tmp_date)
+            next_date = dates[-1]
+
+        # Check if the next date is a working date in UK calendar
+        working_date = obj_compute_uk_working_days.convert_to_working_date_uk(next_date)
 
         # Set the new date with values equal to zero
-        return [0]*self.data_currencies.shape[1], next_date
+        return [0] * self.data_currencies.shape[1], pd.to_datetime(working_date, format='%Y-%m-%d')
 
 
 """
