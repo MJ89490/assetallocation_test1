@@ -248,7 +248,7 @@ class EffectProcCaller(ArpProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'])
+            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
             effect_assets.append(e)
 
         return effect_assets
@@ -272,7 +272,7 @@ class EffectProcCaller(ArpProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'])
+            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
             e.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
 
             effect_assets.append(e)

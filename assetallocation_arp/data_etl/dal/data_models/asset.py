@@ -200,7 +200,6 @@ class EffectAssetInput(Asset):
     def __init__(self, ticker: str, name: str, ndf_code: str, spot_code: str, position_size: float) -> None:
         """EffectAsset class to hold data from database"""
         super().__init__(ticker)
-        super().name = name
         self.ndf_code = ndf_code
         self.spot_code = spot_code
         self.position_size = position_size
