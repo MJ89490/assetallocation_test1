@@ -1,5 +1,7 @@
 import pandas as pd
+
 from calendar import monthrange
+from pandas.tseries import offsets
 
 from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 
@@ -62,19 +64,19 @@ class ComputeProfitAndLoss:
         return pd.DataFrame(profit_and_loss_carry)[0]
 
     @staticmethod
-    def last_wednesday_of_last_year(y, m, frequency):
-        wednesdays = []
+    def get_the_last_day_of_year(y, m, frequency):
+        days = []
         for d in range(1, monthrange(y, m)[1] + 1):
-            date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+            current_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
             if frequency == 'weekly' or frequency == 'daily':
                 # Wednesday = 2
-                if date.weekday() == 2:
-                    wednesdays.append(date)
+                if current_date.weekday() == 2:
+                    days.append(current_date)
             else:
                 # For monthly frequency, we select the last day of December
-                if date.weekday() <= 4:
-                    wednesdays.append(date)
-        return wednesdays[-1]
+                if current_date.weekday() <= 4:
+                    days.append(current_date)
+        return days[-1]
 
     def compute_profit_and_loss_notional(self, spot_overview, total_overview, combo_overview, total_incl_signals, spot_incl_signals):
         """
@@ -90,7 +92,7 @@ class ComputeProfitAndLoss:
 
         last_year = (self.latest_date - pd.DateOffset(years=1)).year
         last_month = 12
-        last_day = self.last_wednesday_of_last_year(last_year, last_month, self.frequency)
+        last_day = self.get_the_last_day_of_year(last_year, last_month, self.frequency)
 
         # YTD P&L:: Total (Returns)
         numerator_returns = total_incl_signals.loc[self.latest_date].values[0]
@@ -124,6 +126,19 @@ class ComputeProfitAndLoss:
                 'profit_and_loss_spot_weekly_notional': weekly_spot,
                 'profit_and_loss_carry_weekly_notional': weekly_carry}
 
+    def get_first_day_of_year(self):
+        days = []
+        first_day_of_year = self.latest_date - offsets.YearBegin()
+        y, m = first_day_of_year.year, first_day_of_year.month
+
+        for d in range(1, monthrange(y, m)[1] + 1):
+            current_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+            # We are checking if the first day of the year is not a weekend
+            if current_date.weekday() <= 4:
+                    days.append(current_date)
+        # Return the first day of year which is not a weekend day
+        return days[0]
+
     def compute_profit_and_loss_implemented_in_matr(self, combo_overview, ytd_total_notional, ytd_spot_notional, weekly_total_notional, weekly_spot_notional, weighted_perf):
         """
         Function calculating the profit and loss implemented in matr
@@ -136,15 +151,12 @@ class ComputeProfitAndLoss:
         :return: a dictionary of profit and loss implemented in MATR
         """
         write_logs_effect("Computing profit and loss implemented in matr...", "logs_p_and_l_matr")
-        import numpy as np
 
-        cumulative_ret = np.cumprod(1 + weighted_perf['Weighted_Performance'].values) - 1
+        first_day_of_year = self.get_first_day_of_year()
 
+        cumulative_ret = (1 + weighted_perf.loc[first_day_of_year:, 'Weighted_Performance']).cumprod() - 1
 
-
-        #TODO REDO CALC!!!!
-        # YTD P&L:: Total (Returns)
-        ytd_total_matr = (weighted_perf.loc[self.latest_date][0]/100) * 10000
+        ytd_total_matr = cumulative_ret.loc[self.latest_date] * 10000
 
         # YTD P&L: Spot
         ytd_spot_matr = ytd_total_matr * (ytd_spot_notional / ytd_total_notional)
