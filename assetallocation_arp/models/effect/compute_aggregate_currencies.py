@@ -241,7 +241,7 @@ class ComputeAggregateCurrencies:
         log_returns_excl = log_returns_excl
         # We remove two lines to fit with log_returns_excl. It is due to the shift(1) in log_returns_excl
         # and to combo calculations with the first value set to 100
-        combo = combo_curr.iloc[2:]
+        combo = combo_curr.iloc[1:]
 
         sum_prod = []
         weighted_perf = []
@@ -249,11 +249,12 @@ class ComputeAggregateCurrencies:
         for values_combo, values_log in zip(combo.values, log_returns_excl.values):
             tmp = []
             for value_combo, value_log in zip(values_combo, values_log):
+                print(value_combo * value_log)
                 tmp.append(value_combo * value_log)
             sum_prod.append(sum(tmp))
 
         for value_weight in range(len(sum_prod)):
-            weighted_perf.append(sum_prod[value_weight] * (weight_value * 100))
+            weighted_perf.append(sum_prod[value_weight] * weight_value)
 
         return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name], index=combo.index.values)
 

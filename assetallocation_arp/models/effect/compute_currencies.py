@@ -374,6 +374,7 @@ class ComputeCurrencies(ProcessDataEffect):
         spot_ex = self.compute_spot_ex_costs()
         spot_incl = self.compute_spot_incl_costs()
 
+
         currencies_calculations = {'carry_curr': carry, 'trend_curr': trend, 'combo_curr': combo,
                                    'return_excl_curr': return_ex, 'return_incl_curr': return_incl,
                                    'spot_excl_curr': spot_ex, 'spot_incl_curr': spot_incl}
