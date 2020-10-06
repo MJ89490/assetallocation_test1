@@ -64,13 +64,14 @@ class ComputeProfitAndLoss:
         return pd.DataFrame(profit_and_loss_carry)[0]
 
     @staticmethod
-    def get_the_last_day_of_year(y, m, frequency):
+    def get_the_last_day_of_year(y, m, frequency, signal_day):
         days = []
+        days_num = {'MON': 0, 'TUE': 1, 'WED': 2, 'THU': 3, 'FRI': 4}
+
         for d in range(1, monthrange(y, m)[1] + 1):
             current_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
             if frequency == 'weekly' or frequency == 'daily':
-                # Wednesday = 2
-                if current_date.weekday() == 2:
+                if current_date.weekday() == days_num[signal_day]:
                     days.append(current_date)
             else:
                 # For monthly frequency, we select the last day of December
@@ -78,7 +79,8 @@ class ComputeProfitAndLoss:
                     days.append(current_date)
         return days[-1]
 
-    def compute_profit_and_loss_notional(self, spot_overview, total_overview, combo_overview, total_incl_signals, spot_incl_signals):
+    def compute_profit_and_loss_notional(self, spot_overview, total_overview, combo_overview, total_incl_signals,
+                                         spot_incl_signals, signal_day):
         """
         Function calculating the profit and loss notional (bp) of the spot, returns and carry
         :param spot_overview: spot overview data of all currencies
@@ -86,13 +88,14 @@ class ComputeProfitAndLoss:
         :param combo_overview: combo overview of all currencies
         :param total_incl_signals: returns data from aggregate currencies (compute_aggregate_total_incl_signals)
         :param spot_incl_signals: spot data from aggregate currencies (compute_aggregate_spot_incl_signals)
+        :param signal_day: current day of the week the model is running
         :return: a dictionary of profit and loss ytd and weekly
         """
         write_logs_effect("Computing profit and loss notional...", "logs_p_and_l_notional")
 
         last_year = (self.latest_date - pd.DateOffset(years=1)).year
         last_month = 12
-        last_day = self.get_the_last_day_of_year(last_year, last_month, self.frequency)
+        last_day = self.get_the_last_day_of_year(last_year, last_month, self.frequency, signal_day)
 
         # YTD P&L:: Total (Returns)
         numerator_returns = total_incl_signals.loc[self.latest_date].values[0]
@@ -177,7 +180,8 @@ class ComputeProfitAndLoss:
                 'profit_and_loss_carry_ytd_matr': ytd_carry_matr, 'profit_and_loss_total_weekly_matr': weekly_returns_matr,
                 'profit_and_loss_spot_weekly_matr': weekly_spot_matr, 'profit_and_loss_carry_weekly_matr': weekly_carry_matr }
 
-    def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals, weighted_perf):
+    def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals,
+                            weighted_perf, signal_day):
         """
         Function calling all the functions above
         :param combo_curr: combo_curr values from compute_currencies class
@@ -186,6 +190,7 @@ class ComputeProfitAndLoss:
         :param total_incl_signals: total_incl_signals values
         :param spot_incl_signals: spot_incl_signals values
         :param weighted_perf: weighted_perf values
+        :param signal_day: current day on we are running the model
         :return: a dictionary
         """
         profit_and_loss_combo_overview = self.compute_profit_and_loss_combo(combo_curr=combo_curr)
@@ -199,7 +204,8 @@ class ComputeProfitAndLoss:
                                                                          total_overview=profit_and_loss_total_overview,
                                                                          combo_overview=profit_and_loss_combo_overview,
                                                                          total_incl_signals=total_incl_signals,
-                                                                         spot_incl_signals=spot_incl_signals)
+                                                                         spot_incl_signals=spot_incl_signals,
+                                                                         signal_day=signal_day)
 
         profit_and_loss_matr = self.compute_profit_and_loss_implemented_in_matr(combo_overview=profit_and_loss_combo_overview,
                                                                                 ytd_total_notional=profit_and_loss_notional['profit_and_loss_total_ytd_notional'],

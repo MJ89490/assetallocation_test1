@@ -111,7 +111,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                                    spot_origin=spot_origin,
                                                    total_incl_signals=agg_currencies['agg_total_incl_signals'],
                                                    spot_incl_signals=agg_currencies['agg_spot_incl_signals'],
-                                                   weighted_perf=agg_currencies['weighted_performance'])
+                                                   weighted_perf=agg_currencies['weighted_performance'],
+                                                   signal_day=strategy_inputs['SignalDay'].item())
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=latest_signal_date,

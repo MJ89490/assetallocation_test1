@@ -7,7 +7,6 @@ import numpy as np
 
 
 class ComputeAggregateCurrencies:
-    AGG_FIRST_VALUE = [100]
 
     def __init__(self, window, start_date_calculations, weight, dates_index, prev_start_date_calc):
         self.start_date_calc = start_date_calculations
@@ -111,27 +110,17 @@ class ComputeAggregateCurrencies:
         :param inverse_volatility: inverse volatility values from compute_inverse_volatility
         :return: a list
         """
-        if len(ComputeAggregateCurrencies.AGG_FIRST_VALUE) != 1:
-            ComputeAggregateCurrencies.update_agg_value()
-
+        inv_volatility_values = [100]
         counter = 0
         for values_returns, values_volatility in zip(returns_spot_values.values, inverse_volatility.values):
             tmp = []
             for value_returns, value_volatility in zip(values_returns, values_volatility):
                 tmp.append(value_returns * value_volatility)
             sum_tmp_volatility = sum(values_volatility)
-            ComputeAggregateCurrencies.AGG_FIRST_VALUE.append(ComputeAggregateCurrencies.AGG_FIRST_VALUE[counter] * (sum(tmp) / sum_tmp_volatility))
+            inv_volatility_values.append(inv_volatility_values[counter] * (sum(tmp) / sum_tmp_volatility))
             counter += 1
-
-        return ComputeAggregateCurrencies.AGG_FIRST_VALUE
-
-    @staticmethod
-    def update_agg_value():
-        """
-        Function updating the AGG_FIRST_VALUE global name
-        :return: a list with [100]
-        """
-        ComputeAggregateCurrencies.AGG_FIRST_VALUE = [100]
+        inv_volatility_values.pop(0)
+        return inv_volatility_values
 
     def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
         """
@@ -215,7 +204,7 @@ class ComputeAggregateCurrencies:
             returns_shift = (spot_excl_costs / spot_excl_costs.shift(1)).iloc[1:]
             spot_excl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
 
-        return pd.DataFrame(spot_excl_signals_values , columns=[CurrencyAggregate.Spot_Excl_Signals.name], index=list(self.dates_index))
+        return pd.DataFrame(spot_excl_signals_values, columns=[CurrencyAggregate.Spot_Excl_Signals.name], index=list(self.dates_index))
 
     @staticmethod
     def compute_log_returns_excl_costs(returns_ex_costs):
@@ -228,7 +217,8 @@ class ComputeAggregateCurrencies:
         np.seterr(divide='ignore')
         return np.log((returns_ex_costs / returns_ex_costs.shift(1)).iloc[1:])
 
-    def compute_weighted_performance(self, log_returns_excl, combo_curr, weight_value):
+    @staticmethod
+    def compute_weighted_performance(log_returns_excl, combo_curr, weight_value):
         """
         Function comptuing the weighted performancen
         :param log_returns_excl: log of retuns excl costs values
@@ -249,7 +239,6 @@ class ComputeAggregateCurrencies:
         for values_combo, values_log in zip(combo.values, log_returns_excl.values):
             tmp = []
             for value_combo, value_log in zip(values_combo, values_log):
-                print(value_combo * value_log)
                 tmp.append(value_combo * value_log)
             sum_prod.append(sum(tmp))
 
@@ -269,9 +258,9 @@ class ComputeAggregateCurrencies:
         :return: a dictionary
         """
         if self.weight != '1/N':
-            inverse_volatilies = self.compute_inverse_volatility(spot_data=spot_origin)
+            inverse_volatility = self.compute_inverse_volatility(spot_data=spot_origin)
         else:
-            inverse_volatilies = None
+            inverse_volatility = None
             write_logs_effect("Not computing inverse volatility: weight == 1/N", "logs_inverse_volatility")
 
         excl_signals_total_return = self.compute_excl_signals_total_return(carry_origin=carry_origin)
@@ -284,16 +273,16 @@ class ComputeAggregateCurrencies:
                                                                  combo_curr=combo_curr, weight_value=weight_value)
 
         aggregate_total_incl_signals = self.compute_aggregate_total_incl_signals(returns_incl_costs=returns_incl_costs,
-                                                                                 inverse_volatility=inverse_volatilies)
+                                                                                 inverse_volatility=inverse_volatility)
 
         aggregate_total_excl_signals = self.compute_aggregate_total_excl_signals(returns_excl_costs=excl_signals_total_return,
-                                                                                 inverse_volatility=inverse_volatilies)
+                                                                                 inverse_volatility=inverse_volatility)
 
         aggregate_spot_incl_signals = self.compute_aggregate_spot_incl_signals(spot_incl_costs=spot_incl_costs,
-                                                                               inverse_volatility=inverse_volatilies)
+                                                                               inverse_volatility=inverse_volatility)
 
         aggregate_spot_excl_signals = self.compute_aggregate_spot_excl_signals(spot_excl_costs=excl_signals_spot_return,
-                                                                               inverse_volatility=inverse_volatilies)
+                                                                               inverse_volatility=inverse_volatility)
 
         return {'agg_total_incl_signals': aggregate_total_incl_signals,
                 'agg_total_excl_signals': aggregate_total_excl_signals,
