@@ -38,7 +38,7 @@ class ComputeAggregateCurrencies:
         :return: a dataFrame with inverse volatility data
         """
         write_logs_effect("Computing inverse volatility...", "logs_inverse_volatility")
-        inverse_volatilities = pd.DataFrame()
+        inverse_volatility = pd.DataFrame()
 
         for currency_spot in spot_data.columns:
 
@@ -46,7 +46,7 @@ class ComputeAggregateCurrencies:
             rows = spot_data[tmp_start_date_computations:].shape[0]
 
             spot_tmp = spot_data.loc[:, currency_spot]
-            volatilities = []
+            volatility = []
 
             for value in range(rows):
                 # Set the start date to start the computation
@@ -68,7 +68,7 @@ class ComputeAggregateCurrencies:
                     volatility = 0
 
                 # Add the standard deviation results into a list
-                volatilities.append(volatility)
+                volatility.append(volatility)
 
                 # Error handling when we reach the end of the dates range
                 try:
@@ -76,12 +76,12 @@ class ComputeAggregateCurrencies:
                 except IndexError:
                     tmp_start_date_computations = spot_data.index[start_current_date_index_loc]
 
-            # Add volatilities into a common dataFrame
-            inverse_volatilities[CurrencyAggregate.Inverse_Volatility.name + currency_spot] = volatilities
+            # Add volatility into a common dataFrame
+            inverse_volatility[CurrencyAggregate.Inverse_Volatility.name + currency_spot] = volatility
 
-        inverse_volatilities = inverse_volatilities.set_index(self.dates_index)
+        inverse_volatility = inverse_volatility.set_index(self.dates_index)
 
-        return inverse_volatilities
+        return inverse_volatility
 
     def compute_excl_signals_total_return(self, carry_origin):
         """

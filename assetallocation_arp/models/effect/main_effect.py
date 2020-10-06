@@ -49,6 +49,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     spx_index_values = obj_import_data.process_data_effect()
     obj_import_data.start_date_calculations = user_date
     spot_origin, carry_origin = obj_import_data.process_data_config_effect()
+
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 

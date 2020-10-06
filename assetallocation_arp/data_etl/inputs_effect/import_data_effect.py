@@ -10,8 +10,6 @@ from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import
     Class to import data from matlab file
 """
 
-#TODO APPLY FORMULA DATES FOR OTHER DATES
-
 
 class ImportDataEffect:
 

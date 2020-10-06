@@ -88,7 +88,7 @@ class ComputeProfitAndLoss:
         :param combo_overview: combo overview of all currencies
         :param total_incl_signals: returns data from aggregate currencies (compute_aggregate_total_incl_signals)
         :param spot_incl_signals: spot data from aggregate currencies (compute_aggregate_spot_incl_signals)
-        :param signal_day: current day of the week the model is running
+        :param signal_day: current day of the week the month
         :return: a dictionary of profit and loss ytd and weekly
         """
         write_logs_effect("Computing profit and loss notional...", "logs_p_and_l_notional")

@@ -98,7 +98,7 @@ class ComputeInflationDifferential:
         :param inflation: inflation date (eg: Apr2020)
         :return: a dataFrame inflation_data_merged with inflation data inside for usd and eur countries
         """
-        # todo modify later because data will be stored in a Db
+        # TODO modify later because data will be stored in a Db
 
         # Set the name of the csv file for country and group data
         data_country = 'data_imf_WEO{}all.csv'.format(inflation)
@@ -150,7 +150,6 @@ class ComputeInflationDifferential:
         Function processing the Bloomberg inflation differential data fom csv files
         :return: a dataFrame inflation_bloomberg_values with inflation data inside for usd and eur countries
         """
-        #TODO ADD SELF POUR INF
         # Processing Bloomberg data
         inflation_values = pd.read_csv(os.path.abspath(
             os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data_effect', 'data', 'bloomberg_data', 'bbg_data.csv')))
