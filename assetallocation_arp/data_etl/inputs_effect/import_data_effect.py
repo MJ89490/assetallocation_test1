@@ -56,7 +56,7 @@ class ImportDataEffect:
     def signal_day_mat(self, value):
         self._signal_day_mat = value
 
-    def import_data_matlab(self):
+    def import_data_matlab(self, calculation_type):
         """
         Function importing the data from matlab file
         :return: a dataFrame self.data_currencies with matlab data
@@ -66,9 +66,10 @@ class ImportDataEffect:
 
         self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
 
-        self.data_currencies_no_start_date = set_data_frequency(self.all_data, self.frequency_mat, self.signal_day_mat)
+        self.data_currencies_no_start_date = set_data_frequency(self.all_data, self.frequency_mat, self.signal_day_mat) # Anais will remove this line
 
-        self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
+        self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat,
+                                                  calculation_type)
 
         next_date_values, next_date = self.add_next_date(self.frequency_mat)
 
