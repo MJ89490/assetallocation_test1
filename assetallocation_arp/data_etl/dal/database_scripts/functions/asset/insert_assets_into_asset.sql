@@ -15,7 +15,7 @@ BEGIN
       name,
       ticker,
       is_tr,
-      type,
+      category,
       execution_state_id
     )
     SELECT

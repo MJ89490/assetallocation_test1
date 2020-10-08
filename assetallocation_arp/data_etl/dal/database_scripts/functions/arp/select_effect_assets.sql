@@ -31,7 +31,6 @@ BEGIN
     WHERE
       s.name = strategy_name
       AND e.version = strategy_version
-    GROUP BY a.id
   ;
 END
 $$;

@@ -21,7 +21,7 @@ CREATE TABLE "arp"."fica_asset"
 	"asset_id" integer NOT NULL,
 	"id" serial NOT NULL,
 	"strategy_id" integer NULL,
-	"soverign_ticker_id" integer NOT NULL,
+	"sovereign_ticker_id" integer NOT NULL,
 	"swap_ticker_id" integer NOT NULL,
 	"swap_cr_ticker_id" integer NOT NULL,
 	"execution_state_id" integer NOT NULL
@@ -50,8 +50,8 @@ ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_fica_fkey"
 	FOREIGN KEY ("strategy_id") REFERENCES "arp"."fica" ("strategy_id") ON DELETE No Action ON UPDATE No Action
 ;
 
-ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_ticker_soverign_fkey"
-	FOREIGN KEY ("soverign_ticker_id") REFERENCES "curve"."ticker" ("id") ON DELETE No Action ON UPDATE No Action
+ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_ticker_sovereign_fkey"
+	FOREIGN KEY ("sovereign_ticker_id") REFERENCES "curve"."ticker" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
 ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_ticker_swap_cr_fkey"

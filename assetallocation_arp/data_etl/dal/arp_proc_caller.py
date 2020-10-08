@@ -44,7 +44,7 @@ class ArpProcCaller(Db):
         return fund_strategy_id is not None
 
     def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int) -> \
-    Optional[FundStrategy]:
+            Optional[FundStrategy]:
         """Select the most recent FundStrategy data for a strategy as at business_datetime and system_datetime"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
@@ -370,19 +370,3 @@ class FicaProcCaller(ArpProcCaller):
             fica_assets.append(f)
 
         return fica_assets
-
-
-if __name__ == '__main__':
-    d = TimesProcCaller()
-
-    t1 = Times(0, 'weekly', 'e', [], [], 0, 0)
-    t_v = d._insert_times_strategy(t1, 'JS89275')
-
-    ta1 = TimesAssetInput('test_ticker1', 'Equity', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', float(1))
-    ta2 = TimesAssetInput('test_ticker1', 'FX', 'US', 'EUR', 'test_name', 'b', 2, 'f', 'g', float(1))
-
-    ins = d._insert_times_assets(t_v, [ta1])
-    print(ins)
-
-    ins = d._insert_times_assets(t_v, [ta2])
-    print(ins)

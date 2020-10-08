@@ -19,22 +19,22 @@ DROP TABLE IF EXISTS "curve"."ticker" CASCADE
 CREATE TABLE "curve"."ticker"
 (
 	"execution_state_id" integer NOT NULL,
-	"type" varchar(50)	 NOT NULL,
+	"category" varchar(50)	 NOT NULL,
 	"id" serial NOT NULL,
-	"ticker_3m" varchar(50)	 NULL,
-	"ticker_1y" varchar(50)	 NULL,
-	"ticker_2y" varchar(50)	 NULL,
-	"ticker_3y" varchar(50)	 NULL,
-	"ticker_4y" varchar(50)	 NULL,
-	"ticker_5y" varchar(50)	 NULL,
-	"ticker_6y" varchar(50)	 NULL,
-	"ticker_7y" varchar(50)	 NULL,
-	"ticker_8y" varchar(50)	 NULL,
-	"ticker_9y" varchar(50)	 NULL,
-	"ticker_10y" varchar(50)	 NULL,
-	"ticker_15y" varchar(50)	 NULL,
-	"ticker_20y" varchar(50)	 NULL,
-	"ticker_30y" varchar(50)	 NULL
+	"mth3" varchar(50)	 NULL,
+	"yr1" varchar(50)	 NULL,
+	"yr2" varchar(50)	 NULL,
+	"yr3" varchar(50)	 NULL,
+	"yr4" varchar(50)	 NULL,
+	"yr5" varchar(50)	 NULL,
+	"yr6" varchar(50)	 NULL,
+	"yr7" varchar(50)	 NULL,
+	"yr8" varchar(50)	 NULL,
+	"yr9" varchar(50)	 NULL,
+	"yr10" varchar(50)	 NULL,
+	"yr15" varchar(50)	 NULL,
+	"yr20" varchar(50)	 NULL,
+	"yr30" varchar(50)	 NULL
 )
 ;
 
@@ -44,7 +44,7 @@ ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_type_check" CHECK (type IN ('sovereign', 'swap', 'cr_swap'))
+ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_category_check" CHECK (category IN ('sovereign', 'swap', 'cr_swap'))
 ;
 
 /* Create Foreign Key Constraints */

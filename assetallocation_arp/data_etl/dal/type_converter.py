@@ -3,7 +3,7 @@ from datetime import datetime, date
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
-from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, AssetAnalytic, FicaAssetInput
 from assetallocation_arp.data_etl.dal.data_models.ticker import Ticker
 
 
@@ -71,4 +71,10 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def ticker_str_to_object(curve_ticker: str) -> Ticker:
+        # TODO
+        pass
+
+    @staticmethod
+    def fica_assets_to_composite(fica_assets: List[FicaAssetInput]) -> str:
+        # TODO
         pass
