@@ -1,8 +1,10 @@
 import mock
 import pytest
 
+from psycopg2.extras import DateTimeTZRange
+
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller, Times, TimesAssetInput, FundStrategy, \
-    EffectProcCaller, Effect, ArpProcCaller, EffectAssetInput
+    EffectProcCaller, Effect, ArpProcCaller, EffectAssetInput, FicaProcCaller, Fica, FicaAssetInput
 from datetime import datetime
 
 
@@ -28,6 +30,12 @@ def MockTimes():
 def MockEffect():
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.Effect', autospec=True) as _MockEffect:
         yield _MockEffect
+
+
+@pytest.fixture()
+def MockFica():
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.Fica', autospec=True) as _MockFica:
+        yield _MockFica
 
 
 @pytest.fixture()
@@ -238,3 +246,70 @@ def test_select_effect_assets_returns_list_of_effect_asset_objects(mock_call_pro
 
     assert isinstance(returns, list)
     assert all([isinstance(i, EffectAssetInput) for i in returns])
+
+
+def test_insert_fica_strategy_calls_call_proc(MockFica, mock_call_proc):
+    mock_fica = MockFica(1.0, 'curve', DateTimeTZRange(), [1, 1], 1, 1)
+    user_id = 'a'
+
+    a = FicaProcCaller()
+    a._insert_fica_strategy(mock_fica, user_id)
+
+    mock_call_proc.assert_called_once_with(a, 'arp.insert_fica_strategy',
+                                           [mock_fica.description, 'a', mock_fica.coupon,
+                                            mock_fica.curve, mock_fica.business_tstzrange,
+                                            mock_fica.strategy_weights, mock_fica.tenor,
+                                            mock_fica.trading_cost])
+
+
+def test_insert_fica_strategy_returns_f_version(MockFica, mock_call_proc):
+    mock_fica = MockFica(1.0, 'curve', DateTimeTZRange(), [1, 1], 1, 1)
+    expected = 5
+    mock_call_proc.return_value = [{'f_version': expected}]
+
+    a = FicaProcCaller()
+    returns = a._insert_fica_strategy(mock_fica, 'a')
+
+    assert expected == returns
+
+
+def test_select_fica_strategy_calls_call_proc(mock_call_proc):
+    f_version = 2
+    mock_call_proc.return_value = []
+
+    a = FicaProcCaller()
+    a._select_fica_strategy(f_version)
+
+    mock_call_proc.assert_called_once_with(a, 'arp.select_fica_strategy', [f_version])
+
+
+def test_select_fica_strategy_returns_fica_object(MockFica):
+    a = FicaProcCaller()
+
+    returns = a._select_fica_strategy(2)
+
+    assert isinstance(returns, Fica)
+
+
+def test_select_fica_assets_with_analytics_calls_call_proc(mock_call_proc):
+    e_version = 2
+    business_datetime = datetime(2020, 9, 1)
+    mock_call_proc.return_value = []
+
+    a = FicaProcCaller()
+    a.select_fica_assets_with_analytics(e_version, business_datetime)
+
+    mock_call_proc.assert_called_once_with(a, 'arp.select_fica_assets_with_analytics', [e_version, business_datetime])
+
+
+def test_select_fica_assets_returns_list_of_fica_asset_objects(mock_call_proc):
+    e_version = 2
+    business_datetime = datetime(2020, 9, 1)
+    mock_call_proc.return_value = [mock.MagicMock(), mock.MagicMock(), mock.MagicMock()]
+
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInput', autospec=True):
+        a = FicaProcCaller()
+        returns = a.select_fica_assets_with_analytics(e_version, business_datetime)
+
+    assert isinstance(returns, list)
+    assert all([isinstance(i, FicaAssetInput) for i in returns])

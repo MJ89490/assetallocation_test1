@@ -4,6 +4,7 @@ from datetime import datetime, date
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
                                                                         FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.ticker import Ticker
 
 
 class DbTypeConverter:
@@ -67,3 +68,7 @@ class ArpTypeConverter(DbTypeConverter):
             asset_analytics.append(FundStrategyAssetAnalytic(asset_ticker, business_date, category, subcategory, value))
 
         return asset_analytics
+
+    @staticmethod
+    def ticker_str_to_object(curve_ticker: str) -> Ticker:
+        pass

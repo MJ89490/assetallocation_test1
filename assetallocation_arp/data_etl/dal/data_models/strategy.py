@@ -4,7 +4,7 @@ from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, Leverage, Name
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput
+from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, FicaAssetInput
 
 
 # noinspection PyAttributeOutsideInit
@@ -140,6 +140,15 @@ class Fica(Strategy):
         self._strategy_weights = strategy_weights
         self._tenor = tenor
         self._trading_cost = trading_cost
+        self._asset_inputs = []
+
+    @property
+    def asset_inputs(self) -> List[FicaAssetInput]:
+        return self._asset_inputs
+
+    @asset_inputs.setter
+    def asset_inputs(self, x: List[FicaAssetInput]) -> None:
+        self._asset_inputs = x
 
     @property
     def coupon(self) -> float:

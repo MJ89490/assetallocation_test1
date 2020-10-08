@@ -4,7 +4,9 @@ from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.country import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
-from assetallocation_arp.data_etl.dal.data_models.custom_error import IncorrectTickerError
+from assetallocation_arp.data_etl.dal.data_models.custom_error import TickerError, TickerCategoryError
+from assetallocation_arp.data_etl.dal.data_models.ticker import Ticker
+from assetallocation_arp.common_libraries.dal_enums import curve
 
 
 # noinspection PyAttributeOutsideInit
@@ -101,7 +103,7 @@ class Asset:
         if asset_analytic.asset_ticker == self.ticker:
             self._asset_analytics.append(asset_analytic)
         else:
-            raise IncorrectTickerError({'asset': self.ticker, 'asset_analytic': asset_analytic.asset_ticker})
+            raise TickerError({'asset': self.ticker, 'asset_analytic': asset_analytic.asset_ticker})
 
     def __eq__(self, other: 'Asset'):
         if isinstance(other, self.__class__):
@@ -110,23 +112,47 @@ class Asset:
             return False
 
 
-class FicaAsset(Asset):
-    def __init__(self, ticker: str, category: Union[str, Category], country: Union[str, Country],
-                 currency: Union[str, Currency], name: str, type: str, future_ticker: str,
-                 generic_yield_ticker: str) -> None:
+# noinspection PyAttributeOutsideInit
+class FicaAssetInput(Asset):
+    def __init__(self, ticker: str, sovereign_ticker: Ticker, swap_ticker: Ticker, swap_cr_ticker: Ticker) -> None:
         """FicaAsset class to hold data from database"""
         super().__init__(ticker)
-        super().name = name
-        self._future_ticker = future_ticker
-        self._generic_yield_ticker = generic_yield_ticker
+        self.sovereign_ticker = sovereign_ticker
+        self.swap_ticker = swap_ticker
+        self.swap_cr_ticker = swap_cr_ticker
 
     @property
-    def generic_yield_ticker(self) -> str:
-        return self._generic_yield_ticker
+    def sovereign_ticker(self) -> Ticker:
+        return self._sovereign_ticker
 
-    @generic_yield_ticker.setter
-    def generic_yield_ticker(self, x: str) -> None:
-        self._generic_yield_ticker = x
+    @sovereign_ticker.setter
+    def sovereign_ticker(self, x: Ticker) -> None:
+        if x.category.name == curve.Category['sovereign']:
+            self._sovereign_ticker = x
+        else:
+            raise TickerCategoryError('sovereign')
+
+    @property
+    def swap_ticker(self) -> Ticker:
+        return self._swap_ticker
+
+    @swap_ticker.setter
+    def swap_ticker(self, x: Ticker) -> None:
+        if x.category.name == curve.Category['swap']:
+            self._swap_ticker = x
+        else:
+            raise TickerCategoryError('swap')
+
+    @property
+    def swap_cr_ticker(self) -> Ticker:
+        return self._swap_cr_ticker
+
+    @swap_cr_ticker.setter
+    def swap_cr_ticker(self, x: Ticker) -> None:
+        if x.category.name == curve.Category['swap_cr']:
+            self._swap_cr_ticker = x
+        else:
+            raise TickerCategoryError('swap_cr')
 
 
 # noinspection PyAttributeOutsideInit
@@ -149,7 +175,7 @@ class TimesAssetInput:
         if x.ticker == self.signal_ticker:
             self._signal_asset = x
         else:
-            raise IncorrectTickerError({'asset': x.ticker, 'signal': self.signal_ticker})
+            raise TickerError({'asset': x.ticker, 'signal': self.signal_ticker})
 
     @property
     def future_asset(self) -> Asset:
@@ -160,7 +186,7 @@ class TimesAssetInput:
         if x.ticker == self.future_ticker:
             self._future_asset = x
         else:
-            raise IncorrectTickerError({'asset': x.ticker, 'future': self.future_ticker})
+            raise TickerError({'asset': x.ticker, 'future': self.future_ticker})
 
     @property
     def s_leverage(self) -> int:
@@ -197,7 +223,7 @@ class TimesAssetInput:
 
 # noinspection PyAttributeOutsideInit
 class EffectAssetInput(Asset):
-    def __init__(self, ticker: str, name: str, ndf_code: str, spot_code: str, position_size: float) -> None:
+    def __init__(self, ticker: str, ndf_code: str, spot_code: str, position_size: float) -> None:
         """EffectAsset class to hold data from database"""
         super().__init__(ticker)
         self.ndf_code = ndf_code

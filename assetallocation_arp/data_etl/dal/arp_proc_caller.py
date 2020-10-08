@@ -3,13 +3,13 @@ from os import environ
 from json import loads
 
 from assetallocation_arp.data_etl.dal.db import Db
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, Asset
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, Asset, FicaAssetInput
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
-from assetallocation_arp.data_etl.dal.proc import Proc, TimesProc, EffectProc
+from assetallocation_arp.data_etl.dal.proc import Proc, TimesProc, EffectProc, FicaProc
 
 
 class ArpProcCaller(Db):
@@ -43,8 +43,8 @@ class ArpProcCaller(Db):
 
         return fund_strategy_id is not None
 
-    def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name],
-                                     strategy_version: int) -> Optional[FundStrategy]:
+    def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int) -> \
+    Optional[FundStrategy]:
         """Select the most recent FundStrategy data for a strategy as at business_datetime and system_datetime"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
@@ -115,7 +115,7 @@ class TimesProcCaller(ArpProcCaller):
         times = self._select_times_strategy(times_version)
 
         if times is not None:
-            times.assets = self._select_times_assets(times_version)
+            times.asset_inputs = self._select_times_assets(times_version)
 
         return times
 
@@ -139,13 +139,13 @@ class TimesProcCaller(ArpProcCaller):
         if not res:
             return
 
-        times_assets = []
+        times_asset_inputs = []
         for r in res:
             t = self._construct_times_asset_input(r)
 
-            times_assets.append(t)
+            times_asset_inputs.append(t)
 
-        return times_assets
+        return times_asset_inputs
 
     def select_times_with_asset_analytics(self, times_version, business_datetime) -> Optional[Times]:
         """Select strategy, assets and asset analytics data for a version of times, as at business_datetime"""
@@ -167,10 +167,10 @@ class TimesProcCaller(ArpProcCaller):
         for r in res:
             t = self._construct_times_asset_input(r)
 
-            t.signal_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['signal_ticker'],
-                                                                                             r['signal_asset_analytics'])
-            t.future_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['future_ticker'],
-                                                                                             r['future_asset_analytics'])
+            t.signal_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['signal_ticker'], r[
+                'signal_asset_analytics'])
+            t.future_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['future_ticker'], r[
+                'future_asset_analytics'])
 
             times_assets.append(t)
 
@@ -219,7 +219,7 @@ class EffectProcCaller(ArpProcCaller):
         effect = self._select_effect_strategy(effect_version)
 
         if effect is not None:
-            effect.assets = self._select_effect_assets(effect_version)
+            effect.asset_inputs = self._select_effect_assets(effect_version)
 
         return effect
 
@@ -248,7 +248,7 @@ class EffectProcCaller(ArpProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
+            e = EffectAssetInput(r['asset_ticker'], r['ndf_code'], r['spot_code'], r['position_size'])
             effect_assets.append(e)
 
         return effect_assets
@@ -272,12 +272,104 @@ class EffectProcCaller(ArpProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'], r['asset_name'], r['ndf_code'], r['spot_code'], r['position_size'])
+            e = EffectAssetInput(r['asset_ticker'], r['ndf_code'], r['spot_code'], r['position_size'])
             e.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
 
             effect_assets.append(e)
 
         return effect_assets
+
+
+class FicaProcCaller(ArpProcCaller):
+    procs = list(Proc.__members__.keys()) + list(FicaProc.__members__.keys())
+
+    def insert_fica(self, fica: Fica, user_id: str) -> int:
+        """Insert data from an instance of Fica into database"""
+        f_version = self._insert_fica_strategy(fica, user_id)
+        if fica.asset_inputs:
+            self._insert_fica_assets(f_version, fica.asset_inputs)
+
+        return f_version
+
+    def _insert_fica_strategy(self, fica: Fica, user_id: str) -> int:
+        """Insert data from an instance of Fica into database"""
+        res = self.call_proc('arp.insert_fica_strategy',
+                             [fica.description, user_id, fica.coupon, fica.curve, fica.business_tstzrange,
+                              fica.strategy_weights, fica.tenor, fica.trading_cost])
+
+        return res[0]['f_version']
+
+    def _insert_fica_assets(self, fica_version: int, fica_assets: List[FicaAssetInput]) -> bool:
+        """Insert asset data for a version of Fica"""
+        fica_assets = ArpTypeConverter.fica_assets_to_composite(fica_assets)
+        res = self.call_proc('arp.insert_fica_assets', [fica_version, fica_assets])
+        asset_ids = res[0].get('asset_ids')
+        return bool(asset_ids)
+
+    def select_fica(self, fica_version) -> Optional[Fica]:
+        """Select strategy and asset data for a version of fica"""
+        fica = self._select_fica_strategy(fica_version)
+
+        if fica is not None:
+            fica.assets = self._select_fica_assets(fica_version)
+
+        return fica
+
+    def _select_fica_strategy(self, fica_version) -> Optional[Fica]:
+        """Select strategy data for a version of fica"""
+        res = self.call_proc('arp.select_fica_strategy', [fica_version])
+        if not res:
+            return
+
+        row = res[0]
+        f = Fica(row['coupon'], row['curve'], row['business_tstzrange'], row['strategy_weights'], row['tenor'],
+                 row['trading_cost'])
+        f.version = fica_version
+        f.description = row['description']
+        return f
+
+    def _select_fica_assets(self, fica_version) -> Optional[List[FicaAssetInput]]:
+        """Select asset data for a version of fica"""
+        res = self.call_proc('arp.select_fica_assets', [fica_version])
+
+        if not res:
+            return
+
+        fica_assets = []
+        for r in res:
+            f = FicaAssetInput(r['asset_ticker'], ArpTypeConverter.ticker_str_to_object(r['sovereign_ticker']),
+                               ArpTypeConverter.ticker_str_to_object(r['swap_ticker']),
+                               ArpTypeConverter.ticker_str_to_object(r['swap_cr_ticker']))
+            fica_assets.append(f)
+
+        return fica_assets
+
+    def select_fica_with_asset_analytics(self, fica_version, business_datetime) -> Optional[Fica]:
+        """Select strategy, assets and asset analytics data for a version of fica, as at business_datetime"""
+        fica = self._select_fica_strategy(fica_version)
+
+        if fica is not None:
+            fica.assets = self.select_fica_assets_with_analytics(fica_version, business_datetime)
+
+        return fica
+
+    def select_fica_assets_with_analytics(self, fica_version, business_datetime) -> Optional[List[FicaAssetInput]]:
+        """Select assets and asset analytics data for a version of fica, as at business_datetime"""
+        res = self.call_proc('arp.select_fica_assets_with_analytics', [fica_version, business_datetime])
+
+        if not res:
+            return
+
+        fica_assets = []
+        for r in res:
+            f = FicaAssetInput(r['asset_ticker'], ArpTypeConverter.ticker_str_to_object(r['sovereign_ticker']),
+                               ArpTypeConverter.ticker_str_to_object(r['swap_ticker']),
+                               ArpTypeConverter.ticker_str_to_object(r['swap_cr_ticker']))
+            f.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
+
+            fica_assets.append(f)
+
+        return fica_assets
 
 
 if __name__ == '__main__':

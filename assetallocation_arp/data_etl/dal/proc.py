@@ -38,3 +38,15 @@ EffectProc = Enum(
         ('arp.select_effect_assets_with_analytics', auto()),
     ]
 )
+
+# noinspection PyArgumentList
+FicaProc = Enum(
+    value='Proc',
+    names=[
+        ('arp.select_fica_strategy', auto()),
+        ('arp.insert_fica_strategy', auto()),
+        ('arp.select_fica_assets', auto()),
+        ('arp.insert_fica_assets', auto()),
+        ('arp.select_fica_assets_with_analytics', auto()),
+    ]
+)
