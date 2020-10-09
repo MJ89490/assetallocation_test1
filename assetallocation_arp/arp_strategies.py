@@ -9,10 +9,10 @@ import assetallocation_arp.data_etl.import_all_data as gd
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times, fica, maven, fxmodels
 from assetallocation_arp.models.times import calculate_signals_returns_r_positioning
-from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter
+from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, \
     FundStrategyAssetWeight
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
@@ -67,30 +67,32 @@ def run_model(model_type, mat_file, input_file, model_date=None):
             fx_model, base_fx, signal, exposure, exposure_agg, returns, contribution, carry_base, fxmodels_inputs,
             asset_inputs)}, input_file)
     if model_type == Name.fica.name:
-        # get inputs from excel and matlab data
-        fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
-                                                                             model_date)
-        # create yield curves and calculate carry & roll down
-        curve = fica.format_data(fica_inputs, asset_inputs, all_data)
-        carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
-        # run strategy
-        signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll,
-                                                                                country_returns)
-        # run daily attributions
-        carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
-        # write results to output sheet
-        write_output_to_excel({Name.fica.name: (
-            carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily,
-            return_daily)}, input_file)
-        print(model_type)
+        run_fica_excel(input_file, mat_file, model_date, model_type)
     if model_type == Name.comca.name:
         print(model_type)
+
+
+def run_fica_excel(input_file, mat_file, model_date, model_type):
+    # get inputs from excel and matlab data
+    fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date)
+    # create yield curves and calculate carry & roll down
+    curve = fica.format_data(fica_inputs, asset_inputs, all_data)
+    carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
+    # run strategy
+    signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll, country_returns)
+    # run daily attributions
+    carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
+    # write results to output sheet
+    write_output_to_excel({Name.fica.name: (
+        carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily,
+        return_daily)}, input_file)
+    print(model_type)
 
 
 def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
     signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
-    asset_analytics = TimesDataFrameConverter.create_times_asset_analytics(signals, returns, r)
+    asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r)
     asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning)
     return asset_analytics, asset_weights
 
@@ -98,6 +100,24 @@ def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[Fu
 def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
     # TODO add code to run effect, using Effect object, here
+    pass
+
+
+def run_fica(strategy: Fica) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
+    """Run fica strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
+    # TODO add code to run fica, using Fica object, here
+
+    # TODO add regression tests THEN refactor!
+    carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
+    # run strategy
+    signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll, country_returns)
+    # run daily attributions
+    carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
+
+    asset_analytics = FicaDataFrameConverter.create_asset_analytics(carry_roll, country_returns, signals,
+                                                                    cum_contribution, returns, carry_daily, return_daily)
+    asset_weights = FicaDataFrameConverter.df_to_asset_weights(positioning)
+    return asset_analytics, asset_weights
     pass
 
 
