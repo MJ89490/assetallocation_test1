@@ -30,15 +30,17 @@ BEGIN
   ins as (
       INSERT INTO curve.ticker (execution_state_id, category, mth3, yr1, yr2, yr3, yr4, yr5, yr6, yr7, yr8, yr9, yr10, yr15, yr20, yr30)
       SELECT * from input_rows
-      ON CONFLICT (category, mth3, yr1, yr2, yr3, yr4, yr5, yr6, yr7, yr8, yr9, yr10, yr15, yr20, yr30) DO NOTHING
+      ON CONFLICT ON CONSTRAINT ticker_values_key DO NOTHING
       RETURNING curve.ticker.id
   )
-  SELECT id
-  FROM ins
-  UNION ALL
-  SELECT t.id
-  FROM ticker t JOIN input_rows i USING(category, mth3, yr1, yr2, yr3, yr4, yr5, yr6, yr7, yr8, yr9, yr10, yr15, yr20, yr30)
-  into ticker_ids;
+  SELECT ARRAY(
+      SELECT id
+      FROM ins
+      UNION ALL
+      SELECT t.id
+      FROM curve.ticker t
+        JOIN input_rows i USING (category, mth3, yr1, yr2, yr3, yr4, yr5, yr6, yr7, yr8, yr9, yr10, yr15, yr20, yr30)
+  )INTO ticker_ids;
   RETURN;
 END;
 $$

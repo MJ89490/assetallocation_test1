@@ -44,11 +44,15 @@ ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_category_check" CHECK (category IN ('sovereign', 'swap', 'cr_swap'))
+ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_category_check" CHECK (category IN ('sovereign', 'swap', 'swap_cr'))
 ;
 
 /* Create Foreign Key Constraints */
 
 ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
+ALTER TABLE "curve"."ticker" ADD CONSTRAINT "ticker_values_key"
+	UNIQUE (category, mth3, yr1, yr2, yr3, yr4, yr5, yr6, yr7, yr8, yr9, yr10, yr15, yr20, yr30)
 ;

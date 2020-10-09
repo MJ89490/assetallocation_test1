@@ -1,7 +1,9 @@
 from collections import namedtuple
 
 from _pytest.fixtures import fixture
-
+from psycopg2.extras import DateTimeTZRange
+from psycopg2.tz import FixedOffsetTimezone
+import datetime as dt
 
 @fixture
 def valid_times():
@@ -19,6 +21,14 @@ def valid_effect():
                               'trend_indicator'])
     return EffectInput('Nominal', float(1), float(1), 0, 'weekly', True, 1, float(1), float(1), 1, 1, True,
                        'TotalReturn')
+
+
+@fixture
+def valid_fica():
+    FicaInput = namedtuple('FicaInput', ['description', 'coupon', 'curve', 'business_tstzrange', 'strategy_weights',
+                                         'tenor', 'trading_cost'])
+    return FicaInput('a', 1.0, 'e', DateTimeTZRange(dt.datetime(2020, 1, 1, tzinfo=FixedOffsetTimezone(offset=0, name=None)),
+                                                    dt.datetime(2020, 2, 2, tzinfo=FixedOffsetTimezone(offset=0, name=None)), bounds='[)'), [1, 2], 1, 1)
 
 
 @fixture

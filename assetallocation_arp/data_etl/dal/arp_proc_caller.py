@@ -152,7 +152,7 @@ class TimesProcCaller(ArpProcCaller):
         times = self._select_times_strategy(times_version)
 
         if times is not None:
-            times.assets = self.select_times_assets_with_analytics(times_version, business_datetime)
+            times.asset_inputs = self.select_times_assets_with_analytics(times_version, business_datetime)
 
         return times
 
@@ -258,7 +258,7 @@ class EffectProcCaller(ArpProcCaller):
         effect = self._select_effect_strategy(effect_version)
 
         if effect is not None:
-            effect.assets = self.select_effect_assets_with_analytics(effect_version, business_datetime)
+            effect.asset_inputs = self.select_effect_assets_with_analytics(effect_version, business_datetime)
 
         return effect
 
@@ -302,7 +302,8 @@ class FicaProcCaller(ArpProcCaller):
     def _insert_fica_assets(self, fica_version: int, fica_assets: List[FicaAssetInput]) -> bool:
         """Insert asset data for a version of Fica"""
         fica_assets = ArpTypeConverter.fica_assets_to_composite(fica_assets)
-        res = self.call_proc('arp.insert_fica_assets', [fica_version, fica_assets])
+        res = self.call_proc('arp.insert_fica_assets', [fica_version] + fica_assets)
+        # todo update database function to return asset ids
         asset_ids = res[0].get('asset_ids')
         return bool(asset_ids)
 
@@ -311,7 +312,7 @@ class FicaProcCaller(ArpProcCaller):
         fica = self._select_fica_strategy(fica_version)
 
         if fica is not None:
-            fica.assets = self._select_fica_assets(fica_version)
+            fica.asset_inputs = self._select_fica_assets(fica_version)
 
         return fica
 
@@ -331,7 +332,6 @@ class FicaProcCaller(ArpProcCaller):
     def _select_fica_assets(self, fica_version) -> Optional[List[FicaAssetInput]]:
         """Select asset data for a version of fica"""
         res = self.call_proc('arp.select_fica_assets', [fica_version])
-
         if not res:
             return
 
@@ -349,7 +349,7 @@ class FicaProcCaller(ArpProcCaller):
         fica = self._select_fica_strategy(fica_version)
 
         if fica is not None:
-            fica.assets = self.select_fica_assets_with_analytics(fica_version, business_datetime)
+            fica.asset_inputs = self.select_fica_assets_with_analytics(fica_version, business_datetime)
 
         return fica
 
@@ -370,3 +370,28 @@ class FicaProcCaller(ArpProcCaller):
             fica_assets.append(f)
 
         return fica_assets
+
+
+if __name__ == '__main__':
+    from psycopg2.extras import DateTimeTZRange
+    from assetallocation_arp.data_etl.dal.data_models.ticker import Ticker
+    import datetime as dt
+
+    f = Fica(2, 'a', DateTimeTZRange(), [1, 2, 3], 1, 1)
+    t1 = Ticker('sovereign', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a')
+    t2 = Ticker('swap', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a')
+    t3 = Ticker('swap_cr', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a')
+    fa = FicaAssetInput('EURUSD Curncy', t1, t2, t3)
+
+    f.asset_inputs = [fa]
+
+    fpc = FicaProcCaller()
+    f1 = fpc.select_fica_with_asset_analytics(42, dt.datetime(2000, 1, 1))
+    print(f1)
+    print(f1.coupon)
+    print(f1.asset_inputs)
+
+    for asset_input in f1.asset_inputs:
+        print(asset_input.name)
+        for i in asset_input.asset_analytics:
+            print(i.asset_ticker, i.business_datetime, i.value)

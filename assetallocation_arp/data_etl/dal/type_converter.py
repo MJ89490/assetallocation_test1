@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from datetime import datetime, date
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic,
@@ -71,10 +71,28 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def ticker_str_to_object(curve_ticker: str) -> Ticker:
-        # TODO
-        pass
+        """curve_ticker is a str of the format
+        '("{t.category.name}","{t.mth3}","{t.yr1}","{t.yr2}","{t.yr3}","{t.yr4}","{t.yr5}","{t.yr6}","{t.yr7}",' \
+        '"{t.yr8}","{t.yr9}","{t.yr10}","{t.yr15}","{t.yr20}","{t.yr30}")'
+        """
+        category, mth3, yr1, yr2, yr3, yr4, yr5, yr6, yr7, yr8, yr9, yr10, yr15, yr20, yr30 = (j.strip('\\"') for j in curve_ticker[1: -1].split(','))
+        return Ticker(category, mth3, yr1, yr2, yr3, yr4, yr5, yr6, yr7, yr8, yr9, yr10, yr15, yr20, yr30)
 
     @staticmethod
-    def fica_assets_to_composite(fica_assets: List[FicaAssetInput]) -> str:
-        # TODO
-        pass
+    def fica_assets_to_composite(fica_assets: List[FicaAssetInput]) -> List[List[str]]:
+        """Format sovereign, swap and swap_cr tickers to match database type curve.ticker_months_years[]"""
+        asset_tickers, sovereign_tickers, swap_tickers, swap_cr_tickers = [], [], [], []
+
+        for i in fica_assets:
+            asset_tickers.append(i.ticker)
+            sovereign_tickers.append(ArpTypeConverter._tickers_to_composite(i.sovereign_ticker))
+            swap_tickers.append(ArpTypeConverter._tickers_to_composite(i.swap_ticker))
+            swap_cr_tickers.append(ArpTypeConverter._tickers_to_composite(i.swap_cr_ticker))
+
+        return [asset_tickers, sovereign_tickers, swap_tickers, swap_cr_tickers]
+
+    @staticmethod
+    def _tickers_to_composite(t: Ticker) -> str:
+        """Format to match database type curve.ticker_months_years"""
+        return f'("{t.category.name}","{t.mth3}","{t.yr1}","{t.yr2}","{t.yr3}","{t.yr4}","{t.yr5}","{t.yr6}","{t.yr7}",' \
+               f'"{t.yr8}","{t.yr9}","{t.yr10}","{t.yr15}","{t.yr20}","{t.yr30}")'

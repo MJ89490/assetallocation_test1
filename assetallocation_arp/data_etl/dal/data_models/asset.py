@@ -127,7 +127,7 @@ class FicaAssetInput(Asset):
 
     @sovereign_ticker.setter
     def sovereign_ticker(self, x: Ticker) -> None:
-        if x.category.name == curve.Category['sovereign']:
+        if x.category.name == curve.Category.sovereign.name:
             self._sovereign_ticker = x
         else:
             raise TickerCategoryError('sovereign')
@@ -138,7 +138,7 @@ class FicaAssetInput(Asset):
 
     @swap_ticker.setter
     def swap_ticker(self, x: Ticker) -> None:
-        if x.category.name == curve.Category['swap']:
+        if x.category.name == curve.Category.swap.name:
             self._swap_ticker = x
         else:
             raise TickerCategoryError('swap')
@@ -149,7 +149,7 @@ class FicaAssetInput(Asset):
 
     @swap_cr_ticker.setter
     def swap_cr_ticker(self, x: Ticker) -> None:
-        if x.category.name == curve.Category['swap_cr']:
+        if x.category.name == curve.Category.swap_cr.name:
             self._swap_cr_ticker = x
         else:
             raise TickerCategoryError('swap_cr')
