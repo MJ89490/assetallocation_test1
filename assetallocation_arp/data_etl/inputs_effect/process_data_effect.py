@@ -155,19 +155,28 @@ class ProcessDataEffect:
         parse_data = self.parse_data_excel_effect()
 
         currencies_usd = pd.DataFrame({"currencies_usd_tickers": parse_data['spot_config']['currencies_spot_usd'] +
-                                                                 parse_data['carry_config']['currencies_carry_usd'] +
-                                                                 parse_data['3M_implied_config']['three_month_implied_usd'] +
-                                                                 parse_data['base_implied_config']['currencies_base_implied_usd']})
+                                                                 parse_data['carry_config']['currencies_carry_usd']})
 
         currencies_eur = pd.DataFrame({"currencies_eur_tickers": parse_data['spot_config']['currencies_spot_eur'] +
-                                                                 parse_data['carry_config']['currencies_carry_eur'] +
-                                                                 parse_data['3M_implied_config']['three_month_implied_eur'] +
-                                                                 parse_data['base_implied_config']['currencies_base_implied_eur']})
+                                                                 parse_data['carry_config']['currencies_carry_eur']})
 
-        self.data_currencies = self.obj_import_data.import_data_matlab()
+        implied_usd = pd.DataFrame(
+            {"currencies_usd_tickers": parse_data['3M_implied_config']['three_month_implied_usd'] +
+                                       parse_data['base_implied_config']['currencies_base_implied_usd']})
 
-        self.data_currencies_usd = self.data_currencies[currencies_usd.currencies_usd_tickers].loc[:]
-        self.data_currencies_eur = self.data_currencies[currencies_eur.currencies_eur_tickers].loc[:]
+        implied_eur = pd.DataFrame(
+            {"currencies_eur_tickers": parse_data['3M_implied_config']['three_month_implied_eur'] +
+                                       parse_data['base_implied_config']['currencies_base_implied_eur']})
+
+        self.data_currencies = self.obj_import_data.import_data_matlab('na')
+        data_currencies_average = self.obj_import_data.import_data_matlab('average')
+
+        self.data_currencies_usd = pd.concat([self.data_currencies[currencies_usd.currencies_usd_tickers].loc[:],
+                                              data_currencies_average[implied_usd.currencies_usd_tickers].loc[:]],
+                                             axis=1)
+        self.data_currencies_eur = pd.concat([self.data_currencies[currencies_eur.currencies_eur_tickers].loc[:],
+                                              data_currencies_average[implied_eur.currencies_eur_tickers].loc[:]],
+                                             axis=1)
 
         # SPXT Index
         spxt_index_values = self.data_currencies[parse_data['spxt_index_config']]
