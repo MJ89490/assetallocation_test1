@@ -17,8 +17,9 @@ from assetallocation_arp.data_etl.inputs_effect.import_data_effect import Import
 
 class ProcessDataEffect:
 
-    def __init__(self, asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, all_data):
-        self.obj_import_data = ImportDataEffect(frequency_mat=frequency_mat, start_date_mat=start_date_mat, end_date_mat=end_date_mat, signal_day_mat=signal_day_mat, all_data=all_data)
+    def __init__(self, asset_inputs, frequency_mat, end_date_mat, signal_day_mat, all_data):
+        self.obj_import_data = ImportDataEffect(frequency_mat=frequency_mat, end_date_mat=end_date_mat,
+                                                signal_day_mat=signal_day_mat, all_data=all_data)
 
         self.data_currencies = pd.DataFrame()
         self.data_currencies_usd = pd.DataFrame()
@@ -117,8 +118,8 @@ class ProcessDataEffect:
 
     @property
     def previous_start_date_calc(self):
-        start_current_date_index_loc = self.obj_import_data.data_currencies_no_start_date.index.get_loc(self.start_date_calculations)
-        return self.obj_import_data.data_currencies_no_start_date.index[start_current_date_index_loc - 1]
+        start_current_date_index_loc = self.obj_import_data.data_currencies_copy.index.get_loc(self.start_date_calculations)
+        return self.obj_import_data.data_currencies_copy.index[start_current_date_index_loc - 1]
 
     @staticmethod
     def find_date(dates_set, pivot):
@@ -155,18 +156,16 @@ class ProcessDataEffect:
         parse_data = self.parse_data_excel_effect()
 
         currencies_usd = pd.DataFrame({"currencies_usd_tickers": parse_data['spot_config']['currencies_spot_usd'] +
-                                                                 parse_data['carry_config']['currencies_carry_usd']})
+                                       parse_data['carry_config']['currencies_carry_usd']})
 
         currencies_eur = pd.DataFrame({"currencies_eur_tickers": parse_data['spot_config']['currencies_spot_eur'] +
-                                                                 parse_data['carry_config']['currencies_carry_eur']})
+                                       parse_data['carry_config']['currencies_carry_eur']})
 
-        implied_usd = pd.DataFrame(
-            {"currencies_usd_tickers": parse_data['3M_implied_config']['three_month_implied_usd'] +
-                                       parse_data['base_implied_config']['currencies_base_implied_usd']})
+        implied_usd = pd.DataFrame({"currencies_usd_tickers": parse_data['3M_implied_config']['three_month_implied_usd']
+                                    + parse_data['base_implied_config']['currencies_base_implied_usd']})
 
-        implied_eur = pd.DataFrame(
-            {"currencies_eur_tickers": parse_data['3M_implied_config']['three_month_implied_eur'] +
-                                       parse_data['base_implied_config']['currencies_base_implied_eur']})
+        implied_eur = pd.DataFrame({"currencies_eur_tickers": parse_data['3M_implied_config']['three_month_implied_eur']
+                                    + parse_data['base_implied_config']['currencies_base_implied_eur']})
 
         self.data_currencies = self.obj_import_data.import_data_matlab('na')
         data_currencies_average = self.obj_import_data.import_data_matlab('average')
@@ -177,7 +176,6 @@ class ProcessDataEffect:
         self.data_currencies_eur = pd.concat([self.data_currencies[currencies_eur.currencies_eur_tickers].loc[:],
                                               data_currencies_average[implied_eur.currencies_eur_tickers].loc[:]],
                                              axis=1)
-
         # SPXT Index
         spxt_index_values = self.data_currencies[parse_data['spxt_index_config']]
 

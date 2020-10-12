@@ -43,7 +43,6 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     obj_import_data = ComputeCurrencies(asset_inputs=asset_inputs,
                                         bid_ask_spread=strategy_inputs['Bid-ask spread (bp)'].item(),
                                         frequency_mat=strategy_inputs['Frequency'].item(),
-                                        start_date_mat=strategy_inputs['StartDate'].item(),
                                         end_date_mat=strategy_inputs['latest signal date'].item(),
                                         signal_day_mat=strategy_inputs['SignalDay'].item(), all_data=all_data)
     spx_index_values = obj_import_data.process_data_effect()
@@ -137,7 +136,6 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                                                      asset_inputs=asset_inputs,
                                                                      end_date_mat=strategy_inputs['latest signal date'].item(),
                                                                      frequency_mat=strategy_inputs['Frequency'].item(),
-                                                                     start_date_mat=strategy_inputs['StartDate'].item(),
                                                                      signal_day_mat=strategy_inputs['SignalDay'].item(),
                                                                      all_data=all_data)
     obj_compute_warning_flags_overview.process_data_effect()

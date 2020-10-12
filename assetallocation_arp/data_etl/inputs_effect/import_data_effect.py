@@ -13,13 +13,12 @@ from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import
 
 class ImportDataEffect:
 
-    def __init__(self, end_date_mat, start_date_mat, frequency_mat, signal_day_mat, all_data):
+    def __init__(self, end_date_mat, frequency_mat, signal_day_mat, all_data):
         self.data_currencies = pd.DataFrame()
         self.data_currencies_copy = pd.DataFrame()
         self.data_currencies_no_end_date = pd.DataFrame()
         self.data_currencies_no_start_date = pd.DataFrame()
         self.frequency_mat = frequency_mat
-        self.start_date_mat = start_date_mat
         self.signal_day_mat = signal_day_mat
         self.end_date_mat = end_date_mat
         self.all_data = all_data
@@ -31,14 +30,6 @@ class ImportDataEffect:
     @frequency_mat.setter
     def frequency_mat(self, value):
         self._frequency_mat = value
-
-    @property
-    def start_date_mat(self):
-        return self._start_date_mat
-
-    @start_date_mat.setter
-    def start_date_mat(self, value):
-        self._start_date_mat = value
 
     @property
     def end_date_mat(self):
@@ -64,15 +55,11 @@ class ImportDataEffect:
 
         self.data_currencies = self.all_data
 
-        self.data_currencies = self.data_currencies.loc[self.start_date_mat:self.end_date_mat]
+        self.data_currencies = self.data_currencies.loc[:self.end_date_mat]
 
-        self.data_currencies_no_start_date = set_data_frequency(self.all_data, self.frequency_mat, self.signal_day_mat) # Anais will remove this line
-
-        self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat,
-                                                  calculation_type)
+        self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat, calculation_type)
 
         last_date = pd.to_datetime(self.data_currencies.index.values[-1], format='%d-%m-%Y')
-
         next_date = self.add_next_date(self.frequency_mat, last_date)
         next_date_values = [0] * self.data_currencies.shape[1]
 

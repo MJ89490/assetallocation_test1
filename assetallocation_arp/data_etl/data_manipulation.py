@@ -14,10 +14,10 @@ def set_data_frequency(data, freq, week_day='SUN', calculation_type='na'):
     if freq == frequency.Frequency.monthly.name:
         data = data.reindex()
         if calculation_type == 'average':
-            rng = data.resample('M').mean()
+            sig = data.resample('M').mean()
         else:
             rng = pd.date_range(start=data.index[0], end=data.index[-1], freq='M')
-        sig = data.reindex(rng, method='pad')
+            sig = data.reindex(rng, method='pad')
     elif freq == frequency.Frequency.weekly.name:
         data = data.reindex()
         if calculation_type == 'average':

@@ -12,8 +12,8 @@ from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import
 
 class ComputeWarningFlagsOverview(ProcessDataEffect):
 
-    def __init__(self, latest_signal_date, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, asset_inputs, all_data):
-        super().__init__(asset_inputs, frequency_mat, start_date_mat, end_date_mat, signal_day_mat, all_data)
+    def __init__(self, latest_signal_date, frequency_mat, end_date_mat, signal_day_mat, asset_inputs, all_data):
+        super().__init__(asset_inputs, frequency_mat, end_date_mat, signal_day_mat, all_data)
         self.latest_signal_date = latest_signal_date
         self.frequency = frequency_mat
 
