@@ -77,14 +77,17 @@ class ComputeInflationDifferential:
 
         # We have to shift by one each year because for each current date,
         # we have to take the previous year to compute the inflation differential
-        years_zero_inflation = pd.DataFrame(inflation_release[CurrencySpot.Inflation_Release.name].index.year,
-                                            columns=['Years']).shift(1).set_index(self.dates_index).iloc[1:]
+        years_zero_inflation = pd.DataFrame(inflation_release[CurrencySpot.Inflation_Release.name].index.year,).shift(1).set_index(self.dates_index).iloc[1:]
+        years_zero_inflation.columns = ['Years']
+        #
+        # years_zero_inflation = pd.DataFrame(inflation_release[CurrencySpot.Inflation_Release.name].index.year,
+        #                                     columns=['Years']).shift(1).set_index(self.dates_index).iloc[1:]
         years_zero_inflation = years_zero_inflation.astype('int64')
 
         # We have to shift by one each month because for each current date,
         # we have to take the previous month to compute the inflation differential
-        months_inflation = pd.DataFrame(inflation_release[CurrencySpot.Inflation_Release.name].index.month,
-                                        columns=['Months']).shift(1).set_index(self.dates_index).iloc[1:]
+        months_inflation = pd.DataFrame(inflation_release[CurrencySpot.Inflation_Release.name].index.month,).shift(1).set_index(self.dates_index).iloc[1:]
+        months_inflation.columns = ['Months']
         months_inflation = months_inflation.astype('int64')
 
         inflation_release = inflation_release.set_index(self.dates_index).shift(1).iloc[1:]

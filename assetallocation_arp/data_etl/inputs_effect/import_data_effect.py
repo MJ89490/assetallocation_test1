@@ -70,7 +70,10 @@ class ImportDataEffect:
 
         self.data_currencies = set_data_frequency(self.data_currencies, self.frequency_mat, self.signal_day_mat)
 
-        next_date_values, next_date = self.add_next_date(self.frequency_mat)
+        last_date = pd.to_datetime(self.data_currencies.index.values[-1], format='%d-%m-%Y')
+
+        next_date = self.add_next_date(self.frequency_mat, last_date)
+        next_date_values = [0] * self.data_currencies.shape[1]
 
         self.data_currencies_copy = self.data_currencies.copy()
 
@@ -78,7 +81,8 @@ class ImportDataEffect:
 
         return self.data_currencies_copy
 
-    def add_next_date(self, frequency):
+    @staticmethod
+    def add_next_date(frequency, last_date):
         """
         Function adding the next day from the last day in the data_currencies dataFrame
         That is mandatory for combo, trend and carry for the Signals overview
@@ -87,17 +91,19 @@ class ImportDataEffect:
 
         obj_compute_uk_working_days = ComputeWorkingDays1D2D()
 
-        last_date = pd.to_datetime(self.data_currencies.index.values[-1], format='%d-%m-%Y')
-
         if frequency == 'weekly':
             next_date = pd.to_datetime(last_date + timedelta(days=7), format='%d-%m-%Y')
         elif frequency == 'daily':
-            next_date = pd.to_datetime(last_date + timedelta(days=1), format='%d-%m-%Y')
+            # Friday
+            if last_date.weekday() == 4:
+                next_date = pd.to_datetime(last_date + timedelta(days=3), format='%d-%m-%Y')
+            else:
+                next_date = pd.to_datetime(last_date + timedelta(days=1), format='%d-%m-%Y')
         else:
             dates = []
-            y, m = last_date.year, (last_date + relativedelta(months=1)).month
+            y, m = (last_date + relativedelta(months=1)).year, (last_date + relativedelta(months=1)).month
             for d in range(1, calendar.monthrange(y, m)[1] + 1):
-                tmp_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+                tmp_date = pd.to_datetime('{:02d}-{:02d}-{:04d}'.format(d, m, y), format='%d-%m-%Y')
                 if tmp_date.weekday() <= 4:
                     dates.append(tmp_date)
             next_date = dates[-1]
@@ -106,4 +112,5 @@ class ImportDataEffect:
         working_date = obj_compute_uk_working_days.convert_to_working_date_uk(next_date)
 
         # Set the new date with values equal to zero
-        return [0] * self.data_currencies.shape[1], pd.to_datetime(working_date, format='%Y-%m-%d')
+        return pd.to_datetime(working_date, format='%Y-%m-%d')
+

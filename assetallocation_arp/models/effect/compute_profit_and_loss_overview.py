@@ -64,12 +64,12 @@ class ComputeProfitAndLoss:
         return pd.DataFrame(profit_and_loss_carry)[0]
 
     @staticmethod
-    def get_the_last_day_of_year(y, m, frequency, signal_day):
+    def get_the_last_day_of_previous_year(y, m, frequency, signal_day):
         days = []
         days_num = {'MON': 0, 'TUE': 1, 'WED': 2, 'THU': 3, 'FRI': 4}
 
         for d in range(1, monthrange(y, m)[1] + 1):
-            current_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+            current_date = pd.to_datetime('{:02d}-{:02d}-{:04d}'.format(d, m, y), format='%d-%m-%Y')
             if frequency == 'weekly' or frequency == 'daily':
                 if current_date.weekday() == days_num[signal_day]:
                     days.append(current_date)
@@ -95,7 +95,7 @@ class ComputeProfitAndLoss:
 
         last_year = (self.latest_date - pd.DateOffset(years=1)).year
         last_month = 12
-        last_day = self.get_the_last_day_of_year(last_year, last_month, self.frequency, signal_day)
+        last_day = self.get_the_last_day_of_previous_year(last_year, last_month, self.frequency, signal_day)
 
         # YTD P&L:: Total (Returns)
         numerator_returns = total_incl_signals.loc[self.latest_date].values[0]
@@ -135,7 +135,7 @@ class ComputeProfitAndLoss:
         y, m = first_day_of_year.year, first_day_of_year.month
 
         for d in range(1, monthrange(y, m)[1] + 1):
-            current_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+            current_date = pd.to_datetime('{:02d}-{:02d}-{:04d}'.format(d, m, y), format='%d-%m-%Y')
             # We are checking if the first day of the year is not a weekend
             if current_date.weekday() <= 4:
                     days.append(current_date)

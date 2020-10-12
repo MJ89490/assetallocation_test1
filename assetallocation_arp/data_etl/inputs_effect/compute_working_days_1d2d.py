@@ -8,6 +8,7 @@ description: working days library for the 1D and 2D model
 import QuantLib as ql
 import datetime as dt
 import pandas as pd
+from datetime import timedelta
 
 
 class ComputeWorkingDays1D2D:
@@ -79,4 +80,5 @@ class ComputeWorkingDays1D2D:
         ql_date = uk_calendar.advance(ql_date, ql.Period(1, ql.Days))
         ql_date = uk_calendar.advance(ql_date, ql.Period(-1, ql.Days))
         dt_date = ComputeWorkingDays1D2D.ql_to_dt(ql_date)
+
         return dt_date

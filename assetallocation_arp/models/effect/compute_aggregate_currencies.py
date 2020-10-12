@@ -228,7 +228,6 @@ class ComputeAggregateCurrencies:
         """
         write_logs_effect("Computing weighted performance...", "logs_weighted_perf")
 
-        log_returns_excl = log_returns_excl
         # We remove two lines to fit with log_returns_excl. It is due to the shift(1) in log_returns_excl
         # and to combo calculations with the first value set to 100
         combo = combo_curr.iloc[1:]
@@ -239,7 +238,8 @@ class ComputeAggregateCurrencies:
         for values_combo, values_log in zip(combo.values, log_returns_excl.values):
             tmp = []
             for value_combo, value_log in zip(values_combo, values_log):
-                tmp.append(value_combo * value_log)
+                tmp.append(np.nanprod(value_combo * value_log))
+
             sum_prod.append(sum(tmp))
 
         for value_weight in range(len(sum_prod)):

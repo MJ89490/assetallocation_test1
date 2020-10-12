@@ -23,17 +23,16 @@ class ComputeWarningFlagsOverview(ProcessDataEffect):
         obj_compute_uk_working_days = ComputeWorkingDays1D2D()
         if self.frequency == 'weekly' or self.frequency == 'daily':
             prev_7_days_date = self.latest_signal_date - datetime.timedelta(days=7)
+            return obj_compute_uk_working_days.convert_to_working_date_uk(prev_7_days_date)
         else:
             # Get the previous month
             days = []
             y, m = self.latest_signal_date.year, (self.latest_signal_date - relativedelta(months=1)).month
             for d in range(1, monthrange(y, m)[1] + 1):
-                tmp_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
+                tmp_date = pd.to_datetime('{:02d}-{:02d}-{:04d}'.format(d, m, y), format='%d-%m-%Y')
                 if tmp_date.weekday() <= 4:
                     days.append(tmp_date)
-            prev_7_days_date = days[-1]
-
-        return obj_compute_uk_working_days.convert_to_working_date_uk(prev_7_days_date)
+            return days[-1]
 
     def compute_warning_flags_rates(self):
         """
