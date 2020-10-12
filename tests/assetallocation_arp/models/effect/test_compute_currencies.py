@@ -21,7 +21,6 @@ del all_data['Date']
 obj_import_data = ComputeCurrencies(asset_inputs=asset_inputs,
                                     bid_ask_spread=10,
                                     frequency_mat='weekly',
-                                    start_date_mat='06/01/1999',
                                     end_date_mat='23/09/2020',
                                     signal_day_mat='WED', all_data=all_data)
 spx_index_values = obj_import_data.process_data_effect()
@@ -41,14 +40,13 @@ inflation_differential = obj_inflation_differential.compute_inflation_differenti
 
 carry_inputs = {'type': 'real', 'inflation': inflation_differential}
 trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
-combo_inputs = combo_inputs = {'cut_off': 0.02 * 100, 'incl_shorts': 'Yes', 'cut_off_s': 0.00 * 100, 'threshold': 0.025 * 100}
+combo_inputs = {'cut_off': 0.02 * 100, 'incl_shorts': 'Yes', 'cut_off_s': 0.00 * 100, 'threshold': 0.025 * 100}
 
 currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
 
 # currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
-print()
 def test_compute_carry():
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "carry_brl_origin.csv"))
     carry_origin = pd.read_csv(path_origin, sep=',', engine='python')
