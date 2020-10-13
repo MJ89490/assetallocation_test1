@@ -41,6 +41,9 @@ class ProcessDataEffect:
         self.asset_inputs = asset_inputs
         self.currencies_spot, self.currencies_carry = dict(), dict()
         self.currencies_3M_implied, self.currencies_base_implied_usd = dict(), dict()
+        self.weight_percentage_usd = pd.DataFrame()
+        self.weight_percentage_eur = pd.DataFrame()
+
 
     @property
     def currencies_spot(self):
@@ -186,9 +189,8 @@ class ProcessDataEffect:
         return spxt_index_values
 
     def parse_data_excel_effect(self):
-
         """
-        Function parsing the data from the config file
+        Function parsing the data from the config file and from excel
         :return: a dictionary
         """
         # Instantiate ConfigParser
@@ -210,6 +212,12 @@ class ProcessDataEffect:
 
         self.currencies_3M_implied['three_month_implied_usd'] = currencies_usd['3M implied ticker'].tolist()
         self.currencies_3M_implied['three_month_implied_eur'] = currencies_eur['3M implied ticker'].tolist()
+
+        weight_usd = list(currencies_usd['Weight on USD'].apply(lambda x: x * 100))
+        weight_eur = list(currencies_eur['Weight on USD'].apply(lambda x: x * 100))
+
+        self.weight_percentage_usd = pd.DataFrame(weight_usd, index=list(currencies_usd['Spot ticker'])).transpose()
+        self.weight_percentage_eur = pd.DataFrame(weight_eur, index=list(currencies_eur['Spot ticker'])).transpose()
 
         # SPX Index
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
