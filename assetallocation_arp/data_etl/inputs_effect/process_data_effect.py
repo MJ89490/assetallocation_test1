@@ -152,13 +152,13 @@ class ProcessDataEffect:
 
         return t_start
 
-    def process_data_effect(self):
+    def process_all_data_effect(self):
         """
         Function processing data from the matlab file to get the required data
         :return: two dataFrames self.data_currencies_usd, self.data_currencies_eur for usd and eur currencies
         """
 
-        parse_data = self.parse_data_excel_effect()
+        parse_data = self.parse_data_config_excel_effect()
 
         currencies_usd = pd.DataFrame({"currencies_usd_tickers": parse_data['spot_config']['currencies_spot_usd'] +
                                        parse_data['carry_config']['currencies_carry_usd']})
@@ -182,13 +182,11 @@ class ProcessDataEffect:
                                               data_currencies_average[implied_eur.currencies_eur_tickers].loc[:]],
                                              axis=1)
         # SPXT Index
-        spxt_index_values = self.data_currencies[parse_data['spxt_index_config']]
+        # spxt_index_values = self.data_currencies[parse_data['spxt_index_config']]
 
-        self.process_data_config_effect()
+        self.process_usd_eur_data_effect()
 
-        return spxt_index_values
-
-    def parse_data_excel_effect(self):
+    def parse_data_config_excel_effect(self):
         """
         Function parsing the data from the config file and from excel
         :return: a dictionary
@@ -234,13 +232,13 @@ class ProcessDataEffect:
 
         return config_data
 
-    def process_data_config_effect(self):
+    def process_usd_eur_data_effect(self):
         """
         Function processing the data from the config file
         :return: dataFrames for spot and carry
         """
 
-        assets_table = self.parse_data_excel_effect()
+        assets_table = self.parse_data_config_excel_effect()
 
         self.three_month_implied_usd = self.data_currencies_usd[assets_table['3M_implied_config']['three_month_implied_usd']]
         self.three_month_implied_eur = self.data_currencies_eur[assets_table['3M_implied_config']['three_month_implied_eur']]
@@ -256,7 +254,9 @@ class ProcessDataEffect:
 
         self.eur_usd_cr = self.data_currencies[assets_table['eur_usd_cr_config']]
 
+        spxt_index_values = self.data_currencies[assets_table['spxt_index_config']]
+
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
-        return common_spot, common_carry
+        return common_spot, common_carry, spxt_index_values
