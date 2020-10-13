@@ -14,6 +14,7 @@ from assetallocation_arp.data_etl.inputs_effect.import_data_effect import Import
     Class to process data from matlab file
 """
 
+#TODO SIMPLIFY THE CLASS
 
 class ProcessDataEffect:
 
@@ -33,6 +34,7 @@ class ProcessDataEffect:
         self.carry_eur = pd.DataFrame()
         self.base_implied_usd = pd.DataFrame()
         self.base_implied_eur = pd.DataFrame()
+        self.eur_usd_cr = pd.DataFrame()
 
         self.start_date_calculations = ''
 
@@ -212,11 +214,15 @@ class ProcessDataEffect:
         # SPX Index
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
 
+        # EURUSDCR Curncy
+        eur_usd_cr_config = config.get('EURUSDCR Currency', 'eur_usd_cr_ticker')
+
         config_data = {'spot_config': self.currencies_spot,
                        'carry_config': self.currencies_carry,
                        'base_implied_config': currencies_base_implied_config,
                        '3M_implied_config': self.currencies_3M_implied,
-                       'spxt_index_config': spxt_index_config}
+                       'spxt_index_config': spxt_index_config,
+                       'eur_usd_cr_config': eur_usd_cr_config}
 
         return config_data
 
@@ -239,6 +245,8 @@ class ProcessDataEffect:
 
         self.base_implied_usd = self.data_currencies_usd[assets_table['base_implied_config']['currencies_base_implied_usd']]
         self.base_implied_eur = self.data_currencies_eur[assets_table['base_implied_config']['currencies_base_implied_eur']]
+
+        self.eur_usd_cr = self.data_currencies[assets_table['eur_usd_cr_config']]
 
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
