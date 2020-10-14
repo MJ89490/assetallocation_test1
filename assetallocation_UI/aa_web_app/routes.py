@@ -73,9 +73,9 @@ def receive_times_data():
         times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
                       short_signals, int(t['lag']), int(t['volwindow']))
         print(times)
-        # times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
-        #                       zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-        # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+        times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
+                              zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
+        fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
         return json.dumps({'status': 'OK'})
 
 
