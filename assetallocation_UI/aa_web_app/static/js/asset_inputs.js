@@ -155,16 +155,18 @@ function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, fre
                                    "signalonelong": signalonelong, "signaltwoshort": signaltwoshort,
                                    "signaltwolong":signaltwolong,"signalthreeshort": signalthreeshort,
                                    "signalthreelong": signalthreelong });
+
     console.log(jsonData);
     $.ajax({
       type : 'POST',
-      url : '/receive_times_data',
+      url : "/receive_times_data",
       data : jsonData,
-      contentType : 'application/json',
-      dataType: 'JSON',
+      contentType : "application/json",
+      dataType: "JSON",
       success: function(response) {
-               console.log(response);
-               window.location.href = "https://www.elle.com/uk/";}
+                console.log(response);
+                window.location.href = "/times_dashboard"
+            }
     });
 
 

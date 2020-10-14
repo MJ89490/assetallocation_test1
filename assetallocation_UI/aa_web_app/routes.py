@@ -59,16 +59,27 @@ def times_dashboard():
 
 @app.route('/receive_times_data', methods=['POST'])
 def receive_times_data():
-
-    #TODO SEPARER RUN MODEL ET VERSION COMME CA ON MET TOUT ICI!
-    import json
     if request.method == "POST":
-        #TODO write data in the database directly because it is directly linked to the runmodel button
 
-
-        data = request.data
-        print(data)
+        t = request.get_json()
+        print(t)
+        fund_name = t['fund']
+        print(fund_name)
+        long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+        print(long_signals)
+        short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+        print(short_signals)
+        print(short_signals)
+        times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
+                      short_signals, int(t['lag']), int(t['volwindow']))
+        print(times)
+        # times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
+        #                       zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
+        # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
         return json.dumps({'status': 'OK'})
+
+
+
 
 # @app.route('/received_data_run_model', methods=['POST'])
 # def received_data_run_model():
@@ -79,16 +90,10 @@ def receive_times_data():
 #     # t = request.get_json()
 #     t = request.json
 #     print(t)
-#     from flask import jsonify
-#     resp = jsonify(success=True)
-#     return resp
-#     # return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-#
-#
+
 # @app.route('/received_data_run_model_get', methods=['GET'])
 # def received_data_run_model_get():
 #     form = InputsTimesModel()
-#     render_template('times_dashboard.html', form=form, title='Dashboard')
 
     # if request.method == 'POST':
     #     # t = json.loads(request.data)
@@ -104,9 +109,6 @@ def receive_times_data():
     #     render_template('times_dashboard.html', form=form, title='Dashboard')
         # print(long_signals)
         # print(short_signals)
-        # render_template('times_dashboard.html', form=form, title='Dashboard')
-
-
 
         # times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
         #               short_signals, int(t['lag']), int(t['volwindow']))
