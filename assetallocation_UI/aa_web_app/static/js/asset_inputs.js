@@ -163,7 +163,7 @@ function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, fre
       contentType : 'application/json',
       dataType: 'JSON',
       success: function(response) {
-      window.location.href = "/received_data_run_model_get";}
+      window.location.href = "https://www.elle.com/uk/";}
     });
 
     return jsonData
