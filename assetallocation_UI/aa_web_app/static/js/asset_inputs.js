@@ -158,13 +158,16 @@ function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, fre
     console.log(jsonData);
     $.ajax({
       type : 'POST',
-      url : '/received_data_run_model',
+      url : '/receive_times_data',
       data : jsonData,
       contentType : 'application/json',
       dataType: 'JSON',
       success: function(response) {
-      window.location.href = "https://www.elle.com/uk/";}
+               console.log(response);
+               window.location.href = "https://www.elle.com/uk/";}
     });
+
+
 
     return jsonData
 

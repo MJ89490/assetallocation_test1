@@ -57,25 +57,38 @@ def times_dashboard():
     return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
-@app.route('/received_data_run_model', methods=['POST'])
-def received_data_run_model():
-    #TODO convert this route into API (1): nicer solution
-    #TODO AJAX request: successfull = take the data and redirect to dashboard (2)
-    #There are 2 solutions
-    # form = InputsTimesModel()
-    # t = request.get_json()
-    t = request.json
-    print(t)
-    from flask import jsonify
-    resp = jsonify(success=True)
-    return resp
-    # return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+@app.route('/receive_times_data', methods=['POST'])
+def receive_times_data():
+
+    #TODO SEPARER RUN MODEL ET VERSION COMME CA ON MET TOUT ICI!
+    import json
+    if request.method == "POST":
+        #TODO write data in the database directly because it is directly linked to the runmodel button
 
 
-@app.route('/received_data_run_model_get', methods=['GET'])
-def received_data_run_model_get():
-    form = InputsTimesModel()
-    render_template('times_dashboard.html', form=form, title='Dashboard')
+        data = request.data
+        print(data)
+        return json.dumps({'status': 'OK'})
+
+# @app.route('/received_data_run_model', methods=['POST'])
+# def received_data_run_model():
+#     #TODO convert this route into API (1): nicer solution
+#     #TODO AJAX request: successfull = take the data and redirect to dashboard (2)
+#     #There are 2 solutions
+#     # form = InputsTimesModel()
+#     # t = request.get_json()
+#     t = request.json
+#     print(t)
+#     from flask import jsonify
+#     resp = jsonify(success=True)
+#     return resp
+#     # return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+#
+#
+# @app.route('/received_data_run_model_get', methods=['GET'])
+# def received_data_run_model_get():
+#     form = InputsTimesModel()
+#     render_template('times_dashboard.html', form=form, title='Dashboard')
 
     # if request.method == 'POST':
     #     # t = json.loads(request.data)
