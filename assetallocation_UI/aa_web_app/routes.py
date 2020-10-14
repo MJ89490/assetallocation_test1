@@ -28,6 +28,7 @@ from .userIdentification import random_identification
 # TODO check with Jess for dashboard regarding inputs in the sidebar + see with her how it works
 # TODO change the names in asset_inputs.py (name convention)
 
+
 @app.route('/')
 def home():
     return render_template('home_new.html', title='HomePage')
@@ -47,27 +48,50 @@ def times_model():
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
 
-@app.route('/received_data_run_model',  methods=['POST'])
+@app.route('/times_dashboard',  methods=['GET', 'POST'])
+def times_dashboard():
+    form = InputsTimesModel()
+    # form = ExportDataForm()
+    # template_data = main_data('f1', 1)
+
+    return render_template('times_dashboard.html', form=form, title='Dashboard')
+
+
+@app.route('/received_data_run_model', methods=['POST'])
 def received_data_run_model():
     #TODO convert this route into API (1): nicer solution
     #TODO AJAX request: successfull = take the data and redirect to dashboard (2)
     #There are 2 solutions
+    # form = InputsTimesModel()
+    # t = request.get_json()
+    t = request.json
+    print(t)
+    from flask import jsonify
+    resp = jsonify(success=True)
+    return resp
+    # return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+
+@app.route('/received_data_run_model_get', methods=['GET'])
+def received_data_run_model_get():
     form = InputsTimesModel()
-    if request.method == 'POST':
-        from flask import jsonify
-        # t = json.loads(request.data)
-        t = request.get_json()
-        print(t)
-        # t = request.data
+    render_template('times_dashboard.html', form=form, title='Dashboard')
 
-        fund_name = t['fund']
-        # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-        # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-
-        print(fund_name)
+    # if request.method == 'POST':
+    #     # t = json.loads(request.data)
+    #     t = request.get_json()
+    #     print(t)
+    #     # t = request.data
+    #
+    #     fund_name = t['fund']
+    #     # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+    #     # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+    #
+    #     print(fund_name)
+    #     render_template('times_dashboard.html', form=form, title='Dashboard')
         # print(long_signals)
         # print(short_signals)
-
+        # render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
 
@@ -79,16 +103,11 @@ def received_data_run_model():
         #
         # return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
         # return redirect(url_for('times_dashboard'))
-    return render_template('times_model_mirror.html', form=form, title='TimesPage')
+
+    # return render_template('times_model_mirror.html', form=form, title='TimesPage')
 
 
-@app.route('/times_dashboard',  methods=['GET', 'POST'])
-def times_dashboard():
-    form = InputsTimesModel()
-    # form = ExportDataForm()
-    # template_data = main_data('f1', 1)
 
-    return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
