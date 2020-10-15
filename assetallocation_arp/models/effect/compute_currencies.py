@@ -223,7 +223,7 @@ class ComputeCurrencies(ProcessDataEffect):
             else:
                 carry_division_tmp = (self.carry_eur.loc[tmp_start_computations:, currency_carry] /
                                       self.carry_eur.loc[tmp_start_computations:, currency_carry].shift(1))
-                bool_base_currency = 1 - self.weight_percentage_eur[currency_spot].item() / 100
+                bool_base_currency = 1 - (self.weight_percentage_eur[currency_spot].item() / 100)
 
             # EURUSDCR Currency
             eur_usd_cr_tmp = (self.eur_usd_cr.loc[tmp_start_computations:] / self.eur_usd_cr.loc[tmp_start_computations:].shift(1)).iloc[1:].tolist()
