@@ -14,7 +14,6 @@ from assetallocation_arp.data_etl.inputs_effect.import_data_effect import Import
     Class to process data from matlab file
 """
 
-#TODO SIMPLIFY THE CLASS
 
 class ProcessDataEffect:
 
@@ -43,7 +42,6 @@ class ProcessDataEffect:
         self.currencies_3M_implied, self.currencies_base_implied_usd = dict(), dict()
         self.weight_percentage_usd = pd.DataFrame()
         self.weight_percentage_eur = pd.DataFrame()
-
 
     @property
     def currencies_spot(self):
@@ -181,8 +179,6 @@ class ProcessDataEffect:
         self.data_currencies_eur = pd.concat([self.data_currencies[currencies_eur.currencies_eur_tickers].loc[:],
                                               data_currencies_average[implied_eur.currencies_eur_tickers].loc[:]],
                                              axis=1)
-        # SPXT Index
-        # spxt_index_values = self.data_currencies[parse_data['spxt_index_config']]
 
         self.process_usd_eur_data_effect()
 
@@ -259,4 +255,4 @@ class ProcessDataEffect:
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
-        return common_spot, common_carry, spxt_index_values
+        return common_spot, common_carry, spxt_index_values, self.three_month_implied_usd, self.three_month_implied_eur

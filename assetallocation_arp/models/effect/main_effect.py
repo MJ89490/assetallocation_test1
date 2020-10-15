@@ -47,7 +47,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                         signal_day_mat=strategy_inputs['SignalDay'].item(), all_data=all_data)
     obj_import_data.process_all_data_effect()
     obj_import_data.start_date_calculations = user_date
-    spot_origin, carry_origin, spx_index_values = obj_import_data.process_usd_eur_data_effect()
+    spot_origin, carry_origin, spx_index_values,  three_month_implied_usd, three_month_implied_eur = obj_import_data.process_usd_eur_data_effect()
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
@@ -133,13 +133,11 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
-                                                                     asset_inputs=asset_inputs,
-                                                                     end_date_mat=strategy_inputs['latest signal date'].item(),
-                                                                     frequency_mat=strategy_inputs['Frequency'].item(),
-                                                                     signal_day_mat=strategy_inputs['SignalDay'].item(),
-                                                                     all_data=all_data)
-    obj_compute_warning_flags_overview.process_data_effect()
-    rates = obj_compute_warning_flags_overview.compute_warning_flags_rates()
+
+                                                                     frequency_mat=strategy_inputs['Frequency'].item()
+                                                                     )
+
+    rates = obj_compute_warning_flags_overview.compute_warning_flags_rates(three_month_implied_usd, three_month_implied_eur)
 
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                            EFFECT RISK RETURN CALCULATIONS                                       #

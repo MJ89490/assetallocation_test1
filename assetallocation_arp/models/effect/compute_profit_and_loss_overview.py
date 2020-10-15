@@ -98,8 +98,8 @@ class ComputeProfitAndLoss:
         last_day = self.get_the_last_day_of_previous_year(last_year, last_month, self.frequency, signal_day)
 
         # YTD P&L:: Total (Returns)
-        numerator_returns = total_incl_signals.loc[self.latest_date].values[0]
-        denominator_returns = total_incl_signals.loc[last_day].values[0]
+        numerator_returns = total_incl_signals.loc[self.latest_date].item()
+        denominator_returns = total_incl_signals.loc[last_day].item()
         ytd_total = 10000 * ((numerator_returns / denominator_returns) - 1)
 
         # YTD P&L: Spot
