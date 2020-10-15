@@ -103,8 +103,8 @@ class ComputeProfitAndLoss:
         ytd_total = 10000 * ((numerator_returns / denominator_returns) - 1)
 
         # YTD P&L: Spot
-        numerator_spot = spot_incl_signals.loc[self.latest_date].values[0]
-        denominator_spot = spot_incl_signals.loc[last_day].values[0]
+        numerator_spot = spot_incl_signals.loc[self.latest_date].item()
+        denominator_spot = spot_incl_signals.loc[last_day].item()
         ytd_spot = 10000 * ((numerator_spot / denominator_spot) - 1)
 
         # YTD P&L: Carry
