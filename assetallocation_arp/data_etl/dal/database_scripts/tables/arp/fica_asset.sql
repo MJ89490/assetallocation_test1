@@ -21,9 +21,8 @@ CREATE TABLE "arp"."fica_asset"
 	"asset_id" integer NOT NULL,
 	"id" serial NOT NULL,
 	"strategy_id" integer NULL,
-	"sovereign_ticker_id" integer NOT NULL,
-	"swap_ticker_id" integer NOT NULL,
-	"swap_cr_ticker_id" integer NOT NULL,
+	"category" varchar(50)	 NOT NULL,
+	"curve_tenor" varchar(5)	 NULL,
 	"execution_state_id" integer NOT NULL
 )
 ;
@@ -36,6 +35,11 @@ ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_pkey"
 ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_asset_id_strategy_id_key" UNIQUE ("asset_id","strategy_id")
 ;
 
+ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "category_check" CHECK (category IN ('future', 'sovereign', 'swap', 'swap_cr'))
+;
+
+ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "curve_tenor_check" CHECK (curve_tenor IN ('mth3', 'yr1', 'yr2', 'yr3', 'yr4', 'yr5', 'yr6', 'yr7', 'yr8', 'yr9', 'yr10', 'yr15', 'yr20', 'yr30'))
+;
 /* Create Foreign Key Constraints */
 
 ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_asset_fkey"
@@ -48,16 +52,4 @@ ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_execution_state_fkey"
 
 ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_fica_fkey"
 	FOREIGN KEY ("strategy_id") REFERENCES "arp"."fica" ("strategy_id") ON DELETE No Action ON UPDATE No Action
-;
-
-ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_ticker_sovereign_fkey"
-	FOREIGN KEY ("sovereign_ticker_id") REFERENCES "curve"."ticker" ("id") ON DELETE No Action ON UPDATE No Action
-;
-
-ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_ticker_swap_cr_fkey"
-	FOREIGN KEY ("swap_cr_ticker_id") REFERENCES "curve"."ticker" ("id") ON DELETE No Action ON UPDATE No Action
-;
-
-ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_ticker_swap_fkey"
-	FOREIGN KEY ("swap_ticker_id") REFERENCES "curve"."ticker" ("id") ON DELETE No Action ON UPDATE No Action
 ;

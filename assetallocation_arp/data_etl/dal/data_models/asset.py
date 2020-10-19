@@ -1,27 +1,25 @@
-from typing import List, Union
+from typing import List, Union, Optional
 
 from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.country import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
-from assetallocation_arp.data_etl.dal.data_models.custom_error import TickerError, TickerCategoryError
-from assetallocation_arp.data_etl.dal.data_models.ticker import Ticker
-from assetallocation_arp.common_libraries.dal_enums import curve
+from assetallocation_arp.data_etl.dal.data_models.custom_error import TickerError
+from assetallocation_arp.common_libraries.dal_enums import fica_asset_input
 
 
-# noinspection PyAttributeOutsideInit
 class Asset:
     def __init__(self, ticker: str):
         """Asset class to hold data from database"""
         self._category = None
         self._country = None
         self._currency = None
-        self.description = ''
+        self._description = ''
         self._name = None
-        self.ticker = ticker
+        self._ticker = ticker
         self._is_tr = None
         self._subcategory = None
-        self.asset_analytics = []
+        self._asset_analytics = []
 
     @property
     def ticker(self) -> str:
@@ -114,45 +112,28 @@ class Asset:
 
 # noinspection PyAttributeOutsideInit
 class FicaAssetInput(Asset):
-    def __init__(self, ticker: str, sovereign_ticker: Ticker, swap_ticker: Ticker, swap_cr_ticker: Ticker) -> None:
+    def __init__(self, ticker: str, category: Union[str, fica_asset_input.Category], curve_tenor: Optional[str]) -> None:
         """FicaAsset class to hold data from database"""
         super().__init__(ticker)
-        self.sovereign_ticker = sovereign_ticker
-        self.swap_ticker = swap_ticker
-        self.swap_cr_ticker = swap_cr_ticker
+        self._category = category
+        self._curve_tenor = curve_tenor
 
     @property
-    def sovereign_ticker(self) -> Ticker:
-        return self._sovereign_ticker
+    def curve_tenor(self) -> Optional[fica_asset_input.CurveTenor]:
+        return self._curve_tenor
 
-    @sovereign_ticker.setter
-    def sovereign_ticker(self, x: Ticker) -> None:
-        if x.category.name == curve.Category.sovereign.name:
-            self._sovereign_ticker = x
-        else:
-            raise TickerCategoryError('sovereign')
+    @curve_tenor.setter
+    def curve_tenor(self, x: Union[str, fica_asset_input.CurveTenor]) -> None:
+        if self._curve_tenor is not None:
+            self._curve_tenor = x if isinstance(x, fica_asset_input.CurveTenor) else fica_asset_input.CurveTenor[x]
 
     @property
-    def swap_ticker(self) -> Ticker:
-        return self._swap_ticker
+    def category(self) -> fica_asset_input.Category:
+        return self._category
 
-    @swap_ticker.setter
-    def swap_ticker(self, x: Ticker) -> None:
-        if x.category.name == curve.Category.swap.name:
-            self._swap_ticker = x
-        else:
-            raise TickerCategoryError('swap')
-
-    @property
-    def swap_cr_ticker(self) -> Ticker:
-        return self._swap_cr_ticker
-
-    @swap_cr_ticker.setter
-    def swap_cr_ticker(self, x: Ticker) -> None:
-        if x.category.name == curve.Category.swap_cr.name:
-            self._swap_cr_ticker = x
-        else:
-            raise TickerCategoryError('swap_cr')
+    @category.setter
+    def category(self, x: Union[fica_asset_input.Category, str]) -> None:
+        self._category = x if isinstance(x, fica_asset_input.Category) else fica_asset_input.Category[x]
 
 
 # noinspection PyAttributeOutsideInit

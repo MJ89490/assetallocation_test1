@@ -7,7 +7,7 @@ from psycopg2.extras import DateTimeTZRange
 from assetallocation_arp.models import fica as f
 from assetallocation_arp.data_etl.dal.data_models.strategy import Fica
 from assetallocation_arp.data_etl.dal.data_models.asset import FicaAssetInput, AssetAnalytic
-from assetallocation_arp.data_etl.dal.data_models.ticker import Ticker
+from assetallocation_arp.data_etl.dal.data_models.ticker import Curve
 
 
 r_path = Path(__file__).parent / 'resources' / 'fica'
@@ -84,8 +84,9 @@ def return_daily():
     return rd.reindex(index_rd)  # reset the dates of the index to Timestamp
 
 
+# TODO redesign tickers as they are assets and have asset values!!!
 @fixture
-def fica_strategy(fica_inputs, asset_inputs, all_data):
+def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
     f = Fica(fica_inputs['coupon'].iat[0], fica_inputs['curve'].iat[0],
              DateTimeTZRange(fica_inputs['date_from'].iat[0], fica_inputs['date_to'].iat[0]),
              [fica_inputs[f'strategy_weights_{i}'].iat[0] for i in range(1, 11)],
@@ -93,18 +94,18 @@ def fica_strategy(fica_inputs, asset_inputs, all_data):
 
     f_asset_inputs = []
     for i in asset_inputs.itertuples():
-        soverign_ticker = Ticker('sovereign', i.sovereign_ticker_3m, i.sovereign_ticker_1y, i.sovereign_ticker_2y,
-                                 i.sovereign_ticker_3y, i.sovereign_ticker_4y, i.sovereign_ticker_5y,
-                                 i.sovereign_ticker_6y, i.sovereign_ticker_7y, i.sovereign_ticker_8y,
-                                 i.sovereign_ticker_9y, i.sovereign_ticker_10y, i.sovereign_ticker_15y,
-                                 i.sovereign_ticker_20y, i.sovereign_ticker_30y)
-        swap_ticker = Ticker('swap', i.swap_ticker_3m, i.swap_ticker_1y, i.swap_ticker_2y,
-                                 i.swap_ticker_3y, i.swap_ticker_4y, i.swap_ticker_5y,
-                                 i.swap_ticker_6y, i.swap_ticker_7y, i.swap_ticker_8y,
-                                 i.swap_ticker_9y, i.swap_ticker_10y, i.swap_ticker_15y,
-                                 i.swap_ticker_20y, i.swap_ticker_30y)
-        swap_cr_ticker = Ticker('swap_cr', i.cr_swap_ticker_3m, i.cr_swap_ticker_1y, '', '', '', '', '', '', '',
-                                 i.cr_swap_ticker_9y, i.cr_swap_ticker_10y, '', '', '')
+        soverign_ticker = Curve('sovereign', i.sovereign_ticker_3m, i.sovereign_ticker_1y, i.sovereign_ticker_2y,
+                                i.sovereign_ticker_3y, i.sovereign_ticker_4y, i.sovereign_ticker_5y,
+                                i.sovereign_ticker_6y, i.sovereign_ticker_7y, i.sovereign_ticker_8y,
+                                i.sovereign_ticker_9y, i.sovereign_ticker_10y, i.sovereign_ticker_15y,
+                                i.sovereign_ticker_20y, i.sovereign_ticker_30y)
+        swap_ticker = Curve('swap', i.swap_ticker_3m, i.swap_ticker_1y, i.swap_ticker_2y,
+                            i.swap_ticker_3y, i.swap_ticker_4y, i.swap_ticker_5y,
+                            i.swap_ticker_6y, i.swap_ticker_7y, i.swap_ticker_8y,
+                            i.swap_ticker_9y, i.swap_ticker_10y, i.swap_ticker_15y,
+                            i.swap_ticker_20y, i.swap_ticker_30y)
+        swap_cr_ticker = Curve('swap_cr', i.cr_swap_ticker_3m, i.cr_swap_ticker_1y, '', '', '', '', '', '', '',
+                               i.cr_swap_ticker_9y, i.cr_swap_ticker_10y, '', '', '')
         fa = FicaAssetInput(i.future_ticker, soverign_ticker, swap_ticker, swap_cr_ticker)
 
         for ticker, data in all_data.items():
@@ -117,6 +118,11 @@ def fica_strategy(fica_inputs, asset_inputs, all_data):
     f.asset_inputs = f_asset_inputs
 
     return f
+
+
+def test_format_data_old(fica_inputs, asset_inputs, all_data):
+    returns = f.format_data_old(fica_inputs, asset_inputs, all_data)
+    pd.testing.assert_frame_equal(curve, returns)
 
 
 def test_format_data(fica_strategy, curve):

@@ -299,13 +299,15 @@ class FicaProcCaller(ArpProcCaller):
 
         return res[0]['f_version']
 
-    def _insert_fica_assets(self, fica_version: int, fica_assets: List[FicaAssetInput]) -> bool:
+    def _insert_fica_assets(self, fica_version: int, fica_assets: List[FicaAssetInput]) -> None:
         """Insert asset data for a version of Fica"""
-        fica_assets = ArpTypeConverter.fica_assets_to_composite(fica_assets)
-        res = self.call_proc('arp.insert_fica_assets', [fica_version] + fica_assets)
-        # todo update database function to return asset ids
-        asset_ids = res[0].get('asset_ids')
-        return bool(asset_ids)
+        asset_tickers, categories, curve_tenors = [], [], []
+        for i in fica_assets:
+            asset_tickers.append(i.ticker)
+            categories.append(i.category)
+            curve_tenors.append(i.curve_tenor)
+
+        self.call_proc('arp.insert_fica_assets', [fica_version, asset_tickers, categories, curve_tenors])
 
     def select_fica(self, fica_version) -> Optional[Fica]:
         """Select strategy and asset data for a version of fica"""
@@ -337,9 +339,7 @@ class FicaProcCaller(ArpProcCaller):
 
         fica_assets = []
         for r in res:
-            f = FicaAssetInput(r['asset_ticker'], ArpTypeConverter.ticker_str_to_object(r['sovereign_ticker']),
-                               ArpTypeConverter.ticker_str_to_object(r['swap_ticker']),
-                               ArpTypeConverter.ticker_str_to_object(r['swap_cr_ticker']))
+            f = FicaAssetInput(r['asset_ticker'], r['fica_asset_category'], r['curve_tenor'])
             fica_assets.append(f)
 
         return fica_assets
@@ -362,9 +362,7 @@ class FicaProcCaller(ArpProcCaller):
 
         fica_assets = []
         for r in res:
-            f = FicaAssetInput(r['asset_ticker'], ArpTypeConverter.ticker_str_to_object(r['sovereign_ticker']),
-                               ArpTypeConverter.ticker_str_to_object(r['swap_ticker']),
-                               ArpTypeConverter.ticker_str_to_object(r['swap_cr_ticker']))
+            f = FicaAssetInput(r['asset_ticker'], r['fica_asset_category'], r['curve_tenor'])
             f.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
 
             fica_assets.append(f)
@@ -374,19 +372,16 @@ class FicaProcCaller(ArpProcCaller):
 
 if __name__ == '__main__':
     from psycopg2.extras import DateTimeTZRange
-    from assetallocation_arp.data_etl.dal.data_models.ticker import Ticker
     import datetime as dt
 
-    f = Fica(2, 'a', DateTimeTZRange(), [1, 2, 3], 1, 1)
-    t1 = Ticker('sovereign', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a')
-    t2 = Ticker('swap', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a')
-    t3 = Ticker('swap_cr', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a')
-    fa = FicaAssetInput('EURUSD Curncy', t1, t2, t3)
-
-    f.asset_inputs = [fa]
+    f2 = Fica(2, 'a', DateTimeTZRange(), [1, 2, 3], 1, 1)
+    fai = FicaAssetInput('AUDUSD Curncy', 'swap', None)
+    f2.asset_inputs = [fai]
 
     fpc = FicaProcCaller()
-    f1 = fpc.select_fica_with_asset_analytics(42, dt.datetime(2000, 1, 1))
+    f_version = fpc.insert_fica(f2, 'JS89275')
+    print(f_version)
+    f1 = fpc.select_fica_with_asset_analytics(f_version, dt.datetime(2020, 8, 20))
     print(f1)
     print(f1.coupon)
     print(f1.asset_inputs)

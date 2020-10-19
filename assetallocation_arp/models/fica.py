@@ -8,8 +8,9 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
 
+from assetallocation_arp.data_etl.dal.data_models.strategy import Fica
 
-def format_data(fica_inputs, asset_inputs, all_data):
+def format_data_old(fica_inputs, asset_inputs, all_data):
     """
     creating dataframe with yield curve data
     :param pd.DataFrame fica_inputs: parameter choices for the model
@@ -28,6 +29,37 @@ def format_data(fica_inputs, asset_inputs, all_data):
     asset_inputs_t = asset_inputs.set_index('country').T
     # selecting which yield curve to use
     if fica_inputs['curve'].item() == 'sovereign':
+        ini = 0
+    else:
+        ini = 14
+    # creating dataframe for all countries
+    ticker_list = asset_inputs_t[country[1]][ini: ini + 14].tolist()
+    for i in range(2, m + 1):
+        ticker_list.extend(asset_inputs_t[country[i]][ini: ini + 14].tolist())
+    curve = all_data[ticker_list]
+    return curve
+
+
+def format_data(strategy: Fica):
+    """
+    creating dataframe with yield curve data
+    :param pd.DataFrame fica_inputs: parameter choices for the model
+    :param pd.DataFrame asset_inputs: asset bloomberg tickers
+    :param pd.DataFrame all_data: historical bloomberg time series
+    :return: dataframe with historical yield curves per country
+    """
+    # reading inputs and shortening data
+    all_data.iloc[-1:] = all_data.iloc[-2:].fillna(method='ffill').tail(1)
+    country = asset_inputs['country']
+    m = len(country)
+    date_from = fica_inputs['date_from'].item()
+    date_to = fica_inputs['date_to'].item()
+    # todo add this into proc caller! should it be in the fica table or as for times?
+    all_data = all_data.loc[date_from:date_to]
+    all_data = all_data.asfreq('BM')
+    asset_inputs_t = asset_inputs.set_index('country').T
+    # selecting which yield curve to use
+    if strategy.curve == 'sovereign':
         ini = 0
     else:
         ini = 14
