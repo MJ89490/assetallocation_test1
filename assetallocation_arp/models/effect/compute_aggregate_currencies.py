@@ -46,7 +46,7 @@ class ComputeAggregateCurrencies:
             rows = spot_data[tmp_start_date_computations:].shape[0]
 
             spot_tmp = spot_data.loc[:, currency_spot]
-            volatility = []
+            volatility_values = []
 
             for value in range(rows):
                 # Set the start date to start the computation
@@ -68,7 +68,7 @@ class ComputeAggregateCurrencies:
                     volatility = 0
 
                 # Add the standard deviation results into a list
-                volatility.append(volatility)
+                volatility_values.append(volatility)
 
                 # Error handling when we reach the end of the dates range
                 try:
@@ -77,7 +77,7 @@ class ComputeAggregateCurrencies:
                     tmp_start_date_computations = spot_data.index[start_current_date_index_loc]
 
             # Add volatility into a common dataFrame
-            inverse_volatility[CurrencyAggregate.Inverse_Volatility.name + currency_spot] = volatility
+            inverse_volatility[CurrencyAggregate.Inverse_Volatility.name + currency_spot] = volatility_values
 
         inverse_volatility = inverse_volatility.set_index(self.dates_index)
 

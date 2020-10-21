@@ -180,8 +180,25 @@ class ComputeProfitAndLoss:
                 'profit_and_loss_carry_ytd_matr': ytd_carry_matr, 'profit_and_loss_total_weekly_matr': weekly_returns_matr,
                 'profit_and_loss_spot_weekly_matr': weekly_spot_matr, 'profit_and_loss_carry_weekly_matr': weekly_carry_matr }
 
-    def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals,
-                            weighted_perf, signal_day):
+    @staticmethod
+    def process_profit_and_loss_overview(p_and_l_combo, p_and_l_spot, p_and_l_total, p_and_l_carry):
+        """
+        Function processing profit and loss overview data
+        If the profit and loss combo is equal to zero, we won't show profit and loss spot and total in the table
+        (Excel and the GUI)
+        :param p_and_l_combo: values from compute_profit_and_loss_combo
+        :param p_and_l_spot: values from compute_profit_and_loss_spot
+        :param p_and_l_total: values from compute_profit_and_loss_total
+        :return: p_and_l_combo, p_and_l_spot, p_and_l_total values
+        """
+
+        for index, val in enumerate(p_and_l_combo):
+            if val == 0:
+                p_and_l_spot[index], p_and_l_total[index], p_and_l_carry[index] = None, None, None
+
+        return p_and_l_spot, p_and_l_total, p_and_l_carry
+
+    def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals,weighted_perf, signal_day):
         """
         Function calling all the functions above
         :param combo_curr: combo_curr values from compute_currencies class
@@ -214,10 +231,15 @@ class ComputeProfitAndLoss:
                                                                                 weekly_spot_notional=profit_and_loss_notional['profit_and_loss_spot_weekly_notional'],
                                                                                 weighted_perf=weighted_perf)
 
+        p_and_l_spot, p_and_l_total, p_and_l_carry = self.process_profit_and_loss_overview(profit_and_loss_combo_overview.values,
+                                                                                           profit_and_loss_spot_overview.values,
+                                                                                           profit_and_loss_total_overview.values,
+                                                                                           profit_and_loss_carry_overview.values)
+
         profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview.values,
-                                    'profit_and_loss_total_overview': profit_and_loss_total_overview.values,
-                                    'profit_and_loss_spot_ex_overview': profit_and_loss_spot_overview.values,
-                                    'profit_and_loss_carry_overview': profit_and_loss_carry_overview.values,
+                                    'profit_and_loss_total_overview': p_and_l_total,
+                                    'profit_and_loss_spot_ex_overview': p_and_l_spot,
+                                    'profit_and_loss_carry_overview': p_and_l_carry,
                                     'profit_and_loss_notional': profit_and_loss_notional,
                                     'profit_and_loss_matr': profit_and_loss_matr
                                     }
