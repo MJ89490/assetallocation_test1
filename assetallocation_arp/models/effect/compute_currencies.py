@@ -219,11 +219,11 @@ class ComputeCurrencies(ProcessDataEffect):
             if currency_carry in self.data_currencies_usd.columns:
                 carry_division_tmp = (self.carry_usd.loc[tmp_start_computations:, currency_carry] /
                                       self.carry_usd.loc[tmp_start_computations:, currency_carry].shift(1))
-                bool_base_currency = self.weight_percentage_usd[currency_spot].item() / 100
+                bool_base_currency = (1 - (self.weight_percentage_usd[currency_spot].item() / 100))
             else:
                 carry_division_tmp = (self.carry_eur.loc[tmp_start_computations:, currency_carry] /
                                       self.carry_eur.loc[tmp_start_computations:, currency_carry].shift(1))
-                bool_base_currency = 1 - (self.weight_percentage_eur[currency_spot].item() / 100)
+                bool_base_currency = (self.weight_percentage_eur[currency_spot].item() / 100)
 
             # EURUSDCR Currency
             eur_usd_cr_tmp = (self.eur_usd_cr.loc[tmp_start_computations:] / self.eur_usd_cr.loc[tmp_start_computations:].shift(1)).iloc[1:].tolist()
@@ -234,8 +234,8 @@ class ComputeCurrencies(ProcessDataEffect):
 
             for values in range(len(carry_division_tmp)):
                 try:
-                    first_returns.append(round(first_returns[values] *
-                                         carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
+                    print(round(first_returns[values] * carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
+                    first_returns.append(round(first_returns[values] * carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
                 except ZeroDivisionError:
                     first_returns.append(0)
             self.return_ex_costs[CurrencySpot.Return_Ex_Costs.value + currency_spot] = first_returns
