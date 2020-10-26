@@ -7,7 +7,7 @@ from psycopg2.extras import DateTimeTZRange
 from assetallocation_arp.models import fica as f
 from assetallocation_arp.data_etl.dal.data_models.strategy import Fica
 from assetallocation_arp.data_etl.dal.data_models.asset import FicaAssetInput, AssetAnalytic
-from assetallocation_arp.data_etl.dal.data_models.ticker import Curve
+from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import CurveTenor, Category
 
 
 r_path = Path(__file__).parent / 'resources' / 'fica'
@@ -90,37 +90,41 @@ def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
     f = Fica(fica_inputs['coupon'].iat[0], fica_inputs['curve'].iat[0],
              DateTimeTZRange(fica_inputs['date_from'].iat[0], fica_inputs['date_to'].iat[0]),
              [fica_inputs[f'strategy_weights_{i}'].iat[0] for i in range(1, 11)],
-             fica_inputs['tenor'].iat[0] ,fica_inputs['trading_costs'].iat[0])
+             fica_inputs['tenor'].iat[0],fica_inputs['trading_costs'].iat[0])
 
     f_asset_inputs = []
-    for i in asset_inputs.itertuples():
-        soverign_ticker = Curve('sovereign', i.sovereign_ticker_3m, i.sovereign_ticker_1y, i.sovereign_ticker_2y,
-                                i.sovereign_ticker_3y, i.sovereign_ticker_4y, i.sovereign_ticker_5y,
-                                i.sovereign_ticker_6y, i.sovereign_ticker_7y, i.sovereign_ticker_8y,
-                                i.sovereign_ticker_9y, i.sovereign_ticker_10y, i.sovereign_ticker_15y,
-                                i.sovereign_ticker_20y, i.sovereign_ticker_30y)
-        swap_ticker = Curve('swap', i.swap_ticker_3m, i.swap_ticker_1y, i.swap_ticker_2y,
-                            i.swap_ticker_3y, i.swap_ticker_4y, i.swap_ticker_5y,
-                            i.swap_ticker_6y, i.swap_ticker_7y, i.swap_ticker_8y,
-                            i.swap_ticker_9y, i.swap_ticker_10y, i.swap_ticker_15y,
-                            i.swap_ticker_20y, i.swap_ticker_30y)
-        swap_cr_ticker = Curve('swap_cr', i.cr_swap_ticker_3m, i.cr_swap_ticker_1y, '', '', '', '', '', '', '',
-                               i.cr_swap_ticker_9y, i.cr_swap_ticker_10y, '', '', '')
-        fa = FicaAssetInput(i.future_ticker, soverign_ticker, swap_ticker, swap_cr_ticker)
 
-        for ticker, data in all_data.items():
-            if ticker == fa.ticker:
-                for index, val in data.iteritems():
-                    fa.add_analytic(AssetAnalytic(ticker, 'PX_LAST', index, float(val)))
+    tickers = {'3m': CurveTenor.mth3, '1y': CurveTenor.yr1, '2y': CurveTenor.yr2, '3y': CurveTenor.yr3,
+               '4y': CurveTenor.yr4, '5y': CurveTenor.yr5, '6y': CurveTenor.yr6, '7y': CurveTenor.yr7,
+               '8y': CurveTenor.yr8, '9y': CurveTenor.yr9, '10y': CurveTenor.yr10, '15y': CurveTenor.yr15,
+               '20y': CurveTenor.yr20, '30y': CurveTenor.yr30}
+
+
+    fais = []
+
+    for r, asset in asset_inputs.iterrows():
+        soverign_assets = [FicaAssetInput(asset.loc[f'sovereign_ticker_{i}'], Category.sovereign, j) for i, j in tickers.items()]
+        swap_assets = [FicaAssetInput(asset.loc[f'swap_ticker_{i}'], Category.swap, j) for i, j in tickers.items()]
+        swap_cr_assets = [FicaAssetInput(asset.loc[f'cr_swap_ticker_{i}'], Category.sovereign, j) for i, j in tickers.items() if f'cr_swap_ticker_{i}' in asset.index]
+        future_asset = FicaAssetInput(asset.loc['future_ticker'], Category.future, None)
+
+        fais.extend(soverign_assets)
+        fais.extend(swap_assets)
+        fais.extend(swap_cr_assets)
+
+    for ticker, data in all_data.items():
+        if ticker in asset_inputs.to_numpy():
+            for index, val in data.iteritems():
+                fa.add_analytic(AssetAnalytic(ticker, 'PX_LAST', index, float(val)))
 
         f_asset_inputs.append(fa)
 
-    f.asset_inputs = f_asset_inputs
+    f.grouped_asset_inputs = f_asset_inputs
 
     return f
 
 
-def test_format_data_old(fica_inputs, asset_inputs, all_data):
+def test_format_data_old(fica_inputs, asset_inputs, all_data, curve):
     returns = f.format_data_old(fica_inputs, asset_inputs, all_data)
     pd.testing.assert_frame_equal(curve, returns)
 

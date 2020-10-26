@@ -112,7 +112,8 @@ class Asset:
 
 # noinspection PyAttributeOutsideInit
 class FicaAssetInput(Asset):
-    def __init__(self, ticker: str, category: Union[str, fica_asset_input.Category], curve_tenor: Optional[str]) -> None:
+    def __init__(self, ticker: str, category: Union[str, fica_asset_input.Category],
+                 curve_tenor: Union[str, fica_asset_input.CurveTenor, None]) -> None:
         """FicaAsset class to hold data from database"""
         super().__init__(ticker)
         self._category = category

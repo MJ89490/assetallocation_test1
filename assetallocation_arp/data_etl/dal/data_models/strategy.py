@@ -140,15 +140,15 @@ class Fica(Strategy):
         self._strategy_weights = strategy_weights
         self._tenor = tenor
         self._trading_cost = trading_cost
-        self._asset_inputs = []
+        self._grouped_asset_inputs = []
 
     @property
-    def asset_inputs(self) -> List[FicaAssetInput]:
-        return self._asset_inputs
+    def grouped_asset_inputs(self) -> List[List[FicaAssetInput]]:
+        return self._grouped_asset_inputs
 
-    @asset_inputs.setter
-    def asset_inputs(self, x: List[FicaAssetInput]) -> None:
-        self._asset_inputs = x
+    @grouped_asset_inputs.setter
+    def grouped_asset_inputs(self, x: List[List[FicaAssetInput]]) -> None:
+        self._grouped_asset_inputs = x
 
     @property
     def coupon(self) -> float:

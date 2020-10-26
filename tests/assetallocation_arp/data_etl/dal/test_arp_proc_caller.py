@@ -284,7 +284,7 @@ def test_insert_fica_assets_calls_call_proc(MockFicaAssetInput, mock_call_proc):
     fica_version = 20
 
     a = FicaProcCaller()
-    a._insert_fica_assets(fica_version, [mock_fai])
+    a._insert_fica_assets(fica_version, [[mock_fai]])
 
     mock_call_proc.assert_called_once_with(
         a, 'arp.insert_fica_assets', [

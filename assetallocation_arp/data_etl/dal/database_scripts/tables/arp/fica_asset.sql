@@ -20,7 +20,7 @@ CREATE TABLE "arp"."fica_asset"
 (
 	"asset_id" integer NOT NULL,
 	"id" serial NOT NULL,
-	"strategy_id" integer NULL,
+	"fica_asset_group_id" integer NOT NULL,
 	"category" varchar(50)	 NOT NULL,
 	"curve_tenor" varchar(5)	 NULL,
 	"execution_state_id" integer NOT NULL
@@ -30,9 +30,6 @@ CREATE TABLE "arp"."fica_asset"
 
 ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_pkey"
 	PRIMARY KEY ("id")
-;
-
-ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_asset_id_strategy_id_key" UNIQUE ("asset_id","strategy_id")
 ;
 
 ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "category_check" CHECK (category IN ('future', 'sovereign', 'swap', 'swap_cr'))
@@ -50,6 +47,6 @@ ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
-ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_fica_fkey"
-	FOREIGN KEY ("strategy_id") REFERENCES "arp"."fica" ("strategy_id") ON DELETE No Action ON UPDATE No Action
+ALTER TABLE "arp"."fica_asset" ADD CONSTRAINT "fica_asset_fica_asset_group_fkey"
+	FOREIGN KEY ("fica_asset_group_id") REFERENCES "arp"."fica_asset_group" ("id") ON DELETE No Action ON UPDATE No Action
 ;

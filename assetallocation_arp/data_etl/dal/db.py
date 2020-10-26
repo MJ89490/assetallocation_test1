@@ -23,7 +23,8 @@ class Db:
             cursor = dbapi_conn.cursor()
             cursor.callproc(proc_name, proc_params)
             column_names_list = [x[0] for x in cursor.description]
-            results = [dict(zip(column_names_list, row)) for row in cursor.fetchall()]
+            res = cursor.fetchall()
+            results = [dict(zip(column_names_list, row)) for row in res]
             cursor.close()
             dbapi_conn.commit()
 

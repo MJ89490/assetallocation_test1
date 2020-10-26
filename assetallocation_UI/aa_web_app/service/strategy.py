@@ -30,7 +30,7 @@ def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, use
     elif isinstance(strategy, Fica):
         pc = FicaProcCaller()
         fica_version = pc.insert_fica(strategy, user_id)
-        strategy.asset_inputs = pc.select_fica_assets_with_analytics(fica_version, business_datetime)
+        strategy.grouped_asset_inputs = pc.select_fica_assets_with_analytics(fica_version, business_datetime)
 
         fs = FundStrategy(fund_name, Name.fica, fica_version, strategy_weight)
         fs.asset_weights, fs.asset_analytics = run_fica(strategy)

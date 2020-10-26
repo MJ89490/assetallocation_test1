@@ -286,8 +286,8 @@ class FicaProcCaller(ArpProcCaller):
     def insert_fica(self, fica: Fica, user_id: str) -> int:
         """Insert data from an instance of Fica into database"""
         f_version = self._insert_fica_strategy(fica, user_id)
-        if fica.asset_inputs:
-            self._insert_fica_assets(f_version, fica.asset_inputs)
+        if fica.grouped_asset_inputs:
+            self._insert_fica_assets(f_version, fica.grouped_asset_inputs)
 
         return f_version
 
@@ -299,22 +299,23 @@ class FicaProcCaller(ArpProcCaller):
 
         return res[0]['f_version']
 
-    def _insert_fica_assets(self, fica_version: int, fica_assets: List[FicaAssetInput]) -> None:
+    def _insert_fica_assets(self, fica_version: int, fica_asset_groups: List[List[FicaAssetInput]]) -> None:
         """Insert asset data for a version of Fica"""
-        asset_tickers, categories, curve_tenors = [], [], []
-        for i in fica_assets:
-            asset_tickers.append(i.ticker)
-            categories.append(i.category)
-            curve_tenors.append(i.curve_tenor)
+        for i in fica_asset_groups:
+            asset_tickers, categories, curve_tenors = [], [], []
+            for j in i:
+                asset_tickers.append(j.ticker)
+                categories.append(j.category)
+                curve_tenors.append(j.curve_tenor)
 
-        self.call_proc('arp.insert_fica_assets', [fica_version, asset_tickers, categories, curve_tenors])
+            self.call_proc('arp.insert_fica_assets', [fica_version, asset_tickers, categories, curve_tenors])
 
     def select_fica(self, fica_version) -> Optional[Fica]:
         """Select strategy and asset data for a version of fica"""
         fica = self._select_fica_strategy(fica_version)
 
         if fica is not None:
-            fica.asset_inputs = self._select_fica_assets(fica_version)
+            fica.grouped_asset_inputs = self._select_fica_assets(fica_version)
 
         return fica
 
@@ -349,7 +350,7 @@ class FicaProcCaller(ArpProcCaller):
         fica = self._select_fica_strategy(fica_version)
 
         if fica is not None:
-            fica.asset_inputs = self.select_fica_assets_with_analytics(fica_version, business_datetime)
+            fica.grouped_asset_inputs = self.select_fica_assets_with_analytics(fica_version, business_datetime)
 
         return fica
 
@@ -372,21 +373,13 @@ class FicaProcCaller(ArpProcCaller):
 
 if __name__ == '__main__':
     from psycopg2.extras import DateTimeTZRange
-    import datetime as dt
 
     f2 = Fica(2, 'a', DateTimeTZRange(), [1, 2, 3], 1, 1)
-    fai = FicaAssetInput('AUDUSD Curncy', 'swap', None)
-    f2.asset_inputs = [fai]
+    fai1 = FicaAssetInput('AUDUSD Curncy', 'swap', None)
+    fai2 = FicaAssetInput('AUDUSD Curncy', 'future', None)
 
     fpc = FicaProcCaller()
-    f_version = fpc.insert_fica(f2, 'JS89275')
-    print(f_version)
-    f1 = fpc.select_fica_with_asset_analytics(f_version, dt.datetime(2020, 8, 20))
-    print(f1)
-    print(f1.coupon)
-    print(f1.asset_inputs)
+    # f_version = fpc.insert_fica(f2, 'JS89275')
+    # print(f_version)
 
-    for asset_input in f1.asset_inputs:
-        print(asset_input.name)
-        for i in asset_input.asset_analytics:
-            print(i.asset_ticker, i.business_datetime, i.value)
+    fpc.select_fica(72)
