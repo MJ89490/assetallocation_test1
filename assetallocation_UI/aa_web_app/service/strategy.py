@@ -17,7 +17,7 @@ def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, use
         strategy.asset_inputs = pc.select_times_assets_with_analytics(times_version, business_datetime)
 
         fs = FundStrategy(fund_name, Name.times, times_version, strategy_weight)
-        fs.asset_weights, fs.asset_analytics = run_times(strategy)
+        fs.asset_analytics, fs.asset_weights = run_times(strategy)
 
     elif isinstance(strategy, Effect):
         pc = EffectProcCaller()
@@ -25,7 +25,7 @@ def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, use
         strategy.asset_inputs = pc.select_effect_assets_with_analytics(effect_version, business_datetime)
 
         fs = FundStrategy(fund_name, Name.effect, effect_version, strategy_weight)
-        fs.asset_weights, fs.asset_analytics = run_effect(strategy)
+        fs.asset_analytics, fs.asset_weights = run_effect(strategy)
 
     elif isinstance(strategy, Fica):
         pc = FicaProcCaller()
@@ -33,7 +33,7 @@ def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, use
         strategy.grouped_asset_inputs = pc.select_fica_assets_with_analytics(fica_version, business_datetime)
 
         fs = FundStrategy(fund_name, Name.fica, fica_version, strategy_weight)
-        fs.asset_weights, fs.asset_analytics = run_fica(strategy)
+        fs.asset_analytics, fs.asset_weights = run_fica(strategy)
 
     else:
         raise TypeError(f'strategy must be of type Strategy')
