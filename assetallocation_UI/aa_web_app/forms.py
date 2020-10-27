@@ -79,6 +79,8 @@ class InputsTimesModel(FlaskForm):
     versions = SelectField('Versions', choices=version_choices)
 
     submit_versions = SubmitField('Select this version')
+    submit_ok_charts_data = SubmitField('Ok')
+    submit_ok_export_data = SubmitField('Ok')
 
     existing_funds = get_fund_names()
     fund_name = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))

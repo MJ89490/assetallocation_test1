@@ -50,8 +50,8 @@ def times_model():
 
 @app.route('/times_dashboard',  methods=['GET', 'POST'])
 def times_dashboard():
-    form = InputsTimesModel()
     # form = ExportDataForm()
+    form = InputsTimesModel()
     # template_data = main_data('f1', 1)
 
     return render_template('times_dashboard.html', form=form, title='Dashboard')
@@ -59,70 +59,24 @@ def times_dashboard():
 
 @app.route('/receive_times_data', methods=['POST'])
 def receive_times_data():
-    if request.method == "POST":
+    form = InputsTimesModel()
 
+    if request.method == "POST":
         t = request.get_json()
-        # print(t)
-        # fund_name = t['fund']
-        # print(fund_name)
+        # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'Weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
+        fund_name = t['fund']
         long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-        # print(long_signals)
         short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-        # print(short_signals)
-        # print(short_signals)
         times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
                       short_signals, int(t['lag']), int(t['volwindow']))
-        # print(times)
+
         times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
                               zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-        # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+
+        # TODO do not work with that line !!!!!
+        fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+
         return json.dumps({'status': 'OK'})
-
-
-
-
-# @app.route('/received_data_run_model', methods=['POST'])
-# def received_data_run_model():
-#     #TODO convert this route into API (1): nicer solution
-#     #TODO AJAX request: successfull = take the data and redirect to dashboard (2)
-#     #There are 2 solutions
-#     # form = InputsTimesModel()
-#     # t = request.get_json()
-#     t = request.json
-#     print(t)
-
-# @app.route('/received_data_run_model_get', methods=['GET'])
-# def received_data_run_model_get():
-#     form = InputsTimesModel()
-
-    # if request.method == 'POST':
-    #     # t = json.loads(request.data)
-    #     t = request.get_json()
-    #     print(t)
-    #     # t = request.data
-    #
-    #     fund_name = t['fund']
-    #     # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-    #     # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-    #
-    #     print(fund_name)
-    #     render_template('times_dashboard.html', form=form, title='Dashboard')
-        # print(long_signals)
-        # print(short_signals)
-
-        # times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
-        #               short_signals, int(t['lag']), int(t['volwindow']))
-        # times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
-        #                       zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-        # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
-        #
-        # return redirect(url_for('times_dashboard', fund_name=fund_name, times_version=fund_strategy.strategy_version))
-        # return redirect(url_for('times_dashboard'))
-
-    # return render_template('times_model_mirror.html', form=form, title='TimesPage')
-
-
-
 
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])

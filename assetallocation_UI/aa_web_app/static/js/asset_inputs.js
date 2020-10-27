@@ -169,8 +169,6 @@ function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, fre
             }
     });
 
-
-
     return jsonData
 
 }

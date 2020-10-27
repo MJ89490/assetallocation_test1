@@ -14,7 +14,7 @@
 
 .sidenav {
   height: 100%;
-  width: 160px;
+  width: 180px;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -37,7 +37,7 @@
 }
 
 .container {
-  margin-left: 160px; /* Same as the width of the sidenav */
+  margin-left: 180px; /* Same as the width of the sidenav */
   font-size: 28px; /* Increased text to enable scrolling */
   padding: 0px 10px;
 }
@@ -47,18 +47,47 @@
   .sidenav a {font-size: 18px;}
 }
 
-.title-dashboard {color: #005774; margin-top: 20px; font-size: 3rem; font-weight: 800;}
+.title-dashboard {
+            color: #005774;
+            font-size: 2.5rem;
+            line-height: 1.4;
+            margin-top: 20px;
+            margin-bottom: 23px;
+
+            max-width: 75%;
+            display: inline-block;
+            z-index: 2;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .sidenav-home {margin-top: 20px;}
 #selectVersion {color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 38px; margin-left: 10px;}
 .form-models-select-sidebar {color: #005774 !important; border-color: #007faa !important; width: 140px; height: 38px; margin-left: 10px; padding-top:0px;}
 .label-models-select-sidebar {color: #fff;  padding-left: 16px; margin-top: 10px;}
-.btn-select-sidebar {font-size: 1rem; width: 125px;height: 38px}
+.btn-select-sidebar {font-size: 1rem; width: 45px;height: 38px}
+
+
+#btn-select-charts-ok{width: 45px; margin-left: 58px; color: #005774;}
+#btn-select-export-data{width: 45px; margin-left: 58px; color: #005774; margin-bottom: 50px;}
 </style>
 </head>
+
 <body>
 
     <div class="sidenav">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{url_for('home')}}">
             <img alt="Legal and General" width="auto" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
         </a>
         <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
@@ -80,7 +109,8 @@
                    <option>s</option>
                </select>
            </div>
-            <a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>
+            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
+            {{ form.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
         </form>
 
         <!-- ============================= EXPORT DATA ============================= -->
@@ -100,7 +130,8 @@
                    <option>s</option>
                </select>
            </div>
-            <a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>
+            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
+            {{ form.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
         </form>
 
         <!-- ============================= SUPPORT ============================= -->
