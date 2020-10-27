@@ -36,7 +36,7 @@ class ComputeRiskReturnCalculations:
         """
         write_logs_effect("Computing risk/return std dev...", "logs_std_dev")
         std_dev_no_signals = (returns_excl_signals / returns_excl_signals.shift(1)).std()[0] * sqrt(52) * 100
-        std_dev_with_signals = (returns_incl_signals / returns_incl_signals.shift(1)).std()[0] * sqrt(52) * 100
+        std_dev_with_signals = (returns_incl_signals / returns_incl_signals.head(-1).shift(1)).std()[0] * sqrt(52) * 100
 
         return {'std_dev_no_signals': std_dev_no_signals, 'std_dev_with_signals': std_dev_with_signals}
 
@@ -71,8 +71,8 @@ class ComputeRiskReturnCalculations:
 
         for value in range(len(returns_excl_tmp)):
 
-            max_drawdown_excl_values.append(returns_excl_tmp[value] / max(returns_excl_tmp[0: value+1]) - 1)
-            max_drawdown_incl_values.append(returns_incl_tmp[value] / max(returns_incl_tmp[0: value+1]) - 1)
+            max_drawdown_excl_values.append((returns_excl_tmp[value] / max(returns_excl_tmp[0: value+1])) - 1)
+            max_drawdown_incl_values.append((returns_incl_tmp[value] / max(returns_incl_tmp[0: value+1])) - 1)
 
         return {'max_drawdown_no_signals': abs(min(max_drawdown_excl_values)) * 100,
                 'max_drawdown_with_signals': abs(min(max_drawdown_incl_values)) * 100}

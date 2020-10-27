@@ -87,7 +87,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
     obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['STDev window (weeks)'].item()),
                                                             weight=strategy_inputs['Risk-weighting'].item().strip(),
-                                                            dates_index=obj_import_data.dates_origin_index,
+                                                            dates_index=obj_import_data.dates_index,
                                                             start_date_calculations=obj_import_data.start_date_calculations,
                                                             prev_start_date_calc=obj_import_data.previous_start_date_calc)
 
@@ -144,12 +144,12 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     # ---------------------------------------------------------------------------------------------------------------- #
     obj_compute_risk_return_calculations = ComputeRiskReturnCalculations(
                                                     start_date=obj_import_data.start_date_calculations,
-                                                    end_date=obj_import_data.dates_origin_index[-1],
+                                                    end_date=latest_signal_date,
                                                     dates_index=obj_import_data.dates_origin_index)
 
     risk_returns = obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
-                                                    returns_excl_signals=agg_currencies['agg_total_excl_signals'],
-                                                    returns_incl_signals=agg_currencies['agg_total_incl_signals'],
+                                                    returns_excl_signals=agg_currencies['agg_total_excl_signals'].head(-1),
+                                                    returns_incl_signals=agg_currencies['agg_total_incl_signals'].head(-1),
                                                     spxt_index_values=spx_index_values.loc[pd.to_datetime(user_date, format='%d-%m-%Y'):])
 
     effect_outputs = {'profit_and_loss': profit_and_loss, 'signals_overview': signals_overview,

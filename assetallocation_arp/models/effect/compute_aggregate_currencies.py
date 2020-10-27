@@ -119,7 +119,7 @@ class ComputeAggregateCurrencies:
             sum_tmp_volatility = sum(values_volatility)
             inv_volatility_values.append(inv_volatility_values[counter] * (sum(tmp) / sum_tmp_volatility))
             counter += 1
-        inv_volatility_values.pop(0)
+        # inv_volatility_values.pop(0)
         return inv_volatility_values
 
     def compute_aggregate_total_incl_signals(self, returns_incl_costs, inverse_volatility):
@@ -136,7 +136,7 @@ class ComputeAggregateCurrencies:
             average_incl_signals = (returns_incl_costs / returns_incl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_incl_signals)):
                 total_incl_signals_values.append(total_incl_signals_values[value] * average_incl_signals[value])
-            total_incl_signals_values.pop(0)
+            # total_incl_signals_values.pop(0)
         else:
             returns_shift = (returns_incl_costs / returns_incl_costs.shift(1)).iloc[1:]
             total_incl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
@@ -157,7 +157,7 @@ class ComputeAggregateCurrencies:
             average_excl_signals = (returns_excl_costs / returns_excl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_excl_signals)):
                 total_excl_signals_values.append(total_excl_signals_values[value] * average_excl_signals[value])
-            total_excl_signals_values.pop(0)
+            # total_excl_signals_values.pop(0)
         else:
             returns_shift = (returns_excl_costs / returns_excl_costs.shift(1)).iloc[1:]
             total_excl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
@@ -178,7 +178,7 @@ class ComputeAggregateCurrencies:
             average_spot_incl_signals = (spot_incl_costs / spot_incl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_spot_incl_signals)):
                 spot_incl_signals_values.append(spot_incl_signals_values[value] * average_spot_incl_signals[value])
-            spot_incl_signals_values.pop(0)
+            # spot_incl_signals_values.pop(0)
         else:
             returns_shift = (spot_incl_costs / spot_incl_costs.shift(1)).iloc[1:]
             spot_incl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
@@ -199,7 +199,7 @@ class ComputeAggregateCurrencies:
             average_spot_excl_signals = (spot_excl_costs / spot_excl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_spot_excl_signals)):
                 spot_excl_signals_values.append(spot_excl_signals_values[value] * average_spot_excl_signals[value])
-            spot_excl_signals_values.pop(0)
+            # spot_excl_signals_values.pop(0)
         else:
             returns_shift = (spot_excl_costs / spot_excl_costs.shift(1)).iloc[1:]
             spot_excl_signals_values = self.compute_aggregate_inverse_volatility(returns_shift, inverse_volatility)
