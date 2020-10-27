@@ -62,20 +62,20 @@ def receive_times_data():
     if request.method == "POST":
 
         t = request.get_json()
-        print(t)
-        fund_name = t['fund']
-        print(fund_name)
+        # print(t)
+        # fund_name = t['fund']
+        # print(fund_name)
         long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-        print(long_signals)
+        # print(long_signals)
         short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-        print(short_signals)
-        print(short_signals)
+        # print(short_signals)
+        # print(short_signals)
         times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
                       short_signals, int(t['lag']), int(t['volwindow']))
-        print(times)
+        # print(times)
         times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
                               zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-        fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+        # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
         return json.dumps({'status': 'OK'})
 
 
