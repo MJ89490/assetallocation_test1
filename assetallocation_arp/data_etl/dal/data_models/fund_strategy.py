@@ -68,7 +68,6 @@ class FundStrategy:
 
     @asset_weights.setter
     def asset_weights(self, x: List['FundStrategyAssetWeight']) -> None:
-        FundStrategyAssetWeight.check_unique(x)
         self._asset_weights = x
 
     @property
@@ -77,7 +76,6 @@ class FundStrategy:
 
     @asset_analytics.setter
     def asset_analytics(self, x: List['FundStrategyAssetAnalytic']) -> None:
-        FundStrategyAssetAnalytic.check_unique(x)
         self._asset_analytics = x
 
     @property
@@ -113,15 +111,12 @@ class FundStrategy:
         self._weight = x
 
     def add_fund_strategy_asset_analytics(self, asset_analytics: List['FundStrategyAssetAnalytic']) -> None:
-        FundStrategyAssetAnalytic.check_unique(self.asset_analytics + asset_analytics)
         self._asset_analytics.extend(asset_analytics)
 
     def add_fund_strategy_asset_analytic(self, asset_analytic: 'FundStrategyAssetAnalytic') -> None:
-        FundStrategyAssetAnalytic.check_unique(self.asset_analytics + [asset_analytic])
         self._asset_analytics.append(asset_analytic)
 
     def add_fund_strategy_asset_weight(self, asset_weight: 'FundStrategyAssetWeight') -> None:
-        FundStrategyAssetWeight.check_unique(self.asset_weights + [asset_weight])
         self._asset_weights.append(asset_weight)
 
 
@@ -165,11 +160,6 @@ class FundStrategyAssetWeight:
     @asset_ticker.setter
     def asset_ticker(self, x: str) -> None:
         self._asset_ticker = x
-
-    @staticmethod
-    def check_unique(asset_weights: List['FundStrategyAssetWeight']) -> None:
-        if len(set((i.asset_ticker, i.business_date) for i in asset_weights)) != len(asset_weights):
-            raise ValueError('Duplicate asset_ticker, business_date combinations are not allowed')
 
 
 # noinspection PyAttributeOutsideInit
@@ -226,8 +216,3 @@ class FundStrategyAssetAnalytic:
     @asset_ticker.setter
     def asset_ticker(self, x: str):
         self._asset_ticker = x
-
-    @staticmethod
-    def check_unique(asset_analytics: List['FundStrategyAssetAnalytic']) -> None:
-        if len(set((i.asset_ticker, i.business_date, i.category, i.subcategory) for i in asset_analytics)) != len(asset_analytics):
-            raise ValueError('Duplicate asset_ticker, business_date, category, subcategory combinations are not allowed')
