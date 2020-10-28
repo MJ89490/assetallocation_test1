@@ -12,6 +12,9 @@ User login form
 """
 
 
+# TODO TO IMPROVE
+
+
 class LoginForm(FlaskForm):
     username = StringField(u'Username')
     password = PasswordField(u'Password')
@@ -79,8 +82,13 @@ class InputsTimesModel(FlaskForm):
     versions = SelectField('Versions', choices=version_choices)
 
     submit_versions = SubmitField('Select this version')
-    submit_ok_charts_data = SubmitField('Ok')
-    submit_ok_export_data = SubmitField('Ok')
+    submit_ok_charts_data = SubmitField('ok')
+    submit_ok_export_data = SubmitField('ok')
+
+    START_DATE = 'Start Date'
+    END_DATE = 'End Date'
+    start_date_inputs = StringField(START_DATE)
+    end_date_inputs = StringField(END_DATE)
 
     existing_funds = get_fund_names()
     fund_name = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
