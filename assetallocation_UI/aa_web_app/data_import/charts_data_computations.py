@@ -94,13 +94,13 @@ class TimesChartsDataComputations(object):
                 'sum_performance_ytd_fx': sum_performance_ytd_fx}
 
     def sum_equities_bonds_fx(self, equities_bonds_fx_data):
-        equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index.levels[1]]
-        bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index.levels[1]]
-        fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index.levels[1]]
+        equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index]
+        bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index]
+        fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index]
 
-        equities = self.round_sum(equities_bonds_fx_data.loc[(slice(None), equities)])
-        bonds = self.round_sum(equities_bonds_fx_data.loc[(slice(None), bonds)])
-        fx = self.round_sum(equities_bonds_fx_data.loc[(slice(None), fx)])
+        equities = self.round_sum(equities_bonds_fx_data.loc[equities])
+        bonds = self.round_sum(equities_bonds_fx_data.loc[bonds])
+        fx = self.round_sum(equities_bonds_fx_data.loc[fx])
         return bonds, equities, fx
 
     @staticmethod
