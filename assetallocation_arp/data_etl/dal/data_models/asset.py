@@ -51,7 +51,8 @@ class Asset:
 
     @category.setter
     def category(self, x: Union[str, Category]) -> None:
-        self._category = x if isinstance(x, Category) else Category[x]
+        # self._category = x if isinstance(x, Category) else Category[x]
+        self._category = x
 
     @property
     def country(self) -> Country:
