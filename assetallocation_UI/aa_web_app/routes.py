@@ -1,37 +1,19 @@
+import os
 import json
 
-# Contains view functions for various URLs
-from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
-from assetallocation_UI.aa_web_app.data_import.main_import_data_from_form import get_times_inputs
 from flask import render_template
-from flask import flash
-from flask import url_for
-from flask import redirect
 from flask import request
-from datetime import datetime
 
 from assetallocation_UI.aa_web_app import app
-from assetallocation_UI.aa_web_app.forms import LoginForm, ExportDataForm, InputsTimesModel
-# from .models import User
+from assetallocation_UI.aa_web_app.forms import InputsTimesModel
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
+from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
-
-import os
-# from flask_login import login_user
-# from flask_login import current_user
-from flask import g
-
-from .userIdentification import random_identification
-
-# TODO mock content and test each route to see if they are ok
-# TODO create blueprints to avoid having single routes
-# TODO check with Jess for dashboard regarding inputs in the sidebar + see with her how it works
-# TODO change the names in asset_inputs.py (name convention)
 
 
 @app.route('/')
 def home():
-    return render_template('home_new.html', title='HomePage')
+    return render_template('home.html', title='HomePage')
 
 
 @app.route('/times_model',  methods=['GET', 'POST'])
@@ -65,7 +47,6 @@ def receive_times_data():
 
     if request.method == "POST":
         t = request.get_json()
-        # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'Weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
         fund_name = t['fund']
         long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
         short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
