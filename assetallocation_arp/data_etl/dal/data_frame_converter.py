@@ -19,6 +19,7 @@ class DataFrameConverter:
         """DataFrame with index of dates and columns named after tickers"""
         data = [[i.asset_ticker, i.business_datetime, i.value] for i in asset_analytics]
         df = pd.DataFrame(data, columns=['ticker', 'business_datetime', 'value'])
+        df = df.drop_duplicates()
         df = df.pivot(index='business_datetime', columns='ticker', values='value')
         df.index = pd.DatetimeIndex(df.index)
         return df

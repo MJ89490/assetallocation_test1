@@ -105,20 +105,15 @@ def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAssetAnalytic], List[
 
 def run_fica(strategy: Fica) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run fica strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    # TODO add code to run fica, using Fica object, here
-
-    # TODO add regression tests THEN refactor!
-    carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
-    # run strategy
-    signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll, country_returns)
-    # run daily attributions
-    carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
+    curve = fica.format_data(strategy)
+    carry_roll, country_returns = fica.calculate_carry_roll_down(strategy, curve)
+    signals, cum_contribution, returns = fica.calculate_signals_and_returns(strategy, carry_roll, country_returns)
+    carry_daily, return_daily = fica.run_daily_attribution(strategy, signals)
 
     asset_analytics = FicaDataFrameConverter.create_asset_analytics(carry_roll, country_returns, signals,
                                                                     cum_contribution, returns, carry_daily, return_daily)
     asset_weights = FicaDataFrameConverter.df_to_asset_weights(positioning)
     return asset_analytics, asset_weights
-    pass
 
 
 def write_output_to_excel(model_outputs, path_excel_times):

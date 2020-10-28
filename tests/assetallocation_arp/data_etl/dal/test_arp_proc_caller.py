@@ -315,7 +315,7 @@ def test_select_fica_assets_with_analytics_calls_call_proc(mock_call_proc):
     mock_call_proc.return_value = []
 
     a = FicaProcCaller()
-    a.select_fica_assets_with_analytics(f_version, business_datetime)
+    a.select_fica_assets_with_analytics(f_version)
 
     mock_call_proc.assert_called_once_with(a, 'arp.select_fica_assets_with_analytics', [f_version, business_datetime])
 
@@ -328,7 +328,7 @@ def test_select_fica_assets_with_analytics_returns_list_of_fica_asset_objects(mo
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInput', autospec=True):
         with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.ArpTypeConverter', autospec=True):
             a = FicaProcCaller()
-            returns = a.select_fica_assets_with_analytics(f_version, business_datetime)
+            returns = a.select_fica_assets_with_analytics(f_version)
 
     assert isinstance(returns, list)
     assert all([isinstance(i, FicaAssetInput) for i in returns])
