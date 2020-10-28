@@ -38,7 +38,7 @@ class DataFrameConverter:
 
         df = df.merge(asset_df, on='ticker', how='left')
         df = df.set_index(['business_date', 'asset_subcategory', 'ticker']).unstack(['ticker', 'asset_subcategory'])
-        df.columns = df.columns.droplevel(0)
+        df.columns = df.columns.droplevel([0, 1])
 
         return df
 

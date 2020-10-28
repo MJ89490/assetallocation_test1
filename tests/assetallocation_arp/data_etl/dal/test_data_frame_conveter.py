@@ -65,8 +65,7 @@ def test_fund_strategy_asset_weights_to_df_returns_expected_value():
     mock_fsaw2 = mock_fund_strategy_asset_weights('c', date(2020, 1, 3), float(4), float(3))
 
     expected = pd.DataFrame([[float(1), nan], [nan, float(4)]],
-                            columns=pd.MultiIndex(levels=[['a', 'c'], ['d', 'f']], codes=[[0, 1], [1, 0]],
-                                                  names=['ticker', 'asset_subcategory']),
+                            columns=['f', 'd'],
                             index=pd.DatetimeIndex(['2020-01-02', '2020-01-03'], dtype='datetime64[ns]', name='business_date'))
 
     returns = DataFrameConverter.fund_strategy_asset_weights_to_df([mock_a1, mock_a2], [mock_fsaw1, mock_fsaw2])
