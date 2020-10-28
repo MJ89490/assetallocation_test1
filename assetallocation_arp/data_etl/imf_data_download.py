@@ -12,7 +12,6 @@ import chardet
 
 from datetime import date
 from pathlib import Path
-import locale
 
 IMF_API_BASE_URL = "http://dataservices.imf.org/REST/SDMX_JSON.svc"
 local_proxy = 'http://zsvzen:80'
@@ -25,64 +24,71 @@ args = None
 log = logging.getLogger(__name__)
 
 # filter those attributes for the columns for eg. if columnname is Subject Descriptor filter for
-# 'Inflation, end of period consumer prices'
 filter_attributes = {'Subject Descriptor': 'Inflation, end of period consumer prices', 'Units': 'Index'}
 
 # it turns out the xls (url_2014) is in fact a tsv file ...
-root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw", "imf_data"))
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data", "data", "imf_data"))
 
 # Specifying the locale of the source
+import locale
 
 locale.setlocale(locale.LC_NUMERIC, 'English')  # 'English_United States.1252'
 
 
-# region build the weo data
-def build_weo_data(date):
+def build_weo_data(date_value):
     """WEO is a particular case of 2 datasets provided as Excel files.
     Its URL change according to the release date.
     """
-    if date.month < 4:
-        year = date.year - 1
+    if date_value.month < 4:
+        year = date_value.year - 1
         release_number = "02"
         file_base_name = "WEO{month_name}{year}all".format(month_name="Oct", year=year)
-    elif 4 <= date.month < 10:
-        year = date.year
+    elif date_value.month == 9:
+        year = date_value.year
+        release_number = "02"
+        file_base_name = "WEO{month_name}{year}all".format(month_name="Sep", year=year)
+    elif date_value.month >= 4 and date_value.month < 9:
+        year = date_value.year
         release_number = "01"
         file_base_name = "WEO{month_name}{year}all".format(month_name="Apr", year=year)
     else:
-        assert date.month >= 10, date
-        year = date.year
+        assert date_value.month >= 10, date_value
+        year = date_value.year
         release_number = "02"
         file_base_name = "WEO{month_name}{year}all".format(month_name="Oct", year=year)
+
     return year, release_number, file_base_name
 
+# https://www.imf.org/en/Publications/WEO/weo-database/2020/October/weo-report?c=512,914,612,614,311,213,911,314,193,122,912,313,419,513,316,913,124,339,638,514,218,963,616,223,516,918,748,618,624,522,622,156,626,628,228,924,233,632,636,634,238,662,960,423,935,128,611,321,243,248,469,253,642,643,939,734,644,819,172,132,646,648,915,134,652,174,328,258,656,654,336,263,268,532,944,176,534,536,429,433,178,436,136,343,158,439,916,664,826,542,967,443,917,544,941,446,666,668,672,946,137,546,674,676,548,556,678,181,867,682,684,273,868,921,948,943,686,688,518,728,836,558,138,196,278,692,694,962,142,449,564,565,283,853,288,293,566,964,182,359,453,968,922,714,862,135,716,456,722,942,718,724,576,936,961,813,726,199,733,184,524,361,362,364,732,366,144,146,463,528,923,738,578,537,742,866,369,744,186,925,869,746,926,466,112,111,298,927,846,299,582,487,474,754,698,&s=PCPIE,&sy=2018&ey=2025&ssm=0&scsm=1&scc=0&ssd=1&ssc=0&sic=0&sort=country&ds=.&br=1
 
-# endregion
+# https://www.imf.org/en/Publications/WEO/weo-database/2019/October/weo-report?c=512,914,612,614,311,213,911,314,193,122,912,313,419,513,316,913,124,339,638,514,218,963,616,223,516,918,748,618,624,522,622,156,626,628,228,924,233,632,636,634,238,662,960,423,935,128,611,321,243,248,469,253,642,643,939,734,644,819,172,132,646,648,915,134,652,174,328,258,656,654,336,263,268,532,944,176,534,536,429,433,178,436,136,343,158,439,916,664,826,542,967,443,917,544,941,446,666,668,672,946,137,546,674,676,548,556,678,181,867,682,684,273,868,921,948,943,686,688,518,728,836,558,138,196,278,692,694,962,142,449,564,565,283,853,288,293,566,964,182,359,453,968,922,714,862,135,716,456,722,942,718,724,576,936,961,813,726,199,733,184,524,361,362,364,732,366,144,146,463,528,923,738,578,537,742,866,369,744,186,925,869,746,926,466,112,111,298,927,846,299,582,474,754,698,&s=PCPIE,&sy=2017&ey=2024&ssm=0&scsm=1&scc=0&ssd=1&ssc=0&sic=0&sort=country&ds=.&br=1
 
-# region build the weo url by the dataset code
-def build_weo_url_by_dataset_code(date):
-    """WEO is a particular case of 2 datasets provided as Excel files.
-    Its URL change according to the release date.
+
+
+def build_weo_url_by_dataset_code(date_value):
     """
-    year, release_number, file_base_name = build_weo_data(date)
+    WEO is a particular case of 2 datasets provided as Excel files.
+    Its URL change according to the release date.
+    WEO = data per country
+    WEOAGG = data per country group
+    """
+    year, release_number, file_base_name = build_weo_data(date_value=date_value)
     base_url = "https://www.imf.org/external/pubs/ft/weo/{year}/{release_number}/weodata/".format(
         release_number=release_number, year=year)
-    return {"WEO": "{base_url}{file_base_name}.xls".format(base_url=base_url, file_base_name=file_base_name),
-            "WEOAGG": "{base_url}{file_base_name}a.xls".format(base_url=base_url, file_base_name=file_base_name), }
+
+    return {
+            "WEO": "{base_url}{file_base_name}.xls".format(base_url=base_url, file_base_name=file_base_name),
+            "WEOAGG": "{base_url}{file_base_name}a.xls".format(base_url=base_url, file_base_name=file_base_name),
+           }
 
 
-# endregion
-
-# region get the encoding
 def get_encoding(file_path):
     with open(file_path, 'rb') as f:
         result = chardet.detect(f.read())
+
     return result
 
 
-# endregion
-
-# region get the footer of the csv file
 def get_footer_of_csv_file(file_path):
     """
     IMF weo data file contains a fppter with name of the dataset and year month
@@ -97,9 +103,6 @@ def get_footer_of_csv_file(file_path):
     return footer
 
 
-# endregion
-
-# region print all the columns in the dataframe
 def print_all_columns_in_dataframe(df, number_of_rows=3):
     """
     print all the columns in the dataframe
@@ -111,51 +114,84 @@ def print_all_columns_in_dataframe(df, number_of_rows=3):
         log.info(df.tail(number_of_rows))
 
 
-# endregion
-
-# region extract the required fields
 def extract_required_fields(downloaded_file, target_dir):
     """
     Extract only those fields required for asset allocation project
-    :param downloaded_file: fully downloaded file
+    :param downloaded_file: fully downloaded files for per country and group countrry
     :param target_dir: target directory where the file goes to
     :return:
     """
-    file_path = os.path.abspath(os.path.join(target_dir, downloaded_file))
-    data_path = os.path.dirname(file_path)
 
-    aa_required_fields = ['Country', 'Subject Descriptor', 'Subject Notes', 'Units', 'Scale',
-                          'Country/Series-specific Notes', 'Estimates Start After']
-    available_columns = pd.read_csv(file_path, sep="\t", nrows=1).columns.tolist()
-    # get last 8 years only
+    INFLATION_KEY = 'Inflation, end of period consumer prices'
+
+    # ----------------------------------- Country group data -----------------------------------
+    country_group_file_path = os.path.abspath(os.path.join(target_dir, downloaded_file[1]))
+    country_group_data_path = os.path.dirname(country_group_file_path)
+    country_group_fields = ['Country Group Name', 'Subject Descriptor']
+    country_group_columns = pd.read_csv(country_group_file_path, sep="\t", nrows=1).columns.tolist()
+
+    # Get last 8 years only
+    last_8_years = country_group_columns[-9:-1]
+    country_group_fields.extend(last_8_years)
+
+    log.info('Starting extraction of data from: %s' % country_group_file_path)
+    country_group_result = get_encoding(country_group_file_path)
+
+    country_group_data = pd.read_csv(country_group_file_path, sep="\t", usecols=country_group_fields, encoding=country_group_result['encoding'])
+    print_all_columns_in_dataframe(country_group_data, 4)
+    country_group_footer = get_footer_of_csv_file(country_group_file_path)
+
+    # Write the footer separately
+    with open(country_group_file_path, "a+") as wp:
+        wp.write("\n")
+        wp.write(country_group_footer)
+        wp.write("\n")
+
+    # Select only 'Inflation, end of period consumer price' and 'Euro area' in country group data
+    country_key = 'Euro area'
+
+    # Remove whitespaces in the Country Group Name
+    country_group_data['Country Group Name'] = country_group_data['Country Group Name'].str.strip()
+
+    country_group_inflation = country_group_data.loc[(country_group_data['Subject Descriptor'] == INFLATION_KEY) & (country_group_data['Country Group Name'] == country_key)]
+
+    country_group_imf_file = os.path.abspath(os.path.join(country_group_data_path, f"data_imf_eur_{downloaded_file[1]}"))
+    country_group_inflation.to_csv(country_group_imf_file, index=False)
+
+    # ----------------------------------- Country data -----------------------------------
+    country_file_path = os.path.abspath(os.path.join(target_dir, downloaded_file[0]))
+    country_data_path = os.path.dirname(country_file_path)
+    country_fields = ['Country', 'Subject Descriptor', 'Subject Notes', 'Units']
+    available_columns = pd.read_csv(country_file_path, sep="\t", nrows=1).columns.tolist()
+
+    # Get last 8 years only
     last_8_years = available_columns[-9:-1]
-    aa_required_fields.extend(last_8_years)
+    country_fields.extend(last_8_years)
 
-    log.info('Starting extraction of data from: %s' % file_path)
-    result = get_encoding(file_path)
+    log.info('Starting extraction of data from: %s' % country_file_path)
+    result = get_encoding(country_file_path)
 
-    imf_required_data = pd.read_csv(file_path, sep="\t", usecols=aa_required_fields, encoding=result['encoding'])
-    print_all_columns_in_dataframe(imf_required_data, 4)
-    footer = get_footer_of_csv_file(file_path)
+    country_data = pd.read_csv(country_file_path, sep="\t", usecols=country_fields, encoding=result['encoding'])
+    print_all_columns_in_dataframe(country_data, 4)
+    country_footer = get_footer_of_csv_file(country_file_path)
 
-    for key, val in filter_attributes.items():
-        imf_required_data = imf_required_data.loc[(imf_required_data[key] == val)]
-
-    # write the dataframe to a file TODO later change this to database
-    aa_imf_file = os.path.abspath(os.path.join(data_path, f"aa-{downloaded_file}"))
-    imf_required_data.to_csv(aa_imf_file, index=False, sep="\t")
-    # write the footer separately
-    with open(aa_imf_file, "a+") as wp:
+    # Write the footer separately
+    with open(country_file_path, "a+") as wp:
         wp.write("\n")
-        wp.write(footer)
+        wp.write(country_footer)
         wp.write("\n")
+
+    # Select only the data for 'Inflation, end of period consumer price'
+    country_inflation = country_data.loc[country_data['Subject Descriptor'] == INFLATION_KEY]
+    country_inflation = country_inflation.loc[
+        (country_inflation['Units'] == 'Annual percent change') | (country_inflation['Units'] == 'Percent change')]
+
+    country_imf_file = os.path.abspath(os.path.join(country_data_path, f"data_imf_{downloaded_file[0]}"))
+    country_inflation.to_csv(country_imf_file, index=False)
 
     return True
 
 
-# endregion
-
-# region download weo data from the imf website
 def download_weo_data_from_imf_website(date_arg):
     """
     downloads the data from imf weo website
@@ -164,26 +200,29 @@ def download_weo_data_from_imf_website(date_arg):
     """
     try:
         date_list = date_arg.split("-")
-        date_val = date(year=int(date_list[2]), month=int(date_list[1]), day=int(date_list[0]))
+        date_value = date(year=int(date_list[2]), month=int(date_list[1]), day=int(date_list[0]))
     except IndexError:
         raise Exception("Invalid Input type")
 
-    # get WEO datasets
-    weo_url_by_dataset_code = build_weo_url_by_dataset_code(date_val)
+    # Get WEO datasets
+    weo_url_by_dataset_code = build_weo_url_by_dataset_code(date_value=date_value)
+
+    dataset_names = []
+
+    # Get the data per country
     for dataset_code, dataset_url in sorted(weo_url_by_dataset_code.items()):
         log.info('Fetching %r - %s', dataset_code, dataset_url)
         weo_response = requests.get(dataset_url, timeout=200, verify=False)
         dataset_name = os.path.basename(dataset_url)
-        dataset_name = dataset_name.split(".")[0] + ".csv"
+        dataset_name = dataset_name.split(".")[0]+".csv"
+        dataset_names.append(dataset_name)
         file_name = args.target_dir / dataset_name
-        with file_name.open("w") as f:
+        with (file_name).open("w") as f:
             f.write(weo_response.content.decode('latin1'))
-        return dataset_name
+
+    return dataset_names
 
 
-# endregion
-
-# region parse the data from the command line
 def parser_data():
     """
     set the arguments for the parser
@@ -191,12 +230,14 @@ def parser_data():
     """
     global args
     parser = argparse.ArgumentParser()
-    parser.add_argument('target_dir', type=Path, help='path of target directory containing data as provided by IMF')
-    parser.add_argument('--date', type=str,
-                        help='date when the imf data is required, it should be in the format dd-mm-yyyy.'
-                             ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
+    parser.add_argument('--target_dir', type=Path, help='path of target directory containing data as provided by IMF')
+    parser.add_argument('--date', type=str, help='date when the imf data is required, it should be in the format dd-mm-yyyy.'
+                                                 ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
     parser.add_argument('--log', default='INFO', help='level of logging messages')
     args = parser.parse_args()
+    target_value = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data_effect', 'data', 'data_imf'))
+
+    args.target_dir = Path(target_value)
 
     if args.date is None:
         today = date.today()
@@ -205,28 +246,27 @@ def parser_data():
     return args.target_dir, args.date, args.log
 
 
-# endregion
-
-# region scrape the imf data
 def scrape_imf_data():
     args_target, args_date, args_log = parser_data()
     numeric_level = getattr(logging, args_log.upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError('Invalid log level: {}'.format(args_log))
-    logging.basicConfig(format="%(levelname)s:%(name)s:%(asctime)s:%(message)s", level=numeric_level,
-                        stream=sys.stdout, )
+    logging.basicConfig(
+        format="%(levelname)s:%(name)s:%(asctime)s:%(message)s",
+        level=numeric_level,
+        stream=sys.stdout,
+    )
     logging.getLogger("urllib3").setLevel(logging.INFO)
     # Download IMF WEO datasets.
     log.info("Download IMF WEO Dataset")
     downloaded_file = download_weo_data_from_imf_website(args_date)
-    # extract only those fields required for Asset allocation.
-    log.info("Extract only those fields required for Assect allocation")
+    # Extract only those fields required for Asset allocation.
+    log.info("Extract only those fields required for Asset allocation")
+    print(log)
     extract_required_fields(downloaded_file, args_target)
 
     return 0
 
-
-# endregion
 
 if __name__ == '__main__':
     sys.exit(scrape_imf_data())

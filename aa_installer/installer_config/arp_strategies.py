@@ -2,43 +2,41 @@ import os
 import sys
 import xlwings as xw
 from time import strftime, gmtime
-
-import common_libraries.dal_enums.strategy
-
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
 sys.path.insert(0, ROOT_DIR)
-from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
+from assetallocation_arp.data_etl import import_data_times_to_delete as gd
 from assetallocation_arp.models import times
+from assetallocation_arp.common_libraries import models_names
 
 
 def run_model(model_type, mat_file, input_file):
 
-    if model_type == common_libraries.dal_enums.strategy.Name.times.name:
-        # get inputs from excel and matlab data
+    if model_type == models_names.Models.times.name:
+        # get inputs_effect from excel and matlab data
         times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        write_output_to_excel({common_libraries.dal_enums.strategy.Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
+        write_output_to_excel({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
 
-    if model_type == common_libraries.dal_enums.strategy.Name.maven.name:
+    if model_type == models_names.Models.maven.name:
         print(model_type)
-    if model_type == common_libraries.dal_enums.strategy.Name.effect.name:
+    if model_type == models_names.Models.effect.name:
         print(model_type)
-    if model_type == common_libraries.dal_enums.strategy.Name.curp.name:
+    if model_type == models_names.Models.curp.name:
         print(model_type)
-    if model_type == common_libraries.dal_enums.strategy.Name.fica.name:
+    if model_type == models_names.Models.fica.name:
         print(model_type)
-    if model_type == common_libraries.dal_enums.strategy.Name.factor.name:
+    if model_type == models_names.Models.factor.name:
         print(model_type)
-    if model_type == common_libraries.dal_enums.strategy.Name.comca.name:
+    if model_type == models_names.Models.comca.name:
         print(model_type)
 
 
 def write_output_to_excel(model_outputs, input_file):
     
-    if common_libraries.dal_enums.strategy.Name.times.name in model_outputs.keys():
+    if models_names.Models.times.name in model_outputs.keys():
 
         asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
 
@@ -62,7 +60,7 @@ def write_output_to_excel(model_outputs, input_file):
         #
         sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
         #
-        # write inputs used to excel and run time
+        # write inputs_effect used to excel and run time
         sheet_times_inputs.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         #
         sheet_times_inputs.range('rng_inputs_used').offset(0, 0).value = times_inputs
@@ -88,7 +86,7 @@ def get_inputs_from_python(model, file):
 
     input_file = None
 
-    models_list = [model.name for model in common_libraries.dal_enums.strategy.Name]
+    models_list = [model.name for model in models_names.Models]
 
 
     xw.Book(file).set_mock_caller()

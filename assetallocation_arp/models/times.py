@@ -18,10 +18,11 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Signal, Performance
 
+#todo move times model into folder
 
 def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
-    # format data and inputs
+    # format data and inputs_effect
     asset_inputs_t = asset_inputs.set_index('asset').T
     # all_data = all_data[all_data.index.values > np.datetime64(times_inputs['date_from'].item())]
     times_data = all_data[asset_inputs.signal_ticker]

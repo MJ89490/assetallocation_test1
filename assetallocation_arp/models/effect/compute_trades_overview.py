@@ -1,0 +1,12 @@
+from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
+
+
+def compute_trades_overview(profit_and_loss_combo_overview, signals_combo_overview):
+    """
+    Function computing the trades
+    :param profit_and_loss_combo_overview: profit_and_loss_combo_overview values
+    :param signals_combo_overview: signals_combo_overview values
+    :return: a dataFrame with trades values
+    """
+    write_logs_effect("Computing trade overview...", "logs_trade_overview")
+    return signals_combo_overview - profit_and_loss_combo_overview
