@@ -48,13 +48,15 @@ def times_model():
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
 
-@app.route('/times_dashboard',  methods=['GET', 'POST'])
-def times_dashboard():
+@app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
+@app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
+# @app.route('/times_dashboard',  methods=['GET', 'POST'])
+def times_dashboard(fund_name: str, times_version: int):
     # form = ExportDataForm()
     form = InputsTimesModel()
-    # template_data = main_data('f1', 1)
+    template_data = main_data('f1', 399)
 
-    return render_template('times_dashboard.html', form=form, title='Dashboard')
+    return render_template('times_dashboard.html', form=form, title='Dashboard', **template_data)
 
 
 @app.route('/receive_times_data', methods=['POST'])

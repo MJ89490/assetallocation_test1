@@ -105,7 +105,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top navbar-default py-lg-0 ">
-            <button class="navbar-toggler" type="button"
+        <button class="navbar-toggler" type="button"
                     data-toggle="collapse"
                     data-target="#navbarResponsive"
                     aria-controls="navbarResponsive"
@@ -113,11 +113,11 @@
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target="">Support</a></li>
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target=""><b>Support</b></a></li>
+            </ul>
+        </div>
     </nav>
 
     <div class="sidenav">
@@ -177,7 +177,25 @@
 
     <!-- ============================= CHARTS AREA ============================= -->
     <div class="container">
-      <h2 class="title-dashboard">TIMES Dashboard</h2>
+        <h2 class="title-dashboard">TIMES Dashboard</h2>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="sparklines_assets_one" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_one.js') }}"></script>
+                <script type="text/javascript">
+                                                sparklinesAssetsOne({{ times_data['times_positions']['US_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['EU_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['JP_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['HK_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['US_10_y_Bonds'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['UK_10_y_Bonds'].tolist()|tojson }})
+                </script>
+
+            </div>
+
+
+        </div>
 
 
     </div>

@@ -27,7 +27,7 @@ class FundStrategy:
         self.strategy_version = strategy_version
         self.asset_weights = fund_strategy_asset_weights or []
         self.asset_analytics = fund_strategy_asset_analytics or []
-        self._assets = None
+        self._assets = []
 
     @property
     def assets(self) -> List[Asset]:
