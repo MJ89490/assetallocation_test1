@@ -92,43 +92,19 @@ function getDataFromTable(){
             input_usd_eur: input_usd_eur};
 }
 
-// Grab data from Bootstrap table
-$(function (){
+
+
+
+
+
+$(function(){
 	$('#contact-form-button-effect').click(function(){
-		var input_update_imf_effect = $('#input_update_imf_effect').val();
-		var input_user_date_effect = $('#input_user_date_effect').val();
-		var input_signal_date_effect = $('#input_signal_date_effect').val();
-		var input_signal_day_effect = $('#input_signal_day_effect').val();
-		var input_frequency_effect = $('#input_frequency_effect').val();
-		var input_trend_indicator_effect = $('#input_trend_indicator_effect').val();
 
-		var input_short_term_ma = $('#input_short_term_ma').val();
-		var input_long_term_ma = $('#input_long_term_ma').val();
-
-		var input_include_shorts_effect = $('#input_include_shorts_effect').val();
-		var input_cut_off_long_effect = $('#input_cut_off_long_effect').val();
-
-        var input_cut_off_short_effect = $('#input_cut_off_short_effect').val();
-		var input_real_nominal_effect = $('#input_real_nominal_effect').val();
-
-		var input_real_time_inf_effect = $('#input_real_time_inf_effect').val();
-		var input_threshold_effect = $('#input_threshold_effect').val();
-
-		var input_risk_weighting = $('#input_risk_weighting').val();
-		var input_window_effect = $('#input_window_effect').val();
-
-		var input_bid_ask_effect = $('#input_bid_ask_effect').val();
-		var input_position_size_effect = $('#input_position_size_effect').val();
-
-        sendJsonDataFromTable(input_update_imf_effect);
-
-	});
-});
-
-// Send Bootstrap and AG grid table to Python
-function sendJsonDataFromTable(input_update_imf_effect){
-
-    		$.ajax({
+	    var res = getDataFromTable();
+	    console.log(res);
+		var user = $('#inputUsername').val();
+		var pass = $('#inputPassword').val();
+		$.ajax({
 			url: '/signUpUser2',
 			data: $('form').serialize(),
 			type: 'POST',
@@ -139,12 +115,5 @@ function sendJsonDataFromTable(input_update_imf_effect){
 				console.log(error);
 			}
 		});
-}
-
-
-// wait for the document to be loaded, otherwise
-// ag-Grid will not find the div in the document.
-document.addEventListener('DOMContentLoaded', function () {
-  var eGridDiv = document.querySelector('#myGrid');
-  new agGrid.Grid(eGridDiv, gridOptions);
+	});
 });

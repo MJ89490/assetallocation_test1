@@ -127,3 +127,9 @@ class InputsTimesModel(FlaskForm):
     asset_input_set = FieldList(FormField(AssetInputForm), min_entries=0)
 
     submit_save = SubmitField('Save')
+
+
+class InputsEffectStrategy(FlaskForm):
+    version_choices = [('New Version', 'New Version')]
+    versions_effect = SelectField('Versions', choices=version_choices)
+

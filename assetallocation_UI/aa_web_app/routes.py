@@ -5,7 +5,7 @@ from flask import render_template
 from flask import request
 
 from assetallocation_UI.aa_web_app import app
-from assetallocation_UI.aa_web_app.forms import InputsTimesModel
+from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
@@ -62,22 +62,45 @@ def receive_times_data():
         return json.dumps({'status': 'OK'})
 
 
-@app.route('/effect_strategy', methods=['GET', 'POST'])
+@app.route('/effect_strategy')
 def effect_strategy():
-    form = InputsTimesModel()
+    form = InputsEffectStrategy(request.form)
     run_model_page = 'run_model_page'
-
-    if request.method == "POST":
-        # TODO set a specific layout depending on the version!
-        version_type = form.versions.data
-
-        return render_template('effect_page_mirror.html', form=form, title='TimesPage')
     return render_template('effect_page.html', title='EffectPage', form=form, run_model_page=run_model_page)
 
 
+@app.route('/effect_strategy_input', methods=['POST'])
+def effect_strategy_input():
+    form = InputsEffectStrategy()
+    return render_template('effect_page_mirror.html', form=form, title='TimesPage')
 
 
+# @app.route('/effect_strategy_run_model', methods=['POST'])
+# def effect_strategy_run_model():
+#     user = request.form['username']
+#     password = request.form['password']
+#     # imf = request.form['input_update_imf_effect']
+#     # print(imf)
+#     return json.dumps({'status': 'OK', 'user': user, 'pass': password})
 
+
+@app.route('/signUp')
+def signUp():
+    return render_template('signUp.html')
+
+
+@app.route('/signUpUser2', methods=['POST'])
+def signUpUser2():
+    # version = request.form['selectVersion']
+    user = request.form['username']
+    password = request.form['password']
+    imf = request.form['input_update_imf_effect']
+    t = request.get_json()
+    print(t)
+    print(user)
+    print(password)
+    print(imf)
+    return json.dumps({'status':'OK','user':user,'pass':password, 'imf': imf})
 
 
 
