@@ -48,8 +48,8 @@
 /* EFFECT PAGE */
 .btn-outline-secondary {background-color:#fff !important; color: #C0C0C0 !important; border-color: #C0C0C0 !important;}
 .row-effect-ag-grid{margin-top: 50px;}
-
-
+.row-effect-ag-grid-bottom{margin-bottom: 100px;}
+.form-models-select-effect{color: #005774 !important; border-color: #007faa !important; width: 230px;}
 
 /* FOOTER */
 #sticky-footer {flex-shrink: none;}
