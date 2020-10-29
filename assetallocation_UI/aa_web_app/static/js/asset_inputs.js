@@ -86,7 +86,7 @@ function printNode(node, index) {
 }
 
 
-// Get the data from the table ==> TO CALL FROM PYTHON TO GET THE INPUTS
+// Get the data from the table
 function getDataFromTable(){
 
     var assetsNames = []
