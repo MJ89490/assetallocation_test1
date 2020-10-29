@@ -1,5 +1,4 @@
 // Items in the table (columns)
-// TO AUTOMATE WITH THE DATABASE!!!
 var columnDefs = [
 
     {headerName: "Asset", field: "asset"},
@@ -199,30 +198,3 @@ document.addEventListener("DOMContentLoaded", function() {
     var eGridDiv = document.querySelector('#myGrid');
     new agGrid.Grid(eGridDiv, gridOptions);
 });
-
-
-//Failed attempt at adding Asset input data to request from submit button
-//
-// $("#btn btn-lg btn-primary").click(function() {
-//     console.log('hit form submit button');
-//     var results = this.getDataFromTable();
-//
-//     var jsonData = JSON.stringify({"assetsNames": results.assetsNames, "assetsTicker": results.assetsTicker,
-//                                    "assetsFutureTicker": results.assetsFutureTicker, "assetsCosts": results.assetsCosts,
-//                                    "assetsLeverage": results.assetsLeverage});
-//
-//      $(this).append(jsonData);
-//      return true;
-// });
-//
-// $("form-group").submit(function () {
-//     console.log('hit form submit button');
-//     var results = this.getDataFromTable();
-//
-//     var jsonData = JSON.stringify({"assetsNames": results.assetsNames, "assetsTicker": results.assetsTicker,
-//                                    "assetsFutureTicker": results.assetsFutureTicker, "assetsCosts": results.assetsCosts,
-//                                    "assetsLeverage": results.assetsLeverage});
-//
-//      $(this).append(jsonData);
-//      return true;
-// });

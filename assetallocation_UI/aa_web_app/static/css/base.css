@@ -45,6 +45,11 @@
 .form-models-select {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; margin-right: 15px;}
 .btn-run-model {width: 415px; margin-top: 32px;}
 
+/* EFFECT PAGE */
+.btn-outline-secondary {background-color:#fff !important; color: #C0C0C0 !important; border-color: #C0C0C0 !important;}
+.row-effect-ag-grid{margin-top: 50px;}
+
+
 
 /* FOOTER */
 #sticky-footer {flex-shrink: none;}

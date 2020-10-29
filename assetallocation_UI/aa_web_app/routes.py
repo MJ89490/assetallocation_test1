@@ -62,6 +62,25 @@ def receive_times_data():
         return json.dumps({'status': 'OK'})
 
 
+@app.route('/effect_strategy', methods=['GET', 'POST'])
+def effect_strategy():
+    form = InputsTimesModel()
+    run_model_page = 'run_model_page'
+
+    if request.method == "POST":
+        # TODO set a specific layout depending on the version!
+        version_type = form.versions.data
+
+        return render_template('effect_page_mirror.html', form=form, title='TimesPage')
+    return render_template('effect_page.html', title='EffectPage', form=form, run_model_page=run_model_page)
+
+
+
+
+
+
+
+
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
 # @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 # def times_dashboard(fund_name: str, times_version: int):

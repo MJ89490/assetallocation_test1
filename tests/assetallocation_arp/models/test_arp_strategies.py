@@ -10,7 +10,7 @@
 
 import pytest
 
-from assetallocation_arp.arp_strategies import get_inputs_from_python
+from assetallocation_arp.arp_strategies_old import get_inputs_from_python
 
 
 @pytest.mark.parametrize("model",
