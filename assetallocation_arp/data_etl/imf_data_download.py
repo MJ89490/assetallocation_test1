@@ -64,23 +64,25 @@ def build_weo_data(date_value):
 # https://www.imf.org/en/Publications/WEO/weo-database/2019/October/weo-report?c=512,914,612,614,311,213,911,314,193,122,912,313,419,513,316,913,124,339,638,514,218,963,616,223,516,918,748,618,624,522,622,156,626,628,228,924,233,632,636,634,238,662,960,423,935,128,611,321,243,248,469,253,642,643,939,734,644,819,172,132,646,648,915,134,652,174,328,258,656,654,336,263,268,532,944,176,534,536,429,433,178,436,136,343,158,439,916,664,826,542,967,443,917,544,941,446,666,668,672,946,137,546,674,676,548,556,678,181,867,682,684,273,868,921,948,943,686,688,518,728,836,558,138,196,278,692,694,962,142,449,564,565,283,853,288,293,566,964,182,359,453,968,922,714,862,135,716,456,722,942,718,724,576,936,961,813,726,199,733,184,524,361,362,364,732,366,144,146,463,528,923,738,578,537,742,866,369,744,186,925,869,746,926,466,112,111,298,927,846,299,582,474,754,698,&s=PCPIE,&sy=2017&ey=2024&ssm=0&scsm=1&scc=0&ssd=1&ssc=0&sic=0&sort=country&ds=.&br=1
 
 
-
 def build_weo_url_by_dataset_code(date_value):
     """
     WEO is a particular case of 2 datasets provided as Excel files.
     Its URL change according to the release date.
+    Sometimes the release_number is included in the url but not always.
     WEO = data per country
     WEOAGG = data per country group
     """
     year, release_number, file_base_name = build_weo_data(date_value=date_value)
-    base_url = "https://www.imf.org/external/pubs/ft/weo/{year}/{release_number}/weodata/".format(
-        release_number=release_number, year=year)
-
+    base_url = f"https://www.imf.org/~/media/Files/Publications/WEO/WEO-Database/{year}/"
     return {
-            "WEO": "{base_url}{file_base_name}.xls".format(base_url=base_url, file_base_name=file_base_name),
-            "WEOAGG": "{base_url}{file_base_name}a.xls".format(base_url=base_url, file_base_name=file_base_name),
-           }
+        "WEO": f"{base_url}{file_base_name}.ashx",
+        "WEOAGG": f"{base_url}{file_base_name}a.ashx",
+        "WEO_release": f"{base_url}{release_number}/{file_base_name}.ashx",
+        "WEOAGG_release": f"{base_url}{release_number}/{file_base_name}a.ashx"
+    }
 
+
+#https://www.imf.org/~/media/Files/Publications/WEO/WEO-Database/2019/WEOApr2019all.ashx
 
 def get_encoding(file_path):
     with open(file_path, 'rb') as f:
@@ -213,14 +215,18 @@ def download_weo_data_from_imf_website(date_arg):
     for dataset_code, dataset_url in sorted(weo_url_by_dataset_code.items()):
         log.info('Fetching %r - %s', dataset_code, dataset_url)
         weo_response = requests.get(dataset_url, timeout=200, verify=False)
-        dataset_name = os.path.basename(dataset_url)
-        dataset_name = dataset_name.split(".")[0]+".csv"
-        dataset_names.append(dataset_name)
-        file_name = args.target_dir / dataset_name
-        with (file_name).open("w") as f:
-            f.write(weo_response.content.decode('latin1'))
+        if weo_response.status_code == 200:
+            dataset_name = os.path.basename(dataset_url)
+            dataset_name = dataset_name.split(".")[0]+".csv"
+            dataset_names.append(dataset_name)
+            file_name = args.target_dir / dataset_name
+            with file_name.open("w") as f:
+                try:
+                    f.write(weo_response.content.decode('utf-16'))
+                except (UnicodeDecodeError, UnicodeEncodeError):
+                    f.write(weo_response.content.decode('latin1'))
 
-    return dataset_names
+    return sorted(dataset_names)
 
 
 def parser_data():
@@ -235,9 +241,10 @@ def parser_data():
                                                  ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
     parser.add_argument('--log', default='INFO', help='level of logging messages')
     args = parser.parse_args()
-    target_value = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data_effect', 'data', 'data_imf'))
-
-    args.target_dir = Path(target_value)
+    if args.target_dir is None:
+        args.target_dir = Path(__file__).parents[2] / 'data_effect' / 'data' / 'data_imf'
+    else:
+        args.target_dir = Path(args.target_dir)
 
     if args.date is None:
         today = date.today()
