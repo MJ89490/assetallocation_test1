@@ -14,7 +14,7 @@ from assetallocation_arp.models.effect.main_effect import run_effect
 from assetallocation_arp.data_etl.outputs_effect.write_outputs_effect_excel import run_write_outputs_effect_model
 
 
-def run_model(model_type, mat_file, input_file):
+def run_model(model_type, mat_file, input_file, excel_instance):
 
     if model_type == models_names.Models.times.name:
         # get inputs_effect from excel and matlab data
@@ -31,7 +31,7 @@ def run_model(model_type, mat_file, input_file):
 
         strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
-        outputs_effect = run_effect(strategy_inputs, asset_inputs=asset_inputs, all_data=all_data)
+        outputs_effect = run_effect(strategy_inputs, excel_instance, asset_inputs=asset_inputs, all_data=all_data)
 
         write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
                                                                  outputs_effect['signals_overview'],
@@ -109,9 +109,9 @@ def get_inputs_from_excel():
     mat_file = xw.Range('rng_mat_file_path').value
     model_type = xw.Range('rng_model_type').value
     file = xw.Range('rng_full_path').value
-
+    excel_instance = xw.Range('rng_run_excel').value
     # run selected model
-    run_model(model_type, mat_file, file)
+    run_model(model_type, mat_file, file, excel_instance)
 
 
 def get_inputs_from_python(model, input_file):

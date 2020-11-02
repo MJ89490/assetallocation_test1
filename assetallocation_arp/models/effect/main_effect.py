@@ -23,7 +23,7 @@ from assetallocation_arp.models.compute_risk_return_calculations import ComputeR
 """
 
 
-def run_effect(strategy_inputs, asset_inputs, all_data):
+def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
 
     user_date = strategy_inputs['userdate'].item()
 
@@ -55,6 +55,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     inflation_differential = obj_inflation_differential.compute_inflation_differential(
                              strategy_inputs['Realtime Inflation Forecast'].item(), obj_import_data.all_currencies_spot,
                              obj_import_data.currencies_spot['currencies_spot_usd'],
+                             excel_instance,
                              imf_data_update=strategy_inputs['updateIMFdata'].item())
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #

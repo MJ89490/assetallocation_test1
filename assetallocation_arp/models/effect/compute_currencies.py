@@ -116,6 +116,7 @@ class ComputeCurrencies(ProcessDataEffect):
                 # Error handling when we reach the end of the dates range
                 try:
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc + 1]
+                    print(tmp_start_date_computations)
                 except IndexError:
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc]
 
@@ -234,7 +235,7 @@ class ComputeCurrencies(ProcessDataEffect):
 
             for values in range(len(carry_division_tmp)):
                 try:
-                    print(round(first_returns[values] * carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
+                    # print(round(first_returns[values] * carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
                     first_returns.append(round(first_returns[values] * carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
                 except ZeroDivisionError:
                     first_returns.append(0)
