@@ -48,15 +48,15 @@ def times_model():
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
 
-@app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
-@app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
-# @app.route('/times_dashboard',  methods=['GET', 'POST'])
-def times_dashboard(fund_name: str, times_version: int):
+# @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
+# @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
+@app.route('/times_dashboard',  methods=['POST'])
+def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    template_data = main_data('f1', 399)
+    # template_data = main_data('f1', 399)
 
-    return render_template('times_dashboard.html', form=form, title='Dashboard', **template_data)
+    return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
 @app.route('/receive_times_data', methods=['POST'])
@@ -65,19 +65,18 @@ def receive_times_data():
 
     if request.method == "POST":
         t = request.get_json()
-        # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'Weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
         fund_name = t['fund']
         long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
         short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
         times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
                       short_signals, int(t['lag']), int(t['volwindow']))
-
+        print('before times assets')
         times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
                               zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-
+        print('after times assets')
         # TODO do not work with that line !!!!!
         fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
-
+        print('after fund strategy')
         return json.dumps({'status': 'OK'})
 
 

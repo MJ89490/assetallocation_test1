@@ -25,12 +25,13 @@
                     <!-- Form: select the version for the model -->
                     <div class="btn-group">
                         {{ form.versions(class="form-control", id="selectVersion")}}
-                         <a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
+                         <a href="#"><button type="submit" onsubmit="load_variables()" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
                     </div>
                 </form>
             </div>
             <div class="col-lg-4"></div>
         </div>
+             
 
         {% if run_model_page=='run_model_page' %}
             <div class="jumbotron jumbotron-fluid jumbotron-image-models" style="background-image: url(static/img/model_image.png);"></div>

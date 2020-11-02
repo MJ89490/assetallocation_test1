@@ -1,5 +1,29 @@
 // Items in the table (columns)
 // TO AUTOMATE WITH THE DATABASE!!!
+
+function load_variables(){
+    $('#inputFundname').val('f1');
+    $('#inputdatefrom').val('01/01/2000');
+    $('#inputtimelag').val(1);
+    $('#inputstrategyweight').val(1);
+    $('#inputleverage').val(3);
+    $('#inputvolwindow').val(3);
+
+    $('#inputfrequency').val('Weekly');
+    $('#inputweekday').val('Mon');
+
+    $('#inputsignaloneshort').val(15);
+    $('#inputsignalonelong').val(30);
+
+    $('#inputsignaltwoshort').val(15);
+    $('#inputsignaltwolong').val(30);
+
+    $('#inputsignalthreeshort').val(15);
+    $('#inputsignalthreelong').val(30);
+}
+
+
+
 var columnDefs = [
 
     {headerName: "Asset", field: "asset"},
@@ -111,6 +135,9 @@ function getDataFromTable(){
 
 $(function (){
 	$('#contact-form-button').click(function(){
+
+
+
 		var fund = $('#inputFundname').val();
 		var date = $('#inputdatefrom').val();
 		var lag = $('#inputtimelag').val()
@@ -159,14 +186,20 @@ function sendJsonDataFromTable(fund, date, weight, lag, leverage, volwindow, fre
     console.log(jsonData);
     $.ajax({
       type : 'POST',
+      async: false,
       url : "/receive_times_data",
       data : jsonData,
       contentType : "application/json",
       dataType: "JSON",
       success: function(response) {
                 console.log(response);
-                window.location.href = "/times_dashboard"
-            }
+
+                window.location.replace("/times_dashboard");
+            },
+      errors: function(response){
+      console.log(response);
+      alert('ERROR');
+      }
     });
 
     return jsonData

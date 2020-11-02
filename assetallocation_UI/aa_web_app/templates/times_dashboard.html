@@ -181,17 +181,7 @@
     <div class="container">
         <h2 class="title-dashboard">TIMES Dashboard</h2>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="sparklines_dynamic" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_dynamic.js') }}"></script>
-                <script type="text/javascript">
-                sparklinesAssetsOne({{ times_data['times_positions']['US_Equities'].tolist()|tojson }})
-                </script>
 
-            </div>
-
-        </div>
 
 
     </div>
