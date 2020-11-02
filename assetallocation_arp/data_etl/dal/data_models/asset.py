@@ -51,8 +51,7 @@ class Asset:
 
     @category.setter
     def category(self, x: Union[str, Category]) -> None:
-        # self._category = x if isinstance(x, Category) else Category[x]
-        self._category = x
+        self._category = x if isinstance(x, Category) else Category[x]
 
     @property
     def country(self) -> Country:
@@ -113,11 +112,11 @@ class Asset:
 
 # noinspection PyAttributeOutsideInit
 class FicaAssetInput(Asset):
-    def __init__(self, ticker: str, category: Union[str, fica_asset_input.Category],
+    def __init__(self, ticker: str, input_category: Union[str, fica_asset_input.Category],
                  curve_tenor: Union[str, fica_asset_input.CurveTenor, None]) -> None:
         """FicaAsset class to hold data from database"""
         super().__init__(ticker)
-        self._category = category
+        self._input_category = input_category
         self._curve_tenor = curve_tenor
 
     @property
@@ -130,12 +129,12 @@ class FicaAssetInput(Asset):
             self._curve_tenor = x if isinstance(x, fica_asset_input.CurveTenor) else fica_asset_input.CurveTenor[x]
 
     @property
-    def category(self) -> fica_asset_input.Category:
-        return self._category
+    def input_category(self) -> fica_asset_input.Category:
+        return self._input_category
 
-    @category.setter
-    def category(self, x: Union[fica_asset_input.Category, str]) -> None:
-        self._category = x if isinstance(x, fica_asset_input.Category) else fica_asset_input.Category[x]
+    @input_category.setter
+    def input_category(self, x: Union[fica_asset_input.Category, str]) -> None:
+        self._input_category = x if isinstance(x, fica_asset_input.Category) else fica_asset_input.Category[x]
 
 
 # noinspection PyAttributeOutsideInit

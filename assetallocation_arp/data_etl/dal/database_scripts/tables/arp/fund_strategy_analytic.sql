@@ -6,62 +6,69 @@
 
 /* Drop Sequences for Autonumber Columns */
 
-DROP SEQUENCE IF EXISTS "arp"."fund_strategy_asset_analytic_id_seq" CASCADE
+DROP SEQUENCE IF EXISTS "arp"."fund_strategy_analytic_id_seq" CASCADE
 ;
 
 /* Drop Tables */
 
-DROP TABLE IF EXISTS "arp"."fund_strategy_asset_analytic" CASCADE
+DROP TABLE IF EXISTS "arp"."fund_strategy_analytic" CASCADE
 ;
 
 /* Create Tables */
 
-CREATE TABLE "arp"."fund_strategy_asset_analytic"
+CREATE TABLE "arp"."fund_strategy_analytic"
 (
 	"id" serial NOT NULL,
 	"fund_strategy_id" integer NOT NULL,
-	"asset_id" integer NOT NULL,
+	"aggregation_level" varchar(25) NOT NULL,
+	"asset_id" integer NULL,
 	"category" varchar(50)	 NOT NULL,
 	"subcategory" varchar(50)	 NOT NULL,
 	"business_date" date NOT NULL,
+	"frequency" frequency NOT NULL,
 	"value" numeric(32,16) NOT NULL,
 	"execution_state_id" integer NOT NULL
 )
 ;
 /* Create Primary Keys, Indexes, Uniques, Checks */
 
-ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_asset_analytic_pkey"
+ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_pkey"
 	PRIMARY KEY ("id")
 ;
 
 ALTER TABLE
-	"arp"."fund_strategy_asset_analytic"
+	"arp"."fund_strategy_analytic"
 ADD CONSTRAINT
-	"fund_strategy_asset_analytic_fund_strategy_id_asset_id_business_date_category_subcategory_key"
+	"fund_strategy_analytic_fund_strategy_id_asset_id_business_date_category_subcategory_key"
 UNIQUE
 	("fund_strategy_id","asset_id","business_date", "category","subcategory")
 ;
 
-ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_asset_analytic_category_subcategory_check"CHECK (
+ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_category_subcategory_check"CHECK (
 	(category IN ('performance', 'signal'))
 AND
 	(CASE
-		WHEN category = 'performance' THEN subcategory in ('carry', 'spot', 'total return', 'excess return', 'excess return index')
+		WHEN category = 'performance'
+			THEN subcategory in ('carry', 'spot', 'beta', 'total return', 'correlation','excess return', 'excess return index', 'total return index')
 		ELSE subcategory in ('carry', 'momentum', 'value')
 	END)
 )
 ;
 
+ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_aggregation_level_check"
+	CHECK (aggregation_level IN ('asset', 'strategy', 'comparator'))
+;
+
 /* Create Foreign Key Constraints */
 
-ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_asset_analytic_asset_fkey"
+ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_asset_fkey"
 	FOREIGN KEY ("asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
-ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_asset_analytic_execution_state_fkey"
+ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
-ALTER TABLE "arp"."fund_strategy_asset_analytic" ADD CONSTRAINT "fund_strategy_asset_analytic_fund_strategy_fkey"
+ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_fund_strategy_fkey"
 	FOREIGN KEY ("fund_strategy_id") REFERENCES "arp"."fund_strategy" ("id") ON DELETE No Action ON UPDATE No Action
 ;

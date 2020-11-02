@@ -1,11 +1,12 @@
-from typing import List, Union
+from typing import List, Union, Dict
 
 import pandas as pd
 
 from assetallocation_arp.data_etl.dal.data_models.asset import Asset, TimesAssetInput
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
-from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Signal, Performance
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, FundStrategyAssetWeight
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Signal, Performance, AggregationLevel
+from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, FundStrategyAssetWeight, FundStrategyAnalytic
 
 
 class DataFrameConverter:
@@ -57,26 +58,39 @@ class DataFrameConverter:
         return df
 
     @staticmethod
-    def df_to_asset_analytics(analytics: pd.DataFrame, category: Union[str, Category],
-                              subcategory: Union[str, Performance, Signal]) -> List[FundStrategyAssetAnalytic]:
+    def df_to_asset_analytics(
+            analytics: pd.DataFrame, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
+            frequency: Union[None, str, Frequency] = None
+    ) -> List[FundStrategyAssetAnalytic]:
         """Transform DataFrame with index of business_date and columns of asset tickers to list of
         FundStrategyAssetAnalytics
         """
-        return [FundStrategyAssetAnalytic(ticker, index, category, subcategory, float(val)) for ticker, data in
-                analytics.items() for index, val in data.iteritems()]
+        return [FundStrategyAssetAnalytic(ticker, index, category, subcategory, float(val), frequency) for ticker, data
+                in analytics.items() for index, val in data.iteritems()]
 
     @staticmethod
-    def df_to_asset_weights(positioning: pd.DataFrame) -> List[FundStrategyAssetWeight]:
+    def series_to_strategy_analytics(
+            analytics: pd.Series, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
+            frequency: Union[None, str, Frequency] = None, aggregation_level: Union[None, str, AggregationLevel] = None
+    ) -> List[FundStrategyAnalytic]:
+        """Transform Series with index of business_date and to list of FundStrategyAnalytics"""
+        return [FundStrategyAnalytic(index, category, subcategory, float(val), frequency, aggregation_level) for
+                index, val in analytics.iteritems()]
+
+    @staticmethod
+    def df_to_asset_weights(
+            weights: pd.DataFrame, frequency: Union[str, Frequency]
+    ) -> List[FundStrategyAssetWeight]:
         """Transform DataFrame with index of business_date and columns of asset tickers to list of FundStrategyAssetWeights
         """
-        return [FundStrategyAssetWeight(ticker, index, float(val)) for ticker, data in positioning.items() for index, val in
-                data.iteritems()]
+        return [FundStrategyAssetWeight(ticker, index, float(val), frequency) for ticker, data in weights.items()
+                for index, val in data.iteritems()]
 
 
 class TimesDataFrameConverter(DataFrameConverter):
     @classmethod
     def create_asset_analytics(cls, signals: pd.DataFrame, returns: pd.DataFrame,
-                               r: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
+                               r: pd.DataFrame, signals_freqency: Frequency) -> List[FundStrategyAssetAnalytic]:
         """
         :param signals: columns named after tickers, index of dates
         :param returns: columns named after tickers, index of dates
@@ -85,35 +99,80 @@ class TimesDataFrameConverter(DataFrameConverter):
         """
         asset_analytics = []
 
-        asset_analytics.extend(cls.df_to_asset_analytics(signals, Category.signal, Signal.momentum))
-        asset_analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"]))
-        asset_analytics.extend(cls.df_to_asset_analytics(r, Category.performance, Performance["excess return index"]))
+        asset_analytics.extend(cls.df_to_asset_analytics(signals, Category.signal, Signal.momentum, signals_freqency))
+        asset_analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"], Frequency.daily))
+        asset_analytics.extend(cls.df_to_asset_analytics(r, Category.performance, Performance["excess return index"], Frequency.daily))
 
         return asset_analytics
 
 
 class FicaDataFrameConverter(DataFrameConverter):
     @classmethod
-    def create_asset_analytics(cls, carry_roll: pd.DataFrame, country_returns: pd.DataFrame,
-                               signals: pd.DataFrame, cum_contribution: pd.DataFrame, returns: pd.DataFrame,
-                               carry_daily: pd.DataFrame, return_daily: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
+    def create_asset_analytics(
+            cls, carry_roll: pd.DataFrame, cum_contribution: pd.DataFrame, returns: pd.DataFrame,
+            carry_daily: pd.DataFrame, return_daily: pd.DataFrame, tickers: List[str]
+    ) -> List[FundStrategyAssetAnalytic]:
         """
-        :param signals: columns named after tickers, index of dates
-        :param returns: columns named after tickers, index of dates
-        :param r: columns named after tickers, index of dates
+        :param carry_roll: columns named after countries, index of dates
+        :param cum_contribution: columns named after countries, index of dates
+        :param returns: columns named after countries, index of dates
+        :param carry_daily: columns named after countries, index of dates
+        :param return_daily: columns named after countries, index of dates
+        :param tickers: ordered list to rename country columns with
         :return:
         """
-        # TODO set category and subcategory depending on Simone's reply
-        asset_analytics = []
+        analytics = []
+        carry_roll.columns = tickers
+        cum_contribution.columns = tickers
+        returns.columns = tickers
+        carry_daily.columns = tickers
+        return_daily.columns = tickers
 
-        asset_analytics.extend(cls.df_to_asset_analytics(carry_roll, Category.signal, Signal.momentum))
-        asset_analytics.extend(cls.df_to_asset_analytics(country_returns, Category.performance, Performance["excess return"]))
-        asset_analytics.extend(cls.df_to_asset_analytics(signals, Category.performance, Performance["excess return index"]))
-        asset_analytics.extend(cls.df_to_asset_analytics(cum_contribution, Category.signal, Signal.momentum))
-        asset_analytics.extend(
-            cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"]))
-        asset_analytics.extend(
-            cls.df_to_asset_analytics(carry_daily, Category.performance, Performance["excess return index"]))
-        asset_analytics.extend(cls.df_to_asset_analytics(return_daily, Category.signal, Signal.momentum))
+        analytics.extend(cls.df_to_asset_analytics(carry_roll, Category.signal, Signal.carry, Frequency.monthly))
+        analytics.extend(cls.df_to_asset_analytics(cum_contribution, Category.performance, Performance['total return'], Frequency.monthly))
+        analytics.extend(cls.df_to_asset_analytics(return_daily, Category.Performance, Performance['total return'], Frequency.daily))
+        analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"]))
+        analytics.extend(cls.df_to_asset_analytics(carry_daily, Category.performance, Performance["excess return index"]))
 
-        return asset_analytics
+        return analytics
+
+    @classmethod
+    def create_strategy_analytics(
+            cls, cum_contribution: pd.Series, returns: pd.DataFrame, carry_roll: pd.Series, carry_daily: pd.DataFrame
+    ) -> List[FundStrategyAnalytic]:
+        """
+        :param returns: columns of Costs, Net_Return, Arithmetic, index of dates
+        :param cum_contribution: index of dates
+        :param carry_roll: index of dates
+        :param carry_daily: columns of 'fica_10y_return', 'fica_10y_return%', 'correlation', 'beta', index of dates
+        :return:
+        """
+        analytics = []
+
+        analytics.extend(cls.series_to_strategy_analytics(cum_contribution, Category.Performance, Performance['total return'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns['Costs'], Category.Performance, Performance.cost, Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns['Net_Return'], Category.Performance, Performance['net return'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns['Arithmetic'], Category.Performance, Performance['net return index'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.Signal, Signal.carry, Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['fica_10y_return'], Category.Performance, Performance['total return index'], Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['fica_10y_return%'], Category.Performance, Performance['total return'], Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['correlation'], Category.Performance, Performance.correlation, Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['beta'], Category.Performance, Performance.beta, Frequency.daily))
+
+        return analytics
+
+    @classmethod
+    def create_comparator_analytics(
+            cls, carry_roll: pd.Series, carry_daily: pd.DataFrame
+    ) -> List[FundStrategyAnalytic]:
+        """
+        :param carry_roll: index of dates
+        :param carry_daily: columns of 'G3_10y_return', 'G3_10y_return%', index of dates
+        :return:
+        """
+        analytics = []
+        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.Signal, Signal.carry, Frequency.daily, AggregationLevel.comparator))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return'], Category.Performance, Performance['total return index'], Frequency.daily, AggregationLevel.comparator))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return%'], Category.Performance, Performance['total return'], Frequency.daily, AggregationLevel.comparator))
+
+        return analytics

@@ -15,7 +15,7 @@ class Country(Enum):
     USD = auto()
 
 
-# TODO update the below
+# TODO update the below ask SIMONE
 country_region = {
     'USD': 'North America',
     'EUR': 'Europe',

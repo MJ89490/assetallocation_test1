@@ -33,7 +33,7 @@ class ArpProcCaller(Db):
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
         """Insert data from an instance of FundStrategy into database"""
         ticker_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
-        ticker_analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.asset_analytics)
+        ticker_analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.analytics)
 
         res = self.call_proc('arp.insert_fund_strategy_results',
                              [fund_strategy.fund_name, fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
@@ -63,13 +63,14 @@ class ArpProcCaller(Db):
             a.subcategory = row['asset_subcategory']
             fund_strategy.add_asset_if_not_exists(a)
 
-            aw = FundStrategyAssetWeight(row['asset_ticker'], row['business_date'], float(row['strategy_weight']))
+            aw = FundStrategyAssetWeight(row['asset_ticker'], row['business_date'], float(row['strategy_weight']),
+                                         row['weight_frequency'])
             aw.implemented_weight = float(row['implemented_weight'])
             fund_strategy.add_fund_strategy_asset_weight(aw)
 
             fund_strategy.add_fund_strategy_asset_analytics(
-                ArpTypeConverter.fund_strategy_asset_analytics_str_to_objects(row['asset_ticker'], row['business_date'],
-                                                                              row['asset_analytics']))
+                ArpTypeConverter.fund_strategy_analytics_str_to_objects(row['asset_ticker'], row['business_date'],
+                                                                        row['analytics']))
 
         return fund_strategy
 
@@ -159,7 +160,6 @@ class TimesProcCaller(ArpProcCaller):
     def select_times_assets_with_analytics(self, times_version, business_datetime) -> Optional[List[TimesAssetInput]]:
         """Select assets and asset analytics data for a version of times, as at business_datetime"""
         res = self.call_proc('arp.select_times_assets_with_analytics', [times_version, business_datetime])
-
         if not res:
             return
 
@@ -305,7 +305,7 @@ class FicaProcCaller(ArpProcCaller):
             asset_tickers, categories, curve_tenors = [], [], []
             for j in i:
                 asset_tickers.append(j.ticker)
-                categories.append(j.category)
+                categories.append(j.input_category)
                 curve_tenors.append(j.curve_tenor)
 
             self.call_proc('arp.insert_fica_assets', [fica_version, asset_tickers, categories, curve_tenors])
@@ -372,14 +372,6 @@ class FicaProcCaller(ArpProcCaller):
 
 
 if __name__ == '__main__':
-    from psycopg2.extras import DateTimeTZRange
-
-    f2 = Fica(2, 'a', DateTimeTZRange(), [1, 2, 3], 1, 1)
-    fai1 = FicaAssetInput('AUDUSD Curncy', 'swap', None)
-    fai2 = FicaAssetInput('AUDUSD Curncy', 'future', None)
-
-    fpc = FicaProcCaller()
-    # f_version = fpc.insert_fica(f2, 'JS89275')
-    # print(f_version)
-
-    fpc.select_fica(72)
+    apc = ArpProcCaller()
+    fs = apc.select_fund_strategy_results('f1', 'times', 432)
+    print(fs)

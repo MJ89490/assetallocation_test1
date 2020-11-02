@@ -50,6 +50,12 @@ def MockAsset():
         yield _MockAsset
 
 
+@pytest.fixture()
+def MockFundStrategyAssetWeight():
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FundStrategyAssetWeight', autospec=True) as _MockFundStrategyAssetWeight:
+        yield _MockFundStrategyAssetWeight
+
+
 def test_insert_times_strategy_calls_call_proc(MockTimes, mock_call_proc):
     mock_times = MockTimes(1, 'weekly', 'e', [float(2)], [float(3)], 4, 5)
     user_id = 'a'
@@ -169,7 +175,7 @@ def test_select_fund_strategy_results_calls_call_proc(mock_call_proc):
                                            [fund_name, strategy_name, strategy_version])
 
 
-def test_select_fund_strategy_results_returns_fund_strategy(mock_call_proc, MockAsset):
+def test_select_fund_strategy_results_returns_fund_strategy(mock_call_proc, MockAsset, MockFundStrategyAssetWeight):
     fund_name = 'b'
     strategy_name = 'times'
     strategy_version = 1
@@ -288,7 +294,7 @@ def test_insert_fica_assets_calls_call_proc(MockFicaAssetInput, mock_call_proc):
 
     mock_call_proc.assert_called_once_with(
         a, 'arp.insert_fica_assets', [
-            fica_version, [mock_fai.ticker], [mock_fai.category], [mock_fai.curve_tenor]])
+            fica_version, [mock_fai.ticker], [mock_fai.input_category], [mock_fai.curve_tenor]])
 
 
 def test_select_fica_strategy_calls_call_proc(mock_call_proc):
@@ -311,13 +317,12 @@ def test_select_fica_strategy_returns_fica_object(MockFica):
 
 def test_select_fica_assets_with_analytics_calls_call_proc(mock_call_proc):
     f_version = 2
-    business_datetime = datetime(2020, 9, 1)
     mock_call_proc.return_value = []
 
     a = FicaProcCaller()
     a.select_fica_assets_with_analytics(f_version)
 
-    mock_call_proc.assert_called_once_with(a, 'arp.select_fica_assets_with_analytics', [f_version, business_datetime])
+    mock_call_proc.assert_called_once_with(a, 'arp.select_fica_assets_with_analytics', [f_version])
 
 
 def test_select_fica_assets_with_analytics_returns_list_of_fica_asset_objects(mock_call_proc):

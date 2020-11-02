@@ -11,9 +11,10 @@ RETURNS TABLE(
   asset_category varchar,
   asset_subcategory varchar,
   business_date date,
+  weight_frequency frequency,
   strategy_weight numeric,
   implemented_weight numeric,
-  asset_analytics arp.category_subcategory_value[]
+  analytics arp.aggregation_category_subcategory_frequency_value[]
 )
 AS
 $$
@@ -48,19 +49,22 @@ BEGIN
       a.ticker as asset_ticker,
       a.category as asset_category,
       a.subcategory as asset_subcategory,
-      fsaw.business_date,
+      fsa.business_date,
+      fsaw.frequency as weight_frequency,
       fsaw.strategy_weight,
       fsaw.implemented_weight,
-      array_agg((fsaa.category, fsaa.subcategory, fsaa.value):: arp.category_subcategory_value) as asset_analytics
+      array_agg(
+            (fsa.aggregation_level, fsa.category, fsa.subcategory, fsa.frequency, fsa.value)
+            :: arp.aggregation_category_subcategory_frequency_value
+          ) as analytics
     FROM
-      arp.fund_strategy_asset_weight fsaw
+      fsr
+      JOIN arp.fund_strategy_analytic fsa ON fsa.fund_strategy_id = fsr.fund_strategy_id
+      LEFT JOIN arp.fund_strategy_asset_weight fsaw
+          ON fsaw.fund_strategy_id = fsr.fund_strategy_id
+          AND fsaw.asset_id = fsa.asset_id
+          AND fsaw.business_date = fsa.business_date
       JOIN asset.asset a ON fsaw.asset_id = a.id
-      JOIN fsr ON fsaw.fund_strategy_id = fsr.fund_strategy_id
-      JOIN arp.fund_strategy_asset_analytic fsaa
-          ON fsaa.fund_strategy_id = fsr.fund_strategy_id
-          AND fsaa.asset_id = fsaw.asset_id
-          AND fsaa.asset_id = a.id
-          AND fsaa.business_date = fsaw.business_date
     GROUP BY
       fsr.python_code_version,
       fsr.output_is_saved,
@@ -68,7 +72,8 @@ BEGIN
       a.ticker,
       a.category,
       a.subcategory,
-      fsaw.business_date,
+      fsa.business_date,
+      fsaw.frequency,
       fsaw.strategy_weight,
       fsaw.implemented_weight
   ;

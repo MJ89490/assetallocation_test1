@@ -21,7 +21,7 @@ def format_data(strategy: Fica):
     # selecting which yield curve to use
     curve_category = Category.sovereign if strategy.curve == Category.sovereign.name else Category.swap
     analytics = [analytic for group in strategy.grouped_asset_inputs for asset in group for analytic
-                 in asset.asset_analytics if asset.category == curve_category]
+                 in asset.asset_analytics if asset.input_category == curve_category]
 
     curve = DataFrameConverter.asset_analytics_to_df(analytics)
     return curve.asfreq('BM')
@@ -98,8 +98,7 @@ def calculate_signals_and_returns(strategy: Fica, carry_roll, country_returns):
     cum_contribution['Return'] = cum_contribution.sum(axis=1)
     # calculating returns, starting return index series with 100
     sub_signals = signals - signals.shift()
-    signals['Turnover'] = sub_signals.abs().sum(axis=1)
-    returns['Costs'] = signals['Turnover'] * strategy.trading_cost / 100
+    returns['Costs'] = sub_signals.abs().sum(axis=1) * strategy.trading_cost / 100
     returns['Net_Return'] = cum_contribution['Return'] - returns['Costs'].cumsum()
     returns['Arithmetic'] = (1 + returns['Net_Return'] / 100) * 100
     returns['Geometric'] = 100
@@ -120,11 +119,11 @@ def run_daily_attribution(strategy, signals):
     swap_cr_tickers, swap_crs = [], []
     for group in strategy.grouped_asset_inputs:
         for asset in group:
-            if asset.category == Category.future and asset.country.name in ('EUR', 'GBP', 'USD'):
+            if asset.input_category == Category.future and asset.country.name in ('EUR', 'GBP', 'USD'):
                 future_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
                     futures.append(analytic)
-            elif asset.category == Category.swap_cr:
+            elif asset.input_category == Category.swap_cr:
                 swap_cr_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
                     swap_crs.append(analytic)
