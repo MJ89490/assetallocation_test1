@@ -12,7 +12,6 @@ from pandas.tseries.offsets import BDay
 from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, DayOfWeek
 from assetallocation_arp.models import portfolio_construction as pc
 from assetallocation_arp.models import arp_signals as arp
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
@@ -56,7 +55,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     return signals, returns, r, positioning
 
 
-def calculate_signals_returns_r_positioning(times: Times) -> \
+def calculate_signals_returns_r_positioning(times: 'Times') -> \
         Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     asset_inputs, future_assets, signal_assets = get_asset_data_as_data_frames(times.asset_inputs)
     future_assets = future_assets.pct_change()

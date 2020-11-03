@@ -1,4 +1,5 @@
 from typing import List, Union, Optional
+import itertools
 
 from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
@@ -135,6 +136,52 @@ class FicaAssetInput(Asset):
     @input_category.setter
     def input_category(self, x: Union[fica_asset_input.Category, str]) -> None:
         self._input_category = x if isinstance(x, fica_asset_input.Category) else fica_asset_input.Category[x]
+
+
+# noinspection PyAttributeOutsideInit
+class FxAssetInput:
+    def __init__(self, ppp_ticker: str, cash_rate_ticker: str, currency: str) -> None:
+        """TimesAssetInput class to hold data from database"""
+        self.ppp_ticker = ppp_ticker
+        self.cash_rate_ticker = cash_rate_ticker
+        self.currency = currency
+
+        self.ppp_asset = None
+        self.cash_rate_asset = None
+
+    @property
+    def cash_rate_asset(self) -> Asset:
+        return self._cash_rate_asset
+
+    @cash_rate_asset.setter
+    def cash_rate_asset(self, x: Asset) -> None:
+        self._cash_rate_asset = x
+
+
+    @property
+    def ppp_asset(self) -> Asset:
+        return self._ppp_asset
+
+    @ppp_asset.setter
+    def ppp_asset(self, x: Asset) -> None:
+        self._ppp_asset = x
+
+
+    @staticmethod
+    def get_crosses(fx_asset_inputs: List['FxAssetInput']) -> List[str]:
+        currencies = [i.currency for i in fx_asset_inputs]
+        fx = [x for x in itertools.combinations(currencies, 2)]
+        return [''.join(x) + 'CR Curncy' for x in fx]
+
+    @staticmethod
+    def get_spot_tickers(fx_asset_inputs: List['FxAssetInput']) -> List[str]:
+        crosses = FxAssetInput.get_crosses(fx_asset_inputs)
+        return [''.join(x) + ' Curncy' for x in crosses]
+
+    @staticmethod
+    def get_carry_tickers(fx_asset_inputs: List['FxAssetInput']) -> List[str]:
+        crosses = FxAssetInput.get_crosses(fx_asset_inputs)
+        return [''.join(x) + 'CR Curncy' for x in crosses]
 
 
 # noinspection PyAttributeOutsideInit

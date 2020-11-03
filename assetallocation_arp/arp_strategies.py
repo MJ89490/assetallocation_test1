@@ -1,19 +1,12 @@
 import os
 import sys
-from typing import Tuple, List
 
 import pandas as pd
 
-from assetallocation_arp.common_libraries.dal_enums.strategy import Name, Frequency
-from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 import assetallocation_arp.data_etl.import_all_data as gd
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times, fica, maven, fxmodels
-from assetallocation_arp.models.times import calculate_signals_returns_r_positioning
-from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAnalytic, \
-    FundStrategyAssetWeight
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
@@ -88,51 +81,6 @@ def run_fica_excel(input_file, mat_file, model_date, model_type):
         carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily,
         return_daily)}, input_file)
     print(model_type)
-
-
-def run_times(strategy: Times) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
-    """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
-    asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r, strategy.frequency)
-    asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning, Frequency.daily)
-    print('done asset_weights')
-    return asset_analytics, asset_weights
-
-
-def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
-    """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    # TODO add code to run effect, using Effect object, here
-    pass
-
-
-def run_fica(strategy: Fica) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
-    """Run fica strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    curve = fica.format_data(strategy)
-    carry_roll, country_returns = fica.calculate_carry_roll_down(strategy, curve)
-    signals, cum_contribution, returns = fica.calculate_signals_and_returns(strategy, carry_roll, country_returns)
-    carry_daily, return_daily = fica.run_daily_attribution(strategy, signals)
-
-
-    carry_total_cols = ['fica_10y_carry', 'fica_10y_carry_cum', 'G3_10y_carry']
-    return_total_cols = ['fica_10y_spot', 'fica_10y_spot_cum', 'fica_10y_return', 'fica_10y_return%',
-                         'correlation', 'beta', 'G3_10y_return', 'G3_10y_return%']
-    contribution_total_col = 'Return'
-    strategy_analytics = FicaDataFrameConverter.create_strategy_analytics(
-        cum_contribution[contribution_total_col], returns, carry_roll['fica_10y_carry'],
-        carry_daily['fica_10y_return', 'fica_10y_return%', 'correlation', 'beta']
-    )
-    comparator_analytics = FicaDataFrameConverter.create_comparator_analytics(
-        carry_roll['G3_10y_carry'], carry_daily['G3_10y_return', 'G3_10y_return%'])
-
-    future_tickers = [asset.ticker for group in strategy.grouped_asset_inputs for asset in group if asset.input_category == Category.future]
-    asset_analytics = FicaDataFrameConverter.create_asset_analytics(
-        carry_roll.drop(carry_total_cols), cum_contribution.drop(contribution_total_col),
-        carry_daily.drop(return_total_cols), return_daily, future_tickers
-    )
-    analytics = strategy_analytics + comparator_analytics + asset_analytics
-
-    asset_weights = FicaDataFrameConverter.df_to_asset_weights(signals, Frequency.monthly)
-    return analytics, asset_weights
 
 
 def write_output_to_excel(model_outputs, path_excel_times):

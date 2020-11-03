@@ -109,13 +109,12 @@ class TimesDataFrameConverter(DataFrameConverter):
 class FicaDataFrameConverter(DataFrameConverter):
     @classmethod
     def create_asset_analytics(
-            cls, carry_roll: pd.DataFrame, cum_contribution: pd.DataFrame, returns: pd.DataFrame,
+            cls, carry_roll: pd.DataFrame, cum_contribution: pd.DataFrame,
             carry_daily: pd.DataFrame, return_daily: pd.DataFrame, tickers: List[str]
     ) -> List[FundStrategyAssetAnalytic]:
         """
         :param carry_roll: columns named after countries, index of dates
         :param cum_contribution: columns named after countries, index of dates
-        :param returns: columns named after countries, index of dates
         :param carry_daily: columns named after countries, index of dates
         :param return_daily: columns named after countries, index of dates
         :param tickers: ordered list to rename country columns with
@@ -124,14 +123,12 @@ class FicaDataFrameConverter(DataFrameConverter):
         analytics = []
         carry_roll.columns = tickers
         cum_contribution.columns = tickers
-        returns.columns = tickers
         carry_daily.columns = tickers
         return_daily.columns = tickers
 
         analytics.extend(cls.df_to_asset_analytics(carry_roll, Category.signal, Signal.carry, Frequency.monthly))
         analytics.extend(cls.df_to_asset_analytics(cum_contribution, Category.performance, Performance['total return'], Frequency.monthly))
         analytics.extend(cls.df_to_asset_analytics(return_daily, Category.Performance, Performance['total return'], Frequency.daily))
-        analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"]))
         analytics.extend(cls.df_to_asset_analytics(carry_daily, Category.performance, Performance["excess return index"]))
 
         return analytics

@@ -9,10 +9,9 @@ import pandas as pd
 import numpy as np
 
 import assetallocation_arp.data_etl.data_manipulation as dm
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 
 
-def momentum(index_data: pd.DataFrame, times: Times):
+def momentum(index_data: pd.DataFrame, times: 'Times'):
     sig = pd.DataFrame()
     for col in index_data:
         # Calculate intermediate signals

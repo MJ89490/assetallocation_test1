@@ -7,10 +7,10 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets_with_analytics(
     s_leverage integer,
     future_name varchar,
     future_ticker varchar,
-    future_asset_analytics arp.category_datetime_value[],
+    future_asset_analytics asset.category_datetime_value[],
     signal_name varchar,
     signal_ticker varchar,
-    signal_asset_analytics arp.category_datetime_value[]
+    signal_asset_analytics asset.category_datetime_value[]
   )
 LANGUAGE plpgsql
 AS
@@ -34,7 +34,7 @@ BEGIN
         ta2.signal_asset_id,
         a.name as signal_name,
         a.ticker as signal_ticker,
-        array_agg((aa.category, aa.business_datetime, aa.value)::arp.category_datetime_value) as signal_asset_analytics
+        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as signal_asset_analytics
       FROM
         times_assets ta2
         JOIN asset.asset a on ta2.signal_asset_id = a.id
@@ -51,7 +51,7 @@ BEGIN
         ta3.future_asset_id,
         a.name as future_name,
         a.ticker as future_ticker,
-        array_agg((aa.category, aa.business_datetime, aa.value)::arp.category_datetime_value) as future_asset_analytics
+        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as future_asset_analytics
       FROM
         times_assets ta3
         JOIN asset.asset a on ta3.future_asset_id = a.id

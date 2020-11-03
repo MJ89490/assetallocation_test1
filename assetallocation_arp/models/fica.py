@@ -8,12 +8,11 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
 
-from assetallocation_arp.data_etl.dal.data_models.strategy import Fica
 from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 
-def format_data(strategy: Fica):
+def format_data(strategy: 'Fica'):
     """Select curve data for sovereign tickers if curve == soveeign else swap
     tickers
     :return: dataframe with historical yield curves per country
@@ -27,7 +26,7 @@ def format_data(strategy: Fica):
     return curve.asfreq('BM')
 
 
-def calculate_carry_roll_down(strategy: Fica, curve: pd.DataFrame):
+def calculate_carry_roll_down(strategy: 'Fica', curve: pd.DataFrame):
     """
     creating dataframe with carry + roll down and return calculations
     :param Fica strategy: Fica object with strategy inputs
@@ -73,7 +72,7 @@ def calculate_carry_roll_down(strategy: Fica, curve: pd.DataFrame):
     return carry_roll, country_returns
 
 
-def calculate_signals_and_returns(strategy: Fica, carry_roll, country_returns):
+def calculate_signals_and_returns(strategy: 'Fica', carry_roll, country_returns):
     """"
     creating dataframe with country signals and contributions and overall model performances
     :param Fica strategy: Fica object with strategy inputs

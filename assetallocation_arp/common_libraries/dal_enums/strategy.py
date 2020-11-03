@@ -42,4 +42,9 @@ class Name(Enum):
     fica = auto()
     factor = auto()
     comca = auto()
-    fxmodels = auto()
+    fx = auto()
+
+
+class FxModel(Enum):
+    cumo = auto()
+

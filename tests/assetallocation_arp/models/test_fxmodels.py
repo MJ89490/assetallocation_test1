@@ -68,11 +68,11 @@ def test_calculate_returns():
 
 """
 fxmodels_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
-        spot, carry, cash, ppp = fxmodels.format_data(fxmodels_inputs, asset_inputs, all_data)
-        signal, volatility = fxmodels.calculate_signals(fxmodels_inputs, spot, carry, cash, ppp)
-        fx_model, exposure, exposure_agg = fxmodels.determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility)
-        base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(fxmodels_inputs, carry, signal,
-                                                                                exposure, exposure_agg)
-        return base_fx, returns, contribution, carry_base
-        
-       """
+spot, carry, cash, ppp = fxmodels.format_data(fxmodels_inputs, asset_inputs, all_data)
+signal, volatility = fxmodels.calculate_signals(fxmodels_inputs, spot, carry, cash, ppp)
+fx_model, exposure, exposure_agg = fxmodels.determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility)
+base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(fxmodels_inputs, carry, signal,
+                                                                        exposure, exposure_agg)
+return base_fx, returns, contribution, carry_base
+
+"""

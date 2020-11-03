@@ -3,7 +3,8 @@ from datetime import datetime, date
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic, FundStrategyAnalytic,
                                                                         FundStrategyAssetWeight)
-from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, AssetAnalytic, \
+    FxAssetInput
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import AggregationLevel
 
 
@@ -58,6 +59,11 @@ class ArpTypeConverter(DbTypeConverter):
         """Format to match database type arp.ticker_ticker_cost_leverage[]"""
         return [DbTypeConverter.to_composite(i.signal_ticker, i.future_ticker, i.cost, i.s_leverage)
                 for i in times_assets]
+
+    @staticmethod
+    def fx_assets_to_composite(fx_assets: List[FxAssetInput]) -> List[str]:
+        """Format to match database type arp.ticker_ticker_cost_leverage[]"""
+        return [DbTypeConverter.to_composite(i.ppp_ticker, i.cash_rate_ticker, i.currency) for i in fx_assets]
 
     @staticmethod
     def analytics_to_composite(analytics: List[FundStrategyAnalytic]) -> List[str]:
