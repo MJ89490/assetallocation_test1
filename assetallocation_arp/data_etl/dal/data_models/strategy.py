@@ -53,13 +53,11 @@ class Strategy(ABC):
 
 # noinspection PyAttributeOutsideInit
 class Times(Strategy):
-    name = Name.times.name
-
     def __init__(self, day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency],
                  leverage_type: Union[str, Leverage], long_signals: List[float], short_signals: List[float],
                  time_lag_in_months: int, volatility_window: int) -> None:
         """Times class to hold data from database"""
-        super().__init__(self.name)
+        super().__init__(Name.times)
         self.day_of_week = day_of_week
         self.frequency = frequency
         self.leverage_type = leverage_type
@@ -145,12 +143,10 @@ class Times(Strategy):
     
 
 class Fica(Strategy):
-    name = Name.fica.name
-
     def __init__(self, coupon: float, curve: str, business_tstzrange: DateTimeTZRange,
                  strategy_weights: List[float], tenor: int, trading_cost: int) -> None:
         """Fica class to hold data from database"""
-        super().__init__(self.name)
+        super().__init__(Name.fica)
         self._coupon = coupon
         self._curve = curve
         self._business_tstzrange = business_tstzrange
@@ -248,15 +244,13 @@ class Fica(Strategy):
 
 # noinspection PyAttributeOutsideInit
 class Effect(Strategy):
-    name = Name.effect.name
-
     def __init__(self, carry_type: Union[str, CarryType], closing_threshold: float, cost: float,
                  day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency], include_shorts: bool,
                  inflation_lag_in_months: int, interest_rate_cut_off_long: float, interest_rate_cut_off_short: float,
                  moving_average_long_term: int, moving_average_short_term: int, is_realtime_inflation_forecast: bool,
                  trend_indicator: Union[str, TrendIndicator]) -> None:
         """Effect class to hold data from database"""
-        super().__init__(self.name)
+        super().__init__(Name.effect)
         self.carry_type = carry_type
         self.closing_threshold = closing_threshold
         self.cost = cost
@@ -396,13 +390,11 @@ class Effect(Strategy):
 
 # noinspection PyAttributeOutsideInit
 class Fx(Strategy):
-    name = Name.fx.name
-
     def __init__(
             self, model: str, business_tstzrange: DateTimeTZRange, signal: str, currency: str, response_function: bool,
             exposure: float, momentum_weights: List[float], transaction_cost: float
     ) -> None:
-        super().__init__(self.name)
+        super().__init__(Name.fx)
         self.model = model
         self.business_tstzrange = business_tstzrange
         self.signal = signal
