@@ -4,19 +4,6 @@ from assetallocation_arp.data_etl.dal.data_models.strategy import Strategy, Time
 from tests.assetallocation_arp.data_etl.dal.resources import valid_effect, valid_times
 
 
-def test_name_setter_raises_key_error_invalid_name():
-    with raises(KeyError):
-        Strategy('invalid_name')
-
-
-def test_name_setter_sets_name_valid_name():
-    name = 'times'
-
-    a = Strategy(name)
-
-    assert a.name.name == name
-
-
 def test_times_day_of_week_setter_raises_key_error_invalid_day_of_week(valid_times):
     with raises(ValueError):
         Times(10, valid_times.frequency, valid_times.leverage_type, valid_times.long_signals, valid_times.short_signals,

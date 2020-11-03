@@ -6,9 +6,7 @@ from flask import request
 
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
-from assetallocation_UI.aa_web_app.service.strategy import run_strategy
-from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
+from assetallocation_arp.arp_strategies import get_inputs_from_python
 
 
 @app.route('/')
@@ -32,17 +30,13 @@ def times_model():
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
 # @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
-# <<<<<<< HEAD
-# @app.route('/times_dashboard',  methods=['GET', 'POST'])
-# =======
-# @app.route('/times_dashboard',  methods=['POST'])
-# >>>>>>> feature/flask_UI_dal_integration_new_layout
-# def times_dashboard():
-#     # form = ExportDataForm()
-#     form = InputsTimesModel()
-#     # template_data = main_data('f1', 399)
-#
-#     return render_template('times_dashboard.html', form=form, title='Dashboard')
+@app.route('/times_dashboard',  methods=['GET', 'POST'])
+def times_dashboard():
+    # form = ExportDataForm()
+    form = InputsTimesModel()
+    # template_data = main_data('f1', 399)
+
+    return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
 # @app.route('/receive_times_data', methods=['POST'])
@@ -65,7 +59,6 @@ def times_model():
 #         fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
 #
 #         return json.dumps({'status': 'OK'})
-
 
 
 @app.route('/effect_strategy_get', methods=['GET'])
@@ -95,18 +88,20 @@ def received_data_effect_form():
     print(effect_form)
     print(request.form['json_data'])
 
-    t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
-    fund_name = t['fund']
-    long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-    short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-    times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
-                  short_signals, int(t['lag']), int(t['volwindow']))
+    get_inputs_from_python('effect')
 
-    times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
-                          zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-
-    # TODO do not work with that line !!!!!
-    fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+    # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
+    # fund_name = t['fund']
+    # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+    # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+    # times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
+    #               short_signals, int(t['lag']), int(t['volwindow']))
+    #
+    # times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
+    #                       zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
+    #
+    #
+    # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
 
     return json.dumps({'status': 'OK'})
 

@@ -9,13 +9,13 @@ import pandas as pd
 import numpy as np
 
 import assetallocation_arp.data_etl.data_manipulation as dm
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 
 
-def momentum(index_data: pd.DataFrame, times: Times):
+def momentum(index_data: pd.DataFrame, times: 'Times'):
     sig = pd.DataFrame()
     for col in index_data:
         # Calculate intermediate signals
+        # TODO ADD FLOAT BECAURE TYPEERROR BETWEEN FLOAT AND DECIMAL
         sig1 = calc_int_mom_signal(index_data[col], times.short_signals[0], times.long_signals[0], times.volatility_window)
         sig2 = calc_int_mom_signal(index_data[col], times.short_signals[1], times.long_signals[1], times.volatility_window)
         sig3 = calc_int_mom_signal(index_data[col], times.short_signals[2], times.long_signals[2], times.volatility_window)

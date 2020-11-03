@@ -50,3 +50,15 @@ FicaProc = Enum(
         ('arp.select_fica_assets_with_analytics', auto()),
     ]
 )
+
+# noinspection PyArgumentList
+FxProc = Enum(
+    value='Proc',
+    names=[
+        ('arp.select_fx_strategy', auto()),
+        ('arp.insert_fx_strategy', auto()),
+        ('arp.select_fx_assets', auto()),
+        ('arp.insert_fx_assets', auto()),
+        ('arp.select_fx_assets_with_analytics', auto()),
+    ]
+)

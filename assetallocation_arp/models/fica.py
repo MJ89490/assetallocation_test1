@@ -8,12 +8,11 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
 
-from assetallocation_arp.data_etl.dal.data_models.strategy import Fica
 from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 
-def format_data(strategy: Fica):
+def format_data(strategy: 'Fica'):
     """Select curve data for sovereign tickers if curve == soveeign else swap
     tickers
     :return: dataframe with historical yield curves per country
@@ -21,13 +20,13 @@ def format_data(strategy: Fica):
     # selecting which yield curve to use
     curve_category = Category.sovereign if strategy.curve == Category.sovereign.name else Category.swap
     analytics = [analytic for group in strategy.grouped_asset_inputs for asset in group for analytic
-                 in asset.asset_analytics if asset.category == curve_category]
+                 in asset.asset_analytics if asset.input_category == curve_category]
 
     curve = DataFrameConverter.asset_analytics_to_df(analytics)
     return curve.asfreq('BM')
 
 
-def calculate_carry_roll_down(strategy: Fica, curve: pd.DataFrame):
+def calculate_carry_roll_down(strategy: 'Fica', curve: pd.DataFrame):
     """
     creating dataframe with carry + roll down and return calculations
     :param Fica strategy: Fica object with strategy inputs
@@ -73,7 +72,7 @@ def calculate_carry_roll_down(strategy: Fica, curve: pd.DataFrame):
     return carry_roll, country_returns
 
 
-def calculate_signals_and_returns(strategy: Fica, carry_roll, country_returns):
+def calculate_signals_and_returns(strategy: 'Fica', carry_roll, country_returns):
     """"
     creating dataframe with country signals and contributions and overall model performances
     :param Fica strategy: Fica object with strategy inputs
@@ -98,8 +97,7 @@ def calculate_signals_and_returns(strategy: Fica, carry_roll, country_returns):
     cum_contribution['Return'] = cum_contribution.sum(axis=1)
     # calculating returns, starting return index series with 100
     sub_signals = signals - signals.shift()
-    signals['Turnover'] = sub_signals.abs().sum(axis=1)
-    returns['Costs'] = signals['Turnover'] * strategy.trading_cost / 100
+    returns['Costs'] = sub_signals.abs().sum(axis=1) * strategy.trading_cost / 100
     returns['Net_Return'] = cum_contribution['Return'] - returns['Costs'].cumsum()
     returns['Arithmetic'] = (1 + returns['Net_Return'] / 100) * 100
     returns['Geometric'] = 100
@@ -120,11 +118,11 @@ def run_daily_attribution(strategy, signals):
     swap_cr_tickers, swap_crs = [], []
     for group in strategy.grouped_asset_inputs:
         for asset in group:
-            if asset.category == Category.future and asset.country.name in ('EUR', 'GBP', 'USD'):
+            if asset.input_category == Category.future and asset.country.name in ('EUR', 'GBP', 'USD'):
                 future_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
                     futures.append(analytic)
-            elif asset.category == Category.swap_cr:
+            elif asset.input_category == Category.swap_cr:
                 swap_cr_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
                     swap_crs.append(analytic)

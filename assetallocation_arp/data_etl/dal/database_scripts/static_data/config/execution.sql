@@ -2,6 +2,8 @@ INSERT INTO config.execution (name, description, in_use)
 VALUES
   ('arp.insert_times_strategy', 'Insert times strategy', 't'),
   ('arp.insert_times_assets', 'Insert times assets into arp.times_asset and asset.asset', 't'),
+  ('arp.insert_fx_strategy', 'Insert fx strategy', 't'),
+  ('arp.insert_fx_assets', 'Insert fx assets into arp.fx_asset and asset.asset', 't'),
   ('arp.insert_effect_strategy', 'Insert effect strategy', 't'),
   ('arp.insert_effect_assets', 'Insert effect assets into arp.effect_asset and asset.asset', 't'),
   ('arp.insert_fica_strategy', 'Insert fica strategy', 't'),

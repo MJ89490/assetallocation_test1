@@ -13,7 +13,7 @@ def test_asset_country_setter_raises_key_error_invalid_country():
 
 
 def test_asset_country_setter_sets_country_valid_country():
-    country = 'EU'
+    country = 'EUR'
 
     a = Asset('a')
     a.country = country
@@ -50,7 +50,7 @@ def test_asset_currency_setter_sets_currency_valid_currency():
     assert a.currency.name == currency
 
 
-@mark.parametrize('country, expected', [('EU', 'Europe'), ('US', 'North America')])
+@mark.parametrize('country, expected', [('EUR', 'Europe'), ('USD', 'North America')])
 def test_asset_region_property_gets_region_based_on_country(country, expected):
     a = Asset('a')
     a.country = country

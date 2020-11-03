@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION arp.select_fica_assets_with_analytics(
     curve_tenor varchar,
     asset_name varchar,
     asset_ticker varchar,
-    asset_analytics arp.category_datetime_value[]
+    asset_analytics asset.category_datetime_value[]
   )
 LANGUAGE plpgsql
 AS
@@ -30,7 +30,7 @@ BEGIN
         fa2.asset_id,
         a1.name as asset_name,
         a1.ticker as asset_ticker,
-        array_agg((aa.category, aa.business_datetime, aa.value)::arp.category_datetime_value) as asset_analytics
+        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as asset_analytics
       FROM
         fica_assets fa2
         JOIN asset.asset a1 on fa2.asset_id = a1.id

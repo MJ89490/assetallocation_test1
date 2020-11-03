@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION arp.select_effect_assets_with_analytics(
     postition_size numeric(32, 16),
     asset_name varchar,
     asset_ticker varchar,
-    asset_analytics arp.category_datetime_value[]
+    asset_analytics asset.category_datetime_value[]
   )
 LANGUAGE plpgsql
 AS
@@ -32,7 +32,7 @@ BEGIN
         ea2.asset_id,
         a1.name as asset_name,
         a1.ticker as asset_ticker,
-        array_agg((aa.category, aa.business_datetime, aa.value)::arp.category_datetime_value) as asset_analytics
+        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as asset_analytics
       FROM
         effect_assets ea2
         JOIN asset.asset a1 on ea2.asset_id = a1.id
