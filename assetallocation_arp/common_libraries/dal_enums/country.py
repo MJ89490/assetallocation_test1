@@ -1,14 +1,23 @@
 from enum import Enum, auto
 
 
+# TODO update in DB
 class Country(Enum):
-    US = auto()
-    EU = auto()
-    JP = auto()
+    AUD = auto()
+    CAD = auto()
+    CHF = auto()
+    EUR = auto()
+    GBP = auto()
+    JPY = auto()
+    NOK = auto()
+    NZD = auto()
+    SEK = auto()
+    USD = auto()
 
 
+# TODO update the below
 country_region = {
-    'US': 'North America',
-    'EU': 'Europe',
-    'JP': 'Asia'
+    'USD': 'North America',
+    'EUR': 'Europe',
+    'JPY': 'Asia'
 }

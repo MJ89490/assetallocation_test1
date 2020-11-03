@@ -20,6 +20,7 @@ class DataFrameConverter:
         """DataFrame with index of dates and columns named after tickers"""
         data = [[i.asset_ticker, i.business_datetime, i.value] for i in asset_analytics]
         df = pd.DataFrame(data, columns=['ticker', 'business_datetime', 'value'])
+        df = df.drop_duplicates()
         df = df.pivot(index='business_datetime', columns='ticker', values='value')
         df.index = pd.DatetimeIndex(df.index)
         return df
@@ -66,18 +67,17 @@ class DataFrameConverter:
                 analytics.items() for index, val in data.iteritems()]
 
     @staticmethod
-    def df_to_asset_weights(
-            weights: pd.DataFrame, frequency: Union[str, Frequency]
-    ) -> List[FundStrategyAssetWeight]:
+    def df_to_asset_weights(positioning: pd.DataFrame) -> List[FundStrategyAssetWeight]:
         """Transform DataFrame with index of business_date and columns of asset tickers to list of FundStrategyAssetWeights
         """
-        return [FundStrategyAssetWeight(ticker, index, float(val), frequency) for ticker, data in weights.items()
-                for index, val in data.iteritems()]
+        return [FundStrategyAssetWeight(ticker, index, float(val)) for ticker, data in positioning.items() for index, val in
+                data.iteritems()]
+
 
 class TimesDataFrameConverter(DataFrameConverter):
     @classmethod
     def create_asset_analytics(cls, signals: pd.DataFrame, returns: pd.DataFrame,
-                               r: pd.DataFrame, signals_freqency: Frequency) -> List[FundStrategyAssetAnalytic]:
+                               r: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
         """
         :param signals: columns named after tickers, index of dates
         :param returns: columns named after tickers, index of dates
@@ -85,9 +85,9 @@ class TimesDataFrameConverter(DataFrameConverter):
         :return:
         """
         asset_analytics = []
-        asset_analytics.extend(cls.df_to_asset_analytics(signals, Category.signal, Signal.momentum, signals_freqency))
-        asset_analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"], Frequency.daily))
-        asset_analytics.extend(cls.df_to_asset_analytics(r, Category.performance, Performance["excess return index"], Frequency.daily))
+        asset_analytics.extend(cls.df_to_asset_analytics(signals, Category.signal, Signal.momentum))
+        asset_analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"]))
+        asset_analytics.extend(cls.df_to_asset_analytics(r, Category.performance, Performance["excess return index"]))
         return asset_analytics
 
 

@@ -11,7 +11,8 @@ from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times, fica, maven, fxmodels
 from assetallocation_arp.models.times import calculate_signals_returns_r_positioning
 from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, FundStrategyAssetWeight
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, \
+    FundStrategyAssetWeight
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -94,9 +95,9 @@ def run_fica_excel(input_file, mat_file, model_date, model_type):
 
 def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    signals, returns, r, positioning = times.calculate_signals_returns_r_positioning(strategy)
-    asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r, strategy.frequency)
-    asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning, Frequency.daily)
+    signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
+    asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r)
+    asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning)
     return asset_analytics, asset_weights
 
 def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
@@ -107,20 +108,15 @@ def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAssetAnalytic], List[
 
 def run_fica(strategy: Fica) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run fica strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    # TODO add code to run fica, using Fica object, here
-
-    # TODO add regression tests THEN refactor!
-    carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
-    # run strategy
-    signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll, country_returns)
-    # run daily attributions
-    carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
+    curve = fica.format_data(strategy)
+    carry_roll, country_returns = fica.calculate_carry_roll_down(strategy, curve)
+    signals, cum_contribution, returns = fica.calculate_signals_and_returns(strategy, carry_roll, country_returns)
+    carry_daily, return_daily = fica.run_daily_attribution(strategy, signals)
 
     asset_analytics = FicaDataFrameConverter.create_asset_analytics(carry_roll, country_returns, signals,
                                                                     cum_contribution, returns, carry_daily, return_daily)
     asset_weights = FicaDataFrameConverter.df_to_asset_weights(positioning)
     return asset_analytics, asset_weights
-    pass
 
 
 def write_output_to_excel(model_outputs, path_excel_times):

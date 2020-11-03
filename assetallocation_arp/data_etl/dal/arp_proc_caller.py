@@ -350,13 +350,13 @@ class FicaProcCaller(ArpProcCaller):
         fica = self._select_fica_strategy(fica_version)
 
         if fica is not None:
-            fica.grouped_asset_inputs = self.select_fica_assets_with_analytics(fica_version, business_datetime)
+            fica.grouped_asset_inputs = self.select_fica_assets_with_analytics(fica_version)
 
         return fica
 
-    def select_fica_assets_with_analytics(self, fica_version, business_datetime) -> Optional[List[FicaAssetInput]]:
+    def select_fica_assets_with_analytics(self, fica_version) -> Optional[List[FicaAssetInput]]:
         """Select assets and asset analytics data for a version of fica, as at business_datetime"""
-        res = self.call_proc('arp.select_fica_assets_with_analytics', [fica_version, business_datetime])
+        res = self.call_proc('arp.select_fica_assets_with_analytics', [fica_version])
 
         if not res:
             return

@@ -1,6 +1,5 @@
 from typing import Union, List
-
-from datetime import datetime
+import datetime as dt
 
 from assetallocation_arp.arp_strategies import run_times, run_effect, run_fica
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller, EffectProcCaller, ArpProcCaller, FicaProcCaller
@@ -10,7 +9,7 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 
 
 def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, user_id: str,
-                 business_datetime: datetime = datetime.today()) -> FundStrategy:
+                 business_datetime: dt.datetime = dt.datetime.today() - dt.timedelta(365)) -> FundStrategy:
     if isinstance(strategy, Times):
         pc = TimesProcCaller()
         times_version = pc.insert_times(strategy, user_id)
@@ -30,7 +29,7 @@ def run_strategy(fund_name: str, strategy_weight: float, strategy: Strategy, use
     elif isinstance(strategy, Fica):
         pc = FicaProcCaller()
         fica_version = pc.insert_fica(strategy, user_id)
-        strategy.grouped_asset_inputs = pc.select_fica_assets_with_analytics(fica_version, business_datetime)
+        strategy.grouped_asset_inputs = pc.select_fica_assets_with_analytics(fica_version)
 
         fs = FundStrategy(fund_name, Name.fica, fica_version, strategy_weight)
         fs.asset_analytics, fs.asset_weights = run_fica(strategy)

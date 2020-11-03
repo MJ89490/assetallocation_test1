@@ -84,73 +84,87 @@ def return_daily():
     return rd.reindex(index_rd)  # reset the dates of the index to Timestamp
 
 
-# TODO redesign tickers as they are assets and have asset values!!!
 @fixture
 def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
+    # the database will filter the data between the dates below
+    data = all_data.loc[fica_inputs['date_from'].iat[0]:fica_inputs['date_to'].iat[0]]
+
     f = Fica(fica_inputs['coupon'].iat[0], fica_inputs['curve'].iat[0],
              DateTimeTZRange(fica_inputs['date_from'].iat[0], fica_inputs['date_to'].iat[0]),
              [fica_inputs[f'strategy_weights_{i}'].iat[0] for i in range(1, 11)],
-             fica_inputs['tenor'].iat[0],fica_inputs['trading_costs'].iat[0])
-
-    f_asset_inputs = []
+             fica_inputs['tenor'].iat[0], fica_inputs['trading_costs'].iat[0])
 
     tickers = {'3m': CurveTenor.mth3, '1y': CurveTenor.yr1, '2y': CurveTenor.yr2, '3y': CurveTenor.yr3,
                '4y': CurveTenor.yr4, '5y': CurveTenor.yr5, '6y': CurveTenor.yr6, '7y': CurveTenor.yr7,
                '8y': CurveTenor.yr8, '9y': CurveTenor.yr9, '10y': CurveTenor.yr10, '15y': CurveTenor.yr15,
                '20y': CurveTenor.yr20, '30y': CurveTenor.yr30}
 
+    cr_tickers = {'3m': CurveTenor.mth3, '1y': CurveTenor.yr1, '9y': CurveTenor.yr9, '10y': CurveTenor.yr10}
 
-    fais = []
-
+    grouped_asset_inputs = []
     for r, asset in asset_inputs.iterrows():
-        soverign_assets = [FicaAssetInput(asset.loc[f'sovereign_ticker_{i}'], Category.sovereign, j) for i, j in tickers.items()]
-        swap_assets = [FicaAssetInput(asset.loc[f'swap_ticker_{i}'], Category.swap, j) for i, j in tickers.items()]
-        swap_cr_assets = [FicaAssetInput(asset.loc[f'cr_swap_ticker_{i}'], Category.sovereign, j) for i, j in tickers.items() if f'cr_swap_ticker_{i}' in asset.index]
-        future_asset = FicaAssetInput(asset.loc['future_ticker'], Category.future, None)
+        asset_input_group = []
+        for i, j in tickers.items():
+            so_ticker = asset.loc[f'sovereign_ticker_{i}']
+            so_fai = FicaAssetInput(so_ticker, Category.sovereign, j)
+            so_fai.country = asset.loc['country']
+            so_fai.asset_analytics = [AssetAnalytic(so_ticker, 'PX_LAST', index, float(val)) for index, val
+                                      in data.loc[:, so_ticker].iteritems() if pd.notna(val)]
+            asset_input_group.append(so_fai)
 
-        fais.extend(soverign_assets)
-        fais.extend(swap_assets)
-        fais.extend(swap_cr_assets)
+            sw_ticker = asset.loc[f'swap_ticker_{i}']
+            sw_fai = FicaAssetInput(sw_ticker, Category.swap, j)
+            sw_fai.country = asset.loc['country']
+            sw_fai.asset_analytics = [AssetAnalytic(sw_ticker, 'PX_LAST', index, float(val)) for index, val in
+                                      data.loc[:, sw_ticker].iteritems() if pd.notna(val)]
+            asset_input_group.append(sw_fai)
 
-    for ticker, data in all_data.items():
-        if ticker in asset_inputs.to_numpy():
-            for index, val in data.iteritems():
-                fa.add_analytic(AssetAnalytic(ticker, 'PX_LAST', index, float(val)))
+            if i in cr_tickers:
+                cr_ticker = asset.loc[f'cr_swap_ticker_{i}']
+                cr_fai = FicaAssetInput(cr_ticker, Category.swap_cr, j)
+                cr_fai.country = asset.loc['country']
+                cr_fai.asset_analytics = [AssetAnalytic(cr_ticker, 'PX_LAST', index, float(val)) for index, val in
+                                          data.loc[:, cr_ticker].iteritems() if pd.notna(val)]
+                asset_input_group.append(cr_fai)
 
-        f_asset_inputs.append(fa)
+        future_ticker = asset.loc['future_ticker']
+        if pd.notna(future_ticker):
+            future_asset_input = FicaAssetInput(future_ticker, Category.future, None)
+            future_asset_input.country = asset.loc['country']
+            future_asset_input.asset_analytics = [AssetAnalytic(future_ticker, 'PX_LAST', index, float(val)) for index, val
+                                                  in data.loc[:, future_ticker].iteritems() if pd.notna(val)]
+            asset_input_group.append(future_asset_input)
 
-    f.grouped_asset_inputs = f_asset_inputs
+        grouped_asset_inputs.append(asset_input_group)
+
+    f.grouped_asset_inputs = grouped_asset_inputs
 
     return f
 
 
-def test_format_data_old(fica_inputs, asset_inputs, all_data, curve):
-    returns = f.format_data_old(fica_inputs, asset_inputs, all_data)
-    pd.testing.assert_frame_equal(curve, returns)
-
-
 def test_format_data(fica_strategy, curve):
     returns = f.format_data(fica_strategy)
-    pd.testing.assert_frame_equal(curve, returns)
+    pd.testing.assert_frame_equal(curve, returns, check_names=False, check_like=True)
 
 
-def test_calculate_carry_roll_down(fica_inputs, asset_inputs, curve, carry_roll, country_returns):
-    returns_carry_roll, returns_country_returns = f.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
+def test_calculate_carry_roll_down(fica_strategy, curve, carry_roll, country_returns):
+    returns_carry_roll, returns_country_returns = f.calculate_carry_roll_down(fica_strategy, curve)
 
-    pd.testing.assert_frame_equal(carry_roll, returns_carry_roll, check_names=False)
-    pd.testing.assert_frame_equal(country_returns, returns_country_returns, check_names=False)
+    pd.testing.assert_frame_equal(carry_roll, returns_carry_roll, check_names=False, check_like=True)
+    pd.testing.assert_frame_equal(country_returns, returns_country_returns, check_names=False, check_like=True)
 
 
-def test_calculate_signals_and_returns(fica_inputs, carry_roll, country_returns, signals, cum_contribution, returns):
-    return_signals, returns_cum_contribution, returns_returns = f.calculate_signals_and_returns(fica_inputs, carry_roll, country_returns)
+def test_calculate_signals_and_returns(fica_strategy, carry_roll, country_returns, signals, cum_contribution, returns):
+    return_signals, returns_cum_contribution, returns_returns = f.calculate_signals_and_returns(fica_strategy, carry_roll, country_returns)
 
     pd.testing.assert_frame_equal(signals, return_signals)
     pd.testing.assert_frame_equal(cum_contribution, returns_cum_contribution)
     pd.testing.assert_frame_equal(returns, returns_returns)
 
 
-def test_run_daily_attribution(fica_inputs, asset_inputs, all_data, signals, carry_daily, return_daily):
-    returns_carry_daily, returns_return_daily = f.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
+def test_run_daily_attribution(fica_strategy, signals, carry_daily, return_daily):
+    returns_carry_daily, returns_return_daily = f.run_daily_attribution(fica_strategy, signals)
 
-    pd.testing.assert_frame_equal(carry_daily, returns_carry_daily)
-    pd.testing.assert_frame_equal(return_daily, returns_return_daily)
+    pd.testing.assert_frame_equal(carry_daily, returns_carry_daily, check_names=False)
+    pd.testing.assert_frame_equal(return_daily, returns_return_daily, check_names=False)
+
