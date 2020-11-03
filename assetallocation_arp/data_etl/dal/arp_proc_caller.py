@@ -156,7 +156,8 @@ class TimesProcCaller(ArpProcCaller, StrategyProcCaller):
             return
 
         row = res[0]
-        t = Times(row['day_of_week'], row['frequency'], row['leverage_type'], row['long_signals'], row['short_signals'],
+        t = Times(row['day_of_week'], row['frequency'], row['leverage_type'], [float(i) for i in row['long_signals']],
+                  [float(i) for i in row['short_signals']],
                   -ArpTypeConverter.month_interval_to_int(row['time_lag']), row['volatility_window'])
         t.version = times_version
         t.description = row['description']
