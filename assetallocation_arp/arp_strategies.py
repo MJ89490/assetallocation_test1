@@ -5,6 +5,7 @@ from typing import Tuple, List
 import pandas as pd
 
 from common_libraries.dal_enums.strategy import Name
+from common_libraries.frequency_types import Frequency
 import assetallocation_arp.data_etl.import_all_data as gd
 from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
 from assetallocation_arp.models import times, fica, maven, fxmodels
@@ -93,11 +94,10 @@ def run_fica_excel(input_file, mat_file, model_date, model_type):
 
 def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
-    asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r)
-    asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning)
+    signals, returns, r, positioning = times.calculate_signals_returns_r_positioning(strategy)
+    asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r, strategy.frequency)
+    asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning, Frequency.daily)
     return asset_analytics, asset_weights
-
 
 def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
     """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""

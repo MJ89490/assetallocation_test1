@@ -30,10 +30,10 @@ def times_model():
     return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
 
 
-@app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
-@app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
-# @app.route('/times_dashboard',  methods=['GET', 'POST'])
-def times_dashboard(fund_name: str, times_version: int):
+# @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
+# @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
+@app.route('/times_dashboard',  methods=['GET', 'POST'])
+def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
     template_data = main_data('f1', 399)
@@ -41,66 +41,69 @@ def times_dashboard(fund_name: str, times_version: int):
     return render_template('times_dashboard.html', form=form, title='Dashboard', **template_data)
 
 
-@app.route('/receive_times_data', methods=['POST'])
-def receive_times_data():
-    form = InputsTimesModel()
+# @app.route('/receive_times_data', methods=['POST'])
+# def receive_times_data():
+#     form = InputsTimesModel()
+#
+#     if request.method == "POST":
+#         t = request.get_json()
+#         print(t)
+#         fund_name = t['fund']
+#         long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+#         short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+#         times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
+#                       short_signals, int(t['lag']), int(t['volwindow']))
+#
+#         times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
+#                               zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
+#
+#         # TODO do not work with that line !!!!!
+#         fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+#
+#         return json.dumps({'status': 'OK'})
 
-    if request.method == "POST":
-        t = request.get_json()
-        fund_name = t['fund']
-        long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-        short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-        times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
-                      short_signals, int(t['lag']), int(t['volwindow']))
 
-        times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
-                              zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-
-        # TODO do not work with that line !!!!!
-        fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
-
-        return json.dumps({'status': 'OK'})
+@app.route('/effect_strategy_get', methods=['GET'])
+def effect_strategy_get():
+    form = InputsEffectStrategy(request.form)
+    run_model_page = 'not_run_model_page'
+    return render_template('effect_page.html', title='EffectPage', form=form, run_model_page=run_model_page)
 
 
-@app.route('/effect_strategy')
-def effect_strategy():
+@app.route('/effect_strategy_post', methods=['POST'])
+def effect_strategy_post():
     form = InputsEffectStrategy(request.form)
     run_model_page = 'run_model_page'
     return render_template('effect_page.html', title='EffectPage', form=form, run_model_page=run_model_page)
 
 
-@app.route('/effect_strategy_input', methods=['POST'])
-def effect_strategy_input():
-    form = InputsEffectStrategy()
-    return render_template('effect_page_mirror.html', form=form, title='TimesPage')
+@app.route('/received_data_effect_form', methods=['POST'])
+def received_data_effect_form():
+    effect_form = {}
 
+    form_data = request.form['form_data'].split('&')
 
-# @app.route('/effect_strategy_run_model', methods=['POST'])
-# def effect_strategy_run_model():
-#     user = request.form['username']
-#     password = request.form['password']
-#     # imf = request.form['input_update_imf_effect']
-#     # print(imf)
-#     return json.dumps({'status': 'OK', 'user': user, 'pass': password})
+    for idx, val in enumerate(form_data):
+        if idx > 1:
+            effect_form[val.split('=', 1)[0]] = val.split('=', 1)[1]
 
+    print(effect_form)
+    print(request.form['json_data'])
 
-@app.route('/signUp')
-def signUp():
-    return render_template('signUp.html')
+    t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
+    fund_name = t['fund']
+    long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
+    short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
+    times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
+                  short_signals, int(t['lag']), int(t['volwindow']))
 
+    times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
+                          zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
 
-@app.route('/signUpUser2', methods=['POST'])
-def signUpUser2():
-    # version = request.form['selectVersion']
-    user = request.form['username']
-    password = request.form['password']
-    imf = request.form['input_update_imf_effect']
-    t = request.get_json()
-    print(t)
-    print(user)
-    print(password)
-    print(imf)
-    return json.dumps({'status':'OK','user':user,'pass':password, 'imf': imf})
+    # TODO do not work with that line !!!!!
+    fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
+
+    return json.dumps({'status': 'OK'})
 
 
 
