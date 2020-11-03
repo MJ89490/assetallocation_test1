@@ -256,3 +256,5 @@ class ProcessDataEffect:
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
         return common_spot, common_carry, spxt_index_values, self.three_month_implied_usd, self.three_month_implied_eur
+
+

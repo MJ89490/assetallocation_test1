@@ -6,7 +6,7 @@ from flask import request
 
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
-from assetallocation_arp.arp_strategies import get_inputs_from_python
+from assetallocation_arp.arp_strategies import get_inputs_from_excel
 
 
 @app.route('/')
@@ -88,7 +88,7 @@ def received_data_effect_form():
     print(effect_form)
     print(request.form['json_data'])
 
-    get_inputs_from_python('effect')
+    get_inputs_from_excel()
 
     # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
     # fund_name = t['fund']

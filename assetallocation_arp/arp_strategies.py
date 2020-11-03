@@ -1,158 +1,143 @@
 import os
 import sys
-from typing import Tuple, List
-
-import pandas as pd
-
-from common_libraries.dal_enums.strategy import Name
-from common_libraries.frequency_types import Frequency
-from assetallocation_arp.common_libraries.dal_enums.strategy import Name
-import assetallocation_arp.data_etl.import_all_data as gd
-from assetallocation_arp.data_etl import import_all_data as gd
-from assetallocation_arp.models import times, fica, maven, fxmodels
-from assetallocation_arp.models.times import calculate_signals_returns_r_positioning
-from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, \
-    FundStrategyAssetWeight
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica
+import xlwings as xw
+from time import strftime, gmtime
 
 ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 print(ROOT_DIR)
 sys.path.insert(0, ROOT_DIR)
 
+from assetallocation_arp.data_etl import import_data_from_excel_matlab as gd
+from assetallocation_arp.models import times
+from assetallocation_arp.common_libraries import models_names
+from assetallocation_arp.models.effect.main_effect import run_effect
+from assetallocation_arp.data_etl.outputs_effect.write_outputs_effect_excel import run_write_outputs_effect_model
 
-def run_model(model_type, mat_file, input_file, model_date=None):
-    if model_type == Name.times.name:
-        # get inputs from excel and matlab data
-        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
-                                                                              model_date)
+
+def run_model(model_type, mat_file, input_file, excel_instance):
+
+    if model_type == models_names.Models.times.name:
+        # get inputs_effect from excel and matlab data
+        times_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
         # run strategy
         signals, returns, r, positioning = times.format_data_and_calc(times_inputs, asset_inputs, all_data)
         # write results to output sheet
-        # write_output_to_excel({Name.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
+        write_output_to_excel({models_names.Models.times.name: (asset_inputs, positioning, r, signals, times_inputs)}, input_file)
 
-    if model_type == Name.maven.name:
-        # get inputs from excel and matlab data
-        maven_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
-                                                                              model_date)
-        # calculate asset return index series and and maven's excess return index series
-        asset_returns = maven.format_data(maven_inputs, asset_inputs, all_data)
-        maven_returns = maven.calculate_excess_returns(maven_inputs, asset_inputs, asset_returns)
-        # calculate value and momentum scores, and the top/bottom countries on the combination score
-        momentum, value, long_signals, short_signals, long_signals_name, short_signals_name, value_last, momentum_last, long_list, short_list, volatility = maven.calculate_signals(
-            maven_inputs, maven_returns)
-        # calculate maven return series, and benchmarks, asset class exposures and contributions
-        returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short = maven.run_performance_stats(
-            maven_inputs, asset_inputs, maven_returns, volatility, long_signals, short_signals)
-        # write results to output sheet
-        write_output_to_excel({Name.maven.name: (
-            momentum, value, long_signals_name, short_signals_name, value_last, momentum_last, long_list, short_list,
-            returns_maven, asset_class_long, asset_class_short, asset_contribution_long, asset_contribution_short,
-            asset_inputs, maven_inputs)}, input_file)
+    if model_type == models_names.Models.maven.name:
+        print(model_type)
 
-    if model_type == Name.effect.name:
-        from assetallocation_arp.models.effect.main_effect import run_effect
+    if model_type == models_names.Models.effect.name:
+
         strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
-        outputs_effect = run_effect(strategy_inputs, asset_inputs=asset_inputs, all_data=all_data)
+        outputs_effect = run_effect(strategy_inputs, excel_instance, asset_inputs=asset_inputs, all_data=all_data)
 
-    if model_type == Name.fxmodels.name:
-        # get inputs from excel and matlab data
-        fxmodels_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
-        # create the input series for the signal types
-        spot, carry, cash, ppp = fxmodels.format_data(fxmodels_inputs, asset_inputs, all_data)
-        # calculate signals
-        signal, volatility = fxmodels.calculate_signals(fxmodels_inputs, spot, carry, cash, ppp)
-        # determine exposures
-        fx_model, exposure, exposure_agg = fxmodels.determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility)
-        # calculate returns
-        base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(fxmodels_inputs, carry, signal,
-                                                                                exposure, exposure_agg)
-        # write results to output sheet
-        write_output_to_excel({Name.fxmodels.name: (
-            fx_model, base_fx, signal, exposure, exposure_agg, returns, contribution, carry_base, fxmodels_inputs,
-            asset_inputs)}, input_file)
-    if model_type == Name.fica.name:
-        run_fica_excel(input_file, mat_file, model_date, model_type)
-    if model_type == Name.comca.name:
+        write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
+                                                                 outputs_effect['signals_overview'],
+                                                                 outputs_effect['trades_overview'],
+                                                                 outputs_effect['rates'],
+                                                                 outputs_effect['risk_returns'],
+                                                                 outputs_effect['combo'],
+                                                                 outputs_effect['total_excl_signals'],
+                                                                 outputs_effect['total_incl_signals'],
+                                                                 outputs_effect['spot_incl_signals'],
+                                                                 outputs_effect['spot_excl_signals'])}, input_file)
+
+        # write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
+        #
+        #
+        #                                                          outputs_effect['rates'],
+        #                                                          outputs_effect['risk_returns'],
+        #                                                          outputs_effect['combo'],
+        #                                                          outputs_effect['total_excl_signals'],
+        #                                                          outputs_effect['total_incl_signals'],
+        #                                                          outputs_effect['spot_incl_signals'],
+        #                                                          outputs_effect['spot_excl_signals'])}, input_file)
+
+    if model_type == models_names.Models.curp.name:
+        print(model_type)
+    if model_type == models_names.Models.fica.name:
+        print(model_type)
+    if model_type == models_names.Models.factor.name:
+        print(model_type)
+    if model_type == models_names.Models.comca.name:
         print(model_type)
 
 
-def run_fica_excel(input_file, mat_file, model_date, model_type):
-    # get inputs from excel and matlab data
-    fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file, model_date)
-    # create yield curves and calculate carry & roll down
-    curve = fica.format_data(fica_inputs, asset_inputs, all_data)
-    carry_roll, country_returns = fica.calculate_carry_roll_down(fica_inputs, asset_inputs, curve)
-    # run strategy
-    signals, cum_contribution, returns = fica.calculate_signals_and_returns(fica_inputs, carry_roll, country_returns)
-    # run daily attributions
-    carry_daily, return_daily = fica.run_daily_attribution(fica_inputs, asset_inputs, all_data, signals)
-    # write results to output sheet
-    write_output_to_excel({Name.fica.name: (
-        carry_roll, signals, country_returns, cum_contribution, returns, asset_inputs, fica_inputs, carry_daily,
-        return_daily)}, input_file)
-    print(model_type)
+def write_output_to_excel(model_outputs, input_file):
+
+    if models_names.Models.times.name in model_outputs.keys():
+
+        asset_inputs, positioning, returns, signals, times_inputs = model_outputs['times']
+
+        xw.Book(input_file).set_mock_caller()
+
+        sheet_times_output = xw.Book.caller().sheets['times_output']
+
+        sheet_times_inputs = xw.Book.caller().sheets['times_input']
+
+        n_columns = len(signals.columns) + 2
+
+        sheet_times_output.range('rng_times_output').offset(-1, 0).value = "TIMES Signals"
+
+        sheet_times_output.range('rng_times_output').value = signals
+        #
+        sheet_times_output.range('rng_times_output').offset(-1, n_columns + 2).value = "TIMES Returns"
+        #
+        sheet_times_output.range('rng_times_output').offset(0, n_columns + 2).value = returns
+        #
+        sheet_times_output.range('rng_times_output').offset(-1, 2 * n_columns + 4).value = "TIMES Positions"
+        #
+        sheet_times_output.range('rng_times_output').offset(0, 2 * n_columns + 4).value = positioning
+        #
+        # write inputs_effect used to excel and run time
+        sheet_times_inputs.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        #
+        sheet_times_inputs.range('rng_inputs_used').offset(0, 0).value = times_inputs
+        #
+        sheet_times_inputs.range('rng_inputs_used').offset(3, 0).value = asset_inputs
+
+    elif models_names.Models.effect.name in model_outputs.keys():
+        xw.Book(input_file).set_mock_caller()
+        run_write_outputs_effect_model(model_outputs)
 
 
-def run_times(strategy: Times) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
-    """Run times strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    signals, returns, r, positioning = calculate_signals_returns_r_positioning(strategy)
-    asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r)
-    asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning)
-    return asset_analytics, asset_weights
+def get_inputs_from_excel():
+
+    # select data from excel
+    mat_file = xw.Range('rng_mat_file_path').value
+    model_type = xw.Range('rng_model_type').value
+    file = xw.Range('rng_full_path').value
+    excel_instance = xw.Range('rng_run_excel').value
+    # run selected model
+    run_model(model_type, mat_file, file, excel_instance)
 
 
-def run_effect(strategy: Effect) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
-    """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    # TODO add code to run effect, using Effect object, here
-    pass
+def get_inputs_from_python(model, input_file):
 
-
-def run_fica(strategy: Fica) -> Tuple[List[FundStrategyAssetAnalytic], List[FundStrategyAssetWeight]]:
-    """Run fica strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-    curve = fica.format_data(strategy)
-    carry_roll, country_returns = fica.calculate_carry_roll_down(strategy, curve)
-    signals, cum_contribution, returns = fica.calculate_signals_and_returns(strategy, carry_roll, country_returns)
-    carry_daily, return_daily = fica.run_daily_attribution(strategy, signals)
-
-    asset_analytics = FicaDataFrameConverter.create_asset_analytics(carry_roll, country_returns, signals,
-                                                                    cum_contribution, returns, carry_daily, return_daily)
-    asset_weights = FicaDataFrameConverter.df_to_asset_weights(positioning)
-    return asset_analytics, asset_weights
-
-
-def write_output_to_excel(model_outputs, path_excel_times):
-    if Name.times.name in model_outputs.keys():
-        print("===models.times.name===", Name.times.name)
-        print("=======model output keys===", model_outputs.keys())
-        positioning, returns, signals = model_outputs[Name.times.name]
-        print("===========current _path, excel path ===========", os.getcwd(), path_excel_times)
-        with pd.ExcelWriter(path_excel_times) as writer:
-            signals.to_excel(writer, sheet_name='signal', encoding='utf8')
-            returns.to_excel(writer, sheet_name='returns', encoding='utf8')
-            positioning.to_excel(writer, sheet_name='positioning', encoding='utf8')
-            writer.save()
-
-
-def get_inputs_from_python(model):
-    # launch the script from Python
     # launch the script from Python
     mat_file = None
-    input_file = None
-    models_list = [model.name for model in Name]
+    # input_file = None
+
+    models_list = [model.name for model in models_names.Models]
+
+    xw.Book(input_file).set_mock_caller()
 
     if model in models_list:
         model_type = model
-        run_model(model_type, mat_file, input_file)
+        run_model(model_type, mat_file, input_file, 'excel')
     else:
         raise NameError("Your input is incorrect.")
 
 
 def get_input_user():
-    model_str = input("Choose a Model: ")
+
+    # model_str = input("Choose a Model: ")
+    model_str = 'effect'
     return model_str
 
 
 if __name__ == "__main__":
-    sys.exit(get_inputs_from_python(get_input_user()))
+    # get_inputs_from_python(get_input_user(), "arp_dashboard_effect.xlsm"
+    get_inputs_from_excel()
