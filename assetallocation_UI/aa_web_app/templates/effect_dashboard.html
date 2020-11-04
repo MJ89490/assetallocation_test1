@@ -73,7 +73,7 @@
 
 
 
-
+.date_run_dashboard{margin-bottom: 25px;}
 
 
 
@@ -179,12 +179,80 @@
 
     <!-- ============================= CHARTS AREA ============================= -->
     <div class="container">
-        <h2 class="title-dashboard">EFFECT Dashboard</h2>
+        <h2 class="title-dashboard">EFFECT Dashboard</h2><br>
+
+        <h6 class="date_run_dashboard text-muted"><b>Date run {{effect_data_form['input_signal_date_effect']}}</b></h6>
 
 
 
+        <div class="row">
+            <div class="col-lg-12">
+                <h6 class="text-muted">100% notional(bp)</h6>
+                <table class="table table-hover table-custom">
+                <thead>
+                    <tr>
+                        <th scope="col" id="index-perf-cell"></th>
+                        <th scope="col" id="ret-cum-perf-cell"></th>
+                        <th scope="col" id="ret-perf-cell"></th>
+                        <th scope="col" id="vol-perf-cell"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="text-muted" scope="row">Weekly P&L</th>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']}}</td>
+                    </tr>
+                <tr>
+                        <th class="text-muted" scope="row">YTD P&L</th>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_ytd_notional']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_ytd_notional']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_ytd_notional']}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
 
-    </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h6 class="text-muted">As implemented in MATR (bp)</h6>
+                <table class="table table-hover table-custom">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="text-muted" scope="row">Weekly P&L</th>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_weekly_matr']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_weekly_matr']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_carry_weekly_matr']}}</td>
+                    </tr>
+                <tr>
+                        <th class="text-muted" scope="row">YTD P&L</th>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_ytd_matr']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
+                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h6 class="text-muted">Profit and Loss</h6>
+            </div>
+
+        </div>
 
 </body>
 </html>

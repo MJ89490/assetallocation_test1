@@ -106,7 +106,7 @@ $(function(){
 			success: function(response){
 				console.log(response);
 				alert('The strategy has been run successfully!');
-				window.location.href = "/effect_dashboard"
+				window.location.href = "/effect_dashboard";
 			},
 			error: function(error){
 				console.log(error);

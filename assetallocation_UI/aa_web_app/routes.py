@@ -1,4 +1,3 @@
-import os
 import json
 
 from flask import render_template
@@ -6,7 +5,10 @@ from flask import request
 
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
-from assetallocation_arp.arp_strategies import get_inputs_from_excel
+from assetallocation_arp.arp_strategies import run_effect_strategy
+from assetallocation_UI.aa_web_app.get_data_effect import ReceivedDataEffect
+
+obj_received_data_effect = ReceivedDataEffect()
 
 
 @app.route('/')
@@ -62,11 +64,12 @@ def times_dashboard():
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
 def effect_dashboard():
-    # form = ExportDataForm()
     form = InputsTimesModel()
-    # template_data = main_data('f1', 399)
+    effect_data_form = obj_received_data_effect.effect_data_form
+    effect_outputs = obj_received_data_effect.effect_outputs
 
-    return render_template('effect_dashboard.html', form=form, title='Dashboard')
+    return render_template('effect_dashboard.html', form=form, effect_outputs=effect_outputs,
+                           effect_data_form=effect_data_form, title='Dashboard')
 
 
 @app.route('/effect_strategy_get', methods=['GET'])
@@ -85,31 +88,39 @@ def effect_strategy_post():
 
 @app.route('/received_data_effect_form', methods=['POST'])
 def received_data_effect_form():
-    effect_form = {}
-    #todo add fct to process data correctly
+    # todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
+    #  ex: "/some_url?x=1&y=2"
+    # todo class instance
+
     form_data = request.form['form_data'].split('&')
+    effect_form = obj_received_data_effect.received_data_effect(form_data)
 
-    for idx, val in enumerate(form_data):
-        if idx > 1:
-            effect_form[val.split('=', 1)[0]] = val.split('=', 1)[1]
-
-    print(effect_form)
     print(request.form['json_data'])
 
-    # Process date under format '12%2F09%2F2000 to 12/09/2000
-    effect_form['input_user_date_effect'] = '/'.join(effect_form['input_user_date_effect'].split('%2F'))
-    effect_form['input_signal_date_effect'] = '/'.join(effect_form['input_signal_date_effect'].split('%2F'))
+    obj_received_data_effect.call_run_effect()
+    # run_effect_strategy()
 
-    if 'Total' and 'return' in effect_form['input_trend_indicator_effect']:
-        effect_form['input_trend_indicator_effect'] = ' '.join(effect_form['input_trend_indicator_effect'].split('%20'))
-
-    if 'inverse' in effect_form['input_risk_weighting']:
-        effect_form['input_risk_weighting'] = ' '.join(effect_form['input_risk_weighting'].split('%20'))
-    else:
-        effect_form['input_risk_weighting'] = '/'.join(effect_form['input_risk_weighting'].split('%2F'))
-
-
-    print(effect_form)
+    # for idx, val in enumerate(form_data):
+    #     if idx > 1:
+    #         effect_form[val.split('=', 1)[0]] = val.split('=', 1)[1]
+    #
+    # print(effect_form)
+    # print(request.form['json_data'])
+    #
+    # # Process date under format '12%2F09%2F2000 to 12/09/2000
+    # effect_form['input_user_date_effect'] = '/'.join(effect_form['input_user_date_effect'].split('%2F'))
+    # effect_form['input_signal_date_effect'] = '/'.join(effect_form['input_signal_date_effect'].split('%2F'))
+    #
+    # if 'Total' and 'return' in effect_form['input_trend_indicator_effect']:
+    #     effect_form['input_trend_indicator_effect'] = ' '.join(effect_form['input_trend_indicator_effect'].split('%20'))
+    #
+    # if 'inverse' in effect_form['input_risk_weighting']:
+    #     effect_form['input_risk_weighting'] = ' '.join(effect_form['input_risk_weighting'].split('%20'))
+    # else:
+    #     effect_form['input_risk_weighting'] = '/'.join(effect_form['input_risk_weighting'].split('%2F'))
+    #
+    #
+    # print(effect_form)
     # get_inputs_from_excel()
 
     # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
@@ -125,7 +136,7 @@ def received_data_effect_form():
     #
     # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
 
-    return json.dumps({'status': 'OK'})
+    return json.dumps({'status': 'OK', 'effect_data': effect_form})
 
 
 #     if request.method == "POST":
@@ -143,7 +154,7 @@ def received_data_effect_form():
 #         fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
 #         print('after fund strategy')
 #         return json.dumps({'status': 'OK'})
-# >>>>>>> feature/flask_UI_dal_integration_new_layout
+
 
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])

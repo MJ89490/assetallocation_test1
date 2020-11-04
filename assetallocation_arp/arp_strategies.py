@@ -46,16 +46,7 @@ def run_model(model_type, mat_file, input_file, excel_instance):
                                                                  outputs_effect['spot_incl_signals'],
                                                                  outputs_effect['spot_excl_signals'])}, input_file)
 
-        # write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
-        #
-        #
-        #                                                          outputs_effect['rates'],
-        #                                                          outputs_effect['risk_returns'],
-        #                                                          outputs_effect['combo'],
-        #                                                          outputs_effect['total_excl_signals'],
-        #                                                          outputs_effect['total_incl_signals'],
-        #                                                          outputs_effect['spot_incl_signals'],
-        #                                                          outputs_effect['spot_excl_signals'])}, input_file)
+        return outputs_effect
 
     if model_type == models_names.Models.curp.name:
         print(model_type)
@@ -114,6 +105,18 @@ def get_inputs_from_excel():
     excel_instance = xw.Range('rng_run_excel').value
     # run selected model
     run_model(model_type, mat_file, file, excel_instance)
+
+
+def run_effect_strategy():
+    # select data from excel
+    mat_file = xw.Range('rng_mat_file_path').value
+    model_type = xw.Range('rng_model_type').value
+    file = xw.Range('rng_full_path').value
+    excel_instance = xw.Range('rng_run_excel').value
+    # run selected model
+    effect_output = run_model(model_type, mat_file, file, excel_instance)
+
+    return effect_output
 
 
 def get_inputs_from_python(model, input_file):

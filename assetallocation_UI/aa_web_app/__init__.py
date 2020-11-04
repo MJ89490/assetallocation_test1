@@ -13,6 +13,9 @@ import os
 
 CURRENT_PATH = os.path.dirname(__file__)
 
+# todo create class there for effect_data (line 39) and then import class in routes.py
+# slow down app at launch
+
 
 class ReverseProxied:
     def __init__(self, app):
