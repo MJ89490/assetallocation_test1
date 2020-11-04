@@ -1,4 +1,4 @@
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Type
 from os import environ
 from json import loads
 from abc import ABC, abstractmethod
@@ -19,7 +19,7 @@ from assetallocation_arp.data_etl.dal.proc import Proc, TimesProc, EffectProc, F
 
 class StrategyProcCallerFactory:
     @staticmethod
-    def get_proc_caller(strategy_name: Name):
+    def get_proc_caller(strategy_name: Name) -> Type['StrategyProcCaller']:
         proc_maps = {
             Name.times: TimesProcCaller,
             Name.effect: EffectProcCaller,
@@ -27,18 +27,6 @@ class StrategyProcCallerFactory:
             Name.fx: FxProcCaller
         }
         return proc_maps[strategy_name]
-
-
-class StrategyProcCaller(ABC):
-    @abstractmethod
-    def insert_strategy(self, strategy: Strategy, user_id: str):
-        pass
-
-    @abstractmethod
-    def select_strategy_with_asset_analytics(
-            self, strategy_version: int, business_datetime: Optional[dt.datetime]
-    ) -> Optional[Strategy]:
-        pass
 
 
 class ArpProcCaller(Db):
@@ -114,8 +102,35 @@ class ArpProcCaller(Db):
         return res[0].get('fund_names') or []
 
 
-class TimesProcCaller(ArpProcCaller, StrategyProcCaller):
+class StrategyProcCaller(ABC, ArpProcCaller):
+    @abstractmethod
+    def insert_strategy(self, strategy: Strategy, user_id: str):
+        pass
+
+    @abstractmethod
+    def select_strategy_with_asset_analytics(
+            self, strategy_version: int, business_datetime: Optional[dt.datetime]
+    ) -> Optional[Strategy]:
+        pass
+
+    @abstractmethod
+    def insert_strategy_returning_asset_analytics(
+            self, strategy: Strategy, user_id: str, business_datetime: Optional[dt.datetime]
+    ) -> None:
+        pass
+
+
+class TimesProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(TimesProc.__members__.keys())
+
+    def insert_strategy_returning_asset_analytics(
+            self, strategy: Times, user_id: str, business_datetime: dt.datetime
+    ) -> None:
+        """Insert data from an instance of Times into database. Add asset analytics to times."""
+        strategy.version = self._insert_times_strategy(strategy, user_id)
+        if strategy.asset_inputs:
+            self._insert_times_assets(strategy.version, strategy.asset_inputs)
+            strategy.asset_inputs = self.select_times_assets_with_analytics(strategy.version, business_datetime)
 
     def insert_strategy(self, times: Times, user_id: str) -> int:
         """Insert data from an instance of Times into database. Return strategy version."""
@@ -216,8 +231,24 @@ class TimesProcCaller(ArpProcCaller, StrategyProcCaller):
         return t
 
 
-class FxProcCaller(ArpProcCaller, StrategyProcCaller):
+class FxProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(FxProc.__members__.keys())
+
+    def insert_strategy_returning_asset_analytics(
+            self, strategy: Fx, user_id: str, business_datetime: Optional[dt.datetime] = None
+    ) -> None:
+        """Insert data from an instance of Fx into database. Add asset analytics to fx."""
+        strategy.version = self._insert_fx_strategy(strategy, user_id)
+        if strategy.asset_inputs:
+            self._insert_fx_assets(strategy.version, strategy.asset_inputs)
+
+            strategy.asset_inputs = self.select_fx_assets_with_analytics(strategy.version)
+
+            carry_tickers = FxAssetInput.get_carry_tickers(strategy.asset_inputs)
+            strategy.carry_assets = self.select_assets_with_analytics(carry_tickers, strategy.business_tstzrange)
+
+            spot_tickers = FxAssetInput.get_spot_tickers(strategy.asset_inputs)
+            strategy.spot_assets = self.select_assets_with_analytics(spot_tickers, strategy.business_tstzrange)
 
     def insert_strategy(self, fx: Fx, user_id: str) -> int:
         """Insert data from an instance of Fx into database. Return strategy version."""
@@ -273,6 +304,7 @@ class FxProcCaller(ArpProcCaller, StrategyProcCaller):
         f.sharpe_cutoff = r.get('sharpe_cutoff')
         f.sharpe_cutoff = r.get('sharpe_cutoff')
         f.historical_base = r.get('historical_base')
+        f.mean_reversion = r.get('mean_reversion')
 
         f.version = fx_version
         f.description = r['description']
@@ -351,8 +383,16 @@ class FxProcCaller(ArpProcCaller, StrategyProcCaller):
         return t
 
 
-class EffectProcCaller(ArpProcCaller, StrategyProcCaller):
+class EffectProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(EffectProc.__members__.keys())
+
+    def insert_strategy_returning_asset_analytics(
+            self, strategy: Effect, user_id: str, business_datetime: dt.datetime
+    ) -> None:
+        strategy.version = self._insert_effect_strategy(strategy, user_id)
+        if strategy.asset_inputs:
+            self._insert_effect_assets(strategy.version, strategy.asset_inputs)
+            strategy.asset_inputs = self.select_effect_assets_with_analytics(strategy.version, business_datetime)
 
     def insert_strategy(self, effect: Effect, user_id: str) -> int:
         """Insert data from an instance of Effect into database"""
@@ -450,8 +490,16 @@ class EffectProcCaller(ArpProcCaller, StrategyProcCaller):
         return effect_assets
 
 
-class FicaProcCaller(ArpProcCaller, StrategyProcCaller):
+class FicaProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(FicaProc.__members__.keys())
+
+    def insert_strategy_returning_asset_analytics(
+            self, strategy: Fica, user_id: str, business_datetime: Optional[dt.datetime] = None
+    ) -> None:
+        strategy.version = self._insert_fica_strategy(strategy, user_id)
+        if strategy.grouped_asset_inputs:
+            self._insert_fica_assets(strategy.version, strategy.grouped_asset_inputs)
+            strategy.grouped_asset_inputs = self.select_fica_assets_with_analytics(strategy.version)
 
     def insert_strategy(self, fica: Fica, user_id: str) -> int:
         """Insert data from an instance of Fica into database"""

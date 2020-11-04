@@ -9,9 +9,10 @@ from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, FicaAssetInput, \
     FxAssetInput, Asset
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAnalytic, FundStrategyAssetWeight
-from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter
+from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter, \
+    FxDataFrameConverter
 from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
-from assetallocation_arp.models import times, fica
+from assetallocation_arp.models import times, fica, fxmodels
 
 
 # noinspection PyAttributeOutsideInit
@@ -486,13 +487,17 @@ class Fx(Strategy):
         self._vol_window = x
 
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
-        # spot, carry, cash, ppp = fxmodels.format_data(strategy)
-        # signal, volatility = fxmodels.calculate_signals(strategy, spot, carry, cash, ppp)
-        # fx_model, exposure, exposure_agg = fxmodels.determine_sizing(strategy, signal, volatility)
-        # base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(strategy, carry, signal, exposure,
-        #                                                                         exposure_agg)
-        #
-        # asset_analytics = FxDataFrameConverter.create_asset_analytics(signals, returns, r, strategy.frequency)
-        # asset_weights = FxDataFrameConverter.df_to_asset_weights(positioning, Frequency.daily)
-        # return asset_analytics, asset_weights
-        pass
+        # TODO refactor FundStrategyAnalytic and FundStrategyAssetWeight to NOT use asset tickers (including db!)
+        spot, carry, cash, ppp = fxmodels.format_data(self)
+        signal, volatility = fxmodels.calculate_signals(self, spot, carry, cash, ppp)
+        exposure, exposure_agg = fxmodels.determine_sizing(self, signal, volatility)
+        returns, contribution, carry_base = fxmodels.calculate_returns(self, carry, signal, exposure, exposure_agg)
+
+        asset_analytics = FxDataFrameConverter.create_asset_analytics(contribution)
+        asset_weights = FxDataFrameConverter.df_to_asset_weights(exposure, Frequency.monthly)
+        strategy_analytics = FxDataFrameConverter.create_strategy_analytics(
+            returns['returns'], returns['returns_cum'], returns['returns_net_cum'], returns['strength_of_signal']
+        )
+        analytics = asset_analytics + strategy_analytics
+        return analytics, asset_weights
+

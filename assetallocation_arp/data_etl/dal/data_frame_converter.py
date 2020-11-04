@@ -1,4 +1,4 @@
-from typing import List, Union, Dict
+from typing import List, Union, Tuple
 
 import pandas as pd
 
@@ -22,6 +22,16 @@ class DataFrameConverter:
         df = pd.DataFrame(data, columns=['ticker', 'business_datetime', 'value'])
         df = df.drop_duplicates()
         df = df.pivot(index='business_datetime', columns='ticker', values='value')
+        df.index = pd.DatetimeIndex(df.index)
+        return df
+
+    @staticmethod
+    def asset_analytics_to_currency_df(currency_asset_analytics: List[Tuple[str, AssetAnalytic]]) -> pd.DataFrame:
+        """DataFrame with index of dates and columns named after tickers"""
+        data = [[i, j.business_datetime, j.value] for i, j in currency_asset_analytics]
+        df = pd.DataFrame(data, columns=['currency', 'business_datetime', 'value'])
+        df = df.drop_duplicates()
+        df = df.pivot(index='business_datetime', columns='currency', values='value')
         df.index = pd.DatetimeIndex(df.index)
         return df
 
@@ -171,5 +181,35 @@ class FicaDataFrameConverter(DataFrameConverter):
         analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.Signal, Signal.carry, Frequency.daily, AggregationLevel.comparator))
         analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return'], Category.Performance, Performance['total return index'], Frequency.daily, AggregationLevel.comparator))
         analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return%'], Category.Performance, Performance['total return'], Frequency.daily, AggregationLevel.comparator))
+
+        return analytics
+
+
+class FxDataFrameConverter(DataFrameConverter):
+    @classmethod
+    def create_asset_analytics(cls, contribution: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
+        """
+        :param contribution: columns named after countries, index of dates
+        :return:
+        """
+        return cls.df_to_asset_analytics(contribution, Category.Performance, Performance['total return'], Frequency.monthly)
+
+    @classmethod
+    def create_strategy_analytics(
+            cls, returns: pd.Series, returns_cum: pd.Series, returns_net_cum: pd.Series, strength_of_signal: pd.Series
+    ) -> List[FundStrategyAnalytic]:
+        """
+        :param returns: index of dates
+        :param returns_cum: index of dates
+        :param returns_net_cum: index of dates
+        :param strength_of_signal: index of dates
+        :return:
+        """
+        analytics = []
+
+        analytics.extend(cls.series_to_strategy_analytics(returns, Category.Performance, Performance['return'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns_cum, Category.Performance, Performance['return index'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns_net_cum, Category.Performance, Performance['net return index'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(strength_of_signal, Category.Signals, Signal['signal strength'], Frequency.monthly))
 
         return analytics

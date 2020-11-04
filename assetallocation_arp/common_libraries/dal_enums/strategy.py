@@ -45,6 +45,16 @@ class Name(Enum):
     fx = auto()
 
 
-class FxModel(Enum):
-    cumo = auto()
-
+# noinspection PyArgumentList
+FxModel = Enum(
+    value='Performance',
+    names=[
+        ('cumo', auto()),
+        ('cuca', auto()),
+        ('curp', auto()),
+        ('dyn hdge', auto()),
+        ('ppp all', auto()),
+        ('ppp usd', auto()),
+        ('ppp curp', auto())
+    ]
+)

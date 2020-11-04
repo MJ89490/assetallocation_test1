@@ -157,7 +157,6 @@ class FxAssetInput:
     def cash_rate_asset(self, x: Asset) -> None:
         self._cash_rate_asset = x
 
-
     @property
     def ppp_asset(self) -> Asset:
         return self._ppp_asset
@@ -166,12 +165,10 @@ class FxAssetInput:
     def ppp_asset(self, x: Asset) -> None:
         self._ppp_asset = x
 
-
     @staticmethod
     def get_crosses(fx_asset_inputs: List['FxAssetInput']) -> List[str]:
         currencies = [i.currency for i in fx_asset_inputs]
-        fx = [x for x in itertools.combinations(currencies, 2)]
-        return [''.join(x) + 'CR Curncy' for x in fx]
+        return list(itertools.combinations(currencies, 2))
 
     @staticmethod
     def get_spot_tickers(fx_asset_inputs: List['FxAssetInput']) -> List[str]:

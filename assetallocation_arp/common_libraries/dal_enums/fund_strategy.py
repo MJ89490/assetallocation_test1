@@ -22,10 +22,15 @@ Performance = Enum(
 )
 
 
-class Signal(Enum):
-    carry = auto()
-    momentum = auto()
-    value = auto()
+Signal = Enum(
+    value='Signal',
+    names=[
+        ('carry', auto()),
+        ('momentum', auto()),
+        ('value', auto()),
+        ('signal strength', auto()),
+    ]
+)
 
 
 class AggregationLevel(Enum):
