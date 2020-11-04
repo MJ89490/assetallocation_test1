@@ -105,6 +105,7 @@ $(function(){
 			type: 'POST',
 			success: function(response){
 				console.log(response);
+				alert('The strategy has been run successfully!');
 				window.location.href = "/times_dashboard"
 			},
 			error: function(error){
