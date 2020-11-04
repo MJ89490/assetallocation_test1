@@ -60,6 +60,14 @@ def times_dashboard():
 #
 #         return json.dumps({'status': 'OK'})
 
+@app.route('/effect_dashboard',  methods=['GET', 'POST'])
+def effect_dashboard():
+    # form = ExportDataForm()
+    form = InputsTimesModel()
+    # template_data = main_data('f1', 399)
+
+    return render_template('effect_dashboard.html', form=form, title='Dashboard')
+
 
 @app.route('/effect_strategy_get', methods=['GET'])
 def effect_strategy_get():
@@ -78,7 +86,7 @@ def effect_strategy_post():
 @app.route('/received_data_effect_form', methods=['POST'])
 def received_data_effect_form():
     effect_form = {}
-
+    #todo add fct to process data correctly
     form_data = request.form['form_data'].split('&')
 
     for idx, val in enumerate(form_data):
