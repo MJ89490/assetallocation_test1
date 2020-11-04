@@ -9,50 +9,11 @@ import numpy as np
 import pandas as pd
 from pandas.tseries.offsets import BDay
 
-from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, DayOfWeek
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage
 from assetallocation_arp.models import portfolio_construction as pc
 from assetallocation_arp.models import arp_signals as arp
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategy, FundStrategyAssetAnalytic, FundStrategyAssetWeight
-from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Signal, Performance
-
-
-def format_data_and_calc(times_inputs, asset_inputs, all_data):
-
-    # format data and inputs
-    asset_inputs_t = asset_inputs.set_index('asset').T
-    # all_data = all_data[all_data.index.values > np.datetime64(times_inputs['date_from'].item())]
-    times_data = all_data[asset_inputs.signal_ticker]
-    futures_data = all_data[asset_inputs.future_ticker].pct_change()
-    times_data.columns = asset_inputs.asset
-    futures_data.columns = asset_inputs.asset
-    #
-    costs = asset_inputs_t.loc['costs']
-    leverage = asset_inputs_t.loc['s_leverage']
-    leverage_type = times_inputs['leverage_type'].item()
-
-    # apply leverage
-    leverage_data = pc.apply_leverage(futures_data, leverage_type, leverage)
-    leverage_data[leverage.index[leverage.isnull()]] = np.nan
-    index_df = futures_data.append(pd.DataFrame(index=futures_data.iloc[[-1]].index + BDay(2)), sort=True).index
-    leverage_data = leverage_data.shift(periods=times_inputs['time_lag'].item(), freq='D', axis=0).reindex(index_df,
-                                                                                                           method='pad')
-    # calculate signals
-    t = Times(DayOfWeek[times_inputs['week_day'].iat[0]], times_inputs['frequency'].iat[0],
-              times_inputs['leverage_type'].iat[0],
-              [times_inputs['sig1_long'].iat[0], times_inputs['sig2_long'].iat[0], times_inputs['sig3_long'].iat[0]],
-              [times_inputs['sig1_short'].iat[0], times_inputs['sig2_short'].iat[0], times_inputs['sig3_short'].iat[0]],
-              times_inputs['time_lag'].iat[0], times_inputs['volatility_window'].iat[0])
-    signals = arp.momentum(times_data, t)
-    # calculate leveraged positions and returns
-    if leverage_type == Leverage.s.name:
-        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, False)
-    else:
-        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, True)
-        (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
-
-    return signals, returns, r, positioning
 
 
 def calculate_signals_returns_r_positioning(times: 'Times') -> \
