@@ -88,7 +88,21 @@ def received_data_effect_form():
     print(effect_form)
     print(request.form['json_data'])
 
-    get_inputs_from_excel()
+    # Process date under format '12%2F09%2F2000 to 12/09/2000
+    effect_form['input_user_date_effect'] = '/'.join(effect_form['input_user_date_effect'].split('%2F'))
+    effect_form['input_signal_date_effect'] = '/'.join(effect_form['input_signal_date_effect'].split('%2F'))
+
+    if 'Total' and 'return' in effect_form['input_trend_indicator_effect']:
+        effect_form['input_trend_indicator_effect'] = ' '.join(effect_form['input_trend_indicator_effect'].split('%20'))
+
+    if 'inverse' in effect_form['input_risk_weighting']:
+        effect_form['input_risk_weighting'] = ' '.join(effect_form['input_risk_weighting'].split('%20'))
+    else:
+        effect_form['input_risk_weighting'] = '/'.join(effect_form['input_risk_weighting'].split('%2F'))
+
+
+    print(effect_form)
+    # get_inputs_from_excel()
 
     # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
     # fund_name = t['fund']
