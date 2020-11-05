@@ -122,10 +122,11 @@ class FundStrategy:
 
 # noinspection PyAttributeOutsideInit
 class FundStrategyAssetWeight:
-    def __init__(self, asset_ticker: str, business_date: date, strategy_weight: float,
-                 frequency: Union[str, Frequency]) -> None:
+    def __init__(
+            self, asset_subcategory: str, business_date: date, strategy_weight: float, frequency: Union[str, Frequency]
+    ) -> None:
         """FundStrategyAssetWeight class to hold data from database"""
-        self._asset_ticker = asset_ticker
+        self.asset_subcategory = asset_subcategory
         self.business_date = business_date
         self.frequency = frequency
         self.strategy_weight = strategy_weight
@@ -164,12 +165,12 @@ class FundStrategyAssetWeight:
         self._frequency = x if isinstance(x, Frequency) else Frequency[x]
 
     @property
-    def asset_ticker(self) -> str:
-        return self._asset_ticker
+    def asset_subcategory(self) -> str:
+        return self._asset_subcategory
 
-    @asset_ticker.setter
-    def asset_ticker(self, x: str) -> None:
-        self._asset_ticker = x
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: str) -> None:
+        self._asset_subcategory = x
 
 
 # noinspection PyAttributeOutsideInit
@@ -247,20 +248,20 @@ class FundStrategyAssetAnalytic(FundStrategyAnalytic):
     aggregation_level = AggregationLevel.asset
 
     def __init__(
-            self, asset_ticker: str, business_date: date, category: Union[str, Category],
+            self, asset_subcategory: str, business_date: date, category: Union[str, Category],
             subcategory: Union[str, Performance, Signal], value: float, frequency: Union[str, Frequency]
     ) -> None:
         """FundStrategyAssetAnalytic class to hold data from database"""
         super().__init__(business_date, category, subcategory, value, frequency)
-        self.asset_ticker = asset_ticker
+        self.asset_subcategory = asset_subcategory
 
     @property
-    def asset_ticker(self) -> str:
-        return self._asset_ticker
+    def asset_subcategory(self) -> str:
+        return self._asset_subcategory
 
-    @asset_ticker.setter
-    def asset_ticker(self, x: str):
-        self._asset_ticker = x
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: str):
+        self._asset_subcategory = x
 
     @property
     def aggregation_level(self) -> AggregationLevel:

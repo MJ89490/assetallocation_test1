@@ -10,6 +10,7 @@ import pandas as pd
 
 from assetallocation_arp.models.times import calculate_signals_returns_r_positioning
 from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage, DayOfWeek
+from assetallocation_arp.common_libraries.dal_enums.asset import subcategory_map
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput
 from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
@@ -46,7 +47,8 @@ Module test_times.py: tests the Times model (times.py) in order to know if it re
                          [(Leverage.v.name, "signals_leverage_v.csv", "returns_leverage_v.csv", "positioning_leverage_v.csv", "r_leverage_v.csv"),
                           (Leverage.e.name, "signals_leverage_e.csv", "returns_leverage_e.csv", "positioning_leverage_e.csv", "r_leverage_e.csv"),
                           (Leverage.n.name, "signals_leverage_n.csv", "returns_leverage_n.csv", "positioning_leverage_n.csv", "r_leverage_n.csv"),
-                          (Leverage.s.name, "signals_leverage_s.csv", "returns_leverage_s.csv", "positioning_leverage_s.csv", "r_leverage_s.csv")]
+                          (Leverage.s.name, "signals_leverage_s.csv", "returns_leverage_s.csv", "positioning_leverage_s.csv", "r_leverage_s.csv")
+                          ]
                          )
 def test_calculate_signals_returns_r_positioning(leverage_type, signals_output, returns_output, positioning_output, r_output):
     """
@@ -88,16 +90,12 @@ def get_expected_outputs(positioning_output, r_output, returns_output, signals_o
         os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "outputs_leverages_to_test", r_output)),
         index_col=0)
 
-    asset_inputs_data = pd.read_csv(
-        os.path.abspath(os.path.join(CURRENT_PATH, "resources", "times", "inputs_leverages_origin", "asset_inputs.csv")),
-        index_col=0)
+    r.drop(columns='Total', inplace=True)
+    returns.drop(columns='Total', inplace=True)
 
-    cat_ticker = dict(zip(asset_inputs_data['asset'], asset_inputs_data['signal_ticker']))
+    for i in (positioning, r, returns, signals):
 
-    signals.columns = [cat_ticker[i] for i in signals.columns]
-    returns.columns = [cat_ticker.get(i, i) for i in returns.columns]
-    positioning.columns = [cat_ticker.get(i, i) for i in positioning.columns]
-    r.columns = [cat_ticker.get(i, i) for i in r.columns]
+        i.rename(columns={j: subcategory_map[j][j] for j in i.columns}, inplace=True)
 
     return positioning, r, returns, signals
 
@@ -122,7 +120,7 @@ def setup_times(leverage_type):
               times_inputs['time_lag'].iat[0], times_inputs['volatility_window'].iat[0])
     t_asset_inputs = []
     for i in asset_inputs_data.itertuples():
-        ta = TimesAssetInput(i.s_leverage, i.signal_ticker, i.future_ticker, i.costs)
+        ta = TimesAssetInput(i.asset, i.s_leverage, i.signal_ticker, i.future_ticker, i.costs)
 
         for ticker, data in all_data.items():
             if ticker in (ta.signal_ticker, ta.future_ticker):

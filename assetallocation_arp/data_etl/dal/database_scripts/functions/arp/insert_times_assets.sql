@@ -9,10 +9,10 @@ DECLARE
   execution_state_id int;
   strategy_name varchar;
   strategy_id int;
-  _times_assets arp.ticker_ticker_cost_leverage[];
+  _times_assets arp.asset_ticker_ticker_cost_leverage[];
 BEGIN
   strategy_name := 'times';
-  _times_assets := times_assets::arp.ticker_ticker_cost_leverage[];
+  _times_assets := times_assets::arp.asset_ticker_ticker_cost_leverage[];
 
   SELECT config.insert_execution_state('arp.insert_times_assets') INTO execution_state_id;
   SELECT arp.select_strategy_id(strategy_name, times_version) INTO strategy_id;
@@ -37,7 +37,7 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION arp.insert_times_assets_into_times_asset(
   strategy_id int,
   execution_state_id int,
-  times_assets arp.ticker_ticker_cost_leverage[]
+  times_assets arp.asset_ticker_ticker_cost_leverage[]
 )
 RETURNS void
 AS
@@ -47,6 +47,7 @@ BEGIN
     strategy_id,
     signal_asset_id,
     future_asset_id,
+    asset_subcategory,
     s_leverage,
     cost,
     execution_state_id
@@ -55,6 +56,7 @@ BEGIN
     strategy_id,
     a1.id,
     a2.id,
+    (ta).asset_subcategory,
     (ta).s_leverage,
     (ta).cost,
     insert_times_assets_into_times_asset.execution_state_id

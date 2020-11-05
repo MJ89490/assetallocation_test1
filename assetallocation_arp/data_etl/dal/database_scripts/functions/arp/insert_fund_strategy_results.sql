@@ -16,12 +16,12 @@ DECLARE
   execution_state_id int;
   fund_id int;
   strategy_id int;
-  _weights arp.ticker_date_frequency_weight_weight[];
-  _analytics arp.ticker_date_aggregation_category_subcategory_frequency_value[];
+  _weights arp.asset_date_frequency_weight_weight[];
+  _analytics arp.asset_date_aggregation_category_subcategory_frequency_value[];
 
 BEGIN
-  _weights := weights::arp.ticker_date_frequency_weight_weight[];
-  _analytics := analytics::arp.ticker_date_aggregation_category_subcategory_frequency_value[];
+  _weights := weights::arp.asset_date_frequency_weight_weight[];
+  _analytics := analytics::arp.asset_date_aggregation_category_subcategory_frequency_value[];
 
   select config.insert_execution_state('arp.insert_fund_strategy_results') into execution_state_id;
   select select_fund.fund_id from fund.select_fund(fund_name) into fund_id;
@@ -76,7 +76,7 @@ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_asset_weights(
     fund_strategy_id int,
-    weights arp.ticker_date_frequency_weight_weight[],
+    weights arp.asset_date_frequency_weight_weight[],
     execution_state_id int
 )
 RETURNS void
@@ -85,7 +85,7 @@ $$
 BEGIN
   INSERT INTO arp.fund_strategy_asset_weight (
     fund_strategy_id,
-    asset_id,
+    asset_subcategory,
     business_date,
     frequency,
     strategy_weight,
@@ -94,15 +94,14 @@ BEGIN
   )
   SELECT
     insert_fund_strategy_asset_weights.fund_strategy_id,
-    a.id,
+    (aw).asset_subcategory,
     (aw).date,
     (aw).frequency,
     (aw).strategy_weight,
     (aw).implemented_weight,
     insert_fund_strategy_asset_weights.execution_state_id
   FROM
-    unnest(weights) as aw
-    JOIN asset.asset a ON (aw).ticker = a.ticker;
+    unnest(weights) as aw;
   RETURN;
 END
 $$
@@ -110,7 +109,7 @@ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_analytics(
     fund_strategy_id int,
-    analytics arp.ticker_date_aggregation_category_subcategory_frequency_value[],
+    analytics arp.asset_date_aggregation_category_subcategory_frequency_value[],
     execution_state_id int
 )
 RETURNS void
@@ -119,7 +118,7 @@ $$
 BEGIN
   INSERT INTO arp.fund_strategy_analytic (
     fund_strategy_id,
-    asset_id,
+    asset_subcategory,
     aggregation_level,
     business_date,
     category,
@@ -130,7 +129,7 @@ BEGIN
   )
   SELECT
     insert_fund_strategy_analytics.fund_strategy_id,
-    a.id,
+    (aa).asset_subcategory,
     (aa).aggregation_level,
     (aa).date,
     (aa).category,
@@ -139,8 +138,7 @@ BEGIN
     (aa).value,
     insert_fund_strategy_analytics.execution_state_id
   FROM
-    unnest(analytics) as aa
-    LEFT JOIN asset.asset a ON (aa).ticker = a.ticker;
+    unnest(analytics) as aa;
   RETURN;
 END
 $$

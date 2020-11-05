@@ -18,12 +18,13 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 
 def calculate_signals_returns_r_positioning(times: 'Times') -> \
         Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """return signals, returns, r, positioning with columns of asset subcategory"""
     asset_inputs, future_assets, signal_assets = get_asset_data_as_data_frames(times.asset_inputs)
     future_assets = future_assets.pct_change()
 
     signals = arp.momentum(signal_assets, times)
 
-    future_leverage = asset_inputs[['future_ticker', 's_leverage']].set_index('future_ticker')['s_leverage']
+    future_leverage = asset_inputs[['asset_subcategory', 's_leverage']].set_index('asset_subcategory')['s_leverage']
     leverage_data = pc.apply_leverage(future_assets, times.leverage_type, future_leverage)
     leverage_data[asset_inputs['s_leverage'].index[asset_inputs['s_leverage'].isnull()]] = np.nan
     index_df = future_assets.append(pd.DataFrame(index=future_assets.iloc[[-1]].index + BDay(2)), sort=True).index
@@ -31,28 +32,29 @@ def calculate_signals_returns_r_positioning(times: 'Times') -> \
                                                                                                     method='pad')
 
     # calculate leveraged positions and returns
-    cost = asset_inputs[['cost', 'signal_ticker']].set_index('signal_ticker')['cost']
+    cost = asset_inputs[['cost', 'asset_subcategory']].set_index('asset_subcategory')['cost']
 
-    fut_sig_ticker = dict(zip(asset_inputs['future_ticker'], asset_inputs['signal_ticker']))
-    future_assets.columns = [fut_sig_ticker[i] for i in future_assets.columns]
-    leverage_data.columns = [fut_sig_ticker[i] for i in leverage_data.columns]
     if times.leverage_type == Leverage.s:
         returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, False)
 
     else:
         returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, True)
-        returns, r, positioning = pc.rescale(returns, r, positioning, "Total", 0.01)
+        returns, r, positioning = pc.rescale(returns, positioning, 0.01)
 
     return signals, returns, r, positioning
 
 
-def get_asset_data_as_data_frames(asset_inputs: List[TimesAssetInput]) -> Tuple[
-    pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def get_asset_data_as_data_frames(
+        asset_inputs: List[TimesAssetInput]
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Return asset inputs, future assets and signal assets
+    where future and signal assets have columns of asset_inputs[asset_subcategory]
+    """
     signal_assets, future_assets = [], []
 
     for i in asset_inputs:
-        signal_assets.append(i.signal_asset)
-        future_assets.append(i.future_asset)
+        signal_assets.append((i.asset_subcategory, i.signal_asset))
+        future_assets.append((i.asset_subcategory, i.future_asset))
 
     signal_assets = DataFrameConverter.assets_to_df(signal_assets)
     future_assets = DataFrameConverter.assets_to_df(future_assets)

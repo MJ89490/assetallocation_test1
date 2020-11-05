@@ -1,7 +1,8 @@
 from typing import List, Union, Optional
 import itertools
 
-from assetallocation_arp.common_libraries.dal_enums.asset import Category
+from assetallocation_arp.common_libraries.dal_enums.asset import Category, Subcategory, Equity, FixedIncome, FX, \
+    subcategory_map
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.country import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
@@ -183,14 +184,31 @@ class FxAssetInput:
 
 # noinspection PyAttributeOutsideInit
 class TimesAssetInput:
-    def __init__(self, s_leverage: int, signal_ticker: str, future_ticker: str, cost: float) -> None:
-        """TimesAssetInput class to hold data from database"""
+    def __init__(
+            self, asset_subcategory: Union[str, Equity, FixedIncome, FX], s_leverage: int, signal_ticker: str,
+            future_ticker: str, cost: float
+    ) -> None:
+        """TimesAssetInput class to hold data from database
+        :param asset_subcategory:
+        """
+        self.asset_subcategory = asset_subcategory
         self.signal_ticker = signal_ticker
         self.future_ticker = future_ticker
         self.cost = cost
         self.s_leverage = s_leverage
         self._signal_asset = None
         self._future_asset = None
+
+    @property
+    def asset_subcategory(self) -> Union[Equity, FixedIncome, FX]:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Union[str, Equity, FixedIncome, FX]) -> None:
+        if isinstance(x, Subcategory):
+            self._asset_subcategory = x
+        else:
+            self._asset_subcategory = subcategory_map[x][x]
 
     @property
     def signal_asset(self) -> Asset:

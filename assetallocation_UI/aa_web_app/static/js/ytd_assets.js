@@ -31,7 +31,7 @@ function ytdAssets(performance_ytd_gbp, performance_ytd_cad, performance_ytd_aud
                        'EUR',
                        'JPY',
                        'CA 10y Bonds',
-                       'Eu 10y Bonds',
+                       'EU 10y Bonds',
                        'UK 10y Bonds',
                        'US 10y Bonds',
                        'HK Equities',

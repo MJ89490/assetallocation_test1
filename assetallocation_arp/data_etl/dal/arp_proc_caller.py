@@ -49,13 +49,13 @@ class ArpProcCaller(Db):
 
     def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
         """Insert data from an instance of FundStrategy into database"""
-        ticker_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
-        ticker_analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.analytics)
+        asset_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
+        analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.analytics)
 
         res = self.call_proc('arp.insert_fund_strategy_results',
                              [fund_strategy.fund_name, fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
                               fund_strategy.strategy_version, fund_strategy.weight, user_id,
-                              fund_strategy.python_code_version, ticker_weights, ticker_analytics])
+                              fund_strategy.python_code_version, asset_weights, analytics])
         fund_strategy_id = res[0].get('fund_strategy_id')
 
         return fund_strategy_id is not None
@@ -104,7 +104,7 @@ class ArpProcCaller(Db):
 
 class StrategyProcCaller(ABC, ArpProcCaller):
     @abstractmethod
-    def insert_strategy(self, strategy: Strategy, user_id: str):
+    def insert_strategy(self, strategy: Strategy, user_id: str) -> None:
         pass
 
     @abstractmethod
@@ -114,31 +114,24 @@ class StrategyProcCaller(ABC, ArpProcCaller):
         pass
 
     @abstractmethod
-    def insert_strategy_returning_asset_analytics(
-            self, strategy: Strategy, user_id: str, business_datetime: Optional[dt.datetime]
-    ) -> None:
+    def add_asset_analytics_to_strategy(self, strategy: Strategy, business_datetime: Optional[dt.datetime]) -> None:
+        """Add asset analytics to strategy."""
         pass
 
 
 class TimesProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(TimesProc.__members__.keys())
 
-    def insert_strategy_returning_asset_analytics(
-            self, strategy: Times, user_id: str, business_datetime: dt.datetime
-    ) -> None:
-        """Insert data from an instance of Times into database. Add asset analytics to times."""
+    def add_asset_analytics_to_strategy(self, strategy: Times, business_datetime: Optional[dt.datetime]) -> None:
+        """Add asset analytics to strategy."""
+        if strategy.asset_inputs:
+            strategy.asset_inputs = self.select_times_assets_with_analytics(strategy.version, business_datetime)
+
+    def insert_strategy(self, strategy: Times, user_id: str) -> None:
+        """Insert data from an instance of Times into database. Return strategy version."""
         strategy.version = self._insert_times_strategy(strategy, user_id)
         if strategy.asset_inputs:
             self._insert_times_assets(strategy.version, strategy.asset_inputs)
-            strategy.asset_inputs = self.select_times_assets_with_analytics(strategy.version, business_datetime)
-
-    def insert_strategy(self, times: Times, user_id: str) -> int:
-        """Insert data from an instance of Times into database. Return strategy version."""
-        t_version = self._insert_times_strategy(times, user_id)
-        if times.asset_inputs:
-            self._insert_times_assets(t_version, times.asset_inputs)
-
-        return t_version
 
     def _insert_times_strategy(self, times: Times, user_id: str) -> int:
         """Insert data from an instance of Times into database"""
@@ -225,7 +218,9 @@ class TimesProcCaller(StrategyProcCaller):
 
     @staticmethod
     def _construct_times_asset_input(row) -> TimesAssetInput:
-        t = TimesAssetInput(row['s_leverage'], row['signal_ticker'], row['future_ticker'], float(row['cost']))
+        t = TimesAssetInput(
+            row['asset_subcategory'], row['s_leverage'], row['signal_ticker'], row['future_ticker'], float(row['cost'])
+        )
         t.signal_asset = Asset(row['signal_ticker'])
         t.future_asset = Asset(row['future_ticker'])
         return t
@@ -234,14 +229,9 @@ class TimesProcCaller(StrategyProcCaller):
 class FxProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(FxProc.__members__.keys())
 
-    def insert_strategy_returning_asset_analytics(
-            self, strategy: Fx, user_id: str, business_datetime: Optional[dt.datetime] = None
-    ) -> None:
-        """Insert data from an instance of Fx into database. Add asset analytics to fx."""
-        strategy.version = self._insert_fx_strategy(strategy, user_id)
+    def add_asset_analytics_to_strategy(self, strategy: Fx, business_datetime: Optional[dt.datetime] = None) -> None:
+        """Add asset analytics to strategy."""
         if strategy.asset_inputs:
-            self._insert_fx_assets(strategy.version, strategy.asset_inputs)
-
             strategy.asset_inputs = self.select_fx_assets_with_analytics(strategy.version)
 
             carry_tickers = FxAssetInput.get_carry_tickers(strategy.asset_inputs)
@@ -250,13 +240,11 @@ class FxProcCaller(StrategyProcCaller):
             spot_tickers = FxAssetInput.get_spot_tickers(strategy.asset_inputs)
             strategy.spot_assets = self.select_assets_with_analytics(spot_tickers, strategy.business_tstzrange)
 
-    def insert_strategy(self, fx: Fx, user_id: str) -> int:
+    def insert_strategy(self, strategy: Fx, user_id: str) -> None:
         """Insert data from an instance of Fx into database. Return strategy version."""
-        t_version = self._insert_fx_strategy(fx, user_id)
-        if fx.asset_inputs:
-            self._insert_fx_assets(t_version, fx.asset_inputs)
-
-        return t_version
+        strategy.version = self._insert_fx_strategy(strategy, user_id)
+        if strategy.asset_inputs:
+            self._insert_fx_assets(strategy.version, strategy.asset_inputs)
 
     def _insert_fx_strategy(self, fx: Fx, user_id: str) -> int:
         """Insert data from an instance of Fx into database"""
@@ -386,21 +374,15 @@ class FxProcCaller(StrategyProcCaller):
 class EffectProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(EffectProc.__members__.keys())
 
-    def insert_strategy_returning_asset_analytics(
-            self, strategy: Effect, user_id: str, business_datetime: dt.datetime
-    ) -> None:
+    def add_asset_analytics_to_strategy(self, strategy: Effect, business_datetime: Optional[dt.datetime]) -> None:
+        if strategy.asset_inputs:
+            strategy.asset_inputs = self.select_effect_assets_with_analytics(strategy.version, business_datetime)
+
+    def insert_strategy(self, strategy: Effect, user_id: str) -> None:
+        """Insert data from an instance of Effect into database"""
         strategy.version = self._insert_effect_strategy(strategy, user_id)
         if strategy.asset_inputs:
             self._insert_effect_assets(strategy.version, strategy.asset_inputs)
-            strategy.asset_inputs = self.select_effect_assets_with_analytics(strategy.version, business_datetime)
-
-    def insert_strategy(self, effect: Effect, user_id: str) -> int:
-        """Insert data from an instance of Effect into database"""
-        e_version = self._insert_effect_strategy(effect, user_id)
-        if effect.asset_inputs:
-            self._insert_effect_assets(e_version, effect.asset_inputs)
-
-        return e_version
 
     def _insert_effect_strategy(self, effect: Effect, user_id: str) -> int:
         """Insert data from an instance of Effect into database"""
@@ -493,21 +475,16 @@ class EffectProcCaller(StrategyProcCaller):
 class FicaProcCaller(StrategyProcCaller):
     procs = list(Proc.__members__.keys()) + list(FicaProc.__members__.keys())
 
-    def insert_strategy_returning_asset_analytics(
-            self, strategy: Fica, user_id: str, business_datetime: Optional[dt.datetime] = None
-    ) -> None:
+    def add_asset_analytics_to_strategy(self, strategy: Fx, business_datetime: Optional[dt.datetime] = None) -> None:
+        """Add asset analytics to strategy."""
+        if strategy.grouped_asset_inputs:
+            strategy.grouped_asset_inputs = self.select_fica_assets_with_analytics(strategy.version)
+
+    def insert_strategy(self, strategy: Fica, user_id: str) -> None:
+        """Insert data from an instance of Fica into database"""
         strategy.version = self._insert_fica_strategy(strategy, user_id)
         if strategy.grouped_asset_inputs:
             self._insert_fica_assets(strategy.version, strategy.grouped_asset_inputs)
-            strategy.grouped_asset_inputs = self.select_fica_assets_with_analytics(strategy.version)
-
-    def insert_strategy(self, fica: Fica, user_id: str) -> int:
-        """Insert data from an instance of Fica into database"""
-        f_version = self._insert_fica_strategy(fica, user_id)
-        if fica.grouped_asset_inputs:
-            self._insert_fica_assets(f_version, fica.grouped_asset_inputs)
-
-        return f_version
 
     def _insert_fica_strategy(self, fica: Fica, user_id: str) -> int:
         """Insert data from an instance of Fica into database"""

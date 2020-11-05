@@ -14,23 +14,40 @@ Category = Enum(
 )
 
 
-class Equity(Enum):
-    US_Equities = auto()
-    EU_Equities = auto()
-    JP_Equities = auto()
-    HK_Equities = auto()
+class Subcategory(Enum):
+    pass
 
 
-class FixedIncome(Enum):
-    US_10_y_Bonds = auto()
-    UK_10_y_Bonds = auto()
-    EU_10_y_Bonds = auto()
-    CA_10_y_Bonds = auto()
+# noinspection PyArgumentList
+Equity = Subcategory(
+    value='Equity',
+    names=[
+        ('US Equities', auto()),
+        ('EU Equities', auto()),
+        ('JP Equities', auto()),
+        ('HK Equities', auto()),
+    ]
+)
+
+# noinspection PyArgumentList
+FixedIncome = Subcategory(
+    value='FixedIncome',
+    names=[
+        ('US 10y Bonds', auto()),
+        ('UK 10y Bonds', auto()),
+        ('EU 10y Bonds', auto()),
+        ('CA 10y Bonds', auto()),
+    ]
+)
 
 
-class FX(Enum):
+class FX(Subcategory):
     JPY = auto()
     EUR = auto()
     AUD = auto()
     CAD = auto()
     GBP = auto()
+    EURGBP = auto()  # TODO check this is FX not commodity or credit
+
+
+subcategory_map = {j: i for i in (Equity, FixedIncome, FX) for j in i._member_names_}
