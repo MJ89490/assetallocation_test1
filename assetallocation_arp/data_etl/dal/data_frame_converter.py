@@ -31,29 +31,18 @@ class DataFrameConverter:
         return pd.DataFrame(data, columns=['asset_subcategory', 'signal_ticker', 'future_ticker', 'cost', 's_leverage'])
 
     @staticmethod
-    def fund_strategy_asset_weights_to_df(assets: List[Asset], asset_weights: List[FundStrategyAssetWeight]) -> pd.DataFrame:
-        asset_data = [[i.ticker, i.subcategory] for i in assets]
-        asset_df = pd.DataFrame(asset_data, columns=['ticker', 'asset_subcategory'])
-
-        data = [[i.asset_ticker, i.business_date, i.strategy_weight] for i in asset_weights]
-        df = pd.DataFrame(data, columns=['ticker', 'business_date', 'value'])
-
-        df = df.merge(asset_df, on='ticker', how='left')
-        df = df.set_index(['business_date', 'asset_subcategory', 'ticker']).unstack(['ticker', 'asset_subcategory'])
-        df.columns = df.columns.droplevel([0, 1])
-
+    def fund_strategy_asset_weights_to_df( asset_weights: List[FundStrategyAssetWeight]) -> pd.DataFrame:
+        data = [[i.asset_subcategory, i.business_date, i.strategy_weight] for i in asset_weights]
+        df = pd.DataFrame(data, columns=['asset_subcategory', 'business_date', 'value'])
+        df = df.set_index(['business_date', 'asset_subcategory']).unstack(['asset_subcategory'])
+        df.columns = df.columns.droplevel(0)
         return df
 
     @staticmethod
-    def fund_strategy_asset_analytics_to_df(assets: List[Asset], asset_analytics: List[FundStrategyAssetAnalytic]) -> pd.DataFrame:
-        asset_data = [[i.ticker, i.subcategory] for i in assets]
-        asset_df = pd.DataFrame(asset_data, columns=['ticker', 'asset_subcategory'])
-
-        data = [[i.asset_ticker, i.business_date, i.subcategory, i.value] for i in asset_analytics]
-        df = pd.DataFrame(data, columns=['ticker', 'business_date', 'analytic_subcategory', 'value'])
-
-        df = df.merge(asset_df, on='ticker', how='left')
-        df = df.set_index(['business_date', 'analytic_subcategory', 'asset_subcategory', 'ticker']).unstack(['ticker', 'asset_subcategory'])
+    def fund_strategy_asset_analytics_to_df(asset_analytics: List[FundStrategyAssetAnalytic]) -> pd.DataFrame:
+        data = [[i.asset_subcategory, i.business_date, i.subcategory, i.value] for i in asset_analytics]
+        df = pd.DataFrame(data, columns=['asset_subcategory', 'business_date', 'analytic_subcategory', 'value'])
+        df = df.set_index(['business_date', 'analytic_subcategory', 'asset_subcategory']).unstack(['asset_subcategory'])
         df.columns = df.columns.droplevel(0)
         return df
 

@@ -1,5 +1,5 @@
-from datetime import timedelta, date
-from typing import Dict, Optional
+from datetime import timedelta, datetime
+from typing import Dict
 
 import pandas as pd
 
@@ -19,24 +19,24 @@ class TimesChartsDataComputations(object):
         self._returns_ytd = None
 
     @property
-    def max_signals_date(self) -> pd.Timestamp:
+    def max_signals_date(self) -> datetime:
         return self.signals.last_valid_index()
 
     @property
-    def max_returns_date(self) -> pd.Timestamp:
+    def max_returns_date(self) -> datetime:
         return self.returns.last_valid_index()
 
     @property
-    def max_positions_date(self) -> pd.Timestamp:
+    def max_positions_date(self) -> datetime:
         return self.positions.last_valid_index()
 
     @property
-    def returns_dates_weekly_off(self) -> pd.Timestamp:
-        return pd.Timestamp(self.returns.last_valid_index().date() - timedelta(days=7))
+    def returns_dates_weekly_off(self) -> datetime:
+        return self.returns.last_valid_index().date() - timedelta(days=7)
 
     @property
-    def prev_year_end(self) -> pd.Timestamp:
-        return pd.Timestamp(date(self.max_returns_date.year, 1, 1) - timedelta(1))
+    def prev_year_end(self) -> datetime:
+        return datetime(self.max_returns_date.year, 1, 1) - timedelta(1)
 
     @property
     def signals_comp(self) -> pd.DataFrame:

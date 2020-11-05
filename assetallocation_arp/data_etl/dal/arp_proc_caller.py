@@ -4,6 +4,7 @@ from json import loads
 from abc import ABC, abstractmethod
 import datetime as dt
 
+import pandas as pd
 from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.data_etl.dal.db import Db
@@ -75,19 +76,18 @@ class ArpProcCaller(Db):
         fund_strategy.python_code_version = res[0]['python_code_version']
 
         for row in res:
-            a = Asset(row['asset_ticker'])
-            a.category = row['asset_category']
-            a.subcategory = row['asset_subcategory']
-            fund_strategy.add_asset_if_not_exists(a)
+            if pd.notna(row['strategy_weight']):
+                aw = FundStrategyAssetWeight(
+                    row['asset_subcategory'], row['business_date'], float(row['strategy_weight']), row['weight_frequency']
+                )
+                aw.implemented_weight = float(row['implemented_weight'])
+                fund_strategy.add_asset_weight(aw)
 
-            aw = FundStrategyAssetWeight(row['asset_ticker'], row['business_date'], float(row['strategy_weight']),
-                                         row['weight_frequency'])
-            aw.implemented_weight = float(row['implemented_weight'])
-            fund_strategy.add_fund_strategy_asset_weight(aw)
-
-            fund_strategy.add_fund_strategy_asset_analytics(
-                ArpTypeConverter.fund_strategy_analytics_str_to_objects(row['asset_ticker'], row['business_date'],
-                                                                        row['analytics']))
+            fund_strategy.add_analytics(
+                ArpTypeConverter.fund_strategy_analytics_str_to_objects(
+                    row['asset_subcategory'], row['business_date'], row['analytics']
+                )
+            )
 
         return fund_strategy
 

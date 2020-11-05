@@ -110,7 +110,7 @@ class ArpTypeConverter(DbTypeConverter):
         analytics = []
         for i in asset_analytics_str[2:-2].split('","'):
             aggregation_level, category, subcategory, frequency, value = DbTypeConverter.from_composite(i)
-            if aggregation_level == AggregationLevel.asset:
+            if aggregation_level == AggregationLevel.asset.name:
                 a = FundStrategyAssetAnalytic(asset_subcategory, business_date, category, subcategory, value, frequency)
             else:
                 a = FundStrategyAnalytic(business_date, category, subcategory, value, frequency, aggregation_level)

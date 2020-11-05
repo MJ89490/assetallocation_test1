@@ -7,7 +7,6 @@ from numpy import nan
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name, Frequency
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Performance, Signal, AggregationLevel
-from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 
 
 # noinspection PyAttributeOutsideInit
@@ -17,34 +16,16 @@ class FundStrategy:
     _python_code_version = _config['bumpversion']['current_version']
 
     def __init__(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: float,
-                 fund_strategy_analytics: List['FundStrategyAnalytic'] = None,
-                 fund_strategy_asset_weights: List['FundStrategyAssetWeight'] = None):
+                 analytics: List['FundStrategyAnalytic'] = None,
+                 asset_weights: List['FundStrategyAssetWeight'] = None):
         """FundStrategy class to hold data from database"""
         self.fund_name = fund_name
         self.strategy_name = strategy_name
         self.weight = weight
         self.output_is_saved = True
         self.strategy_version = strategy_version
-        self.asset_weights = fund_strategy_asset_weights or []
-        self.analytics = fund_strategy_analytics or []
-        self._assets = []
-
-    @property
-    def assets(self) -> List[Asset]:
-        return self._assets
-
-    @assets.setter
-    def assets(self, x: List[Asset]) -> None:
-        unique_x = []
-        for i in x:
-            if i not in unique_x:
-                unique_x.append(i)
-
-        self._assets = unique_x
-
-    def add_asset_if_not_exists(self, x: Asset) -> None:
-        if x not in self.assets:
-            self.assets.append(x)
+        self.asset_weights = asset_weights or []
+        self.analytics = analytics or []
 
     @property
     def fund_name(self) -> str:
@@ -110,13 +91,13 @@ class FundStrategy:
     def weight(self, x: float) -> None:
         self._weight = x
 
-    def add_fund_strategy_asset_analytics(self, asset_analytics: List['FundStrategyAnalytic']) -> None:
+    def add_analytics(self, asset_analytics: List['FundStrategyAnalytic']) -> None:
         self._analytics.extend(asset_analytics)
 
-    def add_fund_strategy_asset_analytic(self, asset_analytic: 'FundStrategyAnalytic') -> None:
+    def add_analytic(self, asset_analytic: 'FundStrategyAnalytic') -> None:
         self._analytics.append(asset_analytic)
 
-    def add_fund_strategy_asset_weight(self, asset_weight: 'FundStrategyAssetWeight') -> None:
+    def add_asset_weight(self, asset_weight: 'FundStrategyAssetWeight') -> None:
         self._asset_weights.append(asset_weight)
 
 

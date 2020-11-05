@@ -25,7 +25,7 @@ def test_add_fund_strategy_asset_analytic_adds_analytic():
         fs = FundStrategy('a', 'times', 1, float(1))
         fsaa = MockFundStrategyAssetAnalytic('a', date(2020, 1, 1), 'b', 'c', float(1), 'b')
 
-        fs.add_fund_strategy_asset_analytic(fsaa)
+        fs.add_analytic(fsaa)
 
         assert fsaa == fs.analytics[0]
 
@@ -36,7 +36,7 @@ def test_add_fund_strategy_asset_weight_adds_weight():
         fs = FundStrategy('a', 'times', 1, float(1))
         fsaw = MockFundStrategyAssetWeight('a', date(2020, 1, 1), float(1), 'b')
 
-        fs.add_fund_strategy_asset_weight(fsaw)
+        fs.add_asset_weight(fsaw)
 
         assert fsaw == fs.asset_weights[0]
 
