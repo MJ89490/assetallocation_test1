@@ -212,7 +212,7 @@ class ComputeInflationDifferential:
 
         inflation_differential = pd.DataFrame()
 
-        counter = 8
+        currency_logs, counter = [], 8
 
         for currency in currencies_spot:
             inflation_year_zero_value = []
@@ -223,6 +223,7 @@ class ComputeInflationDifferential:
             flag_imf = ''
             print(currency)
             write_logs_effect(currency, counter, True)
+            currency_logs.append(currency[:3])
 
             for inflation, year_zero, year_one in zip(inflation_release_values, years_zero_inflation, years_one_inflation):
 
@@ -294,4 +295,16 @@ class ComputeInflationDifferential:
         new_index = np.delete(self.dates_index, 0)
         inflation_differential = inflation_differential.set_index(new_index)
 
-        return inflation_differential
+        return inflation_differential, currency_logs
+
+
+
+
+
+
+
+
+
+
+
+

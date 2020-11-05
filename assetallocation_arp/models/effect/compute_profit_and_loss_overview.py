@@ -1,5 +1,5 @@
 import pandas as pd
-
+import numpy as np
 from calendar import monthrange
 from pandas.tseries import offsets
 
@@ -198,6 +198,10 @@ class ComputeProfitAndLoss:
         for index, val in enumerate(p_and_l_combo):
             if val == 0:
                 p_and_l_spot[index], p_and_l_total[index], p_and_l_carry[index] = None, None, None
+            else:
+                p_and_l_spot[index], p_and_l_total[index], p_and_l_carry[index] = round(p_and_l_spot[index], 2), \
+                                                                                  round(p_and_l_total[index], 2), \
+                                                                                  round(p_and_l_carry[index], 2)
 
         return p_and_l_spot, p_and_l_total, p_and_l_carry
 
@@ -240,9 +244,9 @@ class ComputeProfitAndLoss:
                                                                                            profit_and_loss_carry_overview.values)
 
         profit_and_loss_overview = {'profit_and_loss_combo_overview': profit_and_loss_combo_overview.values,
-                                    'profit_and_loss_total_overview': p_and_l_total,
-                                    'profit_and_loss_spot_ex_overview': p_and_l_spot,
-                                    'profit_and_loss_carry_overview': p_and_l_carry,
+                                    'profit_and_loss_total_overview': np.where(np.isnan(p_and_l_total), '', p_and_l_total),
+                                    'profit_and_loss_spot_ex_overview': np.where(np.isnan(p_and_l_spot), '', p_and_l_spot),
+                                    'profit_and_loss_carry_overview': np.where(np.isnan(p_and_l_carry), '', p_and_l_carry),
                                     'profit_and_loss_notional': profit_and_loss_notional,
                                     'profit_and_loss_matr': profit_and_loss_matr
                                     }

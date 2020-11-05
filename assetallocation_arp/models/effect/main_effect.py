@@ -52,11 +52,12 @@ def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
-    inflation_differential = obj_inflation_differential.compute_inflation_differential(
-                             strategy_inputs['Realtime Inflation Forecast'].item(), obj_import_data.all_currencies_spot,
-                             obj_import_data.currencies_spot['currencies_spot_usd'],
-                             excel_instance,
-                             imf_data_update=strategy_inputs['updateIMFdata'].item())
+    inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
+                                            strategy_inputs['Realtime Inflation Forecast'].item(),
+                                            obj_import_data.all_currencies_spot,
+                                            obj_import_data.currencies_spot['currencies_spot_usd'],
+                                            excel_instance,
+                                            imf_data_update=strategy_inputs['updateIMFdata'].item())
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     carry_inputs = {'type': strategy_inputs['Real/Nominal'].item().strip().lower(), 'inflation': inflation_differential}
@@ -153,12 +154,17 @@ def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
                                                     returns_incl_signals=agg_currencies['agg_total_incl_signals'].head(-1),
                                                     spxt_index_values=spx_index_values.loc[pd.to_datetime(user_date, format='%d-%m-%Y'):])
 
-    effect_outputs = {'profit_and_loss': profit_and_loss, 'signals_overview': signals_overview,
-                      'trades_overview': trades_overview, 'rates': rates,
-                      'risk_returns': risk_returns, 'combo': currencies_calculations['combo_curr'],
+    write_logs = {'currency_logs': currency_logs}
+
+    effect_outputs = {'profit_and_loss': profit_and_loss,
+                      'signals_overview': signals_overview,
+                      'trades_overview': trades_overview,
+                      'rates': rates,
+                      'risk_returns': risk_returns,
+                      'combo': currencies_calculations['combo_curr'],
                       'total_excl_signals': agg_currencies['agg_total_excl_signals'],
                       'total_incl_signals': agg_currencies['agg_total_incl_signals'],
                       'spot_incl_signals': agg_currencies['agg_spot_incl_signals'],
                       'spot_excl_signals': agg_currencies['agg_spot_excl_signals']}
 
-    return effect_outputs
+    return effect_outputs, write_logs

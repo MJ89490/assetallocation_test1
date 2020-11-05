@@ -1,6 +1,4 @@
 
-
-<html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -101,6 +99,13 @@
 }
 .navbar-default .navbar-nav .nav-link {color: #007faa;}
 .navbar-default .nav-item:hover .nav-link {color: rgb(102, 204, 238);}
+
+
+
+.row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 150px;}
+.row_table_overview{margin-left: 150px; margin-top: 50px;}
+.title-table-overview{color: #005774; font-weight: bold;}
+.sub_title_table_overview{font-size: 0.75rem;}
 </style>
 </head>
 
@@ -181,13 +186,62 @@
     <div class="container">
         <h2 class="title-dashboard">EFFECT Dashboard</h2><br>
 
-        <h6 class="date_run_dashboard text-muted"><b>Date run {{effect_data_form['input_signal_date_effect']}}</b></h6>
+        <h6 class="date_run_dashboard text-muted">Date run {{effect_data_form['input_signal_date_effect']}}</h6>
 
 
+        <div class="row row_notional_table">
+            <div class="col-lg-6">
 
-        <div class="row">
+                <table class="table table-hover table-custom">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="text-muted text-center" scope="row">Drawdown (%)</th>
+                        <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_drawdown_position_size_matr']['drawdown']}}</td>
+                    </tr>
+                <tr>
+                        <th class="text-muted text-center" scope="row">Position size in MATR (%)</th>
+                        <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_drawdown_position_size_matr']['size_matr']}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="col-lg-6">
+                <table class="table table-hover table-custom">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="text-muted text-center" scope="row">Ex-ante vol (%)*</th>
+                        <td class="text-muted text-center"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted text-center" scope="row">MATR Notional (%)**</th>
+                        <td class="text-muted text-center"></td>
+
+                    </tr>
+                </tbody>
+            </table>
+                <h6 class="text-muted sub_title_table_overview">* 2% vol limit</h6>
+                <h6 class="text-muted sub_title_table_overview">** 15% soft notional limit, 20% hard notional limit</h6>
+            </div>
+        </div>
+
+        <!--100% notional(bp)-->
+        <div class="row row_notional_table">
             <div class="col-lg-12">
-                <h6 class="text-muted">100% notional(bp)</h6>
+                <h6 class="title-table-overview">100% notional (bp)</h6>
                 <table class="table table-hover table-custom">
                 <thead>
                     <tr>
@@ -199,26 +253,25 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th class="text-muted" scope="row">Weekly P&L</th>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']}}</td>
+                        <th class="text-muted text-center" scope="row">Weekly P&L</th>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']}}</td>
                     </tr>
                 <tr>
-                        <th class="text-muted" scope="row">YTD P&L</th>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_ytd_notional']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_ytd_notional']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_ytd_notional']}}</td>
+                        <th class="text-muted text-center" scope="row">YTD P&L</th>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_ytd_notional']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_ytd_notional']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_ytd_notional']}}</td>
                     </tr>
                 </tbody>
             </table>
             </div>
-
         </div>
-
-        <div class="row">
+        <!--As implemented in MATR (bp)-->
+        <div class="row row_matr_table">
             <div class="col-lg-12">
-                <h6 class="text-muted">As implemented in MATR (bp)</h6>
+                <h6 class="title-table-overview">As implemented in MATR (bp)</h6>
                 <table class="table table-hover table-custom">
                 <thead>
                     <tr>
@@ -230,29 +283,113 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th class="text-muted" scope="row">Weekly P&L</th>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_weekly_matr']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_weekly_matr']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_carry_weekly_matr']}}</td>
+                        <th class="text-muted text-center" scope="row">Weekly P&L</th>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_weekly_matr']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_weekly_matr']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_carry_weekly_matr']}}</td>
                     </tr>
                 <tr>
-                        <th class="text-muted" scope="row">YTD P&L</th>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_ytd_matr']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
-                        <td class="text-muted">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
+                        <th class="text-muted text-center" scope="row">YTD P&L</th>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_ytd_matr']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
+                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
                     </tr>
                 </tbody>
             </table>
             </div>
         </div>
-
-
-        <div class="row">
-            <div class="col-lg-12">
-                <h6 class="text-muted">Profit and Loss</h6>
+        <!--Table overview-->
+        <div class="row row_table_overview">
+            <!--Profit and Loss-->
+            <div class="col-lg-4">
+                <h6 class="title-table-overview text-center">Profit and Loss</h6>
+                <table class="table table-hover table-custom">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th class="text-muted text-center" scope="col">Last<br>week</th>
+                        <th class="text-muted text-center" scope="col">Total (%)<br></th>
+                        <th class="text-muted text-center" scope="col">Spot (%)</th>
+                        <th class="text-muted text-center tex" scope="col">Carry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for currency in range(write_logs['currency_logs']|length) %}
+                        <tr>
+                            <th class="text-muted text-center">{{write_logs['currency_logs'][currency]}}</th>
+                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_combo_overview'][currency]}}</td>
+                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_total_overview'][currency]}}</td>
+                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_spot_ex_overview'][currency]}}</td>
+                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_carry_overview'][currency]}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             </div>
-
+            <!--Signals-->
+            <div class="col-lg-4">
+                <h6 class="title-table-overview text-center">Signals</h6>
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th class="text-muted text-center" scope="col">Real carry (%)</th>
+                            <th class="text-muted text-center" scope="col">Trend (%)</th>
+                            <th class="text-muted text-center" scope="col">This<br>week</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for currency in range(write_logs['currency_logs']|length) %}
+                            <tr>
+                                <th class="text-muted"></th>
+                                <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_real_carry'][currency]}}</td>
+                                <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_trend_overview'][currency]}}</td>
+                                <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_combo_overview'][currency]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+             <!--Trades-->
+            <div class="col-lg-2">
+                <h6 class="title-table-overview text-center">Trades</h6>
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th class="text-muted text-center" scope="col">This<br>week</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for currency in range(write_logs['currency_logs']|length) %}
+                            <tr>
+                                <th class="text-muted text-center"></th>
+                                <td class="text-muted text-center">{{effect_outputs['trades_overview'][currency]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!--Warning Flags-->
+            <div class="col-lg-2">
+                <h6 class="title-table-overview text-center">Warning flags</h6>
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th class="text-muted text-center" scope="col"><br>Rates (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for currency in range(write_logs['currency_logs']|length) %}
+                            <tr>
+                                <th class="text-muted"></th>
+                                <td class="text-muted text-center">{{effect_outputs['rates'][currency]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-
+    </div>
 </body>
-</html>

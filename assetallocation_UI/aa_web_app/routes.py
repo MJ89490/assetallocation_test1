@@ -67,8 +67,9 @@ def effect_dashboard():
     form = InputsTimesModel()
     effect_data_form = obj_received_data_effect.effect_data_form
     effect_outputs = obj_received_data_effect.effect_outputs
+    write_logs = obj_received_data_effect.write_logs
 
-    return render_template('effect_dashboard.html', form=form, effect_outputs=effect_outputs,
+    return render_template('effect_dashboard.html', form=form, effect_outputs=effect_outputs, write_logs=write_logs,
                            effect_data_form=effect_data_form, title='Dashboard')
 
 

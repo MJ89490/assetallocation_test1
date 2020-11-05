@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import datetime
 
 from calendar import monthrange
@@ -53,7 +54,7 @@ class ComputeWarningFlagsOverview:
 
         rates = pd.concat([rates_usd, rates_eur], axis=0)
 
-        return rates.values
+        return np.round(rates.values, 2)
 
     def compute_warning_flags_inflation(self):
         """

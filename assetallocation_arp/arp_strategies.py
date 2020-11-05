@@ -33,7 +33,7 @@ def run_model(model_type, mat_file, input_file, excel_instance):
 
         strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
-        outputs_effect = run_effect(strategy_inputs, excel_instance, asset_inputs=asset_inputs, all_data=all_data)
+        outputs_effect, write_logs = run_effect(strategy_inputs, excel_instance, asset_inputs=asset_inputs, all_data=all_data)
 
         write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
                                                                  outputs_effect['signals_overview'],
@@ -46,7 +46,7 @@ def run_model(model_type, mat_file, input_file, excel_instance):
                                                                  outputs_effect['spot_incl_signals'],
                                                                  outputs_effect['spot_excl_signals'])}, input_file)
 
-        return outputs_effect
+        return outputs_effect, write_logs
 
     if model_type == models_names.Models.curp.name:
         print(model_type)
@@ -114,9 +114,9 @@ def run_effect_strategy():
     file = xw.Range('rng_full_path').value
     excel_instance = xw.Range('rng_run_excel').value
     # run selected model
-    effect_output = run_model(model_type, mat_file, file, excel_instance)
+    effect_output, write_logs = run_model(model_type, mat_file, file, excel_instance)
 
-    return effect_output
+    return effect_output, write_logs
 
 
 def get_inputs_from_python(model, input_file):

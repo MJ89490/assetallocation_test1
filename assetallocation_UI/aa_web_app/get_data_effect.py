@@ -5,6 +5,7 @@ class ReceivedDataEffect:
     def __init__(self):
         self.effect_outputs = {}
         self.effect_form = {}
+        self.write_logs = {}
 
     @property
     def effect_data_form(self):
@@ -34,7 +35,13 @@ class ReceivedDataEffect:
 
     def call_run_effect(self):
 
-        self.effect_outputs = run_effect_strategy()
+        self.effect_outputs, self.write_logs = run_effect_strategy()
+
+        # p = self.effect_outputs['profit_and_loss']
+
+
+
+        print()
 
 
 
