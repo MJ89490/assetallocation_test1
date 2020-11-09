@@ -72,10 +72,10 @@ def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
                     'long_term': int(strategy_inputs['input_long_term_ma'].item()),
                     'trend': strategy_inputs['input_trend_indicator_effect'].item().strip().lower()}
 
-    combo_inputs = {'cut_off': float(strategy_inputs['input_cut_off_long'].item()) / 100,
+    combo_inputs = {'cut_off': float(strategy_inputs['input_cut_off_long'].item()),
                     'incl_shorts': strategy_inputs['input_include_shorts_effect'].item().strip().lower(),
-                    'cut_off_s': float(strategy_inputs['input_cut_off_short'].item()) / 100,
-                    'threshold': float(strategy_inputs['input_threshold_effect'].item()) / 100}
+                    'cut_off_s': float(strategy_inputs['input_cut_off_short'].item()),
+                    'threshold': float(strategy_inputs['input_threshold_effect'].item())}
 
     currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
