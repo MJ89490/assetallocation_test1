@@ -42,19 +42,9 @@ def run_model(model_type, mat_file, input_file, excel_instance):
                                                                  outputs_effect['total_excl_signals'],
                                                                  outputs_effect['total_incl_signals'],
                                                                  outputs_effect['spot_incl_signals'],
-                                                                 outputs_effect['spot_excl_signals'])}, input_file)
-
-        # write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
-        #
-        #
-        #                                                          outputs_effect['rates'],
-        #                                                          outputs_effect['risk_returns'],
-        #                                                          outputs_effect['combo'],
-        #                                                          outputs_effect['total_excl_signals'],
-        #                                                          outputs_effect['total_incl_signals'],
-        #                                                          outputs_effect['spot_incl_signals'],
-        #                                                          outputs_effect['spot_excl_signals'])}, input_file)
-
+                                                                 outputs_effect['spot_excl_signals'],
+                                                                 strategy_inputs['latest signal date'])},
+                                                                 input_file)
     if model_type == models_names.Models.curp.name:
         print(model_type)
     if model_type == models_names.Models.fica.name:

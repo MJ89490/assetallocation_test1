@@ -2,7 +2,8 @@ import xlwings as xw
 
 
 # def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview, rates):
-def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates):
+def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates, date_run):
+
     weekly_total_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']
     weekly_spot_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']
     weekly_carry_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']
@@ -20,6 +21,9 @@ def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overvi
     ytd_carry_matr = p_and_l_overview['profit_and_loss_matr']['profit_and_loss_carry_ytd_matr']
 
     sheet_effect_input = xw.Book.caller().sheets['EFFECT']
+
+    # Date run
+    sheet_effect_input.range('rng_effect_date_run').value = date_run.item()
 
     # Profit and Loss overview
     sheet_effect_input.range('profit_and_loss_total_weekly_notional').value = weekly_total_not
@@ -156,9 +160,9 @@ def add_color_scheme_to_tables():
 
 def run_write_outputs_effect_model(model_outputs: dict):
     p_and_l_overview, signals_overview, trades_overview, rates, risk_returns, combo, \
-    total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals = model_outputs['effect']
+    total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals, date_run = model_outputs['effect']
 
-    write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates)
+    write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates, date_run)
     write_outputs_risk_return_overview(risk_returns)
     write_outputs_effect(combo, total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals)
 
