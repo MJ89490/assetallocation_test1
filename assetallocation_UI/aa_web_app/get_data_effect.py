@@ -1,3 +1,5 @@
+import pandas as pd
+
 from assetallocation_arp.arp_strategies import run_effect_strategy
 
 
@@ -33,15 +35,11 @@ class ReceivedDataEffect:
         self.effect_form = effect_form
         return effect_form
 
-    def call_run_effect(self):
+    def call_run_effect(self, effect_form):
 
-        self.effect_outputs, self.write_logs = run_effect_strategy()
+        strategy_inputs = pd.DataFrame.from_dict(effect_form, orient='index').T
 
-        # p = self.effect_outputs['profit_and_loss']
-
-
-
-        print()
+        self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs)
 
 
 

@@ -98,8 +98,7 @@ def received_data_effect_form():
 
     print(request.form['json_data'])
 
-    obj_received_data_effect.call_run_effect()
-    # run_effect_strategy()
+    obj_received_data_effect.call_run_effect(effect_form)
 
     # for idx, val in enumerate(form_data):
     #     if idx > 1:

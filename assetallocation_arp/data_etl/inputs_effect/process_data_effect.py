@@ -1,9 +1,6 @@
 import os
-import sys
 import json
-import win32api
 
-import xlwings as xw
 import pandas as pd
 
 from configparser import ConfigParser
@@ -111,10 +108,7 @@ class ProcessDataEffect:
             self._start_date_calculations = None
         else:
             if pd.to_datetime(value, format='%d-%m-%Y') < pd.to_datetime(start_common_date, format='%d-%m-%Y'):
-                wb = xw.Book.caller()
-                win32api.MessageBox(wb.app.hwnd, f'Start date is lesser than {start_common_date}')
-                sys.exit()
-                # raise ValueError(f'Start date is lesser than {start_common_date}')
+                raise ValueError(f'Start date is lesser than {start_common_date}')
             else:
                 start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
                 self._start_date_calculations = start_date

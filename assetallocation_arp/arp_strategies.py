@@ -16,7 +16,7 @@ from assetallocation_arp.data_etl.outputs_effect.write_outputs_effect_excel impo
 # TODO ADD JESS CHANGES FOR TIMES
 
 
-def run_model(model_type, mat_file, input_file, excel_instance):
+def run_model(model_type, mat_file, input_file, excel_instance, strategy_inputs):
 
     if model_type == models_names.Models.times.name:
         # get inputs_effect from excel and matlab data
@@ -30,21 +30,20 @@ def run_model(model_type, mat_file, input_file, excel_instance):
         print(model_type)
 
     if model_type == models_names.Models.effect.name:
-
-        strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+        old_strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
         outputs_effect, write_logs = run_effect(strategy_inputs, excel_instance, asset_inputs=asset_inputs, all_data=all_data)
 
-        write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
-                                                                 outputs_effect['signals_overview'],
-                                                                 outputs_effect['trades_overview'],
-                                                                 outputs_effect['rates'],
-                                                                 outputs_effect['risk_returns'],
-                                                                 outputs_effect['combo'],
-                                                                 outputs_effect['total_excl_signals'],
-                                                                 outputs_effect['total_incl_signals'],
-                                                                 outputs_effect['spot_incl_signals'],
-                                                                 outputs_effect['spot_excl_signals'])}, input_file)
+        # write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
+        #                                                          outputs_effect['signals_overview'],
+        #                                                          outputs_effect['trades_overview'],
+        #                                                          outputs_effect['rates'],
+        #                                                          outputs_effect['risk_returns'],
+        #                                                          outputs_effect['combo'],
+        #                                                          outputs_effect['total_excl_signals'],
+        #                                                          outputs_effect['total_incl_signals'],
+        #                                                          outputs_effect['spot_incl_signals'],
+        #                                                          outputs_effect['spot_excl_signals'])}, input_file)
 
         return outputs_effect, write_logs
 
@@ -96,44 +95,44 @@ def write_output_to_excel(model_outputs, input_file):
         run_write_outputs_effect_model(model_outputs)
 
 
-def get_inputs_from_excel():
+# def get_inputs_from_excel():
+#
+#     # select data from excel
+#     mat_file = xw.Range('rng_mat_file_path').value
+#     model_type = xw.Range('rng_model_type').value
+#     file = xw.Range('rng_full_path').value
+#     excel_instance = xw.Range('rng_run_excel').value
+#     # run selected model
+#     run_model(model_type, mat_file, file, excel_instance)
 
+
+def run_effect_strategy(strategy_inputs):
     # select data from excel
     mat_file = xw.Range('rng_mat_file_path').value
     model_type = xw.Range('rng_model_type').value
     file = xw.Range('rng_full_path').value
     excel_instance = xw.Range('rng_run_excel').value
     # run selected model
-    run_model(model_type, mat_file, file, excel_instance)
-
-
-def run_effect_strategy():
-    # select data from excel
-    mat_file = xw.Range('rng_mat_file_path').value
-    model_type = xw.Range('rng_model_type').value
-    file = xw.Range('rng_full_path').value
-    excel_instance = xw.Range('rng_run_excel').value
-    # run selected model
-    effect_output, write_logs = run_model(model_type, mat_file, file, excel_instance)
+    effect_output, write_logs = run_model(model_type, mat_file, file, excel_instance, strategy_inputs)
 
     return effect_output, write_logs
 
 
-def get_inputs_from_python(model, input_file):
-
-    # launch the script from Python
-    mat_file = None
-    # input_file = None
-
-    models_list = [model.name for model in models_names.Models]
-
-    xw.Book(input_file).set_mock_caller()
-
-    if model in models_list:
-        model_type = model
-        run_model(model_type, mat_file, input_file, 'excel')
-    else:
-        raise NameError("Your input is incorrect.")
+# def get_inputs_from_python(model, input_file):
+#
+#     # launch the script from Python
+#     mat_file = None
+#     # input_file = None
+#
+#     models_list = [model.name for model in models_names.Models]
+#
+#     xw.Book(input_file).set_mock_caller()
+#
+#     if model in models_list:
+#         model_type = model
+#         run_model(model_type, mat_file, input_file, 'excel')
+#     else:
+#         raise NameError("Your input is incorrect.")
 
 
 def get_input_user():
