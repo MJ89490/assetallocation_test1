@@ -189,23 +189,23 @@ class ProcessDataEffect:
         # Read values from the all_currencies_effect_to_delete.ini file
         currencies_base_implied_config = json.loads(config.get('currencies_base_implied', 'currencies_base_implied_data'))
         # Read value from Excel and sort data depending on its base currency
-        currencies_eur = self.asset_inputs.loc[self.asset_inputs['EUR/USD base'] == 'EUR']
-        currencies_usd = self.asset_inputs.loc[self.asset_inputs['EUR/USD base'] == 'USD']
+        currencies_eur = self.asset_inputs.loc[self.asset_inputs['input_usd_eur'] == 'EUR']
+        currencies_usd = self.asset_inputs.loc[self.asset_inputs['input_usd_eur'] == 'USD']
 
-        self.currencies_spot['currencies_spot_usd'] = currencies_usd['Spot ticker'].tolist()
-        self.currencies_spot['currencies_spot_eur'] = currencies_eur['Spot ticker'].tolist()
+        self.currencies_spot['currencies_spot_usd'] = currencies_usd['input_spot_ticker'].tolist()
+        self.currencies_spot['currencies_spot_eur'] = currencies_eur['input_spot_ticker'].tolist()
 
-        self.currencies_carry['currencies_carry_usd'] = currencies_usd['Carry ticker'].tolist()
-        self.currencies_carry['currencies_carry_eur'] = currencies_eur['Carry ticker'].tolist()
+        self.currencies_carry['currencies_carry_usd'] = currencies_usd['input_carry_ticker'].tolist()
+        self.currencies_carry['currencies_carry_eur'] = currencies_eur['input_carry_ticker'].tolist()
 
-        self.currencies_3M_implied['three_month_implied_usd'] = currencies_usd['3M implied ticker'].tolist()
-        self.currencies_3M_implied['three_month_implied_eur'] = currencies_eur['3M implied ticker'].tolist()
+        self.currencies_3M_implied['three_month_implied_usd'] = currencies_usd['input_implied'].tolist()
+        self.currencies_3M_implied['three_month_implied_eur'] = currencies_eur['input_implied'].tolist()
 
-        weight_usd = list(currencies_usd['Weight on USD'].apply(lambda x: x * 100))
-        weight_eur = list(currencies_eur['Weight on USD'].apply(lambda x: x * 100))
+        weight_usd = list(currencies_usd['input_weight_usd'])
+        weight_eur = list(currencies_eur['input_weight_usd'])
 
-        self.weight_percentage_usd = pd.DataFrame(weight_usd, index=list(currencies_usd['Spot ticker'])).transpose()
-        self.weight_percentage_eur = pd.DataFrame(weight_eur, index=list(currencies_eur['Spot ticker'])).transpose()
+        self.weight_percentage_usd = pd.DataFrame(weight_usd, index=list(currencies_usd['input_spot_ticker'])).transpose()
+        self.weight_percentage_eur = pd.DataFrame(weight_eur, index=list(currencies_eur['input_spot_ticker'])).transpose()
 
         # SPX Index
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')

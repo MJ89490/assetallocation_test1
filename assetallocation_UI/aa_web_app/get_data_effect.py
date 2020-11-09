@@ -35,11 +35,12 @@ class ReceivedDataEffect:
         self.effect_form = effect_form
         return effect_form
 
-    def call_run_effect(self, effect_form):
+    def call_run_effect(self, effect_form, assets_inputs_effect):
 
         strategy_inputs = pd.DataFrame.from_dict(effect_form, orient='index').T
+        asset_inputs = pd.DataFrame.from_dict(assets_inputs_effect, orient='index').T
 
-        self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs)
+        self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs, asset_inputs)
 
 
 

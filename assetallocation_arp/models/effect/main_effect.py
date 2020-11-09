@@ -23,7 +23,7 @@ from assetallocation_arp.models.compute_risk_return_calculations import ComputeR
 """
 
 
-def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
+def run_effect(strategy_inputs, asset_inputs, all_data):
 
     user_date = pd.to_datetime(strategy_inputs['input_user_date_effect'].item().replace('/', '-'), format='%d-%m-%Y')
 
@@ -61,7 +61,6 @@ def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
                                             strategy_inputs['input_real_time_inf_effect'].item(),
                                             obj_import_data.all_currencies_spot,
                                             obj_import_data.currencies_spot['currencies_spot_usd'],
-                                            excel_instance,
                                             imf_data_update=imf_data_update)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #

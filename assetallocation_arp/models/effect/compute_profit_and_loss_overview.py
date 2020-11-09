@@ -3,8 +3,6 @@ import numpy as np
 from calendar import monthrange
 from pandas.tseries import offsets
 
-from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
-
 
 class ComputeProfitAndLoss:
 
@@ -20,7 +18,7 @@ class ComputeProfitAndLoss:
         :param combo_curr: combo data of all currencies from compute_currencies.py
         :return: a dataFrame with the combo of all currencies at the latest date
         """
-        write_logs_effect("Computing profit and loss last week...", "logs_p_and_l_combo")
+
         return combo_curr.loc[self.latest_date]
 
     def compute_profit_and_loss_total(self, returns_ex_costs):
@@ -29,7 +27,7 @@ class ComputeProfitAndLoss:
         :param returns_ex_costs: returns exclude costs of all currencies
         :return:a dataFrame of the returns of all currencies at the latest date
         """
-        write_logs_effect("Computing profit and loss total...", "logs_p_and_l_total")
+
         profit_and_loss_returns = returns_ex_costs / returns_ex_costs.shift(1)
         profit_and_loss_returns = profit_and_loss_returns.apply(lambda x: x - 1)
 
@@ -42,7 +40,7 @@ class ComputeProfitAndLoss:
         :param combo_overview: combo from compute_profit_and_loss_combo function
         :return: a dataFrame of the spot of all currencies at the latest date
         """
-        write_logs_effect("Computing profit and loss spot...", "logs_p_and_l_spot")
+
         profit_and_loss_spot = spot_origin / spot_origin.shift(1)
         profit_and_loss_spot = profit_and_loss_spot.apply(lambda x: x - 1)
         profit_and_loss_spot = profit_and_loss_spot.apply(lambda x: x * 100).loc[self.latest_date]
@@ -58,7 +56,7 @@ class ComputeProfitAndLoss:
         :param profit_and_loss_spot: spot of profit and loss overview for all currencies
         :return: a dataFrame of carry of all currencies
         """
-        write_logs_effect("Computing profit and loss carry...", "logs_p_and_l_carry")
+
         profit_and_loss_carry = profit_and_loss_total.values - profit_and_loss_spot.values
 
         return pd.DataFrame(profit_and_loss_carry)[0]
@@ -91,7 +89,6 @@ class ComputeProfitAndLoss:
         :param signal_day: current day of the week the month
         :return: a dictionary of profit and loss ytd and weekly
         """
-        write_logs_effect("Computing profit and loss notional...", "logs_p_and_l_notional")
 
         last_year = (self.latest_date - pd.DateOffset(years=1)).year
         last_month = 12
@@ -153,7 +150,6 @@ class ComputeProfitAndLoss:
         :param weighted_perf: weighted performance data
         :return: a dictionary of profit and loss implemented in MATR
         """
-        write_logs_effect("Computing profit and loss implemented in matr...", "logs_p_and_l_matr")
 
         first_day_of_year = self.get_first_day_of_year()
 

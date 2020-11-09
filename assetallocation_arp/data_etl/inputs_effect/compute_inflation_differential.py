@@ -11,7 +11,6 @@ from configparser import ConfigParser
 
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
-from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 
 
@@ -24,7 +23,7 @@ class ComputeInflationDifferential:
         Function computing the inflation release depending on the publications IMF dates
         :return: separate dataFrames inflation_release, years_zero_inflation, months_inflation
         """
-        write_logs_effect("Computing inflation release...", "logs_inflation_release")
+
         weo_dates = []
         inflation_release = pd.DataFrame()
         flag = False
@@ -184,17 +183,17 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd, excel_instance, imf_data_update):
+    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd, imf_data_update):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
         """
-        write_logs_effect("Computing inflation differential...", "logs_inflation_differential")
+
         inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
         # Grab the latest inflation differential data
         if imf_data_update:
-            scrape_imf_data(excel_instance)
+            scrape_imf_data()
 
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
 
@@ -222,7 +221,7 @@ class ComputeInflationDifferential:
 
             flag_imf = ''
             print(currency)
-            write_logs_effect(currency, counter, True)
+
             currency_logs.append(currency[:3])
 
             for inflation, year_zero, year_one in zip(inflation_release_values, years_zero_inflation, years_one_inflation):

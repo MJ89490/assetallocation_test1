@@ -5,16 +5,12 @@ import datetime
 from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 
-from data_etl.inputs_effect.process_data_effect import ProcessDataEffect
-from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
-
 from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import ComputeWorkingDays1D2D
 
 
 class ComputeWarningFlagsOverview:
 
     def __init__(self, latest_signal_date, frequency_mat):
-        # super().__init__(asset_inputs, frequency_mat, end_date_mat, signal_day_mat, all_data)
         self.latest_signal_date = latest_signal_date
         self.frequency = frequency_mat
 
@@ -40,7 +36,6 @@ class ComputeWarningFlagsOverview:
         Function computing the warning flags rates
         :return: dataFrames with rates usd and rates eur
         """
-        write_logs_effect("Computing warnings flags rates...", "logs_warnings_rates")
 
         three_month_implied_usd_latest_date = three_month_implied_usd.loc[self.latest_signal_date]
         three_month_implied_usd_previous_seven_days_latest_date = three_month_implied_usd.loc[self.prev_7_days_from_latest_signal_date]
