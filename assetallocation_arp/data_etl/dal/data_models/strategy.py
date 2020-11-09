@@ -6,14 +6,15 @@ from psycopg2.extras import DateTimeTZRange
 from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, \
     Leverage, Name, FxModel
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, FicaAssetInput, \
-    FxAssetInput, Asset
+from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, \
+    FxAssetInput, Asset, FicaAssetInputGroup
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAnalytic, FundStrategyAssetWeight
 from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter, \
     FxDataFrameConverter
 from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
 from assetallocation_arp.models import times, fica, fxmodels
 
+# TODO fix run for fx to give asset_subcategory / currency / country as output
 
 # noinspection PyAttributeOutsideInit
 class Strategy(ABC):
@@ -157,11 +158,11 @@ class Fica(Strategy):
         self._grouped_asset_inputs = []
 
     @property
-    def grouped_asset_inputs(self) -> List[List[FicaAssetInput]]:
+    def grouped_asset_inputs(self) -> List[FicaAssetInputGroup]:
         return self._grouped_asset_inputs
 
     @grouped_asset_inputs.setter
-    def grouped_asset_inputs(self, x: List[List[FicaAssetInput]]) -> None:
+    def grouped_asset_inputs(self, x: List[FicaAssetInputGroup]) -> None:
         self._grouped_asset_inputs = x
 
     @property
@@ -229,13 +230,9 @@ class Fica(Strategy):
         comparator_analytics = FicaDataFrameConverter.create_comparator_analytics(
             carry_roll['G3_10y_carry'], carry_daily['G3_10y_return', 'G3_10y_return%'])
 
-        future_tickers = [
-            asset.ticker for group in self.grouped_asset_inputs for asset in group if
-            asset.input_category == Category.future
-        ]
         asset_analytics = FicaDataFrameConverter.create_asset_analytics(
             carry_roll.drop(carry_total_cols), cum_contribution.drop(contribution_total_col),
-            carry_daily.drop(return_total_cols), return_daily, future_tickers
+            carry_daily.drop(return_total_cols), return_daily
         )
         analytics = strategy_analytics + comparator_analytics + asset_analytics
 
@@ -487,7 +484,6 @@ class Fx(Strategy):
         self._vol_window = x
 
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
-        # TODO refactor FundStrategyAnalytic and FundStrategyAssetWeight to NOT use asset tickers (including db!)
         spot, carry, cash, ppp = fxmodels.format_data(self)
         signal, volatility = fxmodels.calculate_signals(self, spot, carry, cash, ppp)
         exposure, exposure_agg = fxmodels.determine_sizing(self, signal, volatility)

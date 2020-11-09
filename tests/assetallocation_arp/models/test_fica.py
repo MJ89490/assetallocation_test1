@@ -6,7 +6,7 @@ from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.models import fica as f
 from assetallocation_arp.data_etl.dal.data_models.strategy import Fica
-from assetallocation_arp.data_etl.dal.data_models.asset import FicaAssetInput, AssetAnalytic
+from assetallocation_arp.data_etl.dal.data_models.asset import FicaAssetInput, AssetAnalytic, FicaAssetInputGroup
 from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import CurveTenor, Category
 
 
@@ -135,7 +135,7 @@ def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
                                                   in data.loc[:, future_ticker].iteritems() if pd.notna(val)]
             asset_input_group.append(future_asset_input)
 
-        grouped_asset_inputs.append(asset_input_group)
+        grouped_asset_inputs.append(FicaAssetInputGroup(asset.loc['country'], asset_input_group))
 
     f.grouped_asset_inputs = grouped_asset_inputs
 

@@ -20,6 +20,7 @@ CREATE TABLE "arp"."fica_asset_group"
 (
 	"id" serial NOT NULL,
 	"strategy_id" integer NOT NULL,
+  "asset_subcategory" varchar(25) NOT NULL,
 	"execution_state_id" integer NOT NULL
 )
 ;
@@ -27,6 +28,10 @@ CREATE TABLE "arp"."fica_asset_group"
 
 ALTER TABLE "arp"."fica_asset_group" ADD CONSTRAINT "fica_asset_group_pkey"
 	PRIMARY KEY ("id")
+;
+
+ALTER TABLE "arp"."fica_asset_group" ADD CONSTRAINT "fica_asset_group_strategy_id_asset_subcategory_key"
+	UNIQUE ("strategy_id", "asset_subcategory")
 ;
 
 /* Create Foreign Key Constraints */

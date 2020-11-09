@@ -95,7 +95,7 @@ def get_expected_outputs(positioning_output, r_output, returns_output, signals_o
 
     for i in (positioning, r, returns, signals):
 
-        i.rename(columns={j: subcategory_map[j][j] for j in i.columns}, inplace=True)
+        i.rename(columns={j: subcategory_map[j] for j in i.columns}, inplace=True)
 
     return positioning, r, returns, signals
 

@@ -42,12 +42,17 @@ FixedIncome = Subcategory(
 
 
 class FX(Subcategory):
-    JPY = auto()
-    EUR = auto()
     AUD = auto()
     CAD = auto()
+    CHF = auto()
+    EUR = auto()
     GBP = auto()
+    JPY = auto()
+    NOK = auto()
+    NZD = auto()
+    SEK = auto()
+    USD = auto()
     EURGBP = auto()  # TODO check this is FX not commodity or credit
 
 
-subcategory_map = {j: i for i in (Equity, FixedIncome, FX) for j in i._member_names_}
+subcategory_map = {j: i[j] for i in (Equity, FixedIncome, FX) for j in i._member_names_}

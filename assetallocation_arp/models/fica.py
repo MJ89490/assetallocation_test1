@@ -13,14 +13,16 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 
 
 def format_data(strategy: 'Fica'):
-    """Select curve data for sovereign tickers if curve == soveeign else swap
+    """Select curve data for sovereign tickers if curve == sovereign else swap
     tickers
     :return: dataframe with historical yield curves per country
     """
     # selecting which yield curve to use
     curve_category = Category.sovereign if strategy.curve == Category.sovereign.name else Category.swap
-    analytics = [analytic for group in strategy.grouped_asset_inputs for asset in group for analytic
-                 in asset.asset_analytics if asset.input_category == curve_category]
+    analytics = [
+        (asset.ticker, analytic) for group in strategy.grouped_asset_inputs for asset in
+        group.fica_asset_inputs for analytic in asset.asset_analytics if asset.input_category == curve_category
+    ]
 
     curve = DataFrameConverter.asset_analytics_to_df(analytics)
     return curve.asfreq('BM')
@@ -36,7 +38,7 @@ def calculate_carry_roll_down(strategy: 'Fica', curve: pd.DataFrame):
     # reading inputs
     tenor = strategy.tenor
     coupon = strategy.coupon
-    countries = [group[0].country.name for group in strategy.grouped_asset_inputs]
+    countries = [group.asset_subcategory.name for group in strategy.grouped_asset_inputs]
     n = len(curve)
     m = len(countries)
     # creating cash flows (semi-annually until expiration) and corresponding cash flow dates
@@ -117,15 +119,15 @@ def run_daily_attribution(strategy, signals):
     future_tickers, futures = [], []
     swap_cr_tickers, swap_crs = [], []
     for group in strategy.grouped_asset_inputs:
-        for asset in group:
-            if asset.input_category == Category.future and asset.country.name in ('EUR', 'GBP', 'USD'):
+        for asset in group.fica_asset_inputs:
+            if asset.input_category == Category.future and group.asset_subcategory.name in ('EUR', 'GBP', 'USD'):
                 future_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
-                    futures.append(analytic)
+                    futures.append((asset.ticker, analytic))
             elif asset.input_category == Category.swap_cr:
                 swap_cr_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
-                    swap_crs.append(analytic)
+                    swap_crs.append((asset.ticker, analytic))
 
     futures = DataFrameConverter.asset_analytics_to_df(futures)[future_tickers]
     curve_ox = DataFrameConverter.asset_analytics_to_df(swap_crs)[swap_cr_tickers]
@@ -133,14 +135,14 @@ def run_daily_attribution(strategy, signals):
     # reading inputs and shortening data
     carry_daily = pd.DataFrame()
     return_daily = pd.DataFrame()
-    country = [group[0].country.name for group in strategy.grouped_asset_inputs]
-    m = len(country)
+    countries = [group.asset_subcategory.name for group in strategy.grouped_asset_inputs]
+    m = len(countries)
     n = len(curve_ox)
     # creating carry & return dataframe for three country proxy
 
     for i in range(m):
-        carry_daily[country[i]] = 10 * curve_ox.iloc[:, 3+i*4] - 9 * curve_ox.iloc[:, 2+i*4] - curve_ox.iloc[:, i*4]
-        return_daily[country[i]] = -7.5 * (curve_ox.iloc[:, 3+i*4] - curve_ox.iloc[:, 3+i*4].shift())
+        carry_daily[countries[i]] = 10 * curve_ox.iloc[:, 3+i*4] - 9 * curve_ox.iloc[:, 2+i*4] - curve_ox.iloc[:, i*4]
+        return_daily[countries[i]] = -7.5 * (curve_ox.iloc[:, 3+i*4] - curve_ox.iloc[:, 3+i*4].shift())
     # creating daily signals from monthly signals
     signal_daily = signals.resample('B').ffill()
     # creating FICA and G3 carry & return series

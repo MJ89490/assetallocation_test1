@@ -35,8 +35,8 @@ ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_asset_subcategory_strategy_id_key"
-	UNIQUE ("asset_subcategory","strategy_id")
+ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_strategy_id_asset_subcategory_key"
+	UNIQUE ("strategy_id", "asset_subcategory")
 ;
 
 /* Create Foreign Key Constraints */

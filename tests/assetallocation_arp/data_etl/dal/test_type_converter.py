@@ -6,23 +6,23 @@ from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrat
     FundStrategyAssetWeight, FundStrategyAnalytic
 
 
-def mock_fund_strategy_asset_weights(asset_ticker: str, business_date: date, strategy_weight: float,
+def mock_fund_strategy_asset_weights(asset_subcategory: str, business_date: date, strategy_weight: float,
                                      implemented_weight: float, frequency: str):
     MockFundStrategyAssetWeight = mock.create_autospec(FundStrategyAssetWeight)
-    mock_fsaw = MockFundStrategyAssetWeight(asset_ticker, business_date, strategy_weight, frequency)
+    mock_fsaw = MockFundStrategyAssetWeight(asset_subcategory, business_date, strategy_weight, frequency)
     mock_fsaw.business_date = business_date
-    mock_fsaw.asset_ticker = asset_ticker
+    mock_fsaw.asset_subcategory = asset_subcategory
     mock_fsaw.frequency.name = frequency
     mock_fsaw.strategy_weight = strategy_weight
     mock_fsaw.implemented_weight = implemented_weight
     return mock_fsaw
 
 
-def mock_fund_strategy_asset_analytic(asset_ticker: str, business_date: date, category: str, subcategory: str,
+def mock_fund_strategy_asset_analytic(asset_subcategory: str, business_date: date, category: str, subcategory: str,
                                       value: float, frequency: str, aggregation_level: str):
     MockFundStrategyAssetAnalytic = mock.create_autospec(FundStrategyAssetAnalytic)
-    mock_fsaa = MockFundStrategyAssetAnalytic(asset_ticker, business_date, category, subcategory, value, frequency)
-    mock_fsaa.asset_ticker = asset_ticker
+    mock_fsaa = MockFundStrategyAssetAnalytic(asset_subcategory, business_date, category, subcategory, value, frequency)
+    mock_fsaa.asset_subcategory = asset_subcategory
     mock_fsaa.business_date = business_date
     mock_fsaa.category.name = category
     mock_fsaa.subcategory.name = subcategory

@@ -1,8 +1,7 @@
 from typing import List, Union, Optional
 import itertools
 
-from assetallocation_arp.common_libraries.dal_enums.asset import Category, Subcategory, Equity, FixedIncome, FX, \
-    subcategory_map
+from assetallocation_arp.common_libraries.dal_enums.asset import Category, Subcategory, subcategory_map
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.country import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
@@ -140,6 +139,32 @@ class FicaAssetInput(Asset):
 
 
 # noinspection PyAttributeOutsideInit
+class FicaAssetInputGroup:
+    def __init__(self, asset_subcategory: Union[str, Subcategory], fica_asset_inputs: List[FicaAssetInput]):
+        self.asset_subcategory = asset_subcategory
+        self.fica_asset_inputs = fica_asset_inputs
+
+    @property
+    def asset_subcategory(self) -> Union[str, Subcategory]:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Union[str, Subcategory]) -> None:
+        if isinstance(x, Subcategory):
+            self._asset_subcategory = x
+        else:
+            self._asset_subcategory = subcategory_map[x]
+
+    @property
+    def fica_asset_inputs(self) -> List[FicaAssetInput]:
+        return self._fica_asset_inputs
+
+    @fica_asset_inputs.setter
+    def fica_asset_inputs(self, x: List[FicaAssetInput]) -> None:
+        self._fica_asset_inputs = x
+
+
+# noinspection PyAttributeOutsideInit
 class FxAssetInput:
     def __init__(self, ppp_ticker: str, cash_rate_ticker: str, currency: str) -> None:
         """TimesAssetInput class to hold data from database"""
@@ -185,7 +210,7 @@ class FxAssetInput:
 # noinspection PyAttributeOutsideInit
 class TimesAssetInput:
     def __init__(
-            self, asset_subcategory: Union[str, Equity, FixedIncome, FX], s_leverage: int, signal_ticker: str,
+            self, asset_subcategory: Union[str, Subcategory], s_leverage: int, signal_ticker: str,
             future_ticker: str, cost: float
     ) -> None:
         """TimesAssetInput class to hold data from database
@@ -200,15 +225,15 @@ class TimesAssetInput:
         self._future_asset = None
 
     @property
-    def asset_subcategory(self) -> Union[Equity, FixedIncome, FX]:
+    def asset_subcategory(self) -> Subcategory:
         return self._asset_subcategory
 
     @asset_subcategory.setter
-    def asset_subcategory(self, x: Union[str, Equity, FixedIncome, FX]) -> None:
+    def asset_subcategory(self, x: Union[str, Subcategory]) -> None:
         if isinstance(x, Subcategory):
             self._asset_subcategory = x
         else:
-            self._asset_subcategory = subcategory_map[x][x]
+            self._asset_subcategory = subcategory_map[x]
 
     @property
     def signal_asset(self) -> Asset:
