@@ -74,7 +74,7 @@ class ComputeSignalsOverview:
         # Position size in MATR
         size_matr = self.size_attr * 100
 
-        return {'drawdown': drawdown, 'size_matr': size_matr}
+        return {'drawdown': round(drawdown, 2), 'size_matr': size_matr}
 
     def compute_limits_controls(self, signals_combo, agg_log_returns):
         """
