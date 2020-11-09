@@ -1,7 +1,5 @@
 from math import sqrt
 
-from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
-
 
 class ComputeSignalsOverview:
 
@@ -66,7 +64,6 @@ class ComputeSignalsOverview:
         :param agg_total_incl_signals: agg_total_incl_signals values
         :return: a dictionary with drawdown and size values
         """
-        write_logs_effect("Computing drawdown and position size in matr...", "logs_signals_drawdown_size_matr")
 
         # Drawdown
         drawdown = ((agg_total_incl_signals.loc[self.latest_signal_date][0] / agg_total_incl_signals.max()[0]) - 1) * 100
@@ -83,7 +80,7 @@ class ComputeSignalsOverview:
         :param agg_log_returns: agg_log_returns values
         :return: a dictionary with ex ante vol and matr notional values
         """
-        write_logs_effect("Computing limits controls...", "logs_signals_limits")
+
         current_signals = tuple(list(signals_combo * self.size_attr))
         # Ex-ante volatility
         latest_signal_date_loc = agg_log_returns.index.get_loc(self.latest_signal_date)

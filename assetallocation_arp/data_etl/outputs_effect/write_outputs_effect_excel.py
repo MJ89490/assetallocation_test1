@@ -66,34 +66,34 @@ def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overvi
 def write_outputs_risk_return_overview(risk_returns):
     sheet_risk_returns = xw.Book.caller().sheets['RiskReturns']
 
-    sheet_risk_returns.range('logs_excess_ret_no_signals').options(transpose=True).value = \
+    sheet_risk_returns.range('rng_excess_ret_no_signals').options(transpose=True).value = \
     risk_returns['excess_returns']['excess_returns_no_signals']
-    sheet_risk_returns.range('logs_excess_ret_signals').options(transpose=True).value = risk_returns['excess_returns'][
+    sheet_risk_returns.range('rng_excess_ret_signals').options(transpose=True).value = risk_returns['excess_returns'][
         'excess_returns_with_signals']
 
-    sheet_risk_returns.range('logs_std_dev_no_signals').options(transpose=True).value = risk_returns['std_dev'][
+    sheet_risk_returns.range('rng_std_dev_no_signals').options(transpose=True).value = risk_returns['std_dev'][
         'std_dev_no_signals']
-    sheet_risk_returns.range('logs_std_dev_signals').options(transpose=True).value = risk_returns['std_dev'][
+    sheet_risk_returns.range('rng_std_dev_signals').options(transpose=True).value = risk_returns['std_dev'][
         'std_dev_with_signals']
 
-    sheet_risk_returns.range('logs_sharpe_ratio_no_signals').options(transpose=True).value = \
+    sheet_risk_returns.range('rng_sharpe_ratio_no_signals').options(transpose=True).value = \
     risk_returns['sharpe_ratio']['sharpe_ratio_no_signals']
-    sheet_risk_returns.range('logs_sharpe_ratio_signals').options(transpose=True).value = risk_returns['sharpe_ratio'][
+    sheet_risk_returns.range('rng_sharpe_ratio_signals').options(transpose=True).value = risk_returns['sharpe_ratio'][
         'sharpe_ratio_with_signals']
 
-    sheet_risk_returns.range('logs_max_drawdown_no_signals').options(transpose=True).value = \
+    sheet_risk_returns.range('rng_max_drawdown_no_signals').options(transpose=True).value = \
     risk_returns['max_drawdown']['max_drawdown_no_signals']
-    sheet_risk_returns.range('logs_max_drawdown_signals').options(transpose=True).value = risk_returns['max_drawdown'][
+    sheet_risk_returns.range('rng_max_drawdown_signals').options(transpose=True).value = risk_returns['max_drawdown'][
         'max_drawdown_with_signals']
 
-    sheet_risk_returns.range('logs_calmar_no_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
+    sheet_risk_returns.range('rng_calmar_no_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
         'calmar_ratio_no_signals']
-    sheet_risk_returns.range('logs_calmar_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
+    sheet_risk_returns.range('rng_calmar_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
         'calmar_ratio_with_signals']
 
-    sheet_risk_returns.range('logs_equity_corr_no_signals').options(transpose=True).value = risk_returns['equity_corr'][
+    sheet_risk_returns.range('rng_equity_corr_no_signals').options(transpose=True).value = risk_returns['equity_corr'][
         'equity_corr_no_signals']
-    sheet_risk_returns.range('logs_equity_corr_signals').options(transpose=True).value = risk_returns['equity_corr'][
+    sheet_risk_returns.range('rng_equity_corr_signals').options(transpose=True).value = risk_returns['equity_corr'][
         'equity_corr_with_signals']
 
 

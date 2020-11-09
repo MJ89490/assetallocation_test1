@@ -24,7 +24,7 @@ class ComputeInflationDifferential:
         Function computing the inflation release depending on the publications IMF dates
         :return: separate dataFrames inflation_release, years_zero_inflation, months_inflation
         """
-        write_logs_effect("Computing inflation release...", "logs_inflation_release")
+
         weo_dates = []
         inflation_release = pd.DataFrame()
         flag = False
@@ -189,7 +189,7 @@ class ComputeInflationDifferential:
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
         """
-        write_logs_effect("Computing inflation differential...", "logs_inflation_differential")
+
         inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
         # Grab the latest inflation differential data
