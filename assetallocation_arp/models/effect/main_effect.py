@@ -102,7 +102,7 @@ def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_signal_date,
-                                                                position_size_attribution=float(strategy_inputs['Position size'][1]),
+                                                                position_size_attribution=float(strategy_inputs['Position size'].item()),
                                                                 index_dates=obj_import_data.dates_origin_index,
                                                                 frequency=strategy_inputs['Frequency'].item())
 
