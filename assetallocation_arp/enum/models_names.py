@@ -8,3 +8,4 @@ class Models(enum.Enum):
     fica = 4
     factor = 5
     comca = 6
+    fxmodels = 7
