@@ -104,13 +104,14 @@
 
 .row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 150px;}
 .row_table_overview{margin-left: 150px; margin-top: 50px;}
+.row-agg-line-chart{margin-left: 100px; margin-top: 50px;}
 .title-table-overview{color: #005774; font-weight: bold;}
 .sub_title_table_overview{font-size: 0.75rem;}
 </style>
 </head>
 
 <body>
-
+    <!--Navbar-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top navbar-default py-lg-0 ">
         <button class="navbar-toggler" type="button"
                     data-toggle="collapse"
@@ -126,7 +127,7 @@
             </ul>
         </div>
     </nav>
-
+    <!--Sidebar-->
     <div class="sidenav">
         <a href="{{url_for('home')}}"><img alt="Legal and General" width="90px;" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg"></a>
 
@@ -187,7 +188,6 @@
         <h2 class="title-dashboard">EFFECT Dashboard</h2><br>
 
         <h6 class="date_run_dashboard text-muted">Date run {{effect_data_form['input_signal_date_effect']}}</h6>
-
 
         <div class="row row_notional_table">
             <div class="col-lg-6">
@@ -389,6 +389,20 @@
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!--Aggregate line chart-->
+        <div class="row row-agg-line-chart">
+            <div class="col-lg-12">
+                <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
+                <script type="text/javascript">
+                   agg_line_chart({{effect_outputs['total_excl_signals']|tojson}},
+                                  {{effect_outputs['total_incl_signals']|tojson}},
+                                  {{effect_outputs['spot_incl_signals']|tojson}},
+                                  {{effect_outputs['spot_excl_signals']|tojson}})
+                </script>
             </div>
         </div>
     </div>

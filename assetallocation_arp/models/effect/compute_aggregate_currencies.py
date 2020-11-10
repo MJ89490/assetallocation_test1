@@ -246,6 +246,7 @@ class ComputeAggregateCurrencies:
 
         return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name], index=combo.index.values)
 
+
     def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr, weight_value):
         """
         Function running the different function above
@@ -281,6 +282,7 @@ class ComputeAggregateCurrencies:
 
         aggregate_spot_excl_signals = self.compute_aggregate_spot_excl_signals(spot_excl_costs=excl_signals_spot_return,
                                                                                inverse_volatility=inverse_volatility)
+
 
         return {'agg_total_incl_signals': aggregate_total_incl_signals,
                 'agg_total_excl_signals': aggregate_total_excl_signals,

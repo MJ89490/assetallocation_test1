@@ -70,6 +70,7 @@ def build_weo_url_by_dataset_code(date_value):
     """
     year, release_number, file_base_name = build_weo_data(date_value=date_value)
     base_url = f"https://www.imf.org/~/media/Files/Publications/WEO/WEO-Database/{year}/"
+
     return {
         "WEO": f"{base_url}{file_base_name}.ashx",
         "WEOAGG": f"{base_url}{file_base_name}a.ashx",
@@ -87,7 +88,7 @@ def get_encoding(file_path):
 
 def get_footer_of_csv_file(file_path):
     """
-    IMF weo data file contains a fppter with name of the dataset and year month
+    IMF weo data file contains a footer with name of the dataset and year month
     :param file_path:
     :return:
     """
@@ -219,7 +220,7 @@ def download_weo_data_from_imf_website(date_arg):
 
             with file_name.open("w") as f:
                 try:
-                    f.write(weo_response.content.decode('utf-16'))
+                    f.write(weo_response.content.decode('utf-16-le'))
                 except (UnicodeDecodeError, UnicodeEncodeError):
                     f.write(weo_response.content.decode('latin1'))
 

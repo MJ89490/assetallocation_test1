@@ -86,9 +86,6 @@ def received_data_effect_form():
 def risk_returns():
     effect_outputs = obj_received_data_effect.effect_outputs
 
-    print(effect_outputs['risk_returns'])
-
-    print()
     return render_template('risk_returns_template.html', title='Risk_Returns_overall', effect_outputs=effect_outputs)
 
 
