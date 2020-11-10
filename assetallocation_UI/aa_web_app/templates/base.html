@@ -48,6 +48,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Models Consolidation</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('risk_returns')}}">Risk and Returns overall</a>
+                </li>
             </ul>
         </div>
 
@@ -57,6 +60,7 @@
         {% block homepage %} {% endblock %}
         {% block timespage %} {% endblock %}
         {% block effect_page %} {% endblock %}
+        {% block risk_returns_page %} {% endblock %}
     {% endblock %}
 
     <footer id="sticky-footer" class="py-4 bg-white text-black-50">

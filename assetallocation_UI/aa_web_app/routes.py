@@ -41,27 +41,6 @@ def times_dashboard():
     return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
-# @app.route('/receive_times_data', methods=['POST'])
-# def receive_times_data():
-#     form = InputsTimesModel()
-#
-#     if request.method == "POST":
-#         t = request.get_json()
-#         print(t)
-#         fund_name = t['fund']
-#         long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-#         short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-#         times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
-#                       short_signals, int(t['lag']), int(t['volwindow']))
-#
-#         times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
-#                               zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-#
-#         # TODO do not work with that line !!!!!
-#         fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
-#
-#         return json.dumps({'status': 'OK'})
-
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
 def effect_dashboard():
     form = InputsTimesModel()
@@ -100,61 +79,13 @@ def received_data_effect_form():
 
     obj_received_data_effect.call_run_effect(effect_form, assets_inputs_effect=json.loads(request.form['json_data']))
 
-    # for idx, val in enumerate(form_data):
-    #     if idx > 1:
-    #         effect_form[val.split('=', 1)[0]] = val.split('=', 1)[1]
-    #
-    # print(effect_form)
-    # print(request.form['json_data'])
-    #
-    # # Process date under format '12%2F09%2F2000 to 12/09/2000
-    # effect_form['input_user_date_effect'] = '/'.join(effect_form['input_user_date_effect'].split('%2F'))
-    # effect_form['input_signal_date_effect'] = '/'.join(effect_form['input_signal_date_effect'].split('%2F'))
-    #
-    # if 'Total' and 'return' in effect_form['input_trend_indicator_effect']:
-    #     effect_form['input_trend_indicator_effect'] = ' '.join(effect_form['input_trend_indicator_effect'].split('%20'))
-    #
-    # if 'inverse' in effect_form['input_risk_weighting']:
-    #     effect_form['input_risk_weighting'] = ' '.join(effect_form['input_risk_weighting'].split('%20'))
-    # else:
-    #     effect_form['input_risk_weighting'] = '/'.join(effect_form['input_risk_weighting'].split('%2F'))
-    #
-    #
-    # print(effect_form)
-    # get_inputs_from_excel()
-
-    # t = {'assetsNames': ['US Equities'], 'assetsTicker': ['SPXT Index'], 'assetsFutureTicker': ['SPXT Index'], 'assetsCosts': [0.0002], 'assetsLeverage': [1], 'fund': 'f1', 'date': '01/01/2000', 'weight': '1', 'lag': '1', 'leverage': 'v', 'volwindow': '3', 'frequency': 'weekly', 'weekday': 'Mon', 'signaloneshort': '15', 'signalonelong': '30', 'signaltwoshort': '15', 'signaltwolong': '30', 'signalthreeshort': '15', 'signalthreelong': '30'}
-    # fund_name = t['fund']
-    # long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-    # short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-    # times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
-    #               short_signals, int(t['lag']), int(t['volwindow']))
-    #
-    # times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
-    #                       zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-    #
-    #
-    # fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
-
     return json.dumps({'status': 'OK', 'effect_data': effect_form})
 
 
-#     if request.method == "POST":
-#         t = request.get_json()
-#         fund_name = t['fund']
-#         long_signals = list(map(float, [t['signalonelong'], t['signaltwolong'], t['signalthreelong']]))
-#         short_signals = list(map(float, [t['signaloneshort'], t['signaltwoshort'], t['signalthreeshort']]))
-#         times = Times(DayOfWeek[t['weekday'].upper()], t['frequency'].lower(), t['leverage'], long_signals,
-#                       short_signals, int(t['lag']), int(t['volwindow']))
-#         print('before times assets')
-#         times.asset_inputs = [TimesAssetInput(int(i), j, k, float(l)) for i, j, k, l in
-#                               zip(t['assetsLeverage'], t['assetsTicker'], t['assetsFutureTicker'], t['assetsCosts'])]
-#         print('after times assets')
-#         # TODO do not work with that line !!!!!
-#         fund_strategy = run_strategy(fund_name, float(t['weight']), times, os.environ.get('USERNAME'), t['date'])
-#         print('after fund strategy')
-#         return json.dumps({'status': 'OK'})
+@app.route('/risk_returns', methods=['GET', 'POST'])
+def risk_returns():
 
+    return render_template('risk_returns_template.html')
 
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])

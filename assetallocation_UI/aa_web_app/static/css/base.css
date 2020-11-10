@@ -34,8 +34,13 @@
 
 .btn {background-color:  #005774 !important; border-color: #005774 !important; width: 200px; }
 
+/* COMMON FEATURES */
+
+.container .title-page{padding-top:100px; color: #005774 !important;}
+.row_risk_returns{margin-top: 40px;}
+
 /* TIMES PAGE */
-.container .title-times-page {padding-top:100px; color: #005774 !important;}
+
 #selectVersion {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 20px; height: 48px;}
 .btn-select {margin-top: 20px; margin-left: 15px;}
 .btn-ag-grid {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; background-color: #fff !important;}
@@ -51,6 +56,8 @@
 .row-effect-ag-grid-bottom{margin-bottom: 100px;}
 .form-models-select-effect{color: #005774 !important; border-color: #007faa !important; width: 230px;}
 
+/* RISK RETURNS*/
+.card-title-risk-returns{color: #005774 !important; padding-top: 100px;}
 
 /* FOOTER */
 #sticky-footer {flex-shrink: none;}
