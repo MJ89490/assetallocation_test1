@@ -21,8 +21,8 @@ class ComputeRiskReturnCalculations:
         excess_returns_no_signals = (((returns_excl_signals.loc[self.end_date][0] / returns_excl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
         excess_returns_with_signals = (((returns_incl_signals.loc[self.end_date][0] / returns_incl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
 
-        return {'excess_returns_no_signals': excess_returns_no_signals,
-                'excess_returns_with_signals': excess_returns_with_signals}
+        return {'excess_returns_no_signals': round(excess_returns_no_signals, 2),
+                'excess_returns_with_signals': round(excess_returns_with_signals, 2)}
 
     @staticmethod
     def compute_std_dev(returns_excl_signals, returns_incl_signals):
@@ -36,7 +36,8 @@ class ComputeRiskReturnCalculations:
         std_dev_no_signals = (returns_excl_signals / returns_excl_signals.shift(1)).std()[0] * sqrt(52) * 100
         std_dev_with_signals = (returns_incl_signals / returns_incl_signals.head(-1).shift(1)).std()[0] * sqrt(52) * 100
 
-        return {'std_dev_no_signals': std_dev_no_signals, 'std_dev_with_signals': std_dev_with_signals}
+        return {'std_dev_no_signals': round(std_dev_no_signals, 2),
+                'std_dev_with_signals': round(std_dev_with_signals, 2)}
 
     @staticmethod
     def compute_sharpe_ratio(excess_returns, std_dev):
@@ -50,8 +51,8 @@ class ComputeRiskReturnCalculations:
         sharpe_ratio_no_signals = excess_returns['excess_returns_no_signals'] / std_dev['std_dev_no_signals']
         sharpe_ratio_with_signals = excess_returns['excess_returns_with_signals'] / std_dev['std_dev_with_signals']
 
-        return {'sharpe_ratio_no_signals': sharpe_ratio_no_signals,
-                'sharpe_ratio_with_signals': sharpe_ratio_with_signals}
+        return {'sharpe_ratio_no_signals': round(sharpe_ratio_no_signals, 2),
+                'sharpe_ratio_with_signals': round(sharpe_ratio_with_signals, 2)}
 
     @staticmethod
     def compute_max_drawdown(returns_excl_signals, returns_incl_signals):
@@ -72,8 +73,8 @@ class ComputeRiskReturnCalculations:
             max_drawdown_excl_values.append((returns_excl_tmp[value] / max(returns_excl_tmp[0: value+1])) - 1)
             max_drawdown_incl_values.append((returns_incl_tmp[value] / max(returns_incl_tmp[0: value+1])) - 1)
 
-        return {'max_drawdown_no_signals': abs(min(max_drawdown_excl_values)) * 100,
-                'max_drawdown_with_signals': abs(min(max_drawdown_incl_values)) * 100}
+        return {'max_drawdown_no_signals': round(abs(min(max_drawdown_excl_values)) * 100, 2),
+                'max_drawdown_with_signals': round(abs(min(max_drawdown_incl_values)) * 100, 2)}
 
     @staticmethod
     def compute_calmar_ratio(excess_returns, max_drawdown):
@@ -87,8 +88,8 @@ class ComputeRiskReturnCalculations:
         calmar_ratio_no_signals = excess_returns['excess_returns_no_signals'] / max_drawdown['max_drawdown_no_signals']
         calmar_ratio_with_signals = excess_returns['excess_returns_with_signals'] / max_drawdown['max_drawdown_with_signals']
 
-        return {'calmar_ratio_no_signals': calmar_ratio_no_signals,
-                'calmar_ratio_with_signals': calmar_ratio_with_signals}
+        return {'calmar_ratio_no_signals': round(calmar_ratio_no_signals, 2),
+                'calmar_ratio_with_signals': round(calmar_ratio_with_signals, 2)}
 
     @staticmethod
     def compute_equity_correlation(spx_index_values, returns_excl_signals, returns_incl_signals):
@@ -107,8 +108,8 @@ class ComputeRiskReturnCalculations:
         equity_corr_no_signals = ret_excl_shift.corrwith(spxt_shift, axis=0)
         equity_corr_with_signals = ret_incl_shift.corrwith(spxt_shift, axis=0)
 
-        return {'equity_corr_no_signals': equity_corr_no_signals.values,
-                'equity_corr_with_signals': equity_corr_with_signals.values}
+        return {'equity_corr_no_signals': round(equity_corr_no_signals.item(), 2),
+                'equity_corr_with_signals': round(equity_corr_with_signals.item(), 2)}
 
     def compute_gbi_em_correlation(self):
         """

@@ -84,8 +84,12 @@ def received_data_effect_form():
 
 @app.route('/risk_returns', methods=['GET', 'POST'])
 def risk_returns():
+    effect_outputs = obj_received_data_effect.effect_outputs
 
-    return render_template('risk_returns_template.html')
+    print(effect_outputs['risk_returns'])
+
+    print()
+    return render_template('risk_returns_template.html', title='Risk_Returns_overall', effect_outputs=effect_outputs)
 
 
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])

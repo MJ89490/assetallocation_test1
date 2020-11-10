@@ -57,8 +57,6 @@
 .form-models-select-effect{color: #005774 !important; border-color: #007faa !important; width: 230px;}
 
 /* RISK RETURNS*/
-.card-title-risk-returns{color: #005774 !important; padding-top: 100px;}
+.card-title-risk-returns{color: #005774;}
 
-/* FOOTER */
-#sticky-footer {flex-shrink: none;}
 
