@@ -7,6 +7,7 @@ FICA
 import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
+import math
 
 
 def format_data(fica_inputs, asset_inputs, all_data):
@@ -19,6 +20,13 @@ def format_data(fica_inputs, asset_inputs, all_data):
     """
     # reading inputs and shortening data
     all_data.iloc[-1:] = all_data.iloc[-2:].fillna(method='ffill').tail(1)
+    #remove unwanted countries
+    if fica_inputs['countries_to_exclude'].item() is not None:
+        my_str = fica_inputs['countries_to_exclude'].item()
+        my_list = my_str.split(',')
+        for place in my_list:
+            asset_inputs = asset_inputs[asset_inputs['country'] != place]
+            asset_inputs.index = np.arange(1, len(asset_inputs) + 1)
     country = asset_inputs['country']
     m = len(country)
     date_from = fica_inputs['date_from'].item()
@@ -47,6 +55,14 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor):
     :param pd.DataFrame curve: dataframe with historical yield curves per country
     :return: dataframe with historical carry and roll down and return calculations per country
     """
+
+    # remove unwanted countries
+    if fica_inputs['countries_to_exclude'].item() is not None:
+        my_str = fica_inputs['countries_to_exclude'].item()
+        my_list = my_str.split(',')
+        for place in my_list:
+            asset_inputs = asset_inputs[asset_inputs['country'] != place]
+            asset_inputs.index = np.arange(1, len(asset_inputs) + 1)
     # reading inputs
     coupon = fica_inputs['coupon'].item()
     country = asset_inputs['country']
@@ -105,6 +121,14 @@ def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     tenor = fica_inputs['tenor'].item()
     tenor_l = fica_inputs['tenor 2'].item()
     dur_target = fica_inputs['duration'].item()
+    # remove unwanted countries
+    my_list = []
+    if fica_inputs['countries_to_exclude'].item() is not None:
+        my_str = fica_inputs['countries_to_exclude'].item()
+        my_list = my_str.split(',')
+        for place in my_list:
+            asset_inputs = asset_inputs[asset_inputs['country'] != place]
+            asset_inputs.index = np.arange(1, len(asset_inputs) + 1)
     if tenor_l is None:
         carry_roll, country_returns, duration = calculate_carry_roll_down(fica_inputs, asset_inputs, curve, tenor)
     else:
@@ -115,12 +139,15 @@ def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     returns = pd.DataFrame()
     m = len(carry_roll.columns)
     n = len(carry_roll)
-    weight = [fica_inputs['strategy_weights_' + str(x)].item() for x in range(1, m + 1)]
+    weight = [fica_inputs['strategy_weights_' + str(x)].item() for x in range(1, m+len(my_list)+1)]
+    if m != 10:
+        no_longs = math.floor(m / 2)
+        weight = weight[:no_longs] + [0]*(m-2*no_longs) + weight[-no_longs:]
     costs = fica_inputs['trading_costs'].item()
     # ranking the countries
     rank = carry_roll.T.rank()
     signals = rank.T
-    # determining country weights
+    # determining country weight
     for i in range(m):
         signals = signals.replace(i + 1, weight[m - i - 1])
     if dur_target is not None:
@@ -146,7 +173,8 @@ def calculate_signals_and_returns(fica_inputs, asset_inputs, curve):
     returns['Geometric'] = 100
     for k in range(1, n):
         returns.iloc[k, 3] = (1 + (contribution.iloc[k, m] - returns.iloc[k, 0]) / 100) * returns.iloc[k - 1, 3]
-    return signals, cum_contribution, returns, carry_roll, country_returns, signals_s if 'signals_2' in locals() else None
+    return signals, cum_contribution, returns, carry_roll, country_returns
+    #return signals, cum_contribution, returns, carry_roll, country_returns, signals_s if 'signals_2' in locals() else None
 
 
 def run_daily_attribution(fica_inputs, asset_inputs, all_data, signals):
@@ -161,6 +189,13 @@ def run_daily_attribution(fica_inputs, asset_inputs, all_data, signals):
     # reading inputs and shortening data
     carry_daily = pd.DataFrame()
     return_daily = pd.DataFrame()
+    # remove unwanted countries
+    if fica_inputs['countries_to_exclude'].item() is not None:
+        my_str = fica_inputs['countries_to_exclude'].item()
+        my_list = my_str.split(',')
+        for place in my_list:
+            asset_inputs = asset_inputs[asset_inputs['country'] != place]
+            asset_inputs.index = np.arange(1, len(asset_inputs) + 1)
     country = asset_inputs['country']
     m = len(country)
     date_from = fica_inputs['date_from'].item()
@@ -199,3 +234,13 @@ def run_daily_attribution(fica_inputs, asset_inputs, all_data, signals):
     return_daily['beta'] = return_daily['fica_10y_return%'].rolling(64).cov(return_daily['G3_10y_return%']) / \
                             return_daily['G3_10y_return%'].rolling(64).var()
     return carry_daily, return_daily
+
+'''
+Paste a load of stuff to excel
+signals.to_clipboard()
+cum_contribution.to_clipboard()
+returns.to_clipboard()
+carry_roll.to_clipboard()
+country_returns.to_clipboard()
+
+'''
