@@ -1,4 +1,5 @@
 from typing import List, Union, Tuple
+from itertools import chain
 
 import pandas as pd
 
@@ -188,5 +189,54 @@ class FxDataFrameConverter(DataFrameConverter):
         analytics.extend(cls.series_to_strategy_analytics(returns_cum, Category.Performance, Performance['return index'], Frequency.monthly))
         analytics.extend(cls.series_to_strategy_analytics(returns_net_cum, Category.Performance, Performance['net return index'], Frequency.monthly))
         analytics.extend(cls.series_to_strategy_analytics(strength_of_signal, Category.Signals, Signal['signal strength'], Frequency.monthly))
+
+        return analytics
+
+
+class MavenDataFrameConverter(DataFrameConverter):
+    @classmethod
+    def create_asset_analytics(
+            cls, value: pd.DataFrame, momentum: pd.DataFrame, frequency: Frequency
+    ) -> List[FundStrategyAssetAnalytic]:
+        """
+        :param value: columns named after asset subcategory, index of dates
+        :param momentum: columns named after asset subcategory, index of dates
+        :return:
+        """
+        analytics = cls.df_to_asset_analytics(value, Category.Signal, Signal.value, frequency)
+        analytics.extend(cls.df_to_asset_analytics(momentum, Category.Signal, Signal.momentum, frequency))
+        return analytics
+
+    @classmethod
+    def create_strategy_analytics(
+            cls, notional: pd.Series, volatility: pd.Series, long_gross: pd.Series, short_gross: pd.Series,
+            long_net: pd.Series, short_net: pd.Series, frequency: Frequency
+    ) -> List[FundStrategyAnalytic]:
+        """
+        :param notional: index of dates
+        :param volatility: index of dates
+        :param long_gross: index of dates
+        :param short_gross: index of dates
+        :param long_net: index of dates
+        :param short_net: index of dates
+        :param frequency: frequency of analytics
+        :return:
+        """
+        analytics = list(
+            chain(
+                cls.series_to_strategy_analytics(notional, Category.Performance,
+                                                 Performance['equal notional return index'], frequency),
+                cls.series_to_strategy_analytics(volatility, Category.Performance,
+                                                 Performance['equal volatility return index'], frequency),
+                cls.series_to_strategy_analytics(long_gross, Category.Performance,
+                                                 Performance['long gross return index'], frequency),
+                cls.series_to_strategy_analytics(short_gross, Category.Performance,
+                                                 Performance['short gross return index'], frequency),
+                cls.series_to_strategy_analytics(long_net, Category.Performance, Performance['long net return index'],
+                                                 frequency),
+                cls.series_to_strategy_analytics(short_net, Category.Performance, Performance['short net return index'],
+                                                 frequency)
+            )
+        )
 
         return analytics

@@ -61,6 +61,8 @@ def assert_equal(counter: str, expected: Dict[str, Any], v: Any):
         expected[counter] = expected[counter].squeeze(axis=1)
         pd.testing.assert_series_equal(expected[counter], v, check_names=False, check_dtype=False)
     elif isinstance(v, pd.DataFrame):
+        expected[counter] = expected[counter][v.columns]
+        eq_vals = expected[counter].eq(v)
         pd.testing.assert_frame_equal(expected[counter], v, check_names=False, check_dtype=False, check_like=True)
     else:
         assert expected[counter] == v

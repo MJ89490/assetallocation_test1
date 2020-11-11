@@ -7,14 +7,12 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicat
     Leverage, Name, FxModel
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, \
-    FxAssetInput, Asset, FicaAssetInputGroup
+    FxAssetInput, Asset, FicaAssetInputGroup, MavenAssetInput
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAnalytic, FundStrategyAssetWeight
 from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter, \
-    FxDataFrameConverter
-from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
-from assetallocation_arp.models import times, fica, fxmodels
+    FxDataFrameConverter, MavenDataFrameConverter
+from assetallocation_arp.models import times, fica, fxmodels, maven
 
-# TODO fix run for fx to give asset_subcategory / currency / country as output
 
 # noinspection PyAttributeOutsideInit
 class Strategy(ABC):
@@ -497,3 +495,138 @@ class Fx(Strategy):
         analytics = asset_analytics + strategy_analytics
         return analytics, asset_weights
 
+
+# noinspection PyAttributeOutsideInit
+class Maven(Strategy):
+    def __init__(
+            self, er_tr: str, frequency: Union[str, Frequency], day_of_week: Union[int, DayOfWeek],
+            business_tstzrange: DateTimeTZRange, asset_count: int, long_cutoff: int, short_cutoff: int,
+            val_period_months: int, val_period_base: int, momentum_weights: List[float], volatility_weights: List[float]
+    ):
+        super().__init__(Name.maven)
+        self.er_tr = er_tr
+        self.frequency = frequency
+        self.day_of_week = day_of_week
+        self.business_tstzrange = business_tstzrange
+        self.asset_count = asset_count
+        self.long_cutoff = long_cutoff
+        self.short_cutoff = short_cutoff
+        self.val_period_months = val_period_months
+        self.val_period_base = val_period_base
+        self.momentum_weights = momentum_weights
+        self.volatility_weights = volatility_weights
+        self.asset_inputs = []
+
+    @property
+    def er_tr(self) -> str:
+        return self._er_tr
+
+    @er_tr.setter
+    def er_tr(self, x: str) -> None:
+        self._er_tr = x
+
+    @property
+    def frequency(self) -> Frequency:
+        return self._frequency
+
+    @frequency.setter
+    def frequency(self, x: Union[str, Frequency]) -> None:
+        self._frequency = x if isinstance(x, Frequency) else Frequency[x]
+
+    @property
+    def day_of_week(self) -> DayOfWeek:
+        return self._day_of_week
+
+    @day_of_week.setter
+    def day_of_week(self, x: Union[int, DayOfWeek]) -> None:
+        self._day_of_week = x if isinstance(x, DayOfWeek) else DayOfWeek(x)
+
+    @property
+    def business_tstzrange(self) -> DateTimeTZRange:
+        return self._business_tstzrange
+
+    @business_tstzrange.setter
+    def business_tstzrange(self, x: DateTimeTZRange) -> None:
+        self._business_tstzrange = x
+
+    @property
+    def asset_count(self) -> int:
+        return self._asset_count
+
+    @asset_count.setter
+    def asset_count(self, x: int) -> None:
+        self._asset_count = x
+
+    @property
+    def long_cutoff(self) -> int:
+        return self._long_cutoff
+
+    @long_cutoff.setter
+    def long_cutoff(self, x: int) -> None:
+        self._long_cutoff = x
+
+    @property
+    def short_cutoff(self) -> int:
+        return self._short_cutoff
+
+    @short_cutoff.setter
+    def short_cutoff(self, x: int) -> None:
+        self._short_cutoff = x
+
+    @property
+    def val_period_months(self) -> int:
+        return self._val_period_months
+
+    @val_period_months.setter
+    def val_period_months(self, x: int) -> None:
+        self._val_period_months = x
+
+    @property
+    def val_period_base(self) -> int:
+        return self._val_period_base
+
+    @val_period_base.setter
+    def val_period_base(self, x: int) -> None:
+        self._val_period_base = x
+
+    @property
+    def momentum_weights(self) -> List[float]:
+        return self._momentum_weights
+
+    @momentum_weights.setter
+    def momentum_weights(self, x: List[float]) -> None:
+        self._momentum_weights = x
+
+    @property
+    def volatility_weights(self) -> List[float]:
+        return self._volatility_weights
+
+    @volatility_weights.setter
+    def volatility_weights(self, x: List[float]) -> None:
+        self._volatility_weights = x
+
+    @property
+    def asset_inputs(self) -> List[MavenAssetInput]:
+        return self._asset_inputs
+
+    @asset_inputs.setter
+    def asset_inputs(self, x: List[MavenAssetInput]) -> None:
+        self._asset_inputs = x
+
+    def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
+        asset_returns = maven.format_data(self)
+        maven_returns = maven.calculate_excess_returns(self, asset_returns)
+        (momentum, value, long_signals, short_signals, _, _, _, _, _, _, volatility) = maven.calculate_signals(self, maven_returns)
+        returns, _, _, asset_contribution_long, asset_contribution_short = \
+            maven.run_performance_stats(self, maven_returns, volatility, long_signals, short_signals)
+
+        asset_contributions = maven.contributions_to_weights(asset_contribution_short, asset_contribution_long)
+
+        asset_analytics = MavenDataFrameConverter.create_asset_analytics(value, momentum, self.frequency)
+        asset_weights = MavenDataFrameConverter.df_to_asset_weights(asset_contributions, self.frequency)
+        strategy_analytics = MavenDataFrameConverter.create_strategy_analytics(
+            returns['equal notional'], returns['equal volatility'], returns['maven long gross'],
+            returns['maven short gross'], returns['maven long net'], returns['maven short net'], self.frequency
+        )
+        analytics = asset_analytics + strategy_analytics
+        return analytics, asset_weights

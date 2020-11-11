@@ -4,7 +4,7 @@ import pytest
 from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller, Times, TimesAssetInput, FundStrategy, \
-    EffectProcCaller, Effect, ArpProcCaller, EffectAssetInput, FicaProcCaller, Fica, FicaAssetInput, FicaAssetInputGroup
+    EffectProcCaller, Effect, ArpProcCaller, EffectAssetInput, FicaProcCaller, Fica, FicaAssetInputGroup
 from datetime import datetime
 
 

@@ -8,14 +8,14 @@ import pandas as pd
 from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.data_etl.dal.db import Db
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica, Fx, Strategy
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica, Fx, Strategy, Maven
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, Asset, \
-    FicaAssetInput, FxAssetInput, FicaAssetInputGroup
+    FicaAssetInput, FxAssetInput, FicaAssetInputGroup, MavenAssetInput
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
-from assetallocation_arp.data_etl.dal.proc import Proc, TimesProc, EffectProc, FicaProc, FxProc
+from assetallocation_arp.data_etl.dal.proc import ArpProc, StrategyProcFactory
 
 
 class StrategyProcCallerFactory:
@@ -25,13 +25,14 @@ class StrategyProcCallerFactory:
             Name.times: TimesProcCaller,
             Name.effect: EffectProcCaller,
             Name.fica: FicaProcCaller,
-            Name.fx: FxProcCaller
+            Name.fx: FxProcCaller,
+            Name.maven: MavenProcCaller
         }
         return proc_maps[strategy_name]
 
 
 class ArpProcCaller(Db):
-    procs = Proc.__members__.keys()
+    procs = list(ArpProc.__members__.keys())
 
     def __init__(self):
         """ArpProcCaller class to interact with ARP database through calling stored procedures"""
@@ -41,8 +42,10 @@ class ArpProcCaller(Db):
         host = config.get('HOST')
         port = config.get('PORT')
         database = config.get('DATABASE')
-
         super().__init__(f'postgresql://{user}:{password}@{host}:{port}/{database}')
+
+    def _add_allowed_procs(self, allowed_procs: List[str]):
+        self.procs.extend(allowed_procs)
 
     def insert_app_user(self, app_user: AppUser) -> bool:
         self.call_proc('arp.insert_app_user', [app_user.user_id, app_user.name, app_user.email])
@@ -102,7 +105,18 @@ class ArpProcCaller(Db):
         return res[0].get('fund_names') or []
 
 
+# noinspection PyAttributeOutsideInit
 class StrategyProcCaller(ABC, ArpProcCaller):
+    def __init__(self):
+        super().__init__()
+        super(ABC, self).__init__()
+        self._add_allowed_procs(list(StrategyProcFactory.get_strategy_proc(self.strategy_name).__members__.keys()))
+
+    @property
+    @abstractmethod
+    def strategy_name(self) -> Name:
+        pass
+
     @abstractmethod
     def insert_strategy(self, strategy: Strategy, user_id: str) -> None:
         pass
@@ -124,7 +138,9 @@ class StrategyProcCaller(ABC, ArpProcCaller):
 
 
 class TimesProcCaller(StrategyProcCaller):
-    procs = list(Proc.__members__.keys()) + list(TimesProc.__members__.keys())
+    @property
+    def strategy_name(self) -> Name:
+        return Name.times
 
     def insert_strategy(self, strategy: Times, user_id: str) -> None:
         """Insert data from an instance of Times into database. Return strategy version."""
@@ -213,7 +229,6 @@ class TimesProcCaller(StrategyProcCaller):
         times_asset_inputs = []
         for r in res:
             t = self._construct_times_asset_input(r)
-
             times_asset_inputs.append(t)
 
         return times_asset_inputs
@@ -231,7 +246,9 @@ class TimesProcCaller(StrategyProcCaller):
 
 
 class FxProcCaller(StrategyProcCaller):
-    procs = list(Proc.__members__.keys()) + list(FxProc.__members__.keys())
+    @property
+    def strategy_name(self) -> Name:
+        return Name.fx
 
     def insert_strategy(self, strategy: Fx, user_id: str) -> None:
         """Insert data from an instance of Fx into database. Return strategy version."""
@@ -319,9 +336,6 @@ class FxProcCaller(StrategyProcCaller):
             r['model'], r['business_tstzrange'], r['signal'], r['currency'], r['response_function'],
             float(r['exposure']), r['momentum_weights'], float(r['transaction_cost'])
         )
-        f.version = fx_version
-        f.description = r['description']
-
         f.top_crosses = r.get('top_crosses')
         f.vol_window = r.get('vol_window')
         f.value_window = r.get('value_window')
@@ -376,7 +390,9 @@ class FxProcCaller(StrategyProcCaller):
 
 
 class EffectProcCaller(StrategyProcCaller):
-    procs = list(Proc.__members__.keys()) + list(EffectProc.__members__.keys())
+    @property
+    def strategy_name(self) -> Name:
+        return Name.effect
 
     def insert_strategy(self, strategy: Effect, user_id: str) -> None:
         """Insert data from an instance of Effect into database"""
@@ -477,7 +493,9 @@ class EffectProcCaller(StrategyProcCaller):
 
 
 class FicaProcCaller(StrategyProcCaller):
-    procs = list(Proc.__members__.keys()) + list(FicaProc.__members__.keys())
+    @property
+    def strategy_name(self) -> Name:
+        return Name.fica
 
     def insert_strategy(self, strategy: Fica, user_id: str) -> None:
         """Insert data from an instance of Fica into database"""
@@ -573,6 +591,117 @@ class FicaProcCaller(StrategyProcCaller):
             fica.grouped_asset_inputs = self._select_fica_assets_with_analytics(strategy_version)
 
         return fica
+
+
+class MavenProcCaller(StrategyProcCaller):
+    @property
+    def strategy_name(self) -> Name:
+        return Name.maven
+
+    def insert_strategy(self, strategy: Maven, user_id: str) -> None:
+        """Insert data from an instance of Fica into database"""
+        strategy.version = self._insert_maven_strategy(strategy, user_id)
+        if strategy.asset_inputs:
+            self._insert_maven_assets(strategy)
+
+    def _insert_maven_strategy(self, strategy: Maven, user_id: str) -> int:
+        """Insert data from an instance of Maven into database"""
+        res = self.call_proc(
+            'arp.insert_maven_strategy',
+            [
+                strategy.description, user_id, strategy.er_tr, strategy.frequency.name,
+                strategy.day_of_week.value, strategy.business_tstzrange, strategy.asset_count,
+                strategy.long_cutoff, strategy.short_cutoff, strategy.val_period_months,
+                strategy.val_period_base, strategy.momentum_weights, strategy.volatility_weights
+            ]
+        )
+
+        return res[0]['strategy_version']
+
+    def _insert_maven_assets(self, strategy: Maven) -> bool:
+        """Insert asset data for a version of fx"""
+        maven_assets = ArpTypeConverter.maven_assets_to_composite(strategy.asset_inputs)
+        self.call_proc('arp.insert_maven_assets', [strategy.version, maven_assets])
+        return True
+
+    def add_asset_analytics_to_strategy(self, strategy: Maven, business_datetime: Optional[dt.datetime] = None) -> None:
+        """Add asset analytics to strategy."""
+        if strategy.asset_inputs:
+            strategy.asset_inputs = self._select_maven_assets_with_analytics(strategy)
+
+    def _select_maven_assets_with_analytics(self, strategy: Maven) -> List[MavenAssetInput]:
+        """Select assets and asset analytics data for a version of fx"""
+        res = self.call_proc('arp.select_maven_assets_with_analytics', [strategy.version])
+        if not res:
+            return []
+
+        asset_inputs = []
+        for r in res:
+            mai = MavenAssetInput(
+                r['asset_subcategory'], r['description'], r['bbg_tr_ticker'], r['bbg_er_ticker'], r['currency'],
+                r['cash_ticker'], r['asset_class'], r['true_excess'], r['asset_weight'], r['transaction_cost']
+            )
+            mai.bbg_tr_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
+                r['bbg_tr_ticker'], r['bbg_tr_asset_analytics']
+            )
+            mai.bbg_er_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
+                r['bbg_er_ticker'], r['bbg_er_rate_asset_analytics']
+            )
+            mai.cash_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
+                r['cash_ticker'], r['cash_asset_analytics']
+            )
+            asset_inputs.append(mai)
+
+        return asset_inputs
+
+    def select_strategy(self, strategy_version: int) -> Optional[Maven]:
+        """Select strategy and asset data for a version of maven"""
+        strategy = self._select_maven_strategy(strategy_version)
+        if strategy is not None:
+            strategy.asset_inputs = self._select_maven_assets(strategy)
+            return strategy
+
+    def _select_maven_strategy(self, strategy_version) -> Optional[Maven]:
+        """Select strategy data for a version of maven"""
+        res = self.call_proc('arp.select_maven_strategy', [strategy_version])
+        if not res:
+            return
+
+        r = res[0]
+        m = Maven(
+            r['er_tr'], r['frequency'], r['day_of_week'], r['business_tstzrange'], r['asset_count'], r['long_cutoff'],
+            r['short_cutoff'], r['val_period_months'], r['val_period_base'], r['momentum_weights'],
+            r['volatility_weights']
+        )
+        m.version = strategy_version
+        m.description = r['description']
+
+        return m
+
+    def _select_maven_assets(self, strategy: Maven) -> List[MavenAssetInput]:
+        """Select asset data for a version of maven"""
+        res = self.call_proc('arp.select_maven_assets', [strategy.version])
+        if not res:
+            return []
+
+        asset_inputs = []
+        for r in res:
+            mai = MavenAssetInput(
+                r['asset_subcategory'], r['description'], r['bbg_tr_ticker'], r['bbg_er_ticker'], r['currency'],
+                r['cash_ticker'], r['asset_class'], r['true_excess'], r['asset_weight'], r['transaction_cost']
+            )
+            asset_inputs.append(mai)
+
+        return asset_inputs
+
+    def select_strategy_with_asset_analytics(
+            self, strategy_version: int, business_datetime: Optional[dt.datetime]
+    ) -> Optional[Maven]:
+        """Select strategy, assets and asset analytics data for a version of maven"""
+        strategy = self._select_maven_strategy(strategy_version)
+        if strategy is not None:
+            strategy.asset_inputs = self._select_maven_assets_with_analytics(strategy)
+            return strategy
 
 
 if __name__ == '__main__':

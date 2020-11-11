@@ -322,3 +322,30 @@ class EffectAssetInput(Asset):
     @position_size.setter
     def position_size(self, x: float) -> None:
         self._position_size = x
+
+
+# noinspection PyAttributeOutsideInit
+class MavenAssetInput:
+    def __init__(
+            self, asset_subcategory: Union[str, Subcategory], description: str, bbg_tr_ticker: str,
+            bbg_er_ticker: str, currency: str, cash_ticker: str, asset_class: str, true_excess: bool,
+            asset_weight: float, transaction_cost: float
+    ) -> None:
+        """TimesAssetInput class to hold data from database
+        :param asset_subcategory:
+        """
+        self.asset_subcategory = asset_subcategory
+        self.description = description
+        self.bbg_tr_ticker = bbg_tr_ticker
+        self.bbg_er_ticker = bbg_er_ticker
+        self.currency = currency
+        self.cash_ticker = cash_ticker
+        self.asset_class = asset_class
+        self.true_excess = true_excess
+        self.asset_weight = asset_weight
+        self.transaction_cost = transaction_cost
+        self.bbg_tr_asset = Asset(bbg_tr_ticker)
+        self.bbg_er_asset = Asset(bbg_er_ticker)
+        self.cash_asset = Asset(cash_ticker)
+
+    # TODO write template for generating pset from __init__ parameters

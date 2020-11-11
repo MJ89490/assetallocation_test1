@@ -4,7 +4,7 @@ from datetime import datetime, date
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic, FundStrategyAnalytic,
                                                                         FundStrategyAssetWeight)
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, AssetAnalytic, \
-    FxAssetInput
+    FxAssetInput, MavenAssetInput
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import AggregationLevel
 
 
@@ -60,6 +60,18 @@ class ArpTypeConverter(DbTypeConverter):
         return [
             DbTypeConverter.to_composite(i.asset_subcategory.name, i.signal_ticker, i.future_ticker, i.cost, i.s_leverage)
             for i in times_assets
+        ]
+
+    @staticmethod
+    def maven_assets_to_composite(maven_assets: List[MavenAssetInput]) -> List[str]:
+        """Format to match database type
+        arp.ticker_ticker_ticker_subcategory_description_currency_class_excess_weight_cost[]
+        """
+        return [
+            DbTypeConverter.to_composite(
+                i.bbg_tr_ticker, i.bbg_er_ticker, i.cash_ticker, i.asset_subcategory, i.description, i.currency,
+                i.asset_class, i.true_excess, i.asset_weight, i.transaction_cost
+            ) for i in maven_assets
         ]
 
     @staticmethod
