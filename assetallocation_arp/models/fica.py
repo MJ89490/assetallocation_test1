@@ -108,7 +108,6 @@ def calculate_signals_and_returns(strategy: 'Fica', carry_roll, country_returns)
     return signals, cum_contribution, returns
 
 
-# TODO refactor for performance
 def run_daily_attribution(strategy, signals):
     """
     performing the daily attributions and inputs for the charts

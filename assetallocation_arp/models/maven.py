@@ -8,12 +8,11 @@ import numpy as np
 import pandas as pd
 
 from assetallocation_arp.models import portfolio_construction as pc
-from assetallocation_arp.data_etl.dal.data_models.strategy import Maven
 from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 
-def format_data(strategy: Maven) -> pd.DataFrame:
+def format_data(strategy: 'Maven') -> pd.DataFrame:
     """creating dataframe with asset return index series
     :param Maven strategy: parameter choices and asset data for the model
     :return: dataframe with formatted asset return series
@@ -59,7 +58,7 @@ def format_data(strategy: Maven) -> pd.DataFrame:
     return asset_returns
 
 
-def calculate_excess_returns(strategy: Maven, asset_returns: pd.DataFrame):
+def calculate_excess_returns(strategy: 'Maven', asset_returns: pd.DataFrame):
     """Creating dataframe with maven's excess return index series
     :param Maven strategy: parameter choices and asset data for the model
     :param pd.DataFrame asset_returns: formatted asset return series
@@ -95,7 +94,7 @@ def calculate_excess_returns(strategy: Maven, asset_returns: pd.DataFrame):
     return maven_returns
 
 
-def calculate_signals(strategy: Maven, maven_returns):
+def calculate_signals(strategy: 'Maven', maven_returns):
     """creating DataFrames with value and momentum scores, and the top/bottom countries on the combination score
     :param Maven strategy: parameter choices and asset data for the model
     :param pd.DataFrame maven_returns: formatted return series for maven assets
@@ -160,7 +159,7 @@ def calculate_signals(strategy: Maven, maven_returns):
     return momentum, value, long_signals, short_signals, volatility
 
 
-def run_performance_stats(strategy: Maven, maven_returns, volatility, long_signals, short_signals):
+def run_performance_stats(strategy: 'Maven', maven_returns, volatility, long_signals, short_signals):
     """
     creating dataframes with maven return series, and benchmarks, asset class exposures and contributions
     :param Maven strategy: parameter choices and asset data for the model

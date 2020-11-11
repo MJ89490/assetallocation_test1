@@ -16,8 +16,6 @@ resource_path = Path(__file__).parent / 'resources' / 'maven'
 @fixture
 def maven_strategy():
     def make_maven_strategy(maven_inputs, asset_inputs, all_data):
-        # the database will filter the data between the dates below
-
         m = Maven(
             maven_inputs['er_tr'].iat[0],
             maven_inputs['frequency'].iat[0],
@@ -31,8 +29,8 @@ def maven_strategy():
             [maven_inputs[f'momentum_weight_{i}m'].iat[0] for i in range(1, 7)],
             [maven_inputs[f'volatility_weight_{i}y'].iat[0] for i in range(1, 6)]
         )
-
         if asset_inputs is not None:
+            # the database will filter the data between the dates below
             data = all_data.loc[maven_inputs['date_from'].iat[0]:maven_inputs['date_to'].iat[0]]
             maven_asset_inputs = []
             for r, asset in asset_inputs.iterrows():
