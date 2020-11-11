@@ -105,19 +105,6 @@ def test_calculate_signals(maven_strategy):
         assert_equal('0', expected, returns)
 
 
-def test_run_performance_stats_old():
-    test_kwargs, expected = read_inputs_outputs(resource_path / 'run_performance_stats')
-    del test_kwargs['all_data']
-    returns = maven.run_performance_stats_old(**test_kwargs)
-
-    if isinstance(returns, tuple):
-        for counter, v in enumerate(returns):
-            assert_equal(str(counter), expected, v)
-
-    else:
-        assert_equal('0', expected, returns)
-
-
 def test_run_performance_stats(maven_strategy):
     test_kwargs, expected = read_inputs_outputs(resource_path / 'run_performance_stats')
     m = maven_strategy(test_kwargs.pop('maven_inputs'), test_kwargs.pop('asset_inputs'), test_kwargs.pop('all_data'))

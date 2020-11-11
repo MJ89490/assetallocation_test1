@@ -616,8 +616,8 @@ class Maven(Strategy):
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
         asset_returns = maven.format_data(self)
         maven_returns = maven.calculate_excess_returns(self, asset_returns)
-        (momentum, value, long_signals, short_signals, _, _, _, _, _, _, volatility) = maven.calculate_signals(self, maven_returns)
-        returns, _, _, asset_contribution_long, asset_contribution_short = \
+        momentum, value, long_signals, short_signals, volatility = maven.calculate_signals(self, maven_returns)
+        returns, asset_contribution_long, asset_contribution_short = \
             maven.run_performance_stats(self, maven_returns, volatility, long_signals, short_signals)
 
         asset_contributions = maven.contributions_to_weights(asset_contribution_short, asset_contribution_long)
