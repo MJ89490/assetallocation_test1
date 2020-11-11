@@ -33,7 +33,232 @@
         {% if run_model_page=='run_model_page' %}
             <div class="jumbotron jumbotron-fluid jumbotron-image-models" style="background-image: url(static/img/model_image.png);"></div>
         {% else %}
-            {% block timespagemirror %} {% endblock %}
+            <div class="row row-effect-ag-grid"></div>
+            <div style="height: 30%; display: flex; flex-direction: column;">
+                <div style="margin-bottom: 4px;">
+                    <button class="btn btn-outline-secondary" onclick="onAddRow()">Add Input</button>
+                    <button class="btn btn-outline-secondary" onclick="onRemoveSelected()">Remove Selected</button>
+                    <button class="btn btn-outline-secondary" onclick="clearData()">Clear Data</button>
+                </div>
+                <div style="flex-grow: 1;">
+                    <div id="myGrid" style="height: 100%;" class="ag-theme-alpine"></div>
+                </div>
+            </div>
+
+            <div class="row row-effect-ag-grid-bottom"></div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <form class="form-signin" role="form">
+                        <h2 class="title-models-ag-grid">Model inputs</h2>
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-3">
+                                <!--Update IMF Data-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Update IMF Data</label>
+                                        <select class="form-control form-models-select-effect" id="input_update_imf_effect" name="input_update_imf_effect">
+                                            <option>True</option>
+                                            <option>False</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--User date-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>User date</label>
+                                        <input type="text" id="input_user_date_effect" name="input_user_date_effect" class="form-control form-models-select-effect" placeholder="User date" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_user_date_effect').value = '12/01/2000';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Latest signal date-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Latest signal date</label>
+                                        <input type="text" id="input_signal_date_effect" name="input_signal_date_effect" class="form-control form-models-select-effect" placeholder="Latest signal date" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_signal_date_effect').value = '23/09/2020';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Signal day-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Signal day</label>
+                                        <select class="form-control form-models-select-effect" id="input_signal_day_effect" name="input_signal_day_effect">
+                                            <option>MON</option>
+                                            <option>TUE</option>
+                                            <option>WED</option>
+                                            <option>THU</option>
+                                            <option>FRI</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--Frequency-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Frequency</label>
+                                        <select class="form-control form-models-select-effect" id="input_frequency_effect" name="input_frequency_effect">
+                                            <option>weekly</option>
+                                            <option>monthly</option>
+                                            <option>daily</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--Trend indicator-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Trend indicator</label>
+                                        <select class="form-control form-models-select-effect" id="input_trend_indicator_effect" name="input_trend_indicator_effect">
+                                            <option>Total return</option>
+                                            <option>Spot</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <!--Short-term MA-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Short-term MA</label>
+                                        <input type="number" id="input_short_term_ma" name="input_short_term_ma" class="form-control form-models-select-effect" placeholder="Short-term MA" required>
+                                         <script type="text/javascript">
+                                            document.getElementById('input_short_term_ma').value = '4';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Long-term MA-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Long-term MA</label>
+                                        <input type="number" id="input_long_term_ma" name="input_long_term_ma" class="form-control form-models-select-effect" placeholder="Long-term MA" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_long_term_ma').value = '16';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Include Shorts-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Include Shorts</label>
+                                         <select class="form-control form-models-select-effect" id="input_include_shorts_effect" name="input_include_shorts_effect">
+                                            <option>Yes</option>
+                                            <option>No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--Interest rate cut-off (long)-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Interest rate cut-off (% long)</label>
+                                        <input type="number" id="input_cut_off_long_effect" name="input_cut_off_long" class="form-control form-models-select-effect" placeholder="Interest rate cut-off (long)" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_cut_off_long_effect').value = '2.0';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Interest rate cut-off (% short)-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Interest rate cut-off (% short)</label>
+                                        <input type="number" id="input_cut_off_short_effect" name="input_cut_off_short" class="form-control form-models-select-effect" placeholder="Interest rate cut-off (short)" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_cut_off_short_effect').value = '0.0';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Real/Nominal-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Real/Nominal</label>
+                                         <select class="form-control form-models-select-effect" id="input_real_nominal_effect" name="input_real_nominal_effect">
+                                            <option>Real</option>
+                                            <option>Nominal</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <!--Real time inflation forecast-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Real time inflation forecast</label>
+                                        <select class="form-control form-models-select-effect" id="input_real_time_inf_effect" name="input_real_time_inf_effect">
+                                            <option>Yes</option>
+                                            <option>No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--Threshold for closing-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Threshold for closing (%)</label>
+                                        <input type="number" id="input_threshold_effect" name="input_threshold_effect" class="form-control form-models-select-effect" placeholder="Threshold for closing" required>
+                                         <script type="text/javascript">
+                                            document.getElementById('input_threshold_effect').value = '0.25';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Risk-weighting-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Risk-weighting</label>
+                                        <select class="form-control form-models-select-effect" id="input_risk_weighting" name="input_risk_weighting">
+                                            <option>1/N</option>
+                                            <option>inverse vol</option>
+                                            <option>inverse carry</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--STDev window (weeks)-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>STDev window (weeks)</label>
+                                        <input type="number" id="input_window_effect" name="input_window_effect" class="form-control form-models-select-effect" placeholder="STDev window (weeks)" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_window_effect').value = '52';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Bid-ask spread (bp)-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Bid-ask spread (bp)</label>
+                                        <input type="number" id="input_bid_ask_effect" name="input_bid_ask_effect" class="form-control form-models-select-effect" placeholder="Bid-ask spread (bp)" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_bid_ask_effect').value = '10';
+                                        </script>
+                                    </div>
+                                </div>
+                                <!--Position size-->
+                                <div class="btn-group">
+                                    <div class="form-group">
+                                        <label>Position size (%)</label>
+                                        <input type="number" id="input_position_size_effect" name="input_position_size_effect" class="form-control form-models-select-effect" placeholder="Position size" required>
+                                        <script type="text/javascript">
+                                            document.getElementById('input_position_size_effect').value = '3.0';
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Run strategy-->
+                        <div class="row">
+                            <div class="col-lg-4"></div>
+                            <div class="col-lg-3">
+                                <button class="btn btn-secondary btn-lg btn-run-model" type="button" id="contact-form-button-times">Run strategy</button>
+                            </div>
+                            <div class="col-lg-3"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <script src="static/js/form_data_times.js"></script>
         {% endif %}
     </div>
     {% endblock %}
