@@ -15,7 +15,6 @@ def momentum(index_data: pd.DataFrame, times: 'Times'):
     sig = pd.DataFrame()
     for col in index_data:
         # Calculate intermediate signals
-        # TODO ADD FLOAT BECAURE TYPEERROR BETWEEN FLOAT AND DECIMAL
         sig1 = calc_int_mom_signal(index_data[col], times.short_signals[0], times.long_signals[0], times.volatility_window)
         sig2 = calc_int_mom_signal(index_data[col], times.short_signals[1], times.long_signals[1], times.volatility_window)
         sig3 = calc_int_mom_signal(index_data[col], times.short_signals[2], times.long_signals[2], times.volatility_window)
@@ -23,6 +22,7 @@ def momentum(index_data: pd.DataFrame, times: 'Times'):
         # S-curve cutout for large movement, alternative curve w/out cutoff:sig[col]=2/(1+math.exp(-2*sig[col]))-1
         sig[col] = sig[col] * np.exp(-1 * sig[col].pow(2) / 6) / (math.sqrt(3) * math.exp(-0.5))
 
+    # sig = dm.set_data_frequency(sig, times.frequency, times.day_of_week)
     sig = dm.set_data_frequency(sig, times.frequency, times.day_of_week)
     sig = sig.shift(times.time_lag_in_months, freq="D")
     return sig

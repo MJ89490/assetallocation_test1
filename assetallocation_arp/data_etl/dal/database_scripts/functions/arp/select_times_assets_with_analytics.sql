@@ -3,12 +3,11 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets_with_analytics(
   business_datetime timestamp with time zone
 )
   RETURNS TABLE(
+    asset_subcategory varchar,
     cost numeric(32, 16),
     s_leverage integer,
-    future_name varchar,
     future_ticker varchar,
     future_asset_analytics asset.category_datetime_value[],
-    signal_name varchar,
     signal_ticker varchar,
     signal_asset_analytics asset.category_datetime_value[]
   )
@@ -21,6 +20,7 @@ BEGIN
       SELECT
         ta.future_asset_id,
         ta.signal_asset_id,
+        ta.asset_subcategory,
         ta.cost,
         ta.s_leverage
       FROM
@@ -32,7 +32,6 @@ BEGIN
     signals as (
       SELECT
         ta2.signal_asset_id,
-        a.name as signal_name,
         a.ticker as signal_ticker,
         array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as signal_asset_analytics
       FROM
@@ -43,13 +42,11 @@ BEGIN
         aa.business_datetime >= select_times_assets_with_analytics.business_datetime
       GROUP BY
         ta2.signal_asset_id,
-        a.name,
         a.ticker
     ),
     futures as (
       SELECT
         ta3.future_asset_id,
-        a.name as future_name,
         a.ticker as future_ticker,
         array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as future_asset_analytics
       FROM
@@ -60,16 +57,14 @@ BEGIN
         aa.business_datetime >= select_times_assets_with_analytics.business_datetime
       GROUP BY
         ta3.future_asset_id,
-        a.name,
         a.ticker
     )
     SELECT
+      ta4.asset_subcategory,
       ta4.cost,
       ta4.s_leverage,
-      f.future_name,
       f.future_ticker,
       f.future_asset_analytics,
-      s.signal_name,
       s.signal_ticker,
       s.signal_asset_analytics
     FROM

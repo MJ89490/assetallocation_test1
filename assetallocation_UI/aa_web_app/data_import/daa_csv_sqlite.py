@@ -2,7 +2,7 @@
 # conn = sqlite3.connect("asset_allocation.sql")
 # curs = conn.cursor()
 # curs.execute("CREATE TABLE times_signals_output  ("TIMES Signals DateTime, US Equities INTEGER,	EU Equities INTEGER,
-#                     JP Equities INTEGER, HK Equities INTEGER, US_10y_Bonds INTEGER, 	UK 10y Bonds	Eu 10y Bonds
+#                     JP Equities INTEGER, HK Equities INTEGER, US_10y_Bonds INTEGER, 	UK 10y Bonds	EU 10y Bonds
 #                     CA 10y Bonds	JPY	EUR	AUD	CAD	GBP);")
 #
 #              "id INTEGER PRIMARY KEY, type INTEGER, term TEXT, definition TEXT);")

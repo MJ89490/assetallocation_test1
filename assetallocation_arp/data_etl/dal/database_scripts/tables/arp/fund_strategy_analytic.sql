@@ -21,7 +21,7 @@ CREATE TABLE "arp"."fund_strategy_analytic"
 	"id" serial NOT NULL,
 	"fund_strategy_id" integer NOT NULL,
 	"aggregation_level" varchar(25) NOT NULL,
-	"asset_id" integer NULL,
+	"asset_subcategory" varchar(25) NULL,
 	"category" varchar(50)	 NOT NULL,
 	"subcategory" varchar(50)	 NOT NULL,
 	"business_date" date NOT NULL,
@@ -39,9 +39,9 @@ ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analyti
 ALTER TABLE
 	"arp"."fund_strategy_analytic"
 ADD CONSTRAINT
-	"fund_strategy_analytic_fund_strategy_id_asset_id_business_date_category_subcategory_key"
+	"fund_strategy_analytic_fund_strategy_id_asset_subcategory_business_date_category_subcategory_key"
 UNIQUE
-	("fund_strategy_id","asset_id","business_date", "category","subcategory")
+	("fund_strategy_id","asset_subcategory","business_date", "category","subcategory")
 ;
 
 ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_category_subcategory_check"CHECK (
@@ -60,10 +60,6 @@ ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analyti
 ;
 
 /* Create Foreign Key Constraints */
-
-ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_asset_fkey"
-	FOREIGN KEY ("asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
-;
 
 ALTER TABLE "arp"."fund_strategy_analytic" ADD CONSTRAINT "fund_strategy_analytic_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action

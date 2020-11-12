@@ -11,10 +11,10 @@ def run_strategy(
         fund_name: str, strategy_weight: float, strategy: Strategy, user_id: str,
         business_datetime: dt.datetime = dt.datetime.today() - dt.timedelta(365)
 ) -> FundStrategy:
-    pc = StrategyProcCallerFactory().get_proc_caller(strategy.name)()
-    strategy_version = pc.insert_strategy(strategy, user_id)
-    strategy = pc.select_strategy_with_asset_analytics(strategy_version, business_datetime)
-    fs = FundStrategy(fund_name, strategy.name, strategy_version, strategy_weight)
+    pc = StrategyProcCallerFactory.get_proc_caller(strategy.name)()
+    pc.insert_strategy(strategy, user_id)
+    pc.add_asset_analytics_to_strategy(strategy, business_datetime)
+    fs = FundStrategy(fund_name, strategy.name, strategy.version, strategy_weight)
     fs.analytics, fs.asset_weights = strategy.run()
     pc.insert_fund_strategy_results(fs, user_id)
     return fs

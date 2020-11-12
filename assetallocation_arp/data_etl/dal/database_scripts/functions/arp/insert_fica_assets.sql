@@ -1,5 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.insert_fica_assets(
   fica_version int,
+  asset_subcategory varchar,
   asset_tickers varchar[],
   categories varchar[] ,
   curve_tenors varchar[]
@@ -17,7 +18,7 @@ BEGIN
 
   SELECT config.insert_execution_state('arp.insert_fica_assets') INTO execution_state_id;
   SELECT arp.select_strategy_id(strategy_name, fica_version) INTO strategy_id;
-  SELECT arp.insert_fica_asset_group(strategy_id, execution_state_id) INTO fica_asset_group_id;
+  SELECT arp.insert_fica_asset_group(strategy_id, asset_subcategory, execution_state_id) INTO fica_asset_group_id;
   PERFORM arp.insert_fica_assets_into_fica_asset(execution_state_id, fica_asset_group_id, asset_tickers,
     categories, curve_tenors);
 END;
@@ -27,14 +28,15 @@ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION arp.insert_fica_asset_group(
   strategy_id int,
+  asset_subcategory varchar,
   execution_state_id int,
   OUT fica_asset_group_id integer
 )
 AS
 $$
 BEGIN
-  INSERT INTO arp.fica_asset_group(strategy_id, execution_state_id)
-  VALUES (strategy_id, execution_state_id)
+  INSERT INTO arp.fica_asset_group(strategy_id, asset_subcategory, execution_state_id)
+  VALUES (strategy_id, asset_subcategory, execution_state_id)
   RETURNING arp.fica_asset_group.id INTO fica_asset_group_id;
 END;
 $$

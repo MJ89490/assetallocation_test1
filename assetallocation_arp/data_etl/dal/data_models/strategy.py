@@ -6,12 +6,12 @@ from psycopg2.extras import DateTimeTZRange
 from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, \
     Leverage, Name, FxModel
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
-from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, FicaAssetInput, \
-    FxAssetInput, Asset
+from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, \
+    FxAssetInput, Asset, FicaAssetInputGroup, MavenAssetInput
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAnalytic, FundStrategyAssetWeight
-from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter
-from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
-from assetallocation_arp.models import times, fica
+from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter, \
+    FxDataFrameConverter, MavenDataFrameConverter
+from assetallocation_arp.models import times, fica, fxmodels, maven
 
 
 # noinspection PyAttributeOutsideInit
@@ -156,11 +156,11 @@ class Fica(Strategy):
         self._grouped_asset_inputs = []
 
     @property
-    def grouped_asset_inputs(self) -> List[List[FicaAssetInput]]:
+    def grouped_asset_inputs(self) -> List[FicaAssetInputGroup]:
         return self._grouped_asset_inputs
 
     @grouped_asset_inputs.setter
-    def grouped_asset_inputs(self, x: List[List[FicaAssetInput]]) -> None:
+    def grouped_asset_inputs(self, x: List[FicaAssetInputGroup]) -> None:
         self._grouped_asset_inputs = x
 
     @property
@@ -228,13 +228,9 @@ class Fica(Strategy):
         comparator_analytics = FicaDataFrameConverter.create_comparator_analytics(
             carry_roll['G3_10y_carry'], carry_daily['G3_10y_return', 'G3_10y_return%'])
 
-        future_tickers = [
-            asset.ticker for group in self.grouped_asset_inputs for asset in group if
-            asset.input_category == Category.future
-        ]
         asset_analytics = FicaDataFrameConverter.create_asset_analytics(
             carry_roll.drop(carry_total_cols), cum_contribution.drop(contribution_total_col),
-            carry_daily.drop(return_total_cols), return_daily, future_tickers
+            carry_daily.drop(return_total_cols), return_daily
         )
         analytics = strategy_analytics + comparator_analytics + asset_analytics
 
@@ -486,13 +482,151 @@ class Fx(Strategy):
         self._vol_window = x
 
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
-        # spot, carry, cash, ppp = fxmodels.format_data(strategy)
-        # signal, volatility = fxmodels.calculate_signals(strategy, spot, carry, cash, ppp)
-        # fx_model, exposure, exposure_agg = fxmodels.determine_sizing(strategy, signal, volatility)
-        # base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(strategy, carry, signal, exposure,
-        #                                                                         exposure_agg)
-        #
-        # asset_analytics = FxDataFrameConverter.create_asset_analytics(signals, returns, r, strategy.frequency)
-        # asset_weights = FxDataFrameConverter.df_to_asset_weights(positioning, Frequency.daily)
-        # return asset_analytics, asset_weights
-        pass
+        spot, carry, cash, ppp = fxmodels.format_data(self)
+        signal, volatility = fxmodels.calculate_signals(self, spot, carry, cash, ppp)
+        exposure, exposure_agg = fxmodels.determine_sizing(self, signal, volatility)
+        returns, contribution, carry_base = fxmodels.calculate_returns(self, carry, signal, exposure, exposure_agg)
+
+        asset_analytics = FxDataFrameConverter.create_asset_analytics(contribution)
+        asset_weights = FxDataFrameConverter.df_to_asset_weights(exposure, Frequency.monthly)
+        strategy_analytics = FxDataFrameConverter.create_strategy_analytics(
+            returns['returns'], returns['returns_cum'], returns['returns_net_cum'], returns['strength_of_signal']
+        )
+        analytics = asset_analytics + strategy_analytics
+        return analytics, asset_weights
+
+
+# noinspection PyAttributeOutsideInit
+class Maven(Strategy):
+    def __init__(
+            self, er_tr: str, frequency: Union[str, Frequency], day_of_week: Union[int, DayOfWeek],
+            business_tstzrange: DateTimeTZRange, asset_count: int, long_cutoff: int, short_cutoff: int,
+            val_period_months: int, val_period_base: int, momentum_weights: List[float], volatility_weights: List[float]
+    ):
+        super().__init__(Name.maven)
+        self.er_tr = er_tr
+        self.frequency = frequency
+        self.day_of_week = day_of_week
+        self.business_tstzrange = business_tstzrange
+        self.asset_count = asset_count
+        self.long_cutoff = long_cutoff
+        self.short_cutoff = short_cutoff
+        self.val_period_months = val_period_months
+        self.val_period_base = val_period_base
+        self.momentum_weights = momentum_weights
+        self.volatility_weights = volatility_weights
+        self.asset_inputs = []
+
+    @property
+    def er_tr(self) -> str:
+        return self._er_tr
+
+    @er_tr.setter
+    def er_tr(self, x: str) -> None:
+        self._er_tr = x
+
+    @property
+    def frequency(self) -> Frequency:
+        return self._frequency
+
+    @frequency.setter
+    def frequency(self, x: Union[str, Frequency]) -> None:
+        self._frequency = x if isinstance(x, Frequency) else Frequency[x]
+
+    @property
+    def day_of_week(self) -> DayOfWeek:
+        return self._day_of_week
+
+    @day_of_week.setter
+    def day_of_week(self, x: Union[int, DayOfWeek]) -> None:
+        self._day_of_week = x if isinstance(x, DayOfWeek) else DayOfWeek(x)
+
+    @property
+    def business_tstzrange(self) -> DateTimeTZRange:
+        return self._business_tstzrange
+
+    @business_tstzrange.setter
+    def business_tstzrange(self, x: DateTimeTZRange) -> None:
+        self._business_tstzrange = x
+
+    @property
+    def asset_count(self) -> int:
+        return self._asset_count
+
+    @asset_count.setter
+    def asset_count(self, x: int) -> None:
+        self._asset_count = x
+
+    @property
+    def long_cutoff(self) -> int:
+        return self._long_cutoff
+
+    @long_cutoff.setter
+    def long_cutoff(self, x: int) -> None:
+        self._long_cutoff = x
+
+    @property
+    def short_cutoff(self) -> int:
+        return self._short_cutoff
+
+    @short_cutoff.setter
+    def short_cutoff(self, x: int) -> None:
+        self._short_cutoff = x
+
+    @property
+    def val_period_months(self) -> int:
+        return self._val_period_months
+
+    @val_period_months.setter
+    def val_period_months(self, x: int) -> None:
+        self._val_period_months = x
+
+    @property
+    def val_period_base(self) -> int:
+        return self._val_period_base
+
+    @val_period_base.setter
+    def val_period_base(self, x: int) -> None:
+        self._val_period_base = x
+
+    @property
+    def momentum_weights(self) -> List[float]:
+        return self._momentum_weights
+
+    @momentum_weights.setter
+    def momentum_weights(self, x: List[float]) -> None:
+        self._momentum_weights = x
+
+    @property
+    def volatility_weights(self) -> List[float]:
+        return self._volatility_weights
+
+    @volatility_weights.setter
+    def volatility_weights(self, x: List[float]) -> None:
+        self._volatility_weights = x
+
+    @property
+    def asset_inputs(self) -> List[MavenAssetInput]:
+        return self._asset_inputs
+
+    @asset_inputs.setter
+    def asset_inputs(self, x: List[MavenAssetInput]) -> None:
+        self._asset_inputs = x
+
+    def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
+        asset_returns = maven.format_data(self)
+        maven_returns = maven.calculate_excess_returns(self, asset_returns)
+        momentum, value, long_signals, short_signals, volatility = maven.calculate_signals(self, maven_returns)
+        returns, asset_contribution_long, asset_contribution_short = \
+            maven.run_performance_stats(self, maven_returns, volatility, long_signals, short_signals)
+
+        asset_contributions = maven.contributions_to_weights(asset_contribution_short, asset_contribution_long)
+
+        asset_analytics = MavenDataFrameConverter.create_asset_analytics(value, momentum, self.frequency)
+        asset_weights = MavenDataFrameConverter.df_to_asset_weights(asset_contributions, self.frequency)
+        strategy_analytics = MavenDataFrameConverter.create_strategy_analytics(
+            returns['equal notional'], returns['equal volatility'], returns['maven long gross'],
+            returns['maven short gross'], returns['maven long net'], returns['maven short net'], self.frequency
+        )
+        analytics = asset_analytics + strategy_analytics
+        return analytics, asset_weights

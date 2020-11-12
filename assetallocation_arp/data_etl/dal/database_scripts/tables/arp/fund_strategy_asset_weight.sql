@@ -20,7 +20,7 @@ CREATE TABLE "arp"."fund_strategy_asset_weight"
 (
 	"id" serial NOT NULL,
 	"fund_strategy_id" integer NOT NULL,
-	"asset_id" integer NOT NULL,
+	"asset_subcategory" varchar(25) NOT NULL,
 	"business_date" date NOT NULL,
 	"frequency" frequency NOT NULL,
 	"strategy_weight" numeric(32,16) NOT NULL,
@@ -37,16 +37,12 @@ ALTER TABLE "arp"."fund_strategy_asset_weight" ADD CONSTRAINT "fund_strategy_ass
 ALTER TABLE
 	"arp"."fund_strategy_asset_weight"
 ADD CONSTRAINT
-	"fund_strategy_asset_weight_fund_strategy_id_asset_id_business_date_key"
+	"fund_strategy_asset_weight_fund_strategy_id_asset_subcategory_business_date_key"
 UNIQUE
-	("fund_strategy_id","asset_id", "business_date")
+	("fund_strategy_id","asset_subcategory", "business_date")
 ;
 
 /* Create Foreign Key Constraints */
-
-ALTER TABLE "arp"."fund_strategy_asset_weight" ADD CONSTRAINT "fund_strategy_asset_weight_asset_fkey"
-	FOREIGN KEY ("asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
-;
 
 ALTER TABLE "arp"."fund_strategy_asset_weight" ADD CONSTRAINT "fund_strategy_asset_weight_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action

@@ -7,8 +7,6 @@ RETURNS TABLE(
   python_code_version varchar,
   output_is_saved boolean,
   weight numeric,
-  asset_ticker varchar,
-  asset_category varchar,
   asset_subcategory varchar,
   business_date date,
   weight_frequency frequency,
@@ -41,14 +39,13 @@ BEGIN
         AND COALESCE(t.version, fi.version, e.version) = select_fund_strategy_results.strategy_version
       ORDER BY
         fs.system_datetime desc
+      LIMIT 1
     )
     SELECT
       fsr.python_code_version,
       fsr.output_is_saved,
       fsr.weight,
-      a.ticker as asset_ticker,
-      a.category as asset_category,
-      a.subcategory as asset_subcategory,
+      fsa.asset_subcategory,
       fsa.business_date,
       fsaw.frequency as weight_frequency,
       fsaw.strategy_weight,
@@ -62,16 +59,13 @@ BEGIN
       JOIN arp.fund_strategy_analytic fsa ON fsa.fund_strategy_id = fsr.fund_strategy_id
       LEFT JOIN arp.fund_strategy_asset_weight fsaw
           ON fsaw.fund_strategy_id = fsr.fund_strategy_id
-          AND fsaw.asset_id = fsa.asset_id
+          AND fsaw.asset_subcategory = fsa.asset_subcategory
           AND fsaw.business_date = fsa.business_date
-      JOIN asset.asset a ON fsaw.asset_id = a.id
     GROUP BY
       fsr.python_code_version,
       fsr.output_is_saved,
       fsr.weight,
-      a.ticker,
-      a.category,
-      a.subcategory,
+      fsa.asset_subcategory,
       fsa.business_date,
       fsaw.frequency,
       fsaw.strategy_weight,

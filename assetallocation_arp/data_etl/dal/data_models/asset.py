@@ -1,7 +1,7 @@
 from typing import List, Union, Optional
 import itertools
 
-from assetallocation_arp.common_libraries.dal_enums.asset import Category
+from assetallocation_arp.common_libraries.dal_enums.asset import Category, Subcategory, subcategory_map
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.country import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
@@ -139,6 +139,32 @@ class FicaAssetInput(Asset):
 
 
 # noinspection PyAttributeOutsideInit
+class FicaAssetInputGroup:
+    def __init__(self, asset_subcategory: Union[str, Subcategory], fica_asset_inputs: List[FicaAssetInput]):
+        self.asset_subcategory = asset_subcategory
+        self.fica_asset_inputs = fica_asset_inputs
+
+    @property
+    def asset_subcategory(self) -> Union[str, Subcategory]:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Union[str, Subcategory]) -> None:
+        if isinstance(x, Subcategory):
+            self._asset_subcategory = x
+        else:
+            self._asset_subcategory = subcategory_map[x]
+
+    @property
+    def fica_asset_inputs(self) -> List[FicaAssetInput]:
+        return self._fica_asset_inputs
+
+    @fica_asset_inputs.setter
+    def fica_asset_inputs(self, x: List[FicaAssetInput]) -> None:
+        self._fica_asset_inputs = x
+
+
+# noinspection PyAttributeOutsideInit
 class FxAssetInput:
     def __init__(self, ppp_ticker: str, cash_rate_ticker: str, currency: str) -> None:
         """TimesAssetInput class to hold data from database"""
@@ -157,7 +183,6 @@ class FxAssetInput:
     def cash_rate_asset(self, x: Asset) -> None:
         self._cash_rate_asset = x
 
-
     @property
     def ppp_asset(self) -> Asset:
         return self._ppp_asset
@@ -166,12 +191,10 @@ class FxAssetInput:
     def ppp_asset(self, x: Asset) -> None:
         self._ppp_asset = x
 
-
     @staticmethod
     def get_crosses(fx_asset_inputs: List['FxAssetInput']) -> List[str]:
         currencies = [i.currency for i in fx_asset_inputs]
-        fx = [x for x in itertools.combinations(currencies, 2)]
-        return [''.join(x) + 'CR Curncy' for x in fx]
+        return list(itertools.combinations(currencies, 2))
 
     @staticmethod
     def get_spot_tickers(fx_asset_inputs: List['FxAssetInput']) -> List[str]:
@@ -186,14 +209,31 @@ class FxAssetInput:
 
 # noinspection PyAttributeOutsideInit
 class TimesAssetInput:
-    def __init__(self, s_leverage: int, signal_ticker: str, future_ticker: str, cost: float) -> None:
-        """TimesAssetInput class to hold data from database"""
+    def __init__(
+            self, asset_subcategory: Union[str, Subcategory], s_leverage: int, signal_ticker: str,
+            future_ticker: str, cost: float
+    ) -> None:
+        """TimesAssetInput class to hold data from database
+        :param asset_subcategory:
+        """
+        self.asset_subcategory = asset_subcategory
         self.signal_ticker = signal_ticker
         self.future_ticker = future_ticker
         self.cost = cost
         self.s_leverage = s_leverage
         self._signal_asset = None
         self._future_asset = None
+
+    @property
+    def asset_subcategory(self) -> Subcategory:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Union[str, Subcategory]) -> None:
+        if isinstance(x, Subcategory):
+            self._asset_subcategory = x
+        else:
+            self._asset_subcategory = subcategory_map[x]
 
     @property
     def signal_asset(self) -> Asset:
@@ -282,3 +322,30 @@ class EffectAssetInput(Asset):
     @position_size.setter
     def position_size(self, x: float) -> None:
         self._position_size = x
+
+
+# noinspection PyAttributeOutsideInit
+class MavenAssetInput:
+    def __init__(
+            self, asset_subcategory: Union[str, Subcategory], description: str, bbg_tr_ticker: str,
+            bbg_er_ticker: str, currency: str, cash_ticker: str, asset_class: str, true_excess: bool,
+            asset_weight: float, transaction_cost: float
+    ) -> None:
+        """TimesAssetInput class to hold data from database
+        :param asset_subcategory:
+        """
+        self.asset_subcategory = asset_subcategory
+        self.description = description
+        self.bbg_tr_ticker = bbg_tr_ticker
+        self.bbg_er_ticker = bbg_er_ticker
+        self.currency = currency
+        self.cash_ticker = cash_ticker
+        self.asset_class = asset_class
+        self.true_excess = true_excess
+        self.asset_weight = asset_weight
+        self.transaction_cost = transaction_cost
+        self.bbg_tr_asset = Asset(bbg_tr_ticker)
+        self.bbg_er_asset = Asset(bbg_er_ticker)
+        self.cash_asset = Asset(cash_ticker)
+
+    # TODO write template for generating pset from __init__ parameters

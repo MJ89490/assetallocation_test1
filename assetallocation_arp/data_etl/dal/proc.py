@@ -1,9 +1,10 @@
 from enum import Enum, auto
 
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 
 # noinspection PyArgumentList
-Proc = Enum(
-    value='Proc',
+ArpProc = Enum(
+    value='ArpProc',
     names=[
         ('fund.select_fund', auto()),
         ('fund.insert_fund', auto()),
@@ -15,50 +16,18 @@ Proc = Enum(
     ]
 )
 
-# noinspection PyArgumentList
-TimesProc = Enum(
-    value='Proc',
-    names=[
-        ('arp.select_times_strategy', auto()),
-        ('arp.insert_times_strategy', auto()),
-        ('arp.select_times_assets', auto()),
-        ('arp.insert_times_assets', auto()),
-        ('arp.select_times_assets_with_analytics', auto())
-    ]
-)
 
-# noinspection PyArgumentList
-EffectProc = Enum(
-    value='Proc',
-    names=[
-        ('arp.select_effect_strategy', auto()),
-        ('arp.insert_effect_strategy', auto()),
-        ('arp.select_effect_assets', auto()),
-        ('arp.insert_effect_assets', auto()),
-        ('arp.select_effect_assets_with_analytics', auto()),
-    ]
-)
-
-# noinspection PyArgumentList
-FicaProc = Enum(
-    value='Proc',
-    names=[
-        ('arp.select_fica_strategy', auto()),
-        ('arp.insert_fica_strategy', auto()),
-        ('arp.select_fica_assets', auto()),
-        ('arp.insert_fica_assets', auto()),
-        ('arp.select_fica_assets_with_analytics', auto()),
-    ]
-)
-
-# noinspection PyArgumentList
-FxProc = Enum(
-    value='Proc',
-    names=[
-        ('arp.select_fx_strategy', auto()),
-        ('arp.insert_fx_strategy', auto()),
-        ('arp.select_fx_assets', auto()),
-        ('arp.insert_fx_assets', auto()),
-        ('arp.select_fx_assets_with_analytics', auto()),
-    ]
-)
+class StrategyProcFactory:
+    # noinspection PyArgumentList
+    @staticmethod
+    def get_strategy_proc(strategy_name: Name):
+        return Enum(
+            value=f'{strategy_name.name.capitalize()}Proc',
+            names=[
+                (f'arp.select_{strategy_name.name}_strategy', auto()),
+                (f'arp.insert_{strategy_name.name}_strategy', auto()),
+                (f'arp.select_{strategy_name.name}_assets', auto()),
+                (f'arp.insert_{strategy_name.name}_assets', auto()),
+                (f'arp.select_{strategy_name.name}_assets_with_analytics', auto())
+            ]
+        )

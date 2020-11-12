@@ -17,23 +17,23 @@ def mock_asset(ticker: str, subcategory: str):
     return mock_a
 
 
-def mock_fund_strategy_asset_weights(asset_ticker: str, business_date: date, strategy_weight: float,
+def mock_fund_strategy_asset_weights(asset_subcategory: str, business_date: date, strategy_weight: float,
                                      implemented_weight: float, frequency: str):
     MockFundStrategyAssetWeight = mock.create_autospec(FundStrategyAssetWeight)
-    mock_fsaw = MockFundStrategyAssetWeight(asset_ticker, business_date, strategy_weight, frequency)
+    mock_fsaw = MockFundStrategyAssetWeight(asset_subcategory, business_date, strategy_weight, frequency)
     mock_fsaw.business_date = business_date
     mock_fsaw.frequency = frequency
-    mock_fsaw.asset_ticker = asset_ticker
+    mock_fsaw.asset_subcategory = asset_subcategory
     mock_fsaw.strategy_weight = strategy_weight
     mock_fsaw.implemented_weight = implemented_weight
     return mock_fsaw
 
 
-def mock_fund_strategy_asset_analytic(asset_ticker: str, business_date: date, category: str, subcategory: str,
+def mock_fund_strategy_asset_analytic(asset_subcategory: str, business_date: date, category: str, subcategory: str,
                                       value: float, frequency: str):
     MockFundStrategyAssetAnalytic = mock.create_autospec(FundStrategyAssetAnalytic)
-    mock_fsaa = MockFundStrategyAssetAnalytic(asset_ticker, business_date, category, subcategory, value, frequency)
-    mock_fsaa.asset_ticker = asset_ticker
+    mock_fsaa = MockFundStrategyAssetAnalytic(asset_subcategory, business_date, category, subcategory, value, frequency)
+    mock_fsaa.asset_subcategory = asset_subcategory
     mock_fsaa.business_date = business_date
     mock_fsaa.freqency = frequency
     mock_fsaa.category = category
@@ -43,39 +43,31 @@ def mock_fund_strategy_asset_analytic(asset_ticker: str, business_date: date, ca
 
 
 def test_fund_strategy_asset_analytics_to_df_returns_expected():
-    mock_a1 = mock_asset('d', 'z')
-    mock_a2 = mock_asset('a', 'y')
-
     mock_fsaa1 = mock_fund_strategy_asset_analytic('a', date(2020, 1, 2), 'b', 'c', float(1), 'g')
     mock_fsaa2 = mock_fund_strategy_asset_analytic('d', date(2020, 1, 3), 'e', 'f', float(2), 'h')
 
     expected = pd.DataFrame(
         [[float(1), nan], [nan, float(2)]],
-        columns=pd.MultiIndex(
-            levels=[['a', 'd'], ['z', 'y']], codes=[[0, 1], [1, 0]], names=['ticker', 'asset_subcategory']
-        ),
+        columns=['a', 'd'],
         index=pd.MultiIndex(
             levels=[pd.DatetimeIndex(['2020-01-02', '2020-01-03'], dtype='datetime64[ns]'), ['c', 'f']],
             codes=[[0, 1], [0, 1]], names=['business_date', 'analytic_subcategory']
         )
     )
 
-    returns = DataFrameConverter.fund_strategy_asset_analytics_to_df([mock_a1, mock_a2], [mock_fsaa1, mock_fsaa2])
+    returns = DataFrameConverter.fund_strategy_asset_analytics_to_df([mock_fsaa1, mock_fsaa2])
 
     pd.testing.assert_frame_equal(expected, returns, check_names=False)
 
 
 def test_fund_strategy_asset_weights_to_df_returns_expected_value():
-    mock_a1 = mock_asset('c', 'd')
-    mock_a2 = mock_asset('a', 'f')
-
     mock_fsaw1 = mock_fund_strategy_asset_weights('a', date(2020, 1, 2), float(1), float(2), 'g')
     mock_fsaw2 = mock_fund_strategy_asset_weights('c', date(2020, 1, 3), float(4), float(3), 'h')
 
     expected = pd.DataFrame([[float(1), nan], [nan, float(4)]],
-                            columns=['f', 'd'],
+                            columns=['a', 'c'],
                             index=pd.DatetimeIndex(['2020-01-02', '2020-01-03'], dtype='datetime64[ns]', name='business_date'))
 
-    returns = DataFrameConverter.fund_strategy_asset_weights_to_df([mock_a1, mock_a2], [mock_fsaw1, mock_fsaw2])
+    returns = DataFrameConverter.fund_strategy_asset_weights_to_df([mock_fsaw1, mock_fsaw2])
 
     pd.testing.assert_frame_equal(expected, returns, check_names=False)

@@ -1,5 +1,7 @@
+import os
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
+
 
 class ReceivedDataTimes:
     def __init__(self):
@@ -20,5 +22,35 @@ class ReceivedDataTimes:
 
     def call_run_times(self, assets_input_times):
 
-       pass
+        fund_name = self.times_form['input_fund_name_times']
+        long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
+                                        self.times_form['input_signal_two_long_times'],
+                                        self.times_form['input_signal_three_long_times']]))
+
+        short_signals = list(map(float, [self.times_form['input_signal_one_short_times'],
+                                         self.times_form['input_signal_two_short_times'],
+                                         self.times_form['input_signal_three_short_times']]))
+
+        times = Times(DayOfWeek[self.times_form['input_weekday_times'].upper()],
+                      self.times_form['input_frequency_times'].lower(),
+                      self.times_form['input_leverage_times'], long_signals, short_signals,
+                      int(self.times_form['input_time_lag_times']),
+                      int(self.times_form['input_vol_window_times']))
+
+        print('before times assets')
+
+        times.asset_inputs = [
+            TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
+                assets_input_times['input_asset'], assets_input_times['input_leverage'],
+                assets_input_times['input_signal_ticker'],
+                assets_input_times['input_future_ticker'], assets_input_times['input_costs']
+            )
+        ]
+        print('after times assets')
+        # TODO do not work with that line !!!!!
+        fund_strategy = run_strategy(fund_name, float(self.times_form['input_strategy_weight_times']),
+                                     times, os.environ.get('USERNAME'),
+                                     self.times_form['input_date_from_times'])
+
         print('after fund strategy')
+

@@ -33,7 +33,7 @@ function positionsAssets(positions_gbp_overview, positions_cad_overview, positio
                         'EUR',
                         'JPY',
                         'CA 10y Bonds',
-                        'Eu 10y Bonds',
+                        'EU 10y Bonds',
                         'UK 10y Bonds',
                         'US 10y Bonds',
                         'HK Equities',

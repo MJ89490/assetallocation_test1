@@ -37,10 +37,12 @@ def apply_leverage(futures_data: Union[pd.Series, pd.DataFrame], leverage_type: 
     return leverage_data
 
 
-def rescale(ret, r, positioning, column, vol):
+def rescale(ret, positioning, vol):
     # Calibrate series to a target volatility, uses full historic time series
-    m_return = r[column].diff(periods=21)
-    return_scaled = ret.div(m_return.expanding(2).std()*math.sqrt(12), axis=0 )*vol
+    r_total = ret.sum(axis=1).cumsum()
+
+    m_return = r_total.diff(periods=21)
+    return_scaled = ret.div(m_return.expanding(2).std()*math.sqrt(12), axis=0)*vol
     positioning_scaled = positioning.div(m_return.expanding(2).std()*math.sqrt(12), axis=0)*vol
     r_scaled = return_scaled.cumsum()
     return return_scaled, r_scaled, positioning_scaled
@@ -64,8 +66,7 @@ def return_ts(sig: pd.DataFrame, future: pd.DataFrame, leverage: pd.DataFrame, c
         # Trading costs
         returns[column].iloc[1:] = returns[column].iloc[1:]-costs[column]*pd.DataFrame.abs(positioning[column].diff(periods=1))
         r[column] = returns[column].cumsum()
-    returns['Total'] = returns.sum(axis=1)
-    r['Total'] = returns['Total'].cumsum()
+
     return returns, r, positioning
 
 

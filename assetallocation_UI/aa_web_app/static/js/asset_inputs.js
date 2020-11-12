@@ -10,18 +10,18 @@ var columnDefs = [
 
 // Items in the table (rows)
 var rowData = [
-    {asset: "US Equities", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "EU Equities", signal_ticker: "SX5T Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "JP Equities", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "HK Equities", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "US 10y Bonds", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "UK 10y Bonds", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "Eu 10y Bonds", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "JPY", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "EUR", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "AUD", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "CAD", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1},
-    {asset: "GBP", signal_ticker: "SPXT Index", future_ticker: "SP1 R:00_0_R Index", costs: 0.0002, s_leverage: 1}
+    {asset: "US Equities", signal_ticker: "F25915Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "EU Equities", signal_ticker: "F91001Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "JP Equities", signal_ticker: "LP01TREU Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "HK Equities", signal_ticker: "I05204Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "US 10y Bonds", signal_ticker: "F91003Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "UK 10y Bonds", signal_ticker: "F10120Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "EU 10y Bonds", signal_ticker: "F25904Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "JPY", signal_ticker: "NK1 A:00_0_R Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "EUR", signal_ticker: "I05110Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "AUD", signal_ticker: "F25606Y Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "CAD", signal_ticker: "SP1 A:00_0_R Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1},
+    {asset: "GBP", signal_ticker: "NDSOC Index", future_ticker: "SPXT Index", costs: 0.0002, s_leverage: 1}
 ];
 
 // Options of the table

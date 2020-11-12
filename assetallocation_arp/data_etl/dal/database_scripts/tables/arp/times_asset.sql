@@ -21,6 +21,7 @@ CREATE TABLE "arp"."times_asset"
 	"id" serial NOT NULL,
 	"signal_asset_id" integer NOT NULL,
 	"future_asset_id" integer NOT NULL,
+	"asset_subcategory" varchar(25) NOT NULL,
 	"s_leverage" integer NULL,
 	"strategy_id" integer NOT NULL,
 	"cost" numeric(32,16) NULL,
@@ -34,7 +35,8 @@ ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_signal_asset_id_future_asset_id_strategy_id_key" UNIQUE ("signal_asset_id","future_asset_id","strategy_id")
+ALTER TABLE "arp"."times_asset" ADD CONSTRAINT "times_asset_strategy_id_asset_subcategory_key"
+	UNIQUE ("strategy_id", "asset_subcategory")
 ;
 
 /* Create Foreign Key Constraints */

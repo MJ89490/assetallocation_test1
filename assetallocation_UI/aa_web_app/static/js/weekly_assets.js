@@ -32,7 +32,7 @@ function weeklyAssets(performance_gbp_overview, performance_cad_overview, perfor
                        'EUR',
                        'JPY',
                        'CA 10y Bonds',
-                       'Eu 10y Bonds',
+                       'EU 10y Bonds',
                        'UK 10y Bonds',
                        'US 10y Bonds',
                        'HK Equities',

@@ -14,8 +14,8 @@ def main_data(fund_name: str, times_version: int):
     """
     apc = TimesProcCaller()
     fs = apc.select_fund_strategy_results(fund_name, Name.times, times_version)
-    weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.assets, fs.asset_weights)
-    analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.assets, fs.analytics)
+    weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+    analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 
     data = {'times_signals': analytic_df.xs(Signal.momentum, level='analytic_subcategory'),
             'times_returns': analytic_df.xs(Performance['excess return'], level='analytic_subcategory'),
@@ -29,9 +29,8 @@ def main_data(fund_name: str, times_version: int):
     data_comp_sum = obj_charts_comp.data_computations_sum()
 
     template_data = {"times_data": data, "times_sum": data_comp_sum, "times_data_comp": data_comp}
-    print(template_data['times_data']['times_positions']['US_Equities'].tolist())
     return template_data
 
 
 if __name__ == "__main__":
-    sys.exit(main_data())
+    main_data('f1', 509)

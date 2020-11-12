@@ -4,7 +4,7 @@ import pytest
 from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller, Times, TimesAssetInput, FundStrategy, \
-    EffectProcCaller, Effect, ArpProcCaller, EffectAssetInput, FicaProcCaller, Fica, FicaAssetInput
+    EffectProcCaller, Effect, ArpProcCaller, EffectAssetInput, FicaProcCaller, Fica, FicaAssetInputGroup
 from datetime import datetime
 
 
@@ -42,6 +42,12 @@ def MockFica():
 def MockFicaAssetInput():
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInput', autospec=True) as _MockFicaAssetInput:
         yield _MockFicaAssetInput
+
+
+@pytest.fixture()
+def MockFicaAssetInputGroup():
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInputGroup', autospec=True) as _MockFicaAssetInputGroup:
+        yield _MockFicaAssetInputGroup
 
 
 @pytest.fixture()
@@ -105,7 +111,7 @@ def test_select_times_assets_with_analytics_calls_call_proc(mock_call_proc):
     mock_call_proc.return_value = []
 
     a = TimesProcCaller()
-    a.select_times_assets_with_analytics(times_version, business_datetime)
+    a._select_times_assets_with_analytics(times_version, business_datetime)
 
     mock_call_proc.assert_called_once_with(a, 'arp.select_times_assets_with_analytics', [times_version, business_datetime])
 
@@ -117,7 +123,7 @@ def test_select_times_assets_returns_list_of_times_asset_objects(mock_call_proc)
 
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.TimesAssetInput', autospec=True):
         a = TimesProcCaller()
-        returns = a.select_times_assets_with_analytics(times_version, business_datetime)
+        returns = a._select_times_assets_with_analytics(times_version, business_datetime)
 
     assert isinstance(returns, list)
     assert all([isinstance(i, TimesAssetInput) for i in returns])
@@ -179,11 +185,13 @@ def test_select_fund_strategy_results_returns_fund_strategy(mock_call_proc, Mock
     fund_name = 'b'
     strategy_name = 'times'
     strategy_version = 1
-    mock_call_proc.return_value = [mock.MagicMock(), mock.MagicMock(), mock.MagicMock()]
+    magic_mock = mock.MagicMock()
+    mock_call_proc.return_value = [magic_mock, magic_mock, magic_mock]
 
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FundStrategy', autospec=True):
-        a = TimesProcCaller()
-        returns = a.select_fund_strategy_results(fund_name, strategy_name, strategy_version)
+        with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.pd.notna', autospec=True):
+            a = TimesProcCaller()
+            returns = a.select_fund_strategy_results(fund_name, strategy_name, strategy_version)
 
     assert isinstance(returns, FundStrategy)
 
@@ -242,7 +250,7 @@ def test_select_effect_assets_with_analytics_calls_call_proc(mock_call_proc):
     mock_call_proc.return_value = []
 
     a = EffectProcCaller()
-    a.select_effect_assets_with_analytics(e_version, business_datetime)
+    a._select_effect_assets_with_analytics(e_version, business_datetime)
 
     mock_call_proc.assert_called_once_with(a, 'arp.select_effect_assets_with_analytics', [e_version, business_datetime])
 
@@ -254,7 +262,7 @@ def test_select_effect_assets_returns_list_of_effect_asset_objects(mock_call_pro
 
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.EffectAssetInput', autospec=True):
         a = EffectProcCaller()
-        returns = a.select_effect_assets_with_analytics(e_version, business_datetime)
+        returns = a._select_effect_assets_with_analytics(e_version, business_datetime)
 
     assert isinstance(returns, list)
     assert all([isinstance(i, EffectAssetInput) for i in returns])
@@ -285,16 +293,18 @@ def test_insert_fica_strategy_returns_f_version(MockFica, mock_call_proc):
     assert expected == returns
 
 
-def test_insert_fica_assets_calls_call_proc(MockFicaAssetInput, mock_call_proc):
+def test_insert_fica_assets_calls_call_proc(MockFicaAssetInput, MockFicaAssetInputGroup, mock_call_proc):
     mock_fai = MockFicaAssetInput('asd', 'future', None)
+    mock_faig = MockFicaAssetInputGroup('asd', [mock_fai])
+    mock_faig.fica_asset_inputs = [mock_fai]
     fica_version = 20
 
     a = FicaProcCaller()
-    a._insert_fica_assets(fica_version, [[mock_fai]])
+    a._insert_fica_assets(fica_version, [mock_faig])
 
     mock_call_proc.assert_called_once_with(
         a, 'arp.insert_fica_assets', [
-            fica_version, [mock_fai.ticker], [mock_fai.input_category], [mock_fai.curve_tenor]])
+            fica_version, mock_faig.asset_subcategory, [mock_fai.ticker], [mock_fai.input_category], [mock_fai.curve_tenor]])
 
 
 def test_select_fica_strategy_calls_call_proc(mock_call_proc):
@@ -320,23 +330,23 @@ def test_select_fica_assets_with_analytics_calls_call_proc(mock_call_proc):
     mock_call_proc.return_value = []
 
     a = FicaProcCaller()
-    a.select_fica_assets_with_analytics(f_version)
+    a._select_fica_assets_with_analytics(f_version)
 
     mock_call_proc.assert_called_once_with(a, 'arp.select_fica_assets_with_analytics', [f_version])
 
 
 def test_select_fica_assets_with_analytics_returns_list_of_fica_asset_objects(mock_call_proc):
     f_version = 2
-    business_datetime = datetime(2020, 9, 1)
     mock_call_proc.return_value = [mock.MagicMock(), mock.MagicMock(), mock.MagicMock()]
 
     with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInput', autospec=True):
-        with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.ArpTypeConverter', autospec=True):
-            a = FicaProcCaller()
-            returns = a.select_fica_assets_with_analytics(f_version)
+        with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInputGroup', autospec=True):
+            with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.ArpTypeConverter', autospec=True):
+                a = FicaProcCaller()
+                returns = a._select_fica_assets_with_analytics(f_version)
 
     assert isinstance(returns, list)
-    assert all([isinstance(i, FicaAssetInput) for i in returns])
+    assert all([isinstance(i, FicaAssetInputGroup) for i in returns])
 
 
 def test_select_fica_assets_calls_call_proc(mock_call_proc):
@@ -349,13 +359,13 @@ def test_select_fica_assets_calls_call_proc(mock_call_proc):
     mock_call_proc.assert_called_once_with(a, 'arp.select_fica_assets', [f_version])
 
 
-def test_select_fica_assets_returns_list_of_fica_asset_objects(mock_call_proc):
+def test_select_fica_assets_returns_list_of_fica_asset_input_group_objects(mock_call_proc):
     f_version = 2
     mock_call_proc.return_value = [mock.MagicMock(), mock.MagicMock(), mock.MagicMock()]
 
-    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInput', autospec=True):
+    with mock.patch('assetallocation_arp.data_etl.dal.arp_proc_caller.FicaAssetInputGroup', autospec=True):
         a = FicaProcCaller()
         returns = a._select_fica_assets(f_version)
 
     assert isinstance(returns, list)
-    assert all([isinstance(i, FicaAssetInput) for i in returns])
+    assert all([isinstance(i, FicaAssetInputGroup) for i in returns])

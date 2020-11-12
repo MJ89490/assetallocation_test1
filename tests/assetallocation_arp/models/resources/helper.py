@@ -42,26 +42,27 @@ def read_inputs_outputs(test_dir: Path):
 
     for f in test_dir.iterdir():
         if f.name.endswith('scalar.csv'):
-            if f.name.startswith('in'):
-                inputs[f.name[3:-11]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True).iat[0, 0]
-
-            elif f.name.startswith('out'):
-                outputs[f.name[4:-11]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True).iat[0, 0]
+            save_dict, key = (inputs, f.name[3:-11]) if f.name.startswith('in') else (outputs, f.name[4:-11])
+            save_dict[key] = pd.read_csv(f, header=0, index_col=0, parse_dates=True).iat[0, 0]
 
         else:
-            if f.name.startswith('in'):
-                inputs[f.name[3:-4]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True)
-
-            elif f.name.startswith('out'):
-                outputs[f.name[4:-4]] = pd.read_csv(f, header=0, index_col=0, parse_dates=True)
+            save_dict, key = (inputs, f.name[3:-4]) if f.name.startswith('in') else (outputs, f.name[4:-4])
+            save_dict[key] = pd.read_csv(f, header=0, index_col=0, parse_dates=True)
+            try:
+                save_dict[key].rename(columns={c: int(c) for c in save_dict[key].columns}, inplace=True)
+            except ValueError:
+                pass
 
     return inputs, outputs
 
 
 def assert_equal(counter: str, expected: Dict[str, Any], v: Any):
     if isinstance(v, pd.Series):
-        pd.testing.assert_series_equal(expected[counter], v, check_names=False)
+        expected[counter] = expected[counter].squeeze(axis=1)
+        pd.testing.assert_series_equal(expected[counter], v, check_names=False, check_dtype=False)
     elif isinstance(v, pd.DataFrame):
-        pd.testing.assert_frame_equal(expected[counter], v, check_names=False)
+        expected[counter] = expected[counter][v.columns]
+        eq_vals = expected[counter].eq(v)
+        pd.testing.assert_frame_equal(expected[counter], v, check_names=False, check_dtype=False, check_like=True)
     else:
         assert expected[counter] == v

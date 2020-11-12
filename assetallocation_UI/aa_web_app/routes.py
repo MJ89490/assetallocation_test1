@@ -5,9 +5,9 @@ from flask import request
 
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
-from assetallocation_arp.arp_strategies import run_effect_strategy
-from assetallocation_UI.aa_web_app.get_data_effect import ReceivedDataEffect
+
 from assetallocation_UI.aa_web_app.get_data_times import ReceivedDataTimes
+from assetallocation_UI.aa_web_app.get_data_effect import ReceivedDataEffect
 
 obj_received_data_effect = ReceivedDataEffect()
 obj_received_data_times = ReceivedDataTimes()

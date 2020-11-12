@@ -1,0 +1,2 @@
+,er_tr,frequency,week_day,date_from,date_to,number_assets,long_cutoff,short_cutoff,val_period_months,val_period_base,momentum_weight_1m,momentum_weight_2m,momentum_weight_3m,momentum_weight_4m,momentum_weight_5m,momentum_weight_6m,volatility_weight_1y,volatility_weight_2y,volatility_weight_3y,volatility_weight_4y,volatility_weight_5y
+1,totalreturn,monthly,TUE,2005-08-31 00:00:00,2020-08-31 00:00:00,4,1,0,60,12,6,5,4,3,2,1,5,4,3,2,1

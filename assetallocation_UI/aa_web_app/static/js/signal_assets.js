@@ -33,7 +33,7 @@ function signalsAssets(signals_gbp, signals_cad, signals_aud, signals_eur, signa
                         'EUR',
                         'JPY',
                         'CA 10y Bonds',
-                        'Eu 10y Bonds',
+                        'EU 10y Bonds',
                         'UK 10y Bonds',
                         'US 10y Bonds',
                         'HK Equities',
