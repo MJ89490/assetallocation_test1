@@ -37,8 +37,6 @@ class ReceivedDataTimes:
                       int(self.times_form['input_time_lag_times']),
                       int(self.times_form['input_vol_window_times']))
 
-        print('before times assets')
-
         times.asset_inputs = [
             TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
                 assets_input_times['input_asset'], assets_input_times['input_leverage'],
@@ -46,11 +44,9 @@ class ReceivedDataTimes:
                 assets_input_times['input_future_ticker'], assets_input_times['input_costs']
             )
         ]
-        print('after times assets')
-        # TODO do not work with that line !!!!!
+
         fund_strategy = run_strategy(fund_name, float(self.times_form['input_strategy_weight_times']),
                                      times, os.environ.get('USERNAME'),
                                      self.times_form['input_date_from_times'])
 
-        print('after fund strategy')
-
+        return fund_strategy

@@ -96,7 +96,7 @@ $(function(){
 			success: function(response){
 				console.log(response);
 				alert('The strategy has been run successfully!');
-				window.location.href = "https://elle.com/uk/";
+				window.location.href = "/times_dashboard";
 			},
 			error: function(error){
 				console.log(error);
