@@ -7,8 +7,10 @@ from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
 from assetallocation_arp.arp_strategies import run_effect_strategy
 from assetallocation_UI.aa_web_app.get_data_effect import ReceivedDataEffect
+from assetallocation_UI.aa_web_app.get_data_times import ReceivedDataTimes
 
 obj_received_data_effect = ReceivedDataEffect()
+obj_received_data_times = ReceivedDataTimes()
 
 
 @app.route('/')
@@ -16,29 +18,62 @@ def home():
     return render_template('home.html', title='HomePage')
 
 
-@app.route('/times_model',  methods=['GET', 'POST'])
-def times_model():
-    form = InputsTimesModel()
-    run_model_page = 'run_model_page'
-
-    if request.method == "POST":
-        # TODO set a specific layout depending on the version!
-        version_type = form.versions.data
-
-        return render_template('times_model_mirror.html', form=form, title='TimesPage')
-
-    return render_template('times_model.html', form=form, title='TimesPage', run_model_page=run_model_page)
-
-
-# @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
-# @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 @app.route('/times_dashboard',  methods=['GET', 'POST'])
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
     # template_data = main_data('f1', 399)
-
     return render_template('times_dashboard.html', form=form, title='Dashboard')
+
+
+@app.route('/times_strategy_get', methods=['GET'])
+def times_strategy_get():
+    form = InputsTimesModel()
+    run_model_page = 'not_run_model_page'
+    return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
+
+
+@app.route('/times_strategy_post', methods=['POST'])
+def times_strategy_post():
+    form = InputsTimesModel()
+    run_model_page = 'run_model_page'
+    return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
+
+
+@app.route('/received_data_times_form', methods=['POST'])
+def received_data_times_form():
+    # todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
+    #  ex: "/some_url?x=1&y=2"
+    # todo class instance
+
+    form_data = request.form['form_data'].split('&')
+
+    print(form_data)
+
+    obj_received_data_times.received_data_times(form_data)
+
+    print(request.form['json_data'])
+
+    obj_received_data_times.call_run_times(json.loads(request.form['json_data']))
+
+    return json.dumps({'status': 'OK'})
+
+# @app.route('/times_model',  methods=['GET', 'POST'])
+# def times_model():
+#     form = InputsTimesModel()
+#     run_model_page = 'run_model_page'
+#
+#     if request.method == "POST":
+#         # TODO set a specific layout depending on the version!
+#         version_type = form.versions.data
+#
+#         return render_template('times_model_mirror.html', form=form, title='TimesPage')
+#
+#     return render_template('times_template.html', form=form, title='TimesPage', run_model_page=run_model_page)
+
+
+# @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
+# @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
@@ -56,14 +91,14 @@ def effect_dashboard():
 def effect_strategy_get():
     form = InputsEffectStrategy(request.form)
     run_model_page = 'not_run_model_page'
-    return render_template('effect_page.html', title='EffectPage', form=form, run_model_page=run_model_page)
+    return render_template('effect_template.html', title='EffectPage', form=form, run_model_page=run_model_page)
 
 
 @app.route('/effect_strategy_post', methods=['POST'])
 def effect_strategy_post():
     form = InputsEffectStrategy(request.form)
     run_model_page = 'run_model_page'
-    return render_template('effect_page.html', title='EffectPage', form=form, run_model_page=run_model_page)
+    return render_template('effect_template.html', title='EffectPage', form=form, run_model_page=run_model_page)
 
 
 @app.route('/received_data_effect_form', methods=['POST'])
@@ -77,7 +112,7 @@ def received_data_effect_form():
 
     print(request.form['json_data'])
 
-    obj_received_data_effect.call_run_effect(effect_form, assets_inputs_effect=json.loads(request.form['json_data']))
+    obj_received_data_effect.call_run_effect(assets_inputs_effect=json.loads(request.form['json_data']))
 
     return json.dumps({'status': 'OK', 'effect_data': effect_form})
 

@@ -90,13 +90,13 @@ $(function(){
         var form_data = $('form').serialize();
 
 		$.ajax({
-			url: '/received_data_effect_form',
+			url: '/received_data_times_form',
 			data: {form_data: form_data, json_data: json_data},
 			type: 'POST',
 			success: function(response){
 				console.log(response);
 				alert('The strategy has been run successfully!');
-				window.location.href = "/effect_dashboard";
+				window.location.href = "https://elle.com/uk/";
 			},
 			error: function(error){
 				console.log(error);
