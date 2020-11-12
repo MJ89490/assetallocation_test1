@@ -1,4 +1,5 @@
-
+from assetallocation_UI.aa_web_app.service.strategy import run_strategy
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
 
 class ReceivedDataTimes:
     def __init__(self):
@@ -19,4 +20,5 @@ class ReceivedDataTimes:
 
     def call_run_times(self, assets_input_times):
 
-        pass
+       pass
+        print('after fund strategy')
