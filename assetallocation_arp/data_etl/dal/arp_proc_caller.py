@@ -639,7 +639,7 @@ class MavenProcCaller(StrategyProcCaller):
         for r in res:
             mai = MavenAssetInput(
                 r['asset_subcategory'], r['description'], r['bbg_tr_ticker'], r['bbg_er_ticker'], r['currency'],
-                r['cash_ticker'], r['asset_class'], r['true_excess'], r['asset_weight'], r['transaction_cost']
+                r['cash_ticker'], r['asset_category'], r['true_excess'], r['asset_weight'], r['transaction_cost']
             )
             mai.bbg_tr_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
                 r['bbg_tr_ticker'], r['bbg_tr_asset_analytics']
@@ -688,7 +688,7 @@ class MavenProcCaller(StrategyProcCaller):
         for r in res:
             mai = MavenAssetInput(
                 r['asset_subcategory'], r['description'], r['bbg_tr_ticker'], r['bbg_er_ticker'], r['currency'],
-                r['cash_ticker'], r['asset_class'], r['true_excess'], r['asset_weight'], r['transaction_cost']
+                r['cash_ticker'], r['asset_category'], r['true_excess'], r['asset_weight'], r['transaction_cost']
             )
             asset_inputs.append(mai)
 

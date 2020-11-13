@@ -23,7 +23,7 @@ def format_data(strategy: 'Maven') -> pd.DataFrame:
         analytics = [(ai.bbg_er_asset.ticker, analytic) for ai in strategy.asset_inputs for analytic in
                   ai.bbg_er_asset.asset_analytics]
         analytics = DataFrameConverter.asset_analytics_to_df(analytics)
-        excess_cols = [ai.bbg_er_asset.ticker for ai in strategy.asset_inputs if ai.true_excess]
+        excess_cols = [ai.bbg_er_asset.ticker for ai in strategy.asset_inputs if ai.is_excess]
         analytics.loc[:, excess_cols] = 1 + analytics.loc[:, excess_cols] / 100
 
     else:
@@ -35,7 +35,7 @@ def format_data(strategy: 'Maven') -> pd.DataFrame:
     # choosing between weekly or monthly data, splitting up assets and cash
     cash_cols, asset_cols = [], []
     for ai in strategy.asset_inputs:
-        (cash_cols if ai.asset_class == 'CASH' else asset_cols).append(getattr(ai, bbg_ticker))
+        (cash_cols if ai.asset_category == 'CASH' else asset_cols).append(getattr(ai, bbg_ticker))
 
     # calculate average cash rate over the period
     if strategy.frequency == Frequency.monthly:
@@ -79,7 +79,7 @@ def calculate_excess_returns(strategy: 'Maven', asset_returns: pd.DataFrame):
     assets = asset_returns[bbg_tickers]
     cash = pd.DataFrame(1, index=assets.index, columns=bbg_tickers)
     if strategy.er_tr != 'excess':
-        excess_cols = [(getattr(ai, bbg), ai.cash_ticker) for ai in strategy.asset_inputs if ai.true_excess and getattr(ai, bbg) in bbg_tickers]
+        excess_cols = [(getattr(ai, bbg), ai.cash_ticker) for ai in strategy.asset_inputs if ai.is_excess and getattr(ai, bbg) in bbg_tickers]
         cash.loc[:, [i[0] for i in excess_cols]] = asset_returns[[i[1] for i in excess_cols]].to_numpy()
 
     # rename asset columns after subcategory
@@ -200,12 +200,12 @@ def run_performance_stats(strategy: 'Maven', maven_returns, volatility, long_sig
     equal_risk_short = pc.cap_and_redistribute((vol_short.T / vol_short.sum(axis=1)).T, 0.5).rolling(w_m).mean()
     # calculating turnover
 
-    assets, costs, asset_class = [], [], []
+    assets, costs, asset_category = [], [], []
     for i in strategy.asset_inputs:
         if i.asset_subcategory in equal_risk.columns and i.asset_subcategory not in assets:
             costs.append(i.transaction_cost)
             assets.append(i.asset_subcategory)
-            asset_class.append(i.asset_class)
+            asset_category.append(i.asset_category)
 
     sub_equal_risk_long = equal_risk_long - equal_risk_long.shift()
     sub_equal_risk_short = equal_risk_short - equal_risk_short.shift()
@@ -222,9 +222,9 @@ def run_performance_stats(strategy: 'Maven', maven_returns, volatility, long_sig
     returns_maven['maven short net'] = (1 + returns_maven_short.sum(axis=1) - turnover_cost_short).cumprod() * 100
     # determining asset class contributions
     asset_contribution_long = pd.DataFrame(data=returns_maven_long.T)
-    asset_contribution_long.index = asset_class
+    asset_contribution_long.index = asset_category
     asset_contribution_short = pd.DataFrame(data=returns_maven_short.T)
-    asset_contribution_short.index = asset_class
+    asset_contribution_short.index = asset_category
     asset_contribution_long = asset_contribution_long.groupby(asset_contribution_long.index).sum().T
     asset_contribution_short = asset_contribution_short.groupby(asset_contribution_short.index).sum().T
 

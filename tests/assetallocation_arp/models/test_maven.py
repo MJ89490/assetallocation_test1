@@ -36,7 +36,6 @@ def maven_strategy():
             for r, asset in asset_inputs.iterrows():
                 mai = MavenAssetInput(
                     asset.loc['asset'],
-                    asset.loc['description'],
                     asset.loc['bbg_tr_ticker'],
                     asset.loc['bbg_er_ticker'],
                     asset.loc['currency'],

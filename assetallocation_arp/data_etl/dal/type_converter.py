@@ -65,12 +65,12 @@ class ArpTypeConverter(DbTypeConverter):
     @staticmethod
     def maven_assets_to_composite(maven_assets: List[MavenAssetInput]) -> List[str]:
         """Format to match database type
-        arp.ticker_ticker_ticker_subcategory_description_currency_class_excess_weight_cost[]
+        arp.ticker_ticker_ticker_category_subcategory_currency_excess_weight_cost[]
         """
         return [
             DbTypeConverter.to_composite(
-                i.bbg_tr_ticker, i.bbg_er_ticker, i.cash_ticker, i.asset_subcategory, i.description, i.currency,
-                i.asset_class, i.true_excess, i.asset_weight, i.transaction_cost
+                i.bbg_tr_ticker, i.bbg_er_ticker, i.cash_ticker, i.asset_category, i.asset_subcategory, i.currency,
+                i.is_excess, i.asset_weight, i.transaction_cost
             ) for i in maven_assets
         ]
 

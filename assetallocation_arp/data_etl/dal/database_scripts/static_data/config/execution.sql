@@ -7,7 +7,9 @@ VALUES
   ('arp.insert_effect_strategy', 'Insert effect strategy', 't'),
   ('arp.insert_effect_assets', 'Insert effect assets into arp.effect_asset and asset.asset', 't'),
   ('arp.insert_fica_strategy', 'Insert fica strategy', 't'),
-  ('arp.insert_fica_assets', 'Insert fica assets into arp.fica_asset and asset.asset', 't'),
+  ('arp.insert_fica_assets', 'Insert fica assets into arp.fica_asset arp.fica_asset_group and asset.asset', 't'),
+  ('arp.insert_maven_strategy', 'Insert maven strategy', 't'),
+  ('arp.insert_maven_assets', 'Insert maven assets into arp.maven_asset and asset.asset', 't'),
   ('arp.insert_fund_strategy_results', 'Insert fund strategy results', 't'),
   ('fund.insert_fund', 'Insert fund', 't'),
   ('arp.insert_app_user', 'Insert app user into arp.app_user', 't')
