@@ -21,6 +21,7 @@
             <h1 class="title-page">EFFECT STRATEGY</h1>
         </div>
 
+        <!--Select a version-->
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
@@ -38,7 +39,12 @@
         </div>
 
         {% if run_model_page !='run_model_page' %}
-            <div class="jumbotron jumbotron-fluid jumbotron-image-models" style="background-image: url(static/img/model_image.png);"></div>
+            <!--Earth img-->
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <img alt="Legal and General" width="950px" height="470px;" src="static/img/model_image.png">
+                </div>
+             </div>
         {% else %}
             <div class="row row-effect-ag-grid"></div>
             <div style="height: 30%; display: flex; flex-direction: column;">
@@ -48,7 +54,7 @@
                     <button class="btn btn-outline-secondary" onclick="clearData()">Clear Data</button>
                 </div>
                 <div style="flex-grow: 1;">
-                    <div id="myGrid" style="height: 100%;" class="ag-theme-alpine"></div>
+                    <div id="myGrid" style="height: 100%;" class="ag-theme-alpine text-center"></div>
                 </div>
             </div>
 
