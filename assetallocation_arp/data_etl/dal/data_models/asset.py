@@ -327,13 +327,11 @@ class EffectAssetInput(Asset):
 # noinspection PyAttributeOutsideInit
 class MavenAssetInput:
     def __init__(
-            self, asset_subcategory: Union[str, Subcategory], bbg_tr_ticker: str,
-            bbg_er_ticker: str, currency: str, cash_ticker: str, asset_category: str, is_excess: bool,
+            self, asset_subcategory: Union[str, Subcategory], bbg_tr_ticker: str, bbg_er_ticker: str,
+            currency: str, cash_ticker: str, asset_category: str, is_excess: bool,
             asset_weight: float, transaction_cost: float
     ) -> None:
-        """TimesAssetInput class to hold data from database
-        :param asset_subcategory:
-        """
+        """MavenAssetInput class to hold data from database"""
         self.asset_subcategory = asset_subcategory
         self.bbg_tr_ticker = bbg_tr_ticker
         self.bbg_er_ticker = bbg_er_ticker
@@ -347,4 +345,74 @@ class MavenAssetInput:
         self.bbg_er_asset = Asset(bbg_er_ticker)
         self.cash_asset = Asset(cash_ticker)
 
-    # TODO write template for generating pset from __init__ parameters
+    @property
+    def asset_subcategory(self) -> Subcategory:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Union[str, Subcategory]) -> None:
+        self._asset_subcategory = x if isinstance(x, Subcategory) else Subcategory[x]
+
+    @property
+    def bbg_tr_ticker(self) -> str:
+        return self._bbg_tr_ticker
+
+    @bbg_tr_ticker.setter
+    def bbg_tr_ticker(self, x: str) -> None:
+        self._bbg_tr_ticker = x
+
+    @property
+    def bbg_er_ticker(self) -> str:
+        return self._bbg_er_ticker
+
+    @bbg_er_ticker.setter
+    def bbg_er_ticker(self, x: str) -> None:
+        self._bbg_er_ticker = x
+
+    @property
+    def currency(self) -> str:
+        return self._currency
+
+    @currency.setter
+    def currency(self, x: str) -> None:
+        self._currency = x
+
+    @property
+    def cash_ticker(self) -> str:
+        return self._cash_ticker
+
+    @cash_ticker.setter
+    def cash_ticker(self, x: str) -> None:
+        self._cash_ticker = x
+
+    @property
+    def asset_category(self) -> str:
+        return self._asset_category
+
+    @asset_category.setter
+    def asset_category(self, x: str) -> None:
+        self._asset_category = x
+
+    @property
+    def is_excess(self) -> bool:
+        return self._is_excess
+
+    @is_excess.setter
+    def is_excess(self, x: bool) -> None:
+        self._is_excess = x
+
+    @property
+    def asset_weight(self) -> float:
+        return self._asset_weight
+
+    @asset_weight.setter
+    def asset_weight(self, x: float) -> None:
+        self._asset_weight = x
+
+    @property
+    def transaction_cost(self) -> float:
+        return self._transaction_cost
+
+    @transaction_cost.setter
+    def transaction_cost(self, x: float) -> None:
+        self._transaction_cost = x
