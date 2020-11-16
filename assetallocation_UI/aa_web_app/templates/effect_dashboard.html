@@ -405,5 +405,20 @@
                 </script>
             </div>
         </div>
+
+        <!--Regions line chart-->
+        <div class="row row-agg-line-chart">
+            <div class="col-lg-12">
+                <div id="region_line_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_region_effect.js') }}"></script>
+                <script type="text/javascript">
+                   region_line_chart({{region_calc['latam']|tojson}},
+                                     {{region_calc['ceema']|tojson}},
+                                     {{region_calc['asia']|tojson}},
+                                     {{region_calc['total']|tojson}},
+                                     {{region_calc['average']|tojson}})
+                </script>
+            </div>
+        </div>
     </div>
 </body>

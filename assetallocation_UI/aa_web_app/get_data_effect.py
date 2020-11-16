@@ -13,7 +13,7 @@ class ReceivedDataEffect:
     def effect_data_form(self):
         return self.effect_form
 
-    def received_data_effect(self, form_data):
+    def process_received_data_effect(self, form_data):
         for idx, val in enumerate(form_data):
             if idx > 1:
                 self.effect_form[val.split('=', 1)[0]] = val.split('=', 1)[1]
@@ -34,12 +34,29 @@ class ReceivedDataEffect:
 
         return self.effect_form
 
+    def process_data_charts_(self):
+        combo_data = self.effect_outputs['combo']
+        # LatAm	CEEMA Asia regions
+        region = self.effect_outputs['region']
+        latam = combo_data[region['latam']].sum(axis=1).to_list()
+        ceema = combo_data[region['ceema']].sum(axis=1).to_list()
+        asia = combo_data[region['asia']].sum(axis=1).to_list()
+        total_region = combo_data.sum(axis=1).to_list()
+        average_region = [sum(total_region) / len(total_region)] * len(total_region)
+
+        return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region}
+
     def call_run_effect(self, assets_inputs_effect):
 
         strategy_inputs = pd.DataFrame.from_dict(self.effect_form, orient='index').T
         asset_inputs = pd.DataFrame.from_dict(assets_inputs_effect, orient='index').T
 
         self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs, asset_inputs)
+
+
+
+
+
 
 
 

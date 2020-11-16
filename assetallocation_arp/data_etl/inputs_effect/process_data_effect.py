@@ -2,6 +2,7 @@ import os
 import json
 
 import pandas as pd
+import numpy as np
 
 from configparser import ConfigParser
 
@@ -150,7 +151,7 @@ class ProcessDataEffect:
         :return: two dataFrames self.data_currencies_usd, self.data_currencies_eur for usd and eur currencies
         """
 
-        parse_data = self.parse_data_config_excel_effect()
+        parse_data = self.parse_data_config_effect()
 
         currencies_usd = pd.DataFrame({"currencies_usd_tickers": parse_data['spot_config']['currencies_spot_usd'] +
                                        parse_data['carry_config']['currencies_carry_usd']})
@@ -176,7 +177,7 @@ class ProcessDataEffect:
 
         self.process_usd_eur_data_effect()
 
-    def parse_data_config_excel_effect(self):
+    def parse_data_config_effect(self):
         """
         Function parsing the data from the config file and from excel
         :return: a dictionary
@@ -191,6 +192,17 @@ class ProcessDataEffect:
         # Read value from Excel and sort data depending on its base currency
         currencies_eur = self.asset_inputs.loc[self.asset_inputs['input_usd_eur'] == 'EUR']
         currencies_usd = self.asset_inputs.loc[self.asset_inputs['input_usd_eur'] == 'USD']
+
+        # Region values to create a region dict with currency list as values
+        region = {}
+
+        unique_region = np.unique(self.asset_inputs['input_region'].to_list())
+
+        for reg in unique_region:
+            region_tmp = self.asset_inputs.loc[self.asset_inputs['input_region'] == reg]
+            curr = ['Combo_' + val for val in region_tmp['input_spot_ticker'].to_list()]
+            region[reg.lower()] = curr
+            # region[reg.lower()] = region_tmp['input_spot_ticker'].to_list()
 
         self.currencies_spot['currencies_spot_usd'] = currencies_usd['input_spot_ticker'].tolist()
         self.currencies_spot['currencies_spot_eur'] = currencies_eur['input_spot_ticker'].tolist()
@@ -218,7 +230,8 @@ class ProcessDataEffect:
                        'base_implied_config': currencies_base_implied_config,
                        '3M_implied_config': self.currencies_3M_implied,
                        'spxt_index_config': spxt_index_config,
-                       'eur_usd_cr_config': eur_usd_cr_config}
+                       'eur_usd_cr_config': eur_usd_cr_config,
+                       'region_config': region}
 
         return config_data
 
@@ -228,7 +241,7 @@ class ProcessDataEffect:
         :return: dataFrames for spot and carry
         """
 
-        assets_table = self.parse_data_config_excel_effect()
+        assets_table = self.parse_data_config_effect()
 
         self.three_month_implied_usd = self.data_currencies_usd[assets_table['3M_implied_config']['three_month_implied_usd']]
         self.three_month_implied_eur = self.data_currencies_eur[assets_table['3M_implied_config']['three_month_implied_eur']]
@@ -249,6 +262,7 @@ class ProcessDataEffect:
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
-        return common_spot, common_carry, spxt_index_values, self.three_month_implied_usd, self.three_month_implied_eur
+        return common_spot, common_carry, spxt_index_values, self.three_month_implied_usd, self.three_month_implied_eur, \
+               assets_table['region_config']
 
 

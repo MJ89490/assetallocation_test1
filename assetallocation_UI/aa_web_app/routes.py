@@ -82,9 +82,10 @@ def effect_dashboard():
     effect_data_form = obj_received_data_effect.effect_data_form
     effect_outputs = obj_received_data_effect.effect_outputs
     write_logs = obj_received_data_effect.write_logs
+    region_calc = obj_received_data_effect.process_data_charts_()
 
     return render_template('effect_dashboard.html', form=form, effect_outputs=effect_outputs, write_logs=write_logs,
-                           effect_data_form=effect_data_form, title='Dashboard')
+                           effect_data_form=effect_data_form, region_calc=region_calc, title='Dashboard')
 
 
 @app.route('/effect_strategy_get', methods=['GET'])
@@ -108,7 +109,7 @@ def received_data_effect_form():
     # todo class instance
 
     form_data = request.form['form_data'].split('&')
-    effect_form = obj_received_data_effect.received_data_effect(form_data)
+    effect_form = obj_received_data_effect.process_received_data_effect(form_data)
 
     print(request.form['json_data'])
 

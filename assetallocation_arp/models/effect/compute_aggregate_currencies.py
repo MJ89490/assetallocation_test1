@@ -246,7 +246,6 @@ class ComputeAggregateCurrencies:
 
         return pd.DataFrame(weighted_perf, columns=[CurrencyAggregate.Weighted_Performance.name], index=combo.index.values)
 
-
     def run_aggregate_currencies(self, returns_incl_costs, spot_incl_costs, spot_origin, carry_origin, combo_curr, weight_value):
         """
         Function running the different function above
