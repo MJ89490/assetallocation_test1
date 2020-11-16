@@ -1,0 +1,78 @@
+/* Login Page Layout */
+
+/* body */
+body {
+        min-height: 100%;
+        display: flex !important;
+     }
+
+body {
+        padding: 0;
+        background-color: #fff;
+        height: auto;
+        min-height: 100%;
+        line-height: 1.42857143;
+     }
+
+body {
+        display: block;
+        -webkit-box-orient: vertical !important;
+        -webkit-box-direction: normal !important;
+        flex-direction: column !important;
+     }
+
+/* main */
+.main {
+        -webkit-box-flex: 1;
+        -ms-flex: 1 0 auto;
+        flex: 1 0 auto;
+        position: relative;
+      }
+
+.main-content {padding-top: 100px; }
+
+.container-fluid {
+                    width: 100%;
+                    padding-right: 15px;
+                    padding-left: 15px;
+                    margin-right: auto;
+                    margin-left: auto;
+                    margin-top: 1px;
+                 }
+
+/* row and columns */
+.row {
+        display: flex;
+        margin-right: -15px;
+        margin-left: -15px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+     }
+
+/* widgets */
+.widget.widget-fullwidth  {
+                            margin-bottom: 0;
+                            margin-top: 10px;
+                            padding-top: 30px;
+                            background-color: #fff;
+                            height:500px;
+                          }
+
+.be-loading { position: relative; }
+
+.widget {
+            background-color: #fff;
+            border-radius: 15px;
+        }
+
+.widget-container { position: relative; }
+
+.img-sign-in {margin-bottom: 10px; }
+
+/* footer */
+.footer { background-color: #fff; bottom:0; position:fixed; width:100%; }
+
+#row-2 { padding-bottom: 370px;}
+
+.text-muted {font-size: 12px; }
+

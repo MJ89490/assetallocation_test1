@@ -1,0 +1,6 @@
+#recursive-include liabilityhub/doc *
+#recursive-include liabilityhub/bin *
+include assetallocation_arp/times_model.xls
+include requirements*.*
+prune .git
+prune venv

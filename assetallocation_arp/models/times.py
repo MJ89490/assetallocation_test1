@@ -1,80 +1,53 @@
-import pandas as pd
+"""
+Created on Fri Nov  15 17:27:51 2019
+TIMES
+@author: SN69248
+"""
+
 import numpy as np
-import math
-import matplotlib.pyplot as plt
+import pandas as pd
 
-import assetallocation_arp.models.ARP as arp
-
-# Parameters
-TIMES_LAG=3
-settings=arp.dataimport_settings("Settings")
-
-# Change the universe of markets that is being used
-markets="Leverage_MATR"  # All "Leverage_all_markets" / Minimalist "Leverage_min"
-# Leverage/scaling of individual markets
-sleverage ="v"           #Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
-
-def signal (index):
-    sig=pd.DataFrame()
-    for column in index:
-        sig1= index[column].ewm(alpha=2/15).mean()/index[column].ewm(alpha=2/30).mean()-1
-        sig2= index[column].ewm(alpha=2/30).mean()/index[column].ewm(alpha=2/60).mean()-1
-        sig3= index[column].ewm(alpha=2/60).mean()/index[column].ewm(alpha=2/120).mean()-1
-    
-        #sig[column]=(sig1/sig1.ewm(alpha=1/30).std()+sig2/sig2.ewm(alpha=1/30).std()+sig3/sig3.ewm(alpha=1/30).std())/3
-        sig[column]=(sig1/sig1.rolling(window=90).std()+sig2/sig2.rolling(window=90).std()+sig3/sig3.rolling(window=90).std())/3
-        # S-curve cut out for large movement, alternative curve without cutoff: sig[column]=2/(1+math.exp(-2*sig[column]))-1
-        sig[column]=sig[column]*np.exp(-1*sig[column].pow(2)/6)/(math.sqrt(3)*math.exp(-0.5))
-    sig=arp.discretise(sig,"weekly")
-    sig=sig.shift(TIMES_LAG,freq="D")
-    return sig
+from common_libraries.dal_enums.strategy import Leverage
+from assetallocation_arp.models import portfolio_construction as pc
+from assetallocation_arp.models import arp_signals as arp
+from pandas.tseries.offsets import BDay
 
 
-# Import data
-future=pd.read_pickle("Future data.pkl")
-index=pd.read_pickle("Data.pkl")
+def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
-sig=signal(index)
-costs=settings.loc["Costs"]
-marketselect=settings.loc[markets]
+    # format data and inputs
+    asset_inputs_t = asset_inputs.set_index('asset').T
+    all_data = all_data[ all_data.index.values > np.datetime64(times_inputs['date_from'].item())]
+    times_data = all_data[asset_inputs.signal_ticker]
+    futures_data = all_data[asset_inputs.future_ticker].pct_change()
+    times_data.columns = asset_inputs.asset
+    futures_data.columns = asset_inputs.asset
+    #
+    costs = asset_inputs_t.loc['costs']
+    leverage = asset_inputs_t.loc['s_leverage']
+    leverage_type = times_inputs['leverage_type'].item()
 
-if sleverage=='e' or sleverage=='s':
-    leverage=0*future+1
-    leverage[marketselect.index[marketselect>0]]=1
-elif sleverage=='n':
-    leverage=0*future+marketselect
-elif sleverage=='v':
-    leverage=1/future.ewm(alpha=1/150, min_periods=10).std()
-else:
-    raise Exception('Invalid entry')
-leverage[marketselect.index[marketselect.isnull()]] = np.nan
-leverage=leverage.shift(periods=TIMES_LAG, freq='D', axis=0).reindex(future.append(sig.iloc[-1]).index,method='pad')
+    # calculate signals
+    signals = arp.momentum(times_data, times_inputs, times_inputs['week_day'].item())
+    # apply leverage
+    leverage_data = pc.apply_leverage(futures_data, leverage_type, leverage)
+    leverage_data[leverage.index[leverage.isnull()]] = np.nan
+    index_df = futures_data.append(pd.DataFrame(index=futures_data.iloc[[-1]].index + BDay(2)), sort=True).index
+    leverage_data = leverage_data.shift(periods=times_inputs['time_lag'].item(), freq='D', axis=0).reindex(
+        index_df, method='pad')
+    # calculate leveraged positions and returns
+    if leverage_type == Leverage.s.name:
+        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 0)
+    elif leverage_type == Leverage.n.name:
+        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
+    else:
+        (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
+        (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
+    return signals, returns, r,  positioning
 
-if sleverage=='s':
-    (ret, R, positioning)=arp.returnTS(sig,future,leverage,0*costs,0)
-    ret1=ret
-    R1=R
-    positioning1=positioning
-else:
-    (ret, R, positioning)=arp.returnTS(sig,future,leverage,0*costs,1)
-    (ret1, R1, positioning1)=arp.rescale(ret,R,positioning,"Total",0.01)
 
-# Add more markets manually if we have more equity markets
-averageEquityAllocation = (sig['S&P 500'] + sig['Euro Stoxx 50'] + sig['Nikkei 225'] + sig['Hang Seng'])/4
-averageBondAllocation = (sig['Treasury'] + sig['Gilt'] + sig['Bund'] + sig['Cad10'])/4
 
-print(positioning1.iloc[-1])
 
-# Plotting average equity allocation
-pltAverageEquityAllocation = plt.subplots(figsize=(6, 5))
-pltAverageEquityAllocation = averageEquityAllocation.iloc[-150:].plot(title='Average alloc. to S&P 500, EuroStoxx 50, Nikkei 225, Hang Seng', ylim=(-1,1))
-pltAverageEquityAllocation.axes.axhline(y=0.85, color='r')
-pltAverageEquityAllocation.axes.axhline(y=-0.85, color='r')
-plt.show()
 
-# Plotting average bond allocation
-pltAverageBondAllocation = plt.subplots(figsize=(6, 5))
-pltAverageBondAllocation = averageBondAllocation.iloc[-150:].plot(title='Average alloc. to Treasury, Gilt, Bund, CAD10', ylim=(-1,1))
-pltAverageBondAllocation.axes.axhline(y=0.85, color='r')
-pltAverageBondAllocation.axes.axhline(y=-0.85, color='r')
-plt.show()
+
+

@@ -1,0 +1,106 @@
+{% extends "times_page.html" %}
+
+<head>
+    <title> {{title }} </title>
+    <link rel="stylesheet" href="{{url_for('.static', filename='times_page_new_version.css')}}">
+</head>
+
+<body>
+
+  {% block assetsInputs%}
+
+    <div class="title-assets"><h2>Model Assets</h2></div>
+
+        <div>
+            <div>
+                <button class="btn btn-lg btn-primary" onclick="onAddRow()" id="onAddRow"><strong>Add Row</strong></button>
+                <button class="btn btn-lg btn-primary" onclick="onRemoveSelected()" id="onRemoveSelected"><strong>Remove Selected</strong></button>
+                <button class="btn btn-lg btn-primary" onclick="clearData()" id="clearData"><strong>Clear Data</strong></button>
+            </div>
+        </div>
+
+        <div style="width: 1030px; height: 350px; ">
+            <div id="myGrid" style="height: 100%; margin-top: 20px; " class="ag-theme-balham"></div>
+        </div>
+        <script src="{{ url_for('static', filename='js/asset_inputs.js') }}"></script>
+
+  {% endblock %}
+
+  {% block inputs %}
+
+    <div class="title-inputs"><h2>Model Inputs</h2></div>
+
+    <div class="form-group">
+
+        <div class="btn-group" id="btn-group-inputs">
+           {{form.strategy_weight.label(id="label_text")}}
+           {{ form.strategy_weight(class="form-control", id="btn-group-inputs-model", placeholder=("Strategy Weight"))}}
+
+            {{form.time_lag.label(id="label_text")}}
+            {{ form.time_lag(class="form-control", id="btn-group-inputs-model", placeholder=("Time Lag"))}}
+
+            {{form.leverage_type.label(id="label_text")}}
+            {{form.leverage_type(class="form-control", id="btn-group-inputs-model-leverage")}}
+
+            {{form.volatility_window.label(id="label_text")}}
+            {{ form.volatility_window(class="form-control", id="btn-group-inputs-model", placeholder=("Volatility Window"))}}
+
+            {{form.frequency.label(id="label_text")}}
+            {{ form.frequency(class="form-control", id="btn-group-inputs-model-frequency", placeholder=("Frequency"))}}
+
+            {{form.week_day.label(id="label_text")}}
+            {{ form.week_day(class="form-control", id="btn-group-inputs-model-week", placeholder=("Week Day"))}}
+        </div>
+
+        <div class="btn-group"  id="btn-group-signals">
+             {{form.sig1_short.label(id="label_text")}}
+             {{ form.sig1_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Short"))}}
+
+              {{form.sig1_long.label(id="label_text")}}
+             {{ form.sig1_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal1 Long"))}}
+
+             {{form.sig2_short.label(id="label_text")}}
+             {{ form.sig2_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Short"))}}
+
+             {{form.sig2_long.label(id="label_text")}}
+                {{ form.sig2_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal2 Long"))}}
+
+             {{form.sig3_short.label(id="label_text")}}
+             {{ form.sig3_short(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Short"))}}
+
+             {{form.sig3_long.label(id="label_text")}}
+             {{ form.sig3_long(class="form-control", id="btn-group-inputs-model", placeholder=("Signal3 Long"))}}
+        </div><br>
+
+        {% block runModel%}
+
+            <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="runTimesModel" id="RunTheModelSubmit2"><strong>Run the model</strong></button>
+
+        {% endblock %}
+
+    </div>
+
+  {% endblock %}
+
+  {% block save %}
+
+    <div class="text-field-path" id="text-field-name-file">
+        {{form.name_file_times.label(id="label_text")}}
+        <em>{{ form.name_file_times(class="form-control", id="btn-group-inputs-model", placeholder=("Name of the file"))}}</em>
+    </div>
+    <!--Form: Check Boxes to save the results-->
+    <div class="check-box-save" id="check-box-save-excel">
+        {{ form.save_excel_outputs(id="radio-box-save-excel") }} {{ form.save_excel_outputs.label(id="label_text") }}
+    </div>
+
+    <div class="check-box-save" id="check-box-save-db">
+        {{ form.save_db_outputs(id="radio-box-save-db") }} {{ form.save_db_outputs.label(id="label_text") }}
+    </div>
+
+    <div class="button-submit" id="button-submit4">
+       <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectTimesPath" id="SelectSaveSubmit4"><strong>Save</strong></button>
+    </div>
+
+ {% endblock %}
+
+</body>
