@@ -12,6 +12,8 @@ from assetallocation_UI.aa_web_app.get_data_effect import ReceivedDataEffect
 obj_received_data_effect = ReceivedDataEffect()
 obj_received_data_times = ReceivedDataTimes()
 
+# data missing: JPPUELM Index
+
 
 @app.route('/')
 def home():
@@ -82,10 +84,10 @@ def effect_dashboard():
     effect_data_form = obj_received_data_effect.effect_data_form
     effect_outputs = obj_received_data_effect.effect_outputs
     write_logs = obj_received_data_effect.write_logs
-    region_calc = obj_received_data_effect.process_data_charts_()
+    data_charts = obj_received_data_effect.process_data_charts_()
 
     return render_template('effect_dashboard.html', form=form, effect_outputs=effect_outputs, write_logs=write_logs,
-                           effect_data_form=effect_data_form, region_calc=region_calc, title='Dashboard')
+                           effect_data_form=effect_data_form, data_charts=data_charts, title='Dashboard')
 
 
 @app.route('/effect_strategy_get', methods=['GET'])

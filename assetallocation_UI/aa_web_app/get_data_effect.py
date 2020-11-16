@@ -43,8 +43,12 @@ class ReceivedDataEffect:
         asia = combo_data[region['asia']].sum(axis=1).to_list()
         total_region = combo_data.sum(axis=1).to_list()
         average_region = [sum(total_region) / len(total_region)] * len(total_region)
+        max_drawdown_no_signals_series = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series']
+        max_drawdown_with_signals_series = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series']
 
-        return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region}
+        return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region,
+                'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
+                'max_drawdown_with_signals_series': max_drawdown_with_signals_series}
 
     def call_run_effect(self, assets_inputs_effect):
 

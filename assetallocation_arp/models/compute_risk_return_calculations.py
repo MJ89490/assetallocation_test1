@@ -74,7 +74,9 @@ class ComputeRiskReturnCalculations:
             max_drawdown_incl_values.append((returns_incl_tmp[value] / max(returns_incl_tmp[0: value+1])) - 1)
 
         return {'max_drawdown_no_signals': round(abs(min(max_drawdown_excl_values)) * 100, 2),
-                'max_drawdown_with_signals': round(abs(min(max_drawdown_incl_values)) * 100, 2)}
+                'max_drawdown_with_signals': round(abs(min(max_drawdown_incl_values)) * 100, 2),
+                'all_max_drawdown_no_signals_series': max_drawdown_excl_values,
+                'all_max_drawdown_with_signals_series': max_drawdown_incl_values}
 
     @staticmethod
     def compute_calmar_ratio(excess_returns, max_drawdown):
