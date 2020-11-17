@@ -7,6 +7,7 @@ from numpy import nan
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name, Frequency
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Performance, Signal, AggregationLevel
+from assetallocation_arp.common_libraries.dal_enums.asset import Subcategory as AssetSubcategory
 
 
 # noinspection PyAttributeOutsideInit
@@ -104,7 +105,8 @@ class FundStrategy:
 # noinspection PyAttributeOutsideInit
 class FundStrategyAssetWeight:
     def __init__(
-            self, asset_subcategory: str, business_date: date, strategy_weight: float, frequency: Union[str, Frequency]
+            self, asset_subcategory: Union[str, AssetSubcategory], business_date: date, strategy_weight: float,
+            frequency: Union[str, Frequency]
     ) -> None:
         """FundStrategyAssetWeight class to hold data from database"""
         self.asset_subcategory = asset_subcategory
@@ -150,8 +152,8 @@ class FundStrategyAssetWeight:
         return self._asset_subcategory
 
     @asset_subcategory.setter
-    def asset_subcategory(self, x: str) -> None:
-        self._asset_subcategory = x
+    def asset_subcategory(self, x: Union[str, AssetSubcategory]):
+        self._asset_subcategory = x if isinstance(x, str) else x.name
 
 
 # noinspection PyAttributeOutsideInit
@@ -226,10 +228,8 @@ class FundStrategyAnalytic:
 
 # noinspection PyAttributeOutsideInit
 class FundStrategyAssetAnalytic(FundStrategyAnalytic):
-    aggregation_level = AggregationLevel.asset
-
     def __init__(
-            self, asset_subcategory: str, business_date: date, category: Union[str, Category],
+            self, asset_subcategory: Union[str, AssetSubcategory], business_date: date, category: Union[str, Category],
             subcategory: Union[str, Performance, Signal], value: float, frequency: Union[str, Frequency]
     ) -> None:
         """FundStrategyAssetAnalytic class to hold data from database"""
@@ -241,8 +241,8 @@ class FundStrategyAssetAnalytic(FundStrategyAnalytic):
         return self._asset_subcategory
 
     @asset_subcategory.setter
-    def asset_subcategory(self, x: str):
-        self._asset_subcategory = x
+    def asset_subcategory(self, x: Union[str, AssetSubcategory]):
+        self._asset_subcategory = x if isinstance(x, str) else x.name
 
     @property
     def aggregation_level(self) -> AggregationLevel:

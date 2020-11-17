@@ -32,7 +32,7 @@ class DataFrameConverter:
         return pd.DataFrame(data, columns=['asset_subcategory', 'signal_ticker', 'future_ticker', 'cost', 's_leverage'])
 
     @staticmethod
-    def fund_strategy_asset_weights_to_df( asset_weights: List[FundStrategyAssetWeight]) -> pd.DataFrame:
+    def fund_strategy_asset_weights_to_df(asset_weights: List[FundStrategyAssetWeight]) -> pd.DataFrame:
         data = [[i.asset_subcategory, i.business_date, i.strategy_weight] for i in asset_weights]
         df = pd.DataFrame(data, columns=['asset_subcategory', 'business_date', 'value'])
         df = df.set_index(['business_date', 'asset_subcategory']).unstack(['asset_subcategory'])
@@ -56,7 +56,7 @@ class DataFrameConverter:
         FundStrategyAssetAnalytics
         """
         return [
-            FundStrategyAssetAnalytic(asset_subcategory.name, index, category, subcategory, float(val), frequency)
+            FundStrategyAssetAnalytic(asset_subcategory, index, category, subcategory, float(val), frequency)
             for asset_subcategory, data in analytics.items() for index, val in data.iteritems() if pd.notna(val)
         ]
 
@@ -75,7 +75,7 @@ class DataFrameConverter:
         FundStrategyAssetWeights
         """
         return [
-            FundStrategyAssetWeight(col.name, index, float(val), frequency) for col, data in weights.items() for index, val
+            FundStrategyAssetWeight(col, index, float(val), frequency) for col, data in weights.items() for index, val
             in data.iteritems() if pd.notna(val)
         ]
 

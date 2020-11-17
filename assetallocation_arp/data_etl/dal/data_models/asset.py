@@ -351,7 +351,10 @@ class MavenAssetInput:
 
     @asset_subcategory.setter
     def asset_subcategory(self, x: Union[str, Subcategory]) -> None:
-        self._asset_subcategory = x if isinstance(x, Subcategory) else Subcategory[x]
+        if isinstance(x, Subcategory):
+            self._asset_subcategory = x
+        else:
+            self._asset_subcategory = subcategory_map[x]
 
     @property
     def bbg_tr_ticker(self) -> str:

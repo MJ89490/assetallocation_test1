@@ -258,11 +258,14 @@ class FxProcCaller(StrategyProcCaller):
 
     def _insert_fx_strategy(self, fx: Fx, user_id: str) -> int:
         """Insert data from an instance of Fx into database"""
-        res = self.call_proc('arp.insert_fx_strategy',
-                             [fx.description, user_id, fx.model, fx.business_tstzrange,
-                              fx.signal, fx.currency, fx.response_function, fx.exposure,
-                              fx.momentum_weights, fx.transaction_cost, fx.top_crosses, fx.vol_window,
-                              fx.value_window, fx.sharpe_cutoff, fx.mean_reversion, fx.historical_base])
+        res = self.call_proc(
+            'arp.insert_fx_strategy',
+            [
+                fx.description, user_id, fx.model, fx.business_tstzrange, fx.signal, fx.currency, fx.response_function,
+                fx.exposure, fx.momentum_weights, fx.transaction_cost, fx.top_crosses, fx.vol_window, fx.value_window,
+                fx.sharpe_cutoff, fx.mean_reversion, fx.historical_base, fx.defensive
+            ]
+        )
 
         return res[0]['f_version']
 
@@ -343,6 +346,7 @@ class FxProcCaller(StrategyProcCaller):
         f.sharpe_cutoff = r.get('sharpe_cutoff')
         f.historical_base = r.get('historical_base')
         f.mean_reversion = r.get('mean_reversion')
+        f.defensive = r.get('defensive')
 
         f.version = fx_version
         f.description = r['description']
@@ -560,7 +564,7 @@ class FicaProcCaller(StrategyProcCaller):
         grouped_asset_inputs = [FicaAssetInputGroup(key, val) for key, val in fica_asset_inputs.items()]
         return grouped_asset_inputs
 
-    def add_asset_analytics_to_strategy(self, strategy: Fx, business_datetime: Optional[dt.datetime] = None) -> None:
+    def add_asset_analytics_to_strategy(self, strategy: Fica, business_datetime: Optional[dt.datetime] = None) -> None:
         """Add asset analytics to strategy."""
         if strategy.grouped_asset_inputs:
             strategy.grouped_asset_inputs = self._select_fica_assets_with_analytics(strategy.version)

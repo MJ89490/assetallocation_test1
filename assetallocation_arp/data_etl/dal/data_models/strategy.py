@@ -406,9 +406,18 @@ class Fx(Strategy):
         self.sharpe_cutoff = None
         self.mean_reversion = None
         self.historical_base = None
+        self.defensive = None
         self.asset_inputs = []
         self.carry_assets = []
         self.spot_assets = []
+
+    @property
+    def defensive(self) -> bool:
+        return self._defensive
+
+    @defensive.setter
+    def defensive(self, x: bool) -> None:
+        self._defensive = x
 
     @property
     def spot_assets(self) -> List[Asset]:

@@ -14,7 +14,8 @@ CREATE OR REPLACE FUNCTION arp.select_fx_strategy(
 	OUT value_window integer,
 	OUT sharpe_cutoff integer,
 	OUT mean_reversion integer,
-	OUT historical_base integer
+	OUT historical_base integer,
+	OUT defensive boolean
 )
 AS
 $$
@@ -34,7 +35,8 @@ BEGIN
     f.value_window,
     f.sharpe_cutoff,
     f.mean_reversion,
-    f.historical_base
+    f.historical_base,
+		f.defensive
   INTO
     description,
 	  model,
@@ -50,7 +52,8 @@ BEGIN
     value_window,
     sharpe_cutoff,
     mean_reversion,
-    historical_base
+    historical_base,
+		defensive
 	FROM
 	  arp.strategy s
 	  JOIN arp.fx f

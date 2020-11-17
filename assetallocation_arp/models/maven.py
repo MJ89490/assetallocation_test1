@@ -72,7 +72,7 @@ def calculate_excess_returns(strategy: 'Maven', asset_returns: pd.DataFrame):
     for ai in strategy.asset_inputs:
         if ai.asset_weight != 0:
             bbg_tickers.append(getattr(ai, bbg))
-            bbg_ticker_subcategory[getattr(ai, bbg)] = ai.asset_subcategory
+            bbg_ticker_subcategory[getattr(ai, bbg)] = ai.asset_subcategory.name
             asset_weights[getattr(ai, bbg)] = ai.asset_weight
 
     # creating asset excess returns
@@ -202,9 +202,9 @@ def run_performance_stats(strategy: 'Maven', maven_returns, volatility, long_sig
 
     assets, costs, asset_category = [], [], []
     for i in strategy.asset_inputs:
-        if i.asset_subcategory in equal_risk.columns and i.asset_subcategory not in assets:
+        if i.asset_subcategory.name in equal_risk.columns and i.asset_subcategory.name not in assets:
             costs.append(i.transaction_cost)
-            assets.append(i.asset_subcategory)
+            assets.append(i.asset_subcategory.name)
             asset_category.append(i.asset_category)
 
     sub_equal_risk_long = equal_risk_long - equal_risk_long.shift()

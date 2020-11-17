@@ -32,6 +32,7 @@ CREATE TABLE "arp"."fx"
 	"sharpe_cutoff" integer NULL,
 	"mean_reversion" integer NULL,
 	"historical_base" integer NULL,
+	"defensive" boolean NULL,
 	"execution_state_id" integer NOT NULL,
 	"strategy_id" integer NOT NULL,
 	"version" serial NOT NULL

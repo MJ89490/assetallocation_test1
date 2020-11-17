@@ -76,7 +76,7 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def fx_assets_to_composite(fx_assets: List[FxAssetInput]) -> List[str]:
-        """Format to match database type arp.ticker_ticker_cost_leverage[]"""
+        """Format to match database type arp.ticker_ticker_currency[]"""
         return [DbTypeConverter.to_composite(i.ppp_ticker, i.cash_rate_ticker, i.currency) for i in fx_assets]
 
     @staticmethod
