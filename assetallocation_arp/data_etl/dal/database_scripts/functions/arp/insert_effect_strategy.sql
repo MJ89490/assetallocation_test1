@@ -1,5 +1,4 @@
 CREATE OR REPLACE FUNCTION arp.insert_effect_strategy(
-  name varchar,
   description varchar,
   user_id varchar,
   carry_type varchar,
@@ -7,7 +6,7 @@ CREATE OR REPLACE FUNCTION arp.insert_effect_strategy(
   cost numeric,
   day_of_week int,
   frequency frequency,
-  include_shorts_flag boolean,
+  include_shorts boolean,
   inflation_lag interval,
   interest_rate_cut_off_long numeric,
   interest_rate_cut_off_short numeric,
@@ -21,9 +20,12 @@ LANGUAGE plpgsql
 AS
 $$
 declare
+  name varchar;
 	execution_state_id int;
 	strategy_id int;
 BEGIN
+  name := 'effect';
+  
 	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
@@ -34,7 +36,7 @@ INSERT INTO arp.effect (
   cost,
   day_of_week,
   frequency,
-  include_shorts_flag,
+  include_shorts,
   inflation_lag,
   interest_rate_cut_off_long,
   interest_rate_cut_off_short,
@@ -51,7 +53,7 @@ VALUES(
   cost,
   day_of_week,
   frequency,
-  include_shorts_flag,
+  include_shorts,
   inflation_lag,
   interest_rate_cut_off_long,
   interest_rate_cut_off_short,

@@ -22,10 +22,10 @@ CREATE TABLE "asset"."asset_analytic"
 	"category" varchar(50)	 NOT NULL,
 	"asset_id" integer NOT NULL,
 	"value" numeric(32,16) NOT NULL,
-	"source_id" integer NOT NULL,
-	"business_tstzrange" tstzrange NOT NULL,
+	"source_id" integer NULL,
+	"business_datetime" timestamp with time zone NOT NULL,
 	"system_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)'),
-	"execution_state_id" integer NOT NULL
+	"execution_state_id" integer NULL
 )
 ;
 

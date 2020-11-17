@@ -1,0 +1,813 @@
+{% extends 'bootstrap/base.html' %}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block navbar %}
+    <!-- Style of the dashoboard -->
+    <head>
+        <!--DASHBOARD PAGE CSS STYLE
+        ================================================== -->
+        <title>{{ title }}</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/dashboard.css')}}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+           <!--<style type="text/css">-->
+        <!--.btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus, .btn-primary:active:focus-->
+            <!--{-->
+                <!--background-color:#869ab8!important ; border-color:#869ab8 ; color:#fff;-->
+            <!--}-->
+           <!--</style>-->
+    </head>
+
+    <!-- Body of the Dashboard Page -->
+    <body>
+        <style>html{margin-top:0 !important;}</style>
+
+            <main class="main bg-dark">
+                <body>
+                    <div class="be-wrapper be-fixed-sidebar">
+                        <!-- NAVBAR
+                        ===================================== !-->
+                        <nav class="navbar navbar-inverse fixed-top be-top-header">
+                            <a><img width="110px" height="auto" id="icon-lgim" src="{{url_for('static', filename='img/icon-lgim.png')}}" alt="LGIM_logo"></a>
+                        </nav>
+
+                        <!-- SIDEBAR
+                        ===================================== !-->
+                        <div class="sidenav">
+                            <a>NAVIGATION</a>
+                            <a href="{{ url_for('home') }}"><span id="home-sidebar-span">Home</span></a>
+
+                            <a><span>Charts Data</span></a>
+                            <ul class="sub-menu">
+                                <div class="text-left">
+                                    <!-- Export Data Form -->
+                                    <form action='' method="POST" novalidate name="ExportDataForm">
+                                        {{ form.hidden_tag() }}
+                                        <div  class="form-group">
+                                            <!-- Form: Versions -->
+                                            {{ form.versions.label(id="label_text")}}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.versions(class="form-control", id="sidebar-form") }}
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectChartsVersionsOk" id="sidebar-submit">Ok</button>
+                                                </div>
+                                            </div>
+                                            <!-- Form: Leverage Types -->
+                                            {{ form.leverage.label(id="label_text")}}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.leverage(class="form-control", id="sidebar-form") }}
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectChartsLeverageOk" id="sidebar-submit">Ok</button>
+                                                </div>
+                                            </div>
+                                            <!-- Form: Submit -->
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectChartsSubmit" id="sidebar-main-submit">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ul>
+
+                            <a><span>Export Data</span></a>
+                            <ul class="sub-menu">
+                                <div class="text-left">
+                                    <!-- Export Data Form -->
+                                    <form action='' method="POST" novalidate name="ExportDataForm">
+                                        {{ form.hidden_tag() }}
+                                        <div  class="form-group">
+                                            <!-- Form: Versions -->
+                                            {{ form.versions.label(id="label_text")}}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.versions(class="form-control", id="sidebar-form") }}
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectVersionsOk" id="sidebar-submit">Ok</button>
+                                                </div>
+                                            </div>
+                                            <!-- Form: Leverage Types -->
+                                            {{ form.leverage.label(id="label_text")}}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.leverage(class="form-control", id="sidebar-form") }}
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectLeverageOk" id="sidebar-submit">Ok</button>
+                                                </div>
+                                            </div>
+                                            <!-- Form: Inputs -->
+                                            {{ form.inputs.label(id="label_text") }}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    {{ form.inputs(class="form-control", id="sidebar-form") }}
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectInputsOk" id="sidebar-submit1">Ok</button>
+                                                </div>
+                                            </div>
+                                             <!-- If the user write wrong dates, then a message will be displayed -->
+                                            {% for message in get_flashed_messages() %}
+                                                <p class="message-dates-sidebar">{{ message }}</p>
+                                            {% endfor %}
+                                            <!-- Form: Start Date -->
+                                            {{ form.start_date_inputs.label(id="label_text") }}<br>
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    <em>{{ form.start_date_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-form") }}</em>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectStartDateOk" id="sidebar-submit2">Ok</button>
+                                                </div>
+                                            </div>
+                                            <!-- Form: End Date -->
+                                            {{ form.end_date_inputs.label(id="label_text") }}
+                                            <div class="row" id="sidebar-row">
+                                                <div class="col-8" id="sidebar-col">
+                                                    <em>{{ form.end_date_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-form") }}</em>
+                                                </div>
+                                                <div class="col-2" id="submit-ok-inputs">
+                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectEndDateOk" id="sidebar-submit2">Ok</button>
+                                                </div>
+                                            </div>
+                                            <!-- Form: Submit -->
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit_button" value="selectDataSubmit" id="sidebar-main-submit">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ul>
+                            <!-- Support Widget: connect to Outlook -->
+                            <a class="support-icon" href="mailto:NexusQuantDev@lgim.com" target="_blank">Support<span><img class="icon-settings" width="auto" height="38" src="{{url_for('static', filename='img/icon-settings.png')}}" alt="Outlook_icon"></span></a>
+                        </div>
+
+                        <!-- CHARTS AREA
+                        ===================================== !-->
+                        <div class="main">
+                            <h2 class="dashboard-title"><img class="icon-dashboard" width="auto" height="55" src="{{url_for('static', filename='img/icon-dashboard.png')}}" alt="Dashboard_icon"><strong><span class="overview-span"> TIMES</span> Dashboard</strong></h2>
+                            <!-- Sparklines Charts -->
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head-overview"><strong>Positions YTD</strong></div>
+                                        <div class="widget-chart-container">
+                                            <div id="sparklines_assets_one" class="responsive-plot"></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_one.js') }}"></script>
+                                            <script type="text/javascript">
+                                                sparklinesAssetsOne({{ times_data['times_positions']['US_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['EU_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['JP_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['HK_Equities'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['US_10_y_Bonds'].tolist()|tojson }},
+                                                                    {{ times_data['times_positions']['UK_10_y_Bonds'].tolist()|tojson }})
+                                             </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                     <div class="widget widget-fullwidth be-loading">
+                                         <div class="widget-head-overview"><strong>Positions YTD</strong></div>
+                                         <div class="widget-chart-container" id="positions-sparklines-charts">
+                                             <div id="sparklines_assets_two" class="responsive-plot"></div>
+                                             <script type="text/javascript" src="{{ url_for('static', filename='js/sparklines_assets_two.js') }}"></script>
+                                                 <script type="text/javascript">
+                                                     sparklinesAssetsTwo({{ times_data['times_positions']['EU_10_y_Bonds'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['CA_10_y_Bonds'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['JPY'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['EUR'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['AUD'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['CAD'].tolist()|tojson }},
+                                                                         {{ times_data['times_positions']['GBP'].tolist()|tojson }}
+                                                                         )
+                                                 </script>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                            <!-- Total Performance Positions Chart -->
+                            <div class="row">
+                                <div class="col-12 col-lg-12">
+                                    <div class="widget widget-fullwidth be-loading" id="main-table-positions-performance-widget">
+                                        <div class="widget-head-overview"><strong>TIMES</strong></div>
+                                        <div class="widget-table-container" id="table1-container">
+                                             <!-- Table1: Sign-Off -->
+                                                <div class="signal-off">
+                                                    <table class="table1 table1-borderless" aria-describedby="Signl-Off">
+                                                        <tr>
+                                                            <th id="signal-off-title">Signal-Off</th>
+                                                            <th id="signal-off-date">28/11/2019</th>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <!-- Table2: Total Performance Positions Chart -->
+                                                <div class="row">
+                                                    <div class="total-positions-performance" id="total-positions-performance">
+                                                        <div class="table-responsive-lg">
+                                                            <table class="table2 table2-borderless" aria-describedby="Performance Position Table2">
+                                                                <tbody class="no-border-x">
+                                                                    <tr>
+                                                                        <th id="blank-id"></th>
+                                                                        <th id="total-positions-title"><strong>Positions</strong></th>
+                                                                        <th id="total-weekly-title"><strong>Weekly Performance</strong></th>
+                                                                        <th id="total-ytd-title"><strong>YTD Performance</strong></th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Equities</strong></td>
+                                                                        <td>{{ times_sum['sum_positions_equities'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_weekly_equities'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_ytd_equities'] }}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Bonds</strong></td>
+                                                                        <td>{{ times_sum['sum_positions_bonds'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_weekly_bonds'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_ytd_bonds'] }}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>FX</strong></td>
+                                                                        <td>{{ times_sum['sum_positions_fx'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_weekly_fx'] }}%</td>
+                                                                        <td>{{ times_sum['sum_performance_ytd_fx'] }}%</td>
+                                                                    </tr>
+                                                              </tbody>
+                                                            </table>
+                                                        </div>
+                                                      </div><!-- .div total-table-container -->
+                                                    <div class="total-positions-bar-charts">
+                                                        <table class="table3 table3-borderless" aria-describedby="Performance Position Table3">
+                                                            <tr>
+                                                                <th id="total-positions-table3"><strong>Positions</strong></th>
+                                                                <th id="total-weekly-table3"><strong>Weekly Performance</strong></th>
+                                                                <th id="total-ytd-table3"><strong>YTD Performance</strong></th>
+                                                            </tr>
+                                                            <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div id="positions-summary" class="responsive-plot">
+                                                                            <script type="text/javascript" src="{{ url_for('static', filename='js/positions_summary.js') }}"></script>
+                                                                            <script type="text/javascript">
+                                                                                positionsSummary({{ times_sum['sum_positions_fx']|tojson }},
+                                                                                                 {{ times_sum['sum_positions_bonds']|tojson }},
+                                                                                                 {{ times_sum['sum_positions_equities']|tojson }})
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div id="weekly_summary" class="responsive-plot">
+                                                                            <script type="text/javascript" src="{{ url_for('static', filename='js/weekly_summary.js') }}"></script>
+                                                                            <script type="text/javascript">
+                                                                                weeklySummary({{ times_sum['sum_performance_weekly_fx']|tojson }},
+                                                                                              {{ times_sum['sum_performance_weekly_bonds']|tojson }},
+                                                                                              {{ times_sum['sum_performance_weekly_equities']|tojson }})
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div id="ytd_summary" class="responsive-plot">
+                                                                            <script type="text/javascript" src="{{ url_for('static', filename='js/ytd_summary.js') }}"></script>
+                                                                            <script type="text/javascript">
+                                                                                ytdSummary({{ times_sum['sum_performance_ytd_fx']|tojson }},
+                                                                                           {{ times_sum['sum_performance_ytd_bonds']|tojson }},
+                                                                                           {{ times_sum['sum_performance_ytd_equities']|tojson }})
+                                                                            </script>
+                                                                          </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                 </div>
+                                                <!-- Table4: Main table Total Performance Positions -->
+                                                <div class="main-table-positions-performance" >
+                                                    <div class="table-responsive-lg">
+                                                        <table class="table4 table4-borderless" aria-describedby="Main Table Performance Positions">
+                                                            <tr>
+                                                                <th id="class-title"><strong>Class</strong></th>
+                                                                <th id="assets-title"><strong>Assets</strong></th>
+                                                                <th id="signals-title"><strong>Signals</strong>
+                                                                <th id="positions-title"><strong>Today Positions</strong></th>
+                                                                <th id="weekly-title"><strong>Last Week Positions</strong></th>
+                                                                <th id="buy/sell-title"><strong>Buy/Sell</strong></th>
+                                                                <th id="change-title"><strong>Change</strong></th>
+                                                                <th id="performance-title"><strong>Weekly Performance</strong></th>
+                                                                <th id="ytd-title"><strong>YTD</strong></th>
+                                                            </tr>
+                                                            <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>US Equities</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["US_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["US_Equities"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["US_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["US_Equities"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>EU Equities</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["EU_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["EU_Equities"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["EU_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["EU_Equities"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>JP Equities</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["JP_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["JP_Equities"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["JP_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["JP_Equities"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Equities</strong></td>
+                                                                    <td>HK Equities</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["HK_Equities"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["HK_Equities"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["HK_Equities"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["HK_Equities"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>US 10y Bonds</td>
+                                                                    <td>{{  times_data_comp['times_signals_comp']["US_10_y_Bonds"] }}</td>
+                                                                    <td>{{  times_data_comp['times_positions_comp']["US_10_y_Bonds"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{  times_data_comp['times_returns_comp']["US_10_y_Bonds"]  }}%</td>
+                                                                    <td>{{  times_data_comp['times_returns_ytd']["US_10_y_Bonds"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>UK 10y Bonds</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["UK_10_y_Bonds"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["UK_10_y_Bonds"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["UK_10_y_Bonds"]  }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["UK_10_y_Bonds"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>EU 10y Bonds</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["EU_10_y_Bonds"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["EU_10_y_Bonds"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["EU_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["EU_10_y_Bonds"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Bonds</strong></td>
+                                                                    <td>CA 10y Bonds</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["CA_10_y_Bonds"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["CA_10_y_Bonds"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["CA_10_y_Bonds"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["CA_10_y_Bonds"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>JPY</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["JPY"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["JPY"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["JPY"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["JPY"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>EUR</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["EUR"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["EUR"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["EUR"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["EUR"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>AUD</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["AUD"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["AUD"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["AUD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["AUD"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>CAD</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["CAD"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["CAD"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["CAD"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["CAD"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>FX</strong></td>
+                                                                    <td>GBP</td>
+                                                                    <td>{{ times_data_comp['times_signals_comp']["GBP"] }}</td>
+                                                                    <td>{{ times_data_comp['times_positions_comp']["GBP"] }}%</td>
+                                                                    <td>Last Week Positions%</td>
+                                                                    <td>Buy/Sell</td>
+                                                                    <td>Change%</td>
+                                                                    <td>{{ times_data_comp['times_returns_comp']["GBP"] }}%</td>
+                                                                    <td>{{ times_data_comp['times_returns_ytd']["GBP"] }}%</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td><strong>Total Positions</strong></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>Total</td>
+                                                                    <td>Total</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                             </tbody>
+                                                     </table>
+                                                    </div>
+                                             </div><!-- .div main-table-container -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <!-- Total Performance Positions Chart -->
+                            <div class="row">
+                                <div class="col-12 col-lg-12">
+                                    <div class="widget widget-fullwidth be-loading" id="main-table-positions-performance-widget">
+                                        <div class="widget-head-overview"><strong>TIMES</strong></div>
+                                            <div class="widget-chart-container">
+                                                 <div class="main-table-positions-performance-charts">
+                                                     <div class="table-responsive-lg">
+                                                        <table class="table6 table6-borderless" aria-describedby="Performance Positions table6">
+                                                            <tr>
+                                                                <th id="signals_title"><strong>Signals</strong></th>
+                                                                <th id="positions_title"><strong>Positions</strong></th>
+                                                                <th id="weekly_title"><strong>Performances Weekly</strong></th>
+                                                                <th id="ytd_title"><strong>Performances YTD</strong></th>
+
+                                                            </tr>
+                                                            <tbody class="no-border-x">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div id="signals_assets" class="responsive-plot"></div>
+                                                                        <script type="text/javascript" src="{{ url_for('static', filename='js/signal_assets.js') }}"></script>
+                                                                        <script type="text/javascript">
+                                                                             signalsAssets({{ times_data_comp['times_signals_comp']['GBP']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['CAD']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['AUD']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['EUR']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['JPY']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['CA_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['EU_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['UK_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['US_10_y_Bonds']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['HK_Equities']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['JP_Equities']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['EU_Equities']|tojson }},
+                                                                                           {{ times_data_comp['times_signals_comp']['US_Equities']|tojson }})
+                                                                        </script>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div id="position_assets" class="responsive-plot"></div>
+                                                                        <script type="text/javascript" src="{{ url_for('static', filename='js/positions_assets.js') }}"></script>
+                                                                        <script type="text/javascript">
+                                                                            positionsAssets({{ times_data_comp['times_positions_comp']['GBP']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['CAD']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['AUD']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['EUR']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['JPY']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['CA_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['EU_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['UK_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['US_10_y_Bonds']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['HK_Equities']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['JP_Equities']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['EU_Equities']|tojson }},
+                                                                                            {{ times_data_comp['times_positions_comp']['US_Equities']|tojson }})
+                                                                        </script>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div id="weekly_assets" class="responsive-plot"></div>
+                                                                        <script type="text/javascript" src="{{ url_for('static', filename='js/weekly_assets.js') }}"></script>
+                                                                        <script type="text/javascript">
+                                                                            weeklyAssets({{ times_data_comp['times_returns_comp']['GBP']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['CAD']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['AUD']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['EUR']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['JPY']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['CA_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['EU_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['UK_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['US_10_y_Bonds']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['HK_Equities']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['JP_Equities']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['EU_Equities']|tojson }},
+                                                                                         {{ times_data_comp['times_returns_comp']['US_Equities']|tojson }})
+                                                                        </script>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div id="ytd_assets" class="responsive-plot"></div>
+                                                                        <script type="text/javascript" src="{{ url_for('static', filename='js/ytd_assets.js') }}"></script>
+                                                                        <script type="text/javascript">
+                                                                            ytdAssets({{ times_data_comp['times_returns_ytd']['GBP']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['CAD']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['AUD']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['EUR']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['JPY']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['CA_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['EU_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['UK_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['US_10_y_Bonds']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['HK_Equities']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['JP_Equities']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['EU_Equities']|tojson }},
+                                                                                      {{ times_data_comp['times_returns_ytd']['US_Equities']|tojson }})
+                                                                        </script>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                     </div>
+                                                 </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Chart: Asset Allocation Over Times-->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.start_date_chart0(class="form-control", placeholder= "01/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.end_date_chart0(class="form-control", placeholder= "05/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart0" id="charts-submit">Ok</button>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
+                                                                    <em class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></em></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for the first chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div class="text-center"><div id="asset_allocation_over_times" class="responsive-plot" ></div></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/asset_allocation_over_times.js') }}"></script>
+                                            <script type="text/javascript">
+                                                assetAllocationChart({{ times_data['times_positions']['US_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['EU_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['JP_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['HK_Equities'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['US_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['UK_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['EU_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['CA_10_y_Bonds'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['JPY'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['EUR'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['AUD'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['CAD'].tolist()|tojson }},
+                                                                     {{ times_data['times_positions']['GBP'].tolist()|tojson }}
+                                                                     )
+                                            </script>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            <!-- Two Charts: Performance-->
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                     <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.start_date_chart1(class="form-control", placeholder= "01/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.end_date_chart1(class="form-control", placeholder= "05/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart1" id="charts-submit">Ok</button>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart0" id="selectDownloadDataChart">
+                                                                    <em class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></em></button>
+                                                            </div>
+                                                        </div>
+                                                </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m == "Check the Start and End Date. They are incorrect for this second chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div id="performance_jpy" class="responsive-plot" ></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/performance_jpy.js') }}"></script>
+                                            <script type="text/javascript">
+                                                performanceJpyChart({{ times_data['times_returns']['JPY'].tolist()|tojson }})
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                     <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.start_date_chart2(class="form-control", placeholder= "01/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.end_date_chart2(class="form-control", placeholder= "05/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart2" id="charts-submit">Ok</button>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart2" id="selectDownloadDataChart">
+                                                                    <em class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></em></button>
+                                                            </div>
+                                                     </div>
+                                                </form>
+                                                <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m ==  "Check the Start and End Date. They are incorrect for this third chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div id="performance_eur" class="responsive-plot" ></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/performance_eur.js') }}"></script>
+                                            <script type="text/javascript">
+                                                performanceEurChart({{ times_data['times_returns']['EUR'].tolist()|tojson }})
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <div class="row" id="dates-row">
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.start_date_chart3(class="form-control", placeholder="01/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <em>{{ form.end_date_chart3(class="form-control", placeholder="05/01/2020", id="charts-form") }}</em>
+                                                            </div>
+                                                            <div class="col-3" id="submit-ok-versions">
+                                                                <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart3" id="charts-submit">Ok</button>
+                                                            </div>
+                                                            <div class="col-3" id="versions-row">
+                                                                <button class="button" type="submit" name="submit_button" value="selectDataChart3" id="selectDownloadDataChart">
+                                                                    <em class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></em></button>
+                                                                </div>
+                                                         </div>
+                                                    </div>
+                                                </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m ==  "Check the Start and End Date. They are incorrect for this fourth chart." %}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div id="performance_aud" class="responsive-plot" ></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/performance_aud.js') }}"></script>
+                                            <script type="text/javascript">
+                                                performanceAudChart({{ times_data['times_returns']['AUD'].tolist()|tojson }})
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="widget widget-fullwidth be-loading">
+                                        <div class="widget-head">
+                                            <div class="dates">
+                                                <!--Date Form -->
+                                                <form action='', method="POST" novalidate name="DateForm">
+                                                    {{ form.hidden_tag() }}
+                                                    <div  class="form-group" id="date_chart0_form">
+                                                        <div  class="form-group" id="date_chart0_form">
+                                                            <div class="row" id="dates-row">
+                                                                <div class="col-3" id="versions-row">
+                                                                    <em>{{ form.start_date_chart4(class="form-control", placeholder="01/01/2020", id="charts-form") }}</em>
+                                                                </div>
+                                                                <div class="col-3" id="versions-row">
+                                                                    <em>{{ form.end_date_chart4(class="form-control", placeholder="05/01/2020", id="charts-form") }}</em>
+                                                                </div>
+                                                                <div class="col-3" id="submit-ok-versions">
+                                                                    <button class="btn btn-lg btn-primary" type="submit" name="submit_button" value="selectDatesChart4" id="charts-submit">Ok</button>
+                                                                </div>
+                                                                <div class="col-3" id="versions-row">
+                                                                    <button class="button" type="submit" name="submit_button" value="selectDataChart4" id="selectDownloadDataChart">
+                                                                        <em class="fa fa-cloud-download" style="font-size:36px;color:lightgrey;"></em></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                 <!-- If the user write wrong dates, then a message will be displayed -->
+                                                {% if m ==  "Check the Start and End Date. They are incorrect for this fifth chart."%}
+                                                    <p class="message-dates-charts">{{ m }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="widget-chart-container">
+                                            <div id="performance_cad" class="responsive-plot" ></div>
+                                            <script type="text/javascript" src="{{ url_for('static', filename='js/performance_cad.js') }}"></script>
+                                            <script type="text/javascript">
+                                                performanceCadChart({{ times_data['times_returns']['CAD'].tolist()|tojson }})
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </body><!-- .body2 -->
+            </main>
+
+         <!-- FOOTER
+         ===================================== !-->
+            <footer class="footer" id="container-footer">
+                <div class="text-center">
+                <div class="container">
+                    <span class="text-muted" id="footer-dashboard-title">© Legal & General 2020</span>
+                </div>
+                </div>
+            </footer><!-- .footer -->
+
+    </body><!-- .body1 -->
+{% endblock %}

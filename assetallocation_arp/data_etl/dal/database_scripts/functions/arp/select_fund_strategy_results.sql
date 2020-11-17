@@ -1,30 +1,26 @@
---DROP FUNCTION arp.select_fund_strategy_results(character varying,character varying,timestamp with time zone,timestamp with time zone)
 CREATE OR REPLACE FUNCTION arp.select_fund_strategy_results(
   fund_name varchar,
   strategy_name varchar,
-  max_business_datetime timestamp with time zone,
-  max_system_datetime timestamp with time zone
+  strategy_version int
 )
 RETURNS TABLE(
-  strategy_version int,
   python_code_version varchar,
-  business_datetime timestamp with time zone,
   output_is_saved boolean,
   weight numeric,
-  asset_ticker varchar,
+  asset_subcategory varchar,
+  business_date date,
+  weight_frequency frequency,
   strategy_weight numeric,
   implemented_weight numeric,
-  asset_analytics arp.category_subcategory_value[]
+  analytics arp.aggregation_category_subcategory_frequency_value[]
 )
 AS
 $$
 BEGIN
   RETURN QUERY
-    WITH fsr (fund_strategy_id, strategy_version, business_datetime, python_code_version, output_is_saved, weight) AS (
+    WITH fsr (fund_strategy_id, python_code_version, output_is_saved, weight) AS (
       SELECT
         fs.id,
-        COALESCE(t.version, fi.version, e.version) as strategy_version,
-        fs.business_datetime,
         fs.python_code_version,
         fs.output_is_saved,
         fs.weight
@@ -40,38 +36,38 @@ BEGIN
       WHERE
         fu.name = select_fund_strategy_results.fund_name
         AND s.name = select_fund_strategy_results.strategy_name
-        AND fs.business_datetime <= select_fund_strategy_results.max_business_datetime
-        AND fs.system_datetime <= select_fund_strategy_results.max_system_datetime
+        AND COALESCE(t.version, fi.version, e.version) = select_fund_strategy_results.strategy_version
       ORDER BY
-        fs.system_datetime desc,
-        fs.business_datetime desc
+        fs.system_datetime desc
       LIMIT 1
     )
     SELECT
-      fsr.strategy_version,
       fsr.python_code_version,
-      fsr.business_datetime,
       fsr.output_is_saved,
       fsr.weight,
-      a.ticker as asset_ticker,
+      fsa.asset_subcategory,
+      fsa.business_date,
+      fsaw.frequency as weight_frequency,
       fsaw.strategy_weight,
       fsaw.implemented_weight,
-      array_agg((fsaa.category, fsaa.subcategory, fsaa.value):: arp.category_subcategory_value) as asset_analytics
+      array_agg(
+            (fsa.aggregation_level, fsa.category, fsa.subcategory, fsa.frequency, fsa.value)
+            :: arp.aggregation_category_subcategory_frequency_value
+          ) as analytics
     FROM
-      arp.fund_strategy_asset_weight fsaw
-      JOIN asset.asset a ON fsaw.asset_id = a.id
-      JOIN fsr ON fsaw.fund_strategy_id = fsr.fund_strategy_id
-      JOIN arp.fund_strategy_asset_analytic fsaa
-          ON fsaa.fund_strategy_id = fsr.fund_strategy_id
-          AND fsaa.asset_id = fsaw.asset_id
-          AND fsaa.asset_id = a.id
+      fsr
+      JOIN arp.fund_strategy_analytic fsa ON fsa.fund_strategy_id = fsr.fund_strategy_id
+      LEFT JOIN arp.fund_strategy_asset_weight fsaw
+          ON fsaw.fund_strategy_id = fsr.fund_strategy_id
+          AND fsaw.asset_subcategory = fsa.asset_subcategory
+          AND fsaw.business_date = fsa.business_date
     GROUP BY
-      fsr.strategy_version,
-      fsr.business_datetime,
       fsr.python_code_version,
       fsr.output_is_saved,
       fsr.weight,
-      a.ticker,
+      fsa.asset_subcategory,
+      fsa.business_date,
+      fsaw.frequency,
       fsaw.strategy_weight,
       fsaw.implemented_weight
   ;

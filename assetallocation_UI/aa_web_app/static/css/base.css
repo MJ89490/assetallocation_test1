@@ -1,0 +1,50 @@
+/* NAVBAR */
+.navbar-default {
+    background-color:  #005774 !important;
+    border-color:  #005774  !important;
+}
+
+.navbar-default .navbar-nav .nav-link {color: #fff;}
+
+.navbar-default .nav-item:hover .nav-link {color: #FFEBCD;}
+
+
+/* JUMBOTRON */
+.jumbotron-image {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 550px !important;
+}
+
+.jumbotron-image-models {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 550px !important;
+  margin-top: 40px;
+}
+
+.jumbotron-image .display-4 {color: #005774 !important;
+                             font-size: 3rem;
+                             font-weight: 800;}
+
+/* CONTAINER MODELS */
+.container .link-model {color: #005774 !important;}
+
+.btn {background-color:  #005774 !important; border-color: #005774 !important; width: 200px; }
+
+/* TIMES PAGE */
+.container .title-times-page {padding-top:100px; color: #005774 !important;}
+#selectVersion {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 20px; height: 48px;}
+.btn-select {margin-top: 20px; margin-left: 15px;}
+.btn-ag-grid {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; background-color: #fff !important;}
+.title-models-ag-grid {color: #005774 !important;}
+.row-ag-grid {margin-top: 70px;}
+.row-model_form {margin-top: 70px;}
+.form-models-select {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; margin-right: 15px;}
+.btn-run-model {width: 415px; margin-top: 32px;}
+
+
+/* FOOTER */
+#sticky-footer {flex-shrink: none;}

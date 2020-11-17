@@ -1,0 +1,2 @@
+,tenor,coupon,curve,trading_costs,frequency,date_from,date_to,strategy_weights_1,strategy_weights_2,strategy_weights_3,strategy_weights_4,strategy_weights_5,strategy_weights_6,strategy_weights_7,strategy_weights_8,strategy_weights_9,strategy_weights_10
+1,10,0.06,sovereign,10,monthly,2010-08-31 00:00:00,2020-08-31 00:00:00,0.4,0.3,0.2,0.1,0,0,-0.1,-0.2,-0.3,-0.4

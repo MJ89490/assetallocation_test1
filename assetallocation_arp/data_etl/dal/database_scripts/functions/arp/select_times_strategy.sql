@@ -11,11 +11,7 @@ CREATE OR REPLACE FUNCTION arp.select_times_strategy(
 )
 AS
 $$
-DECLARE
-  strategy_name varchar;
 BEGIN
-  strategy_name := 'times';
-  
 	SELECT
 	  s.description,
 	  t.time_lag,
@@ -36,11 +32,9 @@ BEGIN
     day_of_week
 	FROM
 	  arp.strategy s
-	  JOIN arp.times t
-	  ON s.id = t.strategy_id
+	  JOIN arp.times t ON s.id = t.strategy_id
 	WHERE
-	  s.name = strategy_name
-	  AND t.version = strategy_version;
+	  t.version = strategy_version;
   return;
 END;
 $$

@@ -4,54 +4,69 @@ PORTFOLIO CONSTRUCTION
 @author: SN69248
 """
 import math
-import pandas as pd
+from typing import Union
 
+import pandas as pd
 from pandas.tseries.offsets import BDay
 
-from common_libraries.dal_enums.strategy import Leverage
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage
 
 
-def apply_leverage(futures_data, leverage_type, leverage):
+def apply_leverage(futures_data: Union[pd.Series, pd.DataFrame], leverage_type: Leverage, leverage: pd.Series
+                   ) -> Union[pd.Series, pd.DataFrame]:
+    """
+
+    :param futures_data: with columns of asset ticker
+    :param leverage_type:
+    :param leverage: with index of asset ticker
+    :return:
+    """
     # leverage_type: Equal(e) / Normative(n) / Volatility(v) / Standalone(s)
-    if leverage_type == Leverage.e.name or leverage_type == Leverage.s.name:
+    if leverage_type in (Leverage.e, Leverage.s, 'e', 's'):
         leverage_data = 0 * futures_data + 1
         leverage_data[leverage.index[leverage > 0]] = 1
-    elif leverage_type == Leverage.n.name:
+
+    elif leverage_type in (Leverage.n, 'n'):
         leverage_data = 0 * futures_data + leverage
-    elif leverage_type == Leverage.v.name:
+
+    elif leverage_type in (Leverage.v, 'v'):
         leverage_data = 1 / futures_data.ewm(alpha=1/150, min_periods=10).std()
+
     else:
-        raise Exception('Invalid entry')
+        raise Exception(f'leverage type {leverage_type} is not a valid Leverage')
     return leverage_data
 
 
-def rescale(ret, r, positioning, column, vol):
+def rescale(ret, positioning, vol):
     # Calibrate series to a target volatility, uses full historic time series
-    m_return = r[column].diff(periods=21)
-    return_scaled = ret.div(m_return.expanding(2).std()*math.sqrt(12), axis=0 )*vol
+    r_total = ret.sum(axis=1).cumsum()
+
+    m_return = r_total.diff(periods=21)
+    return_scaled = ret.div(m_return.expanding(2).std()*math.sqrt(12), axis=0)*vol
     positioning_scaled = positioning.div(m_return.expanding(2).std()*math.sqrt(12), axis=0)*vol
     r_scaled = return_scaled.cumsum()
     return return_scaled, r_scaled, positioning_scaled
 
 
-def return_ts(sig, future, leverage, costs, cummul):
+def return_ts(sig: pd.DataFrame, future: pd.DataFrame, leverage: pd.DataFrame, costs: pd.Series, cummul: bool):
+    """DataFrames have columns of 'signal_ticker'"""
     # Implement trading signal in a time-series context and as standalone for every series
     returns = pd.DataFrame()
     r = pd.DataFrame()
-    sig = sig.reindex(future.append(pd.DataFrame(index=future.iloc[[-1]].index + BDay(2)), sort=True).index, method='pad') 
-    if cummul == 1:
+    sig = sig.reindex(future.append(pd.DataFrame(index=future.iloc[[-1]].index + BDay(2)), sort=True).index, method='pad')
+    if cummul:
         positioning = sig.divide(future.multiply(leverage).count(axis=1), axis=0)
         positioning.iloc[-1:] = sig.iloc[-1:]/sig.iloc[-1].multiply(leverage.iloc[-1]).count()
     else:
         positioning = sig
+
     for column in sig:
         positioning[column] = leverage[column]*positioning[column]
         returns[column] = future[column]*positioning[column]
         # Trading costs
         returns[column].iloc[1:] = returns[column].iloc[1:]-costs[column]*pd.DataFrame.abs(positioning[column].diff(periods=1))
         r[column] = returns[column].cumsum()
-    returns['Total'] = returns.sum(axis=1)
-    r['Total'] = returns['Total'].cumsum()
+
     return returns, r, positioning
 
 

@@ -12,13 +12,28 @@ Performance = Enum(
     names=[
         ('carry', auto()),
         ('spot', auto()),
+        ('beta', auto()),
+        ('correlation', auto()),
         ('total return', auto()),
-        ('excess return', auto())
+        ('excess return', auto()),
+        ('excess return index', auto()),
+        ('total return index', auto())
     ]
 )
 
 
-class Signal(Enum):
-    carry = auto()
-    momentum = auto()
-    value = auto()
+Signal = Enum(
+    value='Signal',
+    names=[
+        ('carry', auto()),
+        ('momentum', auto()),
+        ('value', auto()),
+        ('signal strength', auto()),
+    ]
+)
+
+
+class AggregationLevel(Enum):
+    asset = auto()
+    strategy = auto()
+    comparator = auto()

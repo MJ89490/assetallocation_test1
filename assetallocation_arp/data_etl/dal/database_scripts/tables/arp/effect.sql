@@ -23,7 +23,7 @@ CREATE TABLE "arp"."effect"
 	"trend_indicator" varchar(50)	 NOT NULL,
 	"moving_average_short_term" int NOT NULL,
 	"moving_average_long_term" int NOT NULL,
-	"include_shorts_flag" boolean NOT NULL,
+	"include_shorts" boolean NOT NULL,
 	"interest_rate_cut_off_long" numeric(32,16) NOT NULL,
 	"execution_state_id" integer NOT NULL,
 	"interest_rate_cut_off_short" numeric(32,16) NOT NULL,

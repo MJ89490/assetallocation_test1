@@ -1,19 +1,26 @@
-from decimal import Decimal
 from typing import Union
+from datetime import datetime
 
-from common_libraries.dal_enums.source import Source
-from common_libraries.dal_enums.asset_analytic import Category
+from assetallocation_arp.common_libraries.dal_enums.asset_analytic import Category
 
 
 # noinspection PyAttributeOutsideInit
 class AssetAnalytic:
-    def __init__(self, asset_ticker: str, source: Union[str, Source], category: Union[str, Category],
-                 value: Decimal) -> None:
+    def __init__(self, asset_ticker: str, category: Union[str, Category],
+                 business_datetime: datetime, value: float) -> None:
         """AssetAnalytic class to hold data from database"""
         self.asset_ticker = asset_ticker
-        self.source = source
         self.category = category
+        self.business_datetime = business_datetime
         self.value = value
+
+    @property
+    def business_datetime(self) -> datetime:
+        return self._business_datetime
+
+    @business_datetime.setter
+    def business_datetime(self, x: datetime) -> None:
+        self._business_datetime = x
 
     @property
     def asset_ticker(self) -> str:
@@ -32,17 +39,9 @@ class AssetAnalytic:
         self._category = x if isinstance(x, Category) else Category[x]
 
     @property
-    def source(self) -> Source:
-        return self._source
-
-    @source.setter
-    def source(self, x: Union[str, Source]) -> None:
-        self._source = x if isinstance(x, Source) else Source[x]
-
-    @property
-    def value(self) -> Decimal:
+    def value(self) -> float:
         return self._value
 
     @value.setter
-    def value(self, x:  Decimal) -> None:
+    def value(self, x:  float) -> None:
         self._value = x

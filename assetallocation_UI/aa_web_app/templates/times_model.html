@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+
+<html>
+
+<head>
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    {% block timespage %}
+
+    <div class="container">
+
+        <div class="row">
+            <h1 class="title-times-page">TIMES STRATEGY</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                <a href="{{url_for('times_dashboard')}}"><button type="button" class="btn btn-secondary btn-lg">Dashboard</button></a>
+                <form class="center" action="" method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    <!-- Form: select the version for the model -->
+                    <div class="btn-group">
+                        {{ form.versions(class="form-control", id="selectVersion")}}
+                         <a href="#"><button type="submit" onsubmit="load_variables()" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-4"></div>
+        </div>
+             
+
+        {% if run_model_page=='run_model_page' %}
+            <div class="jumbotron jumbotron-fluid jumbotron-image-models" style="background-image: url(static/img/model_image.png);"></div>
+        {% else %}
+            {% block timespagemirror %} {% endblock %}
+        {% endif %}
+    </div>
+    {% endblock %}
+</body>

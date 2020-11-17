@@ -3,57 +3,74 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets_with_analytics(
   business_datetime timestamp with time zone
 )
   RETURNS TABLE(
-    category varchar,
+    asset_subcategory varchar,
     cost numeric(32, 16),
-    country char(2),
-    currency char(3),
-    description varchar,
-    future_ticker varchar,
-    name varchar,
-    signal_ticker varchar,
-    ticker varchar,
-    is_tr boolean,
-    asset_type varchar,
     s_leverage integer,
-    asset_analytics arp.source_category_value[]
+    future_ticker varchar,
+    future_asset_analytics asset.category_datetime_value[],
+    signal_ticker varchar,
+    signal_asset_analytics asset.category_datetime_value[]
   )
 LANGUAGE plpgsql
 AS
 $$
-DECLARE
-  strategy_name varchar;
 BEGIN
-  strategy_name := 'times';
-
   return query
+    WITH times_assets as (
+      SELECT
+        ta.future_asset_id,
+        ta.signal_asset_id,
+        ta.asset_subcategory,
+        ta.cost,
+        ta.s_leverage
+      FROM
+        arp.times_asset ta
+        JOIN arp.times t on ta.strategy_id = t.strategy_id
+      WHERE
+        t.version = strategy_version
+    ),
+    signals as (
+      SELECT
+        ta2.signal_asset_id,
+        a.ticker as signal_ticker,
+        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as signal_asset_analytics
+      FROM
+        times_assets ta2
+        JOIN asset.asset a on ta2.signal_asset_id = a.id
+        JOIN asset.asset_analytic aa on a.id = aa.asset_id
+      WHERE
+        aa.business_datetime >= select_times_assets_with_analytics.business_datetime
+      GROUP BY
+        ta2.signal_asset_id,
+        a.ticker
+    ),
+    futures as (
+      SELECT
+        ta3.future_asset_id,
+        a.ticker as future_ticker,
+        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as future_asset_analytics
+      FROM
+        times_assets ta3
+        JOIN asset.asset a on ta3.future_asset_id = a.id
+        JOIN asset.asset_analytic aa on a.id = aa.asset_id
+      WHERE
+        aa.business_datetime >= select_times_assets_with_analytics.business_datetime
+      GROUP BY
+        ta3.future_asset_id,
+        a.ticker
+    )
     SELECT
-      a.category,
-      a.cost,
-      c2.country,
-      c.currency,
-      a.description,
-      a.future_ticker,
-      a.name,
-      a.signal_ticker,
-      a.ticker,
-      a.is_tr,
-      a.type as asset_type,
-      a.s_leverage,
-      array_agg((s2.source, aa.category, aa.value) :: arp.source_category_value) as asset_analytic
+      ta4.asset_subcategory,
+      ta4.cost,
+      ta4.s_leverage,
+      f.future_ticker,
+      f.future_asset_analytics,
+      s.signal_ticker,
+      s.signal_asset_analytics
     FROM
-      asset.asset a
-      JOIN arp.times_asset ta on a.id = ta.asset_id
-      JOIN arp.times t on ta.strategy_id = t.strategy_id
-      JOIN arp.strategy s on t.strategy_id = s.id
-      JOIN lookup.currency c on a.currency_id = c.id
-      JOIN lookup.country c2 on a.country_id = c2.id
-      JOIN asset.asset_analytic aa on a.id = aa.asset_id
-      JOIN lookup.source s2 on aa.source_id = s2.id
-    WHERE
-      s.name = strategy_name
-      AND t.version = strategy_version
-      AND aa.business_tstzrange @> business_datetime
-    GROUP BY a.id, c.id, c2.id
+      times_assets ta4
+      JOIN futures f on ta4.future_asset_id = f.future_asset_id
+      JOIN signals s on ta4.signal_asset_id = s.signal_asset_id
   ;
 END
 $$;

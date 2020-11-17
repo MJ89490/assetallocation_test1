@@ -1,0 +1,44 @@
+{% extends "times_page.html" %}
+
+<head>
+    <title> {{title }} </title>
+</head>
+
+<body>
+
+  {% block assetsInputs%}
+
+    <div class="title-assets"><h2>Model Assets</h2></div>
+
+        <div>
+            <div>
+                <button class="btn btn-lg btn-primary" onclick="onAddRow()" id="onAddRow"><strong>Add Row</strong></button>
+                <button class="btn btn-lg btn-primary" onclick="onRemoveSelected()" id="onRemoveSelected"><strong>Remove Selected</strong></button>
+                <button class="btn btn-lg btn-primary" onclick="clearData()" id="clearData"><strong>Clear Data</strong></button>
+            </div>
+        </div>
+
+        <div style="width: 1030px; height: 350px; ">
+            <div id="myGrid" style="height: 100%; margin-top: 20px; " class="ag-theme-balham"></div>
+        </div>
+
+
+  {% endblock %}
+
+  {% block inputs %}
+
+    <div class="title-inputs"><h2>Model Inputs</h2></div>
+
+        <div class="container">
+        <form class="form-signin"  role="form">
+            <input type="email" id="inputUsername" name="username" class="form-control" placeholder="Email address" required autofocus>
+            <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+            <button class="btn btn-lg btn-primary btn-block" type="button">Register</button>
+		</form>
+     </div>
+
+  {% endblock %}
+
+
+
+</body>

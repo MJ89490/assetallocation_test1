@@ -1,0 +1,71 @@
+
+<head>
+    <title>Asset Allocation ARP</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/ag-grid-community.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-grid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-theme-bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-theme-balham.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--<script src="static/js/asset_inputs.js"></script>-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="static/css/base.css">
+</head>
+
+<body>
+    <!--pour chaque page mettre une image de fond avec la planète-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top navbar-default py-lg-0 ">
+
+        <a class="navbar-brand" href="#">
+            <img alt="Legal and General" width="62px" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse"
+                data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('home')}}">Home</a></li>
+                <!-- Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Models</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{url_for('times_model')}}">TIMES</a>
+                        <a class="dropdown-item" href="#">MAVEN</a>
+                        <a class="dropdown-item" href="#">EFFECT</a>
+                        <a class="dropdown-item" href="#">COMCA</a>
+                        <a class="dropdown-item" href="#">CURP</a>
+                        <a class="dropdown-item" href="#">FICA</a>
+                        <a class="dropdown-item" href="#">FACTOR</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Models Consolidation</a>
+                </li>
+            </ul>
+        </div>
+
+    </nav>
+
+    {% block content %}
+        {% block homepage %} {% endblock %}
+        {% block timespage %} {% endblock %}
+    {% endblock %}
+
+    <footer id="sticky-footer" class="py-4 bg-white text-black-50">
+        <div class="container text-center">
+            <small>Copyright &copy; Legal & General 2020</small>
+        </div>
+    </footer>
+
+</body>
+

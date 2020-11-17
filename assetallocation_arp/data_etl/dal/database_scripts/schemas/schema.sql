@@ -3,10 +3,6 @@ CREATE SCHEMA IF NOT EXISTS asset;
 GRANT ALL ON SCHEMA asset TO d00_asset_allocation_data_migration;
 GRANT ALL ON SCHEMA asset TO d00_asset_allocation_data_app;
 
-CREATE SCHEMA IF NOT EXISTS curve;
-GRANT ALL ON SCHEMA curve TO d00_asset_allocation_data_migration;
-GRANT ALL ON SCHEMA asset TO d00_asset_allocation_data_app;
-
 CREATE SCHEMA IF NOT EXISTS lookup;
 GRANT ALL ON SCHEMA lookup TO d00_asset_allocation_data_migration;
 GRANT ALL ON SCHEMA asset TO d00_asset_allocation_data_app;
