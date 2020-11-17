@@ -12,6 +12,13 @@ import sys
 import numpy as np
 from datetime import datetime
 
+#Comments: may be we should the structure of the import data when we will have the database
+#          we are not going to use the matlab file but grab the data from the database directly
+#          it might be a good idea to create classes?
+
+# FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
+FILE_PATH = r'/var/lib/jenkins/iep_archive/matlabData.mat'
+
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
@@ -80,7 +87,6 @@ def data_frame_from_xlsx(xlsx_file, range_name, hascolnames):
 
 
 def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, model_date=None):
-
     if model_date is None:
         model_date = np.datetime64(datetime.today())
     else:
@@ -93,7 +99,7 @@ def extract_inputs_and_mat_data(model_type, mat_file=None, input_file=None, mode
         all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
         del all_data['Date']
     else:
-        file_path = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
+        file_path = FILE_PATH
         all_data = matfile_to_dataframe(file_path, model_date)
 
     if input_file is None:

@@ -13,14 +13,9 @@ def read(file_name):
 with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'requirements.txt'))) as fp:
     install_requires = fp.read().splitlines()
 
-setup_requirements = [
-    'pytest-runner',
-]
+print(install_requires)
 
-test_requirements = [
-    'pytest',
-    'nbformat'
-]
+
 
 setup(
     author='SN',
@@ -31,17 +26,16 @@ setup(
     ],
 
     name="assetallocation_arp",
-    version="0.0.24",
+    version="0.0.5",
     #version_config={
     #  "version_format": "{tag}.dev{sha}",
-    #  "starting_version": "0.0.24"
+    #  "starting_version": "0.0.5"
     #},
-    description="sist[3~[3~[3~[3~[3~",
+    description="",
     long_description=open('README.md').read(),
-    packages=find_packages(),
-    setup_requires=setup_requirements,
-    test_suite='tests',
-    tests_require=test_requirements,
+    packages=find_packages("assetallocation_arp"),
+    package_dir={'': "assetallocation_arp"},
+    setup_requires=install_requires,
     include_package_data = True,
     install_requires=install_requires
 )
