@@ -6,19 +6,25 @@ DATA MANIPULATION
 
 import pandas as pd
 
-from common_libraries.dal_enums.strategy import Frequency
+from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency
 
 
-def set_data_frequency(data, freq, week_day='SUN'):
+def set_data_frequency(data, freq, week_day='SUN', calculation_type='na'):
     # Reduce frequency of a series, used to reflect weekly implementation of a strategy
     if freq == Frequency.monthly.name:
         data = data.reindex()
-        rng = pd.date_range(start=data.index[0], end=data.index[-1], freq='M')
-        sig = data.reindex(rng, method='pad')
+        if calculation_type == 'average':
+            sig = data.resample('M').mean()
+        else:
+            rng = pd.date_range(start=data.index[0], end=data.index[-1], freq='M')
+            sig = data.reindex(rng, method='pad')
     elif freq == Frequency.weekly.name:
         data = data.reindex()
-        rng = pd.date_range(start=data.index[0], end=data.index[-1], freq='W-' + week_day)
-        sig = data.reindex(rng, method='pad')
+        if calculation_type == 'average':
+            sig = data.resample('W-' + week_day).mean()
+        else:
+            rng = pd.date_range(start=data.index[0], end=data.index[-1], freq='W-' + week_day)
+            sig = data.reindex(rng, method='pad')
     elif freq == Frequency.daily.name:
         sig = data
     else:

@@ -13,6 +13,8 @@ from assetallocation_arp.models import times
 from assetallocation_arp.models import fica
 from assetallocation_arp.models import maven
 from assetallocation_arp.models import fxmodels
+from assetallocation_arp.models.effect.main_effect import run_effect
+from assetallocation_arp.data_etl.outputs_effect.write_outputs_effect_excel import run_write_outputs_effect_model
 
 
 def run_model(model_type, mat_file, input_file, model_date=None):
@@ -79,9 +81,17 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         write_output_to_excel({Name.fica.name: (carry_roll, signals, country_returns, cum_contribution,
                                                          returns, asset_inputs, fica_inputs, carry_daily,
                                                          return_daily)}, input_file)
-        print(model_type)
-    if model_type == Name.comca.name:
-        print(model_type)
+
+    if model_type == Name.effect.name:
+
+        strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
+
+        outputs_effect = run_effect(strategy_inputs, excel_instance, asset_inputs=asset_inputs, all_data=all_data)
+
+        write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
+                                                                 outputs_effect['signals_overview'],
+                                                                 outputs_effect['trades_overview'],
+
 
 
 def write_output_to_excel(model_outputs, input_file):
@@ -212,6 +222,10 @@ def write_output_to_excel(model_outputs, input_file):
         # sheet_maven_input.range('rng_inputs_used').offset(-1, 1).value = strftime("%Y-%m-%d %H:%M:%S", gmtime())
         sheet_fxmodels_input.range('rng_input_fxmodels_used').value = fxmodels_inputs
         sheet_fxmodels_input.range('rng_input_fxmodels_used').offset(3, 0).value = asset_inputs
+
+    elif Name.effect.name in model_outputs.keys():
+        xw.Book(input_file).set_mock_caller()
+        run_write_outputs_effect_model(model_outputs)
 
 
 def get_inputs_from_excel():
