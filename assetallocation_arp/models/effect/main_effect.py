@@ -23,7 +23,7 @@ from assetallocation_arp.models.compute_risk_return_calculations import ComputeR
 """
 
 
-def run_effect(strategy_inputs, excel_instance, asset_inputs, all_data):
+def run_effect(strategy_inputs,  asset_inputs, all_data):
 
     user_date = strategy_inputs['userdate'].item()
 

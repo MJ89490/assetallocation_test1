@@ -46,8 +46,6 @@ def run_model(model_type, mat_file, input_file, model_date=None):
                                                           returns_maven, asset_class_long,
                                                           asset_class_short, asset_contribution_long,
                                                           asset_contribution_short, asset_inputs, maven_inputs)}, input_file)
-    if model_type == Name.effect.name:
-        print(model_type)
 
     if model_type == Name.fxmodels.name:
         # get inputs from excel and matlab data
@@ -83,15 +81,21 @@ def run_model(model_type, mat_file, input_file, model_date=None):
                                                          return_daily)}, input_file)
 
     if model_type == Name.effect.name:
-
         strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
-        outputs_effect = run_effect(strategy_inputs, excel_instance, asset_inputs=asset_inputs, all_data=all_data)
+        outputs_effect = run_effect(strategy_inputs, asset_inputs=asset_inputs, all_data=all_data)
 
-        write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
-                                                                 outputs_effect['signals_overview'],
-                                                                 outputs_effect['trades_overview'],
-
+        write_output_to_excel({Name.Models.effect.name: (outputs_effect['profit_and_loss'],
+                                                         outputs_effect['signals_overview'],
+                                                         outputs_effect['trades_overview'],
+                                                         outputs_effect['rates'],
+                                                         outputs_effect['risk_returns'],
+                                                         outputs_effect['combo'],
+                                                         outputs_effect['total_excl_signals'],
+                                                         outputs_effect['total_incl_signals'],
+                                                         outputs_effect['spot_incl_signals'],
+                                                         outputs_effect['spot_excl_signals'],
+                                                         strategy_inputs['latest signal date'])}, input_file)
 
 
 def write_output_to_excel(model_outputs, input_file):
@@ -224,7 +228,6 @@ def write_output_to_excel(model_outputs, input_file):
         sheet_fxmodels_input.range('rng_input_fxmodels_used').offset(3, 0).value = asset_inputs
 
     elif Name.effect.name in model_outputs.keys():
-        xw.Book(input_file).set_mock_caller()
         run_write_outputs_effect_model(model_outputs)
 
 
@@ -235,7 +238,6 @@ def get_inputs_from_excel():
     model_date = xw.Range('rng_date_to').value
     mat_file = xw.Range('rng_mat_file_path').value
     model_type = xw.Range('rng_model_type').value
-
 
     run_model(model_type, mat_file, input_file, model_date)
 
