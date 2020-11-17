@@ -11,6 +11,12 @@ def run_strategy(
         fund_name: str, strategy_weight: float, strategy: Strategy, user_id: str,
         business_datetime: dt.datetime = dt.datetime.today() - dt.timedelta(365)
 ) -> FundStrategy:
+    """Inserts strategy object data into database. Reads asset analytics from
+    database to enable running of strategy, producing outputs of
+    FundStrategyAnalytics and FundStrategyAssetWeights which are written into
+    the database.
+    :return FundStrategy object containing outputs of strategy run
+    """
     pc = StrategyProcCallerFactory.get_proc_caller(strategy.name)()
     pc.insert_strategy(strategy, user_id)
     pc.add_asset_analytics_to_strategy(strategy, business_datetime)
@@ -21,5 +27,6 @@ def run_strategy(
 
 
 def get_strategy_versions(strategy_name: Union[str, Name]) -> List[int]:
+    """Get list of existing strategy versions from database"""
     apc = ArpProcCaller()
     return apc.select_strategy_versions(strategy_name)

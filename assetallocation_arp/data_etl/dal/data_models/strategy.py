@@ -48,6 +48,7 @@ class Strategy(ABC):
 
     @abstractmethod
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
+        """Run strategy to produce outputs of FundStrategyAnalytics and FundStrategyAssetWeights"""
         pass
 
 
