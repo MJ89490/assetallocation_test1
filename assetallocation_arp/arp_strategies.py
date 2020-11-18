@@ -63,6 +63,7 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         write_output_to_excel({Name.fxmodels.name: (fx_model, base_fx, signal, exposure, exposure_agg,
                                                              returns, contribution, carry_base, fxmodels_inputs,
                                                              asset_inputs)}, input_file)
+
     if model_type == Name.fica.name:
         # get inputs from excel and matlab data
         fica_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file,
@@ -85,7 +86,7 @@ def run_model(model_type, mat_file, input_file, model_date=None):
 
         outputs_effect = run_effect(strategy_inputs, asset_inputs=asset_inputs, all_data=all_data)
 
-        write_output_to_excel({Name.Models.effect.name: (outputs_effect['profit_and_loss'],
+        write_output_to_excel({Name.effect.name: (outputs_effect['profit_and_loss'],
                                                          outputs_effect['signals_overview'],
                                                          outputs_effect['trades_overview'],
                                                          outputs_effect['rates'],
@@ -267,4 +268,5 @@ def get_input_user():
 
 
 if __name__ == "__main__":
-    get_inputs_from_python(get_input_user(), file="arp_dashboard.xlsm")
+    get_inputs_from_excel()
+    # get_inputs_from_python(get_input_user(), file="arp_dashboard_effect.xlsm")
