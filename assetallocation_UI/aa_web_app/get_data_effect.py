@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 from assetallocation_arp.arp_strategies import run_effect_strategy
 
@@ -46,9 +47,31 @@ class ReceivedDataEffect:
         max_drawdown_no_signals_series = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series']
         max_drawdown_with_signals_series = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series']
 
+        # Year to date contribution
+        log_ret = self.effect_outputs['log_ret'].head(-1)
+        combo_data_tmp = combo_data.head(-1).tail(-1)
+
+        log_ret = log_ret.loc[pd.to_datetime('31-12-2019', format='%d-%m-%Y'):pd.to_datetime('30-09-2020', format='%d-%m-%Y'), :]
+        combo_data_tmp = combo_data_tmp.loc[pd.to_datetime('31-12-2019', format='%d-%m-%Y'):pd.to_datetime('30-09-2020', format='%d-%m-%Y'), :]
+
+        year_to_date_contrib_sum_prod = []
+
+        for num_col in range(log_ret.shape[1]):
+            tmp = []
+            for values_combo, values_log in zip(combo_data_tmp.iloc[:, num_col], log_ret.iloc[:, num_col]):
+                tmp.append(np.nanprod(values_combo * values_log))
+            year_to_date_contrib_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size'])*100)
+
+        year_to_date_contrib_sum_prod_total = sum(year_to_date_contrib_sum_prod)
+        year_to_date_contrib_sum_prod.append(year_to_date_contrib_sum_prod_total)
+        names_curr = self.write_logs['currency_logs']
+        names_curr.append('Total')
+
         return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region,
                 'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
-                'max_drawdown_with_signals_series': max_drawdown_with_signals_series}
+                'max_drawdown_with_signals_series': max_drawdown_with_signals_series,
+                'year_to_year_contrib': year_to_date_contrib_sum_prod,
+                'names_curr': names_curr}
 
     def call_run_effect(self, assets_inputs_effect):
 

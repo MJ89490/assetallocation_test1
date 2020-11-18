@@ -220,7 +220,7 @@ class ComputeAggregateCurrencies:
     @staticmethod
     def compute_weighted_performance(log_returns_excl, combo_curr, weight_value):
         """
-        Function comptuing the weighted performancen
+        Function computing the weighted performancen
         :param log_returns_excl: log of retuns excl costs values
         :param combo_curr: combo of currencies from compute_currencies class
         :param weight_value: weight value (pos attr from the inputs)
@@ -281,7 +281,6 @@ class ComputeAggregateCurrencies:
 
         aggregate_spot_excl_signals = self.compute_aggregate_spot_excl_signals(spot_excl_costs=excl_signals_spot_return,
                                                                                inverse_volatility=inverse_volatility)
-
 
         return {'agg_total_incl_signals': aggregate_total_incl_signals,
                 'agg_total_excl_signals': aggregate_total_excl_signals,

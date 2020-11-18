@@ -429,9 +429,18 @@
                 <script type="text/javascript">
                    drawdown_line_chart({{data_charts['max_drawdown_no_signals_series']|tojson}},
                                         {{data_charts['max_drawdown_with_signals_series']|tojson}})
+                </script>
+            </div>
+        </div>
 
-
-
+        <!--Year to year contrb bar chart-->
+        <div class="row row-agg-line-chart">
+            <div class="col-lg-12">
+                <div id="horizontal_bar_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/horizontal_bar_chart_year_to_year_contrib_effect.js') }}"></script>
+                <script type="text/javascript">
+                   horizontal_bar_chart({{data_charts['year_to_year_contrib']|tojson}},
+                                        {{data_charts['names_curr']|tojson}})
 
                 </script>
             </div>

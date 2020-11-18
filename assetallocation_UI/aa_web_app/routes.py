@@ -14,6 +14,9 @@ obj_received_data_times = ReceivedDataTimes()
 
 # data missing: JPPUELM Index
 
+# @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
+# @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
+
 
 @app.route('/')
 def home():
@@ -59,23 +62,6 @@ def received_data_times_form():
     obj_received_data_times.call_run_times(json.loads(request.form['json_data']))
 
     return json.dumps({'status': 'OK'})
-
-# @app.route('/times_model',  methods=['GET', 'POST'])
-# def times_model():
-#     form = InputsTimesModel()
-#     run_model_page = 'run_model_page'
-#
-#     if request.method == "POST":
-#         # TODO set a specific layout depending on the version!
-#         version_type = form.versions.data
-#
-#         return render_template('times_model_mirror.html', form=form, title='TimesPage')
-#
-#     return render_template('times_template.html', form=form, title='TimesPage', run_model_page=run_model_page)
-
-
-# @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
-# @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])

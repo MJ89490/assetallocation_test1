@@ -187,6 +187,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                       'rates': rates,
                       'risk_returns': risk_returns,
                       'combo': currencies_calculations['combo_curr'],
+                      'log_ret': agg_currencies['log_returns_excl_costs'],
+                      'pos_size': float(strategy_inputs['input_position_size_effect'].item())/100,
                       'region': region,
                       'total_excl_signals': agg_total_excl_signals,
                       'total_incl_signals': agg_total_incl_signals,
