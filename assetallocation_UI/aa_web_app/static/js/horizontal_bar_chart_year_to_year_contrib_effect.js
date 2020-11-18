@@ -1,23 +1,31 @@
 HORIZONTAL_BAR_CHART = document.getElementById('horizontal_bar_chart_effect');
 
-function horizontal_bar_chart(year_to_year_contrib, names_curr)
+function horizontal_bar_chart(year_to_year_contrib, year_to_date_contrib_sum_prod_total, names_curr)
 {
 
    var trace1 = {
                   type: 'bar',
                   x: year_to_year_contrib,
                   y: names_curr,
+                  name: 'Currency',
                   orientation: 'h',
-                  line: {color: 'rgb(0, 128, 64)'}
+                  marker: {color: '#005774'}
                 };
 
-    var data = [trace1];
+   var trace2 = {
+                  type: 'bar',
+                  x: year_to_date_contrib_sum_prod_total,
+                  y: ['Total'],
+                  name: 'Total',
+                  orientation: 'h',
+                  marker: {color: 'rgb(192, 0, 0)'}
+                };
+
+    var data = [trace1, trace2];
 
     var layout = {showlegend: false,
                   title: {text: 'Year-to-date contributions (scaled to MATR allocation)', font: {color: 'lightgrey'}},
-                  legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                  margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 },
-                  xaxis: {tickformat: ',.0%'}
+                  xaxis: {title: '%',  titlefont: {size: 12, color: 'lightgrey'}}
                  };
 
     var config = {'displayModeBar': false, 'responsive': true };

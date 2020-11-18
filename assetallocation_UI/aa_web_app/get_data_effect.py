@@ -62,15 +62,26 @@ class ReceivedDataEffect:
                 tmp.append(np.nanprod(values_combo * values_log))
             year_to_date_contrib_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size'])*100)
 
-        year_to_date_contrib_sum_prod_total = sum(year_to_date_contrib_sum_prod)
-        year_to_date_contrib_sum_prod.append(year_to_date_contrib_sum_prod_total)
+        year_to_date_contrib_sum_prod_total = [sum(year_to_date_contrib_sum_prod)]
         names_curr = self.write_logs['currency_logs']
-        names_curr.append('Total')
+
+        # Quarterly P&L
+        # combo_quarterly_tmp = combo_data
+        # Select quarterly months
+        # combo_quarterly = combo_quarterly_tmp.loc[(pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 3) |
+        #                                           (pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 6) |
+        #                                           (pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 9) |
+        #                                           (pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 12)]
+
+        rng_quarterly = pd.date_range(start=combo_data.index[0], end=combo_data.index[-1], freq='Q')
+        combo_quarterly = combo_data.reindex(rng_quarterly, method='pad')
+        log_ret_quarterly = log_ret.reindex(rng_quarterly, method='pad')
 
         return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region,
                 'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
                 'max_drawdown_with_signals_series': max_drawdown_with_signals_series,
                 'year_to_year_contrib': year_to_date_contrib_sum_prod,
+                'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
                 'names_curr': names_curr}
 
     def call_run_effect(self, assets_inputs_effect):
