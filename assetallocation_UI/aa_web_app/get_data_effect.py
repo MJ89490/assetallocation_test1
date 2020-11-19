@@ -66,7 +66,7 @@ class ReceivedDataEffect:
         names_curr = self.write_logs['currency_logs']
 
         # Quarterly P&L
-        start_quarterly = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
+        start_quarterly = pd.to_datetime('31-12-2013', format='%d-%m-%Y')
         rng = pd.date_range(start=combo_data.index[0], end=combo_data.index[-1], freq='Q')
         # combo_quarterly == log_quarterly for the dates range
         combo_quarterly = combo_data.reindex(rng, method='pad')
@@ -74,39 +74,51 @@ class ReceivedDataEffect:
 
         from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
         quarterly_currency = pd.DataFrame()
+        counter = 0
 
         # Loop through dates
         for currency_combo, currency_log in zip(combo_data, log_ret_data):
-            for date in range(len(dates_set)):
+            quarterly_sum_prod = []
+
+            for date in range(len(rng)):
                 # Set the start date to start the computation
                 start_current_date_index_loc = combo_quarterly.index.get_loc(start_quarterly)
                 start_current_date_index = find_date(dates_set, combo_quarterly.index[start_current_date_index_loc])
+                start_next_date_index_loc = combo_data.index.get_loc(start_current_date_index) + 1
+                start_next_date_index = combo_data.index[start_next_date_index_loc]
 
-                # Take the previous dates
-                previous_start_date_index = find_date(dates_set, combo_quarterly.index[start_current_date_index_loc - 1])
+                # Take the next dates
+                try:
+                    next_start_date_index = find_date(dates_set, combo_quarterly.index[start_current_date_index_loc + 1])
+                    print(next_start_date_index)
+                except IndexError:
+                    # We reach the end of the dates range, we can go to the next currency
+                    break
 
                 # Select the range of data according to the current and previous date
-                combo_temp = combo_data.iloc[previous_start_date_index:start_current_date_index, currency_combo]
-                log_temp = log_ret_data.iloc[previous_start_date_index:start_current_date_index, currency_log]
+                combo_temp = combo_data.loc[start_next_date_index:next_start_date_index, currency_combo]
+                log_temp = log_ret_data.loc[start_next_date_index:next_start_date_index, currency_log]
 
                 # Compute the sumprod between combo_temp and log_temp
-                quarterly_sum_prod = []
+                tmp = []
 
-                for num_col in range(combo_temp.shape[1]):
-                    tmp = []
-                    for values_combo, values_log in zip(combo_temp.iloc[:, num_col], log_temp.iloc[:, num_col]):
-                        tmp.append(np.nanprod(values_combo * values_log))
-                    quarterly_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']) * 100)
+                for values_combo, values_log in zip(combo_temp.to_list(), log_temp.to_list()):
+                    tmp.append(np.nanprod(values_combo * values_log))
+
+                quarterly_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']) * 100)
+
+                # Error handling when we reach the end of the dates range
+                start_quarterly = combo_quarterly.index[start_current_date_index_loc + 1]
+                print(start_quarterly)
 
             # Save the quarterly sum prod in a dataFrame
-            quarterly_currency[currency_combo[:3]] = quarterly_sum_prod
+            quarterly_currency[names_curr[counter]] = quarterly_sum_prod
+            start_quarterly = pd.to_datetime('31-12-2013', format='%d-%m-%Y')
+            counter += 1
 
-            # Error handling when we reach the end of the dates range
+        index_quarterly = combo_quarterly.index
 
-
-
-
-
+        quarterly_currency = quarterly_currency.set_index(index_quarterly)
 
 
 
