@@ -48,17 +48,17 @@ class ReceivedDataEffect:
         max_drawdown_with_signals_series = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series']
 
         # Year to date contribution
-        log_ret = self.effect_outputs['log_ret'].head(-1)
+        log_ret_data = self.effect_outputs['log_ret'].head(-1)
         combo_data_tmp = combo_data.head(-1).tail(-1)
 
-        log_ret = log_ret.loc[pd.to_datetime('31-12-2019', format='%d-%m-%Y'):pd.to_datetime('30-09-2020', format='%d-%m-%Y'), :]
+        log_ret_tmp = log_ret_data.loc[pd.to_datetime('31-12-2019', format='%d-%m-%Y'):pd.to_datetime('30-09-2020', format='%d-%m-%Y'), :]
         combo_data_tmp = combo_data_tmp.loc[pd.to_datetime('31-12-2019', format='%d-%m-%Y'):pd.to_datetime('30-09-2020', format='%d-%m-%Y'), :]
 
         year_to_date_contrib_sum_prod = []
 
-        for num_col in range(log_ret.shape[1]):
+        for num_col in range(log_ret_tmp.shape[1]):
             tmp = []
-            for values_combo, values_log in zip(combo_data_tmp.iloc[:, num_col], log_ret.iloc[:, num_col]):
+            for values_combo, values_log in zip(combo_data_tmp.iloc[:, num_col], log_ret_tmp.iloc[:, num_col]):
                 tmp.append(np.nanprod(values_combo * values_log))
             year_to_date_contrib_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size'])*100)
 
@@ -66,16 +66,62 @@ class ReceivedDataEffect:
         names_curr = self.write_logs['currency_logs']
 
         # Quarterly P&L
-        # combo_quarterly_tmp = combo_data
-        # Select quarterly months
-        # combo_quarterly = combo_quarterly_tmp.loc[(pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 3) |
-        #                                           (pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 6) |
-        #                                           (pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 9) |
-        #                                           (pd.DatetimeIndex(combo_quarterly_tmp['Dates']).month == 12)]
+        start_quarterly = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
+        rng = pd.date_range(start=combo_data.index[0], end=combo_data.index[-1], freq='Q')
+        # combo_quarterly == log_quarterly for the dates range
+        combo_quarterly = combo_data.reindex(rng, method='pad')
+        dates_set = combo_data.index.values
 
-        rng_quarterly = pd.date_range(start=combo_data.index[0], end=combo_data.index[-1], freq='Q')
-        combo_quarterly = combo_data.reindex(rng_quarterly, method='pad')
-        log_ret_quarterly = log_ret.reindex(rng_quarterly, method='pad')
+        from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
+        quarterly_currency = pd.DataFrame()
+
+        # Loop through dates
+        for currency_combo, currency_log in zip(combo_data, log_ret_data):
+            for date in range(len(dates_set)):
+                # Set the start date to start the computation
+                start_current_date_index_loc = combo_quarterly.index.get_loc(start_quarterly)
+                start_current_date_index = find_date(dates_set, combo_quarterly.index[start_current_date_index_loc])
+
+                # Take the previous dates
+                previous_start_date_index = find_date(dates_set, combo_quarterly.index[start_current_date_index_loc - 1])
+
+                # Select the range of data according to the current and previous date
+                combo_temp = combo_data.iloc[previous_start_date_index:start_current_date_index, currency_combo]
+                log_temp = log_ret_data.iloc[previous_start_date_index:start_current_date_index, currency_log]
+
+                # Compute the sumprod between combo_temp and log_temp
+                quarterly_sum_prod = []
+
+                for num_col in range(combo_temp.shape[1]):
+                    tmp = []
+                    for values_combo, values_log in zip(combo_temp.iloc[:, num_col], log_temp.iloc[:, num_col]):
+                        tmp.append(np.nanprod(values_combo * values_log))
+                    quarterly_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']) * 100)
+
+            # Save the quarterly sum prod in a dataFrame
+            quarterly_currency[currency_combo[:3]] = quarterly_sum_prod
+
+            # Error handling when we reach the end of the dates range
+
+
+
+
+
+
+
+
+
+
+        # combo_quarterly = combo_data.reindex(rng_quarterly, method='pad').loc[start_quarterly:]
+        # log_ret_quarterly = log_ret_data.reindex(rng_quarterly, method='pad').loc[start_quarterly:]
+        #
+        # current_date_quarterly = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
+
+
+
+
+
+
 
         return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region,
                 'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
