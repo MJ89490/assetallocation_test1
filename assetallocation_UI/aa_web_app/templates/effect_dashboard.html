@@ -104,9 +104,9 @@
 
 .row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 150px;}
 .row_table_overview{margin-left: 150px; margin-top: 50px;}
-.row-agg-line-chart{margin-left: 100px; margin-top: 50px;}
-.row-drawdown-agg-line-chart{margin-left: 100px; margin-bottom: 50px;}
-.row-year-contrib-agg-line-chart{margin-left: 100px; margin-bottom: 70px;}
+.row-agg-line-chart{margin-left: 100px;}
+.row-drawdown-agg-line-chart{margin-left: 100px;}
+.row-year-contrib-agg-line-chart{margin-left: 200px;}
 .title-table-overview{color: #005774; font-weight: bold;}
 .sub_title_table_overview{font-size: 0.75rem;}
 </style>
@@ -397,20 +397,6 @@
         <!--Aggregate line chart-->
         <div class="row row-agg-line-chart">
             <div class="col-lg-12">
-                <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
-                <script type="text/javascript">
-                   agg_line_chart({{effect_outputs['total_excl_signals']|tojson}},
-                                  {{effect_outputs['total_incl_signals']|tojson}},
-                                  {{effect_outputs['spot_incl_signals']|tojson}},
-                                  {{effect_outputs['spot_excl_signals']|tojson}})
-                </script>
-            </div>
-        </div>
-
-        <!--Regions line chart-->
-        <div class="row row-agg-line-chart">
-            <div class="col-lg-12">
                 <div id="region_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_region_effect.js') }}"></script>
                 <script type="text/javascript">
@@ -423,19 +409,8 @@
             </div>
         </div>
 
-        <!--Drawdown line chart-->
-        <div class="row row-drawdown-agg-line-chart">
-            <div class="col-lg-12">
-                <div id="drawdown_line_chart_effect" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_max_drawdown_effect.js') }}"></script>
-                <script type="text/javascript">
-                   drawdown_line_chart({{data_charts['max_drawdown_no_signals_series']|tojson}},
-                                        {{data_charts['max_drawdown_with_signals_series']|tojson}})
-                </script>
-            </div>
-        </div>
 
-        <!--Year to year contrb bar chart-->
+                <!--Year to year contrb bar chart-->
         <div class="row row-year-contrib-agg-line-chart">
             <div class="col-lg-12">
                 <div id="horizontal_bar_chart_effect" class="responsive-plot"></div>
@@ -446,13 +421,32 @@
                                         {{data_charts['names_curr']|tojson}})
                 </script>
             </div>
+        </div>
 
-            
-
-
-
+        <!--Regions line chart-->
+        <div class="row row-agg-line-chart">
+                        <div class="col-lg-6">
+                <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
+                <script type="text/javascript">
+                   agg_line_chart({{effect_outputs['total_excl_signals']|tojson}},
+                                  {{effect_outputs['total_incl_signals']|tojson}},
+                                  {{effect_outputs['spot_incl_signals']|tojson}},
+                                  {{effect_outputs['spot_excl_signals']|tojson}})
+                </script>
+            </div>
+            <!--Drawdown line chart-->
+                        <div class="col-lg-6">
+                <div id="drawdown_line_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_max_drawdown_effect.js') }}"></script>
+                <script type="text/javascript">
+                   drawdown_line_chart({{data_charts['max_drawdown_no_signals_series']|tojson}},
+                                        {{data_charts['max_drawdown_with_signals_series']|tojson}})
+                </script>
+            </div>
 
         </div>
+
 
         <div class="row row-year-contrib-agg-line-chart">
 
