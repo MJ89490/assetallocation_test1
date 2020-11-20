@@ -66,11 +66,13 @@ class ReceivedDataEffect:
         names_curr = self.write_logs['currency_logs']
 
         # Quarterly P&L
-        start_quarterly = pd.to_datetime('31-12-2013', format='%d-%m-%Y')
         rng = pd.date_range(start=combo_data.index[0], end=combo_data.index[-1], freq='Q')
-        # combo_quarterly == log_quarterly for the dates range
-        combo_quarterly = combo_data.reindex(rng, method='pad')
+        combo_quarterly = combo_data.reindex(rng, method='pad') # combo_quarterly == log_quarterly for the dates range
         dates_set = combo_data.index.values
+
+        start_quarterly = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
+        start_prev_quarterly_loc = combo_quarterly.index.get_loc(start_quarterly) - 1
+        start_prev_quarterly = combo_quarterly.index[start_prev_quarterly_loc]
 
         from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
         quarterly_currency = pd.DataFrame()
@@ -82,15 +84,15 @@ class ReceivedDataEffect:
 
             for date in range(len(rng)):
                 # Set the start date to start the computation
-                start_current_date_index_loc = combo_quarterly.index.get_loc(start_quarterly)
+                start_current_date_index_loc = combo_quarterly.index.get_loc(start_prev_quarterly)
                 start_current_date_index = find_date(dates_set, combo_quarterly.index[start_current_date_index_loc])
-                start_next_date_index_loc = combo_data.index.get_loc(start_current_date_index) + 1
-                start_next_date_index = combo_data.index[start_next_date_index_loc]
 
                 # Take the next dates
                 try:
+                    start_next_date_index_loc = combo_data.index.get_loc(start_current_date_index) + 1
+                    start_next_date_index = combo_data.index[start_next_date_index_loc]
+
                     next_start_date_index = find_date(dates_set, combo_quarterly.index[start_current_date_index_loc + 1])
-                    print(next_start_date_index)
                 except IndexError:
                     # We reach the end of the dates range, we can go to the next currency
                     break
@@ -99,48 +101,60 @@ class ReceivedDataEffect:
                 combo_temp = combo_data.loc[start_next_date_index:next_start_date_index, currency_combo]
                 log_temp = log_ret_data.loc[start_next_date_index:next_start_date_index, currency_log]
 
-                # Compute the sumprod between combo_temp and log_temp
+                # Compute the sum prod between combo_temp and log_temp
                 tmp = []
-
                 for values_combo, values_log in zip(combo_temp.to_list(), log_temp.to_list()):
                     tmp.append(np.nanprod(values_combo * values_log))
 
                 quarterly_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']) * 100)
 
                 # Error handling when we reach the end of the dates range
-                start_quarterly = combo_quarterly.index[start_current_date_index_loc + 1]
-                print(start_quarterly)
+                start_prev_quarterly = combo_quarterly.index[start_current_date_index_loc + 1]
 
             # Save the quarterly sum prod in a dataFrame
             quarterly_currency[names_curr[counter]] = quarterly_sum_prod
-            start_quarterly = pd.to_datetime('31-12-2013', format='%d-%m-%Y')
+            print(names_curr[counter])
+            start_prev_quarterly = combo_quarterly.index[start_prev_quarterly_loc]
             counter += 1
 
-        index_quarterly = combo_quarterly.index
+        index_quarterly = combo_quarterly.loc[start_quarterly:].index.values
 
         quarterly_currency = quarterly_currency.set_index(index_quarterly)
 
+        # Total (live)
+        quarterly_currency['Total live'] = quarterly_currency.sum(axis=1)
 
+        # Backtest
+        start_quarterly_backtest = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
+        end_quarterly_backtest = pd.to_datetime('30-06-2017', format='%d-%m-%Y')
+        quarterly_backtest = quarterly_currency.loc[start_quarterly_backtest:end_quarterly_backtest, 'Total live']
+        quarterly_backtest_dates = quarterly_backtest.index.strftime("%Y").to_list()
 
+        # Live
+        start_quarterly_live = pd.to_datetime('30-09-2017', format='%d-%m-%Y')
+        quarterly_live = quarterly_currency.loc[start_quarterly_live:, 'Total live']
+        quarterly_live_dates = quarterly_live.index.strftime("%Y").to_list()
 
+        # Set the quarters depending on the dates
+        quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 3, 'Quarters'] = 'Q1'
+        quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 6, 'Quarters'] = 'Q2'
+        quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 9, 'Quarters'] = 'Q3'
+        quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 12, 'Quarters'] = 'Q4'
 
-        # combo_quarterly = combo_data.reindex(rng_quarterly, method='pad').loc[start_quarterly:]
-        # log_ret_quarterly = log_ret_data.reindex(rng_quarterly, method='pad').loc[start_quarterly:]
-        #
-        # current_date_quarterly = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
-
-
-
-
-
-
+        # Quarters for backtest
+        quarters_backtest = quarterly_currency.loc[start_quarterly_backtest:end_quarterly_backtest, 'Quarters'].to_list()
+        # Quarters for live
+        quarters_live = quarterly_currency.loc[start_quarterly_live:, 'Quarters'].to_list()
 
         return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region,
                 'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
                 'max_drawdown_with_signals_series': max_drawdown_with_signals_series,
                 'year_to_year_contrib': year_to_date_contrib_sum_prod,
                 'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
-                'names_curr': names_curr}
+                'names_curr': names_curr, 'backtest_quarterly_profit_and_loss': quarterly_backtest.to_list(),
+                'live_quarterly_profit_and_loss': quarterly_live.to_list(),
+                'quarterly_backtest_dates': quarterly_backtest_dates, 'quarterly_live_dates': quarterly_live_dates,
+                'quarters_backtest': quarters_backtest, 'quarters_live': quarters_live}
 
     def call_run_effect(self, assets_inputs_effect):
 

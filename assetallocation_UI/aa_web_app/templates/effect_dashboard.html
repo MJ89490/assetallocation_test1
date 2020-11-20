@@ -437,7 +437,7 @@
 
         <!--Year to year contrb bar chart-->
         <div class="row row-year-contrib-agg-line-chart">
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div id="horizontal_bar_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/horizontal_bar_chart_year_to_year_contrib_effect.js') }}"></script>
                 <script type="text/javascript">
@@ -447,5 +447,26 @@
                 </script>
             </div>
         </div>
+
+        <div class="row row-year-contrib-agg-line-chart">
+
+
+                   <div class="col-lg-12">
+                <div id="vertical_bar_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/vertical_bar_chart_quarterly_profit_and_loss.js') }}"></script>
+                <script type="text/javascript">
+                   vertical_bar_chart({{data_charts['backtest_quarterly_profit_and_loss']|tojson}},
+                                      {{data_charts['live_quarterly_profit_and_loss']|tojson}},
+                                      {{data_charts['quarterly_backtest_dates']|tojson}},
+                                      {{data_charts['quarterly_live_dates']|tojson}},
+                                      {{data_charts['quarters_backtest']|tojson}},
+                                      {{data_charts['quarters_live']|tojson}})
+                </script>
+            </div>
+
+
+        </div>
+
+
     </div>
 </body>
