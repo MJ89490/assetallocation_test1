@@ -42,6 +42,7 @@ function region_line_chart(latam_data, ceema_data, asia_data, total_data, averag
     var layout = {showlegend: true,
                   legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
                   margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 },
+                  xaxis: {tickfont: {size: 14, color: 'rgb(107, 107, 107)'}, color: 'rgb(107, 107, 107)'},
                   yaxis: {title: 'net positions',  titlefont: {size: 12, color: 'lightgrey'}}
                  };
 

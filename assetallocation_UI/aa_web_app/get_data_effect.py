@@ -60,9 +60,10 @@ class ReceivedDataEffect:
             tmp = []
             for values_combo, values_log in zip(combo_data_tmp.iloc[:, num_col], log_ret_tmp.iloc[:, num_col]):
                 tmp.append(np.nanprod(values_combo * values_log))
-            year_to_date_contrib_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size'])*100)
+            year_to_date_contrib_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']))
 
         year_to_date_contrib_sum_prod_total = [sum(year_to_date_contrib_sum_prod)]
+        
         names_curr = self.write_logs['currency_logs']
 
         # Quarterly P&L
@@ -106,7 +107,7 @@ class ReceivedDataEffect:
                 for values_combo, values_log in zip(combo_temp.to_list(), log_temp.to_list()):
                     tmp.append(np.nanprod(values_combo * values_log))
 
-                quarterly_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']) * 100)
+                quarterly_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']))
 
                 # Error handling when we reach the end of the dates range
                 start_prev_quarterly = combo_quarterly.index[start_current_date_index_loc + 1]

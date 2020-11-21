@@ -28,7 +28,7 @@ function vertical_bar_chart(backtest, livetest, quarterly_backtest_dates, quarte
       yaxis: {title: 'MATR P&L contribution(quarterly)',
               titlefont: {size: 12, color: 'lightgrey'},
               tickfont: {size: 12},
-              tickformat: ',.0%'},
+              tickformat: ',.3%'},
       barmode: 'group',
       bargap: 0.15,
       bargroupgap: 0.1,

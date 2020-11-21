@@ -25,7 +25,7 @@ function horizontal_bar_chart(year_to_year_contrib, year_to_date_contrib_sum_pro
 
     var layout = {showlegend: false,
                   title: {text: 'Year-to-date contributions (scaled to MATR allocation)', font: {color: 'lightgrey'}},
-                  xaxis: {title: '%',  titlefont: {size: 12, color: 'lightgrey'}}
+                  xaxis: {titlefont: {size: 12, color: 'rgb(107, 107, 107)'}, color: 'rgb(107, 107, 107)', tickformat: ',.3%'}
                  };
 
     var config = {'displayModeBar': false, 'responsive': true };

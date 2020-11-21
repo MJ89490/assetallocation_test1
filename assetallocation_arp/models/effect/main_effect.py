@@ -170,16 +170,16 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     # TODO put in a function in another script + remove last val
     agg_total_excl_signals = agg_currencies['agg_total_excl_signals']
-    agg_total_excl_signals = agg_total_excl_signals['Total_Excl_Signals'].to_list()
+    agg_total_excl_signals = agg_total_excl_signals['Total_Excl_Signals'].to_list()[:-1]
 
     agg_total_incl_signals = agg_currencies['agg_total_incl_signals']
-    agg_total_incl_signals = agg_total_incl_signals['Total_Incl_Signals'].to_list()
+    agg_total_incl_signals = agg_total_incl_signals['Total_Incl_Signals'].to_list()[:-1]
 
     agg_spot_incl_signals = agg_currencies['agg_spot_incl_signals']
-    agg_spot_incl_signals = agg_spot_incl_signals['Spot_Incl_Signals'].to_list()
+    agg_spot_incl_signals = agg_spot_incl_signals['Spot_Incl_Signals'].to_list()[:-1]
 
     agg_spot_excl_signals = agg_currencies['agg_spot_excl_signals']
-    agg_spot_excl_signals = agg_spot_excl_signals['Spot_Excl_Signals'].to_list()
+    agg_spot_excl_signals = agg_spot_excl_signals['Spot_Excl_Signals'].to_list()[:-1]
 
     effect_outputs = {'profit_and_loss': profit_and_loss,
                       'signals_overview': signals_overview,

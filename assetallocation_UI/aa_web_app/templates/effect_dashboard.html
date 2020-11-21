@@ -11,21 +11,10 @@
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-
-
-
-
-
-
-
-
 <style>
 
 .sidenav {
-  height: 100%;
-  width: 180px;
-  position: fixed;
-  z-index: 1;
+    height: 100%; width: 180px; position: fixed; z-index: 1;
   top: 0;
   left: 0;
   background-color: #005774;
@@ -33,24 +22,13 @@
   padding-top: 20px;
 }
 
-.sidenav a {
-  padding-left: 16px;
-
-  text-decoration: none;
-  font-size: 23px;
-  color: #fff;
-  display: block;
-}
+.sidenav a {padding-left: 16px; text-decoration: none; font-size: 23px; color: #fff; display: block;}
 
 .sidenav a:hover {
   color: #f1f1f1;
 }
 
-.container {
-  margin-left: 180px; /* Same as the width of the sidenav */
-  font-size: 28px; /* Increased text to enable scrolling */
-  padding: 0px 10px;
-}
+.container {margin-left: 180px; font-size: 28px; background-color: pink; width: 100%}
 
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
@@ -63,7 +41,7 @@
             line-height: 1.4;
             margin-top: 60px;
             margin-bottom: 23px;
-
+            margin-left: 200px;
             max-width: 75%;
             display: inline-block;
             z-index: 2;}
@@ -71,7 +49,7 @@
 
 
 
-.date_run_dashboard{margin-bottom: 25px;}
+.date_run_dashboard{margin-bottom: 25px; margin-left: 200px;}
 
 
 
@@ -102,18 +80,22 @@
 
 
 
-.row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 150px;}
-.row_table_overview{margin-left: 150px; margin-top: 50px;}
-.row-agg-line-chart{margin-left: 100px;}
-.row-drawdown-agg-line-chart{margin-left: 100px;}
-.row-year-contrib-agg-line-chart{margin-left: 200px;}
+.row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 167px;}
+.row_table_overview{margin-left: 150px; margin-top: 50px; margin-left: 167px;}
+
+.row-agg-line-chart{margin-left: 130px;}
+
+.row-year-contrib-agg-line-chart{margin-left: 220px;}
+.row-drawdown-agg-line-chart{margin-left: 0px;}
+.row-quarterly-profit-agg-line-chart{margin-left: 190px;}
+
 .title-table-overview{color: #005774; font-weight: bold;}
 .sub_title_table_overview{font-size: 0.75rem;}
 
 
 tr {
-   line-height: 14px;
-   height: 14px;
+   line-height: 11px;
+   height: 11px;
 
 }
 
@@ -197,14 +179,13 @@ tr {
     </div>
 
     <!-- ============================= CHARTS AREA ============================= -->
-    <div class="container">
+    <div class="container-fluid">
         <h2 class="title-dashboard">EFFECT Dashboard</h2><br>
 
         <h6 class="date_run_dashboard text-muted">Date run {{effect_data_form['input_signal_date_effect']}}</h6>
 
         <div class="row row_notional_table">
             <div class="col-lg-6">
-
                 <table class="table table-hover table-custom">
                 <thead>
                     <tr>
@@ -217,10 +198,9 @@ tr {
                         <th class="text-muted text-center" scope="row">Drawdown (%)</th>
                         <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_drawdown_position_size_matr']['drawdown']}}</td>
                     </tr>
-                <tr>
+                    <tr>
                         <th class="text-muted text-center" scope="row">Position size in MATR (%)</th>
                         <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_drawdown_position_size_matr']['size_matr']}}</td>
-
                     </tr>
                 </tbody>
             </table>
@@ -320,9 +300,9 @@ tr {
                 <thead>
                     <tr>
                         <th scope="col"></th>
-                        <th class="text-muted text-center" scope="col">Last<br>week</th>
-                        <th class="text-muted text-center" scope="col">Total (%)<br></th>
-                        <th class="text-muted text-center" scope="col">Spot (%)</th>
+                        <th class="text-muted text-center" scope="col">Lastweek</th>
+                        <th class="text-muted text-center" scope="col">Total(%)<br></th>
+                        <th class="text-muted text-center" scope="col">Spot(%)</th>
                         <th class="text-muted text-center tex" scope="col">Carry</th>
                     </tr>
                 </thead>
@@ -346,9 +326,9 @@ tr {
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th class="text-muted text-center" scope="col">Real carry (%)</th>
-                            <th class="text-muted text-center" scope="col">Trend (%)</th>
-                            <th class="text-muted text-center" scope="col">This<br>week</th>
+                            <th class="text-muted text-center" scope="col">Real carry(%)</th>
+                            <th class="text-muted text-center" scope="col">Trend(%)</th>
+                            <th class="text-muted text-center" scope="col">This week</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -370,7 +350,7 @@ tr {
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th class="text-muted text-center" scope="col">This<br>week</th>
+                            <th class="text-muted text-center" scope="col">This week</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -390,7 +370,7 @@ tr {
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th class="text-muted text-center" scope="col"><br>Rates (%)</th>
+                            <th class="text-muted text-center" scope="col">Rates(%)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -420,8 +400,7 @@ tr {
             </div>
         </div>
 
-
-                <!--Year to year contrb bar chart-->
+        <!--Year to year contrb bar chart-->
         <div class="row row-year-contrib-agg-line-chart">
             <div class="col-lg-12">
                 <div id="horizontal_bar_chart_effect" class="responsive-plot"></div>
@@ -436,7 +415,7 @@ tr {
 
         <!--Regions line chart-->
         <div class="row row-agg-line-chart">
-                        <div class="col-lg-6">
+            <div class="col-lg-6">
                 <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
                 <script type="text/javascript">
@@ -458,11 +437,8 @@ tr {
 
         </div>
 
-
-        <div class="row row-year-contrib-agg-line-chart">
-
-
-                   <div class="col-lg-12">
+        <div class="row row-quarterly-profit-agg-line-chart">
+            <div class="col-lg-12">
                 <div id="vertical_bar_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/vertical_bar_chart_quarterly_profit_and_loss.js') }}"></script>
                 <script type="text/javascript">
@@ -474,8 +450,6 @@ tr {
                                       {{data_charts['quarters_live']|tojson}})
                 </script>
             </div>
-
-
         </div>
 
 
