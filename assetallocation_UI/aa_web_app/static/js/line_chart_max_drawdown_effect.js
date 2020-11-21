@@ -1,15 +1,15 @@
 DRAWDOWN_LINE_CHART = document.getElementById('drawdown_line_chart_effect');
 
-function drawdown_line_chart(drawdown_no_signals, drawdown_with_signals)
+function drawdown_line_chart(drawdown_no_signals, drawdown_with_signals, drawdown_dates)
 {
-    var trace1 = {
+    var trace1 = {  x: drawdown_dates,
                     y: drawdown_no_signals,
                     mode: 'lines',
                     name: 'All EM FX',
                     line: {color:'#005774'}
                  };
 
-    var trace2 = {
+    var trace2 = {  x: drawdown_dates,
                     y: drawdown_with_signals,
                     mode: 'lines',
                     name: 'L = 16, S = 4, r = 2%, Forward CPI, Incl shorts',

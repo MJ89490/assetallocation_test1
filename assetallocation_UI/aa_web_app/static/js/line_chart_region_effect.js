@@ -1,36 +1,36 @@
 REGION_LINE_CHART = document.getElementById('region_line_chart_effect');
 
-function region_line_chart(latam_data, ceema_data, asia_data, total_data, average_data)
+function region_line_chart(latam_data, ceema_data, asia_data, total_data, average_data, region_dates)
 {
-    var trace1 = {
+    var trace1 = {  x:region_dates,
                     y: latam_data,
                     mode: 'lines',
                     name: 'LatAm',
                     line: {color:'#005774'}
                  };
 
-    var trace2 = {
+    var trace2 = {  x:region_dates,
                     y: ceema_data,
                     mode: 'lines',
                     name: 'CEEMA',
                     line: {color: 'rgb(102, 204, 238)'}
                  };
 
-    var trace3 = {
+    var trace3 = {  x:region_dates,
                     y: asia_data,
                     mode: 'lines',
                     name: 'Asia',
                     line: {color: 'rgb(17, 119, 153)'}
                  };
 
-    var trace4 = {
+    var trace4 = {  x:region_dates,
                     y: total_data,
                     mode: 'lines',
                     name: 'Total',
                     line: {color: 'rgb(0, 128, 64)'}
                  };
 
-    var trace5 = {
+    var trace5 = {  x:region_dates,
                     y: average_data,
                     mode: 'lines',
                     name: 'Average',

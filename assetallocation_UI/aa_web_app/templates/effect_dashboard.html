@@ -395,7 +395,8 @@ tr {
                                      {{data_charts['ceema']|tojson}},
                                      {{data_charts['asia']|tojson}},
                                      {{data_charts['total']|tojson}},
-                                     {{data_charts['average']|tojson}})
+                                     {{data_charts['average']|tojson}},
+                                     {{data_charts['region_dates']|tojson}})
                 </script>
             </div>
         </div>
@@ -422,7 +423,8 @@ tr {
                    agg_line_chart({{effect_outputs['total_excl_signals']|tojson}},
                                   {{effect_outputs['total_incl_signals']|tojson}},
                                   {{effect_outputs['spot_incl_signals']|tojson}},
-                                  {{effect_outputs['spot_excl_signals']|tojson}})
+                                  {{effect_outputs['spot_excl_signals']|tojson}},
+                                  {{effect_outputs['agg_dates']|tojson}})
                 </script>
             </div>
             <!--Drawdown line chart-->
@@ -431,7 +433,8 @@ tr {
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_max_drawdown_effect.js') }}"></script>
                 <script type="text/javascript">
                    drawdown_line_chart({{data_charts['max_drawdown_no_signals_series']|tojson}},
-                                        {{data_charts['max_drawdown_with_signals_series']|tojson}})
+                                        {{data_charts['max_drawdown_with_signals_series']|tojson}},
+                                        {{data_charts['drawdown_dates']|tojson}})
                 </script>
             </div>
 

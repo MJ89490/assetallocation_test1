@@ -37,6 +37,7 @@ class ReceivedDataEffect:
 
     def process_data_charts_(self):
         combo_data = self.effect_outputs['combo']
+
         # LatAm	CEEMA Asia regions
         region = self.effect_outputs['region']
         latam = combo_data[region['latam']].sum(axis=1).to_list()
@@ -44,8 +45,12 @@ class ReceivedDataEffect:
         asia = combo_data[region['asia']].sum(axis=1).to_list()
         total_region = combo_data.sum(axis=1).to_list()
         average_region = [sum(total_region) / len(total_region)] * len(total_region)
+        region_dates = combo_data.index.strftime("%Y-%m-%d").to_list()
+
+        # Drawdown
         max_drawdown_no_signals_series = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series']
         max_drawdown_with_signals_series = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series']
+        drawdown_dates = self.effect_outputs['risk_returns']['max_drawdown']['drawdown_dates']
 
         # Year to date contribution
         log_ret_data = self.effect_outputs['log_ret'].head(-1)
@@ -63,7 +68,7 @@ class ReceivedDataEffect:
             year_to_date_contrib_sum_prod.append((sum(tmp) * self.effect_outputs['pos_size']))
 
         year_to_date_contrib_sum_prod_total = [sum(year_to_date_contrib_sum_prod)]
-        
+
         names_curr = self.write_logs['currency_logs']
 
         # Quarterly P&L
@@ -147,9 +152,11 @@ class ReceivedDataEffect:
         # Quarters for live
         quarters_live = quarterly_currency.loc[start_quarterly_live:, 'Quarters'].to_list()
 
-        return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region,
+        return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region,
+                'average': average_region, 'region_dates': region_dates,
                 'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
                 'max_drawdown_with_signals_series': max_drawdown_with_signals_series,
+                'drawdown_dates': drawdown_dates,
                 'year_to_year_contrib': year_to_date_contrib_sum_prod,
                 'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
                 'names_curr': names_curr, 'backtest_quarterly_profit_and_loss': quarterly_backtest.to_list(),

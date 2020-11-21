@@ -1,29 +1,29 @@
 AGG_LINE_CHART = document.getElementById('aggregate_line_chart_effect');
 
-function agg_line_chart(total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals)
+function agg_line_chart(total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals, agg_dates)
 {
-    var trace1 = {
+    var trace1 = {  x: agg_dates,
                     y: total_excl_signals,
                     mode: 'lines',
                     name: 'Total Excl Signals',
                     line: {color:'#005774'}
                  };
 
-    var trace2 = {
+    var trace2 = {  x: agg_dates,
                     y: total_incl_signals,
                     mode: 'lines',
                     name: 'Total Incl Signals',
                     line: {color: 'rgb(102, 204, 238)'}
                  };
 
-    var trace3 = {
+    var trace3 = {  x: agg_dates,
                     y: spot_incl_signals,
                     mode: 'lines',
                     name: 'Spot Incl Signals',
                     line: {color: 'rgb(17, 119, 153)'}
                  };
 
-    var trace4 = {
+    var trace4 = {  x: agg_dates,
                     y: spot_excl_signals,
                     mode: 'lines',
                     name: 'Spot Excl Signals',

@@ -66,6 +66,8 @@ class ComputeRiskReturnCalculations:
         returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.to_list()
         returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.tolist()
 
+        drawdown_dates = returns_excl_signals.index.strftime("%Y-%m-%d").to_list()
+
         max_drawdown_excl_values, max_drawdown_incl_values = [], []
 
         for value in range(len(returns_excl_tmp)):
@@ -76,7 +78,8 @@ class ComputeRiskReturnCalculations:
         return {'max_drawdown_no_signals': round(abs(min(max_drawdown_excl_values)) * 100, 2),
                 'max_drawdown_with_signals': round(abs(min(max_drawdown_incl_values)) * 100, 2),
                 'all_max_drawdown_no_signals_series': max_drawdown_excl_values,
-                'all_max_drawdown_with_signals_series': max_drawdown_incl_values}
+                'all_max_drawdown_with_signals_series': max_drawdown_incl_values,
+                'drawdown_dates': drawdown_dates}
 
     @staticmethod
     def compute_calmar_ratio(excess_returns, max_drawdown):
