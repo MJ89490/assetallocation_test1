@@ -4,7 +4,8 @@ from flask import render_template
 from flask import request
 
 from assetallocation_UI.aa_web_app import app
-from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
+from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel
+from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
 
 from assetallocation_UI.aa_web_app.get_data_times import ReceivedDataTimes
 from assetallocation_UI.aa_web_app.get_data_effect import ProcessDataEffect
@@ -58,7 +59,7 @@ def received_data_times_form():
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
 def effect_dashboard():
-    form = InputsTimesModel()
+    form = InputsEffectStrategy()
     data_effect = obj_received_data_effect.run_process_data_effect()
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 

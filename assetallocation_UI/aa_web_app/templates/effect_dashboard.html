@@ -134,7 +134,7 @@ tr {
             {{ form.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions(class="form-control", id="selectVersion")}}
+                {{ form.versions_effect(class="form-control", id="selectVersion")}}
             </div>
            <div class="form-group">
                <label class="label-models-select-sidebar">Leverage type</label>
@@ -145,8 +145,7 @@ tr {
                    <option>s</option>
                </select>
            </div>
-            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
-            {{ form.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
+            {{ form.submit_ok_charts_effect_data(class="form-control", id="btn-select-charts-ok")}}
         </form>
 
         <!-- ============================= EXPORT DATA ============================= -->
@@ -155,7 +154,7 @@ tr {
             {{ form.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions(class="form-control", id="selectVersion")}}
+                {{ form.versions_effect(class="form-control", id="selectVersion")}}
             </div>
             <div class="form-group">
                <label class="label-models-select-sidebar">Leverage type</label>
@@ -167,11 +166,11 @@ tr {
                </select>
            </div>
             <label class="label-models-date-sidebar">Start date</label>
-            {{ form.start_date_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
+            {{ form.start_date_effect_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
              <label class="label-models-date-sidebar">End date</label>
-            {{ form.end_date_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
+            {{ form.end_date_effect_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
             <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
-            {{ form.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
+            {{ form.submit_ok_export_effect_data(class="form-control", id="btn-select-export-data")}}
         </form>
 
         <!-- ============================= SUPPORT ============================= -->

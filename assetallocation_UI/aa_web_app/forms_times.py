@@ -7,19 +7,6 @@ from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
 from assetallocation_UI.aa_web_app.service.fund import get_fund_names
 from assetallocation_UI.aa_web_app.service.formatter import format_versions
 
-"""
-User login form
-"""
-
-
-# TODO TO IMPROVE
-
-
-class LoginForm(FlaskForm):
-    username = StringField(u'Username')
-    password = PasswordField(u'Password')
-    submit = SubmitField('Sign In')
-
 
 class ExportDataForm(FlaskForm):
 
@@ -127,9 +114,3 @@ class InputsTimesModel(FlaskForm):
     asset_input_set = FieldList(FormField(AssetInputForm), min_entries=0)
 
     submit_save = SubmitField('Save')
-
-
-class InputsEffectStrategy(FlaskForm):
-    version_choices = [('New Version', 'New Version')]
-    versions_effect = SelectField('Versions', choices=version_choices)
-
