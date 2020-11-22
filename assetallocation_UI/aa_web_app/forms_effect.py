@@ -11,3 +11,7 @@ class InputsEffectStrategy(FlaskForm):
     end_date_effect_inputs = StringField('End Date')
     submit_ok_export_effect_data = SubmitField('ok')
 
+    # Quarterly profit and loss
+    start_date_quarterly_profit_and_loss_effect = StringField('31/03/2014')
+    submit_ok_quarterly_profit_and_loss = SubmitField('ok')
+

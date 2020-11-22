@@ -87,7 +87,7 @@
 
 .row-year-contrib-agg-line-chart{margin-left: 220px;}
 .row-drawdown-agg-line-chart{margin-left: 0px;}
-.row-quarterly-profit-agg-line-chart{margin-left: 190px;}
+.row-quarterly-profit-agg-line-chart{margin-left: 190px; margin-top: 80px;}
 
 .title-table-overview{color: #005774; font-weight: bold;}
 .sub_title_table_overview{font-size: 0.75rem;}
@@ -99,8 +99,9 @@ tr {
 
 }
 
-
-
+#submit_ok_quarterly_profit_and_loss{height: 30px; margin-left: 10px; width: 70px; padding-top: 2px;}
+#date_box_effect{height: 30px; width: 150px; text-align: center; }
+.title-date-box-effect{font-size: 20px; margin-left: 40px;}
 
 </style>
 </head>
@@ -438,8 +439,18 @@ tr {
             </div>
         </div>
 
+
         <!--Quarterly profit and loss chart-->
         <div class="row row-quarterly-profit-agg-line-chart">
+            <form class="center" action="" method="POST" novalidate>
+                <label class="title-date-box-effect text-muted">Backtest</label>
+                <div class="btn-group">
+
+                    {{form.start_date_quarterly_profit_and_loss_effect(class="form-control", placeholder="31/03/2014", id="date_box_effect")}}
+                    {{form.submit_ok_quarterly_profit_and_loss(class="form-control", id="submit_ok_quarterly_profit_and_loss")}}
+                </div>
+            </form>
+
             <div class="col-lg-12">
                 <div id="vertical_bar_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/vertical_bar_chart_quarterly_profit_and_loss.js') }}"></script>

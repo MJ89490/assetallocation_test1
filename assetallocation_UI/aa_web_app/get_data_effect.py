@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 from assetallocation_arp.arp_strategies import run_effect_strategy
-
+from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 class ReceiveDataEffect:
     def __init__(self):
@@ -87,7 +87,7 @@ class ProcessDataEffect(ReceiveDataEffect):
                 'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
                 'names_curr': self.write_logs['currency_logs']}
 
-    def draw_quarterly_profit_and_loss_chart(self):
+    def draw_quarterly_profit_and_loss_chart(self, quarterly_date='30/06/2014'):
         # Quarterly P&L
         rng = pd.date_range(start=self.effect_outputs['combo'].index[0], end=self.effect_outputs['combo'].index[-1],
                             freq='Q')
@@ -95,11 +95,10 @@ class ProcessDataEffect(ReceiveDataEffect):
         combo_quarterly = self.effect_outputs['combo'].reindex(rng, method='pad')
         dates_set = self.effect_outputs['combo'].index.values
 
-        start_quarterly = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
+        start_quarterly = pd.to_datetime(quarterly_date.replace('/', '-'), format='%d-%m-%Y')
         start_prev_quarterly_loc = combo_quarterly.index.get_loc(start_quarterly) - 1
         start_prev_quarterly = combo_quarterly.index[start_prev_quarterly_loc]
 
-        from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
         quarterly_currency = pd.DataFrame()
         counter = 0
 
@@ -198,11 +197,11 @@ class ProcessDataEffect(ReceiveDataEffect):
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 9, 'Quarters'] = 'Q3'
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 12, 'Quarters'] = 'Q4'
 
-    def run_process_data_effect(self):
+    def run_process_data_effect(self, quarterly_date='30/06/2014'):
         return {'region_chart': self.draw_regions_charts(),
                 'drawdown_chart': self.draw_drawdown_chart(),
                 'year_to_date_contrib_chart': self.draw_year_to_date_contrib_chart(),
-                'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(),
+                'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(quarterly_date),
                 'effect_data_form': self.effect_form,
                 'effect_outputs': self.effect_outputs,
                 'write_logs': self.write_logs}

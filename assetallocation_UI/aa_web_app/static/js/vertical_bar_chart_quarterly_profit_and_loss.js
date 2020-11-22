@@ -32,7 +32,8 @@ function vertical_bar_chart(backtest, livetest, quarterly_backtest_dates, quarte
       barmode: 'group',
       bargap: 0.15,
       bargroupgap: 0.1,
-      legend:{xanchor:"center", yanchor:"top", y:-0.3, x:0.5}
+      legend:{xanchor:"center", yanchor:"top", y:-0.3, x:0.5},
+      margin: { l: 'auto', r: 0, b: 0, t: 0, pad: 4 }
     };
 
     var config = {'displayModeBar': false, 'responsive': true };
