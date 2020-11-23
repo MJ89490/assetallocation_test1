@@ -58,18 +58,16 @@
 
 
 
-.sidenav-home{margin-top: 40px;}
+.sidenav-home{margin-top: 40px; margin-bottom: 20px;}
 
 
-#selectVersion {color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 38px; margin-left: 10px;}
 .form-models-select-sidebar {color: #005774 !important; border-color: #007faa !important; width: 140px; height: 38px; margin-left: 10px; padding-top:0px;}
 .label-models-select-sidebar {color: #fff;  padding-left: 16px; margin-top: 10px;}
 .btn-select-sidebar {font-size: 1rem; width: 45px;height: 38px}
 
 .label-models-date-sidebar{color: #fff;  padding-left: 16px;}
 #btn-select-charts-ok, #btn-select-export-data{width: 45px; margin-left: 58px; color: #005774; height: 25px; padding-top: 0px;}
-#sidebar-start-date{width: 140px; margin-left: 10px; color: #005774;}
-#sidebar-end-date{width: 140px; margin-left: 10px; color: #005774; margin-bottom: 10px;}
+
 
 
 .navbar-default {
@@ -101,6 +99,13 @@ tr {
 
 #submit_ok_quarterly_profit_and_loss{height: 30px; margin-left: 10px; width: 70px; padding-top: 2px;}
 #date_box_effect{height: 30px; width: 150px; text-align: center; margin-bottom: 5px;}
+
+#submit_ok_charts_effect_data{height: 30px; margin-left: 10px; width: 50px; margin-left: 55px; padding-top: 2px; color: #005774; margin-bottom: 20px;}
+#versions_effect{text-align: center;  margin-bottom: 15px; padding-bottom: 0px; padding-top: 0px; color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 30px; margin-left: 10px;}
+#versions_export_effect{text-align: center;  margin-bottom: 20px; padding-bottom: 0px; padding-top: 0px; color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 30px; margin-left: 10px;}
+#start_date_effect_inputs{text-align: center; width: 140px;  height: 30px; margin-left: 10px; color: #005774; margin-bottom: 20px;}
+#end_date_effect_inputs{text-align: center; width: 140px;  height: 30px; margin-left: 10px; color: #005774; margin-bottom: 15px;}
+
 .title-date-box-effect{font-size: 18px; margin-left: 40px;}
 .title-end-date-box-effect{font-size: 18px; padding-top: 10px;}
 </style>
@@ -135,9 +140,10 @@ tr {
             {{ form.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions_effect(class="form-control", id="selectVersion")}}
+                {{ form.versions_effect(class="form-control", id="versions_effect")}}
             </div>
-            {{ form.submit_ok_charts_effect_data(class="form-control", id="btn-select-charts-ok")}}
+            {{ form.submit_ok_charts_effect_data(class="form-control",  id="submit_ok_charts_effect_data")}}
+            <!--id="btn-select-charts-ok"-->
         </form>
 
         <!-- ============================= EXPORT DATA ============================= -->
@@ -146,14 +152,14 @@ tr {
             {{ form.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions_effect(class="form-control", id="selectVersion")}}
+                {{ form.versions_effect(class="form-control", id="versions_export_effect")}}
             </div>
             <label class="label-models-date-sidebar">Start date</label>
-            {{ form.start_date_effect_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
+            {{ form.start_date_effect_inputs(class="form-control", placeholder="25/12/2018", id="start_date_effect_inputs") }}
              <label class="label-models-date-sidebar">End date</label>
-            {{ form.end_date_effect_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
-            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
-            {{ form.submit_ok_export_effect_data(class="form-control", id="btn-select-export-data")}}
+            {{ form.end_date_effect_inputs(class="form-control", placeholder="05/01/2019", id="end_date_effect_inputs") }}
+            <!--id="btn-select-export-data"-->
+            {{ form.submit_ok_export_effect_data(class="form-control", id="submit_ok_charts_effect_data")}}
         </form>
 
         <!-- ============================= SUPPORT ============================= -->
