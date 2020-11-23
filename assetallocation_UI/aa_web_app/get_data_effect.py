@@ -42,6 +42,10 @@ class ProcessDataEffect(ReceiveDataEffect):
     def __init__(self):
         super().__init__()
         self.quarterly_date_chart = ''
+        self.start_quarterly_back_p_and_l_date = ''
+        self.end_quarterly_back_p_and_l_date = ''
+        self.start_quarterly_live_p_and_l_date = ''
+        self.start_year_to_year_contrib_date = ''
 
     @property
     def quarterly_date_chart(self):
@@ -49,8 +53,55 @@ class ProcessDataEffect(ReceiveDataEffect):
 
     @quarterly_date_chart.setter
     def quarterly_date_chart(self, value):
-        dates = [val.replace('/', '-') for val in value]
+        if isinstance(value, str):
+            dates = value.replace('/', '-')
+        else:
+            dates = [val.replace('/', '-') for val in value]
         self._quarterly_date_chart = dates
+
+    @property
+    def start_quarterly_back_p_and_l_date(self):
+        return self._start_quarterly_back_p_and_l_date
+
+    @start_quarterly_back_p_and_l_date.setter
+    def start_quarterly_back_p_and_l_date(self, value):
+        if value == '':
+            self._start_quarterly_back_p_and_l_date = '31/03/2014'
+        else:
+            self._start_quarterly_back_p_and_l_date = value
+
+    @property
+    def end_quarterly_back_p_and_l_date(self):
+        return self._end_quarterly_back_p_and_l_date
+
+    @end_quarterly_back_p_and_l_date.setter
+    def end_quarterly_back_p_and_l_date(self, value):
+        if value == '':
+            self._end_quarterly_back_p_and_l_date = '30/06/2017'
+        else:
+            self._end_quarterly_back_p_and_l_date = value
+
+    @property
+    def start_quarterly_live_p_and_l_date(self):
+        return self._start_quarterly_live_p_and_l_date
+
+    @start_quarterly_live_p_and_l_date.setter
+    def start_quarterly_live_p_and_l_date(self, value):
+        if value == '':
+            self._start_quarterly_live_p_and_l_date = '30/09/2017'
+        else:
+            self._start_quarterly_live_p_and_l_date = value
+
+    @property
+    def start_year_to_year_contrib_date(self):
+        return self._start_year_to_year_contrib_date
+
+    @start_year_to_year_contrib_date.setter
+    def start_year_to_year_contrib_date(self, value):
+        if value == '':
+            self._start_year_to_year_contrib_date = '31/12/2019'
+        else:
+            self._start_year_to_year_contrib_date = value
 
     def draw_regions_charts(self):
         # LatAm	CEEMA Asia regions
@@ -81,7 +132,10 @@ class ProcessDataEffect(ReceiveDataEffect):
     def draw_year_to_date_contrib_chart(self):
         combo_data_tmp = self.effect_outputs['combo'].head(-1).tail(-1)
 
-        start_date = find_date(combo_data_tmp.index.values, pd.to_datetime('31-12-2019', format='%d-%m-%Y'))
+        self.quarterly_date_chart = self.start_year_to_year_contrib_date
+        start_year_to_year_contrib_date = self.quarterly_date_chart
+
+        start_date = find_date(combo_data_tmp.index.values, pd.to_datetime(start_year_to_year_contrib_date, format='%d-%m-%Y'))
         end_date = find_date(combo_data_tmp.index.values, pd.to_datetime('30-09-2020', format='%d-%m-%Y'))
 
         log_ret_tmp = self.effect_outputs['log_ret'].head(-1).loc[start_date:end_date, :]
@@ -101,7 +155,7 @@ class ProcessDataEffect(ReceiveDataEffect):
                 'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
                 'names_curr': self.write_logs['currency_logs']}
 
-    def draw_quarterly_profit_and_loss_chart(self, quarterly_date, end_quarterly_back_date, start_quarterly_live_date):
+    def draw_quarterly_profit_and_loss_chart(self):
         # Quarterly P&L
         rng = pd.date_range(start=self.effect_outputs['combo'].index[0], end=self.effect_outputs['combo'].index[-1],
                             freq='Q')
@@ -109,7 +163,7 @@ class ProcessDataEffect(ReceiveDataEffect):
         combo_quarterly = self.effect_outputs['combo'].reindex(rng, method='pad')
         dates_set = self.effect_outputs['combo'].index.values
 
-        self.quarterly_date_chart = quarterly_date, end_quarterly_back_date, start_quarterly_live_date
+        self.quarterly_date_chart = self.start_quarterly_back_p_and_l_date, self.end_quarterly_back_p_and_l_date, self.start_quarterly_live_p_and_l_date
         start_quarterly_date, end_quarterly_back_date, start_quarterly_live_date = self.quarterly_date_chart
 
         start_quarterly = pd.to_datetime(start_quarterly_date, format='%d-%m-%Y')
@@ -214,14 +268,12 @@ class ProcessDataEffect(ReceiveDataEffect):
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 9, 'Quarters'] = 'Q3'
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 12, 'Quarters'] = 'Q4'
 
-    def run_process_data_effect(self, quarterly_date='31/03/2014', end_quarterly_back_date='30/06/2017',
-                                start_quarterly_live_date='30/09/2017'):
+    def run_process_data_effect(self):
+
         return {'region_chart': self.draw_regions_charts(),
                 'drawdown_chart': self.draw_drawdown_chart(),
                 'year_to_date_contrib_chart': self.draw_year_to_date_contrib_chart(),
-                'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(quarterly_date,
-                                                                                             end_quarterly_back_date,
-                                                                                             start_quarterly_live_date),
+                'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(),
                 'effect_data_form': self.effect_form,
                 'effect_outputs': self.effect_outputs,
                 'write_logs': self.write_logs}
