@@ -13,8 +13,6 @@ from assetallocation_UI.aa_web_app.get_data_effect import ProcessDataEffect
 obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
 
-# data missing: JPPUELM Index
-
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
 # @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 # todo store data in db with an id + concatenate id in the redirect url + load data in tables using id

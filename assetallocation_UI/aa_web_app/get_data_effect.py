@@ -4,6 +4,7 @@ import numpy as np
 from assetallocation_arp.arp_strategies import run_effect_strategy
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
+
 class ReceiveDataEffect:
     def __init__(self):
         self.effect_outputs = {}
@@ -80,10 +81,11 @@ class ProcessDataEffect(ReceiveDataEffect):
     def draw_year_to_date_contrib_chart(self):
         combo_data_tmp = self.effect_outputs['combo'].head(-1).tail(-1)
 
-        log_ret_tmp = self.effect_outputs['log_ret'].head(-1).loc[pd.to_datetime('31-12-2019', format='%d-%m-%Y'):
-                                                                  pd.to_datetime('30-09-2020', format='%d-%m-%Y'), :]
-        combo_data_tmp = combo_data_tmp.loc[pd.to_datetime('31-12-2019', format='%d-%m-%Y'):
-                                            pd.to_datetime('30-09-2020', format='%d-%m-%Y'), :]
+        start_date = find_date(combo_data_tmp.index.values, pd.to_datetime('31-12-2019', format='%d-%m-%Y'))
+        end_date = find_date(combo_data_tmp.index.values, pd.to_datetime('30-09-2020', format='%d-%m-%Y'))
+
+        log_ret_tmp = self.effect_outputs['log_ret'].head(-1).loc[start_date:end_date, :]
+        combo_data_tmp = combo_data_tmp.loc[start_date:end_date, :]
 
         year_to_date_contrib_sum_prod = []
 
