@@ -46,6 +46,8 @@ function region_line_chart(latam_data, ceema_data, asia_data, total_data, averag
                   yaxis: {title: 'net positions',  titlefont: {size: 12, color: 'lightgrey'}}
                  };
 
+
+
     var config = {'displayModeBar': false, 'responsive': true };
 
     Plotly.newPlot(REGION_LINE_CHART, data, layout, config);

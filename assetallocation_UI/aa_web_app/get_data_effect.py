@@ -183,7 +183,8 @@ class ProcessDataEffect(ReceiveDataEffect):
                 'quarters_backtest': quarters_backtest,
                 'quarters_live': quarters_live}
 
-    def create_backtest(self, quarterly_currency, quarterly_date, end_quarterly_back_date):
+    @staticmethod
+    def create_backtest(quarterly_currency, quarterly_date, end_quarterly_back_date):
         start_quarterly_backtest = pd.to_datetime(quarterly_date, format='%d-%m-%Y')
         end_quarterly_backtest = pd.to_datetime(end_quarterly_back_date, format='%d-%m-%Y')
         quarterly_backtest = quarterly_currency.loc[start_quarterly_backtest:end_quarterly_backtest, 'Total live']
