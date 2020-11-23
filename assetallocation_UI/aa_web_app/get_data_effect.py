@@ -269,7 +269,6 @@ class ProcessDataEffect(ReceiveDataEffect):
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 12, 'Quarters'] = 'Q4'
 
     def run_process_data_effect(self):
-
         return {'region_chart': self.draw_regions_charts(),
                 'drawdown_chart': self.draw_drawdown_chart(),
                 'year_to_date_contrib_chart': self.draw_year_to_date_contrib_chart(),
