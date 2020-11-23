@@ -223,7 +223,10 @@ class ProcessDataEffect:
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
 
         # EURUSDCR Curncy
-        eur_usd_cr_config = config.get('EURUSDCR Currency', 'eur_usd_cr_ticker')
+        eur_usd_cr_config = config.get('eurusdcr_currency', 'eur_usd_cr_ticker')
+
+        # JGENVUUG Index
+        jgenvuug_index_config = config.get('jgenvuug_index', 'jgenvuug_index_ticker')
 
         config_data = {'spot_config': self.currencies_spot,
                        'carry_config': self.currencies_carry,
@@ -231,6 +234,7 @@ class ProcessDataEffect:
                        '3M_implied_config': self.currencies_3M_implied,
                        'spxt_index_config': spxt_index_config,
                        'eur_usd_cr_config': eur_usd_cr_config,
+                       'jgenvuug_index_config': jgenvuug_index_config,
                        'region_config': region}
 
         return config_data
@@ -259,10 +263,12 @@ class ProcessDataEffect:
 
         spxt_index_values = self.data_currencies[assets_table['spxt_index_config']]
 
+        jgenvuug_index_values = self.data_currencies[assets_table['jgenvuug_index_config']]
+
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
         return common_spot, common_carry, spxt_index_values, self.three_month_implied_usd, self.three_month_implied_eur, \
-               assets_table['region_config']
+               assets_table['region_config'], jgenvuug_index_values
 
 

@@ -47,8 +47,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                         signal_day_mat=strategy_inputs['input_signal_day_effect'].item(), all_data=all_data)
     obj_import_data.process_all_data_effect()
     obj_import_data.start_date_calculations = user_date
-    spot_origin, carry_origin, spx_index_values,  three_month_implied_usd, three_month_implied_eur, region = \
-        obj_import_data.process_usd_eur_data_effect()
+    spot_origin, carry_origin, spx_index_values,  three_month_implied_usd, three_month_implied_eur, region, \
+    jgenvuug_index_values = obj_import_data.process_usd_eur_data_effect()
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
@@ -164,7 +164,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     risk_returns = obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
                                                     returns_excl_signals=agg_currencies['agg_total_excl_signals'].head(-1),
                                                     returns_incl_signals=agg_currencies['agg_total_incl_signals'].head(-1),
-                                                    spxt_index_values=spx_index_values.loc[user_date:])
+                                                    spxt_index_values=spx_index_values.loc[user_date:],
+                                                    jgenvuug_index_values=jgenvuug_index_values)
 
     write_logs = {'currency_logs': currency_logs}
 

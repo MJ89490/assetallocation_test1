@@ -1,3 +1,4 @@
+import numpy
 from math import sqrt
 
 
@@ -55,7 +56,7 @@ class ComputeRiskReturnCalculations:
                 'sharpe_ratio_with_signals': round(sharpe_ratio_with_signals, 2)}
 
     @staticmethod
-    def compute_max_drawdown(returns_excl_signals, returns_incl_signals):
+    def compute_max_drawdown(returns_excl_signals, returns_incl_signals, jgenvuug_index_values):
         """
         Function computing the max drawdown
         :param returns_excl_signals: returns_excl_signals values
@@ -66,19 +67,26 @@ class ComputeRiskReturnCalculations:
         returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.to_list()
         returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.tolist()
 
+        jgenvuug_index_tmp = jgenvuug_index_values[returns_excl_signals.first_valid_index():
+                                                   returns_excl_signals.last_valid_index()].tolist()
+
+        jgenvuug_index_tmp = [0 if str(val) == 'nan' else val for val in jgenvuug_index_tmp]
+
         drawdown_dates = returns_excl_signals.index.strftime("%Y-%m-%d").to_list()
 
-        max_drawdown_excl_values, max_drawdown_incl_values = [], []
+        max_drawdown_excl_values, max_drawdown_incl_values, max_drawdown_index_values = [], [], []
 
         for value in range(len(returns_excl_tmp)):
 
             max_drawdown_excl_values.append((returns_excl_tmp[value] / max(returns_excl_tmp[0: value+1])) - 1)
             max_drawdown_incl_values.append((returns_incl_tmp[value] / max(returns_incl_tmp[0: value+1])) - 1)
-
+            max_drawdown_index_values.append((jgenvuug_index_tmp[value] / max(jgenvuug_index_tmp[0: value + 1])) - 1)
+            
         return {'max_drawdown_no_signals': round(abs(min(max_drawdown_excl_values)) * 100, 2),
                 'max_drawdown_with_signals': round(abs(min(max_drawdown_incl_values)) * 100, 2),
                 'all_max_drawdown_no_signals_series': max_drawdown_excl_values,
                 'all_max_drawdown_with_signals_series': max_drawdown_incl_values,
+                'all_max_drawdown_jgenvuug': max_drawdown_index_values,
                 'drawdown_dates': drawdown_dates}
 
     @staticmethod
@@ -123,7 +131,8 @@ class ComputeRiskReturnCalculations:
         """
         pass
 
-    def run_compute_risk_return_calculations(self, returns_excl_signals, returns_incl_signals, spxt_index_values):
+    def run_compute_risk_return_calculations(self, returns_excl_signals, returns_incl_signals, spxt_index_values,
+                                             jgenvuug_index_values):
         """
         Function calling the functions above
         :param returns_excl_signals: returns_excl_returns_excl_signals values
@@ -140,7 +149,8 @@ class ComputeRiskReturnCalculations:
         sharpe_ratio = self.compute_sharpe_ratio(std_dev=std_dev, excess_returns=excess_returns)
 
         max_drawdown = self.compute_max_drawdown(returns_excl_signals=returns_excl_signals,
-                                                 returns_incl_signals=returns_incl_signals)
+                                                 returns_incl_signals=returns_incl_signals,
+                                                 jgenvuug_index_values=jgenvuug_index_values)
 
         calmar_ratio = self.compute_calmar_ratio(excess_returns=excess_returns, max_drawdown=max_drawdown)
 

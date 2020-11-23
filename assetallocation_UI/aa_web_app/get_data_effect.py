@@ -69,10 +69,12 @@ class ProcessDataEffect(ReceiveDataEffect):
             self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series']
         max_drawdown_with_signals_series = \
             self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series']
+        max_drawdown_jgenvuug = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_jgenvuug']
         drawdown_dates = self.effect_outputs['risk_returns']['max_drawdown']['drawdown_dates']
 
         return {'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
                 'max_drawdown_with_signals_series': max_drawdown_with_signals_series,
+                'max_drawdown_jgenvuug': max_drawdown_jgenvuug,
                 'drawdown_dates': drawdown_dates}
 
     def draw_year_to_date_contrib_chart(self):

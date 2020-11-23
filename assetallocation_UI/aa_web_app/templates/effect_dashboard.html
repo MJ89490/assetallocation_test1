@@ -416,7 +416,7 @@ tr {
 
         <!--Aggregate chart-->
         <div class="row row-agg-line-chart">
-            <div class="col-lg-6">
+            <div class="col-lg-5">
                 <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
                 <script type="text/javascript">
@@ -428,17 +428,17 @@ tr {
                 </script>
             </div>
             <!--Drawdown line chart-->
-            <div class="col-lg-6">
+            <div class="col-lg-7">
                 <div id="drawdown_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_max_drawdown_effect.js') }}"></script>
                 <script type="text/javascript">
                    drawdown_line_chart({{data_effect['drawdown_chart']['max_drawdown_no_signals_series']|tojson}},
                                         {{data_effect['drawdown_chart']['max_drawdown_with_signals_series']|tojson}},
+                                        {{data_effect['drawdown_chart']['max_drawdown_jgenvuug']|tojson}},
                                         {{data_effect['drawdown_chart']['drawdown_dates']|tojson}})
                 </script>
             </div>
         </div>
-
 
         <!--Quarterly profit and loss chart-->
         <div class="row row-quarterly-profit-agg-line-chart">
