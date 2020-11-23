@@ -81,8 +81,8 @@
 .row_table_overview{margin-left: 150px; margin-top: 50px; margin-left: 167px;}
 
 .row-agg-line-chart{margin-left: 130px;}
-
-.row-year-contrib-agg-line-chart{margin-left: 220px;}
+.row-region-line-chart{margin-left: 130px; margin-bottom: 60px;}
+.row-year-contrib-agg-line-chart{margin-left: 140px; margin-bottom: 40px;}
 .row-drawdown-agg-line-chart{margin-left: 0px;}
 .row-quarterly-profit-agg-line-chart{margin-left: 145px; margin-top: 80px;}
 
@@ -368,7 +368,7 @@ tr {
         </div>
 
         <!-- Regions chart-->
-        <div class="row row-agg-line-chart">
+        <div class="row row-region-line-chart">
             <div class="col-lg-12">
                 <div id="region_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_region_effect.js') }}"></script>
@@ -385,6 +385,13 @@ tr {
 
         <!--Year to year contrb bar chart-->
         <div class="row row-year-contrib-agg-line-chart">
+            <form class="center" action="" method="POST" novalidate>
+                <label class="title-date-box-effect text-muted">Start year-to-year</label>
+                <div class="btn-group">
+                    {{form.start_year_to_year_contrib(class="form-control", placeholder="31/12/2019", id="date_box_effect")}}
+                    {{form.submit_ok_year_to_year_contrib(class="form-control", id="submit_ok_quarterly_profit_and_loss")}}
+                </div>
+            </form>
             <div class="col-lg-12">
                 <div id="horizontal_bar_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/horizontal_bar_chart_year_to_year_contrib_effect.js') }}"></script>

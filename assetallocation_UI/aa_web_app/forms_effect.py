@@ -17,6 +17,12 @@ class InputsEffectStrategy(FlaskForm):
     start_date_quarterly_live_profit_and_loss_effect = StringField('30/09/2017')
     submit_ok_quarterly_profit_and_loss = SubmitField('ok')
 
+    # Year to year contrib
+    start_year_to_year_contrib = StringField('31/12/2019')
+    submit_ok_year_to_year_contrib = SubmitField('ok')
+
+
+
 
 
 
