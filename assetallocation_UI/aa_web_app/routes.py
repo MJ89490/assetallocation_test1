@@ -63,8 +63,12 @@ def effect_dashboard():
     data_effect = obj_received_data_effect.run_process_data_effect()
 
     if form.submit_ok_quarterly_profit_and_loss.data:
-        quarterly_p_and_l_date = form.start_date_quarterly_profit_and_loss_effect.data
-        data_effect = obj_received_data_effect.run_process_data_effect(quarterly_date=quarterly_p_and_l_date)
+        start_quarterly_back_p_and_l_date = form.start_date_quarterly_backtest_profit_and_loss_effect.data
+        end_quarterly_back_p_and_l_date = form.end_date_quarterly_backtest_profit_and_loss_effect.data
+        start_quarterly_live_p_and_l_date = form.start_date_quarterly_live_profit_and_loss_effect.data
+        data_effect = obj_received_data_effect.run_process_data_effect(quarterly_date=start_quarterly_back_p_and_l_date,
+                                                                       end_quarterly_back_date=end_quarterly_back_p_and_l_date,
+                                                                       start_quarterly_live_date=start_quarterly_live_p_and_l_date)
         return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')

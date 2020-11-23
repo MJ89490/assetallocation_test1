@@ -24,15 +24,12 @@ function vertical_bar_chart(backtest, livetest, quarterly_backtest_dates, quarte
 
     var layout = {
       title: {text: 'Quarterly P&L', font: {color: 'lightgrey'}},
-      xaxis: {tickfont: {size: 14, color: 'rgb(107, 107, 107)'}},
+      xaxis: {tickfont: {size: 10, color: 'rgb(107, 107, 107)'}},
       yaxis: {title: 'MATR P&L contribution(quarterly)',
               titlefont: {size: 12, color: 'lightgrey'},
               tickfont: {size: 12},
               tickformat: ',.3%'},
-      barmode: 'group',
-      bargap: 0.15,
-      bargroupgap: 0.1,
-      legend:{xanchor:"center", yanchor:"top", y:-0.3, x:0.5},
+      legend:{xanchor:"center", yanchor:"top", y:-0.2, x:0.5},
       margin: { l: 'auto', r: 0, b: 0, t: 0, pad: 4 }
     };
 

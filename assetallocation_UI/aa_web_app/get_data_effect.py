@@ -40,6 +40,16 @@ class ProcessDataEffect(ReceiveDataEffect):
 
     def __init__(self):
         super().__init__()
+        self.quarterly_date_chart = ''
+
+    @property
+    def quarterly_date_chart(self):
+        return self._quarterly_date_chart
+
+    @quarterly_date_chart.setter
+    def quarterly_date_chart(self, value):
+        dates = [val.replace('/', '-') for val in value]
+        self._quarterly_date_chart = dates
 
     def draw_regions_charts(self):
         # LatAm	CEEMA Asia regions
@@ -87,7 +97,7 @@ class ProcessDataEffect(ReceiveDataEffect):
                 'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
                 'names_curr': self.write_logs['currency_logs']}
 
-    def draw_quarterly_profit_and_loss_chart(self, quarterly_date='30/06/2014'):
+    def draw_quarterly_profit_and_loss_chart(self, quarterly_date, end_quarterly_back_date, start_quarterly_live_date):
         # Quarterly P&L
         rng = pd.date_range(start=self.effect_outputs['combo'].index[0], end=self.effect_outputs['combo'].index[-1],
                             freq='Q')
@@ -95,7 +105,10 @@ class ProcessDataEffect(ReceiveDataEffect):
         combo_quarterly = self.effect_outputs['combo'].reindex(rng, method='pad')
         dates_set = self.effect_outputs['combo'].index.values
 
-        start_quarterly = pd.to_datetime(quarterly_date.replace('/', '-'), format='%d-%m-%Y')
+        self.quarterly_date_chart = quarterly_date, end_quarterly_back_date, start_quarterly_live_date
+        start_quarterly_date, end_quarterly_back_date, start_quarterly_live_date = self.quarterly_date_chart
+
+        start_quarterly = pd.to_datetime(start_quarterly_date, format='%d-%m-%Y')
         start_prev_quarterly_loc = combo_quarterly.index.get_loc(start_quarterly) - 1
         start_prev_quarterly = combo_quarterly.index[start_prev_quarterly_loc]
 
@@ -149,10 +162,10 @@ class ProcessDataEffect(ReceiveDataEffect):
         quarterly_currency['Total live'] = quarterly_currency.sum(axis=1)
 
         # Backtest
-        backtest = self.create_backtest(quarterly_currency)
+        backtest = self.create_backtest(quarterly_currency, start_quarterly_date, end_quarterly_back_date)
 
         # Live
-        livetest = self.create_livetest(quarterly_currency)
+        livetest = self.create_livetest(quarterly_currency, start_quarterly_live_date)
 
         # Set the quarters depending on the dates
         self.create_quarterly_dates(quarterly_currency)
@@ -170,22 +183,21 @@ class ProcessDataEffect(ReceiveDataEffect):
                 'quarters_backtest': quarters_backtest,
                 'quarters_live': quarters_live}
 
-    @staticmethod
-    def create_backtest(quarterly_currency):
-        start_quarterly_backtest = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
-        end_quarterly_backtest = pd.to_datetime('30-06-2017', format='%d-%m-%Y')
+    def create_backtest(self, quarterly_currency, quarterly_date, end_quarterly_back_date):
+        start_quarterly_backtest = pd.to_datetime(quarterly_date, format='%d-%m-%Y')
+        end_quarterly_backtest = pd.to_datetime(end_quarterly_back_date, format='%d-%m-%Y')
         quarterly_backtest = quarterly_currency.loc[start_quarterly_backtest:end_quarterly_backtest, 'Total live']
-        quarterly_backtest_dates = quarterly_backtest.index.strftime("%Y").to_list()
+        quarterly_backtest_dates = quarterly_backtest.index.strftime("%Y-%m").to_list()
         return {'start_quarterly_backtest': start_quarterly_backtest,
                 'end_quarterly_backtest': end_quarterly_backtest,
                 'quarterly_backtest': quarterly_backtest.to_list(),
                 'quarterly_backtest_dates': quarterly_backtest_dates}
 
     @staticmethod
-    def create_livetest(quarterly_currency):
-        start_quarterly_live = pd.to_datetime('30-09-2017', format='%d-%m-%Y')
+    def create_livetest(quarterly_currency, start_quarterly_live_date):
+        start_quarterly_live = pd.to_datetime(start_quarterly_live_date, format='%d-%m-%Y')
         quarterly_live = quarterly_currency.loc[start_quarterly_live:, 'Total live']
-        quarterly_live_dates = quarterly_live.index.strftime("%Y").to_list()
+        quarterly_live_dates = quarterly_live.index.strftime("%Y-%m").to_list()
         return {'start_quarterly_live': start_quarterly_live,
                 'quarterly_live': quarterly_live.to_list(),
                 'quarterly_live_dates': quarterly_live_dates}
@@ -197,11 +209,14 @@ class ProcessDataEffect(ReceiveDataEffect):
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 9, 'Quarters'] = 'Q3'
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 12, 'Quarters'] = 'Q4'
 
-    def run_process_data_effect(self, quarterly_date='30/06/2014'):
+    def run_process_data_effect(self, quarterly_date='31/03/2014', end_quarterly_back_date='30/06/2017',
+                                start_quarterly_live_date='30/09/2017'):
         return {'region_chart': self.draw_regions_charts(),
                 'drawdown_chart': self.draw_drawdown_chart(),
                 'year_to_date_contrib_chart': self.draw_year_to_date_contrib_chart(),
-                'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(quarterly_date),
+                'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(quarterly_date,
+                                                                                             end_quarterly_back_date,
+                                                                                             start_quarterly_live_date),
                 'effect_data_form': self.effect_form,
                 'effect_outputs': self.effect_outputs,
                 'write_logs': self.write_logs}
