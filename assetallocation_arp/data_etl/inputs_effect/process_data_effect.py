@@ -7,6 +7,7 @@ import numpy as np
 from configparser import ConfigParser
 
 from assetallocation_arp.data_etl.inputs_effect.import_data_effect import ImportDataEffect
+from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 """
     Class to process data from matlab file
@@ -111,39 +112,13 @@ class ProcessDataEffect:
             if pd.to_datetime(value, format='%d-%m-%Y') < pd.to_datetime(start_common_date, format='%d-%m-%Y'):
                 raise ValueError(f'Start date is lesser than {start_common_date}')
             else:
-                start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
+                start_date = find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
                 self._start_date_calculations = start_date
 
     @property
     def previous_start_date_calc(self):
         start_current_date_index_loc = self.obj_import_data.data_currencies_copy.index.get_loc(self.start_date_calculations)
         return self.obj_import_data.data_currencies_copy.index[start_current_date_index_loc - 1]
-
-    @staticmethod
-    def find_date(dates_set, pivot):
-        flag = False
-        # Initialization to start the while loop
-        counter = 0
-        date = dates_set[0]
-
-        while pivot > date:
-            counter += 1
-            if counter >= len(dates_set):
-                # Reach the end of the dates_set list
-                flag = True
-                break
-            date = dates_set[counter]
-        else:
-            if pivot == date:
-                t_start = pivot
-            else:
-                t_start = dates_set[counter - 1]
-
-        # End of the list, we set the date to the last date
-        if flag:
-            t_start = dates_set[-1]
-
-        return t_start
 
     def process_all_data_effect(self):
         """
