@@ -80,8 +80,11 @@ class ComputeRiskReturnCalculations:
 
             max_drawdown_excl_values.append((returns_excl_tmp[value] / max(returns_excl_tmp[0: value+1])) - 1)
             max_drawdown_incl_values.append((returns_incl_tmp[value] / max(returns_incl_tmp[0: value+1])) - 1)
-            max_drawdown_index_values.append((jgenvuug_index_tmp[value] / max(jgenvuug_index_tmp[0: value + 1])) - 1)
-            
+            try:
+                max_drawdown_index_values.append((jgenvuug_index_tmp[value] / max(jgenvuug_index_tmp[0: value + 1])) - 1)
+            except ZeroDivisionError:
+                max_drawdown_index_values.append(0)
+
         return {'max_drawdown_no_signals': round(abs(min(max_drawdown_excl_values)) * 100, 2),
                 'max_drawdown_with_signals': round(abs(min(max_drawdown_incl_values)) * 100, 2),
                 'all_max_drawdown_no_signals_series': max_drawdown_excl_values,
