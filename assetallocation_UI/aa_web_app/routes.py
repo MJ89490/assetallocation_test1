@@ -10,9 +10,13 @@ from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
 from assetallocation_UI.aa_web_app.get_data_times import ReceivedDataTimes
 from assetallocation_UI.aa_web_app.get_data_effect import ProcessDataEffect
 
+from assetallocation_UI.aa_web_app.download_data_chart_effect import DownloadDataChartEffect
+
 obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
+obj_download_data_effect = DownloadDataChartEffect(
 
+)
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
 # @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 # todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
@@ -68,7 +72,9 @@ def effect_dashboard():
 
     if request.method == "POST":
         if request.form['submit_button'] == 'year_to_year_contrib_download':
-            print('hello')
+            obj_received_data_effect.download_year_to_year_contrib_chart()
+
+
 
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 

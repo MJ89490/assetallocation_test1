@@ -268,6 +268,38 @@ class ProcessDataEffect(ReceiveDataEffect):
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 9, 'Quarters'] = 'Q3'
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 12, 'Quarters'] = 'Q4'
 
+    # TODO to move later to download_data_chart_effect.py when db set up
+    def download_year_to_year_contrib_chart(self):
+        combo = self.effect_outputs['combo'].head(-1).tail(-1)
+        log_ret = self.effect_outputs['log_ret'].head(-1)
+        df = pd.concat([combo, log_ret], ignore_index=False, sort=False, axis=1)
+        # TODO to change to Domino format
+        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\year_to_year_contrib_chart.csv', index=False, header=True)
+
+    def download_regions_charts(self):
+        pass
+
+    def download_drawdown_chart(self):
+        pass
+
+    def download_quarterly_profit_and_loss_chart(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def run_process_data_effect(self):
         return {'region_chart': self.draw_regions_charts(),
                 'drawdown_chart': self.draw_drawdown_chart(),
