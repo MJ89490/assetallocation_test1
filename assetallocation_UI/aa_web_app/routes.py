@@ -66,6 +66,10 @@ def effect_dashboard():
         obj_received_data_effect.start_year_to_year_contrib_date = form.start_year_to_year_contrib.data
     data_effect = obj_received_data_effect.run_process_data_effect()
 
+    if request.method == "POST":
+        if request.form['submit_button'] == 'year_to_year_contrib_download':
+            print('hello')
+
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 
 

@@ -107,6 +107,15 @@ tr {
 
 .title-date-box-effect{font-size: 18px; margin-left: 40px;}
 .title-end-date-box-effect{font-size: 18px; padding-top: 10px;}
+
+
+.icon-download{background-color: #fff; border-color: #fff;}
+.btn-outline-light:hover, .btn-outline-light:focus, .btn-outline-light:active,
+.btn-outline-light.active, .btn-outline-light:active:focus{color: #fff !important;
+                                                           background-color: #fff !important;
+                                                           border-color: #fff !important;
+                                                           outline: none !important;
+                                                           box-shadow: none !important;}
 </style>
 </head>
 
@@ -385,13 +394,15 @@ tr {
 
         <!--Year to year contrb bar chart-->
         <div class="row row-year-contrib-agg-line-chart">
-            <form class="center" action="" method="POST" novalidate>
+            <form class="center" action="/effect_dashboard" method="POST" novalidate>
                 <label class="title-date-box-effect text-muted">Start year-to-year</label>
                 <div class="btn-group">
                     {{form.start_year_to_year_contrib(class="form-control", placeholder="31/12/2019", id="date_box_effect")}}
                     {{form.submit_ok_year_to_year_contrib(class="form-control", id="submit_ok_quarterly_profit_and_loss")}}
                 </div>
+                <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="year_to_year_contrib_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
             </form>
+
             <div class="col-lg-12">
                 <div id="horizontal_bar_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/horizontal_bar_chart_year_to_year_contrib_effect.js') }}"></script>
