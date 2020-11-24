@@ -62,16 +62,16 @@ def received_data_times_form():
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
 def effect_dashboard():
     form = InputsEffectStrategy()
-    if form.submit_ok_quarterly_profit_and_loss.data:
-        obj_received_data_effect.start_quarterly_back_p_and_l_date = form.start_date_quarterly_backtest_profit_and_loss_effect.data
-        obj_received_data_effect.end_quarterly_back_p_and_l_date = form.end_date_quarterly_backtest_profit_and_loss_effect.data
-        obj_received_data_effect.start_quarterly_live_p_and_l_date = form.start_date_quarterly_live_profit_and_loss_effect.data
-    elif form.submit_ok_year_to_year_contrib.data:
-        obj_received_data_effect.start_year_to_year_contrib_date = form.start_year_to_year_contrib.data
-    data_effect = obj_received_data_effect.run_process_data_effect()
 
     if request.method == "POST":
-        if request.form['submit_button'] == 'year_to_year_contrib_download':
+        if form.submit_ok_quarterly_profit_and_loss.data:
+            obj_received_data_effect.start_quarterly_back_p_and_l_date = form.start_date_quarterly_backtest_profit_and_loss_effect.data
+            obj_received_data_effect.end_quarterly_back_p_and_l_date = form.end_date_quarterly_backtest_profit_and_loss_effect.data
+            obj_received_data_effect.start_quarterly_live_p_and_l_date = form.start_date_quarterly_live_profit_and_loss_effect.data
+        elif form.submit_ok_year_to_year_contrib.data:
+            obj_received_data_effect.start_year_to_year_contrib_date = form.start_year_to_year_contrib.data
+
+        elif request.form['submit_button'] == 'year_to_year_contrib_download':
             obj_received_data_effect.download_year_to_year_contrib_chart()
         elif request.form['submit_button'] == 'region_download':
             obj_received_data_effect.download_regions_charts()
@@ -79,6 +79,11 @@ def effect_dashboard():
             obj_received_data_effect.download_aggregate_chart()
         elif request.form['submit_button'] == 'drawdown_download':
             obj_received_data_effect.download_drawdown_chart()
+        elif request.form['submit_button'] == 'quarterly_download':
+            obj_received_data_effect.download_quarterly_profit_and_loss_chart()
+
+    data_effect = obj_received_data_effect.run_process_data_effect()
+
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 
 

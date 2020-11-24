@@ -104,17 +104,30 @@ class ProcessDataEffect(ReceiveDataEffect):
             self._start_year_to_year_contrib_date = value
 
     def draw_regions_charts(self):
-        # LatAm	CEEMA Asia regions
         region = self.effect_outputs['region']
-        latam = self.effect_outputs['combo'][region['latam']].sum(axis=1).to_list()
-        ceema = self.effect_outputs['combo'][region['ceema']].sum(axis=1).to_list()
-        asia = self.effect_outputs['combo'][region['asia']].sum(axis=1).to_list()
+
+        region_keys = region.keys()
+        region_dict = {}
+        region_lst = []
+
+        for key in region_keys:
+            region_dict[key] = self.effect_outputs['combo'][region[key]].sum(axis=1).to_list()
+            region_lst.append(self.effect_outputs['combo'][region[key]].sum(axis=1).to_list())
+
+        # latam = self.effect_outputs['combo'][region['latam']].sum(axis=1).to_list()
+        # ceema = self.effect_outputs['combo'][region['ceema']].sum(axis=1).to_list()
+        # asia = self.effect_outputs['combo'][region['asia']].sum(axis=1).to_list()
         total_region = self.effect_outputs['combo'].sum(axis=1).to_list()
         average_region = [sum(total_region) / len(total_region)] * len(total_region)
-        region_dates = self.effect_outputs['combo'].index.strftime("%Y-%m-%d").to_list()
+        region_dates = [self.effect_outputs['combo'].index.strftime("%Y-%m-%d").to_list()]
 
-        return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region,
-                'average': average_region, 'region_dates': region_dates}
+        region_dict['total'], region_dict['average'] = total_region, average_region
+        # region_dict['region_dates'] = region_dates
+
+        return {'regions': region_lst, 'region_dates': region_dates}
+
+        # return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region,
+        #         'average': average_region, 'region_dates': region_dates}
 
     def draw_drawdown_chart(self):
         max_drawdown_no_signals_series = \
@@ -308,18 +321,6 @@ class ProcessDataEffect(ReceiveDataEffect):
         del df['Dates']
         # TODO to change to Domino format
         df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\aggregate_chart.csv', index=True, header=True)
-
-
-
-
-
-
-
-
-
-
-
-
 
     def run_process_data_effect(self):
         return {'region_chart': self.draw_regions_charts(),
