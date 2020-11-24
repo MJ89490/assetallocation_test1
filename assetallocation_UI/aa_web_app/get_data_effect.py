@@ -274,10 +274,16 @@ class ProcessDataEffect(ReceiveDataEffect):
         log_ret = self.effect_outputs['log_ret'].head(-1)
         df = pd.concat([combo, log_ret], ignore_index=False, sort=False, axis=1)
         # TODO to change to Domino format
-        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\year_to_year_contrib_chart.csv', index=False, header=True)
+        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\year_to_year_contrib_chart.csv', index=True, header=True)
 
     def download_regions_charts(self):
-        pass
+        region = self.effect_outputs['region']
+        latam = self.effect_outputs['combo'][region['latam']]
+        ceema = self.effect_outputs['combo'][region['ceema']]
+        asia = self.effect_outputs['combo'][region['asia']]
+        df = pd.concat([latam, ceema, asia], ignore_index=False, sort=False, axis=1)
+        # TODO to change to Domino format
+        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\region_chart.csv', index=True, header=True)
 
     def download_drawdown_chart(self):
         pass

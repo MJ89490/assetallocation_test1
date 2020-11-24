@@ -78,7 +78,7 @@
 
 
 .row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 167px;}
-.row_table_overview{margin-left: 150px; margin-top: 50px; margin-left: 167px;}
+.row_table_overview{margin-left: 150px; margin-top: 50px; margin-left: 167px; margin-bottom: 40px;}
 
 .row-agg-line-chart{margin-left: 130px;}
 .row-region-line-chart{margin-left: 130px; margin-bottom: 60px;}
@@ -110,6 +110,7 @@ tr {
 
 
 .icon-download{background-color: #fff; border-color: #fff;}
+.icon-region-download{background-color: #fff; border-color: #fff; margin-left: 90px;}
 .btn-outline-light:hover, .btn-outline-light:focus, .btn-outline-light:active,
 .btn-outline-light.active, .btn-outline-light:active:focus{color: #fff !important;
                                                            background-color: #fff !important;
@@ -378,6 +379,9 @@ tr {
 
         <!-- Regions chart-->
         <div class="row row-region-line-chart">
+            <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                <button class="btn btn-outline-light icon-region-download" type="submit" name="submit_button" value="region_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+            </form>
             <div class="col-lg-12">
                 <div id="region_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_region_effect.js') }}"></script>

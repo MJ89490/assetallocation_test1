@@ -73,8 +73,8 @@ def effect_dashboard():
     if request.method == "POST":
         if request.form['submit_button'] == 'year_to_year_contrib_download':
             obj_received_data_effect.download_year_to_year_contrib_chart()
-
-
+        elif request.form['submit_button'] == 'region_download':
+            obj_received_data_effect.download_regions_charts()
 
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 
