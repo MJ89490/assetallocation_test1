@@ -111,6 +111,7 @@ tr {
 
 .icon-download{background-color: #fff; border-color: #fff;}
 .icon-region-download{background-color: #fff; border-color: #fff; margin-left: 90px;}
+.icon-agg-download{background-color: #fff; border-color: #fff; margin-left: 90px;}
 .btn-outline-light:hover, .btn-outline-light:focus, .btn-outline-light:active,
 .btn-outline-light.active, .btn-outline-light:active:focus{color: #fff !important;
                                                            background-color: #fff !important;
@@ -418,9 +419,12 @@ tr {
             </div>
         </div>
 
-        <!--Aggregate chart-->
+        <!--Aggregate and drawdown charts-->
         <div class="row row-agg-line-chart">
             <div class="col-lg-5">
+                <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                    <button class="btn btn-outline-light icon-agg-download" type="submit" name="submit_button" value="agg_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                </form>
                 <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
                 <script type="text/javascript">
@@ -431,7 +435,6 @@ tr {
                                   {{data_effect['effect_outputs']['agg_dates']|tojson}})
                 </script>
             </div>
-            <!--Drawdown line chart-->
             <div class="col-lg-7">
                 <div id="drawdown_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_max_drawdown_effect.js') }}"></script>

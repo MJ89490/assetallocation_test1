@@ -34,8 +34,8 @@ function agg_line_chart(total_excl_signals, total_incl_signals, spot_incl_signal
 
     var layout = {showlegend: true,
                   legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                  margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 },
-                   xaxis: {tickfont: {size: 14, color: 'rgb(107, 107, 107)'},  color: 'rgb(107, 107, 107)'}
+                  margin: { l: 'auto', r: 0, b: 0, t: 0, pad: 0 },
+                  xaxis: {tickfont: {size: 14, color: 'rgb(107, 107, 107)'},  color: 'rgb(107, 107, 107)'}
                  };
 
     var config = {'displayModeBar': false, 'responsive': true };

@@ -170,7 +170,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     write_logs = {'currency_logs': currency_logs}
 
     # TODO put in a function in another script + remove last val
-    agg_dates = agg_currencies['agg_total_excl_signals'].index.strftime("%Y-%m-%d").to_list()
+    agg_dates = agg_currencies['agg_total_excl_signals'].index.strftime("%Y-%m-%d").to_list()[:-1]
     agg_total_excl_signals = agg_currencies['agg_total_excl_signals']
     agg_total_excl_signals = agg_total_excl_signals['Total_Excl_Signals'].to_list()[:-1]
 

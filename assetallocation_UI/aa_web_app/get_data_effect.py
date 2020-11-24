@@ -291,8 +291,16 @@ class ProcessDataEffect(ReceiveDataEffect):
     def download_quarterly_profit_and_loss_chart(self):
         pass
 
-
-
+    def download_aggregate_chart(self):
+        df = pd.DataFrame({'Total_Excl_Signals': self.effect_outputs['total_excl_signals'],
+                           'Total_Incl_Signals': self.effect_outputs['total_incl_signals'],
+                           'Spot_Incl_Signals': self.effect_outputs['spot_incl_signals'],
+                           'Spot_Excl_Signals': self.effect_outputs['spot_excl_signals']})
+        df['Dates'] = self.effect_outputs['agg_dates']
+        df = df.set_index(df.Dates)
+        del df['Dates']
+        # TODO to change to Domino format
+        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\aggregate_chart.csv', index=True, header=True)
 
 
 
