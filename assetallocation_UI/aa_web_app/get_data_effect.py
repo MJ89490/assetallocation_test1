@@ -286,7 +286,14 @@ class ProcessDataEffect(ReceiveDataEffect):
         df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\region_chart.csv', index=True, header=True)
 
     def download_drawdown_chart(self):
-        pass
+        df = pd.DataFrame({'Exclude_shorts': self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series'],
+                           'Include_shorts': self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series'],
+                           'jgenvuug_index':  self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_jgenvuug']})
+        df['Dates'] = self.effect_outputs['risk_returns']['max_drawdown']['drawdown_dates']
+        df = df.set_index(df.Dates)
+        del df['Dates']
+        # TODO to change to Domino format
+        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\drawdown_chart.csv', index=True, header=True)
 
     def download_quarterly_profit_and_loss_chart(self):
         pass

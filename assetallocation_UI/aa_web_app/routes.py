@@ -77,6 +77,8 @@ def effect_dashboard():
             obj_received_data_effect.download_regions_charts()
         elif request.form['submit_button'] == 'agg_download':
             obj_received_data_effect.download_aggregate_chart()
+        elif request.form['submit_button'] == 'drawdown_download':
+            obj_received_data_effect.download_drawdown_chart()
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 
 
