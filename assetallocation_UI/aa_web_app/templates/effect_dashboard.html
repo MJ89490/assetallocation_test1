@@ -389,15 +389,9 @@ tr {
                 <div id="region_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_region_effect.js') }}"></script>
                 <script type="text/javascript">
-
-
                      region_line_chart({{data_effect['region_chart']['regions']|tojson}},
-                                       {{data_effect['region_chart']['region_dates']|tojson}})
-
-
-
-
-
+                                       {{data_effect['region_chart']['region_dates']|tojson}},
+                                       {{data_effect['region_chart']['region_names']|tojson}})
                 </script>
             </div>
         </div>

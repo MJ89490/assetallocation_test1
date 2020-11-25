@@ -107,27 +107,22 @@ class ProcessDataEffect(ReceiveDataEffect):
         region = self.effect_outputs['region']
 
         region_keys = region.keys()
-        region_dict = {}
-        region_lst = []
+        region_lst, region_names = [], []
 
         for key in region_keys:
-            region_dict[key] = self.effect_outputs['combo'][region[key]].sum(axis=1).to_list()
             region_lst.append(self.effect_outputs['combo'][region[key]].sum(axis=1).to_list())
+            region_names.append(key)
 
-        # latam = self.effect_outputs['combo'][region['latam']].sum(axis=1).to_list()
-        # ceema = self.effect_outputs['combo'][region['ceema']].sum(axis=1).to_list()
-        # asia = self.effect_outputs['combo'][region['asia']].sum(axis=1).to_list()
         total_region = self.effect_outputs['combo'].sum(axis=1).to_list()
         average_region = [sum(total_region) / len(total_region)] * len(total_region)
         region_dates = [self.effect_outputs['combo'].index.strftime("%Y-%m-%d").to_list()]
 
-        region_dict['total'], region_dict['average'] = total_region, average_region
-        # region_dict['region_dates'] = region_dates
+        region_names.append('Total')
+        region_lst.append(total_region)
+        region_names.append('Average')
+        region_lst.append(average_region)
 
-        return {'regions': region_lst, 'region_dates': region_dates}
-
-        # return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region,
-        #         'average': average_region, 'region_dates': region_dates}
+        return {'regions': region_lst, 'region_dates': region_dates, 'region_names': region_names}
 
     def draw_drawdown_chart(self):
         max_drawdown_no_signals_series = \
