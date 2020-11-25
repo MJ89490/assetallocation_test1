@@ -12,6 +12,8 @@ from assetallocation_UI.aa_web_app.get_data_effect import ProcessDataEffect
 
 from assetallocation_UI.aa_web_app.download_data_chart_effect import DownloadDataChartEffect
 
+from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
+
 obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
 obj_download_data_effect = DownloadDataChartEffect(
@@ -33,7 +35,7 @@ def home():
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    # template_data = main_data('f1', 399)
+    template_data = main_data('f1', 509)
     return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
