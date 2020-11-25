@@ -22,6 +22,7 @@ def momentum(index_data: pd.DataFrame, times: 'Times'):
         # S-curve cutout for large movement, alternative curve w/out cutoff:sig[col]=2/(1+math.exp(-2*sig[col]))-1
         sig[col] = sig[col] * np.exp(-1 * sig[col].pow(2) / 6) / (math.sqrt(3) * math.exp(-0.5))
 
+    # sig = dm.set_data_frequency(sig, times.frequency, times.day_of_week)
     sig = dm.set_data_frequency(sig, times.frequency, times.day_of_week)
     sig = sig.shift(times.time_lag_in_months, freq="D")
     return sig
