@@ -7,6 +7,7 @@ class ReceivedDataTimes:
     def __init__(self):
         self.times_form = {}
         self.write_logs = {}
+        self.version_strategy = 0
 
     def received_data_times(self, form_data):
         for idx, val in enumerate(form_data):
@@ -48,5 +49,7 @@ class ReceivedDataTimes:
         fund_strategy = run_strategy(fund_name, float(self.times_form['input_strategy_weight_times']),
                                      times, os.environ.get('USERNAME'),
                                      self.times_form['input_date_from_times'])
+
+        self.version_strategy = fund_strategy.strategy_version
 
         return fund_strategy

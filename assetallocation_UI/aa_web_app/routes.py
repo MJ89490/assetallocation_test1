@@ -35,7 +35,7 @@ def home():
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    template_data = main_data('f1', 509)
+    template_data = main_data('f1', obj_received_data_times.version_strategy)
     return render_template('times_dashboard.html', form=form, title='Dashboard')
 
 
@@ -206,4 +206,4 @@ def risk_returns():
 #             print('data data data')
 #
 #     # put the data in dict or create a class to handle the data nicer (later with the db?)
-#     return render_template('dashboard_new.html', title=title, form=form, m=m, **template_data)
+#     return render_template('dashboard_new_to_delete.html', title=title, form=form, m=m, **template_data)

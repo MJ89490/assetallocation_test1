@@ -13,14 +13,6 @@
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-
-
-
-
-
-
-
-
 <style>
 
 .sidenav {
@@ -172,19 +164,21 @@
             <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
             {{ form.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
         </form>
-
-        <!-- ============================= SUPPORT ============================= -->
-        <!--<a href="mailto:NexusQuantDev@lgim.com" target="">Support</a>-->
     </div>
 
     <!-- ============================= CHARTS AREA ============================= -->
-    <div class="container">
+    <div class="container-fluid">
         <h2 class="title-dashboard">TIMES Dashboard</h2>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="asset_allocation_over_time" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_asset_allocation_over_time_times.js') }}"></script>
+                <script type="text/javascript">
 
-
-
+                </script>
+            </div>
+        </div>
     </div>
-
 </body>
 </html>
