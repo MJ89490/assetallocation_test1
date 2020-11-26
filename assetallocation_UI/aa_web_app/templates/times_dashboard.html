@@ -63,7 +63,7 @@
 
 
 
-
+.row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
 
 
 
@@ -168,12 +168,12 @@
     <div class="container-fluid">
         <h2 class="title-dashboard">TIMES Dashboard</h2>
 
-        <div class="row">
+        <div class="row row-asset-alloc-chart">
             <div class="col-lg-12">
                 <div id="asset_allocation_over_time" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
                 <script type="text/javascript">
-                    assetAllocationChart({{data_times['times_data']['times_positions']['US Equities'].tolist()|tojson}})
+                    assetAllocationChart({{f|tojson}})
                 </script>
             </div>
         </div>

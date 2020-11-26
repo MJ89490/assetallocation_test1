@@ -35,8 +35,13 @@ def home():
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    data_times = main_data('f1', obj_received_data_times.version_strategy)
-    return render_template('times_dashboard.html', title='Dashboard', form=form, data_times=data_times)
+    template_data = main_data('f1', obj_received_data_times.version_strategy)
+
+    import pandas as pd
+    f = template_data['times_data']['times_positions']['US Equities']
+    f = f.loc[pd.to_datetime('2018-05-15', format='%Y-%m-%d'):]
+
+    return render_template('times_dashboard.html', title='Dashboard', form=form, f=f.to_list())
 
 
 @app.route('/times_strategy_get', methods=['GET'])
