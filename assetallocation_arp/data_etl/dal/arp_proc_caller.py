@@ -389,6 +389,7 @@ class FxProcCaller(StrategyProcCaller):
         return t
 
 
+# TODO change database
 class EffectProcCaller(StrategyProcCaller):
     @property
     def strategy_name(self) -> Name:

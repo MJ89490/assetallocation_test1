@@ -6,6 +6,17 @@ class TrendIndicator(Enum):
     Spot = auto()
 
 
+# noinspection PyArgumentList
+RiskWeighting = Enum(
+    value='RiskWeighting',
+    names=[
+        ('1 / N', auto()),
+        ('inverse vol', auto()),
+        ('inverse carry', auto())
+    ]
+)
+
+
 class CarryType(Enum):
     Nominal = auto()
     Real = auto()

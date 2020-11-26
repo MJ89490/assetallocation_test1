@@ -1,7 +1,7 @@
 from typing import List, Union, Optional
 import itertools
 
-from assetallocation_arp.common_libraries.dal_enums.asset import Category, Subcategory, subcategory_map
+from assetallocation_arp.common_libraries.dal_enums.asset import Category, Subcategory, subcategory_map, Base
 from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.country import Country, country_region
 from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
@@ -291,37 +291,72 @@ class TimesAssetInput:
 
 
 # noinspection PyAttributeOutsideInit
-class EffectAssetInput(Asset):
-    def __init__(self, ticker: str, ndf_code: str, spot_code: str, position_size: float) -> None:
-        """EffectAsset class to hold data from database"""
-        super().__init__(ticker)
-        self.ndf_code = ndf_code
-        self.spot_code = spot_code
-        self.position_size = position_size
+class EffectAssetInput:
+    def __init__(self, currency: str, ticker_3m: str, spot_ticker: str, carry_ticker: str, usd_weight: float,
+                 base: Union[str, Base], region: str) -> None:
+        self.currency = currency
+        self.ticker_3m = ticker_3m
+        self.spot_ticker = spot_ticker
+        self.carry_ticker = carry_ticker
+        self.usd_weight = usd_weight
+        self.base = base
+        self.region = region
 
     @property
-    def ndf_code(self) -> str:
-        return self._ndf_code
+    def currency(self) -> str:
+        return self._currency
 
-    @ndf_code.setter
-    def ndf_code(self, x: str) -> None:
-        self._ndf_code = x
-
-    @property
-    def spot_code(self) -> str:
-        return self._spot_code
-
-    @spot_code.setter
-    def spot_code(self, x: str) -> None:
-        self._spot_code = x
+    @currency.setter
+    def currency(self, x: str) -> None:
+        self._currency = x
 
     @property
-    def position_size(self) -> float:
-        return self._position_size
+    def ticker_3m(self) -> str:
+        return self._ticker_3m
 
-    @position_size.setter
-    def position_size(self, x: float) -> None:
-        self._position_size = x
+    @ticker_3m.setter
+    def ticker_3m(self, x: str) -> None:
+        self._ticker_3m = x
+
+    @property
+    def spot_ticker(self) -> str:
+        return self._spot_ticker
+
+    @spot_ticker.setter
+    def spot_ticker(self, x: str) -> None:
+        self._spot_ticker = x
+
+    @property
+    def carry_ticker(self) -> str:
+        return self._carry_ticker
+
+    @carry_ticker.setter
+    def carry_ticker(self, x: str) -> None:
+        self._carry_ticker = x
+
+    @property
+    def usd_weight(self) -> float:
+        return self._usd_weight
+
+    @usd_weight.setter
+    def usd_weight(self, x: float) -> None:
+        self._usd_weight = x
+
+    @property
+    def base(self) -> Union[str, Base]:
+        return self._base
+
+    @base.setter
+    def base(self, x: Union[str, Base]) -> None:
+        self._base = x
+
+    @property
+    def region(self) -> str:
+        return self._region
+
+    @region.setter
+    def region(self, x: str) -> None:
+        self._region = x
 
 
 # noinspection PyAttributeOutsideInit

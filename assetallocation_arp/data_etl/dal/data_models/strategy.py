@@ -1,10 +1,11 @@
 from typing import List, Union, Optional, Tuple
 from abc import ABC, abstractmethod
+import datetime as dt
 
 from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, \
-    Leverage, Name, FxModel
+    Leverage, Name, FxModel, RiskWeighting
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, \
     FxAssetInput, Asset, FicaAssetInputGroup, MavenAssetInput
@@ -240,27 +241,91 @@ class Fica(Strategy):
 
 # noinspection PyAttributeOutsideInit
 class Effect(Strategy):
-    def __init__(self, carry_type: Union[str, CarryType], closing_threshold: float, cost: float,
-                 day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency], include_shorts: bool,
-                 inflation_lag_in_months: int, interest_rate_cut_off_long: float, interest_rate_cut_off_short: float,
-                 moving_average_long_term: int, moving_average_short_term: int, is_realtime_inflation_forecast: bool,
-                 trend_indicator: Union[str, TrendIndicator]) -> None:
+    def __init__(
+            self, update_imf: bool, user_date: dt.date, signal_date: dt.date, position_size: float,
+            risk_weighting: Union[str, RiskWeighting], st_dev_window: int, bid_ask_spread: int,
+            carry_type: Union[str, CarryType], closing_threshold: float, day_of_week: Union[int, DayOfWeek],
+            frequency: Union[str, Frequency], include_shorts: bool, interest_rate_cut_off_long: float,
+            interest_rate_cut_off_short: float, moving_average_long_term: int, moving_average_short_term: int,
+            is_realtime_inflation_forecast: bool, trend_indicator: Union[str, TrendIndicator]
+    ) -> None:
         """Effect class to hold data from database"""
         super().__init__(Name.effect)
-        self.carry_type = carry_type
-        self.closing_threshold = closing_threshold
-        self.cost = cost
-        self.day_of_week = day_of_week
-        self.frequency = frequency
-        self.include_shorts = include_shorts
-        self.inflation_lag_in_months = inflation_lag_in_months
-        self.interest_rate_cut_off_long = interest_rate_cut_off_long
-        self.interest_rate_cut_off_short = interest_rate_cut_off_short
-        self.moving_average_long_term = moving_average_long_term
+        self.update_imf = update_imf
         self.moving_average_short_term = moving_average_short_term
         self.is_realtime_inflation_forecast = is_realtime_inflation_forecast
+        self.user_date = user_date
+        self.moving_average_long_term = moving_average_long_term
+        self.closing_threshold = closing_threshold
+        self.signal_date = signal_date
+        self.include_shorts = include_shorts
+        self.risk_weighting = risk_weighting
+        self.day_of_week = day_of_week
+        self.interest_rate_cut_off_long = interest_rate_cut_off_long
+        self.st_dev_window = st_dev_window
+        self.frequency = frequency
+        self.interest_rate_cut_off_short = interest_rate_cut_off_short
+        self.bid_ask_spread = bid_ask_spread
         self.trend_indicator = trend_indicator
+        self.carry_type = carry_type
+        self.position_size = position_size
         self._asset_inputs = []
+
+    @property
+    def st_dev_window(self) -> int:
+        return self._st_dev_window
+
+    @st_dev_window.setter
+    def st_dev_window(self, x: int) -> None:
+        self._st_dev_window = x
+
+    @property
+    def bid_ask_spread(self) -> float:
+        return self._bid_ask_spread
+
+    @bid_ask_spread.setter
+    def bid_ask_spread(self, x: float) -> None:
+        self._bid_ask_spread = x
+
+    @property
+    def risk_weighting(self) -> RiskWeighting:
+        return self._risk_weighting
+
+    @risk_weighting.setter
+    def risk_weighting(self, x: Union[str, RiskWeighting]) -> None:
+        self._risk_weighting = x if isinstance(x, RiskWeighting) else RiskWeighting[x]
+
+    @property
+    def update_imf(self) -> bool:
+        return self._update_imf
+
+    @update_imf.setter
+    def update_imf(self, x: bool) -> None:
+        self._update_imf = x
+
+    @property
+    def user_date(self) -> dt.date:
+        return self._user_date
+
+    @user_date.setter
+    def user_date(self, x: dt.date) -> None:
+        self._user_date = x
+
+    @property
+    def signal_date(self) -> dt.date:
+        return self._signal_date
+
+    @signal_date.setter
+    def signal_date(self, x: dt.date) -> None:
+        self._signal_date = x
+
+    @property
+    def position_size(self) -> float:
+        return self._position_size
+
+    @position_size.setter
+    def position_size(self, x: float) -> None:
+        self._position_size = x
 
     @property
     def asset_inputs(self) -> List[EffectAssetInput]:
@@ -269,10 +334,6 @@ class Effect(Strategy):
     @asset_inputs.setter
     def asset_inputs(self, x: List[EffectAssetInput]) -> None:
         self._asset_inputs = x
-
-    @property
-    def inflation_lag_interval(self) -> str:
-        return ArpTypeConverter.month_lag_int_to_interval(self.inflation_lag_in_months)
 
     @property
     def carry_type(self) -> CarryType:
@@ -289,14 +350,6 @@ class Effect(Strategy):
     @closing_threshold.setter
     def closing_threshold(self, x: float) -> None:
         self._closing_threshold = x
-
-    @property
-    def cost(self) -> float:
-        return self._cost
-
-    @cost.setter
-    def cost(self, x: float) -> None:
-        self._cost = x
 
     @property
     def day_of_week(self) -> DayOfWeek:
@@ -321,14 +374,6 @@ class Effect(Strategy):
     @include_shorts.setter
     def include_shorts(self, x: bool) -> None:
         self._include_shorts = x
-
-    @property
-    def inflation_lag_in_months(self) -> int:
-        return self._inflation_lag_in_months
-
-    @inflation_lag_in_months.setter
-    def inflation_lag_in_months(self, x: int):
-        self._inflation_lag_in_months = x
 
     @property
     def interest_rate_cut_off_long(self) -> float:

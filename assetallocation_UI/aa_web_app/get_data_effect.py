@@ -1,7 +1,11 @@
+import os
+
 import pandas as pd
 import numpy as np
 
-from assetallocation_arp.arp_strategies import run_effect_strategy
+from assetallocation_arp.data_etl.dal.data_models.strategy import Effect
+from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput
+from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 
 
 class ReceivedDataEffect:
@@ -103,25 +107,10 @@ class ReceivedDataEffect:
 
             # Error handling when we reach the end of the dates range
 
-
-
-
-
-
-
-
-
-
         # combo_quarterly = combo_data.reindex(rng_quarterly, method='pad').loc[start_quarterly:]
         # log_ret_quarterly = log_ret_data.reindex(rng_quarterly, method='pad').loc[start_quarterly:]
         #
         # current_date_quarterly = pd.to_datetime('31-03-2014', format='%d-%m-%Y')
-
-
-
-
-
-
 
         return {'latam': latam, 'ceema': ceema, 'asia': asia, 'total': total_region, 'average': average_region,
                 'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
@@ -130,12 +119,32 @@ class ReceivedDataEffect:
                 'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
                 'names_curr': names_curr}
 
-    def call_run_effect(self, assets_inputs_effect):
-
-        strategy_inputs = pd.DataFrame.from_dict(self.effect_form, orient='index').T
-        asset_inputs = pd.DataFrame.from_dict(assets_inputs_effect, orient='index').T
-
-        self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs, asset_inputs)
+    def call_run_effect(self, assets_inputs_effect) -> 'FundStrategy':
+        effect = Effect(
+            self.effect_form['input_update_imf_effect'], self.effect_form['input_user_date_effect'],
+            self.effect_form['input_signal_date_effect'], self.effect_form['input_position_size_effect'],
+            self.effect_form['input_risk_weighting'], self.effect_form['input_window_effect'],
+            self.effect_form['input_bid_ask_effect'], self.effect_form['input_real_nominal_effect'],
+            self.effect_form['input_threshold_effect'], self.effect_form['input_signal_day_effect'],
+            self.effect_form['input_frequency_effect'], self.effect_form['input_include_shorts_effect'],
+            self.effect_form['input_cut_off_long'], self.effect_form['input_cut_off_short'],
+            self.effect_form['input_long_term_ma'], self.effect_form['input_short_term_ma'],
+            self.effect_form['input_real_time_inf_effect'], self.effect_form['input_trend_indicator_effect']
+        )
+        effect.asset_inputs = [
+            EffectAssetInput(h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
+            zip(
+                assets_inputs_effect['input_currency'], assets_inputs_effect['input_implied'],
+                assets_inputs_effect['input_spot_ticker'], assets_inputs_effect['input_carry_ticker'],
+                assets_inputs_effect['input_weight_usd'], assets_inputs_effect['input_usd_eur'],
+                assets_inputs_effect['input_region']
+            )
+        ]
+        fund_strategy = run_strategy(
+            self.effect_form['input_fund_name_effect'], float(self.effect_form['input_strategy_weight_effect']),
+            effect, os.environ.get('USERNAME')
+        )
+        return fund_strategy
 
 
 

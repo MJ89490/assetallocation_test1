@@ -56,3 +56,8 @@ class FX(Subcategory):
 
 
 subcategory_map = {j: i[j] for i in (Equity, FixedIncome, FX) for j in i._member_names_}
+
+
+class Base(Enum):
+    USD = auto()
+    EUR = auto()

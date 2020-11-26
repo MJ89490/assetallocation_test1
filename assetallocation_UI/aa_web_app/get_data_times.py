@@ -1,6 +1,8 @@
 import os
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times
+from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput
+from assetallocation_arp.common_libraries.dal_enums.strategy import DayOfWeek
 
 
 class ReceivedDataTimes:
