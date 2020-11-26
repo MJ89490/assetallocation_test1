@@ -177,7 +177,6 @@ class ProcessDataEffect:
             region_tmp = self.asset_inputs.loc[self.asset_inputs['input_region'] == reg]
             curr = ['Combo_' + val for val in region_tmp['input_spot_ticker'].to_list()]
             region[reg.lower()] = curr
-            # region[reg.lower()] = region_tmp['input_spot_ticker'].to_list()
 
         self.currencies_spot['currencies_spot_usd'] = currencies_usd['input_spot_ticker'].tolist()
         self.currencies_spot['currencies_spot_eur'] = currencies_eur['input_spot_ticker'].tolist()

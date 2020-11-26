@@ -3,9 +3,6 @@ import pandas as pd
 import numpy as np
 import pytest
 
-
-# TODO DO THE UNIT TESTS WHILE DOING THE FRONTEND
-
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
@@ -23,46 +20,59 @@ obj_import_data = ComputeCurrencies(asset_inputs=asset_inputs,
                                     frequency_mat='weekly',
                                     end_date_mat='23/09/2020',
                                     signal_day_mat='WED', all_data=all_data)
-spx_index_values = obj_import_data.process_data_effect()
-obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
-obj_import_data.process_data_config_effect()
 
-# -------------------------- Inflation differential calculations ------------------------------------------------- #
+obj_import_data.process_all_data_effect()
+obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
+spot_origin, carry_origin, spx_index_values, three_month_implied_usd, three_month_implied_eur, region, \
+jgenvuug_index_values = obj_import_data.process_usd_eur_data_effect()
+
+# Inflation differential calculations
 obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 realtime_inflation_forecast, imf_data_update = 'Yes', False
 
-inflation_differential = obj_inflation_differential.compute_inflation_differential(
-                         realtime_inflation_forecast, obj_import_data.all_currencies_spot,
-                         obj_import_data.currencies_spot['currencies_spot_usd'],
-                         imf_data_update=imf_data_update)
+inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
+                                        realtime_inflation_forecast, obj_import_data.all_currencies_spot,
+                                        obj_import_data.currencies_spot['currencies_spot_usd'],
+                                        imf_data_update=imf_data_update)
 
-# -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
-
-carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
-combo_inputs = {'cut_off': 0.02 * 100, 'incl_shorts': 'Yes', 'cut_off_s': 0.00 * 100, 'threshold': 0.025 * 100}
-
-currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
+# # Carry - Trend - Combo - Returns - Spo
+#
+# carry_inputs = {'type': 'real', 'inflation': inflation_differential}
+# trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
+# combo_inputs = {'cut_off': 0.02 * 100, 'incl_shorts': 'Yes', 'cut_off_s': 0.00 * 100, 'threshold': 0.025 * 100}
 
 
-# currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
 def test_compute_carry():
     path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "carry_brl_origin.csv"))
-    carry_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    carry = pd.read_csv(path_origin, sep=',', engine='python')
 
     carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-    carry_results = obj_import_data.compute_carry(carry_inputs['type'], carry_inputs['inflation'])
-    pd.testing.assert_series_equal(carry_origin.carry_BRL.reset_index(drop=True), carry_results['Carry_BRLUSD Curncy'].reset_index(drop=True), check_names=False)
+    pd.testing.assert_series_equal(carry.carry_BRL.reset_index(drop=True),
+                                   obj_import_data.compute_carry(carry_inputs['type'], carry_inputs['inflation'])
+                                   ['Carry_BRLUSD Curncy'].reset_index(drop=True), check_names=False)
 
 
-def test_compute_combo():
+def test_compute_trend():
+    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "trend_brl_origin.csv"))
+    trend = pd.read_csv(path_origin, sep=',', engine='python')
 
-    combo_inputs = {'cut_off': 0.02 * 100, 'incl_shorts': 'Yes', 'cut_off_s': 0.00 * 100, 'threshold': 0.025 * 100}
-    r = obj_import_data.compute_combo(combo_inputs['cut_off'], combo_inputs['incl_shorts'], combo_inputs['cut_off_s'], combo_inputs['threshold'])
+    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
+    t = obj_import_data.compute_trend(trend_inputs['trend'], trend_inputs['short_term'], trend_inputs['long_term'])
+    # t.loc[pd.to_datetime('23/09/2020', format='%d-%m-%Y')]
+    pd.testing.assert_series_equal(trend.trend_BRL.reset_index(drop=True),
+                                   obj_import_data.compute_trend(trend_inputs['trend'], trend_inputs['short_term'], trend_inputs['long_term'])
+                                   ['Trend_BRLUSD Curncy'].reset_index(drop=True), check_names=False)
 
 
-    print()
+
+# def test_compute_combo():
+#
+#     combo_inputs = {'cut_off': 0.02 * 100, 'incl_shorts': 'Yes', 'cut_off_s': 0.00 * 100, 'threshold': 0.025 * 100}
+#     r = obj_import_data.compute_combo(combo_inputs['cut_off'], combo_inputs['incl_shorts'], combo_inputs['cut_off_s'], combo_inputs['threshold'])
+#
+#
+#     print()
 # @pytest.mark.parametrize("trend_origin, trend_results",
 #                          [("trend_one_origin.csv", "trend_one_results.csv"),
 #                           ("trend_two_origin.csv", "trend_two_results.csv")])

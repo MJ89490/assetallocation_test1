@@ -1,2 +1,4 @@
-currency,3M implied ticker,Spot ticker,Carry ticker,EUR/USD base
-BRL,BCNI3M Curncy,BRLUSD Curncy,BRLUSDCR Curncy,USD
+currency,input_implied,input_spot_ticker,input_carry_ticker,input_weight_usd,input_usd_eur,input_region
+BRL,BCNI3M Curncy,BRLUSD Curncy,BRLUSDCR Curncy,100,USD,LatAm
+
+

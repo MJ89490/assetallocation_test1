@@ -44,7 +44,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                         bid_ask_spread=int(strategy_inputs['input_bid_ask_effect'].item()),
                                         frequency_mat=strategy_inputs['input_frequency_effect'].item(),
                                         end_date_mat=strategy_inputs['input_signal_date_effect'].item(),
-                                        signal_day_mat=strategy_inputs['input_signal_day_effect'].item(), all_data=all_data)
+                                        signal_day_mat=strategy_inputs['input_signal_day_effect'].item(),
+                                        all_data=all_data)
     obj_import_data.process_all_data_effect()
     obj_import_data.start_date_calculations = user_date
     spot_origin, carry_origin, spx_index_values,  three_month_implied_usd, three_month_implied_eur, region, \
