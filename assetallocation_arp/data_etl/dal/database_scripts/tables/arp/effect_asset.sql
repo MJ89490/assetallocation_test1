@@ -18,12 +18,15 @@ DROP TABLE IF EXISTS "arp"."effect_asset" CASCADE
 
 CREATE TABLE "arp"."effect_asset"
 (
-	"position_size" numeric(32,16) NOT NULL,
 	"id" serial NOT NULL,
 	"strategy_id" integer NOT NULL,
-	"asset_id" integer NOT NULL,
-	"ndf_code" varchar(50) NOT NULL,
-	"spot_code" varchar(50)	NOT NULL,
+	"asset_3m_id" integer NOT NULL,
+  "spot_asset_id" integer NOT NULL,
+  "carry_asset_id" integer NOT NULL,
+  "currency" varchar(50) NOT NULL,
+	"usd_weight" numeric(32,16) NOT NULL,
+	"base" varchar(50) NOT NULL,
+	"region" varchar(50)	NOT NULL,
 	"execution_state_id" integer NOT NULL
 )
 ;
@@ -34,13 +37,22 @@ ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_asset_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_asset_asset_id_strategy_id_key" UNIQUE ("asset_id","strategy_id")
+ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_asset_asset_id_strategy_id_key"
+	UNIQUE ("carry_asset_id","strategy_id")
 ;
 
 /* Create Foreign Key Constraints */
 
-ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_asset_asset_fkey"
-	FOREIGN KEY ("asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
+ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_asset_3m_asset_fkey"
+	FOREIGN KEY ("asset_3m_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
+ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_spot_asset_asset_fkey"
+FOREIGN KEY ("spot_asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
+ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_carry_asset_asset_fkey"
+FOREIGN KEY ("carry_asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
 ALTER TABLE "arp"."effect_asset" ADD CONSTRAINT "effect_asset_effect_fkey"

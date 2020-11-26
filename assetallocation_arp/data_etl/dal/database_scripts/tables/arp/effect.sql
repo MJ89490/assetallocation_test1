@@ -18,21 +18,26 @@ DROP TABLE IF EXISTS "arp"."effect" CASCADE
 
 CREATE TABLE "arp"."effect"
 (
-	"frequency" frequency NOT NULL,
+	"update_imf" boolean NOT NULL,
+	"user_date" date NOT NULL,
+	"signal_date" date NOT NULL,
+	"position_size" numeric(32,16) NOT NULL,
+	"risk_weighting" varchar(25) NOT NULL,
+	"st_dev_window" integer NOT NULL,
+	"bid_ask_spread" integer NOT NULL,
+	"carry_type" varchar(50)	 NOT NULL,
+	"closing_threshold" numeric(32,16) NOT NULL,
 	"day_of_week" integer NOT NULL,
-	"trend_indicator" varchar(50)	 NOT NULL,
-	"moving_average_short_term" int NOT NULL,
-	"moving_average_long_term" int NOT NULL,
+	"frequency" frequency NOT NULL,
 	"include_shorts" boolean NOT NULL,
 	"interest_rate_cut_off_long" numeric(32,16) NOT NULL,
-	"execution_state_id" integer NOT NULL,
 	"interest_rate_cut_off_short" numeric(32,16) NOT NULL,
-	"carry_type" varchar(50)	 NOT NULL,
-	"version" serial NOT NULL,
-	"inflation_lag" interval NOT NULL,
+	"moving_average_long_term" int NOT NULL,
+	"moving_average_short_term" int NOT NULL,
 	"is_realtime_inflation_forecast" boolean NOT NULL,
-	"closing_threshold" numeric(32,16) NOT NULL,
-	"cost" numeric(32,16) NOT NULL,
+	"trend_indicator" varchar(50)	 NOT NULL,
+	"execution_state_id" integer NOT NULL,
+	"version" serial NOT NULL,
 	"strategy_id" integer NOT NULL
 )
 ;
