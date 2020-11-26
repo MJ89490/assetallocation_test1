@@ -42,6 +42,10 @@ def calculate_signals_returns_r_positioning(times: 'Times') -> \
         returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, True)
         returns, r, positioning = pc.rescale(returns, positioning, 0.01)
 
+    # Replace inf values with nan values
+    # Replacing infinite with nan
+    positioning.replace([np.inf, -np.inf], np.nan, inplace=True)
+
     return signals, returns, r, positioning
 
 

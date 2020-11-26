@@ -29,7 +29,6 @@ def main_data(fund_name: str, times_version: int):
     data_comp_sum = obj_charts_comp.data_computations_sum()
 
     template_data = {"times_data": data, "times_sum": data_comp_sum, "times_data_comp": data_comp}
-    template_data['times_data']['times_positions']
 
     return template_data
 
