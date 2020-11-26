@@ -7,6 +7,7 @@ import numpy as np
 from configparser import ConfigParser
 
 from assetallocation_arp.data_etl.inputs_effect.import_data_effect import ImportDataEffect
+from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 """
     Class to process data from matlab file
@@ -111,39 +112,13 @@ class ProcessDataEffect:
             if pd.to_datetime(value, format='%d-%m-%Y') < pd.to_datetime(start_common_date, format='%d-%m-%Y'):
                 raise ValueError(f'Start date is lesser than {start_common_date}')
             else:
-                start_date = self.find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
+                start_date = find_date(self.data_currencies_usd.index.values, pd.to_datetime(value, format='%d-%m-%Y'))
                 self._start_date_calculations = start_date
 
     @property
     def previous_start_date_calc(self):
         start_current_date_index_loc = self.obj_import_data.data_currencies_copy.index.get_loc(self.start_date_calculations)
         return self.obj_import_data.data_currencies_copy.index[start_current_date_index_loc - 1]
-
-    @staticmethod
-    def find_date(dates_set, pivot):
-        flag = False
-        # Initialization to start the while loop
-        counter = 0
-        date = dates_set[0]
-
-        while pivot > date:
-            counter += 1
-            if counter >= len(dates_set):
-                # Reach the end of the dates_set list
-                flag = True
-                break
-            date = dates_set[counter]
-        else:
-            if pivot == date:
-                t_start = pivot
-            else:
-                t_start = dates_set[counter - 1]
-
-        # End of the list, we set the date to the last date
-        if flag:
-            t_start = dates_set[-1]
-
-        return t_start
 
     def process_all_data_effect(self):
         """
@@ -223,7 +198,10 @@ class ProcessDataEffect:
         spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
 
         # EURUSDCR Curncy
-        eur_usd_cr_config = config.get('EURUSDCR Currency', 'eur_usd_cr_ticker')
+        eur_usd_cr_config = config.get('eurusdcr_currency', 'eur_usd_cr_ticker')
+
+        # JGENVUUG Index
+        jgenvuug_index_config = config.get('jgenvuug_index', 'jgenvuug_index_ticker')
 
         config_data = {'spot_config': self.currencies_spot,
                        'carry_config': self.currencies_carry,
@@ -231,6 +209,7 @@ class ProcessDataEffect:
                        '3M_implied_config': self.currencies_3M_implied,
                        'spxt_index_config': spxt_index_config,
                        'eur_usd_cr_config': eur_usd_cr_config,
+                       'jgenvuug_index_config': jgenvuug_index_config,
                        'region_config': region}
 
         return config_data
@@ -259,10 +238,12 @@ class ProcessDataEffect:
 
         spxt_index_values = self.data_currencies[assets_table['spxt_index_config']]
 
+        jgenvuug_index_values = self.data_currencies[assets_table['jgenvuug_index_config']]
+
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
         return common_spot, common_carry, spxt_index_values, self.three_month_implied_usd, self.three_month_implied_eur, \
-               assets_table['region_config']
+               assets_table['region_config'], jgenvuug_index_values
 
 

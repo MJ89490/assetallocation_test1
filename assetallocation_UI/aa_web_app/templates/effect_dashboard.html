@@ -10,22 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-
-
-
-
-
-
-
-
 <style>
 
 .sidenav {
-  height: 100%;
-  width: 180px;
-  position: fixed;
-  z-index: 1;
+    height: 100%; width: 180px; position: fixed; z-index: 1;
   top: 0;
   left: 0;
   background-color: #005774;
@@ -33,24 +21,13 @@
   padding-top: 20px;
 }
 
-.sidenav a {
-  padding-left: 16px;
-
-  text-decoration: none;
-  font-size: 23px;
-  color: #fff;
-  display: block;
-}
+.sidenav a {padding-left: 16px; text-decoration: none; font-size: 23px; color: #fff; display: block;}
 
 .sidenav a:hover {
   color: #f1f1f1;
 }
 
-.container {
-  margin-left: 180px; /* Same as the width of the sidenav */
-  font-size: 28px; /* Increased text to enable scrolling */
-  padding: 0px 10px;
-}
+.container {margin-left: 180px; font-size: 28px; background-color: pink; width: 100%}
 
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
@@ -63,7 +40,7 @@
             line-height: 1.4;
             margin-top: 60px;
             margin-bottom: 23px;
-
+            margin-left: 200px;
             max-width: 75%;
             display: inline-block;
             z-index: 2;}
@@ -71,7 +48,7 @@
 
 
 
-.date_run_dashboard{margin-bottom: 25px;}
+.date_run_dashboard{margin-bottom: 25px; margin-left: 200px;}
 
 
 
@@ -80,18 +57,16 @@
 
 
 
-.sidenav-home{margin-top: 40px;}
+.sidenav-home{margin-top: 40px; margin-bottom: 20px;}
 
 
-#selectVersion {color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 38px; margin-left: 10px;}
 .form-models-select-sidebar {color: #005774 !important; border-color: #007faa !important; width: 140px; height: 38px; margin-left: 10px; padding-top:0px;}
 .label-models-select-sidebar {color: #fff;  padding-left: 16px; margin-top: 10px;}
 .btn-select-sidebar {font-size: 1rem; width: 45px;height: 38px}
 
 .label-models-date-sidebar{color: #fff;  padding-left: 16px;}
 #btn-select-charts-ok, #btn-select-export-data{width: 45px; margin-left: 58px; color: #005774; height: 25px; padding-top: 0px;}
-#sidebar-start-date{width: 140px; margin-left: 10px; color: #005774;}
-#sidebar-end-date{width: 140px; margin-left: 10px; color: #005774; margin-bottom: 10px;}
+
 
 
 .navbar-default {
@@ -102,13 +77,49 @@
 
 
 
-.row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 150px;}
-.row_table_overview{margin-left: 150px; margin-top: 50px;}
-.row-agg-line-chart{margin-left: 100px; margin-top: 50px;}
-.row-drawdown-agg-line-chart{margin-left: 100px; margin-bottom: 50px;}
-.row-year-contrib-agg-line-chart{margin-left: 100px; margin-bottom: 70px;}
+.row_notional_table, .row_matr_table{margin-bottom: 10px; margin-left: 167px;}
+.row_table_overview{margin-left: 150px; margin-top: 50px; margin-left: 167px; margin-bottom: 40px;}
+
+.row-agg-line-chart{margin-left: 130px; margin-bottom: 60px;}
+.row-region-line-chart{margin-left: 130px; margin-bottom: 60px;}
+.row-year-contrib-agg-line-chart{margin-left: 140px; margin-bottom: 60px;}
+.row-drawdown-agg-line-chart{margin-left: 0px;}
+.row-quarterly-profit-agg-line-chart{margin-left: 145px; margin-top: 80px;}
+
 .title-table-overview{color: #005774; font-weight: bold;}
 .sub_title_table_overview{font-size: 0.75rem;}
+
+
+tr {
+   line-height: 11px;
+   height: 11px;
+
+}
+
+#submit_ok_quarterly_profit_and_loss{height: 30px; margin-left: 10px; width: 70px; padding-top: 2px;}
+#date_box_effect{height: 30px; width: 150px; text-align: center; margin-bottom: 5px;}
+
+#submit_ok_charts_effect_data{height: 30px; margin-left: 10px; width: 50px; margin-left: 55px; padding-top: 2px; color: #005774; margin-bottom: 20px;}
+#versions_effect{text-align: center;  margin-bottom: 15px; padding-bottom: 0px; padding-top: 0px; color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 30px; margin-left: 10px;}
+#versions_export_effect{text-align: center;  margin-bottom: 20px; padding-bottom: 0px; padding-top: 0px; color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 30px; margin-left: 10px;}
+#start_date_effect_inputs{text-align: center; width: 140px;  height: 30px; margin-left: 10px; color: #005774; margin-bottom: 20px;}
+#end_date_effect_inputs{text-align: center; width: 140px;  height: 30px; margin-left: 10px; color: #005774; margin-bottom: 15px;}
+
+.title-date-box-effect{font-size: 18px; margin-left: 40px;}
+.title-end-date-box-effect{font-size: 18px; padding-top: 10px;}
+
+
+.icon-download{background-color: #fff; border-color: #fff;}
+.icon-region-download{background-color: #fff; border-color: #fff; margin-left: 90px;}
+.icon-agg-download{background-color: #fff; border-color: #fff; margin-left: 90px;}
+.icon-drawdown-download{background-color: #fff; border-color: #fff; margin-left: 50px;}
+.icon-quarterly-download{background-color: #fff; border-color: #fff;}
+.btn-outline-light:hover, .btn-outline-light:focus, .btn-outline-light:active,
+.btn-outline-light.active, .btn-outline-light:active:focus{color: #fff !important;
+                                                           background-color: #fff !important;
+                                                           border-color: #fff !important;
+                                                           outline: none !important;
+                                                           box-shadow: none !important;}
 </style>
 </head>
 
@@ -141,19 +152,9 @@
             {{ form.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions(class="form-control", id="selectVersion")}}
+                {{ form.versions_effect(class="form-control", id="versions_effect")}}
             </div>
-           <div class="form-group">
-               <label class="label-models-select-sidebar">Leverage type</label>
-               <select id="inputleveragesidebar" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
-                   <option>v</option>
-                   <option>e</option>
-                   <option>n</option>
-                   <option>s</option>
-               </select>
-           </div>
-            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
-            {{ form.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
+            {{ form.submit_ok_charts_effect_data(class="form-control",  id="submit_ok_charts_effect_data")}}
         </form>
 
         <!-- ============================= EXPORT DATA ============================= -->
@@ -162,38 +163,24 @@
             {{ form.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions(class="form-control", id="selectVersion")}}
+                {{ form.versions_effect(class="form-control", id="versions_export_effect")}}
             </div>
-            <div class="form-group">
-               <label class="label-models-select-sidebar">Leverage type</label>
-               <select id="inputleveragesidebardexcel" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
-                   <option>v</option>
-                   <option>e</option>
-                   <option>n</option>
-                   <option>s</option>
-               </select>
-           </div>
             <label class="label-models-date-sidebar">Start date</label>
-            {{ form.start_date_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
+            {{ form.start_date_effect_inputs(class="form-control", placeholder="25/12/2018", id="start_date_effect_inputs") }}
              <label class="label-models-date-sidebar">End date</label>
-            {{ form.end_date_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
-            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
-            {{ form.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
+            {{ form.end_date_effect_inputs(class="form-control", placeholder="05/01/2019", id="end_date_effect_inputs") }}
+            {{ form.submit_ok_export_effect_data(class="form-control", id="submit_ok_charts_effect_data")}}
         </form>
-
-        <!-- ============================= SUPPORT ============================= -->
-        <!--<a href="mailto:NexusQuantDev@lgim.com" target="">Support</a>-->
     </div>
 
     <!-- ============================= CHARTS AREA ============================= -->
-    <div class="container">
+    <div class="container-fluid">
         <h2 class="title-dashboard">EFFECT Dashboard</h2><br>
 
-        <h6 class="date_run_dashboard text-muted">Date run {{effect_data_form['input_signal_date_effect']}}</h6>
+        <h6 class="date_run_dashboard text-muted">Date run {{data_effect['effect_data_form']['input_signal_date_effect']}}</h6>
 
         <div class="row row_notional_table">
             <div class="col-lg-6">
-
                 <table class="table table-hover table-custom">
                 <thead>
                     <tr>
@@ -204,12 +191,11 @@
                 <tbody>
                     <tr>
                         <th class="text-muted text-center" scope="row">Drawdown (%)</th>
-                        <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_drawdown_position_size_matr']['drawdown']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['signals_overview']['signals_drawdown_position_size_matr']['drawdown']}}</td>
                     </tr>
-                <tr>
+                    <tr>
                         <th class="text-muted text-center" scope="row">Position size in MATR (%)</th>
-                        <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_drawdown_position_size_matr']['size_matr']}}</td>
-
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['signals_overview']['signals_drawdown_position_size_matr']['size_matr']}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -226,11 +212,11 @@
                 <tbody>
                     <tr>
                         <th class="text-muted text-center" scope="row">Ex-ante vol (%)*</th>
-                        <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_limits_controls']['ex_ante_vol']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['signals_overview']['signals_limits_controls']['ex_ante_vol']}}</td>
                     </tr>
                     <tr>
                         <th class="text-muted text-center" scope="row">MATR Notional (%)**</th>
-                        <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_limits_controls']['matr_notional']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['signals_overview']['signals_limits_controls']['matr_notional']}}</td>
 
                     </tr>
                 </tbody>
@@ -256,15 +242,15 @@
                 <tbody>
                     <tr>
                         <th class="text-muted text-center" scope="row">Weekly P&L</th>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']}}</td>
                     </tr>
                 <tr>
                         <th class="text-muted text-center" scope="row">YTD P&L</th>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_ytd_notional']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_ytd_notional']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_ytd_notional']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_total_ytd_notional']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_spot_ytd_notional']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_notional']['profit_and_loss_carry_ytd_notional']}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -286,15 +272,15 @@
                 <tbody>
                     <tr>
                         <th class="text-muted text-center" scope="row">Weekly P&L</th>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_weekly_matr']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_weekly_matr']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_carry_weekly_matr']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_weekly_matr']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_weekly_matr']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_carry_weekly_matr']}}</td>
                     </tr>
                 <tr>
                         <th class="text-muted text-center" scope="row">YTD P&L</th>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_ytd_matr']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
-                        <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_total_ytd_matr']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
+                        <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_matr']['profit_and_loss_spot_ytd_matr']}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -309,20 +295,20 @@
                 <thead>
                     <tr>
                         <th scope="col"></th>
-                        <th class="text-muted text-center" scope="col">Last<br>week</th>
-                        <th class="text-muted text-center" scope="col">Total (%)<br></th>
-                        <th class="text-muted text-center" scope="col">Spot (%)</th>
+                        <th class="text-muted text-center" scope="col">Lastweek</th>
+                        <th class="text-muted text-center" scope="col">Total(%)<br></th>
+                        <th class="text-muted text-center" scope="col">Spot(%)</th>
                         <th class="text-muted text-center tex" scope="col">Carry</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for currency in range(write_logs['currency_logs']|length) %}
+                    {% for currency in range(data_effect['write_logs']['currency_logs']|length) %}
                         <tr>
-                            <th class="text-muted text-center">{{write_logs['currency_logs'][currency]}}</th>
-                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_combo_overview'][currency]}}</td>
-                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_total_overview'][currency]}}</td>
-                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_spot_ex_overview'][currency]}}</td>
-                            <td class="text-muted text-center">{{effect_outputs['profit_and_loss']['profit_and_loss_carry_overview'][currency]}}</td>
+                            <th class="text-muted text-center">{{data_effect['write_logs']['currency_logs'][currency]}}</th>
+                            <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_combo_overview'][currency]}}</td>
+                            <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_total_overview'][currency]}}</td>
+                            <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_spot_ex_overview'][currency]}}</td>
+                            <td class="text-muted text-center">{{data_effect['effect_outputs']['profit_and_loss']['profit_and_loss_carry_overview'][currency]}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -335,18 +321,18 @@
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th class="text-muted text-center" scope="col">Real carry (%)</th>
-                            <th class="text-muted text-center" scope="col">Trend (%)</th>
-                            <th class="text-muted text-center" scope="col">This<br>week</th>
+                            <th class="text-muted text-center" scope="col">Real carry(%)</th>
+                            <th class="text-muted text-center" scope="col">Trend(%)</th>
+                            <th class="text-muted text-center" scope="col">This week</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for currency in range(write_logs['currency_logs']|length) %}
+                        {% for currency in range(data_effect['write_logs']['currency_logs']|length) %}
                             <tr>
                                 <th class="text-muted"></th>
-                                <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_real_carry'][currency]}}</td>
-                                <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_trend_overview'][currency]}}</td>
-                                <td class="text-muted text-center">{{effect_outputs['signals_overview']['signals_combo_overview'][currency]}}</td>
+                                <td class="text-muted text-center">{{data_effect['effect_outputs']['signals_overview']['signals_real_carry'][currency]}}</td>
+                                <td class="text-muted text-center">{{data_effect['effect_outputs']['signals_overview']['signals_trend_overview'][currency]}}</td>
+                                <td class="text-muted text-center">{{data_effect['effect_outputs']['signals_overview']['signals_combo_overview'][currency]}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -359,14 +345,14 @@
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th class="text-muted text-center" scope="col">This<br>week</th>
+                            <th class="text-muted text-center" scope="col">This week</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for currency in range(write_logs['currency_logs']|length) %}
+                        {% for currency in range(data_effect['write_logs']['currency_logs']|length) %}
                             <tr>
                                 <th class="text-muted text-center"></th>
-                                <td class="text-muted text-center">{{effect_outputs['trades_overview'][currency]}}</td>
+                                <td class="text-muted text-center">{{data_effect['effect_outputs']['trades_overview'][currency]}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -379,14 +365,14 @@
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th class="text-muted text-center" scope="col"><br>Rates (%)</th>
+                            <th class="text-muted text-center" scope="col">Rates(%)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for currency in range(write_logs['currency_logs']|length) %}
+                        {% for currency in range(data_effect['write_logs']['currency_logs']|length) %}
                             <tr>
                                 <th class="text-muted"></th>
-                                <td class="text-muted text-center">{{effect_outputs['rates'][currency]}}</td>
+                                <td class="text-muted text-center">{{data_effect['effect_outputs']['rates'][currency]}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -394,56 +380,103 @@
             </div>
         </div>
 
-        <!--Aggregate line chart-->
-        <div class="row row-agg-line-chart">
-            <div class="col-lg-12">
-                <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
-                <script type="text/javascript">
-                   agg_line_chart({{effect_outputs['total_excl_signals']|tojson}},
-                                  {{effect_outputs['total_incl_signals']|tojson}},
-                                  {{effect_outputs['spot_incl_signals']|tojson}},
-                                  {{effect_outputs['spot_excl_signals']|tojson}})
-                </script>
-            </div>
-        </div>
-
-        <!--Regions line chart-->
-        <div class="row row-agg-line-chart">
+        <!-- Regions chart-->
+        <div class="row row-region-line-chart">
+            <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                <button class="btn btn-outline-light icon-region-download" type="submit" name="submit_button" value="region_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+            </form>
             <div class="col-lg-12">
                 <div id="region_line_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_region_effect.js') }}"></script>
                 <script type="text/javascript">
-                   region_line_chart({{data_charts['latam']|tojson}},
-                                     {{data_charts['ceema']|tojson}},
-                                     {{data_charts['asia']|tojson}},
-                                     {{data_charts['total']|tojson}},
-                                     {{data_charts['average']|tojson}})
-                </script>
-            </div>
-        </div>
-
-        <!--Drawdown line chart-->
-        <div class="row row-drawdown-agg-line-chart">
-            <div class="col-lg-12">
-                <div id="drawdown_line_chart_effect" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_max_drawdown_effect.js') }}"></script>
-                <script type="text/javascript">
-                   drawdown_line_chart({{data_charts['max_drawdown_no_signals_series']|tojson}},
-                                        {{data_charts['max_drawdown_with_signals_series']|tojson}})
+                     region_line_chart({{data_effect['region_chart']['regions']|tojson}},
+                                       {{data_effect['region_chart']['region_dates']|tojson}},
+                                       {{data_effect['region_chart']['region_names']|tojson}})
                 </script>
             </div>
         </div>
 
         <!--Year to year contrb bar chart-->
         <div class="row row-year-contrib-agg-line-chart">
-            <div class="col-lg-6">
+            <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                <label class="title-date-box-effect text-muted">Start year-to-year</label>
+                <div class="btn-group">
+                    {{form.start_year_to_year_contrib(class="form-control", placeholder="31/12/2019", id="date_box_effect")}}
+                    {{form.submit_ok_year_to_year_contrib(class="form-control", id="submit_ok_quarterly_profit_and_loss")}}
+                </div>
+                <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="year_to_year_contrib_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+            </form>
+
+            <div class="col-lg-12">
                 <div id="horizontal_bar_chart_effect" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/horizontal_bar_chart_year_to_year_contrib_effect.js') }}"></script>
                 <script type="text/javascript">
-                   horizontal_bar_chart({{data_charts['year_to_year_contrib']|tojson}},
-                                        {{data_charts['year_to_date_contrib_sum_prod_total']|tojson}},
-                                        {{data_charts['names_curr']|tojson}})
+                   horizontal_bar_chart({{data_effect['year_to_date_contrib_chart']['year_to_year_contrib']|tojson}},
+                                        {{data_effect['year_to_date_contrib_chart']['year_to_date_contrib_sum_prod_total']|tojson}},
+                                        {{data_effect['year_to_date_contrib_chart']['names_curr']|tojson}})
+                </script>
+            </div>
+        </div>
+
+        <!--Aggregate and drawdown charts-->
+        <div class="row row-agg-line-chart">
+            <div class="col-lg-5">
+                <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                    <button class="btn btn-outline-light icon-agg-download" type="submit" name="submit_button" value="agg_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                </form>
+                <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/aggregate_line_chart_effect.js') }}"></script>
+                <script type="text/javascript">
+                   agg_line_chart({{data_effect['effect_outputs']['total_excl_signals']|tojson}},
+                                  {{data_effect['effect_outputs']['total_incl_signals']|tojson}},
+                                  {{data_effect['effect_outputs']['spot_incl_signals']|tojson}},
+                                  {{data_effect['effect_outputs']['spot_excl_signals']|tojson}},
+                                  {{data_effect['effect_outputs']['agg_dates']|tojson}})
+                </script>
+            </div>
+            <div class="col-lg-7">
+                <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                    <button class="btn btn-outline-light icon-drawdown-download" type="submit" name="submit_button" value="drawdown_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                </form>
+                <div id="drawdown_line_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/line_chart_max_drawdown_effect.js') }}"></script>
+                <script type="text/javascript">
+                   drawdown_line_chart({{data_effect['drawdown_chart']['max_drawdown_no_signals_series']|tojson}},
+                                        {{data_effect['drawdown_chart']['max_drawdown_with_signals_series']|tojson}},
+                                        {{data_effect['drawdown_chart']['max_drawdown_jgenvuug']|tojson}},
+                                        {{data_effect['drawdown_chart']['drawdown_dates']|tojson}})
+                </script>
+            </div>
+        </div>
+
+        <!--Quarterly profit and loss chart-->
+        <div class="row row-quarterly-profit-agg-line-chart">
+            <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                <label class="title-date-box-effect text-muted">Start backtest</label>
+                <div class="btn-group">
+                    {{form.start_date_quarterly_backtest_profit_and_loss_effect(class="form-control", placeholder="31/03/2014", id="date_box_effect")}}
+                </div>
+                <label class="title-end-date-box-effect text-muted">End backtest</label>
+                <div class="btn-group">
+                    {{form.end_date_quarterly_backtest_profit_and_loss_effect(class="form-control", placeholder="30/06/2017", id="date_box_effect")}}
+                </div>
+                 <label class="title-end-date-box-effect text-muted">Start livetest</label>
+                <div class="btn-group">
+                    {{form.start_date_quarterly_live_profit_and_loss_effect(class="form-control", placeholder="30/06/2017", id="date_box_effect")}}
+                    {{form.submit_ok_quarterly_profit_and_loss(class="form-control", id="submit_ok_quarterly_profit_and_loss")}}
+                </div>
+                <button class="btn btn-outline-light icon-quarterly-download" type="submit" name="submit_button" value="quarterly_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+            </form>
+            <div class="col-lg-12">
+                <div id="vertical_bar_chart_effect" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/vertical_bar_chart_quarterly_profit_and_loss.js') }}"></script>
+                <script type="text/javascript">
+                   vertical_bar_chart({{data_effect['quarterly_profit_and_loss_chart']['backtest_quarterly_profit_and_loss']|tojson}},
+                                      {{data_effect['quarterly_profit_and_loss_chart']['live_quarterly_profit_and_loss']|tojson}},
+                                      {{data_effect['quarterly_profit_and_loss_chart']['quarterly_backtest_dates']|tojson}},
+                                      {{data_effect['quarterly_profit_and_loss_chart']['quarterly_live_dates']|tojson}},
+                                      {{data_effect['quarterly_profit_and_loss_chart']['quarters_backtest']|tojson}},
+                                      {{data_effect['quarterly_profit_and_loss_chart']['quarters_live']|tojson}})
                 </script>
             </div>
         </div>

@@ -4,18 +4,24 @@ from flask import render_template
 from flask import request
 
 from assetallocation_UI.aa_web_app import app
-from assetallocation_UI.aa_web_app.forms import InputsTimesModel, InputsEffectStrategy
+from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel
+from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
 
 from assetallocation_UI.aa_web_app.get_data_times import ReceivedDataTimes
-from assetallocation_UI.aa_web_app.get_data_effect import ReceivedDataEffect
+from assetallocation_UI.aa_web_app.get_data_effect import ProcessDataEffect
 
-obj_received_data_effect = ReceivedDataEffect()
+from assetallocation_UI.aa_web_app.download_data_chart_effect import DownloadDataChartEffect
+
+obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
+obj_download_data_effect = DownloadDataChartEffect(
 
-# data missing: JPPUELM Index
-
+)
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
 # @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
+# todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
+#  ex: "/some_url?x=1&y=2"
+# todo class instance
 
 
 @app.route('/')
@@ -47,33 +53,38 @@ def times_strategy_post():
 
 @app.route('/received_data_times_form', methods=['POST'])
 def received_data_times_form():
-    # todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
-    #  ex: "/some_url?x=1&y=2"
-    # todo class instance
-
     form_data = request.form['form_data'].split('&')
-
-    print(form_data)
-
     obj_received_data_times.received_data_times(form_data)
-
-    print(request.form['json_data'])
-
     obj_received_data_times.call_run_times(json.loads(request.form['json_data']))
-
     return json.dumps({'status': 'OK'})
 
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
 def effect_dashboard():
-    form = InputsTimesModel()
-    effect_data_form = obj_received_data_effect.effect_data_form
-    effect_outputs = obj_received_data_effect.effect_outputs
-    write_logs = obj_received_data_effect.write_logs
-    data_charts = obj_received_data_effect.process_data_charts_()
+    form = InputsEffectStrategy()
 
-    return render_template('effect_dashboard.html', form=form, effect_outputs=effect_outputs, write_logs=write_logs,
-                           effect_data_form=effect_data_form, data_charts=data_charts, title='Dashboard')
+    if request.method == "POST":
+        if form.submit_ok_quarterly_profit_and_loss.data:
+            obj_received_data_effect.start_quarterly_back_p_and_l_date = form.start_date_quarterly_backtest_profit_and_loss_effect.data
+            obj_received_data_effect.end_quarterly_back_p_and_l_date = form.end_date_quarterly_backtest_profit_and_loss_effect.data
+            obj_received_data_effect.start_quarterly_live_p_and_l_date = form.start_date_quarterly_live_profit_and_loss_effect.data
+        elif form.submit_ok_year_to_year_contrib.data:
+            obj_received_data_effect.start_year_to_year_contrib_date = form.start_year_to_year_contrib.data
+
+        elif request.form['submit_button'] == 'year_to_year_contrib_download':
+            obj_received_data_effect.download_year_to_year_contrib_chart()
+        elif request.form['submit_button'] == 'region_download':
+            obj_received_data_effect.download_regions_charts()
+        elif request.form['submit_button'] == 'agg_download':
+            obj_received_data_effect.download_aggregate_chart()
+        elif request.form['submit_button'] == 'drawdown_download':
+            obj_received_data_effect.download_drawdown_chart()
+        elif request.form['submit_button'] == 'quarterly_download':
+            obj_received_data_effect.download_quarterly_profit_and_loss_chart()
+
+    data_effect = obj_received_data_effect.run_process_data_effect()
+
+    return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 
 
 @app.route('/effect_strategy_get', methods=['GET'])
@@ -92,24 +103,15 @@ def effect_strategy_post():
 
 @app.route('/received_data_effect_form', methods=['POST'])
 def received_data_effect_form():
-    # todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
-    #  ex: "/some_url?x=1&y=2"
-    # todo class instance
-
     form_data = request.form['form_data'].split('&')
-    effect_form = obj_received_data_effect.process_received_data_effect(form_data)
-
-    print(request.form['json_data'])
-
+    effect_form = obj_received_data_effect.receive_data_effect(form_data)
     obj_received_data_effect.call_run_effect(assets_inputs_effect=json.loads(request.form['json_data']))
-
     return json.dumps({'status': 'OK', 'effect_data': effect_form})
 
 
 @app.route('/risk_returns', methods=['GET', 'POST'])
 def risk_returns():
     effect_outputs = obj_received_data_effect.effect_outputs
-
     return render_template('risk_returns_template.html', title='Risk_Returns_overall', effect_outputs=effect_outputs)
 
 
