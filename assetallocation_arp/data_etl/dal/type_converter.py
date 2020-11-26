@@ -96,8 +96,10 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def effect_assets_to_composite(effect_assets: List[EffectAssetInput]) -> List[str]:
-        """Format to match database type arp.ticker_code_code_size[]"""
-        return [DbTypeConverter.to_composite(i.ticker, i.ndf_code, i.spot_code, i.position_size) for i in effect_assets]
+        """Format to match database type arp.currency_ticker_ticker_ticker_weight_base_region[]"""
+        return [DbTypeConverter.to_composite(
+            i.currency, i.ticker_3m, i.spot_ticker, i.carry_ticker, i.usd_weight, i.base.name, i.region
+        ) for i in effect_assets]
 
     @staticmethod
     def asset_analytics_str_to_objects(asset_ticker: str, asset_analytics_str: str) -> List[AssetAnalytic]:

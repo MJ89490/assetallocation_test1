@@ -64,7 +64,7 @@ def test_inflation_lag_interval_property_gets_inflation_lag_interval_based_on_in
                valid_effect.frequency, valid_effect.include_shorts, inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
     assert expected == a.inflation_lag_interval
 
 
@@ -74,7 +74,7 @@ def test_carry_type_setter_raises_key_error_invalid_carry_type(valid_effect):
                valid_effect.frequency, valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
 
 
 def test_carry_type_setter_sets_carry_type_valid_carry_type(valid_effect):
@@ -82,7 +82,7 @@ def test_carry_type_setter_sets_carry_type_valid_carry_type(valid_effect):
                valid_effect.frequency, valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
 
     assert a.carry_type.name == valid_effect.carry_type
 
@@ -93,7 +93,7 @@ def test_effect_day_of_week_setter_raises_key_error_invalid_day_of_week(valid_ef
                valid_effect.frequency, valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
 
 
 def test_effect_day_of_week_setter_sets_day_of_week_valid_day_of_week(valid_effect):
@@ -101,7 +101,7 @@ def test_effect_day_of_week_setter_sets_day_of_week_valid_day_of_week(valid_effe
                valid_effect.frequency, valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
 
     assert a.day_of_week.value == valid_effect.day_of_week
 
@@ -112,7 +112,7 @@ def test_effect_frequency_setter_raises_key_error_invalid_frequency(valid_effect
                'invalid_frequency', valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
 
 
 def test_effect_frequency_setter_sets_frequency_valid_frequency(valid_effect):
@@ -120,7 +120,7 @@ def test_effect_frequency_setter_sets_frequency_valid_frequency(valid_effect):
                valid_effect.frequency, valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
 
     assert a.frequency.name == valid_effect.frequency
 
@@ -131,7 +131,7 @@ def test_trend_indicator_setter_raises_key_error_invalid_trend_indicator(valid_e
                valid_effect.frequency, valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, 'invalid_trend_indicator')
+               valid_effect.is_real_time_inflation_forecast, 'invalid_trend_indicator')
 
 
 def test_trend_indicator_setter_sets_trend_indicator_valid_trend_indicator(valid_effect):
@@ -139,6 +139,6 @@ def test_trend_indicator_setter_sets_trend_indicator_valid_trend_indicator(valid
                valid_effect.frequency, valid_effect.include_shorts, valid_effect.inflation_lag_in_months,
                valid_effect.interest_rate_cut_off_long, valid_effect.interest_rate_cut_off_short,
                valid_effect.moving_average_long_term, valid_effect.moving_average_short_term,
-               valid_effect.is_realtime_inflation_forecast, valid_effect.trend_indicator)
+               valid_effect.is_real_time_inflation_forecast, valid_effect.trend_indicator)
 
     assert a.trend_indicator.name == valid_effect.trend_indicator

@@ -211,7 +211,7 @@ def test_insert_effect_strategy_calls_call_proc(MockEffect, mock_call_proc):
                                             mock_effect.interest_rate_cut_off_long,
                                             mock_effect.interest_rate_cut_off_short,
                                             mock_effect.moving_average_long_term, mock_effect.moving_average_short_term,
-                                            mock_effect.is_realtime_inflation_forecast, mock_effect.trend_indicator.name
+                                            mock_effect.is_real_time_inflation_forecast, mock_effect.trend_indicator.name
                                             ])
 
 

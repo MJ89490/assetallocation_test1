@@ -403,13 +403,17 @@ class EffectProcCaller(StrategyProcCaller):
 
     def _insert_effect_strategy(self, effect: Effect, user_id: str) -> int:
         """Insert data from an instance of Effect into database"""
-        res = self.call_proc('arp.insert_effect_strategy',
-                             [effect.description, user_id, effect.carry_type.name, effect.closing_threshold,
-                              effect.cost, effect.day_of_week.value, effect.frequency.name, effect.include_shorts,
-                              effect.inflation_lag_interval, effect.interest_rate_cut_off_long,
-                              effect.interest_rate_cut_off_short, effect.moving_average_long_term,
-                              effect.moving_average_short_term, effect.is_realtime_inflation_forecast,
-                              effect.trend_indicator.name])
+        res = self.call_proc(
+            'arp.insert_effect_strategy',
+            [
+                effect.description, user_id, effect.update_imf, effect.user_date, effect.signal_date,
+                effect.position_size, effect.risk_weighting.name, effect.st_dev_window, effect.bid_ask_spread,
+                effect.carry_type.name, effect.closing_threshold, effect.day_of_week.value, effect.frequency.name,
+                effect.include_shorts, effect.interest_rate_cut_off_long, effect.interest_rate_cut_off_short,
+                effect.moving_average_long_term, effect.moving_average_short_term,
+                effect.is_real_time_inflation_forecast, effect.trend_indicator
+            ]
+        )
 
         return res[0]['e_version']
 
@@ -439,14 +443,16 @@ class EffectProcCaller(StrategyProcCaller):
         if not res:
             return
 
-        row = res[0]
-        e = Effect(row['carry_type'], row['closing_threshold'], row['cost'], row['day_of_week'], row['frequency'],
-                   row['include_shorts'], -ArpTypeConverter.month_interval_to_int(row['inflation_lag']),
-                   row['interest_rate_cut_off_long'], row['interest_rate_cut_off_short'],
-                   row['moving_average_long_term'], row['moving_average_short_term'],
-                   row['is_realtime_inflation_forecast'], row['trend_indicator'])
+        r = res[0]
+        e = Effect(
+            r['update_imf'], r['user_date'], r['signal_date'], r['position_size'], r['risk_weighting'],
+            r['st_dev_window'], r['bid_ask_spread'], r['carry_type'], r['closing_threshold'], r['day_of_week'],
+            r['frequency'], r['include_shorts'], r['interest_rate_cut_off_long'], r['interest_rate_cut_off_short'],
+            r['moving_average_long_term'], r['moving_average_short_term'], r['is_real_time_inflation_forecast'],
+            r['trend_indicator']
+        )
         e.version = effect_version
-        e.description = row['description']
+        e.description = r['description']
         return e
 
     def _select_effect_assets(self, effect_version) -> Optional[List[EffectAssetInput]]:
@@ -458,7 +464,10 @@ class EffectProcCaller(StrategyProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'], r['ndf_code'], r['spot_code'], r['position_size'])
+            e = EffectAssetInput(
+                r['currency'], r['ticker_3m'], r['spot_ticker'], r['carry_ticker'], r['usd_weight'], r['base'],
+                r['region']
+            )
             effect_assets.append(e)
 
         return effect_assets
@@ -485,9 +494,19 @@ class EffectProcCaller(StrategyProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_ticker'], r['ndf_code'], r['spot_code'], r['position_size'])
-            e.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
-
+            e = EffectAssetInput(
+                r['currency'], r['ticker_3m'], r['spot_ticker'], r['carry_ticker'], r['usd_weight'], r['base'],
+                r['region']
+            )
+            e.asset_3m.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
+                r['ticker_3m'], r['asset_analytics_3m']
+            )
+            e.spot_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
+                r['spot_ticker'], r['spot_asset_analytics']
+            )
+            e.carry_asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
+                r['carry_ticker'], r['carry_asset_analytics']
+            )
             effect_assets.append(e)
 
         return effect_assets

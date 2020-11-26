@@ -247,13 +247,13 @@ class Effect(Strategy):
             carry_type: Union[str, CarryType], closing_threshold: float, day_of_week: Union[int, DayOfWeek],
             frequency: Union[str, Frequency], include_shorts: bool, interest_rate_cut_off_long: float,
             interest_rate_cut_off_short: float, moving_average_long_term: int, moving_average_short_term: int,
-            is_realtime_inflation_forecast: bool, trend_indicator: Union[str, TrendIndicator]
+            is_real_time_inflation_forecast: bool, trend_indicator: Union[str, TrendIndicator]
     ) -> None:
         """Effect class to hold data from database"""
         super().__init__(Name.effect)
         self.update_imf = update_imf
         self.moving_average_short_term = moving_average_short_term
-        self.is_realtime_inflation_forecast = is_realtime_inflation_forecast
+        self.is_real_time_inflation_forecast = is_real_time_inflation_forecast
         self.user_date = user_date
         self.moving_average_long_term = moving_average_long_term
         self.closing_threshold = closing_threshold
@@ -408,11 +408,11 @@ class Effect(Strategy):
         self._moving_average_short_term = x
 
     @property
-    def is_realtime_inflation_forecast(self) -> bool:
+    def is_real_time_inflation_forecast(self) -> bool:
         return self._is_realtime_inflation_forecast
 
-    @is_realtime_inflation_forecast.setter
-    def is_realtime_inflation_forecast(self, x: bool) -> None:
+    @is_real_time_inflation_forecast.setter
+    def is_real_time_inflation_forecast(self, x: bool) -> None:
         self._is_realtime_inflation_forecast = x
 
     @property

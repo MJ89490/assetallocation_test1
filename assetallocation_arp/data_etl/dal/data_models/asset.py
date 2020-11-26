@@ -295,12 +295,36 @@ class EffectAssetInput:
     def __init__(self, currency: str, ticker_3m: str, spot_ticker: str, carry_ticker: str, usd_weight: float,
                  base: Union[str, Base], region: str) -> None:
         self.currency = currency
-        self.ticker_3m = ticker_3m
-        self.spot_ticker = spot_ticker
-        self.carry_ticker = carry_ticker
         self.usd_weight = usd_weight
         self.base = base
         self.region = region
+        self.asset_3m = Asset(ticker_3m)
+        self.spot_asset = Asset(spot_ticker)
+        self.carry_asset = Asset(carry_ticker)
+
+    @property
+    def asset_3m(self) -> Asset:
+        return self._asset_3m
+
+    @asset_3m.setter
+    def asset_3m(self, x: Asset) -> None:
+        self._asset_3m = x
+
+    @property
+    def spot_asset(self) -> Asset:
+        return self._spot_asset
+
+    @spot_asset.setter
+    def spot_asset(self, x: Asset) -> None:
+        self._spot_asset = x
+
+    @property
+    def carry_asset(self) -> Asset:
+        return self._carry_asset
+
+    @carry_asset.setter
+    def carry_asset(self, x: Asset) -> None:
+        self._carry_asset = x
 
     @property
     def currency(self) -> str:
@@ -312,27 +336,27 @@ class EffectAssetInput:
 
     @property
     def ticker_3m(self) -> str:
-        return self._ticker_3m
+        return self._asset_3m.ticker
 
     @ticker_3m.setter
     def ticker_3m(self, x: str) -> None:
-        self._ticker_3m = x
+        self._asset_3m = Asset(x)
 
     @property
     def spot_ticker(self) -> str:
-        return self._spot_ticker
+        return self._spot_asset.ticker
 
     @spot_ticker.setter
     def spot_ticker(self, x: str) -> None:
-        self._spot_ticker = x
+        self._spot_asset = Asset(x)
 
     @property
     def carry_ticker(self) -> str:
-        return self._carry_ticker
+        return self._carry_asset.ticker
 
     @carry_ticker.setter
     def carry_ticker(self, x: str) -> None:
-        self._carry_ticker = x
+        self._carry_asset = Asset(x)
 
     @property
     def usd_weight(self) -> float:
