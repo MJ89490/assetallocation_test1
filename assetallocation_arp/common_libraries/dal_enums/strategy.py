@@ -1,16 +1,20 @@
 from enum import Enum, auto
 
 
-class TrendIndicator(Enum):
-    TotalReturn = auto()
-    Spot = auto()
-
+# TODO use enums in Effect UI inputs dropdown
+TrendIndicator = Enum(
+    value='TrendIndicator',
+    names=[
+        ('Total return', auto()),
+        ('Spot', auto()),
+    ]
+)
 
 # noinspection PyArgumentList
 RiskWeighting = Enum(
     value='RiskWeighting',
     names=[
-        ('1 / N', auto()),
+        ('1/N', auto()),
         ('inverse vol', auto()),
         ('inverse carry', auto())
     ]

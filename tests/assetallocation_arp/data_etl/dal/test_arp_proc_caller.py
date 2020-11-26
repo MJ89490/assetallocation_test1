@@ -1,3 +1,5 @@
+import datetime as dt
+
 import mock
 import pytest
 
@@ -197,26 +199,32 @@ def test_select_fund_strategy_results_returns_fund_strategy(mock_call_proc, Mock
 
 
 def test_insert_effect_strategy_calls_call_proc(MockEffect, mock_call_proc):
-    mock_effect = MockEffect('Nominal', 1, 1, 1, 'monthly', 1, 1, 1, 1, 1, 1, 1, 'TotalReturn')
+    mock_e = MockEffect(
+        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'Nominal', float(1), 0, 'weekly', True,
+        float(1), float(1), 1, 1, True, 'Total return'
+    )
     user_id = 'a'
 
     a = EffectProcCaller()
-    a._insert_effect_strategy(mock_effect, user_id)
+    a._insert_effect_strategy(mock_e, user_id)
 
-    mock_call_proc.assert_called_once_with(a, 'arp.insert_effect_strategy',
-                                           [mock_effect.description, 'a', mock_effect.carry_type.name,
-                                            mock_effect.closing_threshold, mock_effect.cost,
-                                            mock_effect.day_of_week.value, mock_effect.frequency.name,
-                                            mock_effect.include_shorts, mock_effect.inflation_lag_interval,
-                                            mock_effect.interest_rate_cut_off_long,
-                                            mock_effect.interest_rate_cut_off_short,
-                                            mock_effect.moving_average_long_term, mock_effect.moving_average_short_term,
-                                            mock_effect.is_real_time_inflation_forecast, mock_effect.trend_indicator.name
-                                            ])
+    mock_call_proc.assert_called_once_with(
+        a, 'arp.insert_effect_strategy',
+        [
+            mock_e.description, 'a', mock_e.update_imf, mock_e.user_date, mock_e.signal_date, mock_e.position_size,
+            mock_e.risk_weighting.name, mock_e.st_dev_window, mock_e.bid_ask_spread, mock_e.carry_type.name,
+            mock_e.closing_threshold, mock_e.day_of_week.value, mock_e.frequency.name, mock_e.include_shorts,
+            mock_e.interest_rate_cut_off_long, mock_e.interest_rate_cut_off_short, mock_e.moving_average_long_term,
+            mock_e.moving_average_short_term, mock_e.is_real_time_inflation_forecast, mock_e.trend_indicator
+        ]
+    )
 
 
 def test_insert_effect_strategy_returns_e_version(MockEffect, mock_call_proc):
-    mock_effect = MockEffect('Nominal', 1, 1, 1, 'monthly', 1, 1, 1, 1, 1, 1, 1, 'TotalReturn')
+    mock_effect = MockEffect(
+        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'Nominal', float(1), 0, 'weekly', True,
+        float(1), float(1), 1, 1, True, 'Total return'
+    )
     expected = 5
     mock_call_proc.return_value = [{'e_version': expected}]
 
