@@ -46,8 +46,8 @@ class ReceiveDataEffect:
             self.effect_form['input_long_term_ma'], self.effect_form['input_short_term_ma'],
             self.effect_form['input_real_time_inf_effect'], self.effect_form['input_trend_indicator_effect']
         )
-        effect.asset_inputs = [
-            EffectAssetInput(h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
+        # TODO effect asset_subcategory is set as currnecy. this will be refactored once
+        effect.asset_inputs = [EffectAssetInput(h, h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
             zip(
                 assets_inputs_effect['input_currency'], assets_inputs_effect['input_implied'],
                 assets_inputs_effect['input_spot_ticker'], assets_inputs_effect['input_carry_ticker'],

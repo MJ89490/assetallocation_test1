@@ -292,8 +292,9 @@ class TimesAssetInput:
 
 # noinspection PyAttributeOutsideInit
 class EffectAssetInput:
-    def __init__(self, currency: str, ticker_3m: str, spot_ticker: str, carry_ticker: str, usd_weight: float,
-                 base: Union[str, Base], region: str) -> None:
+    def __init__(self, asset_subcategory: Union[str, Subcategory], currency: str, ticker_3m: str, spot_ticker: str, carry_ticker: str,
+                 usd_weight: float, base: Union[str, Base], region: str) -> None:
+        self.asset_subcategory = asset_subcategory
         self.currency = currency
         self.usd_weight = usd_weight
         self.base = base
@@ -301,6 +302,17 @@ class EffectAssetInput:
         self.asset_3m = Asset(ticker_3m)
         self.spot_asset = Asset(spot_ticker)
         self.carry_asset = Asset(carry_ticker)
+
+    @property
+    def asset_subcategory(self) -> Subcategory:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Subcategory) -> None:
+        if isinstance(x, Subcategory):
+            self._asset_subcategory = x
+        else:
+            self._asset_subcategory = subcategory_map[x]
 
     @property
     def asset_3m(self) -> Asset:

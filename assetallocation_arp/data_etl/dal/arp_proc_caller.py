@@ -463,10 +463,8 @@ class EffectProcCaller(StrategyProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(
-                r['currency'], r['ticker_3m'], r['spot_ticker'], r['carry_ticker'], r['usd_weight'], r['base'],
-                r['region']
-            )
+            e = EffectAssetInput(r['asset_subcategory'], r['currency'], r['ticker_3m'], r['spot_ticker'],
+                                 r['carry_ticker'], r['usd_weight'], r['base'], r['region'])
             effect_assets.append(e)
 
         return effect_assets
@@ -493,10 +491,8 @@ class EffectProcCaller(StrategyProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(
-                r['currency'], r['ticker_3m'], r['spot_ticker'], r['carry_ticker'], r['usd_weight'], r['base'],
-                r['region']
-            )
+            e = EffectAssetInput(r['asset_subcategory'], r['currency'], r['ticker_3m'], r['spot_ticker'],
+                                 r['carry_ticker'], r['usd_weight'], r['base'], r['region'])
             e.asset_3m.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
                 r['ticker_3m'], r['asset_analytics_3m']
             )
