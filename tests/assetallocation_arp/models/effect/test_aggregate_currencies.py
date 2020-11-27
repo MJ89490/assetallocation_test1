@@ -1,7 +1,5 @@
 import os
-import pytest
 import pandas as pd
-import numpy as np
 from unittest import TestCase
 
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
