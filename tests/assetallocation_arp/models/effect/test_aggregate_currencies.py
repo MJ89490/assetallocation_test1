@@ -2,173 +2,147 @@ import os
 import pytest
 import pandas as pd
 import numpy as np
+from unittest import TestCase
+
+from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
+from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
+from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
 """
 Notes: 
-one: total return; 4 ;16; Yes; 2.0; 0.0; real; yes; 0.25; 1/N; 52; 10; 4
-two: spot; 4 ;16; No; 2.0; 0.0; real; yes; 0.25 ;1/N ;52 ;10 ;4
+    TrendIndicator: Total Return
+    Short-term: 4
+    Long-term: 16 
+    Incl Shorts: Yes
+    Cut-off long: 2.0% 
+    Cut-off short: 0.0% 
+    Real/Nominal: real
+    Realtime Inflation F'cast: Yes
+    Threshold for closing: 0.25%
+    Risk-weighting: 1/N
+    STDev window (weeks): 52
+    Bid-ask spread (bp): 10
+    Position size: 3%
 """
 
 
-@pytest.fixture
-def currencies():
-    return ['BRL', 'TRY', 'THB']
+class TestComputeAggregateCurrencies(TestCase):
 
+    def setUp(self):
+        all_data = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "all_date.csv")), sep=',', engine='python')
+        all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
+        del all_data['Date']
+        self.obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")), sep=',', engine='python'),
+                                                 bid_ask_spread=10,
+                                                 frequency_mat='weekly',
+                                                 end_date_mat='23/09/2020',
+                                                 signal_day_mat='WED',
+                                                 all_data=all_data)
 
-def test_compute_inverse_volatility(currencies):
-    """
-    Notes: spot; 4 ;16; No; 2.0; 0.0; real; yes; 0.25 ;1/N ;52 ;10 ;4
-    """
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", "inverse_volatilities_origin.csv"))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources",
-                                               "effect", "outputs_to_test", "inverse_volatilities_results.csv"))
+        self.obj_import_data.process_all_data_effect()
+        self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
+        self.spot_origin, self.carry_origin, spx_index_values, three_month_implied_usd, three_month_implied_eur, region, jgenvuug_index_values = self.obj_import_data.return_process_usd_eur_data_effect()
 
-    volatility_results = pd.read_csv(path_result, sep=',', engine='python')
-    volatility_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        # Inflation differential calculations
+        obj_inflation_differential = ComputeInflationDifferential(dates_index=self.obj_import_data.dates_index)
+        realtime_inflation_forecast, imf_data_update = 'Yes', False
+        inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
+                                                realtime_inflation_forecast,
+                                                self.obj_import_data.all_currencies_spot,
+                                                self.obj_import_data.currencies_spot['currencies_spot_usd'],
+                                                imf_data_update=imf_data_update)
 
-    for currency in currencies:
-        assert np.allclose(np.array(volatility_origin[currency].tolist()), np.array(volatility_results[currency].tolist())) is True
+        # Inputs
+        trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
+        carry_inputs = {'type': 'real', 'inflation': inflation_differential}
+        combo_inputs = {'cut_off': 2, 'incl_shorts': 'Yes', 'cut_off_s': 0.00, 'threshold': 0.25}
 
+        self.currencies_calculations = self.obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
+        self.obj_compute_agg_currencies = ComputeAggregateCurrencies(window=52,
+                                                                     weight='1/N',
+                                                                     dates_index=self.obj_import_data.dates_index,
+                                                                     start_date_calculations=self.obj_import_data.start_date_calculations,
+                                                                     prev_start_date_calc=self.obj_import_data.previous_start_date_calc)
 
-@pytest.mark.parametrize("excl_signals_total_return_origin, excl_signals_total_return_results",
-                         [("excl_signals_total_return_one_origin.csv", "excl_signals_total_return_one_results.csv"),
-                          ("excl_signals_total_return_two_origin.csv", "excl_signals_total_return_two_results.csv")])
-def test_compute_excl_signals_total_return(currencies, excl_signals_total_return_origin, excl_signals_total_return_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", excl_signals_total_return_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", excl_signals_total_return_results))
+    def test_compute_inverse_volatility(self):
 
-    signals_results = pd.read_csv(path_result, sep=',', engine='python')
-    signals_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        inv_volatility = self.obj_compute_agg_currencies.compute_inverse_volatility(self.spot_origin)
 
-    for currency in currencies:
-        assert np.allclose(np.array(signals_origin[currency].tolist()), np.array(signals_results[currency].tolist())) is True
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "inverse_volatility_brl_origin.csv"))
+        inv_vol_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
+        pd.testing.assert_series_equal(inv_vol_origin.brl_inv_volatility.reset_index(drop=True), inv_volatility[inv_volatility.columns.item()].reset_index(drop=True), check_names=False)
 
-@pytest.mark.parametrize("excl_signals_spot_return_origin, excl_signals_spot_return_results",
-                         [("excl_signals_spot_return_one_origin.csv", "excl_signals_spot_return_one_results.csv"),
-                          ("excl_signals_spot_return_two_origin.csv", "excl_signals_spot_return_two_results.csv")])
-def test_compute_excl_signals_spot_return(currencies, excl_signals_spot_return_origin, excl_signals_spot_return_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", excl_signals_spot_return_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", excl_signals_spot_return_results))
+    def test_compute_excl_signals_total_return(self):
 
-    signals_results = pd.read_csv(path_result, sep=',', engine='python')
-    signals_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
 
-    for currency in currencies:
-        assert np.allclose(np.array(signals_origin[currency].tolist()), np.array(signals_results[currency].tolist())) is True
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "excl_signals_total_return_brl_origin.csv"))
+        ret_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
+        pd.testing.assert_series_equal(ret_origin.brl_excl_signals_total_return.reset_index(drop=True), ret[ret.columns.item()].reset_index(drop=True), check_names=False)
 
-@pytest.mark.parametrize("log_returns_excl_costs_origin, log_returns_excl_costs_results",
-                         [("log_returns_excl_costs_one_origin.csv", "log_returns_excl_costs_one_results.csv"),
-                          ("log_returns_excl_costs_two_origin.csv", "log_returns_excl_costs_two_results.csv")])
-def test_compute_log_returns_excl_costs(currencies, log_returns_excl_costs_origin, log_returns_excl_costs_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", log_returns_excl_costs_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", log_returns_excl_costs_results))
+    def test_compute_excl_signals_spot_return(self):
 
-    log_results = pd.read_csv(path_result, sep=',', engine='python')
-    log_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        spot = self.obj_compute_agg_currencies.compute_excl_signals_spot_return(self.spot_origin)
 
-    for currency in currencies:
-        assert np.allclose(np.array(log_origin[currency].tolist()), np.array(log_results[currency].tolist())) is True
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "excl_signals_spot_return_brl_origin.csv"))
+        spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
+        pd.testing.assert_series_equal(spot_origin.brl_excl_signals_spot_return.reset_index(drop=True), spot[spot.columns.item()].reset_index(drop=True), check_names=False)
 
-@pytest.mark.parametrize("weighted_performance_origin, weighted_performance_results",
-                         [("weighted_performance_one_origin.csv", "weighted_performance_one_results.csv"),
-                          ("weighted_performance_two_origin.csv", "weighted_performance_two_results.csv")])
-def test_compute_weighted_performance(weighted_performance_origin, weighted_performance_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", weighted_performance_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", weighted_performance_results))
+    def test_compute_aggregate_total_incl_signals(self):
 
-    weighted_results = pd.read_csv(path_result, sep=',', engine='python')
-    weighted_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        ret = self.obj_compute_agg_currencies.compute_aggregate_total_incl_signals(self.currencies_calculations['return_incl_curr'], inverse_volatility=None)
 
-    assert np.allclose(np.array(weighted_origin.Weighted_Performance.tolist()),
-                       np.array(weighted_results.Weighted_Performance.tolist())) is True
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_total_incl_signals_brl_origin.csv"))
+        ret_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
+        pd.testing.assert_series_equal(ret_origin.brl_incl_signals.reset_index(drop=True), ret[ret.columns.item()].reset_index(drop=True), check_names=False)
 
-@pytest.mark.parametrize("agg_total_incl_signals_origin, agg_total_incl_signals_results, name_col",
-                        [("aggregate_total_incl_signals_one_origin.csv",
-                          "aggregate_total_incl_signals_one_results.csv", "Total_Incl_Signals"),
-                         ("aggregate_total_incl_signals_two_origin.csv",
-                          "aggregate_total_incl_signals_two_results.csv", "Total_Incl_Signals")])
-def test_compute_aggregate_total_incl_signals(agg_total_incl_signals_origin, agg_total_incl_signals_results, name_col):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", agg_total_incl_signals_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", agg_total_incl_signals_results))
+    def test_compute_aggregate_total_excl_signals(self):
+        ret_excl_costs = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        ret = self.obj_compute_agg_currencies.compute_aggregate_total_excl_signals(ret_excl_costs, inverse_volatility=None)
 
-    agg_results = pd.read_csv(path_result, sep=',', engine='python')
-    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_total_excl_signals_brl_origin.csv"))
+        ret_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
+        pd.testing.assert_series_equal(ret_origin.brl_ex_signals.reset_index(drop=True), ret[ret.columns.item()].reset_index(drop=True), check_names=False)
 
+    def test_compute_aggregate_spot_incl_signals(self):
+        spot_incl_costs = self.currencies_calculations['spot_incl_curr']
+        spot = self.obj_compute_agg_currencies.compute_aggregate_spot_incl_signals(spot_incl_costs, inverse_volatility=None)
 
-@pytest.mark.parametrize("agg_total_excl_signals_origin, agg_total_excl_signals_results, name_col",
-                        [("aggregate_total_excl_signals_one_origin.csv",
-                          "aggregate_total_excl_signals_one_results.csv", "Total_Excl_Signals"),
-                         ("aggregate_total_excl_signals_two_origin.csv",
-                          "aggregate_total_excl_signals_two_results.csv", "Total_Excl_Signals")])
-def test_compute_aggregate_total_excl_signals(agg_total_excl_signals_origin, agg_total_excl_signals_results, name_col):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", agg_total_excl_signals_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", agg_total_excl_signals_results))
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_spot_incl_signals_brl_origin.csv"))
+        spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-    agg_results = pd.read_csv(path_result, sep=',', engine='python')
-    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        pd.testing.assert_series_equal(spot_origin.brl_spot_incl_signals.reset_index(drop=True), spot[spot.columns.item()].reset_index(drop=True), check_names=False)
 
-    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
+    def test_compute_aggregate_spot_excl_signals(self):
+        excl_signals_spot_ret = self.obj_compute_agg_currencies.compute_excl_signals_spot_return(spot_origin=self.spot_origin)
+        spot = self.obj_compute_agg_currencies.compute_aggregate_spot_excl_signals(excl_signals_spot_ret, inverse_volatility=None)
 
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_spot_excl_signals_brl_origin.csv"))
+        spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-@pytest.mark.parametrize("agg_spot_incl_signals_origin, agg_spot_incl_signals_results, name_col",
-                        [("aggregate_spot_incl_signals_one_origin.csv", "aggregate_spot_incl_signals_one_results.csv",
-                          "Spot_Incl_Signals"),
-                         ("aggregate_spot_incl_signals_two_origin.csv", "aggregate_spot_incl_signals_two_results.csv",
-                          "Spot_Incl_Signals")])
-def test_compute_aggregate_spot_incl_signals(agg_spot_incl_signals_origin, agg_spot_incl_signals_results, name_col):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", agg_spot_incl_signals_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", agg_spot_incl_signals_results))
+        pd.testing.assert_series_equal(spot_origin.brl_spot_excl_signals.reset_index(drop=True), spot[spot.columns.item()].reset_index(drop=True), check_names=False)
 
-    agg_results = pd.read_csv(path_result, sep=',', engine='python')
-    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    def test_compute_log_returns_excl_costs(self):
+        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
 
-    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "log_returns_excl_costs_brl_origin.csv"))
+        log_ret_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
+        log_ret = self.obj_compute_agg_currencies.compute_log_returns_excl_costs(ret)
 
-@pytest.mark.parametrize("agg_spot_excl_signals_origin, agg_spot_excl_signals_results, name_col",
-                        [("aggregate_spot_excl_signals_one_origin.csv",
-                          "aggregate_spot_excl_signals_one_results.csv", "Spot_Excl_Signals"),
-                         ("aggregate_spot_excl_signals_two_origin.csv",
-                          "aggregate_spot_excl_signals_two_results.csv", "Spot_Excl_Signals")])
-def test_compute_aggregate_spot_excl_signals(agg_spot_excl_signals_origin, agg_spot_excl_signals_results, name_col):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_origin", agg_spot_excl_signals_origin))
-    path_result = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect",
-                                               "outputs_to_test", agg_spot_excl_signals_results))
+        pd.testing.assert_series_equal(log_ret_origin.brl_log_returns.reset_index(drop=True), log_ret.iloc[:-1][log_ret.columns.item()].reset_index(drop=True), check_names=False)
 
-    agg_results = pd.read_csv(path_result, sep=',', engine='python')
-    agg_origin = pd.read_csv(path_origin, sep=',', engine='python')
+    def test_compute_weighted_performance(self):
+        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        log_ret = self.obj_compute_agg_currencies.compute_log_returns_excl_costs(ret)
+        weighted_perf = self.obj_compute_agg_currencies.compute_weighted_performance(log_ret, self.currencies_calculations['combo_curr'], 0.03)
 
-    assert np.allclose(np.array(agg_origin[name_col].tolist()), np.array(agg_results[name_col].tolist())) is True
+        path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "weighted_performance_brl_origin.csv"))
+        weighted_perf_origin = pd.read_csv(path_origin, sep=',', engine='python')
 
-
-
-
-
-
-
-
-
-
-
+        pd.testing.assert_series_equal(weighted_perf_origin.brl_weighted_perf.reset_index(drop=True), weighted_perf.iloc[:-1][weighted_perf.columns.item()].reset_index(drop=True), check_names=False)

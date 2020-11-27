@@ -42,7 +42,10 @@ class ComputeAggregateCurrencies:
 
         for currency_spot in spot_data.columns:
 
-            tmp_start_date_computations = self.start_date_calc
+            # tmp_start_date_computations = self.start_date_calc
+            start_date_loc = spot_data.index.get_loc(self.start_date_calc) - 1
+            tmp_start_date_computations = spot_data.index[start_date_loc]
+
             rows = spot_data[tmp_start_date_computations:].shape[0]
 
             spot_tmp = spot_data.loc[:, currency_spot]
