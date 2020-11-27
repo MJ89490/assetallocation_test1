@@ -41,7 +41,6 @@ class ComputeInflationDifferential:
 
             if realtime_inflation_forecast.lower() != 'yes':
                 weo_date = "Latest"
-                # weo_dates.append(weo_date)
             else:
                 counter = 0
                 date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
