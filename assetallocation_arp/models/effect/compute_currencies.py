@@ -234,7 +234,6 @@ class ComputeCurrencies(ProcessDataEffect):
 
             for values in range(len(carry_division_tmp)):
                 try:
-                    # print(round(first_returns[values] * carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
                     first_returns.append(round(first_returns[values] * carry_division_tmp[values] ** combo[values] / eur_usd_cr_tmp[values] ** bool_base_currency, 12))
                 except ZeroDivisionError:
                     first_returns.append(0)

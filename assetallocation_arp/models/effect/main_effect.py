@@ -48,8 +48,10 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                         all_data=all_data)
     obj_import_data.process_all_data_effect()
     obj_import_data.start_date_calculations = user_date
-    spot_origin, carry_origin, spx_index_values,  three_month_implied_usd, three_month_implied_eur, region, \
-    jgenvuug_index_values = obj_import_data.process_usd_eur_data_effect()
+    # spot_origin, carry_origin, spx_index_values,  three_month_implied_usd, three_month_implied_eur, region, \
+    # jgenvuug_index_values = obj_import_data.process_usd_eur_data_effect()
+
+    spot_origin, carry_origin, spx_index_values, three_month_implied_usd, three_month_implied_eur, region, jgenvuug_index_values = obj_import_data.return_process_usd_eur_data_effect()
 
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
