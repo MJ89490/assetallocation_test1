@@ -119,12 +119,12 @@ class ComputeProfitAndLoss:
         # Weekly P&L: Carry
         weekly_carry = weekly_returns - weekly_spot
 
-        return {'profit_and_loss_total_ytd_notional': round(ytd_total, 2),
-                'profit_and_loss_spot_ytd_notional': round(ytd_spot, 2),
-                'profit_and_loss_carry_ytd_notional': round(ytd_carry, 2),
-                'profit_and_loss_total_weekly_notional': round(weekly_returns, 2),
-                'profit_and_loss_spot_weekly_notional': round(weekly_spot, 2),
-                'profit_and_loss_carry_weekly_notional': round(weekly_carry, 2)}
+        return {'profit_and_loss_total_ytd_notional': ytd_total,
+                'profit_and_loss_spot_ytd_notional': ytd_spot,
+                'profit_and_loss_carry_ytd_notional': ytd_carry,
+                'profit_and_loss_total_weekly_notional': weekly_returns,
+                'profit_and_loss_spot_weekly_notional': weekly_spot,
+                'profit_and_loss_carry_weekly_notional': weekly_carry}
 
     def get_first_day_of_year(self):
         days = []
@@ -139,7 +139,8 @@ class ComputeProfitAndLoss:
         # Return the first day of year which is not a weekend day
         return days[0]
 
-    def compute_profit_and_loss_implemented_in_matr(self, combo_overview, ytd_total_notional, ytd_spot_notional, weekly_total_notional, weekly_spot_notional, weighted_perf):
+    def compute_profit_and_loss_implemented_in_matr(self, combo_overview, ytd_total_notional, ytd_spot_notional,
+                                                    weekly_total_notional, weekly_spot_notional, weighted_perf):
         """
         Function calculating the profit and loss implemented in matr
         :param combo_overview: combo overview from profit and loss notional overview
@@ -172,12 +173,12 @@ class ComputeProfitAndLoss:
         # Weekly P&L: Carry
         weekly_carry_matr = weekly_returns_matr - weekly_spot_matr
 
-        return {'profit_and_loss_total_ytd_matr': round(ytd_total_matr, 2),
-                'profit_and_loss_spot_ytd_matr': round(ytd_spot_matr, 2),
-                'profit_and_loss_carry_ytd_matr': round(ytd_carry_matr, 2),
-                'profit_and_loss_total_weekly_matr': round(weekly_returns_matr, 2),
-                'profit_and_loss_spot_weekly_matr': round(weekly_spot_matr, 2),
-                'profit_and_loss_carry_weekly_matr': round(weekly_carry_matr, 2)}
+        return {'profit_and_loss_total_ytd_matr': ytd_total_matr,
+                'profit_and_loss_spot_ytd_matr':ytd_spot_matr,
+                'profit_and_loss_carry_ytd_matr': ytd_carry_matr,
+                'profit_and_loss_total_weekly_matr': weekly_returns_matr,
+                'profit_and_loss_spot_weekly_matr': weekly_spot_matr,
+                'profit_and_loss_carry_weekly_matr': weekly_carry_matr}
 
     @staticmethod
     def process_profit_and_loss_overview(p_and_l_combo, p_and_l_spot, p_and_l_total, p_and_l_carry):
