@@ -1,10 +1,7 @@
 import pandas as pd
-import os
-import calendar
-from configparser import ConfigParser
-from datetime import timedelta
-from dateutil.relativedelta import relativedelta
 
+from assetallocation_arp.models.effect.read_inputs_effect import read_user_date, read_update_imf, \
+                                                                 read_latest_signal_date, read_aggregate_calc
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
@@ -25,17 +22,8 @@ from assetallocation_arp.models.compute_risk_return_calculations import ComputeR
 
 def run_effect(strategy_inputs, asset_inputs, all_data):
 
-    user_date = pd.to_datetime(strategy_inputs['input_user_date_effect'].item().replace('/', '-'), format='%d-%m-%Y')
-
-    if user_date is None:
-        # Instantiate ConfigParser
-        config = ConfigParser()
-        # Parse existing file
-        path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'config_effect_model', 'dates_effect.ini'))
-        config.read(path)
-        # Read values from the dates_effect.ini file
-        default_start_date = config.get('start_date_computations', 'start_date_calculations')
-        user_date = default_start_date
+    user_date = read_user_date(pd.to_datetime(strategy_inputs['input_user_date_effect'].item().replace('/', '-'),
+                                              format='%d-%m-%Y'))
 
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
@@ -53,10 +41,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
-    if strategy_inputs['input_update_imf_effect'].item() == 'False':
-        imf_data_update = False
-    else:
-        imf_data_update = True
+    imf_data_update = read_update_imf(strategy_inputs['input_update_imf_effect'])
 
     inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
                                             strategy_inputs['input_real_time_inf_effect'].item(),
@@ -82,22 +67,9 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
-    latest_signal_date = pd.to_datetime(strategy_inputs['input_signal_date_effect'].item().replace('/', '-'), format='%d-%m-%Y')
-
-    if latest_signal_date is None:
-        latest_signal_date = obj_import_data.dates_origin_index[-2]
-        # Previous Wednesday
-        if strategy_inputs['input_frequency_effect'].item() == 'weekly' or strategy_inputs['input_frequency_effect'].item() == 'daily':
-            delta = (latest_signal_date.weekday() + 4) % 7 + 1
-            latest_signal_date = pd.to_datetime(latest_signal_date.replace('/', '-') - timedelta(days=delta), format='%d-%m-%Y')
-        # Previous month
-        else:
-            days = []
-            y, m = latest_signal_date.year, (latest_signal_date - relativedelta(months=1)).month
-            for d in range(1, calendar.monthrange(y, m)[1] + 1):
-                tmp_date = pd.to_datetime('{:04d}-{:02d}-{:02d}'.format(y, m, d), format='%Y-%m-%d')
-                days.append(tmp_date)
-            latest_signal_date = pd.to_datetime(days[-1], format='%d-%m-%Y')
+    latest_signal_date = read_latest_signal_date(pd.to_datetime(strategy_inputs['input_signal_date_effect'].item().
+                                                                replace('/', '-'), format='%d-%m-%Y'),
+                                                 obj_import_data, strategy_inputs['input_frequency_effect'])
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
     obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['input_window_effect'].item()),
@@ -148,8 +120,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
-                                                                     frequency_mat=strategy_inputs['input_frequency_effect'].item()
-                                                                     )
+                                                                     frequency_mat=strategy_inputs['input_frequency_effect'].item())
 
     rates = obj_compute_warning_flags_overview.compute_warning_flags_rates(three_month_implied_usd, three_month_implied_eur)
 
@@ -169,19 +140,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     write_logs = {'currency_logs': currency_logs}
 
-    # TODO put in a function in another script + remove last val
-    agg_dates = agg_currencies['agg_total_excl_signals'].index.strftime("%Y-%m-%d").to_list()[:-1]
-    agg_total_excl_signals = agg_currencies['agg_total_excl_signals']
-    agg_total_excl_signals = agg_total_excl_signals['Total_Excl_Signals'].to_list()[:-1]
-
-    agg_total_incl_signals = agg_currencies['agg_total_incl_signals']
-    agg_total_incl_signals = agg_total_incl_signals['Total_Incl_Signals'].to_list()[:-1]
-
-    agg_spot_incl_signals = agg_currencies['agg_spot_incl_signals']
-    agg_spot_incl_signals = agg_spot_incl_signals['Spot_Incl_Signals'].to_list()[:-1]
-
-    agg_spot_excl_signals = agg_currencies['agg_spot_excl_signals']
-    agg_spot_excl_signals = agg_spot_excl_signals['Spot_Excl_Signals'].to_list()[:-1]
+    agg_curr = read_aggregate_calc(agg_currencies['agg_total_excl_signals'], agg_currencies['agg_total_incl_signals'],
+                                   agg_currencies['agg_spot_incl_signals'], agg_currencies['agg_spot_excl_signals'])
 
     effect_outputs = {'profit_and_loss': profit_and_loss,
                       'signals_overview': signals_overview,
@@ -192,10 +152,10 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                       'log_ret': agg_currencies['log_returns_excl_costs'],
                       'pos_size': float(strategy_inputs['input_position_size_effect'].item())/100,
                       'region': region,
-                      'agg_dates': agg_dates,
-                      'total_excl_signals': agg_total_excl_signals,
-                      'total_incl_signals': agg_total_incl_signals,
-                      'spot_incl_signals': agg_spot_incl_signals,
-                      'spot_excl_signals': agg_spot_excl_signals}
+                      'agg_dates': agg_curr['agg_dates'],
+                      'total_excl_signals': agg_curr['agg_total_excl_signals'],
+                      'total_incl_signals': agg_curr['agg_total_incl_signals'],
+                      'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
+                      'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
 
     return effect_outputs, write_logs
