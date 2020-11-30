@@ -39,7 +39,7 @@ class TestComputeAggregateCurrencies(TestCase):
 
         self.obj_import_data.process_all_data_effect()
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
-        self.spot_origin, self.carry_origin, spx_index_values, three_month_implied_usd, three_month_implied_eur, region, jgenvuug_index_values = self.obj_import_data.return_process_usd_eur_data_effect()
+        self.process_usd_eur_data_effect = self.obj_import_data.process_usd_eur_data_effect()
 
         # Inflation differential calculations
         obj_inflation_differential = ComputeInflationDifferential(dates_index=self.obj_import_data.dates_index)
@@ -64,7 +64,7 @@ class TestComputeAggregateCurrencies(TestCase):
 
     def test_compute_inverse_volatility(self):
 
-        inv_volatility = self.obj_compute_agg_currencies.compute_inverse_volatility(self.spot_origin)
+        inv_volatility = self.obj_compute_agg_currencies.compute_inverse_volatility(self.process_usd_eur_data_effect['common_spot'])
 
         path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "inverse_volatility_brl_origin.csv"))
         inv_vol_origin = pd.read_csv(path_origin, sep=',', engine='python')
@@ -73,7 +73,7 @@ class TestComputeAggregateCurrencies(TestCase):
 
     def test_compute_excl_signals_total_return(self):
 
-        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
 
         path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "excl_signals_total_return_brl_origin.csv"))
         ret_origin = pd.read_csv(path_origin, sep=',', engine='python')
@@ -82,7 +82,7 @@ class TestComputeAggregateCurrencies(TestCase):
 
     def test_compute_excl_signals_spot_return(self):
 
-        spot = self.obj_compute_agg_currencies.compute_excl_signals_spot_return(self.spot_origin)
+        spot = self.obj_compute_agg_currencies.compute_excl_signals_spot_return(self.process_usd_eur_data_effect['common_spot'])
 
         path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "excl_signals_spot_return_brl_origin.csv"))
         spot_origin = pd.read_csv(path_origin, sep=',', engine='python')
@@ -99,7 +99,7 @@ class TestComputeAggregateCurrencies(TestCase):
         pd.testing.assert_series_equal(ret_origin.brl_incl_signals.reset_index(drop=True), ret[ret.columns.item()].reset_index(drop=True), check_names=False)
 
     def test_compute_aggregate_total_excl_signals(self):
-        ret_excl_costs = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        ret_excl_costs = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
         ret = self.obj_compute_agg_currencies.compute_aggregate_total_excl_signals(ret_excl_costs, inverse_volatility=None)
 
         path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_total_excl_signals_brl_origin.csv"))
@@ -117,7 +117,7 @@ class TestComputeAggregateCurrencies(TestCase):
         pd.testing.assert_series_equal(spot_origin.brl_spot_incl_signals.reset_index(drop=True), spot[spot.columns.item()].reset_index(drop=True), check_names=False)
 
     def test_compute_aggregate_spot_excl_signals(self):
-        excl_signals_spot_ret = self.obj_compute_agg_currencies.compute_excl_signals_spot_return(spot_origin=self.spot_origin)
+        excl_signals_spot_ret = self.obj_compute_agg_currencies.compute_excl_signals_spot_return(spot_origin=self.process_usd_eur_data_effect['common_spot'])
         spot = self.obj_compute_agg_currencies.compute_aggregate_spot_excl_signals(excl_signals_spot_ret, inverse_volatility=None)
 
         path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "aggregate_spot_excl_signals_brl_origin.csv"))
@@ -126,7 +126,7 @@ class TestComputeAggregateCurrencies(TestCase):
         pd.testing.assert_series_equal(spot_origin.brl_spot_excl_signals.reset_index(drop=True), spot[spot.columns.item()].reset_index(drop=True), check_names=False)
 
     def test_compute_log_returns_excl_costs(self):
-        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
 
         path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "log_returns_excl_costs_brl_origin.csv"))
         log_ret_origin = pd.read_csv(path_origin, sep=',', engine='python')
@@ -136,7 +136,7 @@ class TestComputeAggregateCurrencies(TestCase):
         pd.testing.assert_series_equal(log_ret_origin.brl_log_returns.reset_index(drop=True), log_ret.iloc[:-1][log_ret.columns.item()].reset_index(drop=True), check_names=False)
 
     def test_compute_weighted_performance(self):
-        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
         log_ret = self.obj_compute_agg_currencies.compute_log_returns_excl_costs(ret)
         weighted_perf = self.obj_compute_agg_currencies.compute_weighted_performance(log_ret, self.currencies_calculations['combo_curr'], 0.03)
 

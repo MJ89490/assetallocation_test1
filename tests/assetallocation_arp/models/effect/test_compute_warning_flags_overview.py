@@ -21,9 +21,9 @@ class TestComputeWarningFlagsOverview(TestCase):
                                                  all_data=all_data)
         self.obj_import_data.process_all_data_effect()
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
-        spot_origin, carry_origin, spx_index_values, self.three_month_implied_usd, self.three_month_implied_eur, region, jgenvuug_index_values = self.obj_import_data.return_process_usd_eur_data_effect()
+        self.process_usd_eur_data_effect = self.obj_import_data.process_usd_eur_data_effect()
         self.obj_compute_warning_flags = ComputeWarningFlagsOverview(pd.to_datetime('23-09-2020', format='%d-%m-%Y'), "weekly")
 
     def test_compute_warning_flags_rates(self):
-        flags = self.obj_compute_warning_flags.compute_warning_flags_rates(self.three_month_implied_usd, self.three_month_implied_eur)
+        flags = self.obj_compute_warning_flags.compute_warning_flags_rates(self.process_usd_eur_data_effect['three_month_implied_usd'], self.process_usd_eur_data_effect['three_month_implied_eur'])
         assert np.allclose(np.array(flags), np.array(-0.0812800000))

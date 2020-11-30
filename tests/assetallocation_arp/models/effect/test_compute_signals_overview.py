@@ -40,7 +40,7 @@ class TestComputeAggregateCurrencies(TestCase):
                                                  signal_day_mat='WED',
                                                  all_data=all_data)
         self.obj_import_data.process_all_data_effect()
-        self.spot_origin, self.carry_origin, spx_index_values, three_month_implied_usd, three_month_implied_eur, region, jgenvuug_index_values = self.obj_import_data.return_process_usd_eur_data_effect()
+        self.process_usd_eur_data_effect = self.obj_import_data.process_usd_eur_data_effect()
 
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
 
@@ -95,7 +95,7 @@ class TestComputeAggregateCurrencies(TestCase):
 
     def test_compute_limits_controls(self):
         signals_combo = self.obj_compute_signals_overview.compute_signals_trend(self.currencies_calculations['combo_curr'])
-        agg_log_returns = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        agg_log_returns = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
         limits = self.obj_compute_signals_overview.compute_limits_controls(signals_combo, agg_log_returns)
 
         assert np.allclose(np.array([limits['ex_ante_vol'], limits['matr_notional']]), np.array([673.0302687471427, -3.00]))

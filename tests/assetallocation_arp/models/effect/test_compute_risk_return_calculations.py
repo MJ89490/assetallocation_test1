@@ -40,7 +40,7 @@ class TestComputeRiskReturnCalculations(TestCase):
 
         self.obj_import_data.process_all_data_effect()
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
-        self.spot_origin, self.carry_origin, self.spx_index_values, three_month_implied_usd, three_month_implied_eur, region, self.jgenvuug_index_values = self.obj_import_data.return_process_usd_eur_data_effect()
+        self.process_usd_eur_data_effect = self.obj_import_data.process_usd_eur_data_effect()
 
         # Inflation differential calculations
         obj_inflation_differential = ComputeInflationDifferential(dates_index=self.obj_import_data.dates_index)
@@ -64,7 +64,7 @@ class TestComputeRiskReturnCalculations(TestCase):
                                                                      prev_start_date_calc=self.obj_import_data.previous_start_date_calc)
 
         total_incl = self.obj_compute_agg_currencies.compute_aggregate_total_incl_signals(self.currencies_calculations['return_incl_curr'], inverse_volatility=None)
-        ret_excl_costs = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        ret_excl_costs = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
         total_excl = self.obj_compute_agg_currencies.compute_aggregate_total_excl_signals(ret_excl_costs, inverse_volatility=None)
         self.returns_excl_signals = total_excl.head(-1)
         self.returns_incl_signals = total_incl.head(-1)
@@ -102,7 +102,7 @@ class TestComputeRiskReturnCalculations(TestCase):
                            np.array([0.23045634050122574, 0.9620123899953575]))
 
     def test_compute_max_drawdown(self):
-        max_drawdown = self.compute_risk_ret.compute_max_drawdown(self.returns_excl_signals, self.returns_incl_signals, self.jgenvuug_index_values)
+        max_drawdown = self.compute_risk_ret.compute_max_drawdown(self.returns_excl_signals, self.returns_incl_signals, self.process_usd_eur_data_effect['jgenvuug_index_values'])
 
         assert np.allclose(np.array([max_drawdown['max_drawdown_no_signals'],
                                      max_drawdown['max_drawdown_with_signals']]),
@@ -113,7 +113,7 @@ class TestComputeRiskReturnCalculations(TestCase):
         excess_ret = self.compute_risk_ret.compute_excess_returns(self.returns_excl_signals, self.returns_incl_signals)
         # Max draxdown
         max_drawdown = self.compute_risk_ret.compute_max_drawdown(self.returns_excl_signals, self.returns_incl_signals,
-                                                                  self.jgenvuug_index_values)
+                                                                  self.process_usd_eur_data_effect['jgenvuug_index_values'])
 
         calmar_ratio = self.compute_risk_ret.compute_calmar_ratio(excess_ret, max_drawdown)
 
@@ -123,7 +123,7 @@ class TestComputeRiskReturnCalculations(TestCase):
 
     def test_compute_equity_correlation(self):
 
-        equity_corr = self.compute_risk_ret.compute_equity_correlation(self.spx_index_values, self.returns_excl_signals, self.returns_incl_signals)
+        equity_corr = self.compute_risk_ret.compute_equity_correlation(self.process_usd_eur_data_effect['spxt_index_values'], self.returns_excl_signals, self.returns_incl_signals)
 
         assert np.allclose(np.array([equity_corr['equity_corr_no_signals'],
                                      equity_corr['equity_corr_with_signals']]),

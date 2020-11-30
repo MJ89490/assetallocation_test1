@@ -40,7 +40,7 @@ class TestComputeProfitAndLoss(TestCase):
                                                  signal_day_mat='WED',
                                                  all_data=all_data)
         self.obj_import_data.process_all_data_effect()
-        self.spot_origin, self.carry_origin, spx_index_values, three_month_implied_usd, three_month_implied_eur, region, jgenvuug_index_values = self.obj_import_data.return_process_usd_eur_data_effect()
+        self.process_usd_eur_data_effect = self.obj_import_data.process_usd_eur_data_effect()
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
 
         # Inflation differential calculations
@@ -83,14 +83,14 @@ class TestComputeProfitAndLoss(TestCase):
 
     def test_compute_profit_and_loss_spot(self):
         combo_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_combo(self.currencies_calculations['combo_curr'])
-        p_and_l_spot = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.spot_origin, combo_overview)
+        p_and_l_spot = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.process_usd_eur_data_effect['common_spot'], combo_overview)
 
         assert np.allclose(np.array(p_and_l_spot.item()), np.array(5.35433070866143000))
 
     def test_compute_profit_and_loss_carry(self):
         profit_and_loss_total = self.obj_compute_profit_and_loss.compute_profit_and_loss_total(self.currencies_calculations['return_excl_curr'])
         combo_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_combo(self.currencies_calculations['combo_curr'])
-        profit_and_loss_spot = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.spot_origin, combo_overview)
+        profit_and_loss_spot = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.process_usd_eur_data_effect['common_spot'], combo_overview)
 
         p_and_l_carry = self.obj_compute_profit_and_loss.compute_profit_and_loss_carry(profit_and_loss_total, profit_and_loss_spot)
 
@@ -112,7 +112,7 @@ class TestComputeProfitAndLoss(TestCase):
     def test_compute_profit_and_loss_notional(self):
         combo_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_combo(self.currencies_calculations['combo_curr'])
         total_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_total(self.currencies_calculations['return_excl_curr'])
-        spot_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.spot_origin, combo_overview)
+        spot_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.process_usd_eur_data_effect['common_spot'], combo_overview)
 
         # Aggregate
         total_incl_signals = self.obj_compute_agg_currencies.compute_aggregate_total_incl_signals(self.currencies_calculations['return_incl_curr'], inverse_volatility=None)
@@ -148,7 +148,7 @@ class TestComputeProfitAndLoss(TestCase):
     def test_compute_profit_and_loss_implemented_in_matr(self):
         combo_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_combo(self.currencies_calculations['combo_curr'])
         total_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_total(self.currencies_calculations['return_excl_curr'])
-        spot_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.spot_origin, combo_overview)
+        spot_overview = self.obj_compute_profit_and_loss.compute_profit_and_loss_spot(self.process_usd_eur_data_effect['common_spot'], combo_overview)
 
         # Aggregate
         total_incl_signals = self.obj_compute_agg_currencies.compute_aggregate_total_incl_signals(self.currencies_calculations['return_incl_curr'], inverse_volatility=None)
@@ -161,7 +161,7 @@ class TestComputeProfitAndLoss(TestCase):
                                                                                         spot_incl_signals,
                                                                                         "WED")
         # Weighted performance
-        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
         log_ret = self.obj_compute_agg_currencies.compute_log_returns_excl_costs(ret)
         weighted_perf = self.obj_compute_agg_currencies.compute_weighted_performance(log_ret, self.currencies_calculations['combo_curr'], 0.03)
 
