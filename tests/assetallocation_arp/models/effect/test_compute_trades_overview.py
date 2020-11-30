@@ -27,10 +27,7 @@ Notes:
 """
 
 
-@pytest.mark.parametrize("trades_overview_origin, trades_overview_results",
-                         [("trades_overview_one_origin.csv", "trades_overview_one_results.csv"),
-                          ("trades_overview_two_origin.csv", "trades_overview_two_results.csv")])
-def test_compute_trades_overview(trades_overview_origin, trades_overview_results):
+def test_compute_trades_overview():
     all_data = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "all_date.csv")), sep=',', engine='python')
     all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
     del all_data['Date']

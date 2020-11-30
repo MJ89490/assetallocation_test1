@@ -87,7 +87,7 @@ class TestComputeRiskReturnCalculations(TestCase):
 
         assert np.allclose(np.array([std_dev['std_dev_no_signals'],
                                      std_dev['std_dev_with_signals']]),
-                           np.array([16.63420169145636, 10.5620210587769000]))
+                           np.array([16.68743875343896, 10.466027604266557]))
 
     def test_compute_sharpe_ratio(self):
         # Excess returns
@@ -99,7 +99,7 @@ class TestComputeRiskReturnCalculations(TestCase):
 
         assert np.allclose(np.array([sharpe_ratio['sharpe_ratio_no_signals'],
                                      sharpe_ratio['sharpe_ratio_with_signals']]),
-                           np.array([0.2311939063135874, 0.953269092468927000]))
+                           np.array([0.23045634050122574, 0.9620123899953575]))
 
     def test_compute_max_drawdown(self):
         max_drawdown = self.compute_risk_ret.compute_max_drawdown(self.returns_excl_signals, self.returns_incl_signals, self.jgenvuug_index_values)
