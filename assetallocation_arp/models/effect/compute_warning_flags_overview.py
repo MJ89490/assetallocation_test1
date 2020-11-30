@@ -48,8 +48,8 @@ class ComputeWarningFlagsOverview:
         rates_eur = three_month_implied_eur_latest_date - three_month_implied_eur_previous_seven_days_latest_date
 
         rates = pd.concat([rates_usd, rates_eur], axis=0)
-
-        return np.round(rates.values, 2)
+        # np.round(rates.values, 2)
+        return rates.values
 
     def compute_warning_flags_inflation(self):
         """

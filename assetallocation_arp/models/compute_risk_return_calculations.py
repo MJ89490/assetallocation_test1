@@ -1,4 +1,3 @@
-import numpy
 from math import sqrt
 
 
@@ -22,8 +21,8 @@ class ComputeRiskReturnCalculations:
         excess_returns_no_signals = (((returns_excl_signals.loc[self.end_date][0] / returns_excl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
         excess_returns_with_signals = (((returns_incl_signals.loc[self.end_date][0] / returns_incl_signals.loc[self.start_date][0]) ** exp) - 1) * 100
 
-        return {'excess_returns_no_signals': round(excess_returns_no_signals, 2),
-                'excess_returns_with_signals': round(excess_returns_with_signals, 2)}
+        return {'excess_returns_no_signals': excess_returns_no_signals,
+                'excess_returns_with_signals': excess_returns_with_signals}
 
     @staticmethod
     def compute_std_dev(returns_excl_signals, returns_incl_signals):
@@ -37,8 +36,8 @@ class ComputeRiskReturnCalculations:
         std_dev_no_signals = (returns_excl_signals / returns_excl_signals.shift(1)).std()[0] * sqrt(52) * 100
         std_dev_with_signals = (returns_incl_signals / returns_incl_signals.head(-1).shift(1)).std()[0] * sqrt(52) * 100
 
-        return {'std_dev_no_signals': round(std_dev_no_signals, 2),
-                'std_dev_with_signals': round(std_dev_with_signals, 2)}
+        return {'std_dev_no_signals': std_dev_no_signals,
+                'std_dev_with_signals': std_dev_with_signals}
 
     @staticmethod
     def compute_sharpe_ratio(excess_returns, std_dev):
@@ -52,8 +51,8 @@ class ComputeRiskReturnCalculations:
         sharpe_ratio_no_signals = excess_returns['excess_returns_no_signals'] / std_dev['std_dev_no_signals']
         sharpe_ratio_with_signals = excess_returns['excess_returns_with_signals'] / std_dev['std_dev_with_signals']
 
-        return {'sharpe_ratio_no_signals': round(sharpe_ratio_no_signals, 2),
-                'sharpe_ratio_with_signals': round(sharpe_ratio_with_signals, 2)}
+        return {'sharpe_ratio_no_signals': sharpe_ratio_no_signals,
+                'sharpe_ratio_with_signals': sharpe_ratio_with_signals}
 
     @staticmethod
     def compute_max_drawdown(returns_excl_signals, returns_incl_signals, jgenvuug_index_values):
@@ -64,8 +63,8 @@ class ComputeRiskReturnCalculations:
         :return: a dictionary with max drawdown having no signals and with signal
         """
 
-        returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.to_list()
-        returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.tolist()
+        returns_incl_tmp = returns_incl_signals.Total_Incl_Signals.to_list()
+        returns_excl_tmp = returns_excl_signals.Total_Excl_Signals.tolist()
 
         jgenvuug_index_tmp = jgenvuug_index_values[returns_excl_signals.first_valid_index():
                                                    returns_excl_signals.last_valid_index()].tolist()
@@ -85,8 +84,8 @@ class ComputeRiskReturnCalculations:
             except ZeroDivisionError:
                 max_drawdown_index_values.append(0)
 
-        return {'max_drawdown_no_signals': round(abs(min(max_drawdown_excl_values)) * 100, 2),
-                'max_drawdown_with_signals': round(abs(min(max_drawdown_incl_values)) * 100, 2),
+        return {'max_drawdown_no_signals': abs(min(max_drawdown_excl_values)) * 100,
+                'max_drawdown_with_signals': abs(min(max_drawdown_incl_values)) * 100,
                 'all_max_drawdown_no_signals_series': max_drawdown_excl_values,
                 'all_max_drawdown_with_signals_series': max_drawdown_incl_values,
                 'all_max_drawdown_jgenvuug': max_drawdown_index_values,
@@ -104,8 +103,8 @@ class ComputeRiskReturnCalculations:
         calmar_ratio_no_signals = excess_returns['excess_returns_no_signals'] / max_drawdown['max_drawdown_no_signals']
         calmar_ratio_with_signals = excess_returns['excess_returns_with_signals'] / max_drawdown['max_drawdown_with_signals']
 
-        return {'calmar_ratio_no_signals': round(calmar_ratio_no_signals, 2),
-                'calmar_ratio_with_signals': round(calmar_ratio_with_signals, 2)}
+        return {'calmar_ratio_no_signals': calmar_ratio_no_signals,
+                'calmar_ratio_with_signals': calmar_ratio_with_signals}
 
     @staticmethod
     def compute_equity_correlation(spx_index_values, returns_excl_signals, returns_incl_signals):
@@ -124,8 +123,8 @@ class ComputeRiskReturnCalculations:
         equity_corr_no_signals = ret_excl_shift.corrwith(spxt_shift, axis=0)
         equity_corr_with_signals = ret_incl_shift.corrwith(spxt_shift, axis=0)
 
-        return {'equity_corr_no_signals': round(equity_corr_no_signals.item(), 2),
-                'equity_corr_with_signals': round(equity_corr_with_signals.item(), 2)}
+        return {'equity_corr_no_signals': equity_corr_no_signals.item(),
+                'equity_corr_with_signals': equity_corr_with_signals.item()}
 
     def compute_gbi_em_correlation(self):
         """

@@ -1,103 +1,131 @@
 import os
-import pytest
 import numpy as np
 import pandas as pd
+from unittest import TestCase
 
+from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
+from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
+from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
+from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 """
 Notes: 
-one: total return; 4 ;16; Yes; 2.0; 0.0; real; yes; 0.25; 1/N; 52; 10; 4
-two: spot; 4 ;16; No; 2.0; 0.0; real; yes; 0.25 ;1/N ;52 ;10 ;4
+    TrendIndicator: Total Return
+    Short-term: 4
+    Long-term: 16 
+    Incl Shorts: Yes
+    Cut-off long: 2.0% 
+    Cut-off short: 0.0% 
+    Real/Nominal: real
+    Realtime Inflation F'cast: Yes
+    Threshold for closing: 0.25%
+    Risk-weighting: 1/N
+    STDev window (weeks): 52
+    Bid-ask spread (bp): 10
+    Position size: 3%
 """
 
 
-@pytest.mark.parametrize("risk_returns_table_origin, risk_returns_table_results",
-                         [("risk_returns_table_one_origin.csv", "risk_returns_table_one_results.csv"),
-                          ("risk_returns_table_two_origin.csv", "risk_returns_table_two_results.csv")])
-def test_compute_excess_returns(risk_returns_table_origin, risk_returns_table_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                                "risk_returns_table_one_results.csv"))
-    risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
-    risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+class TestComputeRiskReturnCalculations(TestCase):
 
-    assert np.allclose(np.array(risk_returns_results.excess_returns_with_signals.values),
-                       np.array(risk_returns_origin.excess_returns_with_signals.values)) is True
+    def setUp(self):
+        all_data = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "all_date.csv")), sep=',', engine='python')
+        all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
+        del all_data['Date']
+        self.obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")), sep=',', engine='python'),
+                                                 bid_ask_spread=10,
+                                                 frequency_mat='weekly',
+                                                 end_date_mat='23/09/2020',
+                                                 signal_day_mat='WED',
+                                                 all_data=all_data)
 
-    assert np.allclose(np.array(risk_returns_results.excess_returns_no_signals.values),
-                       np.array(risk_returns_origin.excess_returns_no_signals.values)) is True
+        self.obj_import_data.process_all_data_effect()
+        self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
+        self.spot_origin, self.carry_origin, self.spx_index_values, three_month_implied_usd, three_month_implied_eur, region, self.jgenvuug_index_values = self.obj_import_data.return_process_usd_eur_data_effect()
 
+        # Inflation differential calculations
+        obj_inflation_differential = ComputeInflationDifferential(dates_index=self.obj_import_data.dates_index)
+        realtime_inflation_forecast, imf_data_update = 'Yes', False
+        inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
+                                                realtime_inflation_forecast,
+                                                self.obj_import_data.all_currencies_spot,
+                                                self.obj_import_data.currencies_spot['currencies_spot_usd'],
+                                                imf_data_update=imf_data_update)
 
-@pytest.mark.parametrize("risk_returns_table_origin, risk_returns_table_results",
-                         [("risk_returns_table_one_origin.csv", "risk_returns_table_one_results.csv"),
-                          ("risk_returns_table_two_origin.csv", "risk_returns_table_two_results.csv")])
-def test_compute_std_dev(risk_returns_table_origin, risk_returns_table_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                                "risk_returns_table_one_results.csv"))
-    risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
-    risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        # Inputs
+        trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
+        carry_inputs = {'type': 'real', 'inflation': inflation_differential}
+        combo_inputs = {'cut_off': 2, 'incl_shorts': 'Yes', 'cut_off_s': 0.00, 'threshold': 0.25}
 
-    assert np.allclose(np.array(risk_returns_results.std_dev_with_signals.values),
-                       np.array(risk_returns_origin.std_dev_with_signals.values)) is True
+        self.currencies_calculations = self.obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
+        self.obj_compute_agg_currencies = ComputeAggregateCurrencies(window=52,
+                                                                     weight='1/N',
+                                                                     dates_index=self.obj_import_data.dates_index,
+                                                                     start_date_calculations=self.obj_import_data.start_date_calculations,
+                                                                     prev_start_date_calc=self.obj_import_data.previous_start_date_calc)
 
-    assert np.allclose(np.array(risk_returns_results.std_dev_no_signals.values),
-                       np.array(risk_returns_origin.std_dev_no_signals.values)) is True
+        total_incl = self.obj_compute_agg_currencies.compute_aggregate_total_incl_signals(self.currencies_calculations['return_incl_curr'], inverse_volatility=None)
+        ret_excl_costs = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.carry_origin)
+        total_excl = self.obj_compute_agg_currencies.compute_aggregate_total_excl_signals(ret_excl_costs, inverse_volatility=None)
+        self.returns_excl_signals = total_excl.head(-1)
+        self.returns_incl_signals = total_incl.head(-1)
 
+        self.compute_risk_ret = ComputeRiskReturnCalculations(start_date=self.obj_import_data.start_date_prev_calculations,
+                                                              end_date=pd.to_datetime('23-09-2020', format='%d-%m-%Y'),
+                                                              dates_index=self.obj_import_data.dates_origin_index)
 
-@pytest.mark.parametrize("risk_returns_table_origin, risk_returns_table_results",
-                         [("risk_returns_table_one_origin.csv", "risk_returns_table_one_results.csv"),
-                          ("risk_returns_table_two_origin.csv", "risk_returns_table_two_results.csv")])
-def test_compute_sharpe_ratio(risk_returns_table_origin, risk_returns_table_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                                "risk_returns_table_one_results.csv"))
+    def test_compute_excess_returns(self):
+        # Excess returns
+        excess_ret = self.compute_risk_ret.compute_excess_returns(self.returns_excl_signals, self.returns_incl_signals)
 
-    risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
-    risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        assert np.allclose(np.array([excess_ret['excess_returns_no_signals'],
+                                     excess_ret['excess_returns_with_signals']]),
+                           np.array([3.84572606745583000, 10.068448229337900000]))
 
-    assert np.allclose(np.array(risk_returns_results.sharpe_with_signals.values),
-                       np.array(risk_returns_origin.sharpe_with_signals.values)) is True
+    def test_compute_std_dev(self):
+        # Standard deviation
+        std_dev = self.compute_risk_ret.compute_std_dev(self.returns_excl_signals, self.returns_incl_signals)
 
-    assert np.allclose(np.array(risk_returns_results.sharpe_no_signals.values),
-                       np.array(risk_returns_origin.sharpe_no_signals.values)) is True
+        assert np.allclose(np.array([std_dev['std_dev_no_signals'],
+                                     std_dev['std_dev_with_signals']]),
+                           np.array([16.63420169145636, 10.5620210587769000]))
 
+    def test_compute_sharpe_ratio(self):
+        # Excess returns
+        excess_ret = self.compute_risk_ret.compute_excess_returns(self.returns_excl_signals, self.returns_incl_signals)
+        # Standard deviation
+        std_dev = self.compute_risk_ret.compute_std_dev(self.returns_excl_signals, self.returns_incl_signals)
 
-@pytest.mark.parametrize("risk_returns_table_origin, risk_returns_table_results",
-                         [("risk_returns_table_one_origin.csv", "risk_returns_table_one_results.csv"),
-                          ("risk_returns_table_two_origin.csv", "risk_returns_table_two_results.csv")])
-def test_compute_max_drawdown(risk_returns_table_origin, risk_returns_table_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                                "risk_returns_table_one_results.csv"))
+        sharpe_ratio = self.compute_risk_ret.compute_sharpe_ratio(excess_ret, std_dev)
 
-    risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
-    risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        assert np.allclose(np.array([sharpe_ratio['sharpe_ratio_no_signals'],
+                                     sharpe_ratio['sharpe_ratio_with_signals']]),
+                           np.array([0.2311939063135874, 0.953269092468927000]))
 
-    assert np.allclose(np.array(risk_returns_results.max_drawdown_with_signals.values),
-                       np.array(risk_returns_origin.max_drawdown_with_signals.values)) is True
+    def test_compute_max_drawdown(self):
+        max_drawdown = self.compute_risk_ret.compute_max_drawdown(self.returns_excl_signals, self.returns_incl_signals, self.jgenvuug_index_values)
 
-    assert np.allclose(np.array(risk_returns_results.max_drawdown_no_signals.values),
-                       np.array(risk_returns_origin.max_drawdown_no_signals.values)) is True
+        assert np.allclose(np.array([max_drawdown['max_drawdown_no_signals'],
+                                     max_drawdown['max_drawdown_with_signals']]),
+                           np.array([49.24300804033870000, 12.1652008006123000]))
 
+    def test_compute_calmar_ratio(self):
+        # Excess returns
+        excess_ret = self.compute_risk_ret.compute_excess_returns(self.returns_excl_signals, self.returns_incl_signals)
+        # Max draxdown
+        max_drawdown = self.compute_risk_ret.compute_max_drawdown(self.returns_excl_signals, self.returns_incl_signals,
+                                                                  self.jgenvuug_index_values)
 
-@pytest.mark.parametrize("risk_returns_table_origin, risk_returns_table_results",
-                         [("risk_returns_table_one_origin.csv", "risk_returns_table_one_results.csv"),
-                          ("risk_returns_table_two_origin.csv", "risk_returns_table_two_results.csv")])
-def test_compute_calmar_ratio(risk_returns_table_origin, risk_returns_table_results):
-    path_origin = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin",
-                                               "risk_returns_table_one_origin.csv"))
-    path_results = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_to_test",
-                                                "risk_returns_table_one_results.csv"))
+        calmar_ratio = self.compute_risk_ret.compute_calmar_ratio(excess_ret, max_drawdown)
 
-    risk_returns_results = pd.read_csv(path_results, sep=',', engine='python')
-    risk_returns_origin = pd.read_csv(path_origin, sep=',', engine='python')
+        assert np.allclose(np.array([calmar_ratio['calmar_ratio_no_signals'],
+                                     calmar_ratio['calmar_ratio_with_signals']]),
+                           np.array([0.07809689579291150000, 0.82764340633252400000]))
 
-    assert np.allclose(np.array(risk_returns_results.calmar_ratio_with_signals.values),
-                       np.array(risk_returns_origin.calmar_ratio_with_signals.values)) is True
+    def test_compute_equity_correlation(self):
 
-    assert np.allclose(np.array(risk_returns_results.calmar_ratio_no_signals.values),
-                       np.array(risk_returns_origin.calmar_ratio_no_signals.values)) is True
+        equity_corr = self.compute_risk_ret.compute_equity_correlation(self.spx_index_values, self.returns_excl_signals, self.returns_incl_signals)
+
+        assert np.allclose(np.array([equity_corr['equity_corr_no_signals'],
+                                     equity_corr['equity_corr_with_signals']]),
+                           np.array([0.3896184250275422, 0.19600035947809472]))
+

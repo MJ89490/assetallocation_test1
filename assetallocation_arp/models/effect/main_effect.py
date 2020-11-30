@@ -157,7 +157,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     #                                            EFFECT RISK RETURN CALCULATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
     obj_compute_risk_return_calculations = ComputeRiskReturnCalculations(
-                                                    start_date=obj_import_data.start_date_calculations,
+                                                    start_date=obj_import_data.start_date_prev_calculations,
                                                     end_date=latest_signal_date,
                                                     dates_index=obj_import_data.dates_origin_index)
 

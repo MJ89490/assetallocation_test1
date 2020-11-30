@@ -95,6 +95,11 @@ class ProcessDataEffect:
     @property
     def start_date_calculations(self):
         return self._start_date_calculations
+    
+    @property
+    def start_date_prev_calculations(self):
+        start_current_date_index_loc = self.obj_import_data.data_currencies_copy.index.get_loc(self.start_date_calculations)
+        return self.obj_import_data.data_currencies_copy.index[start_current_date_index_loc - 1]
 
     @start_date_calculations.setter
     def start_date_calculations(self, value):
