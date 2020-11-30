@@ -240,15 +240,6 @@ class ProcessDataEffect:
 
         self.eur_usd_cr = self.data_currencies[assets_table['eur_usd_cr_config']]
 
-        # spxt_index_values = self.data_currencies[assets_table['spxt_index_config']]
-        #
-        # jgenvuug_index_values = self.data_currencies[assets_table['jgenvuug_index_config']]
-        #
-        # common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
-        # common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
-
-    def return_process_usd_eur_data_effect(self):
-        assets_table = self.parse_data_config_effect()
         spxt_index_values = self.data_currencies[assets_table['spxt_index_config']]
 
         jgenvuug_index_values = self.data_currencies[assets_table['jgenvuug_index_config']]
@@ -256,4 +247,7 @@ class ProcessDataEffect:
         common_spot = pd.concat([self.spot_usd, self.spot_eur], axis=1)
         common_carry = pd.concat([self.carry_usd, self.carry_eur], axis=1)
 
-        return common_spot, common_carry, spxt_index_values, self.three_month_implied_usd, self.three_month_implied_eur, assets_table['region_config'], jgenvuug_index_values
+        return {'common_spot': common_spot, 'common_carry': common_carry, 'spxt_index_values': spxt_index_values,
+                'three_month_implied_usd': self.three_month_implied_usd,
+                'three_month_implied_eur': self.three_month_implied_eur,
+                'region_config': assets_table['region_config'], 'jgenvuug_index_values': jgenvuug_index_values}

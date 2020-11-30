@@ -36,8 +36,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                         all_data=all_data)
     obj_import_data.process_all_data_effect()
     obj_import_data.start_date_calculations = user_date
-    spot_origin, carry_origin, spx_index_values, three_month_implied_usd, three_month_implied_eur, region, jgenvuug_index_values = obj_import_data.return_process_usd_eur_data_effect()
-
+    process_usd_eur_data_effect = obj_import_data.process_usd_eur_data_effect()
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
@@ -80,9 +79,9 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     agg_currencies = obj_compute_agg_currencies.run_aggregate_currencies(
                                                    returns_incl_costs=currencies_calculations['return_incl_curr'],
-                                                   spot_origin=spot_origin,
+                                                   spot_origin=process_usd_eur_data_effect['common_spot'],
                                                    spot_incl_costs=currencies_calculations['spot_incl_curr'],
-                                                   carry_origin=carry_origin,
+                                                   carry_origin=process_usd_eur_data_effect['common_carry'],
                                                    combo_curr=currencies_calculations['combo_curr'],
                                                    weight_value=float(strategy_inputs['input_position_size_effect'].item())/100)
 
@@ -95,7 +94,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
                                                    combo_curr=currencies_calculations['combo_curr'],
                                                    returns_ex_costs=currencies_calculations['return_excl_curr'],
-                                                   spot_origin=spot_origin,
+                                                   spot_origin=process_usd_eur_data_effect['common_spot'],
                                                    total_incl_signals=agg_currencies['agg_total_incl_signals'],
                                                    spot_incl_signals=agg_currencies['agg_spot_incl_signals'],
                                                    weighted_perf=agg_currencies['weighted_performance'],
@@ -122,7 +121,8 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
                                                                      frequency_mat=strategy_inputs['input_frequency_effect'].item())
 
-    rates = obj_compute_warning_flags_overview.compute_warning_flags_rates(three_month_implied_usd, three_month_implied_eur)
+    rates = obj_compute_warning_flags_overview.compute_warning_flags_rates(process_usd_eur_data_effect['three_month_implied_usd'],
+                                                                           process_usd_eur_data_effect['three_month_implied_eur'])
 
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                            EFFECT RISK RETURN CALCULATIONS                                       #
@@ -133,10 +133,10 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                                     dates_index=obj_import_data.dates_origin_index)
 
     risk_returns = obj_compute_risk_return_calculations.run_compute_risk_return_calculations(
-                                                    returns_excl_signals=agg_currencies['agg_total_excl_signals'].head(-1),
-                                                    returns_incl_signals=agg_currencies['agg_total_incl_signals'].head(-1),
-                                                    spxt_index_values=spx_index_values.loc[user_date:],
-                                                    jgenvuug_index_values=jgenvuug_index_values)
+                                    returns_excl_signals=agg_currencies['agg_total_excl_signals'].head(-1),
+                                    returns_incl_signals=agg_currencies['agg_total_incl_signals'].head(-1),
+                                    spxt_index_values=process_usd_eur_data_effect['spxt_index_values'].loc[user_date:],
+                                    jgenvuug_index_values=process_usd_eur_data_effect['jgenvuug_index_values'])
 
     write_logs = {'currency_logs': currency_logs}
 
@@ -151,7 +151,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                       'combo': currencies_calculations['combo_curr'],
                       'log_ret': agg_currencies['log_returns_excl_costs'],
                       'pos_size': float(strategy_inputs['input_position_size_effect'].item())/100,
-                      'region': region,
+                      'region': process_usd_eur_data_effect['region_config'],
                       'agg_dates': agg_curr['agg_dates'],
                       'total_excl_signals': agg_curr['agg_total_excl_signals'],
                       'total_incl_signals': agg_curr['agg_total_incl_signals'],
