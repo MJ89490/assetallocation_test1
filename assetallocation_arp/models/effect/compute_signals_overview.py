@@ -40,7 +40,8 @@ class ComputeSignalsOverview:
         :param real_carry_curr: real_carry_curr values from compute_currencies class
         :return: a dataFrame with real carry of signals values
         """
-        return real_carry_curr.loc[self.next_latest_date].map('{:,.2f}'.format)
+        # .map('{:,.2f}'.format)
+        return real_carry_curr.loc[self.next_latest_date]
 
     def compute_signals_trend(self, trend_curr):
         """
@@ -48,7 +49,8 @@ class ComputeSignalsOverview:
          :param trend_curr: trend_curr values from compute_currencies class
          :return: a dataFrame with signals trend values
          """
-        return trend_curr.loc[self.next_latest_date].map('{:,.2f}'.format)
+        # .map('{:,.2f}'.format)
+        return trend_curr.loc[self.next_latest_date]
 
     def compute_signals_combo(self, combo_curr):
         """
@@ -71,7 +73,7 @@ class ComputeSignalsOverview:
         # Position size in MATR
         size_matr = self.size_attr * 100
 
-        return {'drawdown': round(drawdown, 2), 'size_matr': size_matr}
+        return {'drawdown': drawdown, 'size_matr': size_matr}
 
     def compute_limits_controls(self, signals_combo, agg_log_returns):
         """
