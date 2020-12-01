@@ -16,7 +16,7 @@ function assetAllocationChart(positions, names_pos, dates_pos)
                     margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 }
                  };
 
-    var config = { 'displayModeBar': false, 'responsive': true }
+    var config = { 'displayModeBar': false, 'responsive': true };
 
     for (i = 0; i < traces.length; i++) {
         console.log(dates[i]);
