@@ -1,17 +1,45 @@
-
 ASSET_ALLOCATION = document.getElementById('asset_allocation_over_time');
 
-function assetAllocationChart(positions_us_equities)
+function assetAllocationChart(positions, names_pos, dates_pos)
 {
+    var traces = positions.map(function(y) { return {y: y, mode: 'none', fill: 'tozeroy',  type: 'scatter'}; });
 
-    var trace1 = {
-                    y: positions_us_equities,
-                    name: 'S&P 500',
-                    fill: 'tozeroy',
-                    type: 'scatter',
-                    mode: 'none',
-                    fillcolor: 'rgb(0, 153, 204)'
-                    };
+    var dates = dates_pos.map(function(x) { return {x: x}; });
+
+    var names = names_pos.map(function(n) { return {name: n}; });
+
+    var layout = {
+                    title: 'Asset Allocation Over Times'.bold(),
+                    titlefont: {color: '#007faa',family: 'Arial, serif'},
+                    showlegend: true,
+                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
+                    margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 }
+                 };
+
+    var config = { 'displayModeBar': false, 'responsive': true }
+
+    for (i = 0; i < traces.length; i++) {
+        Object.assign(traces[i], dates[0]);
+        Object.assign(traces[i], names[i]);
+    }
+
+    Plotly.plot(ASSET_ALLOCATION, [], layout, config);
+    traces.forEach(function(trace, i) {setTimeout(function() {Plotly.addTraces(ASSET_ALLOCATION, trace);},(i+1))});
+
+
+
+
+
+
+//    var trace1 = {
+//                    y: positions,
+//                    name: 'S&P 500',
+//                    fill: 'tozeroy',
+//                    type: 'scatter',
+//                    mode: 'none',
+//                    fillcolor: 'rgb(0, 153, 204)'
+//                    }
+
 
 //    var trace2 = {
 //                    y: positions_eu_equities ,
@@ -121,15 +149,7 @@ function assetAllocationChart(positions_us_equities)
 //                    fillcolor: 'rgb(255, 224, 102)'
 //                  };
 
-    var layout = {
-                    title: 'Asset Allocation Over Times'.bold(),
-                    titlefont: {color: '#007faa',family: 'Arial, serif'},
-                    showlegend: true,
-                    legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                    margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 }
-                 };
 
-    var config = { 'displayModeBar': false, 'responsive': true }
-    var data = [trace1];
-    Plotly.newPlot(ASSET_ALLOCATION, data, layout, config);
+
+//    Plotly.newPlot(ASSET_ALLOCATION, data, layout, config);
 }

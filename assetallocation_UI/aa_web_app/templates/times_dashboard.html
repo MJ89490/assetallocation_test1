@@ -159,7 +159,6 @@
             {{ form.start_date_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
              <label class="label-models-date-sidebar">End date</label>
             {{ form.end_date_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
-            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
             {{ form.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
         </form>
     </div>
@@ -173,7 +172,7 @@
                 <div id="asset_allocation_over_time" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
                 <script type="text/javascript">
-                    assetAllocationChart({{f|tojson}})
+                    assetAllocationChart({{positions|tojson}}, {{names_pos|tojson}}, {{dates_pos|tojson}})
                 </script>
             </div>
         </div>

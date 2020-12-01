@@ -70,6 +70,7 @@ class TimesChartsDataComputations(object):
     def returns_ytd(self, x: pd.DataFrame) -> None:
         self._returns_ytd = x
 
+
     def data_computations(self) -> Dict[str, pd.DataFrame]:
         self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)
         self.positions_comp = round(self.positions.loc[self.max_positions_date] * 100, 2)
@@ -106,3 +107,17 @@ class TimesChartsDataComputations(object):
     @staticmethod
     def round_sum(df):
         return round(sum(df), 2)
+
+    @staticmethod
+    def process_data_from_a_specific_date(times_data):
+        positions, names_pos, dates_pos = [], [], []
+        columns = times_data.columns.tolist()
+        index_start_date = pd.to_datetime('2018-05-15', format='%Y-%m-%d')
+        names = {'US Equities': 'S&P 500'}  # TODO to automate later
+
+        for col in columns:
+            positions.append(times_data.loc[index_start_date:, col].to_list())
+            names_pos.append(names[col])
+
+        dates_pos = times_data.loc[index_start_date:].index.values.tolist()
+        return positions, names_pos, dates_pos

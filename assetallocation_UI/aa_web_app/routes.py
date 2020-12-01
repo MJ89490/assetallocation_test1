@@ -16,9 +16,7 @@ from assetallocation_UI.aa_web_app.data_import.main_import_data import main_data
 
 obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
-obj_download_data_effect = DownloadDataChartEffect(
-
-)
+obj_download_data_effect = DownloadDataChartEffect()
 # @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
 # @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
 # todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
@@ -37,11 +35,7 @@ def times_dashboard():
     form = InputsTimesModel()
     template_data = main_data('f1', obj_received_data_times.version_strategy)
 
-    import pandas as pd
-    f = template_data['times_data']['times_positions']['US Equities']
-    f = f.loc[pd.to_datetime('2018-05-15', format='%Y-%m-%d'):]
-
-    return render_template('times_dashboard.html', title='Dashboard', form=form, f=f.to_list())
+    return render_template('times_dashboard.html', title='Dashboard', form=form, **template_data)
 
 
 @app.route('/times_strategy_get', methods=['GET'])
