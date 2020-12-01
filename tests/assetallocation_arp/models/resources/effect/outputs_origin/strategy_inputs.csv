@@ -1,0 +1,2 @@
+input_update_imf_effect,input_user_date_effect,input_signal_date_effect,input_signal_day_effect,input_frequency_effect,input_trend_indicator_effect,input_short_term_ma,input_long_term_ma,input_include_shorts_effect,input_cut_off_long,input_cut_off_short,input_real_nominal_effect,input_real_time_inf_effect,input_threshold_effect,input_risk_weighting,input_window_effect,input_bid_ask_effect,input_position_size_effect
+FALSE,12/01/2000,23/09/2020,WED,weekly,Total return,4,16,Yes,2,0,Real,Yes,0.25,1/N,52,10,3

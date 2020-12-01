@@ -21,13 +21,10 @@ def read_user_date(user_date):
 
 
 def read_update_imf(bool_update_imf):
-    if bool_update_imf.item() == 'False':
-        imf_data_update = False
+    if str(bool_update_imf.item()) == 'False':
+        return False
     else:
-        imf_data_update = True
-
-    return imf_data_update
-
+        return True
 
 def read_latest_signal_date(latest_signal_date, obj_import_data, freq):
     if latest_signal_date is None:
