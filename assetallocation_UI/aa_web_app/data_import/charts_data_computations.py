@@ -119,5 +119,5 @@ class TimesChartsDataComputations(object):
             positions.append(times_data.loc[index_start_date:, col].to_list())
             names_pos.append(names[col])
 
-        dates_pos = times_data.loc[index_start_date:].index.values.tolist()
+        dates_pos = [times_data.loc[index_start_date:].index.strftime("%Y-%m-%d").to_list()]
         return positions, names_pos, dates_pos

@@ -19,6 +19,7 @@ function assetAllocationChart(positions, names_pos, dates_pos)
     var config = { 'displayModeBar': false, 'responsive': true }
 
     for (i = 0; i < traces.length; i++) {
+        console.log(dates[i]);
         Object.assign(traces[i], dates[0]);
         Object.assign(traces[i], names[i]);
     }
