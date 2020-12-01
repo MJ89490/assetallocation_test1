@@ -70,7 +70,6 @@ class TimesChartsDataComputations(object):
     def returns_ytd(self, x: pd.DataFrame) -> None:
         self._returns_ytd = x
 
-
     def data_computations(self) -> Dict[str, pd.DataFrame]:
         self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)
         self.positions_comp = round(self.positions.loc[self.max_positions_date] * 100, 2)
