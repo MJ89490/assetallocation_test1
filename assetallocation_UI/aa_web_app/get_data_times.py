@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
 
@@ -8,6 +9,15 @@ class ReceivedDataTimes:
         self.times_form = {}
         self.write_logs = {}
         self.version_strategy = 0
+        # self.assets_input_category = pd.DataFrame()
+
+    # @property
+    # def assets_input_category(self):
+    #     return self._assets_input_category
+    #
+    # @assets_input_category.setter
+    # def assets_input_category(self, value):
+    #     self._assets_input_category = value
 
     def received_data_times(self, form_data):
         for idx, val in enumerate(form_data):
@@ -23,6 +33,7 @@ class ReceivedDataTimes:
 
     def call_run_times(self, assets_input_times):
 
+        # self.assets_input_category = assets_input_times["input_category"]
         fund_name = self.times_form['input_fund_name_times']
         long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
                                         self.times_form['input_signal_two_long_times'],

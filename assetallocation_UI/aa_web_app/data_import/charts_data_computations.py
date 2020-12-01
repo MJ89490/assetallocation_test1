@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 from typing import Dict
 
 import pandas as pd
+import datetime
 
 from assetallocation_arp.common_libraries.dal_enums.asset import Equity, FixedIncome, FX
 
@@ -34,9 +35,9 @@ class TimesChartsDataComputations(object):
     def returns_dates_weekly_off(self) -> datetime:
         return self.returns.last_valid_index().date() - timedelta(days=7)
 
-    @property
-    def prev_year_end(self) -> datetime:
-        return datetime(self.max_returns_date.year, 1, 1) - timedelta(1)
+    # @property
+    # def prev_year_end(self) -> datetime:
+    #     return datetime(self.max_returns_date.year, 1, 1) - timedelta(1)
 
     @property
     def signals_comp(self) -> pd.DataFrame:
@@ -70,11 +71,27 @@ class TimesChartsDataComputations(object):
     def returns_ytd(self, x: pd.DataFrame) -> None:
         self._returns_ytd = x
 
+    def compute_weekly_performance_overview(self):
+        # Compute weekly performance per asset
+        last_date = self.returns.index.get_loc(self.returns.last_valid_index()) - 1
+        before_last_date = self.returns.index[last_date]
+        prev_7_days_date = before_last_date - datetime.timedelta(days=7)
+
+        v1 = self.returns.loc[before_last_date]
+        v2 = self.returns.loc[prev_7_days_date]
+
+        weekly_perf = (v1 - v2).apply(lambda x: x * 100)
+
+        names_weekly_perf = weekly_perf.index.to_list()
+        values_weekly_perf = weekly_perf.to_list()
+
+        return names_weekly_perf, values_weekly_perf
+
     def data_computations(self) -> Dict[str, pd.DataFrame]:
         self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)
         self.positions_comp = round(self.positions.loc[self.max_positions_date] * 100, 2)
         self.returns_comp = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.returns_dates_weekly_off]) * 100, 3)
-        self.returns_ytd = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.prev_year_end]) * 100, 3)
+        # self.returns_ytd = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.prev_year_end]) * 100, 3)
 
         return {'times_signals_comp': self.signals_comp, 'times_positions_comp': self.positions_comp,
                 'times_returns_comp': self.returns_comp, 'times_returns_ytd': self.returns_ytd}

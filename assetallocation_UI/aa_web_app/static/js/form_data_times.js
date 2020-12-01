@@ -1,21 +1,22 @@
 var rowData = [
-  {asset: 'US Equities', signal_ticker: 'SPXT Index',future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'EU Equities', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'JP Equities', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'HK Equities', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'US 10y Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'UK 10y Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'Eu 10y Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'JPY', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'EUR', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'AUD', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'CAD', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'GBP', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1}
+  {asset: 'US Equities', category: 'Equities', signal_ticker: 'SPXT Index',future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'EU Equities', category: 'Equities', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'JP Equities', category: 'Equities', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'HK Equities', category: 'Equities', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'US 10y Bonds', category: 'Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'UK 10y Bonds', category: 'Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'Eu 10y Bonds', category: 'Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'JPY', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'EUR', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'AUD', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'CAD', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'GBP', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1}
 ];
 
 var gridOptions = {
   columnDefs: [
     { headerName: 'Asset', field: 'asset' },
+    { headerName: 'Category', field: 'category' },
     { headerName: 'Signal Ticker', field: 'signal_ticker' },
     { headerName: 'Future Ticker', field: 'future_ticker' },
     { headerName: 'Costs', field: 'costs' },
@@ -31,6 +32,7 @@ var gridOptions = {
 function createNewRowData() {
   var newData = {
     asset: 'asset',
+    category: 'category',
     signal_ticker: 'signal ticker ',
     future_ticker: 'future ticker',
     costs: 'costs',
@@ -62,6 +64,7 @@ function onRemoveSelected() {
 function getDataFromTable(){
 
     var input_asset = [];
+    var input_category = [];
     var input_signal_ticker = [];
     var input_future_ticker = [];
     var input_costs = [];
@@ -69,6 +72,7 @@ function getDataFromTable(){
 
     gridOptions.api.forEachNode(function(rowNode, index) {
         input_asset.push(rowNode.data.asset);
+        input_category.push(rowNode.data.category);
         input_signal_ticker.push(rowNode.data.signal_ticker);
         input_future_ticker.push(rowNode.data.future_ticker);
         input_costs.push(rowNode.data.costs);
@@ -76,6 +80,7 @@ function getDataFromTable(){
     });
 
     var json_data = JSON.stringify({"input_asset": input_asset,
+                                    "input_category": input_category,
                                     "input_signal_ticker": input_signal_ticker,
                                     "input_future_ticker": input_future_ticker,
                                     "input_costs": input_costs,

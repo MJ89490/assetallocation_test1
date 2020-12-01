@@ -64,7 +64,7 @@
 
 
 .row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
-
+.row-table{margin-left: 180px;}
 
 
 
@@ -177,20 +177,29 @@
             </div>
         </div>
 
-        <!--<div class="row row-asset-alloc-chart">-->
-             <!--<div class="col-lg-12">-->
-                <!--<div id="sparklines_assets" class="responsive-plot"></div>-->
-                <!--<script type="text/javascript" src="{{ url_for('static', filename='js/times/sparklines_assets_times.js') }}"></script>-->
-                <!--<script type="text/javascript">-->
-                    <!--sparklinesAssets({{sparklines_pos|tojson}})-->
-                <!--</script>-->
-            <!--</div>-->
-        <!--</div>-->
+        <div class="row row-table">
+             <div class="col-lg-12">
 
+                 <table class="table table-hover">
 
-
-
-
+                     <thead>
+                        <tr>
+                          <th scope="col"></th>
+                            <th class="text-center" scope="col">Size</th>
+                          <th class="text-center" scope="col">Weekly</th>
+                          <th class="text-center" scope="col">YTD</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                          <th class="text-center" scope="row">US Equities</th>
+                          <td class="text-center">Otto</td>
+                          <td class="text-center">@mdo</td>
+                        </tr>
+                     </tbody>
+                 </table>
+            </div>
+        </div>
     </div>
 </body>
 </html>
