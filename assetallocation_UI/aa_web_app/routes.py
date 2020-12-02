@@ -33,7 +33,7 @@ def home():
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    template_data, zip_results_perf = main_data('f1', obj_received_data_times.version_strategy)
+    template_data, zip_results_perf = main_data('f1', obj_received_data_times)
 
     return render_template('times_dashboard.html', title='Dashboard', form=form, **template_data, results_perf=zip_results_perf)
 

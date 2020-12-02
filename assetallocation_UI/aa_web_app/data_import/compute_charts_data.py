@@ -3,6 +3,7 @@ from pandas.tseries import offsets
 from calendar import monthrange
 from typing import Dict
 from typing import List
+import numpy as np
 
 import pandas as pd
 import datetime
@@ -140,10 +141,10 @@ class TimesChartsDataComputations(object):
 
         return self.signals.loc[last_date].values.tolist()
 
-    def compute_previous_positions_all_assets_overview(self) -> List[float]:
+    def compute_previous_positions_all_assets_overview(self, strategy_weight) -> List[float]:
         """
         Compute the previous positions for each asset
-        :return: a list with preivous positions for each asset
+        :return: a list with previous positions for each asset
         """
         
         # Find out the date of 7 days ago
@@ -151,11 +152,40 @@ class TimesChartsDataComputations(object):
         before_last_date = self.returns.index[last_date]
         prev_7_days_date = before_last_date - datetime.timedelta(days=7)
 
+        return self.positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist()
 
-        return []
+    def compute_new_positions_all_assets_overview(self, strategy_weight)-> List[float]:
+        """
+        Compute the new positions for each asset
+        :return: a list with new positions for each asset
+        """
+
+        # Find out the last date
+        last_date = self.positions.last_valid_index()
+
+        return self.positions.loc[last_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist()
+
+    @staticmethod
+    def compute_delta_positions_all_assets_overview(prev_positions, new_positions)-> List[float]:
+        """
+        Compute the delta for each asset
+        :return: a list with delta for each asset
+        """
+
+        return np.subtract(new_positions, prev_positions)
+
+    @staticmethod
+    def compute_trade_positions_all_assets_overview(delta)-> List[str]:
+        """
+        Compute the trade for each asset
+        :return: a list with trade for each asset
+        """
+
+        return ['SELL' if val < 0 else 'BUY' for val in delta]
 
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
+        print(list(zip(*results_performance.values())))
         return zip(*results_performance.values())
 
 

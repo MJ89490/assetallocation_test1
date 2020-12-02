@@ -7,13 +7,15 @@ from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal,
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 
-def main_data(fund_name: str, times_version: int):
+# def main_data(fund_name: str, times_version: int, strategy_weight: float, obj_received_data_times: object):
+def main_data(fund_name: str, obj_received_data_times: object):
     """
     Function main to run the TimesChartsDataComputations class
     :return: dictionary with all the data needed for the Front-End
     """
+
     apc = TimesProcCaller()
-    fs = apc.select_fund_strategy_results(fund_name, Name.times, times_version)
+    fs = apc.select_fund_strategy_results(fund_name, Name.times, obj_received_data_times.version_strategy)
     weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
     analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 
@@ -31,20 +33,24 @@ def main_data(fund_name: str, times_version: int):
     # data_comp_sum = obj_charts_comp.data_computations_sum()
     positions, names_pos, dates_pos, sparklines_pos = obj_charts_comp.process_data_from_a_specific_date(data['times_positions'])
     mom_signals = obj_charts_comp.compute_mom_signals_all_assets_overview()
-
-    results_performance = {"category_name": category_name, "names_weekly_perf": names_weekly_perf,
+    previous_positions = obj_charts_comp.compute_previous_positions_all_assets_overview(obj_received_data_times.strategy_weight)
+    new_positions = obj_charts_comp.compute_new_positions_all_assets_overview(obj_received_data_times.strategy_weight)
+    delta_positions = obj_charts_comp.compute_delta_positions_all_assets_overview(previous_positions, new_positions)
+    trade_positions = obj_charts_comp.compute_trade_positions_all_assets_overview(delta_positions)
+    results_performance = {"category_name": category_name,
+                           "names_weekly_perf": names_weekly_perf,
+                           "mom_signals": mom_signals,
+                           "prev_positions": previous_positions,
+                           "new_positions": new_positions,
+                           "delta_positions": delta_positions,
+                           "trade_positions": trade_positions,
                            "weekly_performance_all_currencies": weekly_performance_all_currencies,
                            "ytd_performance_all_currencies": ytd_performance_all_currencies,
-                           "mom_signals": mom_signals}
+                           }
 
     zip_results_perf = obj_charts_comp.zip_results_performance_all_assets_overview(results_performance)
 
-    template_data = {"positions": positions, "names_pos": names_pos, "dates_pos": dates_pos, "sparklines_pos": sparklines_pos,
-                     "weekly_performance_all_currencies": weekly_performance_all_currencies, "category_name": category_name,
-                     "names_weekly_perf": names_weekly_perf,
-                     "ytd_performance_all_currencies": ytd_performance_all_currencies}
-
-
+    template_data = {"positions": positions, "names_pos": names_pos, "dates_pos": dates_pos, "sparklines_pos": sparklines_pos}
 
     return template_data, zip_results_perf
 
