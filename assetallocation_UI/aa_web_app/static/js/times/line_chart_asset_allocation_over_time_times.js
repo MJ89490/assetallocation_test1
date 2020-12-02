@@ -1,12 +1,12 @@
 ASSET_ALLOCATION = document.getElementById('asset_allocation_over_time');
 
-function assetAllocationChart(positions, names_pos, dates_pos)
+function assetAllocationChart(positions, dates_pos)
 {
     var traces = positions.map(function(y) { return {y: y, mode: 'none', fill: 'tozeroy',  type: 'scatter'}; });
 
     var dates = dates_pos.map(function(x) { return {x: x}; });
 
-    var names = names_pos.map(function(n) { return {name: n}; });
+//    var names = names_pos.map(function(n) { return {name: n}; });
 
     var layout = {
                     title: 'Asset Allocation Over Times'.bold(),
@@ -21,7 +21,7 @@ function assetAllocationChart(positions, names_pos, dates_pos)
     for (i = 0; i < traces.length; i++) {
         console.log(dates[i]);
         Object.assign(traces[i], dates[0]);
-        Object.assign(traces[i], names[i]);
+//        Object.assign(traces[i], names[i]);
     }
 
     Plotly.plot(ASSET_ALLOCATION, [], layout, config);

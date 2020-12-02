@@ -97,14 +97,14 @@ class TimesChartsDataComputations(object):
 
         for name in range(len(names_weekly_perf)):
             weekly_perf_dict[names_weekly_perf[name]] = values_weekly_perf[name]
-            if 'Equities' in names_weekly_perf[name]:   # TODO improve it with Jess category from db
+            if 'Equities' in names_weekly_perf[name]:   # TODO improve it with Jess category from db?
                 category_name.append('Equities')
             elif 'Bonds' in names_weekly_perf[name]:
                 category_name.append('Bonds')
             else:
                 category_name.append('FX')
 
-        return self.round_results_all_assets_overview(values_weekly_perf), names_weekly_perf, category_name
+        return self.round_results_all_assets_overview(values_weekly_perf), names_weekly_perf, weekly_perf_dict, category_name
 
     def compute_ytd_performance_all_assets_overview(self):
         """
@@ -186,6 +186,15 @@ class TimesChartsDataComputations(object):
     def compute_size_positions_all_assets_overview():
         pass
 
+    def compute_weekly_overall_performance_all_assets_overview(self, weekly_perf_dict, category_name):
+
+        df = pd.DataFrame(weekly_perf_dict.items(), columns=['Assets', 'Values'])
+        df['Category'] = category_name
+
+        return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum() * 100,
+                                                       df.loc[df['Category'] == 'FX', 'Values'].sum() * 100,
+                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100])
+
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
         print(list(zip(*results_performance.values())))
@@ -194,61 +203,62 @@ class TimesChartsDataComputations(object):
     @staticmethod
     def round_results_all_assets_overview(results):
 
-        return np.around(results, 2)
-
-
-
-
-
-
-    def data_computations(self) -> Dict[str, pd.DataFrame]:
-        self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)
-        self.positions_comp = round(self.positions.loc[self.max_positions_date] * 100, 2)
-        self.returns_comp = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.returns_dates_weekly_off]) * 100, 3)
-        # self.returns_ytd = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.prev_year_end]) * 100, 3)
-
-        return {'times_signals_comp': self.signals_comp, 'times_positions_comp': self.positions_comp,
-                'times_returns_comp': self.returns_comp, 'times_returns_ytd': self.returns_ytd}
-
-    def data_computations_sum(self) -> Dict[str, pd.DataFrame]:
-        """
-        :return: dictionary with all the computations such as the sum of the equities positions, sum of the bonds positions
-        """
-        sum_positions_bonds, sum_positions_equities, sum_positions_fx = self.sum_equities_bonds_fx(self.positions_comp)
-        sum_performance_weekly_equities, sum_performance_weekly_bonds, sum_performance_weekly_fx = self.sum_equities_bonds_fx(self.returns_comp)
-        sum_performance_ytd_equities, sum_performance_ytd_bonds, sum_performance_ytd_fx = self.sum_equities_bonds_fx(self.returns_ytd)
-
-        return {'sum_positions_equities': sum_positions_equities, 'sum_positions_bonds': sum_positions_bonds,
-                'sum_positions_fx': sum_positions_fx, 'sum_performance_weekly_equities': sum_performance_weekly_equities,
-                'sum_performance_weekly_bonds': sum_performance_weekly_bonds, 'sum_performance_weekly_fx': sum_performance_weekly_fx,
-                'sum_performance_ytd_equities': sum_performance_ytd_equities, 'sum_performance_ytd_bonds': sum_performance_ytd_bonds,
-                'sum_performance_ytd_fx': sum_performance_ytd_fx}
-
-    def sum_equities_bonds_fx(self, equities_bonds_fx_data):
-        equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index]
-        bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index]
-        fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index]
-
-        equities = self.round_sum(equities_bonds_fx_data.loc[equities])
-        bonds = self.round_sum(equities_bonds_fx_data.loc[bonds])
-        fx = self.round_sum(equities_bonds_fx_data.loc[fx])
-        return bonds, equities, fx
-
-    @staticmethod
-    def round_sum(df):
-        return round(sum(df), 2)
+        return np.around(results, 4)
 
     @staticmethod
     def process_data_from_a_specific_date(times_data):
         positions, names_pos, sparklines_pos = [], [], []
         columns = times_data.columns.tolist()
         index_start_date = pd.to_datetime('2018-05-15', format='%Y-%m-%d')
-        names = {'US Equities': 'S&P 500', 'EU Equities': 'CAC40', 'HK Equities': 'HK'}  # TODO to automate later
+        # names = {'US Equities': 'S&P 500', 'EU Equities': 'CAC40', 'HK Equities': 'HK', 'UK 10y Bonds': 'FTSE'}  # TODO to automate later
 
         for col in columns:
             positions.append(times_data.loc[index_start_date:, col].to_list())
             sparklines_pos.append(times_data[col].to_list())
-            names_pos.append(names[col])
+            # names_pos.append(names[col])
 
         dates_pos = [times_data.loc[index_start_date:].index.strftime("%Y-%m-%d").to_list()]
-        return positions, names_pos, dates_pos, sparklines_pos
+        return positions, dates_pos, sparklines_pos
+
+
+
+
+
+    # def data_computations(self) -> Dict[str, pd.DataFrame]:
+    #     self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)
+    #     self.positions_comp = round(self.positions.loc[self.max_positions_date] * 100, 2)
+    #     self.returns_comp = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.returns_dates_weekly_off]) * 100, 3)
+    #     # self.returns_ytd = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.prev_year_end]) * 100, 3)
+    #
+    #     return {'times_signals_comp': self.signals_comp, 'times_positions_comp': self.positions_comp,
+    #             'times_returns_comp': self.returns_comp, 'times_returns_ytd': self.returns_ytd}
+    #
+    # def data_computations_sum(self) -> Dict[str, pd.DataFrame]:
+    #     """
+    #     :return: dictionary with all the computations such as the sum of the equities positions, sum of the bonds positions
+    #     """
+    #     sum_positions_bonds, sum_positions_equities, sum_positions_fx = self.sum_equities_bonds_fx(self.positions_comp)
+    #     sum_performance_weekly_equities, sum_performance_weekly_bonds, sum_performance_weekly_fx = self.sum_equities_bonds_fx(self.returns_comp)
+    #     sum_performance_ytd_equities, sum_performance_ytd_bonds, sum_performance_ytd_fx = self.sum_equities_bonds_fx(self.returns_ytd)
+    #
+    #     return {'sum_positions_equities': sum_positions_equities, 'sum_positions_bonds': sum_positions_bonds,
+    #             'sum_positions_fx': sum_positions_fx, 'sum_performance_weekly_equities': sum_performance_weekly_equities,
+    #             'sum_performance_weekly_bonds': sum_performance_weekly_bonds, 'sum_performance_weekly_fx': sum_performance_weekly_fx,
+    #             'sum_performance_ytd_equities': sum_performance_ytd_equities, 'sum_performance_ytd_bonds': sum_performance_ytd_bonds,
+    #             'sum_performance_ytd_fx': sum_performance_ytd_fx}
+    #
+    # def sum_equities_bonds_fx(self, equities_bonds_fx_data):
+    #     equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index]
+    #     bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index]
+    #     fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index]
+    #
+    #     equities = self.round_sum(equities_bonds_fx_data.loc[equities])
+    #     bonds = self.round_sum(equities_bonds_fx_data.loc[bonds])
+    #     fx = self.round_sum(equities_bonds_fx_data.loc[fx])
+    #     return bonds, equities, fx
+    #
+    # @staticmethod
+    # def round_sum(df):
+    #     return round(sum(df), 2)
+
+

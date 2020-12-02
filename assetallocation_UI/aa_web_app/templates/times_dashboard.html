@@ -172,10 +172,34 @@
                 <div id="asset_allocation_over_time" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
                 <script type="text/javascript">
-                    assetAllocationChart({{positions|tojson}}, {{names_pos|tojson}}, {{dates_pos|tojson}})
+                    assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}})
                 </script>
             </div>
         </div>
+
+        <div class="row row-table">
+             <div class="col-lg-12">
+                 <table class="table table-hover">
+                     <thead>
+                        <tr>
+                            <th class="text-muted text-center" scope="col"></th>
+                            <th class="text-muted text-center" scope="col">Weekly (%)</th>
+                        </tr>
+                     </thead>
+
+                     <tbody>
+                        {% for category, w in results_weekly %}
+                        <tr>
+                            <td class="text-muted text-center">{{category}}</td>
+                            <td class="text-muted text-center">{{w}}</td>
+                        </tr>
+                        {% endfor %}
+                     </tbody>
+                 </table>
+
+             </div>
+        </div>
+
 
         <div class="row row-table">
              <div class="col-lg-12">
