@@ -184,24 +184,24 @@
 
                      <thead>
                         <tr>
-                            <th class="text-center" scope="col"></th>
-                            <th class="text-center" scope="col">Weekly</th>
+                            <th class="text-muted text-left" scope="col"></th>
+                            <th class="text-muted text-left" scope="col"></th>
+                            <th class="text-muted text-left" scope="col">Mom Signals</th>
+                            <th class="text-muted text-left" scope="col">Weekly (%)</th>
                         </tr>
                      </thead>
                      <tbody>
 
-                             {% for key, value in weekly_performance_all_currencies.items() %}
-<tr>
-                                    {% for v in range(value|length) %}
-                                        {% if key == 'names_weekly_perf' %}
-                                            <th class="text-center" scope="row">{{value[v]}}</th>
-                                        {% else %}
-                                             <td class="text-center">{{value[v]}}</td>
-                                        {% endif %}
-                                    {% endfor %}
-     </tr>
-                             {% endfor %}
-
+                        {% for key, value in weekly_performance_all_currencies.items() %}
+                            <tr>
+                                {% for v in category_name %}
+                                <th class="text-muted text-left" scope="row">{{v}}</th>
+                                {% endfor %}
+                                <td class="text-muted text-left">{{key}}</td>
+                                <td class="text-muted text-left">{{value}}</td>
+                                <td class="text-muted text-left">0.03</td>
+                            </tr>
+                        {% endfor %}
                      </tbody>
                  </table>
             </div>

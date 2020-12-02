@@ -25,14 +25,14 @@ def main_data(fund_name: str, times_version: int):
                                                   times_positions=data['times_positions'],
                                                   times_returns=data['times_returns'])
 
-    weekly_performance_all_currencies = obj_charts_comp.compute_weekly_performance_all_currencies_overview()
+    weekly_performance_all_currencies, category_name = obj_charts_comp.compute_weekly_performance_all_currencies_overview()
     # data_comp = obj_charts_comp.data_computations()
     # data_comp_sum = obj_charts_comp.data_computations_sum()
     positions, names_pos, dates_pos, sparklines_pos = obj_charts_comp.process_data_from_a_specific_date(data['times_positions'])
 
     # template_data = {"times_data": data, "times_sum": data_comp_sum, "times_data_comp": data_comp}
     template_data = {"positions": positions, "names_pos": names_pos, "dates_pos": dates_pos, "sparklines_pos": sparklines_pos,
-                     "weekly_performance_all_currencies": weekly_performance_all_currencies}
+                     "weekly_performance_all_currencies": weekly_performance_all_currencies, "category_name": category_name}
 
     return template_data
 

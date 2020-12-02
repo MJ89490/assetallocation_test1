@@ -86,7 +86,18 @@ class TimesChartsDataComputations(object):
         names_weekly_perf = weekly_perf.index.to_list()
         values_weekly_perf = weekly_perf.to_list()
 
-        return {'names_weekly_perf': names_weekly_perf, 'values_weekly_perf': values_weekly_perf}
+        weekly_perf_dict, category_name = {}, []
+
+        for name in range(len(names_weekly_perf)):
+            weekly_perf_dict[names_weekly_perf[name]] = values_weekly_perf[name]
+            if 'Equities' in names_weekly_perf[name]:   # TODO improve it with Jess category from db
+                category_name = ['Equities']
+            elif 'Bonds' in names_weekly_perf[name]:
+                category_name = ['Bonds']
+            else:
+                category_name = [FX]
+
+        return weekly_perf_dict, category_name
 
     def data_computations(self) -> Dict[str, pd.DataFrame]:
         self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)
@@ -130,7 +141,7 @@ class TimesChartsDataComputations(object):
         positions, names_pos, sparklines_pos = [], [], []
         columns = times_data.columns.tolist()
         index_start_date = pd.to_datetime('2018-05-15', format='%Y-%m-%d')
-        names = {'US Equities': 'S&P 500', 'EU Equities': 'CAC40'}  # TODO to automate later
+        names = {'US Equities': 'S&P 500', 'EU Equities': 'CAC40', 'HK Equities': 'HK'}  # TODO to automate later
 
         for col in columns:
             positions.append(times_data.loc[index_start_date:, col].to_list())
