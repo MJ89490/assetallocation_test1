@@ -71,7 +71,8 @@ class TimesChartsDataComputations(object):
     def returns_ytd(self, x: pd.DataFrame) -> None:
         self._returns_ytd = x
 
-    def compute_weekly_performance_overview(self):
+    def compute_weekly_performance_all_currencies_overview(self):
+        # If statement with weekly only weekly?
         # Compute weekly performance per asset
         last_date = self.returns.index.get_loc(self.returns.last_valid_index()) - 1
         before_last_date = self.returns.index[last_date]
@@ -85,7 +86,7 @@ class TimesChartsDataComputations(object):
         names_weekly_perf = weekly_perf.index.to_list()
         values_weekly_perf = weekly_perf.to_list()
 
-        return names_weekly_perf, values_weekly_perf
+        return {'names_weekly_perf': names_weekly_perf, 'values_weekly_perf': values_weekly_perf}
 
     def data_computations(self) -> Dict[str, pd.DataFrame]:
         self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)

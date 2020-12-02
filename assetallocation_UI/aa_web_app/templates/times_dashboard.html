@@ -184,18 +184,24 @@
 
                      <thead>
                         <tr>
-                          <th scope="col"></th>
-                            <th class="text-center" scope="col">Size</th>
-                          <th class="text-center" scope="col">Weekly</th>
-                          <th class="text-center" scope="col">YTD</th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col">Weekly</th>
                         </tr>
                      </thead>
                      <tbody>
-                        <tr>
-                          <th class="text-center" scope="row">US Equities</th>
-                          <td class="text-center">Otto</td>
-                          <td class="text-center">@mdo</td>
-                        </tr>
+
+                             {% for key, value in weekly_performance_all_currencies.items() %}
+<tr>
+                                    {% for v in range(value|length) %}
+                                        {% if key == 'names_weekly_perf' %}
+                                            <th class="text-center" scope="row">{{value[v]}}</th>
+                                        {% else %}
+                                             <td class="text-center">{{value[v]}}</td>
+                                        {% endif %}
+                                    {% endfor %}
+     </tr>
+                             {% endfor %}
+
                      </tbody>
                  </table>
             </div>
