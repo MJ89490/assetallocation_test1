@@ -140,6 +140,20 @@ class TimesChartsDataComputations(object):
 
         return self.signals.loc[last_date].values.tolist()
 
+    def compute_previous_positions_all_assets_overview(self) -> List[float]:
+        """
+        Compute the previous positions for each asset
+        :return: a list with preivous positions for each asset
+        """
+        
+        # Find out the date of 7 days ago
+        last_date = self.positions.index.get_loc(self.positions.last_valid_index()) - 1
+        before_last_date = self.returns.index[last_date]
+        prev_7_days_date = before_last_date - datetime.timedelta(days=7)
+
+
+        return []
+
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
         return zip(*results_performance.values())
