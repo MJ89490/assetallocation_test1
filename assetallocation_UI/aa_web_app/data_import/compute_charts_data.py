@@ -1,5 +1,8 @@
 from datetime import timedelta, datetime
+from pandas.tseries import offsets
+from calendar import monthrange
 from typing import Dict
+from typing import List
 
 import pandas as pd
 import datetime
@@ -71,9 +74,12 @@ class TimesChartsDataComputations(object):
     def returns_ytd(self, x: pd.DataFrame) -> None:
         self._returns_ytd = x
 
-    def compute_weekly_performance_all_currencies_overview(self):
+    def compute_weekly_performance_all_assets_overview(self):
+        """
+        Compute the weekly performance for each assets
+        :return:
+        """
         # If statement with weekly only weekly?
-        # Compute weekly performance per asset
         last_date = self.returns.index.get_loc(self.returns.last_valid_index()) - 1
         before_last_date = self.returns.index[last_date]
         prev_7_days_date = before_last_date - datetime.timedelta(days=7)
@@ -91,13 +97,57 @@ class TimesChartsDataComputations(object):
         for name in range(len(names_weekly_perf)):
             weekly_perf_dict[names_weekly_perf[name]] = values_weekly_perf[name]
             if 'Equities' in names_weekly_perf[name]:   # TODO improve it with Jess category from db
-                category_name = ['Equities']
+                category_name.append('Equities')
             elif 'Bonds' in names_weekly_perf[name]:
-                category_name = ['Bonds']
+                category_name.append('Bonds')
             else:
-                category_name = [FX]
+                category_name.append('FX')
 
-        return weekly_perf_dict, category_name
+        return values_weekly_perf, names_weekly_perf, category_name
+
+    def compute_ytd_performance_all_assets_overview(self):
+        """
+        Compute the YTD performance for each asset
+        :return: a list with ytd performance for each asset
+        """
+        # Find out the last before last date
+        last_date = self.returns.index.get_loc(self.returns.last_valid_index()) - 1
+        before_last_date = self.returns.index[last_date]
+        # Find the first date of the year
+        days = []
+        first_day_of_year = before_last_date - offsets.YearBegin()
+        y, m = first_day_of_year.year, first_day_of_year.month
+        for d in range(1, monthrange(y, m)[1] + 1):
+            current_date = pd.to_datetime('{:02d}-{:02d}-{:04d}'.format(d, m, y), format='%d-%m-%Y')
+            # We are checking if the first day of the year is not a weekend
+            if current_date.weekday() <= 4:
+                days.append(current_date)
+
+        v1 = self.returns.loc[before_last_date]
+        v2 = self.returns.loc[days[0]]
+
+        ytd_perf = (v1 - v2).apply(lambda x: x * 100)
+
+        return ytd_perf.to_list()
+
+    def compute_mom_signals_all_assets_overview(self):
+        """
+        Compute the Mom signals for each asset
+        :return: a list with signals for each asset
+        """
+        # Find out the last date
+        last_date = self.signals.last_valid_index()
+
+        return self.signals.loc[last_date].values.tolist()
+
+    @staticmethod
+    def zip_results_performance_all_assets_overview(results_performance):
+        return zip(*results_performance.values())
+
+
+
+
+
 
     def data_computations(self) -> Dict[str, pd.DataFrame]:
         self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)

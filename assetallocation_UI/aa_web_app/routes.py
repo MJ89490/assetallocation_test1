@@ -33,9 +33,9 @@ def home():
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    template_data = main_data('f1', obj_received_data_times.version_strategy)
+    template_data, zip_results_perf = main_data('f1', obj_received_data_times.version_strategy)
 
-    return render_template('times_dashboard.html', title='Dashboard', form=form, **template_data)
+    return render_template('times_dashboard.html', title='Dashboard', form=form, **template_data, results_perf=zip_results_perf)
 
 
 @app.route('/times_strategy_get', methods=['GET'])
