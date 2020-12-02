@@ -104,7 +104,7 @@ class TimesChartsDataComputations(object):
             else:
                 category_name.append('FX')
 
-        return values_weekly_perf, names_weekly_perf, category_name
+        return self.round_results_all_assets_overview(values_weekly_perf), names_weekly_perf, category_name
 
     def compute_ytd_performance_all_assets_overview(self):
         """
@@ -129,7 +129,7 @@ class TimesChartsDataComputations(object):
 
         ytd_perf = (v1 - v2).apply(lambda x: x * 100)
 
-        return ytd_perf.to_list()
+        return self.round_results_all_assets_overview(ytd_perf.to_list())
 
     def compute_mom_signals_all_assets_overview(self):
         """
@@ -139,7 +139,7 @@ class TimesChartsDataComputations(object):
         # Find out the last date
         last_date = self.signals.last_valid_index()
 
-        return self.signals.loc[last_date].values.tolist()
+        return self.round_results_all_assets_overview(self.signals.loc[last_date].values.tolist())
 
     def compute_previous_positions_all_assets_overview(self, strategy_weight) -> List[float]:
         """
@@ -152,7 +152,7 @@ class TimesChartsDataComputations(object):
         before_last_date = self.returns.index[last_date]
         prev_7_days_date = before_last_date - datetime.timedelta(days=7)
 
-        return self.positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist()
+        return self.round_results_all_assets_overview(self.positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
 
     def compute_new_positions_all_assets_overview(self, strategy_weight)-> List[float]:
         """
@@ -163,16 +163,15 @@ class TimesChartsDataComputations(object):
         # Find out the last date
         last_date = self.positions.last_valid_index()
 
-        return self.positions.loc[last_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist()
+        return self.round_results_all_assets_overview(self.positions.loc[last_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
 
-    @staticmethod
-    def compute_delta_positions_all_assets_overview(prev_positions, new_positions)-> List[float]:
+    def compute_delta_positions_all_assets_overview(self, prev_positions, new_positions)-> List[float]:
         """
         Compute the delta for each asset
         :return: a list with delta for each asset
         """
 
-        return np.subtract(new_positions, prev_positions)
+        return self.round_results_all_assets_overview(np.subtract(new_positions, prev_positions))
 
     @staticmethod
     def compute_trade_positions_all_assets_overview(delta)-> List[str]:
@@ -184,9 +183,18 @@ class TimesChartsDataComputations(object):
         return ['SELL' if val < 0 else 'BUY' for val in delta]
 
     @staticmethod
+    def compute_size_positions_all_assets_overview():
+        pass
+
+    @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
         print(list(zip(*results_performance.values())))
         return zip(*results_performance.values())
+
+    @staticmethod
+    def round_results_all_assets_overview(results):
+
+        return np.around(results, 2)
 
 
 
