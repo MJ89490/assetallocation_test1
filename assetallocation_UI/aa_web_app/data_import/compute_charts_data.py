@@ -104,6 +104,25 @@ class TimesChartsDataComputations(object):
             else:
                 category_name.append('FX')
 
+        df = pd.DataFrame(weekly_perf_dict.items(), columns=['Assets', 'Values'])
+        df['Category'] = category_name
+        # Assets
+        assets = df.loc[df['Category'] == 'Equities'].Assets.tolist()
+        fx = df.loc[df['Category'] == 'FX'].Assets.tolist()
+        bonds = df.loc[df['Category'] == 'Bonds'].Assets.tolist()
+        assets.extend(fx)
+        assets.ex
+        # Values of these assets
+        df.loc[df['Category'] == 'Equities'].Values.tolist()
+        df.loc[df['Category'] == 'FX'].Values.tolist()
+        df.loc[df['Category'] == 'Bonds'].Values.tolist()
+
+
+
+
+
+
+
         return self.round_results_all_assets_overview(values_weekly_perf), names_weekly_perf, weekly_perf_dict, category_name
 
     def compute_ytd_performance_all_assets_overview(self):
