@@ -56,15 +56,12 @@ def times_dashboard():
 @app.route('/times_strategy', methods=['GET', 'POST'])
 def times_strategy():
     form = InputsTimesModel()
-    if request.method == "POST":
+    if request.method == 'POST':
         run_model_page = 'run_model_page'
     else:
         run_model_page = 'not_run_model_page'
-    # run_model_page = 'run_model_page'
+
     return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
-
-
-
 
 
 @app.route('/received_data_times_form', methods=['POST'])
