@@ -207,9 +207,10 @@ class TimesChartsDataComputations(object):
 
     @staticmethod
     def process_data_from_a_specific_date(times_data):
-        positions, names_pos, sparklines_pos = [], [], []
+        positions, sparklines_pos = [], []
         columns = times_data.columns.tolist()
         index_start_date = pd.to_datetime('2018-05-15', format='%Y-%m-%d')
+        names_pos = times_data.columns.tolist()
         # names = {'US Equities': 'S&P 500', 'EU Equities': 'CAC40', 'HK Equities': 'HK', 'UK 10y Bonds': 'FTSE'}  # TODO to automate later
 
         for col in columns:
@@ -218,7 +219,7 @@ class TimesChartsDataComputations(object):
             # names_pos.append(names[col])
 
         dates_pos = [times_data.loc[index_start_date:].index.strftime("%Y-%m-%d").to_list()]
-        return positions, dates_pos, sparklines_pos
+        return positions, dates_pos, names_pos, sparklines_pos
 
 
 

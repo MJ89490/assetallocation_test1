@@ -172,7 +172,7 @@
                 <div id="asset_allocation_over_time" class="responsive-plot"></div>
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
                 <script type="text/javascript">
-                    assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}})
+                    assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
                 </script>
             </div>
         </div>

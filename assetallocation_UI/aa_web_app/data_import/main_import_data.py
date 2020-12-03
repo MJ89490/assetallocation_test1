@@ -31,7 +31,7 @@ def main_data(fund_name: str, obj_received_data_times: object):
     ytd_performance_all_currencies = obj_charts_comp.compute_ytd_performance_all_assets_overview()
     # data_comp = obj_charts_comp.data_computations()
     # data_comp_sum = obj_charts_comp.data_computations_sum()
-    positions, dates_pos, sparklines_pos = obj_charts_comp.process_data_from_a_specific_date(data['times_positions'])
+    positions, dates_pos, names_pos, sparklines_pos = obj_charts_comp.process_data_from_a_specific_date(data['times_positions'])
     mom_signals = obj_charts_comp.compute_mom_signals_all_assets_overview()
     previous_positions = obj_charts_comp.compute_previous_positions_all_assets_overview(obj_received_data_times.strategy_weight)
     new_positions = obj_charts_comp.compute_new_positions_all_assets_overview(obj_received_data_times.strategy_weight)
@@ -50,11 +50,11 @@ def main_data(fund_name: str, obj_received_data_times: object):
                            "weekly_performance_all_currencies": weekly_performance_all_currencies,
                            "ytd_performance_all_currencies": ytd_performance_all_currencies,
                            }
-    results_weekly_overall = {"category_name": list(set(category_name)), "weekly_overall": weekly_overall}
+    results_weekly_overall = {"category_name": ['Equities', 'FX', 'Bonds'], "weekly_overall": weekly_overall}
     zip_results_perf = obj_charts_comp.zip_results_performance_all_assets_overview(results_performance)
     zip_results_weekly_overall = obj_charts_comp.zip_results_performance_all_assets_overview(results_weekly_overall)
 
-    template_data = {"positions": positions, "dates_pos": dates_pos,
+    template_data = {"positions": positions, "dates_pos": dates_pos, "names_pos": names_pos,
                      "sparklines_pos": sparklines_pos, "weekly_overall": weekly_overall}
 
     return template_data, zip_results_perf, zip_results_weekly_overall

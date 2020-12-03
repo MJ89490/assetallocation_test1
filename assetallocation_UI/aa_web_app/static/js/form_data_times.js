@@ -1,16 +1,16 @@
 var rowData = [
   {asset: 'US Equities', category: 'Equities', signal_ticker: 'SPXT Index',future_ticker: 'CD1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'EU Equities', category: 'Equities', signal_ticker: 'SPXT Index', future_ticker: 'AD1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'JP Equities', category: 'Equities', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'HK Equities', category: 'Equities', signal_ticker: 'SPXT Index', future_ticker: 'B1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'US 10y Bonds', category: 'Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'UK 10y Bonds', category: 'Bonds', signal_ticker: 'SPXT Index', future_ticker: 'CN1 A:00_0_R Comdty', costs:  0.0002, s_leverage: 1},
-  {asset: 'Eu 10y Bonds', category: 'Bonds', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'JPY', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'EUR', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'AUD', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'AUDUSD Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'CAD', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'GBP', category: 'FX', signal_ticker: 'SPXT Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1}
+  {asset: 'EU Equities', category: 'Equities', signal_ticker: 'SX5T Index', future_ticker: 'AD1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
+  {asset: 'JP Equities', category: 'Equities', signal_ticker: 'TPXDDVD Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'HK Equities', category: 'Equities', signal_ticker: 'HSI 1 A:00_0_R Index', future_ticker: 'B1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
+  {asset: 'US 10y Bonds', category: 'Bonds', signal_ticker: 'MLT1US10 Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'UK 10y Bonds', category: 'Bonds', signal_ticker: 'G 1 A:00_0_R Comdty', future_ticker: 'CN1 A:00_0_R Comdty', costs:  0.0002, s_leverage: 1},
+  {asset: 'EU 10y Bonds', category: 'Bonds', signal_ticker: 'SRX1 A:00_0_R Comdty', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'JPY', category: 'FX', signal_ticker: 'JPYUSD Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'EUR', category: 'FX', signal_ticker: 'EURUSD Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'AUD', category: 'FX', signal_ticker: 'AUDUSD Curncy', future_ticker: 'AUDUSD Curncy', costs:  0.0002, s_leverage: 1},
+  {asset: 'CAD', category: 'FX', signal_ticker: 'CADUSD Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
+  {asset: 'GBP', category: 'FX', signal_ticker: 'EURGBP Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1}
 ];
 
 var gridOptions = {
