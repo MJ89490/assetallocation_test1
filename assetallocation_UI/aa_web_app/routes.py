@@ -39,28 +39,29 @@ def times_dashboard():
                            results_perf=zip_results_perf, results_weekly=zip_results_weekly_overall)
 
 
-@app.route('/times_strategy_get', methods=['GET'])
-def times_strategy_get():
-    form = InputsTimesModel()
-    run_model_page = 'not_run_model_page'
-    return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
-
-
-@app.route('/times_strategy_post', methods=['POST'])
-def times_strategy_post():
-    form = InputsTimesModel()
-    run_model_page = 'run_model_page'
-    return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
-
-#
-# @app.route('/times_strategy', methods=['GET, POST'])
-# def times_strategy():
+# @app.route('/times_strategy_get', methods=['GET'])
+# def times_strategy_get():
 #     form = InputsTimesModel()
-#     if request.method == "POST":
+#     run_model_page = 'not_run_model_page'
+#     return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
 #
 #
+# @app.route('/times_strategy_post', methods=['POST'])
+# def times_strategy_post():
+#     form = InputsTimesModel()
 #     run_model_page = 'run_model_page'
 #     return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
+
+
+@app.route('/times_strategy', methods=['GET', 'POST'])
+def times_strategy():
+    form = InputsTimesModel()
+    if request.method == "POST":
+        run_model_page = 'run_model_page'
+    else:
+        run_model_page = 'not_run_model_page'
+    # run_model_page = 'run_model_page'
+    return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
 
 
 
