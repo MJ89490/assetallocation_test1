@@ -39,7 +39,7 @@ def main_data(fund_name: str, obj_received_data_times: object):
     trade_positions = obj_charts_comp.compute_trade_positions_all_assets_overview(delta_positions)
 
     weekly_overall = obj_charts_comp.compute_weekly_overall_performance_all_assets_overview(weekly_perf_dict, category_name)
-
+    ytd_overall = obj_charts_comp.compute_ytd_overall_performance_all_assets_overview(ytd_performance_all_currencies, category_name)
     results_performance = {"category_name": category_name,
                            "names_weekly_perf": names_weekly_perf,
                            "mom_signals": mom_signals,

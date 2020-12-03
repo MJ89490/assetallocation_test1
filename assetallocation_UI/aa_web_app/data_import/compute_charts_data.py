@@ -94,7 +94,7 @@ class TimesChartsDataComputations(object):
         values_weekly_perf = weekly_perf.to_list()
 
         weekly_perf_dict, category_name = {}, []
-
+        # TODO to improve in order to not repeat code
         for name in range(len(names_weekly_perf)):
             weekly_perf_dict[names_weekly_perf[name]] = values_weekly_perf[name]
             if 'Equities' in names_weekly_perf[name]:   # TODO improve it with Jess category from db?
@@ -104,6 +104,11 @@ class TimesChartsDataComputations(object):
             else:
                 category_name.append('FX')
 
+        values, assets, category = self.sort_by_category_assets(weekly_perf_dict, category_name)
+        return self.round_results_all_assets_overview(values), assets, weekly_perf_dict, category
+
+    @staticmethod
+    def sort_by_category_assets(weekly_perf_dict, category_name):
         df = pd.DataFrame(weekly_perf_dict.items(), columns=['Assets', 'Values'])
         df['Category'] = category_name
         # Assets
@@ -112,6 +117,12 @@ class TimesChartsDataComputations(object):
         bonds = df.loc[df['Category'] == 'Bonds'].Assets.tolist()
         assets.extend(fx)
         assets.extend(bonds)
+        # Category
+        category = df.loc[df['Category'] == 'Equities'].Category.tolist()
+        category_fx = df.loc[df['Category'] == 'FX'].Category.tolist()
+        category_bonds = df.loc[df['Category'] == 'Bonds'].Category.tolist()
+        category.extend(category_fx)
+        category.extend(category_bonds)
         # Values of these assets
         values = df.loc[df['Category'] == 'Equities'].Values.tolist()
         values_fx = df.loc[df['Category'] == 'FX'].Values.tolist()
@@ -119,7 +130,7 @@ class TimesChartsDataComputations(object):
         values.extend(values_fx)
         values.extend(values_bond)
 
-        return self.round_results_all_assets_overview(values), assets, weekly_perf_dict, category_name
+        return values, assets, category
 
     def compute_ytd_performance_all_assets_overview(self):
         """
@@ -209,6 +220,17 @@ class TimesChartsDataComputations(object):
         return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum() * 100,
                                                        df.loc[df['Category'] == 'FX', 'Values'].sum() * 100,
                                                        df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100])
+
+    def compute_ytd_overall_performance_all_assets_overview(self, ytd_perf, category_name):
+
+        df = pd.DataFrame(ytd_perf.items(), columns=['Assets', 'Values'])
+        df['Category'] = category_name
+
+        return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum() * 100,
+                                                       df.loc[df['Category'] == 'FX', 'Values'].sum() * 100,
+                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100])
+
+
 
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
