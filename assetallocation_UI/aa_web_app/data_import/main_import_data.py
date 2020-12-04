@@ -50,7 +50,7 @@ def main_data(fund_name: str, obj_received_data_times: object):
                            "ytd_performance_all_currencies": ytd_performance_all_currencies,
                            }
 
-    results_weekly_ytd_overall = {"category_name": ['Equities', 'FX', 'Bonds', 'Total'], "weekly_overall": weekly_overall,
+    results_weekly_ytd_overall = {"category_name": ['Equities', 'FX', 'Bonds'], "weekly_overall": weekly_overall,
                                   "ytd_overall": ytd_overall}
 
     zip_results_perf = obj_charts_comp.zip_results_performance_all_assets_overview(results_performance)

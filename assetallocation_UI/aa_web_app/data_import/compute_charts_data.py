@@ -238,7 +238,7 @@ class TimesChartsDataComputations(object):
         return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum() * 100,
                                                        df.loc[df['Category'] == 'FX', 'Values'].sum() * 100,
                                                        df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100,
-                                                       df.loc[df['Category'].sum() * 100]])
+                                                      ])
 
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
