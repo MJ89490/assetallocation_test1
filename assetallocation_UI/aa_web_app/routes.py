@@ -109,9 +109,9 @@ def effect_strategy():
 @app.route('/received_data_effect_form', methods=['POST'])
 def received_data_effect_form():
     form_data = request.form['form_data'].split('&')
-    effect_form = obj_received_data_effect.receive_data_effect(form_data)
+    obj_received_data_effect.receive_data_effect(form_data)
     obj_received_data_effect.call_run_effect(assets_inputs_effect=json.loads(request.form['json_data']))
-    return json.dumps({'status': 'OK', 'effect_data': effect_form})
+    return json.dumps({'status': 'OK'})
 
 
 @app.route('/risk_returns', methods=['GET', 'POST'])

@@ -105,7 +105,7 @@ $(function(){
         var form_data = $('form').serialize();
 
 		$.ajax({
-			url: 'received_data_effect_form',
+			url: "received_data_effect_form",
 			data: {form_data: form_data, json_data: json_data},
 			type: 'POST',
 			success: function(response){
