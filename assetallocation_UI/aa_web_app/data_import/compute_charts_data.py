@@ -155,7 +155,23 @@ class TimesChartsDataComputations(object):
 
         ytd_perf = (v1 - v2).apply(lambda x: x * 100)
 
-        return self.round_results_all_assets_overview(ytd_perf.to_list())
+        names_ytd_perf = ytd_perf.index.to_list()
+        values_ytd_perf = ytd_perf.to_list()
+
+        ytd_perf_dict, category_name = {}, []
+        # TODO to put in a fct
+        for name in range(len(names_ytd_perf)):
+            ytd_perf_dict[names_ytd_perf[name]] = values_ytd_perf[name]
+            if 'Equities' in names_ytd_perf[name]:   # TODO improve it with Jess category from db?
+                category_name.append('Equities')
+            elif 'Bonds' in names_ytd_perf[name]:
+                category_name.append('Bonds')
+            else:
+                category_name.append('FX')
+
+        values, assets, category = self.sort_by_category_assets(ytd_perf_dict, category_name)
+        return self.round_results_all_assets_overview(values), assets, ytd_perf_dict, category
+
 
     def compute_mom_signals_all_assets_overview(self):
         """
@@ -212,25 +228,17 @@ class TimesChartsDataComputations(object):
     def compute_size_positions_all_assets_overview():
         pass
 
-    def compute_weekly_overall_performance_all_assets_overview(self, weekly_perf_dict, category_name):
+    # TODO gather both function below into a single one
+    def compute_weekly_ytd_overall_performance_all_assets_overview(self, values, names, category_name):
 
-        df = pd.DataFrame(weekly_perf_dict.items(), columns=['Assets', 'Values'])
+        df = pd.DataFrame(values, columns=['Values'])
+        df['Assets'] = names
         df['Category'] = category_name
 
         return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum() * 100,
                                                        df.loc[df['Category'] == 'FX', 'Values'].sum() * 100,
-                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100])
-
-    def compute_ytd_overall_performance_all_assets_overview(self, ytd_perf, category_name):
-
-        df = pd.DataFrame(ytd_perf.items(), columns=['Assets', 'Values'])
-        df['Category'] = category_name
-
-        return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum() * 100,
-                                                       df.loc[df['Category'] == 'FX', 'Values'].sum() * 100,
-                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100])
-
-
+                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100,
+                                                       df.loc[df['Category'].sum() * 100]])
 
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
@@ -239,7 +247,6 @@ class TimesChartsDataComputations(object):
 
     @staticmethod
     def round_results_all_assets_overview(results):
-
         return np.around(results, 4)
 
     @staticmethod

@@ -33,24 +33,10 @@ def home():
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    template_data, zip_results_perf, zip_results_weekly_overall = main_data('f1', obj_received_data_times)
+    template_data, zip_results_perf, zip_results_weekly_ytd_overall = main_data('f1', obj_received_data_times)
 
     return render_template('times_dashboard.html', title='Dashboard', form=form, **template_data,
-                           results_perf=zip_results_perf, results_weekly=zip_results_weekly_overall)
-
-
-# @app.route('/times_strategy_get', methods=['GET'])
-# def times_strategy_get():
-#     form = InputsTimesModel()
-#     run_model_page = 'not_run_model_page'
-#     return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
-#
-#
-# @app.route('/times_strategy_post', methods=['POST'])
-# def times_strategy_post():
-#     form = InputsTimesModel()
-#     run_model_page = 'run_model_page'
-#     return render_template('times_template.html', title='TimesPage', form=form, run_model_page=run_model_page)
+                           results_perf=zip_results_perf, results_weekly_ytd=zip_results_weekly_ytd_overall)
 
 
 @app.route('/times_strategy', methods=['GET', 'POST'])
@@ -100,17 +86,27 @@ def effect_dashboard():
     return render_template('effect_dashboard.html', form=form, data_effect=data_effect, title='Dashboard')
 
 
-@app.route('/effect_strategy_get', methods=['GET'])
-def effect_strategy_get():
-    form = InputsEffectStrategy(request.form)
-    run_model_page = 'not_run_model_page'
-    return render_template('effect_template.html', title='EffectPage', form=form, run_model_page=run_model_page)
+# @app.route('/effect_strategy_get', methods=['GET'])
+# def effect_strategy_get():
+#     form = InputsEffectStrategy(request.form)
+#     run_model_page = 'not_run_model_page'
+#     return render_template('effect_template.html', title='EffectPage', form=form, run_model_page=run_model_page)
+#
+#
+# @app.route('/effect_strategy_post', methods=['POST'])
+# def effect_strategy_post():
+#     form = InputsEffectStrategy(request.form)
+#     run_model_page = 'run_model_page'
+#     return render_template('effect_template.html', title='EffectPage', form=form, run_model_page=run_model_page)
 
 
-@app.route('/effect_strategy_post', methods=['POST'])
-def effect_strategy_post():
-    form = InputsEffectStrategy(request.form)
-    run_model_page = 'run_model_page'
+@app.route('/effect_strategy', methods=['GET', 'POST'])
+def effect_strategy():
+    form = InputsEffectStrategy()
+    if request.method == 'GET':
+        run_model_page = 'not_run_model_page'
+    else:
+        run_model_page = 'run_model_page'
     return render_template('effect_template.html', title='EffectPage', form=form, run_model_page=run_model_page)
 
 
