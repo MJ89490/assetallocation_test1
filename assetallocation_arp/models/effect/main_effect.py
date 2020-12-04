@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 
-from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
+from assetallocation_arp.data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 
 from assetallocation_arp.models.effect.compute_profit_and_loss_overview import ComputeProfitAndLoss
 from assetallocation_arp.models.effect.compute_signals_overview import ComputeSignalsOverview

@@ -6,7 +6,7 @@ import warnings
 import pandas as pd
 import numpy as np
 
-from data_etl.inputs_effect.process_data_effect import ProcessDataEffect
+from assetallocation_arp.data_etl.inputs_effect.process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_implied import CurrencyBaseImplied
 
