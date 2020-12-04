@@ -30,7 +30,8 @@ function vertical_bar_chart(backtest, livetest, quarterly_backtest_dates, quarte
               tickfont: {size: 12},
               tickformat: ',.3%'},
       legend:{xanchor:"center", yanchor:"top", y:-0.2, x:0.5},
-      margin: { l: 'auto', r: 0, b: 0, t: 0, pad: 4 }
+      margin: { l: 'auto', r: 0, b: 0, t: 35, pad: 4 },
+      width: 1278
     };
 
     var config = {'displayModeBar': false, 'responsive': true };
