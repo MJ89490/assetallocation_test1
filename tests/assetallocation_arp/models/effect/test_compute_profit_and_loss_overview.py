@@ -8,17 +8,18 @@ from assetallocation_arp.models.effect.compute_currencies import ComputeCurrenci
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 from assetallocation_arp.models.effect.compute_profit_and_loss_overview import ComputeProfitAndLoss
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
+from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency, DayOfWeek, TrendIndicator, CarryType, RiskWeighting
 
 """
 Notes: 
     TrendIndicator: Total Return
     Short-term: 4
     Long-term: 16 
-    Incl Shorts: Yes
+    Incl Shorts: True
     Cut-off long: 2.0% 
     Cut-off short: 0.0% 
     Real/Nominal: real
-    Realtime Inflation F'cast: Yes
+    Realtime Inflation F'cast: True
     Threshold for closing: 0.25%
     Risk-weighting: 1/N
     STDev window (weeks): 52
@@ -35,17 +36,18 @@ class TestComputeProfitAndLoss(TestCase):
         del all_data['Date']
         self.obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")), sep=',', engine='python'),
                                                  bid_ask_spread=10,
-                                                 frequency_mat='weekly',
-                                                 end_date_mat='23/09/2020',
-                                                 signal_day_mat='WED',
+                                                 frequency_mat=Frequency.weekly,
+                                                 end_date_mat=pd.to_datetime('23-09-2020', format='%d-%m-%Y'),
+                                                 signal_day_mat=DayOfWeek.WED,
                                                  all_data=all_data)
+
         self.obj_import_data.process_all_data_effect()
-        self.process_usd_eur_data_effect = self.obj_import_data.process_usd_eur_data_effect()
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
+        self.process_usd_eur_data_effect = self.obj_import_data.process_usd_eur_data_effect()
 
         # Inflation differential calculations
         obj_inflation_differential = ComputeInflationDifferential(dates_index=self.obj_import_data.dates_index)
-        realtime_inflation_forecast, imf_data_update = 'Yes', False
+        realtime_inflation_forecast, imf_data_update = True, False
         inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
                                                 realtime_inflation_forecast,
                                                 self.obj_import_data.all_currencies_spot,
@@ -53,15 +55,13 @@ class TestComputeProfitAndLoss(TestCase):
                                                 imf_data_update=imf_data_update)
 
         # Inputs
-        trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
-        carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-        combo_inputs = {'cut_off': 2, 'incl_shorts': 'Yes', 'cut_off_s': 0.00, 'threshold': 0.25}
+        trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': TrendIndicator['Total return']}
+        carry_inputs = {'type': CarryType.Real, 'inflation': inflation_differential}
+        combo_inputs = {'cut_off': 2, 'incl_shorts': True, 'cut_off_s': 0.00, 'threshold': 0.25}
 
         self.currencies_calculations = self.obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
-
-        # Aggregate
         self.obj_compute_agg_currencies = ComputeAggregateCurrencies(window=52,
-                                                                     weight='1/N',
+                                                                     weight=RiskWeighting['1/N'],
                                                                      dates_index=self.obj_import_data.dates_index,
                                                                      start_date_calculations=self.obj_import_data.start_date_calculations,
                                                                      prev_start_date_calc=self.obj_import_data.previous_start_date_calc)
@@ -69,7 +69,7 @@ class TestComputeProfitAndLoss(TestCase):
         self.obj_compute_profit_and_loss = ComputeProfitAndLoss(latest_date=pd.to_datetime('23-09-2020', format='%d-%m-%Y'),
                                                                 position_size_attribution=0.03,
                                                                 index_dates=self.obj_import_data.dates_origin_index,
-                                                                frequency='weekly')
+                                                                frequency=Frequency.weekly)
 
     def test_compute_profit_and_loss_combo(self):
         p_and_l_combo = self.obj_compute_profit_and_loss.compute_profit_and_loss_combo(self.currencies_calculations['combo_curr'])
@@ -96,12 +96,12 @@ class TestComputeProfitAndLoss(TestCase):
 
         assert np.allclose(np.array(p_and_l_carry.item()), np.array(1.4729436052399700000))
 
-    @parameterized.expand([["weekly", "WED", "30/11/2020", "25/12/2019"],
-                           ["weekly", "WED", "23/09/2020", "25/12/2019"],
-                           ["weekly", "WED", "21/10/2020", "25/12/2019"],
-                           ["daily", "WED", "23/09/2020", "25/12/2019"],
-                           ["daily", "THU", "24/09/2020", "26/12/2019"],
-                           ["monthly", "MON", "30/11/2020", "31/12/2019"]
+    @parameterized.expand([[Frequency.weekly, DayOfWeek.WED, "30/11/2020", "25/12/2019"],
+                           [Frequency.weekly, DayOfWeek.WED, "23/09/2020", "25/12/2019"],
+                           [Frequency.weekly, DayOfWeek.WED, "21/10/2020", "25/12/2019"],
+                           [Frequency.daily, DayOfWeek.WED, "23/09/2020", "25/12/2019"],
+                           [Frequency.daily, DayOfWeek.THU, "24/09/2020", "26/12/2019"],
+                           [Frequency.monthly, DayOfWeek.MON, "30/11/2020", "31/12/2019"]
                            ])
     def test_get_the_last_day_of_previous_year(self, frequency, signal_day, origin_output, expected_output):
         year = (pd.to_datetime(origin_output, format="%d/%m/%Y") - pd.DateOffset(years=1)).year
@@ -123,7 +123,7 @@ class TestComputeProfitAndLoss(TestCase):
                                                                                         combo_overview,
                                                                                         total_incl_signals,
                                                                                         spot_incl_signals,
-                                                                                        "WED")
+                                                                                        DayOfWeek.WED)
         p_and_l_total_ytd_not, p_and_l_spot_ytd_not = -41.2655507007209000, -110.3272323904580000
         p_and_l_carry_ytd_not,  p_and_l_total_weekly_not = 69.0616816897371000, 682.7274313901400000
         p_and_l_spot_weekly_not, p_and_l_carry_weekly_not = 535.4330708661430000, 147.2943605239970000
@@ -159,7 +159,7 @@ class TestComputeProfitAndLoss(TestCase):
                                                                                         combo_overview,
                                                                                         total_incl_signals,
                                                                                         spot_incl_signals,
-                                                                                        "WED")
+                                                                                        DayOfWeek.WED)
         # Weighted performance
         ret = self.obj_compute_agg_currencies.compute_excl_signals_total_return(self.process_usd_eur_data_effect['common_carry'])
         log_ret = self.obj_compute_agg_currencies.compute_log_returns_excl_costs(ret)

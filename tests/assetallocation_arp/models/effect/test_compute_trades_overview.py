@@ -8,17 +8,19 @@ from assetallocation_arp.models.effect.compute_trades_overview import compute_tr
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
 from assetallocation_arp.models.effect.compute_signals_overview import ComputeSignalsOverview
+from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency, DayOfWeek, TrendIndicator, CarryType
+
 
 """
 Notes: 
     TrendIndicator: Total Return
     Short-term: 4
     Long-term: 16 
-    Incl Shorts: Yes
+    Incl Shorts: True
     Cut-off long: 2.0% 
     Cut-off short: 0.0% 
     Real/Nominal: real
-    Realtime Inflation F'cast: Yes
+    Realtime Inflation F'cast: True
     Threshold for closing: 0.25%
     Risk-weighting: 1/N
     STDev window (weeks): 52
@@ -31,19 +33,19 @@ def test_compute_trades_overview():
     all_data = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "all_date.csv")), sep=',', engine='python')
     all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
     del all_data['Date']
-    obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")), sep=',', engine='python'),
-                                        bid_ask_spread=10,
-                                        frequency_mat='weekly',
-                                        end_date_mat='23/09/2020',
-                                        signal_day_mat='WED',
-                                        all_data=all_data)
+    obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")),
+                                                                      sep=',', engine='python'), bid_ask_spread=10,
+                                             frequency_mat=Frequency.weekly,
+                                             end_date_mat=pd.to_datetime('23-09-2020', format='%d-%m-%Y'),
+                                             signal_day_mat=DayOfWeek.WED, all_data=all_data)
     obj_import_data.process_all_data_effect()
 
     obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
 
     # Inflation differential calculations
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
-    realtime_inflation_forecast, imf_data_update = 'Yes', False
+    realtime_inflation_forecast, imf_data_update = True, False
     inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
                                                                 realtime_inflation_forecast,
                                                                 obj_import_data.all_currencies_spot,
@@ -51,16 +53,16 @@ def test_compute_trades_overview():
                                                                 imf_data_update=imf_data_update)
 
     # Inputs
-    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
-    carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-    combo_inputs = {'cut_off': 2, 'incl_shorts': 'Yes', 'cut_off_s': 0.00, 'threshold': 0.25}
+    trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': TrendIndicator['Total return']}
+    carry_inputs = {'type': CarryType.Real, 'inflation': inflation_differential}
+    combo_inputs = {'cut_off': 2, 'incl_shorts': True, 'cut_off_s': 0.00, 'threshold': 0.25}
 
     currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
     obj_compute_profit_and_loss = ComputeProfitAndLoss(latest_date=pd.to_datetime('23-09-2020', format='%d-%m-%Y'),
                                                        position_size_attribution=0.03,
                                                        index_dates=obj_import_data.dates_origin_index,
-                                                       frequency='weekly')
+                                                       frequency=Frequency.weekly)
 
     obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=pd.to_datetime('23-09-2020', format='%d-%m-%Y'),
                                                           size_attr=0.03,

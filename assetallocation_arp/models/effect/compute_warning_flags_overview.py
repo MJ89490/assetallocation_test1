@@ -6,11 +6,12 @@ from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 
 from assetallocation_arp.data_etl.inputs_effect.compute_working_days_1d2d import ComputeWorkingDays1D2D
+from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency
 
 
 class ComputeWarningFlagsOverview:
 
-    def __init__(self, latest_signal_date, frequency_mat):
+    def __init__(self, latest_signal_date, frequency_mat: Frequency):
         self.latest_signal_date = latest_signal_date
         self.frequency = frequency_mat
 
@@ -18,7 +19,7 @@ class ComputeWarningFlagsOverview:
     def prev_7_days_from_latest_signal_date(self):
         # Call  ComputeWorkingDays1D2D to check working date
         obj_compute_uk_working_days = ComputeWorkingDays1D2D()
-        if self.frequency == 'weekly' or self.frequency == 'daily':
+        if self.frequency == Frequency.weekly or self.frequency == Frequency.daily:
             prev_7_days_date = self.latest_signal_date - datetime.timedelta(days=7)
             return obj_compute_uk_working_days.convert_to_working_date_uk(prev_7_days_date)
         else:

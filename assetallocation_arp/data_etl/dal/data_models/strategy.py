@@ -11,8 +11,9 @@ from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput,
     FxAssetInput, Asset, FicaAssetInputGroup, MavenAssetInput
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAnalytic, FundStrategyAssetWeight
 from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter, \
-    FxDataFrameConverter, MavenDataFrameConverter
+    FxDataFrameConverter, MavenDataFrameConverter, EffectDataFrameConverter
 from assetallocation_arp.models import times, fica, fxmodels, maven
+from assetallocation_arp.models.effect import main_effect
 
 
 # noinspection PyAttributeOutsideInit
@@ -426,7 +427,33 @@ class Effect(Strategy):
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
         """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
         # TODO add code to run effect, using Effect object, here
-        pass
+        effect_outputs, write_logs = main_effect.run_effect(self)
+
+        """
+        {'profit_and_loss': profit_and_loss,
+                      'signals_overview': signals_overview,
+                      'trades_overview': trades_overview,
+                      'rates': rates,
+                      'risk_returns': risk_returns,
+                      'combo': currencies_calculations['combo_curr'],
+                      'log_ret': agg_currencies['log_returns_excl_costs'],
+                      'pos_size': float(strategy_inputs['input_position_size_effect'].item())/100,
+                      'region': process_usd_eur_data_effect['region_config'],
+                      'agg_dates': agg_curr['agg_dates'],
+                      'total_excl_signals': agg_curr['agg_total_excl_signals'],
+                      'total_incl_signals': agg_curr['agg_total_incl_signals'],
+                      'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
+                      'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
+                  
+                  write_logs = {'currency_logs': currency_logs}
+        """
+        # TODO change depending on Simone's input
+        asset_analytics = EffectDataFrameConverter.create_asset_analytics(contribution)
+        asset_weights = EffectDataFrameConverter.df_to_asset_weights(exposure, Frequency.monthly)
+        strategy_analytics = EffectDataFrameConverter.create_strategy_analytics(returns['returns'], returns['returns_cum'],
+            returns['returns_net_cum'], returns['strength_of_signal'])
+        analytics = asset_analytics + strategy_analytics
+        return analytics, asset_weights
 
 
 # noinspection PyAttributeOutsideInit

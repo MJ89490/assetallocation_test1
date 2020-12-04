@@ -39,7 +39,7 @@ class ComputeInflationDifferential:
 
         for date_index in self.dates_index:
 
-            if realtime_inflation_forecast.lower() != 'yes':
+            if not realtime_inflation_forecast:
                 weo_date = "Latest"
             else:
                 counter = 0
@@ -182,7 +182,7 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd, imf_data_update):
+    def compute_inflation_differential(self, realtime_inflation_forecast: bool, currencies_spot, currencies_usd, imf_data_update):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data

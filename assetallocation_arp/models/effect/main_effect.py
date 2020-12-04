@@ -15,25 +15,40 @@ from assetallocation_arp.models.effect.compute_warning_flags_overview import Com
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
 
-
+# from assetallocation_arp.data_etl.dal.data_models.strategy import Effect
 """
     Main function to run the EFFECT computations
 """
 
 
-def run_effect(strategy_inputs, asset_inputs, all_data):
+def run_effect(strategy: 'Effect'):
+    # TODO deal with conversion to date when reading data into Effect object
+    # user_date = read_user_date(pd.to_datetime(strategy_inputs['input_user_date_effect'].item().replace('/', '-'),
+    #                                           format='%d-%m-%Y'))
+    # int(strategy_inputs['input_bid_ask_effect'].item())
+    # strategy_inputs['input_real_nominal_effect'].item().strip().lower()
+    # int(strategy_inputs['input_short_term_ma'].item())
+    # int(strategy_inputs['input_long_term_ma'].item())
+    # strategy_inputs['input_trend_indicator_effect'].item().strip().lower()
+    # float(strategy_inputs['input_cut_off_long'].item())
+    # strategy_inputs['input_include_shorts_effect'].item().strip().lower()
+    # float(strategy_inputs['input_cut_off_short'].item())
+    # float(strategy_inputs['input_threshold_effect'].item())
+    # pd.to_datetime(strategy_inputs['input_signal_date_effect'].item().replace('/', '-'), format='%d-%m-%Y')
+    # int(strategy_inputs['input_window_effect'].item())
+    # strategy_inputs['input_risk_weighting'].item().strip()
+    # float(strategy_inputs['input_position_size_effect'].item()) / 100
 
-    user_date = read_user_date(pd.to_datetime(strategy_inputs['input_user_date_effect'].item().replace('/', '-'),
-                                              format='%d-%m-%Y'))
+    user_date = strategy.user_date
 
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
     obj_import_data = ComputeCurrencies(asset_inputs=asset_inputs,
-                                        bid_ask_spread=int(strategy_inputs['input_bid_ask_effect'].item()),
-                                        frequency_mat=strategy_inputs['input_frequency_effect'].item(),
-                                        end_date_mat=strategy_inputs['input_signal_date_effect'].item(),
-                                        signal_day_mat=strategy_inputs['input_signal_day_effect'].item(),
+                                        bid_ask_spread=strategy.bid_ask_spread,
+                                        frequency_mat=strategy.frequency,
+                                        end_date_mat=strategy.signal_date,
+                                        signal_day_mat=strategy.day_of_week,
                                         all_data=all_data)
     obj_import_data.process_all_data_effect()
     obj_import_data.start_date_calculations = user_date
@@ -41,39 +56,37 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
-    imf_data_update = read_update_imf(strategy_inputs['input_update_imf_effect'])
+    imf_data_update = read_update_imf(strategy.update_imf)
 
     inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
-                                            strategy_inputs['input_real_time_inf_effect'].item(),
+                                            strategy.is_real_time_inflation_forecast,
                                             obj_import_data.all_currencies_spot,
                                             obj_import_data.currencies_spot['currencies_spot_usd'],
                                             imf_data_update=imf_data_update)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
-    carry_inputs = {'type': strategy_inputs['input_real_nominal_effect'].item().strip().lower(),
+    carry_inputs = {'type': strategy.carry_type,
                     'inflation': inflation_differential}
 
-    trend_inputs = {'short_term': int(strategy_inputs['input_short_term_ma'].item()),
-                    'long_term': int(strategy_inputs['input_long_term_ma'].item()),
-                    'trend': strategy_inputs['input_trend_indicator_effect'].item().strip().lower()}
+    trend_inputs = {'short_term': strategy.moving_average_short_term,
+                    'long_term': strategy.moving_average_long_term,
+                    'trend': strategy.trend_indicator}
 
-    combo_inputs = {'cut_off': float(strategy_inputs['input_cut_off_long'].item()),
-                    'incl_shorts': strategy_inputs['input_include_shorts_effect'].item().strip().lower(),
-                    'cut_off_s': float(strategy_inputs['input_cut_off_short'].item()),
-                    'threshold': float(strategy_inputs['input_threshold_effect'].item())}
+    combo_inputs = {'cut_off': strategy.interest_rate_cut_off_long,
+                    'incl_shorts': strategy.include_shorts,
+                    'cut_off_s': strategy.interest_rate_cut_off_short,
+                    'threshold': strategy.closing_threshold}
 
     currencies_calculations = obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)
 
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                                 EFFECT OVERVIEW                                                  #
     # ---------------------------------------------------------------------------------------------------------------- #
-    latest_signal_date = read_latest_signal_date(pd.to_datetime(strategy_inputs['input_signal_date_effect'].item().
-                                                                replace('/', '-'), format='%d-%m-%Y'),
-                                                 obj_import_data, strategy_inputs['input_frequency_effect'])
+    latest_signal_date = read_latest_signal_date(strategy.signal_date, obj_import_data, strategy.frequency)
 
     # -------------------------------- Aggregate Currencies ---------------------------------------------------------- #
-    obj_compute_agg_currencies = ComputeAggregateCurrencies(window=int(strategy_inputs['input_window_effect'].item()),
-                                                            weight=strategy_inputs['input_risk_weighting'].item().strip(),
+    obj_compute_agg_currencies = ComputeAggregateCurrencies(window=strategy.st_dev_window,
+                                                            weight=strategy.risk_weighting,
                                                             dates_index=obj_import_data.dates_index,
                                                             start_date_calculations=obj_import_data.start_date_calculations,
                                                             prev_start_date_calc=obj_import_data.previous_start_date_calc)
@@ -84,13 +97,13 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                                    spot_incl_costs=currencies_calculations['spot_incl_curr'],
                                                    carry_origin=process_usd_eur_data_effect['common_carry'],
                                                    combo_curr=currencies_calculations['combo_curr'],
-                                                   weight_value=float(strategy_inputs['input_position_size_effect'].item())/100)
+                                                   weight_value=strategy.position_size)
 
     # -------------------------- Profit and Loss overview Combo; Returns Ex costs; Spot; Carry ----------------------- #
     obj_compute_profit_and_loss_overview = ComputeProfitAndLoss(latest_date=latest_signal_date,
-                                                                position_size_attribution=float(strategy_inputs['input_position_size_effect'].item())/100,
+                                                                position_size_attribution=strategy.position_size,
                                                                 index_dates=obj_import_data.dates_origin_index,
-                                                                frequency=strategy_inputs['input_frequency_effect'].item())
+                                                                frequency=strategy.frequency)
 
     profit_and_loss = obj_compute_profit_and_loss_overview.run_profit_and_loss(
                                                    combo_curr=currencies_calculations['combo_curr'],
@@ -99,12 +112,12 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                                                    total_incl_signals=agg_currencies['agg_total_incl_signals'],
                                                    spot_incl_signals=agg_currencies['agg_spot_incl_signals'],
                                                    weighted_perf=agg_currencies['weighted_performance'],
-                                                   signal_day=strategy_inputs['input_signal_day_effect'].item())
+                                                   signal_day=strategy.day_of_week)
 
     # -------------------------- Signals: Combo; Returns Ex costs; Spot; Carry --------------------------------------- #
     obj_compute_signals_overview = ComputeSignalsOverview(latest_signal_date=latest_signal_date,
-                                                          size_attr=float(strategy_inputs['input_position_size_effect'].item())/100,
-                                                          window=int(strategy_inputs['input_window_effect'].item()),
+                                                          size_attr=strategy.position_size,
+                                                          window=strategy.st_dev_window,
                                                           next_latest_date=obj_import_data)
 
     signals_overview = obj_compute_signals_overview.run_signals_overview(
@@ -120,7 +133,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
 
     # -------------------------- Warning Flags: Rates; Inflation ----------------------------------------------------- #
     obj_compute_warning_flags_overview = ComputeWarningFlagsOverview(latest_signal_date=latest_signal_date,
-                                                                     frequency_mat=strategy_inputs['input_frequency_effect'].item())
+                                                                     frequency_mat=strategy.frequency)
 
     rates = obj_compute_warning_flags_overview.compute_warning_flags_rates(process_usd_eur_data_effect['three_month_implied_usd'],
                                                                            process_usd_eur_data_effect['three_month_implied_eur'])
@@ -151,7 +164,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
                       'risk_returns': risk_returns,
                       'combo': currencies_calculations['combo_curr'],
                       'log_ret': agg_currencies['log_returns_excl_costs'],
-                      'pos_size': float(strategy_inputs['input_position_size_effect'].item())/100,
+                      'pos_size': strategy.position_size,
                       'region': process_usd_eur_data_effect['region_config'],
                       'agg_dates': agg_curr['agg_dates'],
                       'total_excl_signals': agg_curr['agg_total_excl_signals'],

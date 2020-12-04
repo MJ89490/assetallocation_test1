@@ -4,6 +4,7 @@ import pandas as pd
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
+from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency, DayOfWeek, TrendIndicator, CarryType
 
 
 class TestComputeInflationDifferential(TestCase):
@@ -14,12 +15,11 @@ class TestComputeInflationDifferential(TestCase):
         all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
         del all_data['Date']
 
-        self.obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")), sep=',', engine='python'),
-                                                 bid_ask_spread=10,
-                                                 frequency_mat='weekly',
-                                                 end_date_mat='23/09/2020',
-                                                 signal_day_mat='WED',
-                                                 all_data=all_data)
+        self.obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")),
+            sep=',', engine='python'), bid_ask_spread=10, frequency_mat=Frequency.weekly,
+            end_date_mat=pd.to_datetime('23-09-2020', format='%d-%m-%Y'), signal_day_mat=DayOfWeek.WED,
+            all_data=all_data)
 
         self.obj_import_data.process_all_data_effect()
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
@@ -28,7 +28,7 @@ class TestComputeInflationDifferential(TestCase):
         self.obj_inflation_differential = ComputeInflationDifferential(dates_index=self.obj_import_data.dates_index)
 
         # Inputs
-        self.realtime_inf_forecast, self.imf_data_update = 'Yes', False
+        self.realtime_inf_forecast, self.imf_data_update = True, False
 
     def test_compute_inflation_release(self):
         inf_release, years_zero_inf, months_inf = self.obj_inflation_differential.compute_inflation_release(self.realtime_inf_forecast)

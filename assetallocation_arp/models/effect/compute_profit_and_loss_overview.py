@@ -3,6 +3,7 @@ import numpy as np
 from calendar import monthrange
 from pandas.tseries import offsets
 
+from assetallocation_arp.common_libraries.dal_enums.strategy import DayOfWeek, Frequency
 
 class ComputeProfitAndLoss:
 
@@ -62,14 +63,13 @@ class ComputeProfitAndLoss:
         return pd.DataFrame(profit_and_loss_carry)[0]
 
     @staticmethod
-    def get_the_last_day_of_previous_year(y, m, frequency, signal_day):
+    def get_the_last_day_of_previous_year(y, m, frequency: Frequency, signal_day: DayOfWeek):
         days = []
-        days_num = {'MON': 0, 'TUE': 1, 'WED': 2, 'THU': 3, 'FRI': 4}
 
         for d in range(1, monthrange(y, m)[1] + 1):
             current_date = pd.to_datetime('{:02d}-{:02d}-{:04d}'.format(d, m, y), format='%d-%m-%Y')
-            if frequency == 'weekly' or frequency == 'daily':
-                if current_date.weekday() == days_num[signal_day]:
+            if frequency == Frequency.weekly or frequency == Frequency.daily:
+                if current_date.weekday() == signal_day.value:
                     days.append(current_date)
             else:
                 # For monthly frequency, we select the last day of December
@@ -78,7 +78,7 @@ class ComputeProfitAndLoss:
         return days[-1]
 
     def compute_profit_and_loss_notional(self, spot_overview, total_overview, combo_overview, total_incl_signals,
-                                         spot_incl_signals, signal_day):
+                                         spot_incl_signals, signal_day: DayOfWeek):
         """
         Function calculating the profit and loss notional (bp) of the spot, returns and carry
         :param spot_overview: spot overview data of all currencies
@@ -210,7 +210,10 @@ class ComputeProfitAndLoss:
 
         return profit_and_loss
 
-    def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals, weighted_perf, signal_day):
+    def run_profit_and_loss(
+            self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals, weighted_perf,
+            signal_day: DayOfWeek
+    ):
         """
         Function calling all the functions above
         :param combo_curr: combo_curr values from compute_currencies class

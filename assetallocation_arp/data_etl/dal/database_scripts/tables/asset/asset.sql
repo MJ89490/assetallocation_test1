@@ -47,8 +47,8 @@ ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_category_subcategory_check"CHE
 	(category in ('Equity', 'Fixed Income', 'FX', 'Commodity', 'Credit'))
 AND
 	(CASE
-		WHEN category = 'Equity' THEN subcategory in ('US_Equities', 'EU_Equities', 'JP_Equities', 'HK_Equities')
-		WHEN category = 'Fixed Income' THEN subcategory in ('US_10_y_Bonds', 'UK_10_y_Bonds', 'EU_10_y_Bonds', 'CA_10_y_Bonds')
+		WHEN category = 'Equity' THEN subcategory in ('US Equities', 'EU Equities', 'JP Equities', 'HK Equities')
+		WHEN category = 'Fixed Income' THEN subcategory in ('US 10y Bonds', 'UK 10y Bonds', 'EU 10y Bonds', 'CA 10y Bonds')
 		WHEN category = 'FX' THEN subcategory in ('JPY', 'EUR', 'AUD', 'CAD', 'GBP')
 	END)
 )

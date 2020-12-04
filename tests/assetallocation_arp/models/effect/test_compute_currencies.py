@@ -4,6 +4,7 @@ import pandas as pd
 
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 from data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
+from assetallocation_arp.common_libraries.dal_enums.strategy import Frequency, DayOfWeek, TrendIndicator, CarryType
 
 
 class TestComputeCurrencies(TestCase):
@@ -14,9 +15,9 @@ class TestComputeCurrencies(TestCase):
         del all_data['Date']
         self.obj_import_data = ComputeCurrencies(asset_inputs=pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "asset_inputs.csv")), sep=',', engine='python'),
                                                  bid_ask_spread=10,
-                                                 frequency_mat='weekly',
-                                                 end_date_mat='23/09/2020',
-                                                 signal_day_mat='WED',
+                                                 frequency_mat=Frequency.weekly,
+                                                 end_date_mat=pd.to_datetime('23-09-2020', format='%d-%m-%Y'),
+                                                 signal_day_mat=DayOfWeek.WED,
                                                  all_data=all_data)
         self.obj_import_data.process_all_data_effect()
         self.obj_import_data.start_date_calculations = pd.to_datetime('12-01-2000', format='%d-%m-%Y')
@@ -24,7 +25,7 @@ class TestComputeCurrencies(TestCase):
 
         # Inflation differential calculations
         obj_inflation_differential = ComputeInflationDifferential(dates_index=self.obj_import_data.dates_index)
-        realtime_inflation_forecast, imf_data_update = 'Yes', False
+        realtime_inflation_forecast, imf_data_update = True, False
         inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
                                                 realtime_inflation_forecast,
                                                 self.obj_import_data.all_currencies_spot,
@@ -32,9 +33,9 @@ class TestComputeCurrencies(TestCase):
                                                 imf_data_update=imf_data_update)
 
         # Inputs
-        self.trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': 'total return'}
-        self.carry_inputs = {'type': 'real', 'inflation': inflation_differential}
-        self.combo_inputs = {'cut_off': 2, 'incl_shorts': 'Yes', 'cut_off_s': 0.00, 'threshold': 0.25}
+        self.trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': TrendIndicator['Total return']}
+        self.carry_inputs = {'type': CarryType.Real, 'inflation': inflation_differential}
+        self.combo_inputs = {'cut_off': 2, 'incl_shorts': True, 'cut_off_s': 0.00, 'threshold': 0.25}
 
     def test_compute_trend(self):
         trend = self.obj_import_data.compute_trend(self.trend_inputs['trend'], self.trend_inputs['short_term'], self.trend_inputs['long_term'])

@@ -9,7 +9,7 @@ import numpy as np
 from assetallocation_arp.data_etl.inputs_effect.process_data_effect import ProcessDataEffect
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_implied import CurrencyBaseImplied
-
+from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType
 
 """
     Class to compute the different calculations for usd and eur currencies
@@ -39,7 +39,7 @@ class ComputeCurrencies(ProcessDataEffect):
     def bid_ask_spread(self, value):
         self._bid_ask_spread = value
 
-    def compute_carry(self, carry_type, inflation_differential):
+    def compute_carry(self, carry_type: CarryType, inflation_differential):
         """
         Function calculating the carry for usd and eur currencies
         :param carry_type: string value depending on the user input: Real or Nominal
@@ -87,7 +87,7 @@ class ComputeCurrencies(ProcessDataEffect):
                     average_index = np.nanmean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
 
                 # Depending on the carry type, if it is real, we take off the inflation, otherwise, we don't
-                if carry_type.lower() == 'real':
+                if carry_type == CarryType.Real:
                     carry_tmp = ((average_implied - average_index) / 100) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100
                 else:
                     carry_tmp = ((average_implied - average_index) / 100)
@@ -107,7 +107,7 @@ class ComputeCurrencies(ProcessDataEffect):
                     numerator = data_all_currencies_carry[previous_start_date_index] / data_all_currencies_carry[previous_eleven_start_date_index]
                     denominator = data_all_currencies_spot[previous_start_date_index] / data_all_currencies_spot[previous_eleven_start_date_index]
 
-                    if carry_type.lower() == 'real':
+                    if carry_type == CarryType.Real:
                         carry.append((((numerator / denominator) ** (52/10))-1) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100)
                     else:
                         carry.append((((numerator / denominator) ** (52/10))-1))
@@ -125,7 +125,7 @@ class ComputeCurrencies(ProcessDataEffect):
 
         return self.carry_currencies
 
-    def compute_trend(self, trend_ind, short_term, long_term):
+    def compute_trend(self, trend_ind: TrendIndicator, short_term, long_term):
         """
         Function calculating the trend for usd and eur currencies
         :param trend_ind: string user input: Spot or Total Return
@@ -134,7 +134,7 @@ class ComputeCurrencies(ProcessDataEffect):
         :return: a dataFrame self.trend_currencies of trend data for usd and eur currencies
         """
 
-        if trend_ind.lower() == 'total return':
+        if trend_ind == TrendIndicator['Total return']:
             currencies = self.all_currencies_carry
         else:
             currencies = self.all_currencies_spot
@@ -159,11 +159,11 @@ class ComputeCurrencies(ProcessDataEffect):
 
         return self.trend_currencies
 
-    def compute_combo(self, cut_off, incl_shorts, cut_off_s, threshold_for_closing):
+    def compute_combo(self, cut_off, incl_shorts: bool, cut_off_s, threshold_for_closing):
         """
         Function calculating the combo for usd and eur currencies
         :param cut_off: integer user input
-        :param incl_shorts: string user input (Yes or No)
+        :param incl_shorts: user input
         :param cut_off_s: integer user input
         :param threshold_for_closing: integer user input
         :return: a dataFrame self.combo_currencies of combo data for usd and eur currencies
@@ -183,7 +183,7 @@ class ComputeCurrencies(ProcessDataEffect):
                     if carry[value] >= cut_off and trend[value] >= 0:
                         combo.append(1)
                     else:
-                        if incl_shorts.lower() == 'yes' and carry[value] <= cut_off_s and trend[value] <= 0:
+                        if incl_shorts and carry[value] <= cut_off_s and trend[value] <= 0:
                             combo.append(-1)
                         else:
                             combo.append(0)
@@ -191,7 +191,7 @@ class ComputeCurrencies(ProcessDataEffect):
                     if carry[value] >= (cut_off - threshold_for_closing) and trend[value] >= 0:
                         combo.append(1)
                     else:
-                        if incl_shorts.lower() == 'yes' and carry[value] <= (cut_off_s + threshold_for_closing) and trend[value] <= 0:
+                        if incl_shorts and carry[value] <= (cut_off_s + threshold_for_closing) and trend[value] <= 0:
                             combo.append(-1)
                         else:
                             combo.append(0)
