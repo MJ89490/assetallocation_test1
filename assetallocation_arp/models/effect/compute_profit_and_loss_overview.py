@@ -205,9 +205,10 @@ class ComputeProfitAndLoss:
     @staticmethod
     def round_profit_and_loss_overview(profit_and_loss):
 
-        pass
+        for key, value in profit_and_loss.items():
+            profit_and_loss[key] = np.round(value)
 
-
+        return profit_and_loss
 
     def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals, weighted_perf, signal_day):
         """
@@ -251,7 +252,7 @@ class ComputeProfitAndLoss:
                                     'profit_and_loss_total_overview': np.where(np.isnan(p_and_l_total), '', p_and_l_total),
                                     'profit_and_loss_spot_ex_overview': np.where(np.isnan(p_and_l_spot), '', p_and_l_spot),
                                     'profit_and_loss_carry_overview': np.where(np.isnan(p_and_l_carry), '', p_and_l_carry),
-                                    'profit_and_loss_notional': profit_and_loss_notional,
+                                    'profit_and_loss_notional': self.round_profit_and_loss_overview(profit_and_loss_notional),
                                     'profit_and_loss_matr': profit_and_loss_matr
                                     }
 
