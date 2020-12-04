@@ -18,7 +18,7 @@
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
                 <a href="{{url_for('times_dashboard')}}"><button type="button" class="btn btn-secondary btn-lg">Dashboard</button></a>
-                <form class="center" action="/times_strategy_post" method="post" novalidate>
+                <form class="center" action="{{url_for('times_strategy')}}" method="post" novalidate>
                     {{ form.hidden_tag() }}
                     <!-- Form: select the version for the model -->
                     <div class="btn-group">
