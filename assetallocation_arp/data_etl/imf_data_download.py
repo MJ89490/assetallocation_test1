@@ -32,7 +32,7 @@ root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", 
 # Specifying the locale of the source
 import locale
 
-locale.setlocale(locale.LC_NUMERIC, 'English')  # 'English_United States.1252'
+# locale.setlocale(locale.LC_NUMERIC, 'English')  # 'English_United States.1252'
 
 
 def build_weo_data(date_value):

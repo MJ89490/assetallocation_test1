@@ -11,7 +11,7 @@ from configparser import ConfigParser
 
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
-from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
+# from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 
 
 class ComputeInflationDifferential:
@@ -191,8 +191,8 @@ class ComputeInflationDifferential:
         inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
         # Grab the latest inflation differential data
-        if imf_data_update:
-            scrape_imf_data()
+        # if imf_data_update:
+        #     scrape_imf_data()
 
         inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
 
