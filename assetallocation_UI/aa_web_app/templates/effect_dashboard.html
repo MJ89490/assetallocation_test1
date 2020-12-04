@@ -382,7 +382,7 @@ tr {
 
         <!-- Regions chart-->
         <div class="row row-region-line-chart">
-            <form class="center" action="/effect_dashboard" method="POST" novalidate>
+            <form class="center" action="{{url_for('effect_dashboard')}}" method="POST" novalidate>
                 <button class="btn btn-outline-light icon-region-download" type="submit" name="submit_button" value="region_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
             </form>
             <div class="col-lg-12">
@@ -398,7 +398,7 @@ tr {
 
         <!--Year to year contrb bar chart-->
         <div class="row row-year-contrib-agg-line-chart">
-            <form class="center" action="/effect_dashboard" method="POST" novalidate>
+            <form class="center" action="{{url_for('effect_dashboard')}}" method="POST" novalidate>
                 <label class="title-date-box-effect text-muted">Start year-to-year</label>
                 <div class="btn-group">
                     {{form.start_year_to_year_contrib(class="form-control", placeholder="31/12/2019", id="date_box_effect")}}
@@ -421,7 +421,7 @@ tr {
         <!--Aggregate and drawdown charts-->
         <div class="row row-agg-line-chart">
             <div class="col-lg-5">
-                <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                <form class="center" action="{{url_for('effect_dashboard')}}" method="POST" novalidate>
                     <button class="btn btn-outline-light icon-agg-download" type="submit" name="submit_button" value="agg_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
                 </form>
                 <div id="aggregate_line_chart_effect" class="responsive-plot"></div>
@@ -451,7 +451,7 @@ tr {
 
         <!--Quarterly profit and loss chart-->
         <div class="row row-quarterly-profit-agg-line-chart">
-            <form class="center" action="/effect_dashboard" method="POST" novalidate>
+            <form class="center" action="{{url_for('effect_dashboard')}}" method="POST" novalidate>
                 <label class="title-date-box-effect text-muted">Start backtest</label>
                 <div class="btn-group">
                     {{form.start_date_quarterly_backtest_profit_and_loss_effect(class="form-control", placeholder="31/03/2014", id="date_box_effect")}}
