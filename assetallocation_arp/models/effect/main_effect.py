@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 from assetallocation_arp.models.effect.read_inputs_effect import read_user_date, read_update_imf, \
                                                                  read_latest_signal_date, read_aggregate_calc
@@ -146,7 +147,7 @@ def run_effect(strategy_inputs, asset_inputs, all_data):
     effect_outputs = {'profit_and_loss': profit_and_loss,
                       'signals_overview': signals_overview,
                       'trades_overview': trades_overview,
-                      'rates': rates,
+                      'rates': np.round(rates, 2),
                       'risk_returns': risk_returns,
                       'combo': currencies_calculations['combo_curr'],
                       'log_ret': agg_currencies['log_returns_excl_costs'],

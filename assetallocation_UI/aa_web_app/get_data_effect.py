@@ -40,6 +40,7 @@ class ReceiveDataEffect:
         asset_inputs = pd.DataFrame.from_dict(assets_inputs_effect, orient='index').T
         self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs, asset_inputs)
 
+        print()
 
 
     # def call_run_effect(self, assets_inputs_effect) -> 'FundStrategy':
@@ -69,6 +70,7 @@ class ReceiveDataEffect:
     #         effect, os.environ.get('USERNAME')
     #     )
     #     return fund_strategy
+
 
 
 class ProcessDataEffect(ReceiveDataEffect):

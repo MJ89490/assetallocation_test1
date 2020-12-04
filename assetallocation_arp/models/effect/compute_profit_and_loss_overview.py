@@ -202,6 +202,13 @@ class ComputeProfitAndLoss:
 
         return p_and_l_spot, p_and_l_total, p_and_l_carry
 
+    @staticmethod
+    def round_profit_and_loss_overview(profit_and_loss):
+
+        pass
+
+
+
     def run_profit_and_loss(self, combo_curr, returns_ex_costs, spot_origin, total_incl_signals, spot_incl_signals, weighted_perf, signal_day):
         """
         Function calling all the functions above
