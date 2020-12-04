@@ -18,10 +18,12 @@ from datetime import datetime
 
 # FILE_PATH = r'S:\Shared\IT\MultiAsset\Data\matlabData.mat'
 FILE_PATH = r'/var/lib/jenkins/iep_archive/matlabData.mat'
+# C:\Users\AJ89720\PycharmProjects\assetallocation_arp\data\matlabData.mat
 
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
+    file_path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'matlabData.mat'))
     mat_file_data = spio.loadmat(file_path)
 
     mat_dates = pd.DataFrame(mat_file_data['dates'])

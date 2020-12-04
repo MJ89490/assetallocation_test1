@@ -15,11 +15,12 @@ from datetime import datetime
 #          we are not going to use the matlab file but grab the data from the database directly
 #          it might be a good idea to create classes?
 
-FILE_PATH = r'\\Inv\lgim\FrontOffice\Structured Products\Solutions Group\SIRM\Shared\Simone\ARP\Data\matlabData.mat'
+# FILE_PATH = r'\\Inv\lgim\FrontOffice\Structured Products\Solutions Group\SIRM\Shared\Simone\ARP\Data\matlabData.mat'
 
 
 def matfile_to_dataframe(file_path, model_date):
     """ Reads Matlab file and formats data into dataframe"""
+    file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'matlabData.mat'))
     mat_file_data = spio.loadmat(file_path)
 
     mat_dates = pd.DataFrame(mat_file_data['dates'])
