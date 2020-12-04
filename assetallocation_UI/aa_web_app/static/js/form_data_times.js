@@ -95,13 +95,13 @@ $(function(){
         var form_data = $('form').serialize();
 
 		$.ajax({
-			url: '/received_data_times_form',
+			url: "received_data_times_form",
 			data: {form_data: form_data, json_data: json_data},
 			type: 'POST',
 			success: function(response){
 				console.log(response);
 				alert('The strategy has been run successfully!');
-				window.location.href = "/times_dashboard";
+				window.location.href = "times_dashboard";
 			},
 			error: function(error){
 				console.log(error);
