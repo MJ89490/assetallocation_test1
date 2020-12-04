@@ -435,7 +435,7 @@ tr {
                 </script>
             </div>
             <div class="col-lg-7">
-                <form class="center" action="/effect_dashboard" method="POST" novalidate>
+                <form class="center" action="{{url_for('effect_dashboard')}}" method="POST" novalidate>
                     <button class="btn btn-outline-light icon-drawdown-download" type="submit" name="submit_button" value="drawdown_download"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
                 </form>
                 <div id="drawdown_line_chart_effect" class="responsive-plot"></div>
