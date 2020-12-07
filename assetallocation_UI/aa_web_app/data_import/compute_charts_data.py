@@ -25,7 +25,6 @@ class TimesChartsDataComputations(object):
 
     @property
     def signal_as_off(self):
-
         return self.signals.last_valid_index().strftime("%d-%m-%Y")
 
     @property
@@ -135,7 +134,7 @@ class TimesChartsDataComputations(object):
         values.extend(values_fx)
         values.extend(values_bond)
 
-        return values, assets, category
+        return [val * 100 for val in values], assets, category
 
     def compute_ytd_performance_all_assets_overview(self):
         """
@@ -176,7 +175,6 @@ class TimesChartsDataComputations(object):
 
         values, assets, category = self.sort_by_category_assets(ytd_perf_dict, category_name)
         return self.round_results_all_assets_overview(values), assets, ytd_perf_dict, category
-
 
     def compute_mom_signals_all_assets_overview(self):
         """
@@ -233,16 +231,16 @@ class TimesChartsDataComputations(object):
     def compute_size_positions_all_assets_overview():
         pass
 
-    # TODO gather both function below into a single one
     def compute_weekly_ytd_overall_performance_all_assets_overview(self, values, names, category_name):
 
         df = pd.DataFrame(values, columns=['Values'])
         df['Assets'] = names
         df['Category'] = category_name
 
-        return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum() * 100,
-                                                       df.loc[df['Category'] == 'FX', 'Values'].sum() * 100,
-                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum() * 100,
+        return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum(),
+                                                       df.loc[df['Category'] == 'FX', 'Values'].sum(),
+                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
+                                                       df.Values.sum()
                                                       ])
 
     @staticmethod
