@@ -24,6 +24,11 @@ class TimesChartsDataComputations(object):
         self._returns_ytd = None
 
     @property
+    def signal_as_off(self):
+
+        return self.signals.last_valid_index().strftime("%d-%m-%Y")
+
+    @property
     def max_signals_date(self) -> datetime:
         return self.signals.last_valid_index()
 

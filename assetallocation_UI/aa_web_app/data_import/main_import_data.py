@@ -27,6 +27,8 @@ def main_data(fund_name: str, obj_received_data_times: object):
                                                   times_positions=data['times_positions'],
                                                   times_returns=data['times_returns'])
 
+    signal_as_off = obj_charts_comp.signal_as_off
+
     weekly_performance_all_currencies, names_weekly_perf, weekly_perf_dict, category_name = obj_charts_comp.compute_weekly_performance_all_assets_overview()
     ytd_performance_all_currencies, names_ytd_perf, ytd_perf_dict, category_name = obj_charts_comp.compute_ytd_performance_all_assets_overview()
     positions, dates_pos, names_pos, sparklines_pos = obj_charts_comp.process_data_from_a_specific_date(data['times_positions'])
@@ -57,7 +59,8 @@ def main_data(fund_name: str, obj_received_data_times: object):
     zip_results_weekly_ytd_overall = obj_charts_comp.zip_results_performance_all_assets_overview(results_weekly_ytd_overall)
 
     template_data = {"positions": positions, "dates_pos": dates_pos, "names_pos": names_pos,
-                     "sparklines_pos": sparklines_pos, "weekly_overall": weekly_overall}
+                     "sparklines_pos": sparklines_pos, "weekly_overall": weekly_overall,
+                     "signal_as_off": signal_as_off}
 
     return template_data, zip_results_perf, zip_results_weekly_ytd_overall
 
