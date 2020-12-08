@@ -233,7 +233,11 @@
                             <td class="text-muted text-center">{{prev_pos}}</td>
                             <td class="text-muted text-center">{{new_pos}}</td>
                             <td class="text-muted text-center">{{delta}}</td>
-                            <td class="text-muted text-center">{{trade}}</td>
+                            {% if trade == 'BUY' %}
+                                <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
+                            {% else %}
+                                <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
+                            {% endif %}
                             <td class="text-muted text-center">{{weekly_perf}}</td>
                             <td class="text-muted text-center">{{ytd_perf}}</td>
                         </tr>
