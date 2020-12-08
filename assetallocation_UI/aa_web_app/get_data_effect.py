@@ -9,6 +9,8 @@ from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 from assetallocation_arp.common_libraries.dal_enums.strategy import DayOfWeek
 from assetallocation_arp.arp_strategies import run_effect_strategy
+from assetallocation_arp.models.effect.read_inputs_effect import read_user_date, read_update_imf, \
+                                                                 read_latest_signal_date
 
 class ReceiveDataEffect:
     def __init__(self):
@@ -35,41 +37,45 @@ class ReceiveDataEffect:
 
         return self.effect_form
 
-    def call_run_effect(self, assets_inputs_effect):
-        strategy_inputs = pd.DataFrame.from_dict(self.effect_form, orient='index').T
+    # def call_run_effect(self, assets_inputs_effect):
+    #     strategy_inputs = pd.DataFrame.from_dict(self.effect_form, orient='index').T
+    #     asset_inputs = pd.DataFrame.from_dict(assets_inputs_effect, orient='index').T
+    #     self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs, asset_inputs)
+    #
+    #     print()
+
+    def call_run_effect(self, assets_inputs_effect) -> 'FundStrategy':
+        effect = Effect(
+            self.effect_form['input_update_imf_effect'],
+            read_user_date(pd.to_datetime(self.effect_form['input_user_date_effect'], format='%d/%m/%Y')),
+            pd.to_datetime(self.effect_form['input_signal_date_effect'], format='%d/%m/%Y'),
+            float(self.effect_form['input_position_size_effect']) / 100,
+            self.effect_form['input_risk_weighting'].strip(), int(self.effect_form['input_window_effect']),
+            int(self.effect_form['input_bid_ask_effect']), self.effect_form['input_real_nominal_effect'].strip().lower(),
+            float(self.effect_form['input_threshold_effect']), DayOfWeek[self.effect_form['input_signal_day_effect']],
+            self.effect_form['input_frequency_effect'], self.effect_form['input_include_shorts_effect'].strip().lower() == 'yes',
+            float(self.effect_form['input_cut_off_long']), float(self.effect_form['input_cut_off_short']),
+            int(self.effect_form['input_long_term_ma']), int(self.effect_form['input_short_term_ma']),
+            self.effect_form['input_real_time_inf_effect'], self.effect_form['input_trend_indicator_effect'].strip().lower()
+        )
+
         asset_inputs = pd.DataFrame.from_dict(assets_inputs_effect, orient='index').T
-        self.effect_outputs, self.write_logs = run_effect_strategy(strategy_inputs, asset_inputs)
-
-        print()
-
-
-    # def call_run_effect(self, assets_inputs_effect) -> 'FundStrategy':
-    #     effect = Effect(
-    #         self.effect_form['input_update_imf_effect'], self.effect_form['input_user_date_effect'],
-    #         self.effect_form['input_signal_date_effect'], self.effect_form['input_position_size_effect'],
-    #         self.effect_form['input_risk_weighting'], self.effect_form['input_window_effect'],
-    #         self.effect_form['input_bid_ask_effect'], self.effect_form['input_real_nominal_effect'],
-    #         self.effect_form['input_threshold_effect'], DayOfWeek[self.effect_form['input_signal_day_effect']],
-    #         self.effect_form['input_frequency_effect'], self.effect_form['input_include_shorts_effect'],
-    #         self.effect_form['input_cut_off_long'], self.effect_form['input_cut_off_short'],
-    #         self.effect_form['input_long_term_ma'], self.effect_form['input_short_term_ma'],
-    #         self.effect_form['input_real_time_inf_effect'], self.effect_form['input_trend_indicator_effect']
-    #     )
-    #     # TODO effect asset_subcategory is set as currnecy. this will be refactored once
-    #     effect.asset_inputs = [EffectAssetInput(h, h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
-    #         zip(
-    #             assets_inputs_effect['input_currency'], assets_inputs_effect['input_implied'],
-    #             assets_inputs_effect['input_spot_ticker'], assets_inputs_effect['input_carry_ticker'],
-    #             assets_inputs_effect['input_weight_usd'], assets_inputs_effect['input_usd_eur'],
-    #             assets_inputs_effect['input_region']
-    #         )
-    #     ]
-    #     # float(self.effect_form['input_strategy_weight_effect']
-    #     fund_strategy = run_strategy(
-    #         self.effect_form['input_fund_name_effect'], 0.46,
-    #         effect, os.environ.get('USERNAME')
-    #     )
-    #     return fund_strategy
+        self.effect_outputs, self.write_logs = run_effect_strategy(effect, asset_inputs)
+        # TODO effect asset_subcategory is set as currnecy. this will be refactored once
+        effect.asset_inputs = [EffectAssetInput(h, h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
+            zip(
+                assets_inputs_effect['input_currency'], assets_inputs_effect['input_implied'],
+                assets_inputs_effect['input_spot_ticker'], assets_inputs_effect['input_carry_ticker'],
+                assets_inputs_effect['input_weight_usd'], assets_inputs_effect['input_usd_eur'],
+                assets_inputs_effect['input_region']
+            )
+        ]
+        # float(self.effect_form['input_strategy_weight_effect']
+        fund_strategy = run_strategy(
+            self.effect_form['input_fund_name_effect'], 0.46,
+            effect, os.environ.get('USERNAME')
+        )
+        return fund_strategy
 
 
 

@@ -200,7 +200,7 @@ def test_select_fund_strategy_results_returns_fund_strategy(mock_call_proc, Mock
 
 def test_insert_effect_strategy_calls_call_proc(MockEffect, mock_call_proc):
     mock_e = MockEffect(
-        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'Nominal', float(1), 0, 'weekly', True,
+        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'nominal', float(1), 0, 'weekly', True,
         float(1), float(1), 1, 1, True, 'Total return'
     )
     user_id = 'a'
@@ -222,7 +222,7 @@ def test_insert_effect_strategy_calls_call_proc(MockEffect, mock_call_proc):
 
 def test_insert_effect_strategy_returns_e_version(MockEffect, mock_call_proc):
     mock_effect = MockEffect(
-        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'Nominal', float(1), 0, 'weekly', True,
+        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'nominal', float(1), 0, 'weekly', True,
         float(1), float(1), 1, 1, True, 'Total return'
     )
     expected = 5

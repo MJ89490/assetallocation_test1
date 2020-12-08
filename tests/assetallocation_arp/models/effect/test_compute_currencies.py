@@ -33,8 +33,8 @@ class TestComputeCurrencies(TestCase):
                                                 imf_data_update=imf_data_update)
 
         # Inputs
-        self.trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': TrendIndicator['Total return']}
-        self.carry_inputs = {'type': CarryType.Real, 'inflation': inflation_differential}
+        self.trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': TrendIndicator['total return']}
+        self.carry_inputs = {'type': CarryType.real, 'inflation': inflation_differential}
         self.combo_inputs = {'cut_off': 2, 'incl_shorts': True, 'cut_off_s': 0.00, 'threshold': 0.25}
 
     def test_compute_trend(self):

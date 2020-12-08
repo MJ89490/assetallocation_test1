@@ -21,7 +21,7 @@ def valid_effect():
             'interest_rate_cut_off_long', 'interest_rate_cut_off_short', 'moving_average_long_term',
             'moving_average_short_term', 'is_real_time_inflation_forecast', 'trend_indicator'])
     return EffectInput(
-        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'Nominal', float(1), 0, 'weekly', True,
+        True, dt.date(2020, 1, 1), dt.date(2020, 1, 1), float(1), '1/N', 1, 1, 'nominal', float(1), 0, 'weekly', True,
         float(1), float(1), 1, 1, True, 'Total return')
 
 

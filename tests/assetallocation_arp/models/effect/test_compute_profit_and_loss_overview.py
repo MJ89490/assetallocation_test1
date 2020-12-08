@@ -18,7 +18,7 @@ Notes:
     Incl Shorts: True
     Cut-off long: 2.0% 
     Cut-off short: 0.0% 
-    Real/Nominal: real
+    real/nominal: real
     Realtime Inflation F'cast: True
     Threshold for closing: 0.25%
     Risk-weighting: 1/N
@@ -55,8 +55,8 @@ class TestComputeProfitAndLoss(TestCase):
                                                 imf_data_update=imf_data_update)
 
         # Inputs
-        trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': TrendIndicator['Total return']}
-        carry_inputs = {'type': CarryType.Real, 'inflation': inflation_differential}
+        trend_inputs = {'short_term': 4, 'long_term': 16, 'trend': TrendIndicator['total return']}
+        carry_inputs = {'type': CarryType.real, 'inflation': inflation_differential}
         combo_inputs = {'cut_off': 2, 'incl_shorts': True, 'cut_off_s': 0.00, 'threshold': 0.25}
 
         self.currencies_calculations = self.obj_import_data.run_compute_currencies(carry_inputs, trend_inputs, combo_inputs)

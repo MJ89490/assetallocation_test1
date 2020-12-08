@@ -21,24 +21,7 @@ from assetallocation_arp.models.compute_risk_return_calculations import ComputeR
 """
 
 
-def run_effect(strategy: 'Effect'):
-    # TODO deal with conversion to date when reading data into Effect object
-    # user_date = read_user_date(pd.to_datetime(strategy_inputs['input_user_date_effect'].item().replace('/', '-'),
-    #                                           format='%d-%m-%Y'))
-    # int(strategy_inputs['input_bid_ask_effect'].item())
-    # strategy_inputs['input_real_nominal_effect'].item().strip().lower()
-    # int(strategy_inputs['input_short_term_ma'].item())
-    # int(strategy_inputs['input_long_term_ma'].item())
-    # strategy_inputs['input_trend_indicator_effect'].item().strip().lower()
-    # float(strategy_inputs['input_cut_off_long'].item())
-    # strategy_inputs['input_include_shorts_effect'].item().strip().lower()
-    # float(strategy_inputs['input_cut_off_short'].item())
-    # float(strategy_inputs['input_threshold_effect'].item())
-    # pd.to_datetime(strategy_inputs['input_signal_date_effect'].item().replace('/', '-'), format='%d-%m-%Y')
-    # int(strategy_inputs['input_window_effect'].item())
-    # strategy_inputs['input_risk_weighting'].item().strip()
-    # float(strategy_inputs['input_position_size_effect'].item()) / 100
-
+def run_effect(strategy: 'Effect', asset_inputs, all_data):
     user_date = strategy.user_date
 
     # ---------------------------------------------------------------------------------------------------------------- #
@@ -56,13 +39,11 @@ def run_effect(strategy: 'Effect'):
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
-    imf_data_update = read_update_imf(strategy.update_imf)
-
     inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
                                             strategy.is_real_time_inflation_forecast,
                                             obj_import_data.all_currencies_spot,
                                             obj_import_data.currencies_spot['currencies_spot_usd'],
-                                            imf_data_update=imf_data_update)
+                                            imf_data_update=strategy.update_imf)
 
     # -------------------------- Carry - Trend - Combo - Returns - Spot ---------------------------------------------- #
     carry_inputs = {'type': strategy.carry_type,

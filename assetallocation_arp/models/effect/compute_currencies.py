@@ -42,7 +42,7 @@ class ComputeCurrencies(ProcessDataEffect):
     def compute_carry(self, carry_type: CarryType, inflation_differential):
         """
         Function calculating the carry for usd and eur currencies
-        :param carry_type: string value depending on the user input: Real or Nominal
+        :param carry_type: string value depending on the user input: real or nominal
         :param inflation_differential: dataFrame with inflation differential data
         :return: a dataFrame self.carry_currencies of carry data for usd and eur currencies
         """
@@ -87,7 +87,7 @@ class ComputeCurrencies(ProcessDataEffect):
                     average_index = np.nanmean(data_all_currencies_implied_base[previous_start_four_date_loc:previous_start_date_index_loc+1])
 
                 # Depending on the carry type, if it is real, we take off the inflation, otherwise, we don't
-                if carry_type == CarryType.Real:
+                if carry_type == CarryType.real:
                     carry_tmp = ((average_implied - average_index) / 100) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100
                 else:
                     carry_tmp = ((average_implied - average_index) / 100)
@@ -107,7 +107,7 @@ class ComputeCurrencies(ProcessDataEffect):
                     numerator = data_all_currencies_carry[previous_start_date_index] / data_all_currencies_carry[previous_eleven_start_date_index]
                     denominator = data_all_currencies_spot[previous_start_date_index] / data_all_currencies_spot[previous_eleven_start_date_index]
 
-                    if carry_type == CarryType.Real:
+                    if carry_type == CarryType.real:
                         carry.append((((numerator / denominator) ** (52/10))-1) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100)
                     else:
                         carry.append((((numerator / denominator) ** (52/10))-1))
@@ -134,7 +134,7 @@ class ComputeCurrencies(ProcessDataEffect):
         :return: a dataFrame self.trend_currencies of trend data for usd and eur currencies
         """
 
-        if trend_ind == TrendIndicator['Total return']:
+        if trend_ind == TrendIndicator['total return']:
             currencies = self.all_currencies_carry
         else:
             currencies = self.all_currencies_spot

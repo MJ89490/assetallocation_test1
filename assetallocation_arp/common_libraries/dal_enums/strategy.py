@@ -5,8 +5,8 @@ from enum import Enum, auto
 TrendIndicator = Enum(
     value='TrendIndicator',
     names=[
-        ('Total return', auto()),
-        ('Spot', auto()),
+        ('total return', auto()),
+        ('spot', auto()),
     ]
 )
 
@@ -22,8 +22,8 @@ RiskWeighting = Enum(
 
 
 class CarryType(Enum):
-    Nominal = auto()
-    Real = auto()
+    nominal = auto()
+    real = auto()
 
 
 class Frequency(Enum):
