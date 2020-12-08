@@ -115,7 +115,6 @@ class ComputeCurrencies(ProcessDataEffect):
                 # Error handling when we reach the end of the dates range
                 try:
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc + 1]
-                    print(tmp_start_date_computations)
                 except IndexError:
                     tmp_start_date_computations = self.data_currencies_usd.index[start_current_date_index_loc]
 

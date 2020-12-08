@@ -1,8 +1,7 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from assetallocation_arp.models.effect.read_inputs_effect import read_user_date, read_update_imf, \
-                                                                 read_latest_signal_date, read_aggregate_calc
+from assetallocation_arp.models.effect.read_inputs_effect import read_latest_signal_date, read_aggregate_calc
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
 
 from assetallocation_arp.data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
@@ -15,15 +14,25 @@ from assetallocation_arp.models.effect.compute_warning_flags_overview import Com
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
 
-# from assetallocation_arp.data_etl.dal.data_models.strategy import Effect
+from assetallocation_arp.data_etl.dal.data_models.strategy import Effect
 """
     Main function to run the EFFECT computations
 """
 
 
-def run_effect(strategy: 'Effect', asset_inputs, all_data):
-    user_date = strategy.user_date
-
+def run_effect(strategy: Effect, all_data):
+    asset_inputs = [
+        (
+            i.asset_subcategory, i.ticker_3m, i.spot_ticker, i.carry_ticker, i.usd_weight, i.base.name, i.region
+        ) for i in strategy.asset_inputs
+    ]
+    asset_inputs = pd.DataFrame(
+        asset_inputs,
+        columns=[
+            'currency', 'input_implied', 'input_spot_ticker', 'input_carry_ticker', 'input_weight_usd', 'input_usd_eur',
+            'input_region'
+        ]
+    )
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #
@@ -34,6 +43,7 @@ def run_effect(strategy: 'Effect', asset_inputs, all_data):
                                         signal_day_mat=strategy.day_of_week,
                                         all_data=all_data)
     obj_import_data.process_all_data_effect()
+    user_date = strategy.user_date.strftime('%d-%m-%Y')
     obj_import_data.start_date_calculations = user_date
     process_usd_eur_data_effect = obj_import_data.process_usd_eur_data_effect()
     # -------------------------- Inflation differential calculations ------------------------------------------------- #

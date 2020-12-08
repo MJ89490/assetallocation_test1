@@ -20,12 +20,6 @@ def read_user_date(user_date):
     return user_date
 
 
-def read_update_imf(bool_update_imf):
-    if str(bool_update_imf.item()) == 'False':
-        return False
-    else:
-        return True
-
 def read_latest_signal_date(latest_signal_date, obj_import_data, freq):
     if latest_signal_date is None:
         latest_signal_date = obj_import_data.dates_origin_index[-2]
@@ -42,7 +36,7 @@ def read_latest_signal_date(latest_signal_date, obj_import_data, freq):
                 days.append(tmp_date)
             latest_signal_date = pd.to_datetime(days[-1], format='%d-%m-%Y')
 
-    return latest_signal_date
+    return pd.to_datetime(latest_signal_date)
 
 
 def read_aggregate_calc(agg_total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals):

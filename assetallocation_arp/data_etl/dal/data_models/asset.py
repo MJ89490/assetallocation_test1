@@ -376,12 +376,12 @@ class EffectAssetInput:
         self._usd_weight = x
 
     @property
-    def base(self) -> Union[str, Base]:
+    def base(self) -> Base:
         return self._base
 
     @base.setter
     def base(self, x: Union[str, Base]) -> None:
-        self._base = x
+        self._base = x if isinstance(x, Base) else Base[x]
 
     @property
     def region(self) -> str:

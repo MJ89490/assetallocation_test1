@@ -29,7 +29,7 @@ def run_model(model_type, mat_file, strategy_inputs, asset_inputs):
     if model_type == models_names.Models.effect.name:
         all_data = gd.extract_inputs_and_mat_data(model_type, mat_file)
 
-        outputs_effect, write_logs = run_effect(strategy_inputs, asset_inputs=asset_inputs, all_data=all_data)
+        outputs_effect, write_logs = run_effect(strategy_inputs, all_data=all_data)
 
         return outputs_effect, write_logs
 

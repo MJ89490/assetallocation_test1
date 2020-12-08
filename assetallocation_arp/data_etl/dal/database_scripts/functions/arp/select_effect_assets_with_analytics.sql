@@ -80,7 +80,8 @@ BEGIN
         aa.business_datetime >= select_effect_assets_with_analytics.business_datetime
       GROUP BY
         ea2.carry_asset_id,
-        a1.ticker
+        a1.ticker,
+        a1.subcategory
     )
     SELECT
       assets_carry.asset_subcategory,

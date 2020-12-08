@@ -410,7 +410,7 @@ class EffectProcCaller(StrategyProcCaller):
                 effect.carry_type.name, effect.closing_threshold, effect.day_of_week.value, effect.frequency.name,
                 effect.include_shorts, effect.interest_rate_cut_off_long, effect.interest_rate_cut_off_short,
                 effect.moving_average_long_term, effect.moving_average_short_term,
-                effect.is_real_time_inflation_forecast, effect.trend_indicator
+                effect.is_real_time_inflation_forecast, effect.trend_indicator.name
             ]
         )
 
