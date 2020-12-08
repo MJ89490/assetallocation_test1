@@ -231,7 +231,7 @@ class TimesChartsDataComputations(object):
     def compute_size_positions_all_assets_overview():
         pass
 
-    def compute_weekly_ytd_overall_performance_all_assets_overview(self, values, names, category_name):
+    def compute_overall_performance_all_assets_overview(self, values, names, category_name):
 
         df = pd.DataFrame(values, columns=['Values'])
         df['Assets'] = names
@@ -240,8 +240,7 @@ class TimesChartsDataComputations(object):
         return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum(),
                                                        df.loc[df['Category'] == 'FX', 'Values'].sum(),
                                                        df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
-                                                       df.Values.sum()
-                                                      ])
+                                                       df.Values.sum()])
 
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):

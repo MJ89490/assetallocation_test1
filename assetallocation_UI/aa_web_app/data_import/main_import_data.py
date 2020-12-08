@@ -40,9 +40,9 @@ def main_data(fund_name: str, obj_received_data_times: object):
     delta_positions = obj_charts_comp.compute_delta_positions_all_assets_overview(previous_positions, new_positions)
     trade_positions = obj_charts_comp.compute_trade_positions_all_assets_overview(delta_positions)
 
-    weekly_overall = obj_charts_comp.compute_weekly_ytd_overall_performance_all_assets_overview(weekly_performance_all_currencies, names_weekly_perf, category_name)
-    ytd_overall = obj_charts_comp.compute_weekly_ytd_overall_performance_all_assets_overview(ytd_performance_all_currencies, names_ytd_perf, category_name)
-    pre_overall = obj_charts_comp.compute_weekly_ytd_overall_performance_all_assets_overview(previous_positions, names_weekly_perf, category_name)
+    weekly_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(weekly_performance_all_currencies, names_weekly_perf, category_name)
+    ytd_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(ytd_performance_all_currencies, names_ytd_perf, category_name)
+    pre_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(previous_positions, names_weekly_perf, category_name)
 
     results_performance = {"category_name": category_name,
                            "names_weekly_perf": names_weekly_perf,
