@@ -192,10 +192,11 @@
                      </thead>
 
                      <tbody>
-                        {% for category, weekly_perf_overall, ytd_perf_overall, pre_overall in results_weekly_ytd %}
+                        {% for category, weekly_perf_overall, ytd_perf_overall, pre_overall, new_overall in results_weekly_ytd %}
                         <tr>
                             <td class="text-muted text-center">{{category}}</td>
                             <td class="text-muted text-center">{{pre_overall}}</td>
+                            <td class="text-muted text-center">{{new_overall}}</td>
                             <td class="text-muted text-center">{{weekly_perf_overall}}</td>
                             <td class="text-muted text-center">{{ytd_perf_overall}}</td>
                         </tr>

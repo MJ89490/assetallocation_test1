@@ -40,9 +40,11 @@ def main_data(obj_received_data_times: object):
     delta_positions = obj_charts_comp.compute_delta_positions_all_assets_overview(previous_positions, new_positions)
     trade_positions = obj_charts_comp.compute_trade_positions_all_assets_overview(delta_positions)
 
+    #TODO to improve
     weekly_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(weekly_performance_all_currencies, names_weekly_perf, category_name)
     ytd_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(ytd_performance_all_currencies, names_ytd_perf, category_name)
     pre_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(previous_positions, names_weekly_perf, category_name)
+    new_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(new_positions, names_weekly_perf, category_name)
 
     results_performance = {"category_name": category_name,
                            "names_weekly_perf": names_weekly_perf,
@@ -56,7 +58,7 @@ def main_data(obj_received_data_times: object):
                            }
 
     results_weekly_ytd_overall = {"category_name": ['Equities', 'FX', 'Bonds', 'Total'], "weekly_overall": weekly_overall,
-                                  "ytd_overall": ytd_overall, "pre_overall": pre_overall}
+                                  "ytd_overall": ytd_overall, "pre_overall": pre_overall, "new_overall": new_overall}
 
     zip_results_perf = obj_charts_comp.zip_results_performance_all_assets_overview(results_performance)
     zip_results_weekly_ytd_overall = obj_charts_comp.zip_results_performance_all_assets_overview(results_weekly_ytd_overall)
