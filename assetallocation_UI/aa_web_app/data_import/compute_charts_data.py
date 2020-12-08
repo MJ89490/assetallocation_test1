@@ -227,12 +227,23 @@ class TimesChartsDataComputations(object):
 
         return ['SELL' if val < 0 else 'BUY' for val in delta]
 
-    @staticmethod
-    def compute_size_positions_all_assets_overview():
-        pass
+    def compute_size_positions_all_assets_overview(self, values, names, category_name, new_overall):
+        df = pd.DataFrame(values, columns=['Values'])
+        df['Assets'] = names
+        df['Category'] = category_name
+
+        equities = (df.loc[df['Category'] == 'Equities', 'Values'] / new_overall[0]).tolist()
+        forex = (df.loc[df['Category'] == 'FX', 'Values'] / new_overall[1]).tolist()
+        bonds = (df.loc[df['Category'] == 'Bonds', 'Values'] / new_overall[2]).tolist()
+
+        size = []
+
+        size.extend(equities + forex + bonds)
+
+        return self.round_results_all_assets_overview(size)
 
     def compute_overall_performance_all_assets_overview(self, values, names, category_name):
-
+        #TODO gather df into one function
         df = pd.DataFrame(values, columns=['Values'])
         df['Assets'] = names
         df['Category'] = category_name

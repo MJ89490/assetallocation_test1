@@ -220,23 +220,33 @@
                             <th class="text-muted text-center" scope="col">New</th>
                             <th class="text-muted text-center" scope="col">Delta (%)</th>
                             <th class="text-muted text-center" scope="col">Trade</th>
+                            <th class="text-muted text-center" scope="col">Size</th>
                             <th class="text-muted text-center" scope="col">Weekly (%)</th>
                             <th class="text-muted text-center" scope="col">YTD (%)</th>
                         </tr>
                      </thead>
                      <tbody>
-                        {% for category, name, mom, prev_pos, new_pos, delta, trade, weekly_perf, ytd_perf   in results_perf %}
+                        {% for category, name, mom, prev_pos, new_pos, delta, trade, size, weekly_perf, ytd_perf   in results_perf %}
                         <tr>
                             <td class="text-muted text-center">{{category}}</td>
                             <td class="text-muted text-center">{{name}}</td>
                             <td class="text-muted text-center">{{mom}}</td>
                             <td class="text-muted text-center">{{prev_pos}}</td>
                             <td class="text-muted text-center">{{new_pos}}</td>
-                            <td class="text-muted text-center">{{delta}}</td>
+                            {% if delta > 0 %}
+                                <td class="text-center" style="color:rgb(0, 128, 0);">{{delta}}</td>
+                            {% else %}
+                                <td class="text-center" style="color:rgb(255, 0, 0);">{{delta}}</td>
+                            {% endif %}
                             {% if trade == 'BUY' %}
                                 <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
                             {% else %}
                                 <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
+                            {% endif %}
+                            {% if size > 0 %}
+                                <td class="text-center" style="color:rgb(0, 128, 0);">{{size}}</td>
+                            {% else %}
+                                <td class="text-center" style="color:rgb(255, 0, 0);">{{size}}</td>
                             {% endif %}
                             <td class="text-muted text-center">{{weekly_perf}}</td>
                             <td class="text-muted text-center">{{ytd_perf}}</td>

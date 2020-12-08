@@ -46,6 +46,8 @@ def main_data(obj_received_data_times: object):
     pre_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(previous_positions, names_weekly_perf, category_name)
     new_overall = obj_charts_comp.compute_overall_performance_all_assets_overview(new_positions, names_weekly_perf, category_name)
 
+    size = obj_charts_comp.compute_size_positions_all_assets_overview(new_positions, names_weekly_perf, category_name, new_overall)
+
     results_performance = {"category_name": category_name,
                            "names_weekly_perf": names_weekly_perf,
                            "mom_signals": mom_signals,
@@ -53,6 +55,7 @@ def main_data(obj_received_data_times: object):
                            "new_positions": new_positions,
                            "delta_positions": delta_positions,
                            "trade_positions": trade_positions,
+                           "size_positions": size,
                            "weekly_performance_all_currencies": weekly_performance_all_currencies,
                            "ytd_performance_all_currencies": ytd_performance_all_currencies,
                            }
@@ -70,5 +73,5 @@ def main_data(obj_received_data_times: object):
     return template_data, zip_results_perf, zip_results_weekly_ytd_overall
 
 
-if __name__ == "__main__":
-    main_data('f1', 509)
+# if __name__ == "__main__":
+#     main_data('f1', 509)
