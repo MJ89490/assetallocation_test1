@@ -41,7 +41,6 @@
 .ag-header-cell-label {justify-content: center;}
 
 /* TIMES PAGE */
-
 #selectVersion {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 20px; height: 48px;}
 .btn-select {margin-top: 20px; margin-left: 15px;}
 .btn-ag-grid {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; background-color: #fff !important;}
@@ -49,6 +48,7 @@
 .row-ag-grid {margin-top: 70px;}
 .row-model_form {margin-top: 70px;}
 .form-models-select-times{color: #005774 !important; border-color: #007faa !important; width: 230px; margin-right: 15px;}
+#input_fund_name_times{color: #005774 !important; border-color: #007faa !important;}
 /*.btn-run-model {width: 415px; margin-top: 32px;}*/
 .btn-run-model-times {width: 475px; margin-top: 32px; height: 38px; padding-top: 0px;}
 /* EFFECT PAGE */

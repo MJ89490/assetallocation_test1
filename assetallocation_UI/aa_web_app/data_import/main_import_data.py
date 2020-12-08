@@ -8,14 +8,14 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 
 
 # def main_data(fund_name: str, times_version: int, strategy_weight: float, obj_received_data_times: object):
-def main_data(fund_name: str, obj_received_data_times: object):
+def main_data(obj_received_data_times: object):
     """
     Function main to run the TimesChartsDataComputations class
     :return: dictionary with all the data needed for the Front-End
     """
 
     apc = TimesProcCaller()
-    fs = apc.select_fund_strategy_results(fund_name, Name.times, obj_received_data_times.version_strategy)
+    fs = apc.select_fund_strategy_results(obj_received_data_times.fund_name, Name.times, obj_received_data_times.version_strategy)
     weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
     analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 

@@ -72,10 +72,9 @@
                                                 <!--Fund name-->
                                                 <div class="form-group">
                                                     <label>Fund name</label>
-                                                    <input id="input_fund_name_times" name="input_fund_name_times" class="form-control form-models-select-times" placeholder="Fund name" required>
-                                                    <script type="text/javascript">
-                                                        document.getElementById('input_fund_name_times').value = 'f1';
-                                                    </script>
+                                                    <div class="form-group form-models-select-effect">
+                                                        {{ form.input_fund_name_times(class="form-control", id="input_fund_name_times")}}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="btn-group">

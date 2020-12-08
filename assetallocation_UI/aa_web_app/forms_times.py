@@ -78,7 +78,7 @@ class InputsTimesModel(FlaskForm):
     end_date_inputs = StringField(END_DATE)
 
     existing_funds = get_fund_names()
-    fund_name = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
+    input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
 
     strategy_weight = StringField(u'Strategy Weight', [DataRequired(message="The strategy weight is required")])
     time_lag = StringField(u'Time Lag', validators=[DataRequired(message="The time lag is required")])

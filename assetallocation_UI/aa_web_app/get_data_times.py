@@ -10,7 +10,7 @@ class ReceivedDataTimes:
         self.write_logs = {}
         self.version_strategy = 0
         self.strategy_weight = 0
-        # self.assets_input_category = pd.DataFrame()
+        self.fund_name = None
 
     @property
     def strategy_weight(self):
@@ -19,6 +19,14 @@ class ReceivedDataTimes:
     @strategy_weight.setter
     def strategy_weight(self, value):
         self._strategy_weight = value
+
+    @property
+    def fund_name(self):
+        return self._fund_name
+
+    @fund_name.setter
+    def fund_name(self, value):
+        self._fund_name = value
 
     def received_data_times(self, form_data):
         for idx, val in enumerate(form_data):
@@ -35,7 +43,8 @@ class ReceivedDataTimes:
     def call_run_times(self, assets_input_times):
 
         self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
-        fund_name = self.times_form['input_fund_name_times']
+        self.fund_name = self.times_form['input_fund_name_times']
+        # fund_name = self.times_form['input_fund_name_times']
 
         long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
                                         self.times_form['input_signal_two_long_times'],
@@ -59,7 +68,7 @@ class ReceivedDataTimes:
             )
         ]
 
-        fund_strategy = run_strategy(fund_name, float(self.times_form['input_strategy_weight_times']),
+        fund_strategy = run_strategy(self.fund_name, float(self.times_form['input_strategy_weight_times']),
                                      times, os.environ.get('USERNAME'),
                                      self.times_form['input_date_from_times'])
 
