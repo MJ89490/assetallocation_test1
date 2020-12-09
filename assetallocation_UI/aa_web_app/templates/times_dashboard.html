@@ -65,9 +65,9 @@
 
 .row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
 .row-table-overall{margin-left: 300px;}
-.row-tables-positions, .row-positions-assets-charts{margin-left: 210px;}
+.row-tables-positions{margin-left: 210px;}
 .table-perf{margin-left: 270px;}
-
+.row-positions-assets-charts{margin-left: 210px;}
 
 
 .pos-perf-title{background-color: #005774; color: #fff;}
@@ -320,12 +320,31 @@
                  </table>
              </div>
         </div>
-
         <!--Positions assets charts-->
-        <div class="row">
+        <div class="row row-positions-assets-charts">
             <div class="col-lg-4">
-
-
+                <div id="positions_equities" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_equities.js') }}"></script>
+                <script type="text/javascript">
+                    positionsEquities({{positions_assets_sum['equities_pos_sum']|tojson}},
+                                      {{positions_assets_sum['dates_positions_assets']|tojson}})
+                </script>
+            </div>
+            <div class="col-lg-4">
+                <div id="positions_bonds" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_bonds.js') }}"></script>
+                <script type="text/javascript">
+                    positionsBonds({{positions_assets_sum['bonds_pos_sum']|tojson}},
+                                      {{positions_assets_sum['dates_positions_assets']|tojson}})
+                </script>
+            </div>
+            <div class="col-lg-4">
+                <div id="positions_forex" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_forex.js') }}"></script>
+                <script type="text/javascript">
+                    positionsForex({{positions_assets_sum['forex_pos_sum']|tojson}},
+                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
+                </script>
             </div>
         </div>
 

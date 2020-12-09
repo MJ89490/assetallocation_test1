@@ -265,15 +265,18 @@ class TimesChartsDataComputations(object):
             else:
                 forex_names.append(name)
 
-        equities = self.positions.loc[pd.to_datetime('14-08-2020', format='%d-%m-%Y'):, equities_names]
-        bonds = self.positions.loc[pd.to_datetime('14-08-2020', format='%d-%m-%Y'):, bonds_names]
-        forex = self.positions.loc[pd.to_datetime('14-08-2020', format='%d-%m-%Y'):, forex_names]
+        equities = self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):, equities_names]
+        bonds = self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):, bonds_names]
+        forex = self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):, forex_names]
 
-        equities = equities.apply(lambda x: x * strategy_weight).sum(axis=1)
-        bonds = bonds.apply(lambda x: x * strategy_weight).sum(axis=1)
-        forex = forex.apply(lambda x: x * strategy_weight).sum(axis=1)
+        dates_positions_assets = equities.index.strftime("%Y-%m-%d").to_list()
 
-        return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex}
+        equities = equities.apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
+        bonds = bonds.apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
+        forex = forex.apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
+
+        return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex,
+                "dates_positions_assets": dates_positions_assets}
 
 
 
