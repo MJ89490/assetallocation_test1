@@ -47,6 +47,7 @@
              </div>
         {% else %}
             <div class="row row-effect-ag-grid"></div>
+            <h2 class="title-models-ag-grid">Model assets</h2>
             <div style="height: 30%; display: flex; flex-direction: column;">
                 <div style="margin-bottom: 4px;">
                     <button class="btn btn-outline-secondary" onclick="onAddRow()">Add Input</button>
@@ -61,226 +62,403 @@
             <div class="row row-effect-ag-grid-bottom"></div>
 
             <div class="row">
-                <div class="col-lg-12">
-                    <form class="form-signin" role="form">
-                        <h2 class="title-models-ag-grid">Model inputs</h2>
-                        <div class="row">
-                            <div class="col-lg-2"></div>
-                            <div class="col-lg-3">
-                                <!--Name of the fund-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Fund Name</label>
-                                        <div class="form-group form-models-select-effect">
-                                            {{ form.input_fund_name_effect(class="form-control", id="form-models-select-effect")}}
+                    <div class="col-lg-12">
+                        <form class="form-signin" role="form">
+                            <h2 class="title-models-ag-grid">Model inputs</h2>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="btn-group">
+                                                <!--Date from-->
+                                                <div class="form-group">
+                                                    <label>Date from</label>
+                                                    <input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times" placeholder="Date from" required>
+                                                    <script type="text/javascript">
+                                                        document.getElementById('input_date_from_times').value = '01/01/2000';
+                                                    </script>
+                                                </div>
+                                                <!--Fund name-->
+                                                <div class="form-group">
+                                                    <label>Fund name</label>
+                                                    <input id="input_fund_name_times" name="input_fund_name_times" class="form-control form-models-select-times" placeholder="Fund name" required>
+                                                    <script type="text/javascript">
+                                                        document.getElementById('input_fund_name_times').value = 'f1';
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group">
+                                                <!--Strategy weight-->
+                                                <div class="form-group">
+                                                    <label>Strategy weight</label>
+                                                    <input type="number" id="input_strategy_weight_times" name="input_strategy_weight_times" class="form-control form-models-select-times" placeholder="Strategy weight" required>
+                                                    <script type="text/javascript">
+                                                        document.getElementById('input_strategy_weight_times').value = 1;
+                                                    </script>
+                                                </div>
+                                                <!--Time lag-->
+                                                <div class="form-group">
+                                                    <label>Time lag</label>
+                                                    <input type="number" id="input_time_lag_times" name="input_time_lag_times" class="form-control form-models-select-times" placeholder="Time lag" required>
+                                                    <script type="text/javascript">
+                                                        document.getElementById('input_time_lag_times').value = 1;
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="btn-group">
+                                                <!--Leverage type-->
+                                                <div class="form-group">
+                                                    <label>Leverage type</label>
+                                                    <select id="input_leverage_times" name="input_leverage_times" class="form-control form-models-select-times">
+                                                        <option>v</option>
+                                                        <option>e</option>
+                                                        <option>n</option>
+                                                        <option>s</option>
+                                                    </select>
+                                                </div>
+                                                <!--Volatility window-->
+                                                <div class="form-group">
+                                                    <label>Volatility window</label>
+                                                    <input type="number" id="input_vol_window_times" name="input_vol_window_times" class="form-control form-models-select-times" placeholder="Volatility window" required>
+                                                     <script type="text/javascript">
+                                                        document.getElementById('input_vol_window_times').value = 3;
+                                                    </script>
+                                                </div>
+                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="btn-group">
+                                                <!--Frequency-->
+                                                <div class="form-group">
+                                                    <label>Frequency</label>
+                                                    <select id="input_frequency_times" name="input_frequency_times" class="form-control form-models-select-times">
+                                                        <option>weekly</option>
+                                                        <option>monthly</option>
+                                                        <option>daily</option>
+                                                    </select>
+                                                </div>
+                                                <!--Week day-->
+                                                <div class="form-group">
+                                                    <label>Week day</label>
+                                                     <select id="input_weekday_times" name="input_weekday_times" class="form-control form-models-select-times">
+                                                         <option>MON</option>
+                                                         <option>TUE</option>
+                                                         <option>WED</option>
+                                                         <option>THU</option>
+                                                         <option>FRI</option>
+                                                         <option>SAT</option>
+                                                         <option>SUN</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!--Update IMF Data-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Update IMF Data</label>
-                                        <select class="form-control form-models-select-effect" id="input_update_imf_effect" name="input_update_imf_effect">
-                                            <option>False</option>
-                                            <option>True</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--User date-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>User date</label>
-                                        <input type="text" id="input_user_date_effect" name="input_user_date_effect" class="form-control form-models-select-effect" placeholder="User date" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_user_date_effect').value = '12/01/2000';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--Latest signal date-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Latest signal date</label>
-                                        <input type="text" id="input_signal_date_effect" name="input_signal_date_effect" class="form-control form-models-select-effect" placeholder="Latest signal date" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_signal_date_effect').value = '23/09/2020';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--Signal day-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Signal day</label>
-                                        <select class="form-control form-models-select-effect" id="input_signal_day_effect" name="input_signal_day_effect">
-                                            <option>MON</option>
-                                            <option>TUE</option>
-                                            <option>WED</option>
-                                            <option>THU</option>
-                                            <option>FRI</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--Frequency-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Frequency</label>
-                                        <select class="form-control form-models-select-effect" id="input_frequency_effect" name="input_frequency_effect">
-                                            <option>weekly</option>
-                                            <option>monthly</option>
-                                            <option>daily</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--Trend indicator-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Trend indicator</label>
-                                        <select class="form-control form-models-select-effect" id="input_trend_indicator_effect" name="input_trend_indicator_effect">
-                                            <option>Total return</option>
-                                            <option>Spot</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-lg-3">
-                                <!--Short-term MA-->
-                                <div class="btn-group">
-                                    <div class="form-group" id="input_short_term_ma_form_group">
-                                        <label>Short-term MA</label>
-                                        <input type="number" id="input_short_term_ma" name="input_short_term_ma" class="form-control form-models-select-effect" placeholder="Short-term MA" required>
-                                         <script type="text/javascript">
-                                            document.getElementById('input_short_term_ma').value = '4';
-                                        </script>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <!--Signal1 short-->
+                                            <div class="btn-group">
+                                                <div class="form-group">
+                                                    <label>Signal1 short</label>
+                                                    <input type="number" id="input_signal_one_short_times" name="input_signal_one_short_times" class="form-control form-models-select-times" placeholder="Signal1 short" required>
+                                                     <script type="text/javascript">
+                                                        document.getElementById('input_signal_one_short_times').value = 15;
+                                                    </script>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Signal1 long</label>
+                                                    <input type="number" id="input_signal_one_long_times" name="input_signal_one_long_times" class="form-control form-models-select-times" placeholder="Signal1 long" required>
+                                                     <script type="text/javascript">
+                                                        document.getElementById('input_signal_one_long_times').value = 30;
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--Long-term MA-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Long-term MA</label>
-                                        <input type="number" id="input_long_term_ma" name="input_long_term_ma" class="form-control form-models-select-effect" placeholder="Long-term MA" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_long_term_ma').value = '16';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--Include Shorts-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Include Shorts</label>
-                                         <select class="form-control form-models-select-effect" id="input_include_shorts_effect" name="input_include_shorts_effect">
-                                            <option>Yes</option>
-                                            <option>No</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--Interest rate cut-off (long)-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Interest rate cut-off (% long)</label>
-                                        <input type="number" id="input_cut_off_long_effect" name="input_cut_off_long" class="form-control form-models-select-effect" placeholder="Interest rate cut-off (long)" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_cut_off_long_effect').value = '2.0';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--Interest rate cut-off (% short)-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Interest rate cut-off (% short)</label>
-                                        <input type="number" id="input_cut_off_short_effect" name="input_cut_off_short" class="form-control form-models-select-effect" placeholder="Interest rate cut-off (short)" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_cut_off_short_effect').value = '0.0';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--real/nominal-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Real/Nominal</label>
-                                         <select class="form-control form-models-select-effect" id="input_real_nominal_effect" name="input_real_nominal_effect">
-                                            <option>Real</option>
-                                            <option>Nominal</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-lg-3">
-                                <!--real time inflation forecast-->
-                                <div class="btn-group">
-                                    <div class="form-group" id="input_real_time_inf_form_group">
-                                        <label>Real time inflation forecast</label>
-                                        <select class="form-control form-models-select-effect" id="input_real_time_inf_effect" name="input_real_time_inf_effect">
-                                            <option>Yes</option>
-                                            <option>No</option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="btn-group">
+                                                <!--Signal2 short-->
+                                                <div class="form-group">
+                                                    <label>Signal2 short</label>
+                                                    <input type="number" id="input_signal_two_short_times" name="input_signal_two_short_times" class="form-control form-models-select-times" placeholder="Signal2 short" required>
+                                                     <script type="text/javascript">
+                                                        document.getElementById('input_signal_two_short_times').value = 15;
+                                                    </script>
+                                                </div>
+                                                <!--Signal2 long-->
+                                                <div class="form-group">
+                                                    <label>Signal2 long</label>
+                                                    <input type="number" id="input_signal_two_long_times" name="input_signal_two_long_times" class="form-control form-models-select-times" placeholder="Signal2 long" required>
+                                                    <script type="text/javascript">
+                                                        document.getElementById('input_signal_two_long_times').value = 30;
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--Threshold for closing-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Threshold for closing (%)</label>
-                                        <input type="number" id="input_threshold_effect" name="input_threshold_effect" class="form-control form-models-select-effect" placeholder="Threshold for closing" required>
-                                         <script type="text/javascript">
-                                            document.getElementById('input_threshold_effect').value = '0.25';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--Risk-weighting-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Risk-weighting</label>
-                                        <select class="form-control form-models-select-effect" id="input_risk_weighting" name="input_risk_weighting">
-                                            <option>1/N</option>
-                                            <option>inverse vol</option>
-                                            <option>inverse carry</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--STDev window (weeks)-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>STDev window (weeks)</label>
-                                        <input type="number" id="input_window_effect" name="input_window_effect" class="form-control form-models-select-effect" placeholder="STDev window (weeks)" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_window_effect').value = '52';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--Bid-ask spread (bp)-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Bid-ask spread (bp)</label>
-                                        <input type="number" id="input_bid_ask_effect" name="input_bid_ask_effect" class="form-control form-models-select-effect" placeholder="Bid-ask spread (bp)" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_bid_ask_effect').value = '10';
-                                        </script>
-                                    </div>
-                                </div>
-                                <!--Position size-->
-                                <div class="btn-group">
-                                    <div class="form-group">
-                                        <label>Position size (%)</label>
-                                        <input type="number" id="input_position_size_effect" name="input_position_size_effect" class="form-control form-models-select-effect" placeholder="Position size" required>
-                                        <script type="text/javascript">
-                                            document.getElementById('input_position_size_effect').value = '3.0';
-                                        </script>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="btn-group">
+                                                <!--Signal3 short-->
+                                                <div class="form-group">
+                                                    <label>Signal3 short</label>
+                                                    <input type="number" id="input_signal_three_short_times" name="input_signal_three_short_times" class="form-control form-models-select-times" placeholder="Signal3 short" required>
+                                                     <script type="text/javascript">
+                                                        document.getElementById('input_signal_three_short_times').value = 15;
+                                                    </script>
+                                                </div>
+                                                <!--Signal3 long-->
+                                                <div class="form-group">
+                                                    <label>Signal3 long</label>
+                                                    <input type="number" id="input_signal_three_long_times" name="input_signal_three_long_times" class="form-control form-models-select-times" placeholder="Signal3 long" required>
+                                                       <script type="text/javascript">
+                                                        document.getElementById('input_signal_three_long_times').value = 30;
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-lg btn-run-model" type="button" id="contact-form-button-times">Run strategy</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!--Run strategy-->
-                        <div class="row">
-                            <div class="col-lg-4"></div>
-                            <div class="col-lg-3">
-                                <button class="btn btn-secondary btn-lg btn-run-model" type="button" id="contact-form-button-effect">Run strategy</button>
-                            </div>
-                            <div class="col-lg-3"></div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <script src="static/js/form_data_effect.js"></script>
+            <script src="static/js/form_data_times.js"></script>
+            <!--<div class="row">-->
+                <!--<div class="col-lg-12">-->
+                    <!--<form class="form-signin" role="form">-->
+                        <!--<h2 class="title-models-ag-grid">Model inputs</h2>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-lg-2"></div>-->
+                            <!--<div class="col-lg-3">-->
+                                <!--&lt;!&ndash;Name of the fund&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Fund Name</label>-->
+                                        <!--<div class="form-group form-models-select-effect">-->
+                                            <!--{{ form.input_fund_name_effect(class="form-control", id="form-models-select-effect")}}-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Update IMF Data&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Update IMF Data</label>-->
+                                        <!--<select class="form-control form-models-select-effect" id="input_update_imf_effect" name="input_update_imf_effect">-->
+                                            <!--<option>False</option>-->
+                                            <!--<option>True</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;User date&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>User date</label>-->
+                                        <!--<input type="text" id="input_user_date_effect" name="input_user_date_effect" class="form-control form-models-select-effect" placeholder="User date" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_user_date_effect').value = '12/01/2000';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Latest signal date&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Latest signal date</label>-->
+                                        <!--<input type="text" id="input_signal_date_effect" name="input_signal_date_effect" class="form-control form-models-select-effect" placeholder="Latest signal date" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_signal_date_effect').value = '23/09/2020';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Signal day&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Signal day</label>-->
+                                        <!--<select class="form-control form-models-select-effect" id="input_signal_day_effect" name="input_signal_day_effect">-->
+                                            <!--<option>MON</option>-->
+                                            <!--<option>TUE</option>-->
+                                            <!--<option>WED</option>-->
+                                            <!--<option>THU</option>-->
+                                            <!--<option>FRI</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Frequency&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Frequency</label>-->
+                                        <!--<select class="form-control form-models-select-effect" id="input_frequency_effect" name="input_frequency_effect">-->
+                                            <!--<option>weekly</option>-->
+                                            <!--<option>monthly</option>-->
+                                            <!--<option>daily</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Trend indicator&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Trend indicator</label>-->
+                                        <!--<select class="form-control form-models-select-effect" id="input_trend_indicator_effect" name="input_trend_indicator_effect">-->
+                                            <!--<option>Total return</option>-->
+                                            <!--<option>Spot</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="col-lg-3">-->
+                                <!--&lt;!&ndash;Short-term MA&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group" id="input_short_term_ma_form_group">-->
+                                        <!--<label>Short-term MA</label>-->
+                                        <!--<input type="number" id="input_short_term_ma" name="input_short_term_ma" class="form-control form-models-select-effect" placeholder="Short-term MA" required>-->
+                                         <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_short_term_ma').value = '4';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Long-term MA&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Long-term MA</label>-->
+                                        <!--<input type="number" id="input_long_term_ma" name="input_long_term_ma" class="form-control form-models-select-effect" placeholder="Long-term MA" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_long_term_ma').value = '16';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Include Shorts&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Include Shorts</label>-->
+                                         <!--<select class="form-control form-models-select-effect" id="input_include_shorts_effect" name="input_include_shorts_effect">-->
+                                            <!--<option>Yes</option>-->
+                                            <!--<option>No</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Interest rate cut-off (long)&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Interest rate cut-off (% long)</label>-->
+                                        <!--<input type="number" id="input_cut_off_long_effect" name="input_cut_off_long" class="form-control form-models-select-effect" placeholder="Interest rate cut-off (long)" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_cut_off_long_effect').value = '2.0';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Interest rate cut-off (% short)&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Interest rate cut-off (% short)</label>-->
+                                        <!--<input type="number" id="input_cut_off_short_effect" name="input_cut_off_short" class="form-control form-models-select-effect" placeholder="Interest rate cut-off (short)" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_cut_off_short_effect').value = '0.0';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Real/Nominal&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Real/Nominal</label>-->
+                                         <!--<select class="form-control form-models-select-effect" id="input_real_nominal_effect" name="input_real_nominal_effect">-->
+                                            <!--<option>Real</option>-->
+                                            <!--<option>Nominal</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="col-lg-3">-->
+                                <!--&lt;!&ndash;Real time inflation forecast&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group" id="input_real_time_inf_form_group">-->
+                                        <!--<label>Real time inflation forecast</label>-->
+                                        <!--<select class="form-control form-models-select-effect" id="input_real_time_inf_effect" name="input_real_time_inf_effect">-->
+                                            <!--<option>Yes</option>-->
+                                            <!--<option>No</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Threshold for closing&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Threshold for closing (%)</label>-->
+                                        <!--<input type="number" id="input_threshold_effect" name="input_threshold_effect" class="form-control form-models-select-effect" placeholder="Threshold for closing" required>-->
+                                         <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_threshold_effect').value = '0.25';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Risk-weighting&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Risk-weighting</label>-->
+                                        <!--<select class="form-control form-models-select-effect" id="input_risk_weighting" name="input_risk_weighting">-->
+                                            <!--<option>1/N</option>-->
+                                            <!--<option>inverse vol</option>-->
+                                            <!--<option>inverse carry</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;STDev window (weeks)&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>STDev window (weeks)</label>-->
+                                        <!--<input type="number" id="input_window_effect" name="input_window_effect" class="form-control form-models-select-effect" placeholder="STDev window (weeks)" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_window_effect').value = '52';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Bid-ask spread (bp)&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Bid-ask spread (bp)</label>-->
+                                        <!--<input type="number" id="input_bid_ask_effect" name="input_bid_ask_effect" class="form-control form-models-select-effect" placeholder="Bid-ask spread (bp)" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_bid_ask_effect').value = '10';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;Position size&ndash;&gt;-->
+                                <!--<div class="btn-group">-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label>Position size (%)</label>-->
+                                        <!--<input type="number" id="input_position_size_effect" name="input_position_size_effect" class="form-control form-models-select-effect" placeholder="Position size" required>-->
+                                        <!--<script type="text/javascript">-->
+                                            <!--document.getElementById('input_position_size_effect').value = '3.0';-->
+                                        <!--</script>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash;Run strategy&ndash;&gt;-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-lg-4"></div>-->
+                            <!--<div class="col-lg-3">-->
+                                <!--<button class="btn btn-secondary btn-lg btn-run-model" type="button" id="contact-form-button-effect">Run strategy</button>-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-3"></div>-->
+                        <!--</div>-->
+                    <!--</form>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<script src="static/js/form_data_effect.js"></script>-->
         {% endif %}
     </div>
 

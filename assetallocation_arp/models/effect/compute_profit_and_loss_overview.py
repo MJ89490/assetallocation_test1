@@ -206,7 +206,7 @@ class ComputeProfitAndLoss:
     def round_profit_and_loss_overview(profit_and_loss):
 
         for key, value in profit_and_loss.items():
-            profit_and_loss[key] = np.round(value)
+            profit_and_loss[key] = np.round(value, 2)
 
         return profit_and_loss
 
@@ -256,7 +256,7 @@ class ComputeProfitAndLoss:
                                     'profit_and_loss_spot_ex_overview': np.where(np.isnan(p_and_l_spot), '', p_and_l_spot),
                                     'profit_and_loss_carry_overview': np.where(np.isnan(p_and_l_carry), '', p_and_l_carry),
                                     'profit_and_loss_notional': self.round_profit_and_loss_overview(profit_and_loss_notional),
-                                    'profit_and_loss_matr': profit_and_loss_matr
+                                    'profit_and_loss_matr': self.round_profit_and_loss_overview(profit_and_loss_matr)
                                     }
 
         return profit_and_loss_overview

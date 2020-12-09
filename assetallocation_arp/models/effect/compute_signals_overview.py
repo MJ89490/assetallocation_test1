@@ -1,3 +1,4 @@
+import numpy as np
 from math import sqrt
 
 
@@ -92,7 +93,13 @@ class ComputeSignalsOverview:
         # MATR notional
         matr_notional = signals_combo.sum() * self.size_attr * 100
 
-        return {'ex_ante_vol': round(ex_ante_vol, 2), 'matr_notional': matr_notional}
+        return {'ex_ante_vol': ex_ante_vol, 'matr_notional': matr_notional}
+
+    @staticmethod
+    def round_signals_drawdown_position_size_matr(signals_drawdown_position_size_matr):
+        for key, value in signals_drawdown_position_size_matr.items():
+            signals_drawdown_position_size_matr[key] = np.round(value, 2)
+        return signals_drawdown_position_size_matr
 
     def run_signals_overview(self, real_carry_curr, trend_curr, combo_curr, agg_total_incl_signals, agg_log_returns):
         """
@@ -111,14 +118,13 @@ class ComputeSignalsOverview:
         signals_drawdown_position_size_matr = self.compute_drawdown_position_size_matr(agg_total_incl_signals=agg_total_incl_signals)
         signals_limits_controls = self.compute_limits_controls(signals_combo=signals_combo_overview, agg_log_returns=agg_log_returns)
 
-
-        import numpy as np
-
         signals_overview = {'signals_real_carry': np.round(signals_real_carry_overview.values, 2),
                             'signals_trend_overview': np.round(signals_trend_overview.values, 2),
                             'signals_combo_overview': np.round(signals_combo_overview.values, 2),
-                            'signals_drawdown_position_size_matr': signals_drawdown_position_size_matr,
-                            'signals_limits_controls': signals_limits_controls}
+                            'signals_drawdown_position_size_matr': self.round_signals_drawdown_position_size_matr(
+                                                                    signals_drawdown_position_size_matr),
+                            'signals_limits_controls': self.round_signals_drawdown_position_size_matr(
+                                                        signals_limits_controls)}
 
         return signals_overview
 
