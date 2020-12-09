@@ -48,6 +48,8 @@ def main_data(obj_received_data_times: object):
 
     size = obj_charts_comp.compute_size_positions_all_assets_overview(new_positions, names_weekly_perf, category_name, new_overall)
 
+    positions_assets_sum = obj_charts_comp.compute_positions_assets_charts(obj_received_data_times.strategy_weight)
+
     results_positions = {"category_name": category_name,
                          "names_weekly_perf": names_weekly_perf,
                          "mom_signals": mom_signals,
@@ -71,7 +73,7 @@ def main_data(obj_received_data_times: object):
 
     template_data = {"positions": positions, "dates_pos": dates_pos, "names_pos": names_pos,
                      "sparklines_pos": sparklines_pos, "weekly_overall": weekly_overall,
-                     "signal_as_off": signal_as_off}
+                     "signal_as_off": signal_as_off, "positions_assets_sum": positions_assets_sum}
 
     return template_data, zip_results_pos, zip_results_pos_overall, zip_results_perf, zip_results_perf_overall
 

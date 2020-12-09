@@ -253,6 +253,34 @@ class TimesChartsDataComputations(object):
                                                        df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
                                                        df.Values.sum()])
 
+    def compute_positions_assets_charts(self, strategy_weight):
+        equities_names, bonds_names, forex_names = [], [], []
+        names = self.positions.columns.to_list()
+
+        for name in names:
+            if 'Equities' in name:
+                equities_names.append(name)
+            elif 'Bonds' in name:
+                bonds_names.append(name)
+            else:
+                forex_names.append(name)
+
+        equities = self.positions.loc[pd.to_datetime('14-08-2020', format='%d-%m-%Y'):, equities_names]
+        bonds = self.positions.loc[pd.to_datetime('14-08-2020', format='%d-%m-%Y'):, bonds_names]
+        forex = self.positions.loc[pd.to_datetime('14-08-2020', format='%d-%m-%Y'):, forex_names]
+
+        equities = equities.apply(lambda x: x * strategy_weight).sum(axis=1)
+        bonds = bonds.apply(lambda x: x * strategy_weight).sum(axis=1)
+        forex = forex.apply(lambda x: x * strategy_weight).sum(axis=1)
+
+        return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex}
+
+
+
+
+
+
+
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):
         print(list(zip(*results_performance.values())))
@@ -277,46 +305,3 @@ class TimesChartsDataComputations(object):
 
         dates_pos = [times_data.loc[index_start_date:].index.strftime("%Y-%m-%d").to_list()]
         return positions, dates_pos, names_pos, sparklines_pos
-
-
-
-
-
-    # def data_computations(self) -> Dict[str, pd.DataFrame]:
-    #     self.signals_comp = round(self.signals.loc[self.max_signals_date], 2)
-    #     self.positions_comp = round(self.positions.loc[self.max_positions_date] * 100, 2)
-    #     self.returns_comp = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.returns_dates_weekly_off]) * 100, 3)
-    #     # self.returns_ytd = round((self.returns.loc[self.max_returns_date] - self.returns.loc[self.prev_year_end]) * 100, 3)
-    #
-    #     return {'times_signals_comp': self.signals_comp, 'times_positions_comp': self.positions_comp,
-    #             'times_returns_comp': self.returns_comp, 'times_returns_ytd': self.returns_ytd}
-    #
-    # def data_computations_sum(self) -> Dict[str, pd.DataFrame]:
-    #     """
-    #     :return: dictionary with all the computations such as the sum of the equities positions, sum of the bonds positions
-    #     """
-    #     sum_positions_bonds, sum_positions_equities, sum_positions_fx = self.sum_equities_bonds_fx(self.positions_comp)
-    #     sum_performance_weekly_equities, sum_performance_weekly_bonds, sum_performance_weekly_fx = self.sum_equities_bonds_fx(self.returns_comp)
-    #     sum_performance_ytd_equities, sum_performance_ytd_bonds, sum_performance_ytd_fx = self.sum_equities_bonds_fx(self.returns_ytd)
-    #
-    #     return {'sum_positions_equities': sum_positions_equities, 'sum_positions_bonds': sum_positions_bonds,
-    #             'sum_positions_fx': sum_positions_fx, 'sum_performance_weekly_equities': sum_performance_weekly_equities,
-    #             'sum_performance_weekly_bonds': sum_performance_weekly_bonds, 'sum_performance_weekly_fx': sum_performance_weekly_fx,
-    #             'sum_performance_ytd_equities': sum_performance_ytd_equities, 'sum_performance_ytd_bonds': sum_performance_ytd_bonds,
-    #             'sum_performance_ytd_fx': sum_performance_ytd_fx}
-    #
-    # def sum_equities_bonds_fx(self, equities_bonds_fx_data):
-    #     equities = [i.name for i in Equity if i.name in equities_bonds_fx_data.index]
-    #     bonds = [i.name for i in FixedIncome if i.name in equities_bonds_fx_data.index]
-    #     fx = [i.name for i in FX if i.name in equities_bonds_fx_data.index]
-    #
-    #     equities = self.round_sum(equities_bonds_fx_data.loc[equities])
-    #     bonds = self.round_sum(equities_bonds_fx_data.loc[bonds])
-    #     fx = self.round_sum(equities_bonds_fx_data.loc[fx])
-    #     return bonds, equities, fx
-    #
-    # @staticmethod
-    # def round_sum(df):
-    #     return round(sum(df), 2)
-
-
