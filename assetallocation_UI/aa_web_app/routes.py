@@ -33,10 +33,11 @@ def home():
 def times_dashboard():
     # form = ExportDataForm()
     form = InputsTimesModel()
-    template_data, zip_results_perf, zip_results_weekly_ytd_overall = main_data(obj_received_data_times)
+    template_data, zip_results_pos, zip_results_pos_overall, zip_results_perf, zip_results_perf_overall = main_data(obj_received_data_times)
 
     return render_template('times_dashboard.html', title='Dashboard', form=form, **template_data,
-                           results_perf=zip_results_perf, results_weekly_ytd=zip_results_weekly_ytd_overall)
+                           zip_results_pos=zip_results_pos, zip_results_pos_overall=zip_results_pos_overall,
+                           zip_results_perf=zip_results_perf, zip_results_perf_overall=zip_results_perf_overall)
 
 
 @app.route('/times_strategy', methods=['GET', 'POST'])
