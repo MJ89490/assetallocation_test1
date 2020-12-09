@@ -3,24 +3,20 @@ import pandas as pd
 
 from assetallocation_arp.models.effect.read_inputs_effect import read_latest_signal_date, read_aggregate_calc
 from assetallocation_arp.models.effect.compute_currencies import ComputeCurrencies
-
 from assetallocation_arp.data_etl.inputs_effect.compute_inflation_differential import ComputeInflationDifferential
-
 from assetallocation_arp.models.effect.compute_profit_and_loss_overview import ComputeProfitAndLoss
 from assetallocation_arp.models.effect.compute_signals_overview import ComputeSignalsOverview
 from assetallocation_arp.models.effect.compute_trades_overview import compute_trades_overview
 from assetallocation_arp.models.effect.compute_warning_flags_overview import ComputeWarningFlagsOverview
-
 from assetallocation_arp.models.effect.compute_aggregate_currencies import ComputeAggregateCurrencies
 from assetallocation_arp.models.compute_risk_return_calculations import ComputeRiskReturnCalculations
-
-from assetallocation_arp.data_etl.dal.data_models.strategy import Effect
+from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 """
     Main function to run the EFFECT computations
 """
 
 
-def run_effect(strategy: Effect, all_data):
+def run_effect(strategy: 'Effect'):
     asset_inputs = [
         (
             i.asset_subcategory, i.ticker_3m, i.spot_ticker, i.carry_ticker, i.usd_weight, i.base.name, i.region
@@ -33,6 +29,15 @@ def run_effect(strategy: Effect, all_data):
             'input_region'
         ]
     )
+
+    carry_analytics = [(ai.carry_ticker, analytic) for ai in strategy.asset_inputs for analytic in ai.carry_asset.asset_analytics]
+    spot_analytics = [(ai.spot_ticker, analytic) for ai in strategy.asset_inputs for analytic in ai.spot_asset.asset_analytics]
+    analytics_3m = [(ai.ticker_3m, analytic) for ai in strategy.asset_inputs for analytic in ai.asset_3m.asset_analytics]
+    analytics_currencies = [(asset.ticker, analytic) for asset in strategy.config_assets for analytic in asset.asset_analytics]
+
+    analytics = carry_analytics + spot_analytics + analytics_3m + analytics_currencies
+    all_data = DataFrameConverter.asset_analytics_to_df(analytics)
+
     # ---------------------------------------------------------------------------------------------------------------- #
     #                                         EFFECT ALL CURRENCIES COMPUTATIONS                                       #
     # ---------------------------------------------------------------------------------------------------------------- #

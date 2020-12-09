@@ -6,7 +6,8 @@ from assetallocation_arp.models.effect.main_effect import run_effect
 from assetallocation_arp.data_etl.dal.data_models.strategy import Effect
 from assetallocation_arp.common_libraries.dal_enums.strategy import DayOfWeek, Frequency, TrendIndicator, CarryType, \
     RiskWeighting
-from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput
+from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, Asset
+from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
 
 all_data = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "resources", "effect", "outputs_origin", "all_date.csv")), sep=',', engine='python')
 all_data = all_data.set_index(pd.to_datetime(all_data.Date, format='%Y-%m-%d'))
@@ -33,12 +34,26 @@ def test_runs_through():
                strategy_inputs['input_real_time_inf_effect'].item() == 'Yes',
         TrendIndicator[strategy_inputs['input_trend_indicator_effect'].item().lower()])
 
-    dict_asset_input = asset_inputs.T.to_dict(orient='index')
-    e.asset_inputs = [EffectAssetInput(h, h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
-                           zip(dict_asset_input['currency'].values(), dict_asset_input['input_implied'].values(),
-                               dict_asset_input['input_spot_ticker'].values(), dict_asset_input['input_carry_ticker'].values(),
-                               dict_asset_input['input_weight_usd'].values(), dict_asset_input['input_usd_eur'].values(),
-                               dict_asset_input['input_region'].values())]
+    effect_asset_inputs = []
+    for r, asset in asset_inputs.iterrows():
+        eai = EffectAssetInput(asset.loc['currency'], asset.loc['currency'], asset.loc['input_implied'], asset.loc['input_spot_ticker'],
+            asset.loc['input_carry_ticker'], asset.loc['input_weight_usd'], asset.loc['input_usd_eur'],
+                               asset.loc['input_region'])
 
-    run_effect(e, all_data)
+        eai.spot_asset.asset_analytics = [AssetAnalytic(eai.spot_ticker, 'PX_LAST', index, float(val)) for
+            index, val in all_data.loc[:, eai.spot_ticker].iteritems()]
+        eai.carry_asset.asset_analytics = [AssetAnalytic(eai.carry_ticker, 'PX_LAST', index, float(val)) for index, val in
+                                          all_data.loc[:, eai.carry_ticker].iteritems()]
+        eai.asset_3m.asset_analytics = [AssetAnalytic(eai.ticker_3m, 'PX_LAST', index, float(val)) for index, val in
+                                          all_data.loc[:, eai.ticker_3m].iteritems()]
 
+        effect_asset_inputs.append(eai)
+
+    e.config_assets = [Asset(ticker) for ticker in e.config_tickers]
+    for i in e.config_assets:
+        i.asset_analytics = [AssetAnalytic(i.ticker, 'PX_LAST', index, float(val)) for index, val in
+            all_data.loc[:, i.ticker].iteritems()]
+
+    e.asset_inputs = effect_asset_inputs
+
+    run_effect(e)

@@ -104,6 +104,17 @@ class ArpProcCaller(Db):
         res = self.call_proc('fund.select_fund_names', [])
         return res[0].get('fund_names') or []
 
+    def _select_assets_with_analytics(self, tickers: List[str], business_tstzrange: DateTimeTZRange) -> List[Asset]:
+        res = self.call_proc('asset.select_assets_with_analytics', [tickers, business_tstzrange])
+        assets = []
+        for r in res:
+            a = Asset(r['ticker'])
+            a.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['ticker'], r['analytics'])
+
+            assets.append(a)
+
+        return assets
+
 
 # noinspection PyAttributeOutsideInit
 class StrategyProcCaller(ABC, ArpProcCaller):
@@ -304,17 +315,6 @@ class FxProcCaller(StrategyProcCaller):
 
         return fx_assets
 
-    def _select_assets_with_analytics(self, tickers: List[str], business_tstzrange: DateTimeTZRange) -> List[Asset]:
-        res = self.call_proc('arp.select_assets_with_analytics', [tickers, business_tstzrange])
-        assets = []
-        for r in res:
-            a = Asset(r['ticker'])
-            a.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['ticker'], r['analytics'])
-
-            assets.append(a)
-
-        return assets
-
     def select_strategy(self, strategy_version: int) -> Optional[Fx]:
         """Select strategy and asset data for a version of fx"""
         fx = self._select_fx_strategy(strategy_version)
@@ -426,6 +426,8 @@ class EffectProcCaller(StrategyProcCaller):
     def add_asset_analytics_to_strategy(self, strategy: Effect, business_datetime: Optional[dt.datetime]) -> None:
         if strategy.asset_inputs:
             strategy.asset_inputs = self._select_effect_assets_with_analytics(strategy.version, business_datetime)
+            business_tstzrange = DateTimeTZRange(business_datetime, dt.datetime.now())
+            strategy.config_assets = self._select_assets_with_analytics(strategy.config_tickers, business_tstzrange)
 
     def select_strategy(self, strategy_version: int) -> Optional[Effect]:
         """Select strategy and asset data for a version of effect"""
@@ -477,6 +479,8 @@ class EffectProcCaller(StrategyProcCaller):
 
         if effect is not None:
             effect.asset_inputs = self._select_effect_assets_with_analytics(strategy_version, business_datetime)
+            business_tstzrange = DateTimeTZRange(business_datetime, dt.datetime.now())
+            effect.config_assets = self._select_assets_with_analytics(effect.config_tickers, business_tstzrange)
 
         return effect
 
@@ -491,8 +495,9 @@ class EffectProcCaller(StrategyProcCaller):
 
         effect_assets = []
         for r in res:
-            e = EffectAssetInput(r['asset_subcategory'], r['currency'], r['ticker_3m'], r['spot_ticker'],
-                                 r['carry_ticker'], r['usd_weight'], r['base'], r['region'])
+            # TODO change asset_subcategory when database is restructured
+            e = EffectAssetInput(r['currency'], r['currency'], r['ticker_3m'], r['spot_ticker'],
+                                 r['carry_ticker'], float(r['usd_weight']), r['base'], r['region'])
             e.asset_3m.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
                 r['ticker_3m'], r['asset_analytics_3m']
             )

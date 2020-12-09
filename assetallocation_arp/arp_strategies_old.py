@@ -31,7 +31,7 @@ def run_model(model_type, mat_file, input_file):
 
         strategy_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
 
-        outputs_effect = run_effect(strategy_inputs, all_data=all_data)
+        outputs_effect = run_effect(strategy_inputs)
 
         write_output_to_excel({models_names.Models.effect.name: (outputs_effect['profit_and_loss'],
                                                                  outputs_effect['signals_overview'],

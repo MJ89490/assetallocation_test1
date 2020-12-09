@@ -1,6 +1,9 @@
 from typing import List, Union, Optional, Tuple
 from abc import ABC, abstractmethod
 import datetime as dt
+from pathlib import Path
+from configparser import ConfigParser
+import json
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -271,6 +274,15 @@ class Effect(Strategy):
         self.carry_type = carry_type
         self.position_size = position_size
         self._asset_inputs = []
+        self.config_assets = []
+
+    @property
+    def config_assets(self) -> List[Asset]:
+        return self._currency_assets
+
+    @config_assets.setter
+    def config_assets(self, x: List[Asset]) -> None:
+        self._currency_assets = x
 
     @property
     def st_dev_window(self) -> int:
@@ -423,6 +435,19 @@ class Effect(Strategy):
     @trend_indicator.setter
     def trend_indicator(self, x: Union[str, TrendIndicator]) -> None:
         self._trend_indicator = x if isinstance(x, TrendIndicator) else TrendIndicator[x]
+
+    @property
+    def config_tickers(self) -> List[str]:
+        config = ConfigParser()
+        config.read(Path(__file__).parents[4] / 'config_effect_model' / 'all_currencies_effect.ini')
+        currencies_config = json.loads(config.get('currencies_base_implied', 'currencies_base_implied_data'))
+        spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
+        eur_usd_cr_config = config.get('eurusdcr_currency', 'eur_usd_cr_ticker')
+        jgenvuug_index_config = config.get('jgenvuug_index', 'jgenvuug_index_ticker')
+
+        all_tickers = [i[0] for i in currencies_config.values()]
+        all_tickers.extend([spxt_index_config, eur_usd_cr_config, jgenvuug_index_config])
+        return all_tickers
 
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
         """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
