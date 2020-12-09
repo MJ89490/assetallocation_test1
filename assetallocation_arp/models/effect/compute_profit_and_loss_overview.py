@@ -159,7 +159,10 @@ class ComputeProfitAndLoss:
         ytd_total_matr = cumulative_ret.loc[self.latest_date] * 10000
 
         # YTD P&L: Spot
-        ytd_spot_matr = ytd_total_matr * (ytd_spot_notional / ytd_total_notional)
+        try:
+            ytd_spot_matr = ytd_total_matr * (ytd_spot_notional / ytd_total_notional)
+        except ZeroDivisionError:
+            ytd_spot_matr = 0
 
         # YTD P&L: Carry
         ytd_carry_matr = ytd_total_matr - ytd_spot_matr
