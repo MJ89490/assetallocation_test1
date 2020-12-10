@@ -327,6 +327,8 @@
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_equities.js') }}"></script>
                 <script type="text/javascript">
                     positionsEquities({{positions_assets_sum['equities_pos_sum']|tojson}},
+                                      {{equities_fifth_percentile|tojson}},
+                                      {{equities_ninety_five_percentile|tojson}},
                                       {{positions_assets_sum['dates_positions_assets']|tojson}})
                 </script>
             </div>
@@ -335,7 +337,9 @@
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_bonds.js') }}"></script>
                 <script type="text/javascript">
                     positionsBonds({{positions_assets_sum['bonds_pos_sum']|tojson}},
-                                      {{positions_assets_sum['dates_positions_assets']|tojson}})
+                                   {{bonds_fifth_percentile|tojson}},
+                                   {{bonds_ninety_five_percentile|tojson}},
+                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
                 </script>
             </div>
             <div class="col-lg-4">
@@ -343,6 +347,8 @@
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_forex.js') }}"></script>
                 <script type="text/javascript">
                     positionsForex({{positions_assets_sum['forex_pos_sum']|tojson}},
+                                   {{forex_fifth_percentile|tojson}},
+                                   {{forex_ninety_five_percentile|tojson}},
                                    {{positions_assets_sum['dates_positions_assets']|tojson}})
                 </script>
             </div>

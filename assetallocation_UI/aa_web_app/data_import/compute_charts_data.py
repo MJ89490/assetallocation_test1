@@ -18,6 +18,7 @@ class TimesChartsDataComputations(object):
         self.signals = times_signals
         self.positions = times_positions
         self.returns = times_returns
+
         self._signals_comp = None
         self._positions_comp = None
         self._returns_comp = None
@@ -42,10 +43,6 @@ class TimesChartsDataComputations(object):
     @property
     def returns_dates_weekly_off(self) -> datetime:
         return self.returns.last_valid_index().date() - timedelta(days=7)
-
-    # @property
-    # def prev_year_end(self) -> datetime:
-    #     return datetime(self.max_returns_date.year, 1, 1) - timedelta(1)
 
     @property
     def signals_comp(self) -> pd.DataFrame:
@@ -78,6 +75,18 @@ class TimesChartsDataComputations(object):
     @returns_ytd.setter
     def returns_ytd(self, x: pd.DataFrame) -> None:
         self._returns_ytd = x
+
+    @property
+    def positions_assets_length(self):
+        #TODO change the date auto
+        return len(self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):])
+
+
+
+
+
+
+
 
     def compute_weekly_performance_all_assets_overview(self):
         """
@@ -278,11 +287,18 @@ class TimesChartsDataComputations(object):
         return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex,
                 "dates_positions_assets": dates_positions_assets}
 
+    @staticmethod
+    def compute_ninety_fifth_percentile(assets_values):
+        # Compute the 95th percentile
+        return np.percentile(assets_values, 95)
 
+    @staticmethod
+    def compute_fifth_percentile(assets_values):
+        # Compute the 5th percentile
+        return np.percentile(assets_values, 5)
 
-
-
-
+    def build_percentile_list(self, assets_percentile):
+        return [assets_percentile] * self.positions_assets_length
 
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance):

@@ -50,6 +50,26 @@ def main_data(obj_received_data_times: object):
 
     positions_assets_sum = obj_charts_comp.compute_positions_assets_charts(obj_received_data_times.strategy_weight)
 
+    # Percentile 95th
+    equities_ninety_five_perc = obj_charts_comp.compute_ninety_fifth_percentile(positions_assets_sum['equities_pos_sum'])
+    bonds_ninety_five_perc = obj_charts_comp.compute_ninety_fifth_percentile(positions_assets_sum['bonds_pos_sum'])
+    forex_ninety_five_perc = obj_charts_comp.compute_ninety_fifth_percentile(positions_assets_sum['forex_pos_sum'])
+
+    # Percentile 5th
+    equities_fifth_perc = obj_charts_comp.compute_fifth_percentile(positions_assets_sum['equities_pos_sum'])
+    bonds_fifth_perc = obj_charts_comp.compute_fifth_percentile(positions_assets_sum['bonds_pos_sum'])
+    forex_fifth_perc = obj_charts_comp.compute_fifth_percentile(positions_assets_sum['forex_pos_sum'])
+
+    # Build percentile list for positions charts
+    equities_ninety_five_percentile = obj_charts_comp.build_percentile_list(equities_ninety_five_perc)
+    bonds_ninety_five_percentile = obj_charts_comp.build_percentile_list(bonds_ninety_five_perc)
+    forex_ninety_five_percentile = obj_charts_comp.build_percentile_list(forex_ninety_five_perc)
+
+    equities_fifth_percentile = obj_charts_comp.build_percentile_list(equities_fifth_perc)
+    bonds_fifth_percentile = obj_charts_comp.build_percentile_list(bonds_fifth_perc)
+    forex_fifth_percentile = obj_charts_comp.build_percentile_list(forex_fifth_perc)
+
+
     results_positions = {"category_name": category_name,
                          "names_weekly_perf": names_weekly_perf,
                          "mom_signals": mom_signals,
@@ -73,7 +93,13 @@ def main_data(obj_received_data_times: object):
 
     template_data = {"positions": positions, "dates_pos": dates_pos, "names_pos": names_pos,
                      "sparklines_pos": sparklines_pos, "weekly_overall": weekly_overall,
-                     "signal_as_off": signal_as_off, "positions_assets_sum": positions_assets_sum}
+                     "signal_as_off": signal_as_off, "positions_assets_sum": positions_assets_sum,
+                     "equities_fifth_percentile": equities_fifth_percentile,
+                     "equities_ninety_five_percentile": equities_ninety_five_percentile,
+                     "bonds_ninety_five_percentile": bonds_ninety_five_percentile,
+                     "bonds_fifth_percentile": bonds_fifth_percentile,
+                     "forex_ninety_five_percentile": forex_ninety_five_percentile,
+                     "forex_fifth_percentile": forex_fifth_percentile}
 
     return template_data, zip_results_pos, zip_results_pos_overall, zip_results_perf, zip_results_perf_overall
 
