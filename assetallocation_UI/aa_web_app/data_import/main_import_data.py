@@ -69,7 +69,6 @@ def main_data(obj_received_data_times: object):
     bonds_fifth_percentile = obj_charts_comp.build_percentile_list(bonds_fifth_perc)
     forex_fifth_percentile = obj_charts_comp.build_percentile_list(forex_fifth_perc)
 
-
     results_positions = {"category_name": category_name,
                          "names_weekly_perf": names_weekly_perf,
                          "mom_signals": mom_signals,
@@ -78,6 +77,7 @@ def main_data(obj_received_data_times: object):
                          "delta_positions": delta_positions,
                          "trade_positions": trade_positions,
                          "size_positions": size}
+
     results_perf = {"weekly_performance_all_currencies": weekly_performance_all_currencies,
                     "ytd_performance_all_currencies": ytd_performance_all_currencies}
 
@@ -99,7 +99,13 @@ def main_data(obj_received_data_times: object):
                      "bonds_ninety_five_percentile": bonds_ninety_five_percentile,
                      "bonds_fifth_percentile": bonds_fifth_percentile,
                      "forex_ninety_five_percentile": forex_ninety_five_percentile,
-                     "forex_fifth_percentile": forex_fifth_percentile}
+                     "forex_fifth_percentile": forex_fifth_percentile,
+                     "mom_signals": mom_signals.tolist(),
+                     "prev_positions": previous_positions.tolist(),
+                     "new_positions": new_positions.tolist(),
+                     "assets_names": names_weekly_perf,
+                     "weekly_performance_all_currencies": weekly_performance_all_currencies.tolist(),
+                     "ytd_performance_all_currencies": ytd_performance_all_currencies.tolist()}
 
     return template_data, zip_results_pos, zip_results_pos_overall, zip_results_perf, zip_results_perf_overall
 

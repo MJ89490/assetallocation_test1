@@ -308,8 +308,41 @@
             </div>
         </div>
 
-        <!--Positions assets charts title-->
+        <!--Performance Title-->
+        <div class="row row-tables-positions">
+             <div class="col-lg-12">
+                 <table class="table table-hover">
+                     <thead>
+                        <tr>
+                            <th class="text-center pos-perf-title" scope="col">Performance</th>
+                        </tr>
+                     </thead>
+                 </table>
+             </div>
+        </div>
+
+        <!--Performance bar charts-->
         <div class="row row-positions-assets-charts">
+            <!--Weekly Performance-->
+            <div class="col-lg-6">
+                <div id="weekly_performance" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_weekly_performance.js') }}"></script>
+                <script type="text/javascript">
+                    weeklyPerformanceChart({{weekly_performance_all_currencies|tojson}}, {{assets_names|tojson}})
+                </script>
+            </div>
+            <!--YTD Performance-->
+            <div class="col-lg-6">
+                <div id="ytd_performance" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_ytd_performance.js') }}"></script>
+                <script type="text/javascript">
+                    ytdPerformanceChart({{ytd_performance_all_currencies|tojson}})
+                </script>
+            </div>
+        </div>
+
+        <!--Positions Title-->
+        <div class="row row-tables-positions">
              <div class="col-lg-12">
                  <table class="table table-hover">
                      <thead>
@@ -320,6 +353,35 @@
                  </table>
              </div>
         </div>
+
+        <!-- Positions bar charts -->
+        <div class="row row-positions-assets-charts">
+            <!--Mom signals-->
+            <div class="col-lg-4">
+                <div id="mom_signals" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_mom_signals.js') }}"></script>
+                <script type="text/javascript">
+                    momSignalsChart({{mom_signals|tojson}}, {{assets_names|tojson}})
+                </script>
+            </div>
+            <!--Previous Positions-->
+            <div class="col-lg-4">
+                <div id="previous_positions" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_previous_positions.js') }}"></script>
+                <script type="text/javascript">
+                    previousPositionsChart({{prev_positions|tojson}})
+                </script>
+            </div>
+            <!--New Positions-->
+            <div class="col-lg-4">
+                <div id="new_positions" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_new_positions.js') }}"></script>
+                <script type="text/javascript">
+                    newPositionsChart({{new_positions|tojson}})
+                </script>
+            </div>
+        </div>
+
         <!--Positions assets charts-->
         <div class="row row-positions-assets-charts">
             <div class="col-lg-4">
