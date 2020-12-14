@@ -40,13 +40,12 @@ def times_dashboard():
     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
                                                  obj_received_data_times.version_strategy)
 
-
     template_data, zip_results_pos, zip_results_pos_overall, zip_results_perf, zip_results_perf_overall = main_data(obj_received_data_times)
 
     if request.method == 'POST':
         if form.submit_ok_positions.data:
-            obj_times_charts_data.process_data_from_a_specific_date(start_date=form.start_date_times_inputs.data,
-                                                                    end_date=form.end_date_times_inputs.data)
+            obj_times_charts_data.compute_positions_assets(start_date=form.start_date_times_inputs.data,
+                                                           end_date=form.end_date_times_inputs.data)
 
     return render_template('times_dashboard.html', title='Dashboard', form=form, **template_data,
                            zip_results_pos=zip_results_pos, zip_results_pos_overall=zip_results_pos_overall,

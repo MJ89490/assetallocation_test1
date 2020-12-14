@@ -31,62 +31,47 @@ class TimesChartsDataComputations(object):
         self._returns_comp = None
         self._returns_ytd = None
 
+        self.positions_sum_start_date = None
+        self.positions_start_date = None
+        self.positions_end_date = None
+
     @property
     def signal_as_off(self):
-        return self.signals.last_valid_index().strftime("%d-%m-%Y")
+        return self.signals.last_valid_index().strftime('%d-%m-%Y')
 
-    # @property
-    # def max_signals_date(self) -> datetime:
-    #     return self.signals.last_valid_index()
-    #
-    # @property
-    # def max_returns_date(self) -> datetime:
-    #     return self.returns.last_valid_index()
-    #
-    # @property
-    # def max_positions_date(self) -> datetime:
-    #     return self.positions.last_valid_index()
-    #
-    # @property
-    # def returns_dates_weekly_off(self) -> datetime:
-    #     return self.returns.last_valid_index().date() - timedelta(days=7)
-    #
-    # @property
-    # def signals_comp(self) -> pd.DataFrame:
-    #     return self._signals_comp
-    #
-    # @signals_comp.setter
-    # def signals_comp(self, x: pd.DataFrame) -> None:
-    #     self._signals_comp = x
-    #
-    # @property
-    # def positions_comp(self) -> pd.DataFrame:
-    #     return self._positions_comp
-    #
-    # @positions_comp.setter
-    # def positions_comp(self, x: pd.DataFrame) -> None:
-    #     self._positions_comp = x
-    #
-    # @property
-    # def returns_comp(self) -> pd.DataFrame:
-    #     return self._returns_comp
-    #
-    # @returns_comp.setter
-    # def returns_comp(self, x: pd.DataFrame) -> None:
-    #     self._returns_comp = x
-    #
-    # @property
-    # def returns_ytd(self) -> pd.DataFrame:
-    #     return self._returns_ytd
-    #
-    # @returns_ytd.setter
-    # def returns_ytd(self, x: pd.DataFrame) -> None:
-    #     self._returns_ytd = x
-    #
-    # @property
-    # def positions_assets_length(self):
-    #     #TODO change the date auto
-    #     return len(self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):])
+    @property
+    def positions_sum_start_date(self):
+        return self._positions_sum_start_date
+
+    @positions_sum_start_date.setter
+    def positions_sum_start_date(self, value):
+        if value is None:
+            value = '14-08-2018'
+        self._positions_sum_start_date = value
+
+    @property
+    def positions_start_date(self):
+        return self._positions_start_date
+
+    @positions_start_date.setter
+    def positions_start_date(self, value):
+        if value is None:
+            value = '15-05-2018'
+        self._positions_start_date = value
+
+    @property
+    def positions_end_date(self):
+        return self._positions_end_date
+
+    @positions_end_date.setter
+    def positions_end_date(self, value):
+        if value is None:
+            value = '25-08-2018'
+        self._positions_end_date = value
+
+    @property
+    def positions_assets_length(self):
+        return len(self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):])
 
     def call_times_proc_caller(self, fund_name, version_strategy):
         apc = TimesProcCaller()
@@ -125,7 +110,7 @@ class TimesChartsDataComputations(object):
         values.extend(values_fx)
         values.extend(values_bond)
 
-        return [val * 100 for val in values], assets, category
+        return {'value': [val * 100 for val in values], 'assets': assets, 'category': category}
 
     @staticmethod
     def compute_trade_positions_all_assets_overview(delta)-> List[str]:
@@ -173,7 +158,7 @@ class TimesChartsDataComputations(object):
         return np.around(results, 4)
 
     @staticmethod
-    def classify_assets_by_category(names_assets, values_perf):
+    def classify_assets_by_category(names_assets, values_perf=None):
         """
         Function which classifies the assets per category
         :param names_assets: names of assets (Equities, FX, Bonds)
@@ -191,6 +176,14 @@ class TimesChartsDataComputations(object):
                 category_name.append('FX')
 
         return category_name, perf_dict
+
+    def build_percentile_list(self, assets_percentile):
+        """
+        Function which build a list of percentile
+        :param assets_percentile: percentile result
+        :return: a list of percentile
+        """
+        return [assets_percentile] * self.positions_assets_length
 
     def compute_weekly_performance_all_assets_overview(self):
         """
@@ -212,8 +205,10 @@ class TimesChartsDataComputations(object):
 
         weekly_perf_dict, category_name = self.classify_assets_by_category(names_weekly_perf, values_weekly_perf)
 
-        values, assets, category = self.sort_by_category_assets(weekly_perf_dict, category_name)
-        return self.round_results_all_assets_overview(values), assets, weekly_perf_dict, category
+        sort_weekly_perf = self.sort_by_category_assets(weekly_perf_dict, category_name)
+
+        return {'weekly_performance_all_currencies': self.round_results_all_assets_overview(sort_weekly_perf['values']),
+                'assets': sort_weekly_perf['assets'], 'category': sort_weekly_perf['category']}
 
     def compute_ytd_performance_all_assets_overview(self):
         """
@@ -243,8 +238,8 @@ class TimesChartsDataComputations(object):
 
         ytd_perf_dict, category_name = self.classify_assets_by_category(names_ytd_perf, values_ytd_perf)
 
-        values, assets, category = self.sort_by_category_assets(ytd_perf_dict, category_name)
-        return self.round_results_all_assets_overview(values), assets, ytd_perf_dict, category
+        sort_ytd_perf = self.sort_by_category_assets(ytd_perf_dict, category_name)
+        return {'ytd_performance_all_currencies': self.round_results_all_assets_overview(sort_ytd_perf['values'])}
 
     def compute_mom_signals_all_assets_overview(self):
         """
@@ -286,6 +281,14 @@ class TimesChartsDataComputations(object):
         return self.round_results_all_assets_overview(np.subtract(new_positions, prev_positions))
 
     def compute_size_positions_all_assets_overview(self, values, names, category_name, new_overall):
+        """
+        Function computing the size of each assets
+        :param values:
+        :param names:
+        :param category_name:
+        :param new_overall:
+        :return: a list of size for each asset
+        """
         df = pd.DataFrame(values, columns=['Values'])
         df['Assets'] = names
         df['Category'] = category_name
@@ -301,7 +304,13 @@ class TimesChartsDataComputations(object):
         return self.round_results_all_assets_overview(size)
 
     def compute_overall_performance_all_assets_overview(self, values, names, category_name):
-        #TODO gather df into one function
+        """
+        Function whic computes the performance for each asset
+        :param values:
+        :param names:
+        :param category_name:
+        :return: a list of performance depending on the category
+        """
         df = pd.DataFrame(values, columns=['Values'])
         df['Assets'] = names
         df['Category'] = category_name
@@ -311,7 +320,13 @@ class TimesChartsDataComputations(object):
                                                        df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
                                                        df.Values.sum()])
 
-    def compute_positions_assets_charts(self, strategy_weight):
+    def compute_sum_positions_assets_charts(self, strategy_weight, start_date):
+        """
+        Function which computes the positions of each asset
+        :param strategy_weight: weight of te strategy (0.46 as example)
+        :param start_date: start date of positions assets
+        :return: a ditionary with positions for each asset
+        """
         equities_names, bonds_names, forex_names = [], [], []
         names = self.positions.columns.to_list()
 
@@ -323,9 +338,11 @@ class TimesChartsDataComputations(object):
             else:
                 forex_names.append(name)
 
-        equities = self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):, equities_names]
-        bonds = self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):, bonds_names]
-        forex = self.positions.loc[pd.to_datetime('14-08-2018', format='%d-%m-%Y'):, forex_names]
+        # Start date of positions
+        self.positions_sum_start_date = start_date
+        equities = self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):, equities_names]
+        bonds = self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):, bonds_names]
+        forex = self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):, forex_names]
 
         dates_positions_assets = equities.index.strftime("%Y-%m-%d").to_list()
 
@@ -336,16 +353,17 @@ class TimesChartsDataComputations(object):
         return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex,
                 "dates_positions_assets": dates_positions_assets}
 
-    def build_percentile_list(self, assets_percentile):
+    def compute_positions_assets(self, start_date, end_date):
         """
-        Function which build a list of percentile
-        :param assets_percentile: percentile result
-        :return: a list of percentile
+        Process positions depending on start and end date, selected by the user on the dashboard
+        :param start_date: start date of positions
+        :param end_date: end date of positions
+        :return:
         """
-        return [assets_percentile] * self.positions_assets_length
-
-    def process_data_from_a_specific_date(self, start_date='2018-05-15', end_date='2020-08-25'):
         positions, sparklines_pos = [], []
+        # Start and end dates positions
+        self.positions_start_date, self.positions_end_date = start_date, end_date
+
         columns = self.positions.columns.tolist()
         index_start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
         index_end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
@@ -360,11 +378,17 @@ class TimesChartsDataComputations(object):
         dates_pos = [self.positions.loc[index_start_date:index_end_date].index.strftime("%Y-%m-%d").to_list()]
         return positions, dates_pos, names_pos, sparklines_pos
 
-    def run_times_charts_data_computations(self, strategy_weight):
+    @staticmethod
+    def build_dict_ready_for_zip(*results, keys):
+        return {keys[key]: results[key] for key in range(len(keys))}
 
-        weekly_performance_all_currencies, names_weekly_perf, weekly_perf_dict, category_name = self.compute_weekly_performance_all_assets_overview()
-        ytd_performance_all_currencies, names_ytd_perf, ytd_perf_dict, category_name = self.compute_ytd_performance_all_assets_overview()
-        positions, dates_pos, names_pos, sparklines_pos = self.process_data_from_a_specific_date()
+    #TODO PUT THAT IN TH MAIN
+    def run_times_charts_data_computations(self, strategy_weight, start_date_sum, start_date, end_date):
+
+        weekly_all_perf = self.compute_weekly_performance_all_assets_overview()
+        ytd_all_perf = self.compute_ytd_performance_all_assets_overview()
+
+        positions, dates_pos, names_pos, sparklines_pos = self.compute_positions_assets(start_date, end_date)
         mom_signals = self.compute_mom_signals_all_assets_overview()
 
         previous_positions = self.compute_previous_positions_all_assets_overview(strategy_weight)
@@ -373,15 +397,21 @@ class TimesChartsDataComputations(object):
         delta_positions = self.compute_delta_positions_all_assets_overview(previous_positions, new_positions)
         trade_positions = self.compute_trade_positions_all_assets_overview(delta_positions)
 
-        # TODO to improve
-        weekly_overall = self.compute_overall_performance_all_assets_overview(weekly_performance_all_currencies, names_weekly_perf, category_name)
-        ytd_overall = self.compute_overall_performance_all_assets_overview(ytd_performance_all_currencies, names_ytd_perf, category_name)
-        pre_overall = self.compute_overall_performance_all_assets_overview(previous_positions, names_weekly_perf, category_name)
-        new_overall = self.compute_overall_performance_all_assets_overview(new_positions, names_weekly_perf, category_name)
+        weekly_overall = self.compute_overall_performance_all_assets_overview(weekly_all_perf['weekly_performance_all_currencies'],
+                                                                              weekly_all_perf['names_weekly_perf'],
+                                                                              weekly_all_perf['category_name'])
+        ytd_overall = self.compute_overall_performance_all_assets_overview(ytd_all_perf['ytd_performance_all_currencies'],
+                                                                           weekly_all_perf['assets'],
+                                                                           weekly_all_perf['category'])
+        pre_overall = self.compute_overall_performance_all_assets_overview(previous_positions, weekly_all_perf['assets'],
+                                                                           weekly_all_perf['category'])
+        new_overall = self.compute_overall_performance_all_assets_overview(new_positions, weekly_all_perf['assets'],
+                                                                           weekly_all_perf['category'])
 
-        size = self.compute_size_positions_all_assets_overview(new_positions, names_weekly_perf, category_name, new_overall)
+        size_pos = self.compute_size_positions_all_assets_overview(new_positions, weekly_all_perf['assets'],
+                                                                   weekly_all_perf['category'], new_overall)
 
-        positions_assets_sum = self.compute_positions_assets_charts(strategy_weight)
+        positions_assets_sum = self.compute_sum_positions_assets_charts(strategy_weight, start_date_sum)
 
         # Percentile 95th
         equities_ninety_five_perc = self.compute_ninety_fifth_percentile(positions_assets_sum['equities_pos_sum'])
@@ -402,31 +432,36 @@ class TimesChartsDataComputations(object):
         bonds_fifth_percentile = self.build_percentile_list(bonds_fifth_perc)
         forex_fifth_percentile = self.build_percentile_list(forex_fifth_perc)
 
-        results_positions = {"category_name": category_name,
-                             "names_weekly_perf": names_weekly_perf,
-                             "mom_signals": mom_signals,
-                             "prev_positions": previous_positions,
-                             "new_positions": new_positions,
-                             "delta_positions": delta_positions,
-                             "trade_positions": trade_positions,
-                             "size_positions": size}
+        pos_keys = ["category_name", "names_weekly_perf", "mom_signals", "prev_positions", "new_positions",
+                    "delta_positions", "trade_positions", "size_positions"]
+        perf_keys = ["weekly_performance_all_currencies", "ytd_performance_all_currencies"]
+        pos_overall_keys = ["category_name",  "pre_overall", "new_overall"]
+        perf_overall_keys = ["weekly_overall", "ytd_overall"]
 
-        results_perf = {"weekly_performance_all_currencies": weekly_performance_all_currencies,
-                        "ytd_performance_all_currencies": ytd_performance_all_currencies}
-
-        results_positions_overall = {"category_name": ['Equities', 'FX', 'Bonds', 'Total'],
-                                     "pre_overall": pre_overall, "new_overall": new_overall}
-
-        results_perf_overall = {"weekly_overall": weekly_overall, "ytd_overall": ytd_overall}
+        results_positions = self.build_dict_ready_for_zip(weekly_all_perf['category'],
+                                                          weekly_all_perf['assets'],
+                                                          mom_signals, previous_positions,
+                                                          new_positions,
+                                                          delta_positions, trade_positions,
+                                                          size_pos, keys=pos_keys)
+        results_perf = self.build_dict_ready_for_zip(weekly_all_perf['weekly_performance_all_currencies'],
+                                                     ytd_all_perf['ytd_performance_all_currencies'], keys=perf_keys)
+        results_positions_overall = self.build_dict_ready_for_zip(['Equities', 'FX', 'Bonds', 'Total'],
+                                                                  pre_overall, new_overall, keys=pos_overall_keys)
+        results_perf_overall = self.build_dict_ready_for_zip(weekly_overall, ytd_overall, keys=perf_overall_keys)
 
         zip_results_pos = self.zip_results_performance_all_assets_overview(results_positions)
         zip_results_pos_overall = self.zip_results_performance_all_assets_overview(results_positions_overall)
         zip_results_perf = self.zip_results_performance_all_assets_overview(results_perf)
         zip_results_perf_overall = self.zip_results_performance_all_assets_overview(results_perf_overall)
 
-        template_data = {"positions": positions, "dates_pos": dates_pos, "names_pos": names_pos,
-                         "sparklines_pos": sparklines_pos, "weekly_overall": weekly_overall,
-                         "signal_as_off": self.signal_as_off, "positions_assets_sum": positions_assets_sum,
+        template_data = {"positions": positions,
+                         "dates_pos": dates_pos,
+                         "names_pos": names_pos,
+                         "sparklines_pos": sparklines_pos,
+                         "weekly_overall": weekly_overall,
+                         "signal_as_off": self.signal_as_off,
+                         "positions_assets_sum": positions_assets_sum,
                          "equities_fifth_percentile": equities_fifth_percentile,
                          "equities_ninety_five_percentile": equities_ninety_five_percentile,
                          "bonds_ninety_five_percentile": bonds_ninety_five_percentile,
@@ -436,9 +471,9 @@ class TimesChartsDataComputations(object):
                          "mom_signals": mom_signals.tolist(),
                          "prev_positions": previous_positions.tolist(),
                          "new_positions": new_positions.tolist(),
-                         "assets_names": names_weekly_perf,
-                         "weekly_performance_all_currencies": weekly_performance_all_currencies.tolist(),
-                         "ytd_performance_all_currencies": ytd_performance_all_currencies.tolist(),
+                         "assets_names": weekly_all_perf['assets'],
+                         "weekly_performance_all_currencies": weekly_all_perf['weekly_performance_all_currencies'].tolist(),
+                         "ytd_performance_all_currencies": ytd_all_perf['ytd_performance_all_currencies'].tolist(),
                          "pre_overall": pre_overall.tolist()}
 
         return template_data, zip_results_pos, zip_results_pos_overall, zip_results_perf, zip_results_perf_overall
