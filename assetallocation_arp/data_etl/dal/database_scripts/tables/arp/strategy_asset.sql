@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS "arp"."strategy_asset" CASCADE
 CREATE TABLE "arp"."strategy_asset"
 (
 	"id" serial NOT NULL,
+	"strategy_asset_group_id" INTEGER NOT NULL,
 	"asset_id" integer NOT NULL,
 	"name" varchar(50) NOT NULL,
 	"execution_state_id" integer NOT NULL
@@ -35,6 +36,10 @@ ALTER TABLE "arp"."strategy_asset" ADD CONSTRAINT "strategy_asset_pkey"
 
 ALTER TABLE "arp"."strategy_asset" ADD CONSTRAINT "strategy_asset_asset_fkey"
 	FOREIGN KEY ("asset_id") REFERENCES "asset"."asset" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
+ALTER TABLE "arp"."strategy_asset" ADD CONSTRAINT "strategy_asset_strategy_asset_group_fkey"
+	FOREIGN KEY ("strategy_asset_group_id") REFERENCES "arp"."strategy_asset_group" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
 ALTER TABLE "arp"."strategy_asset" ADD CONSTRAINT "strategy_asset_execution_state_fkey"
