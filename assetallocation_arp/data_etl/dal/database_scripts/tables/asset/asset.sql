@@ -23,9 +23,8 @@ CREATE TABLE "asset"."asset"
 	"description" varchar(100)	 NULL,
 	"currency_id" integer NULL,
 	"country_id" integer NULL,
-	"category" varchar(50)	 NULL,
 	"execution_state_id" integer NULL,
-	"subcategory" varchar(50)	 NULL,
+	"asset_group_id" integer NOT NULL,
 	"is_tr" boolean NULL,
 	"ticker" varchar(50)	 NOT NULL
 )
@@ -40,20 +39,6 @@ ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_pkey"
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_ticker_key" UNIQUE ("ticker")
 ;
 
-ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_category_check" CHECK (category in ('Equity', 'Fixed Income', 'FX', 'Commodity', 'Credit'))
-;
-
-ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_category_subcategory_check"CHECK (
-	(category in ('Equity', 'Fixed Income', 'FX', 'Commodity', 'Credit'))
-AND
-	(CASE
-		WHEN category = 'Equity' THEN subcategory in ('US_Equities', 'EU_Equities', 'JP_Equities', 'HK_Equities')
-		WHEN category = 'Fixed Income' THEN subcategory in ('US_10_y_Bonds', 'UK_10_y_Bonds', 'EU_10_y_Bonds', 'CA_10_y_Bonds')
-		WHEN category = 'FX' THEN subcategory in ('JPY', 'EUR', 'AUD', 'CAD', 'GBP')
-	END)
-)
-;
-
 /* Create Foreign Key Constraints */
 
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_country_fkey"
@@ -62,6 +47,10 @@ ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_country_fkey"
 
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_currency_fkey"
 	FOREIGN KEY ("currency_id") REFERENCES "lookup"."currency" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
+ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_asset_group_fkey"
+	FOREIGN KEY ("asset_group_id") REFERENCES "asset"."asset_group" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_execution_state_fkey"
