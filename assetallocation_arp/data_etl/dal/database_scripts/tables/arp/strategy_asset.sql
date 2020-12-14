@@ -32,6 +32,9 @@ ALTER TABLE "arp"."strategy_asset" ADD CONSTRAINT "strategy_asset_pkey"
 	PRIMARY KEY ("id")
 ;
 
+ALTER TABLE "arp"."strategy_asset" ADD CONSTRAINT "strategy_asset_group_id_name_key" UNIQUE ("strategy_asset_group_id", "name")
+;
+
 /* Create Foreign Key Constraints */
 
 ALTER TABLE "arp"."strategy_asset" ADD CONSTRAINT "strategy_asset_asset_fkey"
