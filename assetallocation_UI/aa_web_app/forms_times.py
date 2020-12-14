@@ -74,8 +74,9 @@ class InputsTimesModel(FlaskForm):
 
     START_DATE = 'Start Date'
     END_DATE = 'End Date'
-    start_date_inputs = StringField(START_DATE)
-    end_date_inputs = StringField(END_DATE)
+    start_date_times_inputs = StringField(START_DATE)
+    end_date_times_inputs = StringField(END_DATE)
+    submit_ok_positions = SubmitField('ok')
 
     existing_funds = get_fund_names()
     input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))

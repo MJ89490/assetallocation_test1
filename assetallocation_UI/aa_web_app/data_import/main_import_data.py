@@ -31,7 +31,7 @@ def main_data(obj_received_data_times: object):
 
     weekly_performance_all_currencies, names_weekly_perf, weekly_perf_dict, category_name = obj_charts_comp.compute_weekly_performance_all_assets_overview()
     ytd_performance_all_currencies, names_ytd_perf, ytd_perf_dict, category_name = obj_charts_comp.compute_ytd_performance_all_assets_overview()
-    positions, dates_pos, names_pos, sparklines_pos = obj_charts_comp.process_data_from_a_specific_date(data['times_positions'])
+    positions, dates_pos, names_pos, sparklines_pos = obj_charts_comp.process_data_from_a_specific_date()
     mom_signals = obj_charts_comp.compute_mom_signals_all_assets_overview()
 
     previous_positions = obj_charts_comp.compute_previous_positions_all_assets_overview(obj_received_data_times.strategy_weight)
