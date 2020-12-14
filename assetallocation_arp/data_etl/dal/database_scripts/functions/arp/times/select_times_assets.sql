@@ -29,6 +29,10 @@ BEGIN
     WHERE
       t.version = strategy_version
       AND sa.name in ('future', 'signal')
+    GROUP BY
+      tag.strategy_asset_group_id,
+      tag.cost,
+      tag.s_leverage
   ;
 END
 $$;

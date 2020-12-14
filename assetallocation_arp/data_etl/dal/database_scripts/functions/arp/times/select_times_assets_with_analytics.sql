@@ -17,17 +17,26 @@ $$
 BEGIN
   return query
     WITH times_assets as (
-      SELECT
-        ta.future_asset_id,
-        ta.signal_asset_id,
-        ta.asset_subcategory,
-        ta.cost,
-        ta.s_leverage
-      FROM
-        arp.times_asset ta
-        JOIN arp.times t on ta.strategy_id = t.strategy_id
-      WHERE
-        t.version = strategy_version
+    SELECT
+      string_agg(a.id, '') FILTER (WHERE sa.name = 'future') as future_asset_id,
+      string_agg(a.id, '') FILTER (WHERE sa.name = 'signal') as signal_asset_id,
+      string_agg(ag.subcategory, '') FILTER (WHERE sa.name = 'future') as asset_subcategory,
+      tag.cost,
+      tag.s_leverage
+    FROM
+      arp.times t
+      JOIN arp.strategy_asset_group sag ON t.strategy_id = sag.strategy_id
+      JOIN arp.times_asset_group tag ON sag.id = tag.strategy_asset_group_id
+      JOIN arp.strategy_asset sa ON sag.id = sa.strategy_asset_group_id
+      JOIN asset.asset a ON sa.asset_id = a.id
+      JOIN asset.asset_group ag ON a.asset_group_id = ag.id
+    WHERE
+      t.version = strategy_version
+      AND sa.name in ('future', 'signal')
+    GROUP BY
+      tag.strategy_asset_group_id,
+      tag.cost,
+      tag.s_leverage
     ),
     signals as (
       SELECT
