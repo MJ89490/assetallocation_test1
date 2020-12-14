@@ -263,27 +263,27 @@ class EffectDataFrameConverter(DataFrameConverter):
 
     @classmethod
     def create_strategy_analytics(
-            cls, notional: pd.Series, volatility: pd.Series, long_gross: pd.Series,
-            short_gross: pd.Series, frequency: Frequency
+            cls, total_excl_signals: pd.Series, total_incl_signals: pd.Series, spot_incl_signals: pd.Series,
+            spot_excl_signals: pd.Series, frequency: Frequency
     ) -> List[FundStrategyAnalytic]:
         """
-        :param notional: index of dates
-        :param volatility: index of dates
-        :param long_gross: index of dates
-        :param short_gross: index of dates
+        :param total_excl_signals: index of dates
+        :param total_incl_signals: index of dates
+        :param spot_incl_signals: index of dates
+        :param spot_excl_signals: index of dates
         :param frequency: frequency of analytics
         :return:
         """
         # TODO change depending on Simone's input
         analytics = list(
             chain(
-                cls.series_to_strategy_analytics(notional, Category.Performance,
+                cls.series_to_strategy_analytics(total_excl_signals, Category.Performance,
                                                  Performance['total return index incl signals'], frequency),
-                cls.series_to_strategy_analytics(volatility, Category.Performance,
+                cls.series_to_strategy_analytics(total_incl_signals, Category.Performance,
                                                  Performance['total return index excl signals'], frequency),
-                cls.series_to_strategy_analytics(long_gross, Category.Performance,
+                cls.series_to_strategy_analytics(spot_incl_signals, Category.Performance,
                                                  Performance['spot index incl signals'], frequency),
-                cls.series_to_strategy_analytics(short_gross, Category.Performance,
+                cls.series_to_strategy_analytics(spot_excl_signals, Category.Performance,
                                                  Performance['spot index excl signals'], frequency)
             )
         )

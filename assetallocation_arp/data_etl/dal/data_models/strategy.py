@@ -4,6 +4,7 @@ import datetime as dt
 from pathlib import Path
 from configparser import ConfigParser
 import json
+import pandas as pd
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -455,28 +456,33 @@ class Effect(Strategy):
         effect_outputs, write_logs = main_effect.run_effect(self)
 
         """
-        {'profit_and_loss': profit_and_loss,
-                      'signals_overview': signals_overview,
-                      'trades_overview': trades_overview,
-                      'rates': rates,
-                      'risk_returns': risk_returns,
-                      'combo': currencies_calculations['combo_curr'],
-                      'log_ret': agg_currencies['log_returns_excl_costs'],
-                      'pos_size': float(strategy_inputs['input_position_size_effect'].item())/100,
-                      'region': process_usd_eur_data_effect['region_config'],
-                      'agg_dates': agg_curr['agg_dates'],
-                      'total_excl_signals': agg_curr['agg_total_excl_signals'],
-                      'total_incl_signals': agg_curr['agg_total_incl_signals'],
-                      'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
-                      'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
+        {'profit_and_loss': profit_and_loss, - dashboard
+          'signals_overview': signals_overview, - dashboard
+          'trades_overview': trades_overview, - dashboard
+          'rates': rates, - dashboard
+          'risk_returns': risk_returns, - dashboard
+          'combo': currencies_calculations['combo_curr'] - dashboard,
+          'log_ret': agg_currencies['log_returns_excl_costs'] - dashboard,
+          'region': process_usd_eur_data_effect['region_config'] - dashboard,
+          'agg_dates': agg_curr['agg_dates'],
+          'total_excl_signals': agg_curr['agg_total_excl_signals'],
+          'total_incl_signals': agg_curr['agg_total_incl_signals'],
+          'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
+          'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
                   
                   write_logs = {'currency_logs': currency_logs}
         """
         # TODO change depending on Simone's input
-        asset_analytics = EffectDataFrameConverter.create_asset_analytics(contribution)
-        asset_weights = EffectDataFrameConverter.df_to_asset_weights(exposure, Frequency.monthly)
-        strategy_analytics = EffectDataFrameConverter.create_strategy_analytics(returns['returns'], returns['returns_cum'],
-            returns['returns_net_cum'], returns['strength_of_signal'])
+        asset_analytics = EffectDataFrameConverter.create_asset_analytics(contribution, self.frequency)
+        asset_weights = EffectDataFrameConverter.df_to_asset_weights(exposure, self.frequency)
+
+        total_excl_signals = pd.Series(effect_outputs['total_excl_signals'], index=effect_outputs['agg_dates'])
+        total_incl_signals = pd.Series(effect_outputs['total_incl_signals'], index=effect_outputs['agg_dates'])
+        spot_incl_signals = pd.Series(effect_outputs['spot_incl_signals'], index=effect_outputs['agg_dates'])
+        spot_excl_signals = pd.Series(effect_outputs['spot_excl_signals'], index=effect_outputs['agg_dates'])
+        strategy_analytics = EffectDataFrameConverter.create_strategy_analytics(
+            total_excl_signals, total_incl_signals,spot_incl_signals, spot_excl_signals, self.frequency
+        )
         analytics = asset_analytics + strategy_analytics
         return analytics, asset_weights
 
