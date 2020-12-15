@@ -19,9 +19,9 @@ DROP TABLE IF EXISTS "asset"."asset_group" CASCADE
 CREATE TABLE "asset"."asset_group"
 (
 	"id" serial NOT NULL,
-	"category" varchar(50)	 NULL,
+	"category" text NOT NULL,
 	"execution_state_id" integer NULL,
-	"subcategory" varchar(50)	 NULL
+	"subcategory" text NOT NULL
 )
 ;
 
