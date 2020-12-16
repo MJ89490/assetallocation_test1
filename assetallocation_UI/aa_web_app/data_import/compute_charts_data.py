@@ -3,6 +3,7 @@ from pandas.tseries import offsets
 from calendar import monthrange
 from typing import Dict
 from typing import List
+from typing import Tuple
 import numpy as np
 
 import pandas as pd
@@ -36,35 +37,35 @@ class TimesChartsDataComputations(object):
         self.positions_end_date = None
 
     @property
-    def signal_as_off(self):
+    def signal_as_off(self) -> datetime:
         return self.signals.last_valid_index().strftime('%d-%m-%Y')
 
     @property
-    def positions_sum_start_date(self):
+    def positions_sum_start_date(self) -> str:
         return self._positions_sum_start_date
 
     @positions_sum_start_date.setter
-    def positions_sum_start_date(self, value):
+    def positions_sum_start_date(self, value: str) -> None:
         if value is None:
             value = '14-08-2018'
         self._positions_sum_start_date = value
 
     @property
-    def positions_start_date(self):
+    def positions_start_date(self) -> str:
         return self._positions_start_date
 
     @positions_start_date.setter
-    def positions_start_date(self, value):
+    def positions_start_date(self, value: str) -> None:
         if value is None:
             value = '15-05-2018'
         self._positions_start_date = value
 
     @property
-    def positions_end_date(self):
+    def positions_end_date(self) -> str:
         return self._positions_end_date
 
     @positions_end_date.setter
-    def positions_end_date(self, value):
+    def positions_end_date(self, value: str) -> None:
         if value is None:
             value = '25-08-2018'
         self._positions_end_date = value
@@ -73,7 +74,13 @@ class TimesChartsDataComputations(object):
     def positions_assets_length(self):
         return len(self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):])
 
-    def call_times_proc_caller(self, fund_name, version_strategy):
+    def call_times_proc_caller(self, fund_name: str, version_strategy: str) -> None:
+        """
+        Call Times proc caller to grab the data from the db
+        :param fund_name: name of the current fund (example: f1, f2,...)
+        :param version_strategy: version of the current strategy (version1, version2, ...)
+        :return: None
+        """
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy)
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
@@ -88,8 +95,14 @@ class TimesChartsDataComputations(object):
         self.positions = weight_df
 
     @staticmethod
-    def sort_by_category_assets(weekly_perf_dict, category_name):
-        df = pd.DataFrame(weekly_perf_dict.items(), columns=['Assets', 'Values'])
+    def sort_by_category_assets(values_dict: dict, category_name: list) -> Dict[str, ]:
+        """
+        Function which sorts the assets by category (Equities, Bonds, Forex)
+        :param values_dict: values of assets
+        :param category_name: Equities or Forex or Bonds
+        :return: a dictionary
+        """
+        df = pd.DataFrame(values_dict.items(), columns=['Assets', 'Values'])
         df['Category'] = category_name
         # Assets
         assets = df.loc[df['Category'] == 'Equities'].Assets.tolist()
@@ -113,15 +126,15 @@ class TimesChartsDataComputations(object):
         return {'value': [val * 100 for val in values], 'assets': assets, 'category': category}
 
     @staticmethod
-    def compute_trade_positions_all_assets_overview(delta)-> List[str]:
+    def compute_trade_positions_all_assets_overview(delta: list) -> List[str]:
         """
         Compute the trade for each asset
-        :return: a list with trade for each asset
+        :return: a list with trades for each asset
         """
         return ['SELL' if val < 0 else 'BUY' for val in delta]
 
     @staticmethod
-    def compute_ninety_fifth_percentile(assets_values):
+    def compute_ninety_fifth_percentile(assets_values: pd.DataFrame) -> float:
         """
         Compute  the 95th percentile
         :param assets_values: positions assets
@@ -130,7 +143,7 @@ class TimesChartsDataComputations(object):
         return np.percentile(assets_values, 95)
 
     @staticmethod
-    def compute_fifth_percentile(assets_values):
+    def compute_fifth_percentile(assets_values: pd.DataFrame) -> float:
         """
         Compute the 5th percentile
         :param assets_values: positions of assets
@@ -139,26 +152,26 @@ class TimesChartsDataComputations(object):
         return np.percentile(assets_values, 5)
 
     @staticmethod
-    def zip_results_performance_all_assets_overview(results_performance):
+    def zip_results_performance_all_assets_overview(results_performance: dict):
         """
         Function zipping performances results
-        :param results_performance:
+        :param results_performance: dict with all assets performances
         :return: a zip list
         """
         print(list(zip(*results_performance.values())))
         return zip(*results_performance.values())
 
     @staticmethod
-    def round_results_all_assets_overview(results):
+    def round_results_all_assets_overview(results: list) -> List[float]:
         """
         Function rounding any results to 4
-        :param results:
+        :param results: list of results that should be round up
         :return: rounded list
         """
         return np.around(results, 4)
 
     @staticmethod
-    def classify_assets_by_category(names_assets, values_perf=None):
+    def classify_assets_by_category(names_assets: list, values_perf=None) -> Tuple[List[str], Dict[str, float]]:
         """
         Function which classifies the assets per category
         :param names_assets: names of assets (Equities, FX, Bonds)
@@ -177,7 +190,7 @@ class TimesChartsDataComputations(object):
 
         return category_name, perf_dict
 
-    def build_percentile_list(self, assets_percentile):
+    def build_percentile_list(self, assets_percentile: list) -> List[float]:
         """
         Function which build a list of percentile
         :param assets_percentile: percentile result
@@ -185,7 +198,7 @@ class TimesChartsDataComputations(object):
         """
         return [assets_percentile] * self.positions_assets_length
 
-    def compute_weekly_performance_all_assets_overview(self):
+    def compute_weekly_performance_all_assets_overview(self) -> Dict[str, List[float]]:
         """
         Compute the weekly performance for each assets
         :return:
@@ -210,7 +223,7 @@ class TimesChartsDataComputations(object):
         return {'weekly_performance_all_currencies': self.round_results_all_assets_overview(sort_weekly_perf['values']),
                 'assets': sort_weekly_perf['assets'], 'category': sort_weekly_perf['category']}
 
-    def compute_ytd_performance_all_assets_overview(self):
+    def compute_ytd_performance_all_assets_overview(self) -> Dict[str,  List[float]]:
         """
         Compute the YTD performance for each asset
         :return: a list with ytd performance for each asset
@@ -241,7 +254,7 @@ class TimesChartsDataComputations(object):
         sort_ytd_perf = self.sort_by_category_assets(ytd_perf_dict, category_name)
         return {'ytd_performance_all_currencies': self.round_results_all_assets_overview(sort_ytd_perf['values'])}
 
-    def compute_mom_signals_all_assets_overview(self):
+    def compute_mom_signals_all_assets_overview(self) -> np.ndarray:
         """
         Compute the Mom signals for each asset
         :return: a list with signals for each asset
@@ -251,7 +264,7 @@ class TimesChartsDataComputations(object):
 
         return self.round_results_all_assets_overview(self.signals.loc[last_date].values.tolist())
 
-    def compute_previous_positions_all_assets_overview(self, strategy_weight) -> List[float]:
+    def compute_previous_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
         """
         Compute the previous positions for each asset
         :return: a list with previous positions for each asset
@@ -263,7 +276,7 @@ class TimesChartsDataComputations(object):
 
         return self.round_results_all_assets_overview(self.positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
 
-    def compute_new_positions_all_assets_overview(self, strategy_weight)-> List[float]:
+    def compute_new_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
         """
         Compute the new positions for each asset
         :return: a list with new positions for each asset
@@ -273,14 +286,14 @@ class TimesChartsDataComputations(object):
 
         return self.round_results_all_assets_overview(self.positions.loc[last_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
 
-    def compute_delta_positions_all_assets_overview(self, prev_positions, new_positions)-> List[float]:
+    def compute_delta_positions_all_assets_overview(self, prev_positions: pd.DataFrame, new_positions: pd.DataFrame)-> np.ndarray:
         """
         Compute the delta for each asset
         :return: a list with delta for each asset
         """
         return self.round_results_all_assets_overview(np.subtract(new_positions, prev_positions))
 
-    def compute_size_positions_all_assets_overview(self, values, names, category_name, new_overall):
+    def compute_size_positions_all_assets_overview(self, values: list, names: list, category_name: list, new_overall: pd.DataFrame) -> np.ndarray:
         """
         Function computing the size of each assets
         :param values:
@@ -303,7 +316,7 @@ class TimesChartsDataComputations(object):
 
         return self.round_results_all_assets_overview(size)
 
-    def compute_overall_performance_all_assets_overview(self, values, names, category_name):
+    def compute_overall_performance_all_assets_overview(self, values: list, names: list, category_name: list) -> np.ndarray:
         """
         Function whic computes the performance for each asset
         :param values:
@@ -320,7 +333,7 @@ class TimesChartsDataComputations(object):
                                                        df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
                                                        df.Values.sum()])
 
-    def compute_sum_positions_assets_charts(self, strategy_weight, start_date):
+    def compute_sum_positions_assets_charts(self, strategy_weight: float, start_date: str) -> Dict[str, List[float]]:
         """
         Function which computes the positions of each asset
         :param strategy_weight: weight of te strategy (0.46 as example)
@@ -353,7 +366,7 @@ class TimesChartsDataComputations(object):
         return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex,
                 "dates_positions_assets": dates_positions_assets}
 
-    def compute_positions_assets(self, start_date, end_date):
+    def compute_positions_assets(self, start_date: str, end_date: str) -> Tuple[List[float], List[float], List[float], List[float]]:
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -379,7 +392,7 @@ class TimesChartsDataComputations(object):
         return positions, dates_pos, names_pos, sparklines_pos
 
     @staticmethod
-    def build_dict_ready_for_zip(*results, keys):
+    def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:
         return {keys[key]: results[key] for key in range(len(keys))}
 
     #TODO PUT THAT IN TH MAIN
