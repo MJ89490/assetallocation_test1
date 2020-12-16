@@ -95,7 +95,7 @@ class TimesChartsDataComputations(object):
         self.positions = weight_df
 
     @staticmethod
-    def sort_by_category_assets(values_dict: dict, category_name: list) -> Dict[str, ]:
+    def sort_by_category_assets(values_dict: dict, category_name: list):
         """
         Function which sorts the assets by category (Equities, Bonds, Forex)
         :param values_dict: values of assets
@@ -395,98 +395,3 @@ class TimesChartsDataComputations(object):
     def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:
         return {keys[key]: results[key] for key in range(len(keys))}
 
-    #TODO PUT THAT IN TH MAIN
-    def run_times_charts_data_computations(self, strategy_weight, start_date_sum, start_date, end_date):
-
-        weekly_all_perf = self.compute_weekly_performance_all_assets_overview()
-        ytd_all_perf = self.compute_ytd_performance_all_assets_overview()
-
-        positions, dates_pos, names_pos, sparklines_pos = self.compute_positions_assets(start_date, end_date)
-        mom_signals = self.compute_mom_signals_all_assets_overview()
-
-        previous_positions = self.compute_previous_positions_all_assets_overview(strategy_weight)
-        new_positions = self.compute_new_positions_all_assets_overview(strategy_weight)
-
-        delta_positions = self.compute_delta_positions_all_assets_overview(previous_positions, new_positions)
-        trade_positions = self.compute_trade_positions_all_assets_overview(delta_positions)
-
-        weekly_overall = self.compute_overall_performance_all_assets_overview(weekly_all_perf['weekly_performance_all_currencies'],
-                                                                              weekly_all_perf['names_weekly_perf'],
-                                                                              weekly_all_perf['category_name'])
-        ytd_overall = self.compute_overall_performance_all_assets_overview(ytd_all_perf['ytd_performance_all_currencies'],
-                                                                           weekly_all_perf['assets'],
-                                                                           weekly_all_perf['category'])
-        pre_overall = self.compute_overall_performance_all_assets_overview(previous_positions, weekly_all_perf['assets'],
-                                                                           weekly_all_perf['category'])
-        new_overall = self.compute_overall_performance_all_assets_overview(new_positions, weekly_all_perf['assets'],
-                                                                           weekly_all_perf['category'])
-
-        size_pos = self.compute_size_positions_all_assets_overview(new_positions, weekly_all_perf['assets'],
-                                                                   weekly_all_perf['category'], new_overall)
-
-        positions_assets_sum = self.compute_sum_positions_assets_charts(strategy_weight, start_date_sum)
-
-        # Percentile 95th
-        equities_ninety_five_perc = self.compute_ninety_fifth_percentile(positions_assets_sum['equities_pos_sum'])
-        bonds_ninety_five_perc = self.compute_ninety_fifth_percentile(positions_assets_sum['bonds_pos_sum'])
-        forex_ninety_five_perc = self.compute_ninety_fifth_percentile(positions_assets_sum['forex_pos_sum'])
-
-        # Percentile 5th
-        equities_fifth_perc = self.compute_fifth_percentile(positions_assets_sum['equities_pos_sum'])
-        bonds_fifth_perc = self.compute_fifth_percentile(positions_assets_sum['bonds_pos_sum'])
-        forex_fifth_perc = self.compute_fifth_percentile(positions_assets_sum['forex_pos_sum'])
-
-        # Build percentile list for positions charts
-        equities_ninety_five_percentile = self.build_percentile_list(equities_ninety_five_perc)
-        bonds_ninety_five_percentile = self.build_percentile_list(bonds_ninety_five_perc)
-        forex_ninety_five_percentile = self.build_percentile_list(forex_ninety_five_perc)
-
-        equities_fifth_percentile = self.build_percentile_list(equities_fifth_perc)
-        bonds_fifth_percentile = self.build_percentile_list(bonds_fifth_perc)
-        forex_fifth_percentile = self.build_percentile_list(forex_fifth_perc)
-
-        pos_keys = ["category_name", "names_weekly_perf", "mom_signals", "prev_positions", "new_positions",
-                    "delta_positions", "trade_positions", "size_positions"]
-        perf_keys = ["weekly_performance_all_currencies", "ytd_performance_all_currencies"]
-        pos_overall_keys = ["category_name",  "pre_overall", "new_overall"]
-        perf_overall_keys = ["weekly_overall", "ytd_overall"]
-
-        results_positions = self.build_dict_ready_for_zip(weekly_all_perf['category'],
-                                                          weekly_all_perf['assets'],
-                                                          mom_signals, previous_positions,
-                                                          new_positions,
-                                                          delta_positions, trade_positions,
-                                                          size_pos, keys=pos_keys)
-        results_perf = self.build_dict_ready_for_zip(weekly_all_perf['weekly_performance_all_currencies'],
-                                                     ytd_all_perf['ytd_performance_all_currencies'], keys=perf_keys)
-        results_positions_overall = self.build_dict_ready_for_zip(['Equities', 'FX', 'Bonds', 'Total'],
-                                                                  pre_overall, new_overall, keys=pos_overall_keys)
-        results_perf_overall = self.build_dict_ready_for_zip(weekly_overall, ytd_overall, keys=perf_overall_keys)
-
-        zip_results_pos = self.zip_results_performance_all_assets_overview(results_positions)
-        zip_results_pos_overall = self.zip_results_performance_all_assets_overview(results_positions_overall)
-        zip_results_perf = self.zip_results_performance_all_assets_overview(results_perf)
-        zip_results_perf_overall = self.zip_results_performance_all_assets_overview(results_perf_overall)
-
-        template_data = {"positions": positions,
-                         "dates_pos": dates_pos,
-                         "names_pos": names_pos,
-                         "sparklines_pos": sparklines_pos,
-                         "weekly_overall": weekly_overall,
-                         "signal_as_off": self.signal_as_off,
-                         "positions_assets_sum": positions_assets_sum,
-                         "equities_fifth_percentile": equities_fifth_percentile,
-                         "equities_ninety_five_percentile": equities_ninety_five_percentile,
-                         "bonds_ninety_five_percentile": bonds_ninety_five_percentile,
-                         "bonds_fifth_percentile": bonds_fifth_percentile,
-                         "forex_ninety_five_percentile": forex_ninety_five_percentile,
-                         "forex_fifth_percentile": forex_fifth_percentile,
-                         "mom_signals": mom_signals.tolist(),
-                         "prev_positions": previous_positions.tolist(),
-                         "new_positions": new_positions.tolist(),
-                         "assets_names": weekly_all_perf['assets'],
-                         "weekly_performance_all_currencies": weekly_all_perf['weekly_performance_all_currencies'].tolist(),
-                         "ytd_performance_all_currencies": ytd_all_perf['ytd_performance_all_currencies'].tolist(),
-                         "pre_overall": pre_overall.tolist()}
-
-        return template_data, zip_results_pos, zip_results_pos_overall, zip_results_perf, zip_results_perf_overall

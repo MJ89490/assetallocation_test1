@@ -88,25 +88,48 @@ function getDataFromTable(){
     return json_data
 }
 
+// Checking the values of the form before running the model
+
+
+function checkReceivedDataTimes(){
+    var lag = document.getElementById('input_time_lag_times').value;
+    console.log('TIME LAG')
+    console.log(lag);
+
+    if (lag < 1){
+        alert('Error: time lag is lower than 1');
+        return 'error'
+    }
+
+    return 'okay'
+
+}
+
 $(function(){
 	$('#contact-form-button-times').click(function(){
 
 	    var json_data = getDataFromTable();
         var form_data = $('form').serialize();
 
-		$.ajax({
-			url: "received_data_times_form",
-			data: {form_data: form_data, json_data: json_data},
-			type: 'POST',
-			success: function(response){
-				console.log(response);
-				alert('The strategy has been run successfully!');
-				window.location.href = "times_dashboard";
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
+        var check = checkReceivedDataTimes();
+        console.log(check);
+
+        if (check != 'error'){
+            $.ajax({
+                url: "received_data_times_form",
+                data: {form_data: form_data, json_data: json_data},
+                type: 'POST',
+                success: function(response){
+                    console.log(response);
+                    alert('The strategy has been run successfully!');
+                    window.location.href = "times_dashboard";
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+
+		}
 	});
 });
 

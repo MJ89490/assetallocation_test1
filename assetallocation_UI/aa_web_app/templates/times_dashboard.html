@@ -1,112 +1,107 @@
-
-
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
 
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    .sidenav {
+      height: 100%;
+      width: 180px;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #005774;
+      overflow-x: hidden;
+      padding-top: 20px;
+    }
 
-<style>
+    .sidenav a {
+      padding-left: 16px;
 
-.sidenav {
-  height: 100%;
-  width: 180px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #005774;
-  overflow-x: hidden;
-  padding-top: 20px;
-}
+      text-decoration: none;
+      font-size: 23px;
+      color: #fff;
+      display: block;
+    }
 
-.sidenav a {
-  padding-left: 16px;
+    .sidenav a:hover {
+      color: #f1f1f1;
+    }
 
-  text-decoration: none;
-  font-size: 23px;
-  color: #fff;
-  display: block;
-}
+    .container {
+      margin-left: 180px; /* Same as the width of the sidenav */
+      font-size: 28px; /* Increased text to enable scrolling */
+      padding: 0px 10px;
+    }
 
-.sidenav a:hover {
-  color: #f1f1f1;
-}
+    @media screen and (max-height: 450px) {
+      .sidenav {padding-top: 15px;}
+      .sidenav a {font-size: 18px;}
+    }
 
-.container {
-  margin-left: 180px; /* Same as the width of the sidenav */
-  font-size: 28px; /* Increased text to enable scrolling */
-  padding: 0px 10px;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-
-.title-dashboard {color: #005774;
-                  font-size: 2rem;
-                  line-height: 1.4;
-                  margin-top: 60px;
-                  margin-bottom: 23px;
-                  margin-left: 200px;
-                  max-width: 75%;
-                  display: inline-block;
-                  z-index: 2;}
+    .title-dashboard {color: #005774;
+                      font-size: 2rem;
+                      line-height: 1.4;
+                      margin-top: 60px;
+                      margin-bottom: 23px;
+                      margin-left: 200px;
+                      max-width: 75%;
+                      display: inline-block;
+                      z-index: 2;}
 
 
 
-.row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
-.row-table-overall{margin-left: 210px;}
-.row-tables-positions{margin-left: 210px;}
-.row-positions-assets-charts{margin-left: 210px;}
+    .row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
+    .row-table-overall{margin-left: 210px;}
+    .row-tables-positions{margin-left: 210px;}
+    .row-positions-assets-charts{margin-left: 210px;}
 
 
-.pos-perf-title{background-color: #005774; color: #fff;}
-.signal-as-off-date{color: #005774;}
+    .pos-perf-title{background-color: #005774; color: #fff;}
+    .signal-as-off-date{color: #005774;}
 
 
-.sidenav-home{margin-top: 40px;}
+    .sidenav-home{margin-top: 40px;}
 
 
-#selectVersion {color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 38px; margin-left: 10px;}
-.form-models-select-sidebar {color: #005774 !important; border-color: #007faa !important; width: 140px; height: 38px; margin-left: 10px; padding-top:0px;}
-.label-models-select-sidebar {color: #fff;  padding-left: 16px; margin-top: 10px;}
-.btn-select-sidebar {font-size: 1rem; width: 45px;height: 38px}
+    #selectVersion {color: #005774 !important; border-color: #007faa !important; width: 140px; margin-top: 10px; height: 38px; margin-left: 10px;}
+    .form-models-select-sidebar {color: #005774 !important; border-color: #007faa !important; width: 140px; height: 38px; margin-left: 10px; padding-top:0px;}
+    .label-models-select-sidebar {color: #fff;  padding-left: 16px; margin-top: 10px;}
+    .btn-select-sidebar {font-size: 1rem; width: 45px;height: 38px}
 
-.label-models-date-sidebar{color: #fff;  padding-left: 16px;}
-#btn-select-charts-ok, #btn-select-export-data{width: 45px; margin-left: 58px; color: #005774; height: 25px; padding-top: 0px;}
-#sidebar-start-date{width: 140px; margin-left: 10px; color: #005774;}
-#sidebar-end-date{width: 140px; margin-left: 10px; color: #005774; margin-bottom: 10px;}
+    .label-models-date-sidebar{color: #fff;  padding-left: 16px;}
+    #btn-select-charts-ok, #btn-select-export-data{width: 45px; margin-left: 58px; color: #005774; height: 25px; padding-top: 0px;}
+    #sidebar-start-date{width: 140px; margin-left: 10px; color: #005774;}
+    #sidebar-end-date{width: 140px; margin-left: 10px; color: #005774; margin-bottom: 10px;}
 
-.icon-download{background-color: #fff; border-color: #fff;}
-.btn-outline-light:hover, .btn-outline-light:focus, .btn-outline-light:active,
-.btn-outline-light.active, .btn-outline-light:active:focus{color: #fff !important;
-                                                           background-color: #fff !important;
-                                                           border-color: #fff !important;
-                                                           outline: none !important;
-                                                           box-shadow: none !important;}
+    .icon-download{background-color: #fff; border-color: #fff;}
+    .btn-outline-light:hover, .btn-outline-light:focus, .btn-outline-light:active,
+    .btn-outline-light.active, .btn-outline-light:active:focus{color: #fff !important;
+                                                               background-color: #fff !important;
+                                                               border-color: #fff !important;
+                                                               outline: none !important;
+                                                               box-shadow: none !important;}
 
-#submit_ok_positions{height: 30px; margin-left: 10px; width: 70px; padding-top: 2px;}
+    #submit_ok_positions{height: 30px; margin-left: 10px; width: 70px; padding-top: 2px;}
 
 
-.title-date-box{margin-left: 70px; }
-.navbar-default {
-   margin-left: 180px;
-}
-.navbar-default .navbar-nav .nav-link {color: #007faa;}
-.navbar-default .nav-item:hover .nav-link {color: rgb(102, 204, 238);}
-</style>
-</head>
+    .title-date-box{margin-left: 70px; }
+    .navbar-default {
+       margin-left: 180px;
+    }
+    .navbar-default .navbar-nav .nav-link {color: #007faa;}
+    .navbar-default .nav-item:hover .nav-link {color: rgb(102, 204, 238);}
+    </style>
+    </head>
 
-<body>
+    <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top navbar-default py-lg-0 ">
         <button class="navbar-toggler" type="button"
@@ -132,11 +127,12 @@
         <!-- ============================= CHARTS DATA ============================= -->
         <a class="sidenav-item" href="#">Charts Data</a>
         <form class="center" action="" method="POST" novalidate>
-            {{ form.hidden_tag() }}
+            {{ form_side_bar.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions(class="form-control", id="selectVersion")}}
+                {{ form_side_bar.versions_for_charts(class="form-control", id="selectVersion")}}
             </div>
+            <!--Leverage type-->
            <div class="form-group">
                <label class="label-models-select-sidebar">Leverage type</label>
                <select id="inputleveragesidebar" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
@@ -147,17 +143,18 @@
                </select>
            </div>
             <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
-            {{ form.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
+            {{ form_side_bar.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
         </form>
 
         <!-- ============================= EXPORT DATA ============================= -->
         <a class="sidenav-item" href="#">Export Data</a>
         <form class="center" action="" method="POST" novalidate>
-            {{ form.hidden_tag() }}
+            {{ form_side_bar.hidden_tag() }}
             <!-- Form: select the version for the model -->
             <div class="btn-group">
-                {{ form.versions(class="form-control", id="selectVersion")}}
+                {{ form_side_bar.versions_for_export(class="form-control", id="selectVersion")}}
             </div>
+            <!--Leverage type-->
             <div class="form-group">
                <label class="label-models-select-sidebar">Leverage type</label>
                <select id="inputleveragesidebardexcel" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
@@ -167,11 +164,13 @@
                    <option>s</option>
                </select>
            </div>
+            <!--Start date export-->
             <label class="label-models-date-sidebar">Start date</label>
-            {{ form.start_date_inputs(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
+            {{ form_side_bar.start_date_export(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
+            <!--End date export-->
              <label class="label-models-date-sidebar">End date</label>
-            {{ form.end_date_inputs(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
-            {{ form.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
+            {{ form_side_bar.end_date_export(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
+            {{ form_side_bar.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
         </form>
     </div>
 
@@ -266,10 +265,6 @@
                  </table>
             </div>
         </div>
-
-
-
-
 
         <!--Positions and Performance Tables-->
         <div class="row row-tables-positions">
