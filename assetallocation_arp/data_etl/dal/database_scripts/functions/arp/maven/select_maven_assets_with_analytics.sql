@@ -50,7 +50,6 @@ BEGIN
       JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
         m.version = strategy_version
-        AND sa.name in ('bbg_tr', 'bbg_er', 'cash')
         AND aa.business_datetime >= select_maven_assets_with_analytics.business_datetime
       GROUP BY
         mag.strategy_asset_group_id,
