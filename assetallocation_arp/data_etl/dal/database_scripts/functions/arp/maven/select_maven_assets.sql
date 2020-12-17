@@ -18,25 +18,38 @@ $$
 BEGIN
   return query
     SELECT
-      ma.asset_subcategory,
-      a1.ticker as bbg_tr_ticker,
-      a2.ticker as bbg_er_ticker,
-      a3.ticker as cash_ticker,
-      asset_category,
-      asset_subcategory,
-      currency,
-      is_excess,
-      asset_weight,
-      transaction_cost
-    FROM
-      arp.maven_asset ma
-      JOIN asset.asset a1 on ma.bbg_tr_asset_id = a1.id
-      JOIN asset.asset a2 on ma.bbg_er_asset_id = a2.id
-      JOIN asset.asset a3 on ma.cash_asset_id = a3.id
-      JOIN arp.maven m on ma.strategy_id = m.strategy_id
+      string_agg(ag.subcategory, '') FILTER (
+        WHERE sa.name = (
+          CASE
+            WHEN m.er_tr = 'excess' THEN 'bbg_er'
+            ELSE 'bbg_tr'
+          END
+        )
+      ) as asset_subcategory,
+      string_agg(a.ticker, '') FILTER (WHERE sa.name = 'bbg_tr') as bbg_tr_ticker,
+      string_agg(a.ticker, '') FILTER (WHERE sa.name = 'bbg_er') as bbg_er_ticker,
+      string_agg(a.ticker, '') FILTER (WHERE sa.name = 'cash') as cash_ticker,
+      c.currency,
+      mag.is_excess,
+      mag.asset_weight,
+      mag.transaction_cost
+     FROM
+      arp.maven m
+      JOIN arp.strategy_asset_group sag ON m.strategy_id = sag.strategy_id
+      JOIN arp.maven_asset_group mag ON sag.id = mag.strategy_asset_group_id
+      JOIN lookup.currency c on mag.currency_id = c.id
+      JOIN arp.strategy_asset sa ON sag.id = sa.strategy_asset_group_id
+      JOIN asset.asset a ON sa.asset_id = a.id
+      JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
       m.version = strategy_version
-    GROUP BY a1.id, a2.id, a3.id
+      AND sa.name in ('bbg_tr', 'bbg_er', 'cash')
+    GROUP BY
+      mag.strategy_asset_group_id,
+      c.currency,
+      mag.is_excess,
+      mag.asset_weight,
+      mag.transaction_cost
   ;
 END
 $$;

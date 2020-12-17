@@ -38,6 +38,7 @@ ALTER TABLE "asset"."asset_analytic" ADD CONSTRAINT "asset_analytic_pkey"
 ALTER TABLE "asset"."asset_analytic" ADD CONSTRAINT "asset_analytic_category_check" CHECK (category in ('PX_LAST', 'PX_MID', 'DUR_ADJ_MID'))
 ;
 
+CREATE INDEX "asset_analytic_business_datetime_idx" ON asset.asset_analytic (business_datetime);
 -- ALTER TABLE "asset"."asset_analytic" ADD CONSTRAINT "asset_analytic_asset_id_type_business_tstzrange_excl" CHECK (EXCLUDE USING GIST (asset_id WITH =, type WITH =, business_tstzrange WITH &&))
 --
 --

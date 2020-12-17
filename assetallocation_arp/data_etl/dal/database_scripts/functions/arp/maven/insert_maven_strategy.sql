@@ -4,7 +4,6 @@ CREATE OR REPLACE FUNCTION arp.insert_maven_strategy(
   er_tr varchar,
 	frequency frequency,
 	day_of_week integer,
-	business_tstzrange tstzrange,
 	asset_count integer,
 	long_cutoff integer,
 	short_cutoff integer,
@@ -27,7 +26,7 @@ BEGIN
   PERFORM arp.close_off_strategy(name);
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
 	SELECT arp.insert_maven(
-      er_tr, frequency, day_of_week, business_tstzrange, asset_count, long_cutoff, short_cutoff, val_period_months,
+      er_tr, frequency, day_of_week, asset_count, long_cutoff, short_cutoff, val_period_months,
       val_period_base, momentum_weights, volatility_weights, execution_state_id, strategy_id
   ) into t_version;
 	return;
@@ -38,7 +37,6 @@ CREATE OR REPLACE FUNCTION arp.insert_maven(
   er_tr varchar,
 	frequency frequency,
 	day_of_week integer,
-	business_tstzrange tstzrange,
 	asset_count integer,
 	long_cutoff integer,
 	short_cutoff integer,
@@ -57,7 +55,6 @@ BEGIN
 	  er_tr,
     frequency,
     day_of_week,
-    business_tstzrange,
     asset_count,
     long_cutoff,
     short_cutoff,
@@ -72,7 +69,6 @@ BEGIN
 	  er_tr,
     frequency,
     day_of_week,
-    business_tstzrange,
     asset_count,
     long_cutoff,
     short_cutoff,

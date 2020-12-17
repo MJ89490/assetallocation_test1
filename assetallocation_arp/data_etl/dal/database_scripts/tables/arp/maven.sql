@@ -21,7 +21,6 @@ CREATE TABLE "arp"."maven"
 	"er_tr" varchar(25) NOT NULL,
 	"frequency" frequency NOT NULL,
 	"day_of_week" integer NOT NULL,
-	"business_tstzrange" tstzrange NOT NULL,
 	"asset_count" integer NOT NULL,
 	"long_cutoff" integer NOT NULL,
 	"short_cutoff" integer NOT NULL,
