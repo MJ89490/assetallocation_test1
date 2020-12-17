@@ -36,8 +36,6 @@ class ReceivedDataTimes:
         # Process date under format '12%2F09%2F2000 to 01/01/2000
         self.times_form['input_date_from_times'] = '/'.join(self.times_form['input_date_from_times'].split('%2F'))
 
-        # Check the inputs received
-        # self.check_received_data_times()
         print(self.times_form)
         return self.times_form
 
@@ -46,12 +44,6 @@ class ReceivedDataTimes:
         Function checking before running the model if the inputs are correct
         :return:
         """
-
-        if float(self.times_form['input_time_lag_times']) < 1:
-            pass
-
-        if int(self.times_form['input_vol_window_times']) < 10:
-            pass
 
         if int(self.times_form['input_signal_one_short_times']) < (self.times_form['input_signal_one_long_times']
                                                               and self.times_form['input_signal_two_short_times']

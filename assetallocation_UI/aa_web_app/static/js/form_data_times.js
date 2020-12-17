@@ -85,23 +85,50 @@ function getDataFromTable(){
                                     "input_future_ticker": input_future_ticker,
                                     "input_costs": input_costs,
                                     "input_leverage": input_leverage});
-    return json_data
+    return json_data;
+}
+
+// Checking if the values of the signals are in the ascending order, otherwise the signals are wrong
+function checkArray(array) {
+    var aa = array.slice(1);
+    if (aa.every((a, i) => array[i] <= a)) {
+        // No error
+        return false;
+    }
+    return true;
+
 }
 
 // Checking the values of the form before running the model
-
-
 function checkReceivedDataTimes(){
-    var lag = document.getElementById('input_time_lag_times').value;
-    console.log('TIME LAG')
-    console.log(lag);
+    var lag = parseInt(document.getElementById('input_time_lag_times').value);
+    var vol = parseInt(document.getElementById('input_vol_window_times').value);
 
-    if (lag < 1){
-        alert('Error: time lag is lower than 1');
+    var signalOneShort = parseInt(document.getElementById('input_signal_one_short_times').value);
+    var signalOneLong = parseInt(document.getElementById('input_signal_one_long_times').value);
+    var signalTwoShort = parseInt(document.getElementById('input_signal_two_short_times').value);
+    var signalTwoLong = parseInt(document.getElementById('input_signal_two_long_times').value);
+    var signalThreeShort = parseInt(document.getElementById('input_signal_three_short_times').value);
+    var signalThreeLong = parseInt(document.getElementById('input_signal_three_long_times').value);
+
+    var signals = [signalOneShort, signalOneLong, signalTwoShort, signalTwoLong, signalThreeShort, signalThreeLong]
+
+    flagError = checkArray(signals);
+
+    if (flagError == true){
+        alert('Error: signals are wrong\nThe signals must be as follow\nsig1 short < sig1 long < sig2 short < sig2 long < sig3 short < sig3 long');
         return 'error'
     }
 
-    return 'okay'
+    if (lag < 1){
+        alert('Error: time lag is lower than 1');
+        return 'error';
+    }
+    else if (vol < 10){
+        alert('Error: volatility is lower than 10');
+         return 'error';
+    }
+    return 'okay';
 
 }
 
