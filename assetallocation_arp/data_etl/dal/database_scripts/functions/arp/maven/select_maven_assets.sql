@@ -43,7 +43,6 @@ BEGIN
       JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
       m.version = strategy_version
-      AND sa.name in ('bbg_tr', 'bbg_er', 'cash')
     GROUP BY
       mag.strategy_asset_group_id,
       c.currency,
