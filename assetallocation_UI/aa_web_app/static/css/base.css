@@ -66,11 +66,3 @@
 .card-title-risk-returns{color: #005774;}
 
 /* CALENDAR */
-#datepicker{color: #007faa !important; border-color: #007faa !important; width: 230px; margin-right: 15px;}
-#datepicker > span:hover{cursor: pointer;}
-.glyphicon-calendar
-        {
-            font-size: 15pt;
-        }
-
-

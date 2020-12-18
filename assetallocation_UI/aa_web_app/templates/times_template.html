@@ -70,29 +70,21 @@
                                                 <div class="form-group">
                                                     <label>Date from</label>
                                                     <i class="fa fa-envelope icon"></i>
-                                                    <input id="datepicker" name="input_date_from_times" class="form-control rounded-lg" required>
-
-                                                    <script>
-                                                        $('#datepicker').datepicker({
+                                                    <input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2020" required>
+                                                    <script type="text/javascript">
+                                                        $('#input_date_from_times').datepicker({
                                                             uiLibrary: 'bootstrap',
-                                                             todayHighlight: true
+                                                             todayHighlight: true,
+                                                             autoclose: true,
+                                                             format: 'dd/mm/yyyy'
                                                         });
                                                     </script>
-
                                                 </div>
-
-
-
-
-
-
-
-
 
                                                 <!--Fund name-->
                                                 <div class="form-group">
                                                     <label>Fund name</label>
-                                                    <div class="form-group form-models-select-effect">
+                                                    <div class="form-group form-models-select-times">
                                                         {{ form.input_fund_name_times(class="form-control", id="input_fund_name_times")}}
                                                     </div>
                                                 </div>

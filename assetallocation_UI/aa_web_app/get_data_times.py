@@ -39,35 +39,6 @@ class ReceivedDataTimes:
         print(self.times_form)
         return self.times_form
 
-    def check_received_data_times(self):
-        """
-        Function checking before running the model if the inputs are correct
-        :return:
-        """
-
-        if int(self.times_form['input_signal_one_short_times']) < (self.times_form['input_signal_one_long_times']
-                                                              and self.times_form['input_signal_two_short_times']
-                                                              and self.times_form['input_signal_two_long_times']
-                                                              and self.times_form['input_signal_three_short_times']
-                                                              and self.times_form['input_signal_three_long_times']):
-            pass
-
-        if self.times_form['input_signal_one_long_times'] <= self.times_form['input_signal_two_short_times']:
-            pass
-
-        if (self.times_form['input_signal_one_long_times'] and self.times_form['input_signal_two_short_times']) < \
-                                                              (self.times_form['input_signal_two_long_times'] and
-                                                               self.times_form['input_signal_three_short_times'] and
-                                                               self.times_form['input_signal_three_long_times']):
-            pass
-
-        if self.times_form['input_signal_two_long_times'] <= self.times_form['input_signal_three_short_times']:
-            pass
-
-        if (self.times_form['input_signal_two_long_times'] and self.times_form['input_signal_three_short_times']) < \
-                                                               self.times_form['input_signal_three_long_times']:
-            pass
-
     def call_run_times(self, assets_input_times):
 
         self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
