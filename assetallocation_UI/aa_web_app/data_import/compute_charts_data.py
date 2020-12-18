@@ -74,7 +74,7 @@ class TimesChartsDataComputations(object):
     def positions_assets_length(self):
         return len(self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):])
 
-    def call_times_proc_caller(self, fund_name: str, version_strategy: str) -> None:
+    def call_times_proc_caller(self, fund_name: str, version_strategy: int) -> None:
         """
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)

@@ -43,7 +43,6 @@ class ReceivedDataTimes:
 
         self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
         self.fund_name = self.times_form['input_fund_name_times']
-        # fund_name = self.times_form['input_fund_name_times']
 
         long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
                                         self.times_form['input_signal_two_long_times'],

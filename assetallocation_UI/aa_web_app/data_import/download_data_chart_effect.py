@@ -1,5 +1,3 @@
-from assetallocation_UI.aa_web_app.get_data_effect import ReceiveDataEffect
-
 # TODO to connect with db
 
 
