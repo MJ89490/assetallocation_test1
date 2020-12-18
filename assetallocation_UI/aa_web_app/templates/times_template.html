@@ -67,7 +67,12 @@
                                                     <label>Date from</label>
                                                     <input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times" placeholder="Date from" required>
                                                     <script type="text/javascript">
-                                                        document.getElementById('input_date_from_times').value = '01/01/2000';
+                                                        $('#input_date_from_times').datepicker({
+                                                            uiLibrary: 'bootstrap',
+                                                             todayHighlight: true,
+                                                             autoclose: true,
+                                                             format: 'dd/mm/yyyy'
+                                                        });
                                                     </script>
                                                 </div>
                                                 <!--Fund name-->
