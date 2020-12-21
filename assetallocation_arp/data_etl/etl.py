@@ -54,13 +54,20 @@ class ETLProcess:
 
     def clean_data(self):
 
-        logging.info("")
+        # Convert columns to repective format types
+        self.df_bbg["bbergsymbol"] = self.df_bbg["bbergsymbol"].astype(str)
+        self.df_bbg["bbergfield"] = self.df_bbg["bbergfield"].astype(str)
+        self.df_bbg["bbergdate"] = pd.to_datetime(self.df_bbg["bbergdate"])
+        self.df_bbg["bbergvalue"] = self.df_bbg["bbergvalue"].astype(float)
+        self.df_bbg["status"] = self.df_bbg["status"].astype(str)
+
+        logging.info("Columns converted to respective data types")
 
         return
 
     def upload_data(self):
 
-        logging.info("")
+        logging.info("Data written to database")
 
         return
 
@@ -68,3 +75,5 @@ class ETLProcess:
 if __name__ == '__main__':
     etl = ETLProcess()
     etl.bbg_data()
+    etl.clean_data()
+    etl.upload_data()
