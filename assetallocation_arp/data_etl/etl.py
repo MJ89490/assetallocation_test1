@@ -1,5 +1,5 @@
-# TODO: timeit, data type checking, log file
-# TODO: DB: frequency of data updating then uploading; data types
+# TODO: timeit, log file
+# TODO: DB: frequency of data updating then uploading; data types (update everyday / wednesday)
 # stage is one table (asset table in staging schema) and then into 3: asset, asset analytic, asset group (asset schema)
 
 
@@ -8,7 +8,7 @@ import os
 import pandas as pd
 import logging
 from assetallocation_arp.data_etl import bloomberg_data
-# from assetallocation_arp.data_etl import db
+from assetallocation_arp.data_etl.db import Db
 
 # Define logging configuration
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
@@ -66,6 +66,9 @@ class ETLProcess:
         return
 
     def upload_data(self):
+
+        # Call function that uploads data frame to SQL database from respective class and module
+        Db.df_to_staging_asset(self.df_bbg)
 
         logging.info("Data written to database")
 

@@ -46,26 +46,26 @@ class Db:
         df.to_sql(name='asset', con=self.engine, schema='staging', if_exists='append', index=False, **kwargs)
 
 
-if __name__ == '__main__':
-    import pandas as pd
-
-    df = pd.DataFrame([['HSI Index', 'asset name', 'some description', 'Equity', 'US Equities', 'USD', 'AUD', True, 'd', 'Bloomberg', 1.5, '2020-01-02']],
-                      columns=['ticker', 'name', 'description', 'asset_category', 'asset_subcategory', 'currency',
-                               'country', 'is_tr', 'analytic_category', 'source', 'value', 'business_datetime'])
-
-    # loads the dataframe into staging.asset
-    d = Db()
-    d.df_to_staging_asset(df)
-
-    # staging.load_assets proc is not yet implemented. Once finished it will copy the data from staging.asset
-    # to asset.asset, asset.asset_group and asset.asset_analytics
-    d.call_proc('staging.load_assets', [])
-
-    # see data for testing purposes. avoid calling engine.execute() with raw sql in production code
-    selected = d.engine.execute('SELECT * FROM staging.asset')
-    for i in selected:
-        print(i)
-
-    # empty staging.asset table for testing purposes. avoid calling engine.execute() with raw sql in production code
-
-    d.engine.execute('DELETE FROM staging.asset')
+# if __name__ == '__main__':
+#     import pandas as pd
+#
+#     df = pd.DataFrame([['HSI Index', 'asset name', 'some description', 'Equity', 'US Equities', 'USD', 'AUD', True, 'd', 'Bloomberg', 1.5, '2020-01-02']],
+#                       columns=['ticker', 'name', 'description', 'asset_category', 'asset_subcategory', 'currency',
+#                                'country', 'is_tr', 'analytic_category', 'source', 'value', 'business_datetime'])
+#
+#     # loads the dataframe into staging.asset
+#     d = Db()
+#     d.df_to_staging_asset(df)
+#
+#     # staging.load_assets proc is not yet implemented. Once finished it will copy the data from staging.asset
+#     # to asset.asset, asset.asset_group and asset.asset_analytics
+#     d.call_proc('staging.load_assets', [])
+#
+#     # see data for testing purposes. avoid calling engine.execute() with raw sql in production code
+#     selected = d.engine.execute('SELECT * FROM staging.asset')
+#     for i in selected:
+#         print(i)
+#
+#     # empty staging.asset table for testing purposes. avoid calling engine.execute() with raw sql in production code
+#
+#     d.engine.execute('DELETE FROM staging.asset')
