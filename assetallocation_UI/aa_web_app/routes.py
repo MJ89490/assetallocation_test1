@@ -15,17 +15,14 @@ from aa_web_app.data_import.download_data_chart_effect import DownloadDataChartE
 from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
 from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
 
+from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
+
 obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
 obj_download_data_effect = DownloadDataChartEffect()
 
 obj_times_charts_data = TimesChartsDataComputations()
-
-# @app.route('/times_dashboard', defaults={'fund_name': None, 'times_version': None}, methods=['GET', 'POST'])
-# @app.route('/times_dashboard/<string:fund_name>/<int:times_version>', methods=['GET', 'POST'])
-# todo store data in db with an id + concatenate id in the redirect url + load data in tables using id
-#  ex: "/some_url?x=1&y=2"
-# todo class instance
 
 
 @app.route('/')
@@ -38,26 +35,36 @@ def times_dashboard():
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
 
-    obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
-                                                 obj_received_data_times.version_strategy)
-
-    template_data = run_times_charts_data_computations(obj_times_charts_data,
-                                                       obj_received_data_times.strategy_weight,
-                                                       start_date_sum=None, start_date=None, end_date=None)
+    positions_chart = False
 
     if request.method == 'POST':
         if form.submit_ok_positions.data:
+            positions_chart = True
             positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(
                                                                            start_date=form.start_date_times_inputs.data,
                                                                            end_date=form.end_date_times_inputs.data)
-            template_data['positions'],  template_data['dates_pos'], template_data['names_pos'] = positions, \
-                                                                                                  dates_pos, \
-                                                                                                  names_pos
+        elif request.form['submit_button'] == 'dashboard':
+            apc = TimesProcCaller()
+            f, obj_received_data_times.fund_name = 'f1', 'f1'
+            strategy, obj_received_data_times.version_strategy = max(apc.select_strategy_versions(Name.times)), \
+                                                                 max(apc.select_strategy_versions(Name.times))
+            fs = apc.select_fund_strategy_results(f, Name.times, strategy)
+            obj_received_data_times.strategy_weight = fs.weight
+
+    obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name, obj_received_data_times.version_strategy)
+    template_data = run_times_charts_data_computations(obj_times_charts_data,
+                                                       obj_received_data_times.strategy_weight,
+                                                       start_date_sum=None, start_date=None, end_date=None)
+    if positions_chart:
+        template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, \
+                                                                                             dates_pos, \
+                                                                                             names_pos
 
     return render_template('times_dashboard.html',
                            title='Dashboard',
                            form=form,
                            form_side_bar=form_side_bar,
+                           fund_strategy=obj_received_data_times.fund_strategy_dict,
                            **template_data)
 
 

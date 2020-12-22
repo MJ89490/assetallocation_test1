@@ -28,6 +28,10 @@ class ReceivedDataTimes:
     def fund_name(self, value):
         self._fund_name = value
 
+    @property
+    def fund_strategy_dict(self):
+        return {'fund': self._fund_name, 'strategy': self._strategy_weight}
+
     def received_data_times(self, form_data):
         for idx, val in enumerate(form_data):
             if idx > 1:

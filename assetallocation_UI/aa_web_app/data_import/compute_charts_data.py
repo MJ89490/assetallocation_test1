@@ -87,10 +87,6 @@ class TimesChartsDataComputations(object):
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 
-        # data = {'times_signals': analytic_df.xs(Signal.momentum, level='analytic_subcategory'),
-        #         'times_returns': analytic_df.xs(Performance['excess return'], level='analytic_subcategory'),
-        #         'times_positions': weight_df}
-
         self.signals = analytic_df.xs(Signal.momentum, level='analytic_subcategory')
         self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')
         self.positions = weight_df

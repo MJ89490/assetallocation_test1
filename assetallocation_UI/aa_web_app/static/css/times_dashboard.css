@@ -32,11 +32,12 @@
                   font-size: 2rem;
                   line-height: 1.4;
                   margin-top: 60px;
-                  margin-bottom: 23px;
                   margin-left: 200px;
                   max-width: 75%;
                   display: inline-block;
                   z-index: 2;}
+
+.sub-title-dashboard{margin-left: 205px;}
 
 .row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
 .row-table-overall{margin-left: 210px;}
