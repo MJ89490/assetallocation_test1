@@ -30,7 +30,7 @@ class ReceivedDataTimes:
 
     @property
     def fund_strategy_dict(self):
-        return {'fund': self._fund_name, 'strategy': self._strategy_weight}
+        return {'fund': self._fund_name, 'strategy': self.version_strategy}
 
     def received_data_times(self, form_data):
         for idx, val in enumerate(form_data):

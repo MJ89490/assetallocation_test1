@@ -40,9 +40,8 @@ def times_dashboard():
     if request.method == 'POST':
         if form.submit_ok_positions.data:
             positions_chart = True
-            positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(
-                                                                           start_date=form.start_date_times_inputs.data,
-                                                                           end_date=form.end_date_times_inputs.data)
+            start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
+            positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start, end_date=end)
         elif request.form['submit_button'] == 'dashboard':
             apc = TimesProcCaller()
             f, obj_received_data_times.fund_name = 'f1', 'f1'
