@@ -21,7 +21,7 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
     ytd_all_perf = obj_charts_data.compute_ytd_performance_all_assets_overview()
 
     # Positions
-    positions, dates_pos, names_pos, sparklines_pos = obj_charts_data.compute_positions_assets(start_date, end_date)
+    positions, dates_pos, names_pos = obj_charts_data.compute_positions_assets(start_date, end_date)
     mom_signals = obj_charts_data.compute_mom_signals_all_assets_overview()
 
     previous_positions = obj_charts_data.compute_previous_positions_all_assets_overview(strategy_weight)
@@ -33,8 +33,8 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
     # Performance overall
     weekly_overall = obj_charts_data.compute_overall_performance_all_assets_overview(
                                                                    weekly_all_perf['weekly_performance_all_currencies'],
-                                                                   weekly_all_perf['names_weekly_perf'],
-                                                                   weekly_all_perf['category_name'])
+                                                                   weekly_all_perf['assets'],
+                                                                   weekly_all_perf['category'])
     ytd_overall = obj_charts_data.compute_overall_performance_all_assets_overview(
                                                                    ytd_all_perf['ytd_performance_all_currencies'],
                                                                    weekly_all_perf['assets'],
@@ -114,7 +114,7 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
     template_data = {"positions": positions,
                      "dates_pos": dates_pos,
                      "names_pos": names_pos,
-                     "sparklines_pos": sparklines_pos,
+
                      "weekly_overall": weekly_overall,
                      "signal_as_off": obj_charts_data.signal_as_off,
                      "positions_assets_sum": positions_assets_sum,

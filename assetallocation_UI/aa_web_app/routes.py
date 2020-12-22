@@ -47,8 +47,12 @@ def times_dashboard():
 
     if request.method == 'POST':
         if form.submit_ok_positions.data:
-            obj_times_charts_data.compute_positions_assets(start_date=form.start_date_times_inputs.data,
-                                                           end_date=form.end_date_times_inputs.data)
+            positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(
+                                                                           start_date=form.start_date_times_inputs.data,
+                                                                           end_date=form.end_date_times_inputs.data)
+            template_data['positions'],  template_data['dates_pos'], template_data['names_pos'] = positions, \
+                                                                                                  dates_pos, \
+                                                                                                  names_pos
 
     return render_template('times_dashboard.html',
                            title='Dashboard',

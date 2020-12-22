@@ -9,19 +9,16 @@ import numpy as np
 import pandas as pd
 import datetime
 
-from assetallocation_arp.common_libraries.dal_enums.asset import Equity, FixedIncome, FX
-
-# from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
+from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 
 class TimesChartsDataComputations(object):
     """Class doing computations for the data of the times dashboard"""
 
-    # def __init__(self, times_signals, times_positions, times_returns):
     def __init__(self):
         self.signals = None
         self.positions = None
@@ -57,7 +54,9 @@ class TimesChartsDataComputations(object):
     @positions_start_date.setter
     def positions_start_date(self, value: str) -> None:
         if value is None:
-            value = '15-05-2018'
+            value = '15/05/2018'
+        if self.positions is not None:
+            value = find_date(self.positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_start_date = value
 
     @property
@@ -67,7 +66,9 @@ class TimesChartsDataComputations(object):
     @positions_end_date.setter
     def positions_end_date(self, value: str) -> None:
         if value is None:
-            value = '25-08-2018'
+            value = '25/08/2018'
+        if self.positions is not None:
+            value = find_date(self.positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_end_date = value
 
     @property
@@ -123,7 +124,7 @@ class TimesChartsDataComputations(object):
         values.extend(values_fx)
         values.extend(values_bond)
 
-        return {'value': [val * 100 for val in values], 'assets': assets, 'category': category}
+        return {'values': [val * 100 for val in values], 'assets': assets, 'category': category}
 
     @staticmethod
     def compute_trade_positions_all_assets_overview(delta: list) -> List[str]:
@@ -216,7 +217,7 @@ class TimesChartsDataComputations(object):
         names_weekly_perf = weekly_perf.index.to_list()
         values_weekly_perf = weekly_perf.to_list()
 
-        weekly_perf_dict, category_name = self.classify_assets_by_category(names_weekly_perf, values_weekly_perf)
+        category_name,  weekly_perf_dict, = self.classify_assets_by_category(names_weekly_perf, values_weekly_perf)
 
         sort_weekly_perf = self.sort_by_category_assets(weekly_perf_dict, category_name)
 
@@ -249,7 +250,7 @@ class TimesChartsDataComputations(object):
         names_ytd_perf = ytd_perf.index.to_list()
         values_ytd_perf = ytd_perf.to_list()
 
-        ytd_perf_dict, category_name = self.classify_assets_by_category(names_ytd_perf, values_ytd_perf)
+        category_name, ytd_perf_dict = self.classify_assets_by_category(names_ytd_perf, values_ytd_perf)
 
         sort_ytd_perf = self.sort_by_category_assets(ytd_perf_dict, category_name)
         return {'ytd_performance_all_currencies': self.round_results_all_assets_overview(sort_ytd_perf['values'])}
@@ -366,7 +367,7 @@ class TimesChartsDataComputations(object):
         return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex,
                 "dates_positions_assets": dates_positions_assets}
 
-    def compute_positions_assets(self, start_date: str, end_date: str) -> Tuple[List[float], List[float], List[float], List[float]]:
+    def compute_positions_assets(self, start_date: str, end_date: str) -> Tuple[List[float], List[float], List[float]]:
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -376,20 +377,15 @@ class TimesChartsDataComputations(object):
         positions, sparklines_pos = [], []
         # Start and end dates positions
         self.positions_start_date, self.positions_end_date = start_date, end_date
-
         columns = self.positions.columns.tolist()
-        index_start_date = pd.to_datetime(start_date, format='%Y-%m-%d')
-        index_end_date = pd.to_datetime(end_date, format='%Y-%m-%d')
         names_pos = self.positions.columns.tolist()
-        # names = {'US Equities': 'S&P 500', 'EU Equities': 'CAC40', 'HK Equities': 'HK', 'UK 10y Bonds': 'FTSE'}  # TODO to automate later
 
         for col in columns:
-            positions.append(self.positions.loc[index_start_date:index_end_date, col].to_list())
+            positions.append(self.positions.loc[self.positions_start_date:self.positions_end_date, col].to_list())
             sparklines_pos.append(self.positions[col].to_list())
-            # names_pos.append(names[col])
 
-        dates_pos = [self.positions.loc[index_start_date:index_end_date].index.strftime("%Y-%m-%d").to_list()]
-        return positions, dates_pos, names_pos, sparklines_pos
+        dates_pos = [self.positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()]
+        return positions, dates_pos, names_pos
 
     @staticmethod
     def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:

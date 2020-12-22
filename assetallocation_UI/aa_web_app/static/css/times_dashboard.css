@@ -91,14 +91,26 @@
                                                            background-color: #fff !important;
                                                            border-color: #fff !important;
                                                            outline: none !important;
-                                                           box-shadow: none !important;}
+                                                           box-shadow: none !important;
+                                                           }
 
 #submit_ok_positions{height: 30px;
                      margin-left: 10px;
+                     margin-right: 10px;
+                     margin-top: 12px;
                      width: 70px;
                      padding-top: 2px;}
 
-.title-date-box{margin-left: 70px; }
+#start_date_box_times{height: 30px;
+                margin-top: 12px;
+                margin-left: 90px;}
+
+#end_date_box_times{height: 30px;
+                    margin-left:10px;
+                    margin-top: 12px;
+                   }
+
+.title-date-box{margin-left: 70px;}
 .navbar-default {margin-left: 180px;}
 .navbar-default .navbar-nav .nav-link {color: #007faa;}
 .navbar-default .nav-item:hover .nav-link {color: rgb(102, 204, 238);}
