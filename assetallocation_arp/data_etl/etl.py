@@ -47,7 +47,7 @@ class ETLProcess:
         logging.info(f"Master data frame created")
 
         # Output as .csv file
-        self.df_bbg.to_csv("out_test.csv", index=False)
+        self.df_bbg.to_csv("instruments_snippet.csv", index=False)
         logging.info(f"Master data frame exported as .csv")
 
         return self.df_bbg
