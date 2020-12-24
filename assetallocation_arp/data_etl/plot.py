@@ -2,15 +2,15 @@ import pandas as pd
 from bokeh.io import curdoc
 from bokeh.plotting import figure
 from bokeh.layouts import row, column
-from bokeh.models import Select, PreText, TextInput, Paragraph, Button
+from bokeh.models import Select, PreText, TextInput, Button, HoverTool
 import os
+
 local_proxy = 'http://zsvzen:80'
 os.environ['http_proxy'] = local_proxy
 os.environ['HTTP_PROXY'] = local_proxy
 os.environ['https_proxy'] = local_proxy
 from bokeh.palettes import Dark2_5 as palette
 import itertools
-
 
 # Read .csv as data frame
 df = pd.read_csv("instruments_snippet.csv")
@@ -23,6 +23,10 @@ instrument_list = df["bbergsymbol"].unique().tolist()
 drop_down_options = instrument_list
 # Define colours which iterates through the Bokeh palette function, providing a new line colour with each instrument
 colors = itertools.cycle(palette)
+# Format the tooltip
+tooltips = [('Value', '@bbergvalue'),
+            ('Date', '@bbergdate{%F}'),
+            ('Field', '@bbergfield')]
 
 # Initial line chart
 # Create figure for graph
@@ -38,6 +42,8 @@ line_chart.line(x="bbergdate",
 line_chart.xaxis.axis_label = 'Time'
 line_chart.yaxis.axis_label = 'Price (GBP)'
 line_chart.legend.location = "top_left"
+line_chart.add_tools(HoverTool(tooltips=tooltips,
+                               formatters={'@bbergdate': 'datetime'}))
 
 # Create drop down instrument widget
 drop_down = Select(options=drop_down_options, width=200)
@@ -50,7 +56,7 @@ stats = PreText(text='Statistics', width=500)
 stats.text = str(df[df["bbergsymbol"] == instrument_list[0]]["bbergvalue"].describe())
 
 
-def down_down_handle(attr, old, new):
+def drop_down_handle(attr, old, new):
     """
     This function handles when the drop down is changed
     :param attr:
@@ -71,6 +77,9 @@ def down_down_handle(attr, old, new):
     line_chart.xaxis.axis_label = 'Time'
     line_chart.yaxis.axis_label = 'Price (GBP)'
     line_chart.legend.location = "top_left"
+
+    line_chart.add_tools(HoverTool(tooltips=tooltips,
+                                   formatters={'@bbergdate': 'datetime'}))
 
     stats.text = str(df[df["bbergsymbol"] == drop_down.value]["bbergvalue"].describe())
 
@@ -97,7 +106,7 @@ def button_handle():
 
 
 # Registering widget attribute change
-drop_down.on_change("value", down_down_handle)
+drop_down.on_change("value", drop_down_handle)
 text_input.on_change("value", text_input_handle)
 refresh_button.on_click(button_handle)
 
