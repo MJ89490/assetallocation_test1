@@ -1,16 +1,16 @@
 import pandas as pd
+import os
+import itertools
 from bokeh.io import curdoc
 from bokeh.plotting import figure
 from bokeh.layouts import row, column
 from bokeh.models import Select, PreText, TextInput, Button, HoverTool
-import os
+from bokeh.palettes import Dark2_5 as palette
 
 local_proxy = 'http://zsvzen:80'
 os.environ['http_proxy'] = local_proxy
 os.environ['HTTP_PROXY'] = local_proxy
 os.environ['https_proxy'] = local_proxy
-from bokeh.palettes import Dark2_5 as palette
-import itertools
 
 # Read .csv as data frame
 df = pd.read_csv("instruments_snippet.csv")

@@ -60,15 +60,30 @@ class ETLProcess:
         self.df_bbg["bbergdate"] = pd.to_datetime(self.df_bbg["bbergdate"])
         self.df_bbg["bbergvalue"] = self.df_bbg["bbergvalue"].astype(float)
         self.df_bbg["status"] = self.df_bbg["status"].astype(str)
+        self.df_bbg["asset_category"] = "test"
+        self.df_bbg["asset_subcategory"] = "test"
+        self.df_bbg["currency"] = "test"
+        self.df_bbg["country"] = "test"
+        self.df_bbg["is_tr"] = "TRUE"
+        self.df_bbg["analytic_category"] = "test"
+
+        # Rename column headers to match table in database
+        col_dict = {'bbergsymbol': 'ticker',
+                    'bbergfield': 'description',
+                    'bbergdate': 'business_datetime',
+                    'bbergvalue': 'value',
+                    'status': 'source'}
+        self.df_bbg.columns = [col_dict.get(x, x) for x in self.df_bbg.columns]
 
         logging.info("Columns converted to respective data types")
 
-        return
+        return self.df_bbg
 
     def upload_data(self):
 
         # Call function that uploads data frame to SQL database from respective class and module
-        Db.df_to_staging_asset(self.df_bbg)
+        db = Db()
+        db.df_to_staging_asset(self.df_bbg)
 
         logging.info("Data written to database")
 
