@@ -113,7 +113,7 @@ class Asset:
 
 # noinspection PyAttributeOutsideInit
 class FicaAssetInput(Asset):
-    def __init__(self, ticker: str, input_category: Union[str, fica_asset_input.Category],
+    def __init__(self, ticker: str, input_category: Union[str, fica_asset_input.CurveName],
                  curve_tenor: Union[str, fica_asset_input.CurveTenor, None]) -> None:
         """FicaAsset class to hold data from database"""
         super().__init__(ticker)
@@ -130,12 +130,12 @@ class FicaAssetInput(Asset):
             self._curve_tenor = x if isinstance(x, fica_asset_input.CurveTenor) else fica_asset_input.CurveTenor[x]
 
     @property
-    def input_category(self) -> fica_asset_input.Category:
+    def input_category(self) -> fica_asset_input.CurveName:
         return self._input_category
 
     @input_category.setter
-    def input_category(self, x: Union[fica_asset_input.Category, str]) -> None:
-        self._input_category = x if isinstance(x, fica_asset_input.Category) else fica_asset_input.Category[x]
+    def input_category(self, x: Union[fica_asset_input.CurveName, str]) -> None:
+        self._input_category = x if isinstance(x, fica_asset_input.CurveName) else fica_asset_input.CurveName[x]
 
 
 # noinspection PyAttributeOutsideInit

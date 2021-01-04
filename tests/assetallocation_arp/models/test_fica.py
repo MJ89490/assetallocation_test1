@@ -7,7 +7,7 @@ from psycopg2.extras import DateTimeTZRange
 from assetallocation_arp.models import fica as f
 from assetallocation_arp.data_etl.dal.data_models.strategy import Fica
 from assetallocation_arp.data_etl.dal.data_models.asset import FicaAssetInput, AssetAnalytic, FicaAssetInputGroup
-from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import CurveTenor, Category
+from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import CurveTenor, CurveName
 
 
 r_path = Path(__file__).parent / 'resources' / 'fica'
@@ -106,14 +106,14 @@ def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
         asset_input_group = []
         for i, j in tickers.items():
             so_ticker = asset.loc[f'sovereign_ticker_{i}']
-            so_fai = FicaAssetInput(so_ticker, Category.sovereign, j)
+            so_fai = FicaAssetInput(so_ticker, CurveName.sovereign, j)
             so_fai.country = asset.loc['country']
             so_fai.asset_analytics = [AssetAnalytic(so_ticker, 'PX_LAST', index, float(val)) for index, val
                                       in data.loc[:, so_ticker].iteritems() if pd.notna(val)]
             asset_input_group.append(so_fai)
 
             sw_ticker = asset.loc[f'swap_ticker_{i}']
-            sw_fai = FicaAssetInput(sw_ticker, Category.swap, j)
+            sw_fai = FicaAssetInput(sw_ticker, CurveName.swap, j)
             sw_fai.country = asset.loc['country']
             sw_fai.asset_analytics = [AssetAnalytic(sw_ticker, 'PX_LAST', index, float(val)) for index, val in
                                       data.loc[:, sw_ticker].iteritems() if pd.notna(val)]
@@ -121,7 +121,7 @@ def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
 
             if i in cr_tickers:
                 cr_ticker = asset.loc[f'cr_swap_ticker_{i}']
-                cr_fai = FicaAssetInput(cr_ticker, Category.swap_cr, j)
+                cr_fai = FicaAssetInput(cr_ticker, CurveName.swap_cr, j)
                 cr_fai.country = asset.loc['country']
                 cr_fai.asset_analytics = [AssetAnalytic(cr_ticker, 'PX_LAST', index, float(val)) for index, val in
                                           data.loc[:, cr_ticker].iteritems() if pd.notna(val)]
@@ -129,7 +129,7 @@ def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
 
         future_ticker = asset.loc['future_ticker']
         if pd.notna(future_ticker):
-            future_asset_input = FicaAssetInput(future_ticker, Category.future, None)
+            future_asset_input = FicaAssetInput(future_ticker, CurveName.future, None)
             future_asset_input.country = asset.loc['country']
             future_asset_input.asset_analytics = [AssetAnalytic(future_ticker, 'PX_LAST', index, float(val)) for index, val
                                                   in data.loc[:, future_ticker].iteritems() if pd.notna(val)]

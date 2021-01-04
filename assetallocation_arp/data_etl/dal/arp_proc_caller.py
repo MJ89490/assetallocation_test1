@@ -518,14 +518,13 @@ class FicaProcCaller(StrategyProcCaller):
     def _insert_fica_assets(self, fica_version: int, fica_asset_groups: List[FicaAssetInputGroup]) -> None:
         """Insert asset data for a version of Fica"""
         for i in fica_asset_groups:
-            asset_tickers, categories, curve_tenors = [], [], []
+            asset_tickers, names = [], []
             for j in i.fica_asset_inputs:
                 asset_tickers.append(j.ticker)
-                categories.append(j.input_category)
-                curve_tenors.append(j.curve_tenor)
+                names.append(f'{j.curve_tenor}_{j.input_category}')
 
             self.call_proc(
-                'arp.insert_fica_assets', [fica_version, i.asset_subcategory, asset_tickers, categories, curve_tenors]
+                'arp.insert_fica_assets', [fica_version, asset_tickers, names]
             )
 
     def select_strategy(self, strategy_version: int) -> Optional[Fica]:
@@ -558,7 +557,8 @@ class FicaProcCaller(StrategyProcCaller):
 
         fica_asset_inputs = {}
         for r in res:
-            f = FicaAssetInput(r['asset_ticker'], r['fica_asset_category'], r['curve_tenor'])
+            curve_tenor, fica_asset_category = r['fica_asset_name'].split('_', 1)
+            f = FicaAssetInput(r['asset_ticker'], fica_asset_category, curve_tenor)
             fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], []).append(f)
 
         grouped_asset_inputs = [FicaAssetInputGroup(key, val) for key, val in fica_asset_inputs.items()]
@@ -578,7 +578,8 @@ class FicaProcCaller(StrategyProcCaller):
 
         fica_asset_inputs = {}
         for r in res:
-            f = FicaAssetInput(r['asset_ticker'], r['fica_asset_category'], r['curve_tenor'])
+            curve_tenor, fica_asset_category = r['fica_asset_name'].split('_', 1)
+            f = FicaAssetInput(r['asset_ticker'], fica_asset_category, curve_tenor)
             f.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
             fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], []).append(f)
 
