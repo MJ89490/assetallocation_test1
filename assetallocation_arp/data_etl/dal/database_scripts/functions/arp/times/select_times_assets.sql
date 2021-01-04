@@ -26,7 +26,12 @@ BEGIN
       JOIN arp.times t on ta.strategy_id = t.strategy_id
     WHERE
       t.version = strategy_version
-    GROUP BY a1.id, a2.id
+    GROUP BY
+      a1.id,
+      a2.id,
+      ta.asset_subcategory,
+      ta.cost,
+      ta.s_leverage
   ;
 END
 $$;
