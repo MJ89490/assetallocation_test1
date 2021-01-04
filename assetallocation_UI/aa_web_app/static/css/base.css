@@ -35,12 +35,14 @@
 
 /* COMMON FEATURES */
 .container .title-page{padding-top:100px; color: #005774 !important;}
+.title-page-model{padding-top:75px; color: #005774 !important;}
 .row_risk_returns{margin-top: 40px;}
 .ag-header-cell-label {justify-content: center;}
 
 /* TIMES PAGE */
-#selectVersion {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 20px; height: 48px;}
-.btn-select {margin-top: 20px; margin-left: 15px;}
+#selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
+.btn-dashboard {height: 38px; padding-top: 2px;}
+.btn-select {margin-top: 12px; height: 38px; margin-left: 10px; padding-top: 2px;}
 .btn-ag-grid {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; background-color: #fff !important;}
 .title-models-ag-grid {color: #005774 !important;}
 .row-ag-grid {margin-top: 70px;}

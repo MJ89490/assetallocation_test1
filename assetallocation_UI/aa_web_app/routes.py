@@ -70,14 +70,20 @@ def times_dashboard():
 @app.route('/times_strategy', methods=['GET', 'POST'])
 def times_strategy():
     form = InputsTimesModel()
+    show_versions = 'show_versions_not_available'
+    run_model_page = 'not_run_model_page'
+
     if request.method == 'POST':
-        run_model_page = 'run_model_page'
-    else:
-        run_model_page = 'not_run_model_page'
+        if request.form['submit_button'] == 'select-fund':
+            obj_received_data_times.fund_name =  form.input_fund_name_times.data
+            show_versions = 'show_versions_available'
+        elif request.form['submit_button'] == 'select-versions':
+            run_model_page = 'run_model_page'
 
     return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
+                           show_versions=show_versions,
                            run_model_page=run_model_page)
 
 

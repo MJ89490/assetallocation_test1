@@ -10,24 +10,32 @@
     <div class="container">
 
         <div class="row">
-            <h1 class="title-page">TIMES STRATEGY</h1>
+            <h1 class="title-page-model">TIMES STRATEGY</h1>
         </div>
 
-        <!--Select a version-->
+        <!--Select a version and a fund-->
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
                 <!--<button class="btn btn-secondary btn-lg" type="submit" name="submit_button" value="dashboard">Dashboard</button>-->
-                <form class="center" action="/times_dashboard" method="POST" novalidate>
-                    <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg">Dashboard</button>
+                <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                    <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg btn-dashboard">Dashboard</button>
                 </form>
                 <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
                     {{ form.hidden_tag() }}
-                    <!-- Form: select the version for the model -->
                     <div class="btn-group">
-                        {{ form.versions(class="form-control", id="selectVersion")}}
-                         <a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
+                        {{ form.input_fund_name_times(class="form-control", id="selectVersionFund")}}
+                         <a href="#"><button type="submit" name="submit_button" value="select-fund" class="btn btn-secondary btn-lg btn-select">Select this fund</button></a>
                     </div>
+
+                    <!-- Form: select the version for the model -->
+                     {% if show_versions == 'show_versions_available' %}
+                        <div class="btn-group">
+                            {{ form.versions(class="form-control", id="selectVersionFund")}}
+                             <a href="#"><button type="submit" name="submit_button" value="select-versions" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
+                        </div>
+                    {% endif %}
+
                 </form>
             </div>
             <div class="col-lg-4"></div>
@@ -37,7 +45,7 @@
              <!--Earth img-->
              <div class="row">
                 <div class="col-lg-12 text-center">
-                    <img alt="Legal and General" width="950px" height="470px;" src="static/img/model_image.png">
+                    <img alt="Legal and General" width="950px" height="450px;" src="static/img/model_image.png">
                 </div>
              </div>
         {% else %}
@@ -77,13 +85,6 @@
                                                              format: 'dd/mm/yyyy'
                                                         });
                                                     </script>
-                                                </div>
-                                                <!--Fund name-->
-                                                <div class="form-group">
-                                                    <label>Fund name</label>
-                                                    <div class="form-group form-models-select-times">
-                                                        {{ form.input_fund_name_times(class="form-control", id="input_fund_name_times")}}
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="btn-group">

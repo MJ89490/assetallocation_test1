@@ -46,8 +46,7 @@ class ReceivedDataTimes:
     def call_run_times(self, assets_input_times):
 
         self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
-        self.fund_name = self.times_form['input_fund_name_times']
-
+        print(self.fund_name)
         long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
                                         self.times_form['input_signal_two_long_times'],
                                         self.times_form['input_signal_three_long_times']]))
