@@ -40,16 +40,9 @@
             </div>
             <div class="col-lg-4"></div>
         </div>
-
-        {% if run_model_page !='run_model_page' %}
-             <!--Earth img-->
-             <div class="row">
-                <div class="col-lg-12 text-center">
-                    <img alt="Legal and General" width="950px" height="450px;" src="static/img/model_image.png">
-                </div>
-             </div>
-        {% else %}
+        {% if run_model_page == 'run_new_version' %}
             <div class="row row-effect-ag-grid"></div>
+            <h2 class="title-models-ag-grid">Model assets</h2>
             <div style="height: 30%; display: flex; flex-direction: column;">
                 <div style="margin-bottom: 4px;">
                     <button class="btn btn-outline-secondary" onclick="onAddRow()">Add Input</button>
@@ -238,6 +231,76 @@
                     </div>
                 </div>
             <script src="static/js/form_data_times.js"></script>
+
+        {% elif run_model_page == 'run_existing_version' %}
+            <h6><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>
+            <!--Assets-->
+            <h2 class="title-models-ag-grid">Model assets</h2>
+            <table class="table table-hover table-existing-version">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">Asset</th>
+                        <th class="text-center" scope="col">Signal ticker</th>
+                        <th class="text-center" scope="col">Future ticker</th>
+                        <th class="text-center" scope="col">Costs</th>
+                        <th class="text-center" scope="col">Leverage</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for asset in assets: %}
+                    <tr>
+                        {% for a in asset: %}
+                            <td class="text-center">{{a}}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+              </tbody>
+            </table>
+            <!--Inputs-->
+            <h2 class="title-models-ag-grid">Model inputs</h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Date</li>
+                        <li class="list-group-item">Strategy weight: <span class="input_existing_version">{{inputs_versions['input_strategy_weight_times']}}</span></li>
+                        <li class="list-group-item">Times lag:       <span class="input_existing_version">{{inputs_versions['input_time_lag_times']}}</span></li>
+                        <li class="list-group-item">Leverage:        <span class="input_existing_version">{{inputs_versions['input_leverage_times']}}</span></li>
+                        <li class="list-group-item">Volatility:      <span class="input_existing_version">{{inputs_versions['input_vol_window_times']}}</span></li>
+                        <li class="list-group-item">Frequency:       <span class="input_existing_version">{{inputs_versions['input_frequency_times']}}</span></li>
+                        <li class="list-group-item">Week day:        <span class="input_existing_version">{{inputs_versions['input_weekday_times']}}</span></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-6">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Signal1 short: <span class="input_existing_version">{{inputs_versions['input_signal_one_short_times']}}</span></li>
+                        <li class="list-group-item">Signal2 short: <span class="input_existing_version">{{inputs_versions['input_signal_two_short_times']}}</span></li>
+                        <li class="list-group-item">Signal3 short: <span class="input_existing_version">{{inputs_versions['input_signal_three_short_times']}}</span></li>
+                        <li class="list-group-item">Signal1 long:  <span class="input_existing_version">{{inputs_versions['input_signal_one_long_times']}}</span></li>
+                        <li class="list-group-item">Signal2 long:  <span class="input_existing_version">{{inputs_versions['input_signal_two_long_times']}}</span></li>
+                        <li class="list-group-item">Signal3 long:  <span class="input_existing_version">{{inputs_versions['input_signal_three_long_times']}}</span></li>
+                        <li class="list-group-item"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button class="btn btn-secondary btn-lg btn-run-model-existing-versions-times" type="submit" name="submit_button" value="run-strategy-existing-versions">Run strategy</button>
+                    </div>
+                    <div class="col-lg-6"></div>
+                </div>
+            </form>
+
+        {% else %}
+            <!--Earth img-->
+             <div class="row">
+                <div class="col-lg-12 text-center">
+                    <img alt="Legal and General" width="950px" height="450px;" src="static/img/model_image.png">
+                </div>
+             </div>
         {% endif %}
     </div>
     {% endblock %}

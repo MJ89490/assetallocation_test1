@@ -1,7 +1,7 @@
 import json
 
 from flask import render_template
-from flask import request
+from flask import request, redirect, url_for
 
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
@@ -11,6 +11,7 @@ from aa_web_app.data_import.get_data_times import ReceivedDataTimes
 from aa_web_app.data_import.get_data_effect import ProcessDataEffect
 
 from aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
+from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
 from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
@@ -44,7 +45,7 @@ def times_dashboard():
             positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start, end_date=end)
         elif request.form['submit_button'] == 'dashboard':
             apc = TimesProcCaller()
-            f, obj_received_data_times.fund_name = 'f1', 'f1'
+            f, obj_received_data_times.fund_name = 'f1', 'f1'  # TODO CHANGE IT WITH FUND BTN AT THE TOP
             strategy, obj_received_data_times.version_strategy = max(apc.select_strategy_versions(Name.times)), \
                                                                  max(apc.select_strategy_versions(Name.times))
             fs = apc.select_fund_strategy_results(f, Name.times, strategy)
@@ -71,20 +72,74 @@ def times_dashboard():
 def times_strategy():
     form = InputsTimesModel()
     show_versions = 'show_versions_not_available'
-    run_model_page = 'not_run_model_page'
+    run_model_page = 'not_run_model'
+    fund = ''
+    assets = []
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'select-fund':
-            obj_received_data_times.fund_name =  form.input_fund_name_times.data
+            obj_received_data_times.fund_name = form.input_fund_name_times.data
             show_versions = 'show_versions_available'
         elif request.form['submit_button'] == 'select-versions':
-            run_model_page = 'run_model_page'
+            version_strategy = form.versions.data
+            if version_strategy == 'New Version':
+                run_model_page = 'run_new_version'
+            else:
+                run_model_page = 'run_existing_version'
+                # TODO put that in a fct
+                apc = TimesProcCaller()
+                obj_received_data_times.version_strategy = version_strategy
+                strat = apc.select_strategy(version_strategy)
+                # Inputs
+                fs = apc.select_fund_strategy_results(obj_received_data_times.fund_name, Name.times, version_strategy)
+
+                inputs_versions = {'fund': obj_received_data_times.fund_name, 'version': version_strategy,
+                                   'input_date_from_times': '01/01/2000',
+                                   'input_strategy_weight_times': fs.weight,
+                                   'input_time_lag_times': strat.time_lag_in_months,
+                                   'input_leverage_times': strat.leverage_type.name,
+                                   'input_vol_window_times': strat.volatility_window,
+                                   'input_frequency_times': strat.frequency.name,
+                                   'input_weekday_times': strat.day_of_week.name,
+                                   'input_signal_one_short_times': strat.short_signals[0],
+                                   'input_signal_one_long_times': strat.long_signals[0],
+                                   'input_signal_two_short_times': strat.short_signals[1],
+                                   'input_signal_two_long_times': strat.long_signals[1],
+                                   'input_signal_three_short_times': strat.short_signals[2],
+                                   'input_signal_three_long_times': strat.long_signals[2]}
+
+                obj_received_data_times.inputs_existing_versions_times = inputs_versions
+                # Assets
+                assets_names, assets, signal, future, costs, leverage = [], [], [], [], [], []
+
+                for asset in strat.asset_inputs:
+                    assets_names.append(asset.asset_subcategory.name)
+                    signal.append(asset.signal_ticker)
+                    future.append(asset.future_ticker)
+                    costs.append(asset.cost)
+                    leverage.append(asset.s_leverage)
+                    assets.append([asset.asset_subcategory.name, asset.signal_ticker, asset.future_ticker, asset.cost,
+                                   asset.s_leverage])
+
+                obj_received_data_times.assets_existing_versions_times = {'input_asset': assets_names,
+                                                                          'input_signal_ticker': signal,
+                                                                          'input_future_ticker': future,
+                                                                          'input_costs': costs,
+                                                                          'input_leverage': leverage}
+
+        elif request.form['submit_button'] == 'run-strategy-existing-versions':
+            obj_received_data_times.received_data_times(obj_received_data_times.inputs_existing_versions_times)
+            obj_received_data_times.call_run_times(obj_received_data_times.assets_existing_versions_times)
+
+            return redirect(url_for('times_dashboard'))
 
     return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
                            show_versions=show_versions,
-                           run_model_page=run_model_page)
+                           run_model_page=run_model_page,
+                           assets=assets,
+                           inputs_versions=obj_received_data_times.inputs_existing_versions_times)
 
 
 @app.route('/received_data_times_form', methods=['POST'])
