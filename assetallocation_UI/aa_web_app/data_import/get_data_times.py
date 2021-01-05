@@ -165,10 +165,8 @@ class ReceivedDataTimes:
         ]
 
         fund_strategy = run_strategy(self.fund_name, float(self.times_form['input_strategy_weight_times']),
-                                     times, os.environ.get('USERNAME'), self.is_new_strategy, self.version_strategy,
-                                     self.times_form['input_date_from_times']
+                                     times, os.environ.get('USERNAME'), self.times_form['input_date_from_times']
                                      )
-
         self.version_strategy = fund_strategy.strategy_version
 
         return fund_strategy
@@ -176,7 +174,7 @@ class ReceivedDataTimes:
     def run_existing_strategy(self):
         fund_strategy = run_strategy(
             self.fund_name, float(self.strategy_weight), self.strategy, os.environ.get('USERNAME'),
-            self.is_new_strategy, self.inputs_existing_versions_times['input_date_from_times']
+            self.inputs_existing_versions_times['input_date_from_times'], self.is_new_strategy
         )
         self.version_strategy = fund_strategy.strategy_version
         return fund_strategy

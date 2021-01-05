@@ -8,8 +8,8 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 
 
 def run_strategy(
-        fund_name: str, strategy_weight: float, strategy: Strategy, user_id: str, is_new_strategy: bool, existing_version: int,
-        business_datetime: dt.datetime = dt.datetime.today() - dt.timedelta(365)
+        fund_name: str, strategy_weight: float, strategy: Strategy, user_id: str,
+        business_datetime: dt.datetime = dt.datetime.today() - dt.timedelta(365), is_new_strategy: bool = True
 ) -> FundStrategy:
     """Inserts strategy object data into database. Reads asset analytics from
     database to enable running of strategy, producing outputs of
@@ -20,8 +20,6 @@ def run_strategy(
     pc = StrategyProcCallerFactory.get_proc_caller(strategy.name)()
     if is_new_strategy:
         pc.insert_strategy(strategy, user_id)
-    else:
-        strategy.version = existing_version
 
     pc.add_asset_analytics_to_strategy(strategy, business_datetime)
     fs = FundStrategy(fund_name, strategy.name, strategy.version, strategy_weight)
