@@ -85,11 +85,10 @@ def times_strategy():
                 run_model_page = 'run_new_version'
             else:
                 run_model_page = 'run_existing_version'
-                assets = obj_received_data_times.receive_data_existing_versions(version_strategy=version_strategy)
+                assets = obj_received_data_times.receive_data_existing_versions(strategy_version=version_strategy)
 
         elif request.form['submit_button'] == 'run-strategy-existing-versions':
-            obj_received_data_times.received_data_times(obj_received_data_times.inputs_existing_versions_times)
-            obj_received_data_times.call_run_times(obj_received_data_times.assets_existing_versions_times)
+            obj_received_data_times.run_existing_strategy()
 
             return redirect(url_for('times_dashboard'))
 
