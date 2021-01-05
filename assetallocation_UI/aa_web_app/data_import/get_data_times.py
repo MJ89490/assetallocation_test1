@@ -13,8 +13,16 @@ class ReceivedDataTimes:
         self.assets_existing_versions_times = {}
         self.version_strategy = 0
         self.strategy_weight = 0
-        self.is_new_strategy = True
+        self.is_new_strategy = None
         self.fund_name = None
+
+    @property
+    def is_new_strategy(self):
+        return int(self._is_new_strategy)
+
+    @is_new_strategy.setter
+    def is_new_strategy(self, value):
+        self._is_new_strategy= value
 
     @property
     def version_strategy(self):
@@ -115,12 +123,13 @@ class ReceivedDataTimes:
 
     def received_data_times(self, form_data):
         if self.is_new_strategy:
-            self.times_form = form_data
-            for idx, val in enumerate(self.times_form):
+            tmp = {}
+            for idx, val in enumerate(form_data):
                 if idx > 1:
-                    self.times_form[val.split('=', 1)[0]] = val.split('=', 1)[1]
+                    tmp[val.split('=', 1)[0]] = val.split('=', 1)[1]
             # Process date under format '12%2F09%2F2000 to 01/01/2000
-            self.times_form['input_date_from_times'] = '/'.join(self.times_form['input_date_from_times'].split('%2F'))
+            tmp['input_date_from_times'] = '/'.join(tmp['input_date_from_times'].split('%2F'))
+            self.times_form = tmp
         else:
             self.times_form = form_data
 

@@ -105,6 +105,7 @@ def times_strategy():
 @app.route('/received_data_times_form', methods=['POST'])
 def received_data_times_form():
     form_data = request.form['form_data'].split('&')
+    obj_received_data_times.is_new_strategy = True
     obj_received_data_times.received_data_times(form_data)
     obj_received_data_times.call_run_times(json.loads(request.form['json_data']))
     return json.dumps({'status': 'OK'})
@@ -157,6 +158,7 @@ def effect_strategy():
 @app.route('/received_data_effect_form', methods=['POST'])
 def received_data_effect_form():
     form_data = request.form['form_data'].split('&')
+    obj_received_data_times.is_new_strategy = True
     effect_form = obj_received_data_effect.receive_data_effect(form_data)
     obj_received_data_effect.call_run_effect(assets_inputs_effect=json.loads(request.form['json_data']))
     return json.dumps({'status': 'OK', 'effect_data': effect_form})
