@@ -28,6 +28,7 @@ class SideBarDataForm(FlaskForm):
     start_date_export = StringField()
     end_date_export = StringField()
     submit_ok_export_data = SubmitField('ok')
+    submit_ok_export_fund_data = SubmitField('ok')
 
 
 class AssetInputForm(FlaskForm):

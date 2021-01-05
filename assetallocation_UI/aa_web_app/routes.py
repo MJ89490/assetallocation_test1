@@ -41,7 +41,7 @@ def times_dashboard():
             start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
             positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start, end_date=end)
 
-        elif form_side_bar.submit_ok_charts_data.data:
+        elif form_side_bar.submit_ok_charts_data.data or form_side_bar.submit_ok_export_fund_data.data:
             show_versions = 'show_versions_available'
             obj_received_data_times.fund_name = form_side_bar.input_fund_name_times.data
 

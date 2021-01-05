@@ -11,6 +11,7 @@
          }
 
 .sidenav a {padding-left: 16px;
+            margin-bottom: 20px;
             text-decoration: none;
             font-size: 23px;
             color: #fff;
@@ -145,3 +146,12 @@
 .navbar-default {margin-left: 180px;}
 .navbar-default .navbar-nav .nav-link {color: #007faa;}
 .navbar-default .nav-item:hover .nav-link {color: rgb(102, 204, 238);}
+
+
+.btn-dashboard {height: 35px;
+                padding-top: 2px;
+                margin-left: 10px;
+                margin-top: 15px;
+                background-color:  #585858 !important;
+                border-color: #585858 !important;
+                width: 160px;}

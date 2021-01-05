@@ -45,6 +45,7 @@
         <form class="center" action="" method="POST" novalidate>
             {{ form_side_bar.hidden_tag() }}
             <!-- Fund name -->
+            <label class="label-models-date-sidebar">Fund name</label>
            <div class="btn-group">
                 {{ form_side_bar.input_fund_name_times(class="form-control", id="selectFund")}}
                 {{ form_side_bar.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
@@ -64,27 +65,21 @@
         <a class="sidenav-item" href="#">Export Data</a>
         <form class="center" action="" method="POST" novalidate>
             {{ form_side_bar.hidden_tag() }}
+            <!-- Fund name -->
+            <label class="label-models-date-sidebar">Fund name</label>
+           <div class="btn-group">
+                {{ form_side_bar.input_fund_name_times(class="form-control", id="selectFund")}}
+                {{ form_side_bar.submit_ok_export_fund_data(class="form-control", id="btn-select-charts-ok")}}
+           </div>
             <!-- Form: select the version for the model -->
+            <label class="label-models-date-sidebar">Versions</label>
             <div class="btn-group">
                 {{ form_side_bar.versions_for_export(class="form-control", id="selectVersion")}}
+                {{ form_side_bar.submit_ok_export_data(class="form-control", id="btn-select-charts-versions-ok")}}
             </div>
-            <!--Leverage type-->
-            <div class="form-group">
-               <label class="label-models-select-sidebar">Leverage type</label>
-               <select id="inputleveragesidebardexcel" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
-                   <option>v</option>
-                   <option>e</option>
-                   <option>n</option>
-                   <option>s</option>
-               </select>
-           </div>
-            <!--Start date export-->
-            <label class="label-models-date-sidebar">Start date</label>
-            {{ form_side_bar.start_date_export(class="form-control", placeholder="25/12/2018", id="sidebar-start-date") }}
-            <!--End date export-->
-             <label class="label-models-date-sidebar">End date</label>
-            {{ form_side_bar.end_date_export(class="form-control", placeholder="05/01/2019", id="sidebar-end-date") }}
-            {{ form_side_bar.submit_ok_export_data(class="form-control", id="btn-select-export-data")}}
+        </form>
+        <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+            <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg btn-dashboard">Export to csv</button>
         </form>
     </div>
 
