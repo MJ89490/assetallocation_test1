@@ -6,15 +6,12 @@ from flask import request, redirect, url_for
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
 from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
+from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
+from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
 
 from aa_web_app.data_import.get_data_times import ReceivedDataTimes
 from aa_web_app.data_import.get_data_effect import ProcessDataEffect
-
 from aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
-from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
-
-from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
-from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
 
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
@@ -45,7 +42,8 @@ def times_dashboard():
             positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start, end_date=end)
         elif request.form['submit_button'] == 'dashboard':
             apc = TimesProcCaller()
-            f, obj_received_data_times.fund_name = 'f1', 'f1'  # TODO CHANGE IT WITH FUND BTN AT THE TOP
+            # TODO get th version depending on the fund selected! Always try f1 for now
+            f, obj_received_data_times.fund_name = obj_received_data_times.fund_name, obj_received_data_times.fund_name
             strategy, obj_received_data_times.version_strategy = max(apc.select_strategy_versions(Name.times)), \
                                                                  max(apc.select_strategy_versions(Name.times))
             fs = apc.select_fund_strategy_results(f, Name.times, strategy)
@@ -72,6 +70,7 @@ def times_dashboard():
 def times_strategy():
     form = InputsTimesModel()
     show_versions = 'show_versions_not_available'
+    show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets = []
 
@@ -79,6 +78,7 @@ def times_strategy():
         if request.form['submit_button'] == 'select-fund':
             obj_received_data_times.fund_name = form.input_fund_name_times.data
             show_versions = 'show_versions_available'
+            show_dashboard = 'show_dashboard'
         elif request.form['submit_button'] == 'select-versions':
             version_strategy = form.versions.data
             if version_strategy == 'New Version':
@@ -98,6 +98,7 @@ def times_strategy():
                            form=form,
                            show_versions=show_versions,
                            run_model_page=run_model_page,
+                           show_dashboard=show_dashboard,
                            assets=assets,
                            inputs_versions=obj_received_data_times.inputs_existing_versions_times)
 

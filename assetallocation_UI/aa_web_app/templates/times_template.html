@@ -17,17 +17,12 @@
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
-                <!--<button class="btn btn-secondary btn-lg" type="submit" name="submit_button" value="dashboard">Dashboard</button>-->
-                <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
-                    <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg btn-dashboard">Dashboard</button>
-                </form>
                 <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
                     {{ form.hidden_tag() }}
                     <div class="btn-group">
                         {{ form.input_fund_name_times(class="form-control", id="selectVersionFund")}}
                          <a href="#"><button type="submit" name="submit_button" value="select-fund" class="btn btn-secondary btn-lg btn-select">Select this fund</button></a>
                     </div>
-
                     <!-- Form: select the version for the model -->
                      {% if show_versions == 'show_versions_available' %}
                         <div class="btn-group">
@@ -35,8 +30,12 @@
                              <a href="#"><button type="submit" name="submit_button" value="select-versions" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
                         </div>
                     {% endif %}
-
                 </form>
+                {% if show_dashboard == 'show_dashboard' %}
+                    <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                        <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg btn-dashboard">Dashboard</button>
+                    </form>
+                {% endif %}
             </div>
             <div class="col-lg-4"></div>
         </div>
