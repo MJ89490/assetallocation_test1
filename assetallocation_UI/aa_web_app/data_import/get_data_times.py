@@ -15,14 +15,23 @@ class ReceivedDataTimes:
         self.strategy_weight = 0
         self.is_new_strategy = None
         self.fund_name = None
+        self.strategy = None
 
     @property
-    def is_new_strategy(self):
-        return int(self._is_new_strategy)
+    def strategy(self) -> Times:
+        return self._strategy
+
+    @strategy.setter
+    def strategy(self, x: Times) -> None:
+        self._strategy = x
+
+    @property
+    def is_new_strategy(self) -> bool:
+        return bool(self._is_new_strategy)
 
     @is_new_strategy.setter
-    def is_new_strategy(self, value):
-        self._is_new_strategy= value
+    def is_new_strategy(self, value: bool):
+        self._is_new_strategy = value
 
     @property
     def version_strategy(self):
@@ -31,14 +40,6 @@ class ReceivedDataTimes:
     @version_strategy.setter
     def version_strategy(self, value):
         self._version_strategy = value
-
-    @property
-    def is_new_strategy(self):
-        return self._is_new_strategy
-
-    @is_new_strategy.setter
-    def is_new_strategy(self, value):
-        self._is_new_strategy = value
 
     @property
     def strategy_weight(self):
@@ -76,33 +77,34 @@ class ReceivedDataTimes:
     def assets_existing_versions_times(self, value):
         self._assets_existing_versions_times = value
 
-    def receive_data_existing_versions(self, version_strategy):
+    def receive_data_existing_versions(self, strategy_version):
         apc = TimesProcCaller()
-        self.version_strategy = version_strategy
-        strat = apc.select_strategy(version_strategy)
+        self.version_strategy = strategy_version
+        self.strategy = apc.select_strategy(strategy_version)
         # Inputs
-        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, version_strategy)
+        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, strategy_version)
+        self.strategy_weight = fs.weight
 
-        inputs_versions = {'fund': self.fund_name, 'version': version_strategy,
+        inputs_versions = {'fund': self.fund_name, 'version': strategy_version,
                            'input_date_from_times': '01/01/2000',
-                           'input_strategy_weight_times': fs.weight,
-                           'input_time_lag_times': strat.time_lag_in_months,
-                           'input_leverage_times': strat.leverage_type.name,
-                           'input_vol_window_times': strat.volatility_window,
-                           'input_frequency_times': strat.frequency.name,
-                           'input_weekday_times': strat.day_of_week.name,
-                           'input_signal_one_short_times': strat.short_signals[0],
-                           'input_signal_one_long_times': strat.long_signals[0],
-                           'input_signal_two_short_times': strat.short_signals[1],
-                           'input_signal_two_long_times': strat.long_signals[1],
-                           'input_signal_three_short_times': strat.short_signals[2],
-                           'input_signal_three_long_times': strat.long_signals[2]}
+                           'input_strategy_weight_times': self.strategy_weight,
+                           'input_time_lag_times': self.strategy.time_lag_in_months,
+                           'input_leverage_times': self.strategy.leverage_type.name,
+                           'input_vol_window_times': self.strategy.volatility_window,
+                           'input_frequency_times': self.strategy.frequency.name,
+                           'input_weekday_times': self.strategy.day_of_week.name,
+                           'input_signal_one_short_times': self.strategy.short_signals[0],
+                           'input_signal_one_long_times': self.strategy.long_signals[0],
+                           'input_signal_two_short_times': self.strategy.short_signals[1],
+                           'input_signal_two_long_times': self.strategy.long_signals[1],
+                           'input_signal_three_short_times': self.strategy.short_signals[2],
+                           'input_signal_three_long_times': self.strategy.long_signals[2]}
 
         self.inputs_existing_versions_times = inputs_versions
         # Assets
         assets_names, assets, signal, future, costs, leverage = [], [], [], [], [], []
 
-        for asset in strat.asset_inputs:
+        for asset in self.strategy.asset_inputs:
             assets_names.append(asset.asset_subcategory.name)
             signal.append(asset.signal_ticker)
             future.append(asset.future_ticker)
@@ -169,4 +171,12 @@ class ReceivedDataTimes:
 
         self.version_strategy = fund_strategy.strategy_version
 
+        return fund_strategy
+
+    def run_existing_strategy(self):
+        fund_strategy = run_strategy(
+            self.fund_name, float(self.strategy_weight), self.strategy, os.environ.get('USERNAME'),
+            self.is_new_strategy, self.times_form['input_date_from_times']
+        )
+        self.version_strategy = fund_strategy.strategy_version
         return fund_strategy
