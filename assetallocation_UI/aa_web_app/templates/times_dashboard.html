@@ -44,22 +44,20 @@
         <a class="sidenav-item" href="#">Charts Data</a>
         <form class="center" action="" method="POST" novalidate>
             {{ form_side_bar.hidden_tag() }}
-            <!-- Form: select the version for the model -->
-            <div class="btn-group">
-                {{ form_side_bar.versions_for_charts(class="form-control", id="selectVersion")}}
-            </div>
-            <!--Leverage type-->
-           <div class="form-group">
-               <label class="label-models-select-sidebar">Leverage type</label>
-               <select id="inputleveragesidebar" name="leverage" class="form-control form-control-lg form-models-select-sidebar">
-                   <option>v</option>
-                   <option>e</option>
-                   <option>n</option>
-                   <option>s</option>
-               </select>
+            <!-- Fund name -->
+           <div class="btn-group">
+                {{ form_side_bar.input_fund_name_times(class="form-control", id="selectFund")}}
+                {{ form_side_bar.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
            </div>
-            <!--<a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select-sidebar">ok</button></a>-->
-            {{ form_side_bar.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
+
+            {% if show_versions == 'show_versions_available' %}
+                <!-- Form: select the version for the model -->
+                <label class="label-models-date-sidebar">Versions</label>
+                <div class="btn-group">
+                    {{ form_side_bar.versions_for_charts(class="form-control", id="selectVersion")}}
+                    {{ form_side_bar.submit_ok_versions_data(class="form-control", id="btn-select-charts-versions-ok")}}
+                </div>
+            {% endif %}
         </form>
 
         <!-- ============================= EXPORT DATA ============================= -->

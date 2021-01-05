@@ -77,6 +77,12 @@ class ReceivedDataTimes:
     def assets_existing_versions_times(self, value):
         self._assets_existing_versions_times = value
 
+    def receive_data_latest_version_dashboard(self):
+        apc = TimesProcCaller()
+        self.version_strategy = max(apc.select_strategy_versions(Name.times))
+        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy)
+        self.strategy_weight = fs.weight
+
     def receive_data_existing_versions(self, strategy_version):
         apc = TimesProcCaller()
         self.version_strategy = strategy_version
@@ -132,8 +138,6 @@ class ReceivedDataTimes:
             # Process date under format '12%2F09%2F2000 to 01/01/2000
             tmp['input_date_from_times'] = '/'.join(tmp['input_date_from_times'].split('%2F'))
             self.times_form = tmp
-        else:
-            self.times_form = form_data
 
         print(self.times_form)
         return self.times_form

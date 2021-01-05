@@ -32,22 +32,24 @@ def home():
 def times_dashboard():
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
-
-    positions_chart = False
+    show_versions = 'show_versions_not_available'  # TODO move at the top
+    positions_chart, do_not_run = False, False
 
     if request.method == 'POST':
         if form.submit_ok_positions.data:
             positions_chart = True
             start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
             positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start, end_date=end)
+
+        elif form_side_bar.submit_ok_charts_data.data:
+            show_versions = 'show_versions_available'
+            obj_received_data_times.fund_name = form_side_bar.input_fund_name_times.data
+
+        elif form_side_bar.submit_ok_versions_data.data:
+            obj_received_data_times.version_strategy = form_side_bar.versions_for_charts.data
+
         elif request.form['submit_button'] == 'dashboard':
-            apc = TimesProcCaller()
-            # TODO get th version depending on the fund selected! Always try f1 for now
-            f, obj_received_data_times.fund_name = obj_received_data_times.fund_name, obj_received_data_times.fund_name
-            strategy, obj_received_data_times.version_strategy = max(apc.select_strategy_versions(Name.times)), \
-                                                                 max(apc.select_strategy_versions(Name.times))
-            fs = apc.select_fund_strategy_results(f, Name.times, strategy)
-            obj_received_data_times.strategy_weight = fs.weight
+            obj_received_data_times.receive_data_latest_version_dashboard()
 
     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name, obj_received_data_times.version_strategy)
     template_data = run_times_charts_data_computations(obj_times_charts_data,
@@ -57,10 +59,10 @@ def times_dashboard():
         template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, \
                                                                                              dates_pos, \
                                                                                              names_pos
-
     return render_template('times_dashboard.html',
                            title='Dashboard',
                            form=form,
+                           show_versions=show_versions,
                            form_side_bar=form_side_bar,
                            fund_strategy=obj_received_data_times.fund_strategy_dict,
                            **template_data)
