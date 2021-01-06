@@ -7,6 +7,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!--Calendar import-->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -42,24 +43,25 @@
 
         <!-- ============================= CHARTS DATA ============================= -->
         <a class="sidenav-item" href="#">Charts Data</a>
-        <form class="center" action="" method="POST" novalidate>
-            {{ form_side_bar.hidden_tag() }}
+        <form>
             <!-- Fund name -->
-            <label class="label-models-date-sidebar">Fund name</label>
-           <div class="btn-group">
-                {{ form_side_bar.input_fund_name_times(class="form-control", id="selectFund")}}
-                {{ form_side_bar.submit_ok_charts_data(class="form-control", id="btn-select-charts-ok")}}
-           </div>
+            <label class="label-models-date-sidebar">Step 1: select a fund</label>
+            <select class="form-control selectFund" id="send_data_fund_from_sidebar" onchange='sideBarFund()'>
+                {% for f in fund_list %}
+                    <option value="" selected disabled>Fund</option>
+                    <option>{{f}}</option>
+                {% endfor %}
+            </select>
 
-            {% if show_versions == 'show_versions_available' %}
-                <!-- Form: select the version for the model -->
-                <label class="label-models-date-sidebar">Versions</label>
-                <div class="btn-group">
-                    {{ form_side_bar.versions_for_charts(class="form-control", id="selectVersion")}}
-                    {{ form_side_bar.submit_ok_versions_data(class="form-control", id="btn-select-charts-versions-ok")}}
-                </div>
-            {% endif %}
+            <label class="label-models-date-sidebar">Step 2: select a version</label>
+            <select class="form-control selectFund" id="send_data_version_from_sidebar" onchange='sideBarVersion()'>
+                {% for v in versions_list %}
+                    <option value="" selected disabled>Version</option>
+                    <option>{{v}}</option>
+                {% endfor %}
+            </select>
         </form>
+        <script src="static/js/form_dashboard_times.js"></script>
 
         <!-- ============================= EXPORT DATA ============================= -->
         <a class="sidenav-item" href="#">Export Data</a>
@@ -67,19 +69,20 @@
             {{ form_side_bar.hidden_tag() }}
             <!-- Fund name -->
             <label class="label-models-date-sidebar">Fund name</label>
-           <div class="btn-group">
-                {{ form_side_bar.input_fund_name_times(class="form-control", id="selectFund")}}
-                {{ form_side_bar.submit_ok_export_fund_data(class="form-control", id="btn-select-charts-ok")}}
-           </div>
-            <!-- Form: select the version for the model -->
-            <label class="label-models-date-sidebar">Versions</label>
-            <div class="btn-group">
-                {{ form_side_bar.versions_for_export(class="form-control", id="selectVersion")}}
-                {{ form_side_bar.submit_ok_export_data(class="form-control", id="btn-select-charts-versions-ok")}}
-            </div>
-        </form>
-        <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
-            <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg btn-dashboard">Export to csv</button>
+
+
+
+
+
+            {% if show_versions_export == 'show_versions_export' %}
+                <!-- Form: select the version for the model -->
+                <label class="label-models-date-sidebar">Versions</label>
+                <div class="btn-group">
+                    {{ form_side_bar.versions_for_charts(class="form-control", id="selectVersion")}}
+                    {{ form_side_bar.submit_ok_export_data(class="form-control", id="btn-select-charts-versions-ok")}}
+                </div>
+            {% endif %}
+            <button  type="submit" name="submit_button" value="export_to_csv" class="btn btn-secondary btn-lg btn-dashboard">Export to csv</button>
         </form>
     </div>
 

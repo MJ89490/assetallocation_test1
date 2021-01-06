@@ -60,6 +60,16 @@
                 height: 33px;
                }
 
+.selectFund {color: #005774 !important;
+                border-color: #005774 !important;
+                width: 120px;
+                margin-top: 10px;
+                margin-left: 10px;
+                margin-bottom: 10px;
+                height: 33px;
+               }
+
+
 #selectVersion {color: #005774 !important;
                 border-color: #005774 !important;
                 width: 120px;

@@ -12,6 +12,7 @@ class SideBarDataForm(FlaskForm):
     # Versions of the strategy
     existing_versions = get_strategy_versions(Name.times)
     version_choices = list(zip(existing_versions, existing_versions))
+    input_versions_times = existing_versions
     # version_choices = list(zip(existing_versions, format_versions(existing_versions)))
 
     # Chart Data
@@ -20,8 +21,9 @@ class SideBarDataForm(FlaskForm):
 
     # Fund name
     existing_funds = get_fund_names()
-    input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
-    submit_ok_charts_data = SubmitField('ok')
+    input_fund_name_times = existing_funds
+    # input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
+    submit_ok_charts_fund_data = SubmitField('ok')
 
     # Export data
     versions_for_export = SelectField('Versions', choices=version_choices)

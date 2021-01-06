@@ -91,6 +91,12 @@ class TimesChartsDataComputations(object):
         self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')
         self.positions = weight_df
 
+    def export_times_data_to_csv(self):
+
+        df = pd.DataFrame([self.signals, self.returns, self.positions])
+
+        # TODO : call fct to save the results on Domino (write it in another script)
+
     @staticmethod
     def sort_by_category_assets(values_dict: dict, category_name: list):
         """
