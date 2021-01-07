@@ -125,8 +125,8 @@ def received_data_times_form():
 @app.route('/receive_sidebar_data_times_form', methods=['POST'])
 def receive_sidebar_data_times_form():
     outputs_sidebar = json.loads(request.form['json_data'])
-    obj_received_data_times.version_strategy = outputs_sidebar['inputs_sidebar'][1]
-    obj_received_data_times.fund_name = outputs_sidebar['inputs_sidebar'][0]
+    obj_received_data_times.version_strategy = outputs_sidebar['inputs_version']
+    obj_received_data_times.fund_name = outputs_sidebar['input_fund']
     obj_received_data_times.type_of_request = outputs_sidebar['type_of_request']
 
     return json.dumps({'status': 'OK'})
