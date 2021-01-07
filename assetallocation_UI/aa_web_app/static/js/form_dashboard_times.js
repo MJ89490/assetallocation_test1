@@ -57,7 +57,7 @@ function sendDataToPython(){
     if (ready_to_send == true){
 
         var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0], "inputs_version": version_data_to_send_to_python[0], "type_of_request": type_of_request});
-        
+
         $.ajax({
                 url: "receive_sidebar_data_times_form",
                 data: {json_data: json_data},
