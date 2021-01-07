@@ -1,9 +1,17 @@
 data_to_send_to_python = []
 ready_to_send = false
+type_of_request = 'charts_data_sidebar'
 
 function sideBarFund() {
 //CREATE ERROR HANDLING BECAUSE WE CANNOT HAVE MORE THAN 1 FUND
         var select_box = document.getElementById("send_data_fund_from_sidebar");
+        var fund = select_box.options[select_box.selectedIndex].value;
+        this.sendDataToPython(fund);
+}
+
+function sideBarExportFund() {
+//CREATE ERROR HANDLING BECAUSE WE CANNOT HAVE MORE THAN 1 FUND
+        var select_box = document.getElementById("send_data_fund_export_from_sidebar");
         var fund = select_box.options[select_box.selectedIndex].value;
         this.sendDataToPython(fund);
 }
@@ -15,13 +23,20 @@ function sideBarVersion() {
         sendDataToPython(parseInt(version));
 }
 
+function sideBarExportVersion() {
+        var select_box = document.getElementById("send_data_version_export_from_sidebar");
+        var version = select_box.options[select_box.selectedIndex].value;
+        ready_to_send = true;
+        type_of_request = 'export_data_sidebar'
+        sendDataToPython(parseInt(version));
+}
+
 function sendDataToPython(val){
-    console.log(val);
     data_to_send_to_python.push(val);
     console.log(data_to_send_to_python);
 
     if (ready_to_send == true){
-        var json_data = JSON.stringify({"inputs_sidebar": data_to_send_to_python});
+        var json_data = JSON.stringify({"inputs_sidebar": data_to_send_to_python, "type_of_request": type_of_request});
         console.log(json_data);
         $.ajax({
                 url: "receive_sidebar_data_times_form",

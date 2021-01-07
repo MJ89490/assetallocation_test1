@@ -92,8 +92,36 @@ class TimesChartsDataComputations(object):
         self.positions = weight_df
 
     def export_times_data_to_csv(self):
+        # Columns name are the same for signals, returns, positions
+        common_col = self.signals.columns.tolist()
+        # Renaming columns names
+        self.signals.columns = [n + "_signals" for n in common_col]
+        self.returns.columns = [n + "_returns" for n in common_col]
+        self.positions.columns = [n + "_positions" for n in common_col]
 
-        df = pd.DataFrame([self.signals, self.returns, self.positions])
+        df = pd.concat([self.signals, self.returns, self.positions])
+
+        # Save signals, returns and positions in different csvs
+
+        # save res in separate csvs
+        # from domino import Domino
+        # import os
+        #
+        # output_dir = "results"
+        #
+        # # connect to domino; be sure to have these environment variables set
+        # #  (runs inside a Domino executor automatically set these for you)
+        # domino = Domino("manimegalai_jaganathan/solutionapps_domino",
+        #                  api_key=os.environ['DOMINO_USER_API_KEY'],
+        #                  host=os.environ['DOMINO_API_HOST'])
+        #
+        # f = open('/mnt/app.sh', 'rb')
+        # r = domino.files_upload("/new_folder/app.sh", f)
+        #
+        # if r.status_code == 201:
+        #     print(":) Upload successful")
+        # else:
+        #     print("!! Upload failed")
 
         # TODO : call fct to save the results on Domino (write it in another script)
 

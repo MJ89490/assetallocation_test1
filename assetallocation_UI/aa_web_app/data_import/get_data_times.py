@@ -16,6 +16,7 @@ class ReceivedDataTimes:
         self.is_new_strategy = None
         self.fund_name = None
         self.strategy = None
+        self.type_of_request = None
 
     @property
     def strategy(self) -> Times:
@@ -80,6 +81,12 @@ class ReceivedDataTimes:
     def receive_data_latest_version_dashboard(self):
         apc = TimesProcCaller()
         self.version_strategy = max(apc.select_strategy_versions(Name.times))
+        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy)
+        self.strategy_weight = fs.weight
+
+    def receive_data_selected_version_sidebar_dashboard(self):
+        apc = TimesProcCaller()
+        # self.version_strategy = max(apc.select_strategy_versions(Name.times))
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy)
         self.strategy_weight = fs.weight
 
