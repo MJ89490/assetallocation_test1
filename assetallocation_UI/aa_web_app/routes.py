@@ -9,12 +9,9 @@ from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
 from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
 from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
 
-from aa_web_app.data_import.get_data_times import ReceivedDataTimes
-from aa_web_app.data_import.get_data_effect import ProcessDataEffect
-from aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
-
-from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
-from assetallocation_arp.common_libraries.dal_enums.strategy import Name
+from assetallocation_UI.aa_web_app.data_import.get_data_times import ReceivedDataTimes
+from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
+from assetallocation_UI.aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
 
 obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
