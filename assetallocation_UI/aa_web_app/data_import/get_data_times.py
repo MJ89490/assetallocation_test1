@@ -86,7 +86,6 @@ class ReceivedDataTimes:
 
     def receive_data_selected_version_sidebar_dashboard(self):
         apc = TimesProcCaller()
-        # self.version_strategy = max(apc.select_strategy_versions(Name.times))
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy)
         self.strategy_weight = fs.weight
 
