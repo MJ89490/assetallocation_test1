@@ -8,6 +8,8 @@ import numpy as np
 
 import pandas as pd
 import datetime
+from domino import Domino
+import os
 
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
@@ -99,31 +101,16 @@ class TimesChartsDataComputations(object):
         self.returns.columns = [n + "_returns" for n in common_col]
         self.positions.columns = [n + "_positions" for n in common_col]
 
-        df = pd.concat([self.signals, self.returns, self.positions])
-
         # Save signals, returns and positions in different csvs
+        domino = Domino(
+            "{domino_username}/{domino_project_name}".format(domino_username=os.environ['DOMINO_STARTING_USERNAME'],
+                                                             domino_project_name=os.environ['DOMINO_PROJECT_NAME']),
+            api_key=os.environ['DOMINO_USER_API_KEY'],
+            host=os.environ['DOMINO_API_HOST'])
 
-        # save res in separate csvs
-        # from domino import Domino
-        # import os
-        #
-        # output_dir = "results"
-        #
-        # # connect to domino; be sure to have these environment variables set
-        # #  (runs inside a Domino executor automatically set these for you)
-        # domino = Domino("manimegalai_jaganathan/solutionapps_domino",
-        #                  api_key=os.environ['DOMINO_USER_API_KEY'],
-        #                  host=os.environ['DOMINO_API_HOST'])
-        #
-        # f = open('/mnt/app.sh', 'rb')
-        # r = domino.files_upload("/new_folder/app.sh", f)
-        #
-        # if r.status_code == 201:
-        #     print(":) Upload successful")
-        # else:
-        #     print("!! Upload failed")
-
-        # TODO : call fct to save the results on Domino (write it in another script)
+        domino.files_upload("/results/signals.csv", self.signals.to_csv())
+        domino.files_upload("/results/positions.csv", self.returns.to_csv())
+        domino.files_upload("/results/positions.csv", self.positions.to_csv())
 
     @staticmethod
     def sort_by_category_assets(values_dict: dict, category_name: list):
