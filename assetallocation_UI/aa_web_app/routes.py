@@ -29,8 +29,7 @@ def home():
 def times_dashboard():
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
-    show_versions, show_versions_export = 'show_versions_not_available', 'show_versions_not_available'  # TODO move at the top
-    positions_chart, do_not_run = False, False
+    positions_chart = False
     export_data_sidebar = 'not_export_data_sidebar'
 
     if request.method == 'POST':
