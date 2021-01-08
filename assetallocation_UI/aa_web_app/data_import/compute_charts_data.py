@@ -108,9 +108,9 @@ class TimesChartsDataComputations(object):
             api_key=os.environ['DOMINO_USER_API_KEY'],
             host=os.environ['DOMINO_API_HOST'])
 
-        domino.files_upload("/signals.csv", self.signals.to_csv())
-        domino.files_upload("/returns.csv", self.returns.to_csv())
-        domino.files_upload("/positions.csv", self.positions.to_csv())
+        domino.files_upload("/signals_times.csv", self.signals.to_csv())
+        domino.files_upload("/returns_times.csv", self.returns.to_csv())
+        domino.files_upload("/positions_times.csv", self.positions.to_csv())
 
     @staticmethod
     def sort_by_category_assets(values_dict: dict, category_name: list):
