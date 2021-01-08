@@ -44,10 +44,10 @@ def times_dashboard():
 
     else:
         if obj_received_data_times.type_of_request == 'export_data_sidebar':
-            obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
-                                                         obj_received_data_times.version_strategy)
+            version = obj_received_data_times.version_strategy
+            obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name, version)
             export_data_sidebar = 'export_data_sidebar'
-            obj_times_charts_data.export_times_data_to_csv()
+            obj_times_charts_data.export_times_data_to_csv(version)
 
         obj_received_data_times.receive_data_selected_version_sidebar_dashboard()
 

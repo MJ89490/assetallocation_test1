@@ -93,7 +93,7 @@ class TimesChartsDataComputations(object):
         self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')
         self.positions = weight_df
 
-    def export_times_data_to_csv(self):
+    def export_times_data_to_csv(self, version):
         # Columns name are the same for signals, returns, positions
         common_col = self.signals.columns.tolist()
         # Renaming columns names
@@ -108,9 +108,9 @@ class TimesChartsDataComputations(object):
             api_key=os.environ['DOMINO_USER_API_KEY'],
             host=os.environ['DOMINO_API_HOST'])
 
-        domino.files_upload("/signals_times.csv", self.signals.to_csv())
-        domino.files_upload("/returns_times.csv", self.returns.to_csv())
-        domino.files_upload("/positions_times.csv", self.positions.to_csv())
+        domino.files_upload("/signals_times_version{version}.csv".format(version=version), self.signals.to_csv())
+        domino.files_upload("/returns_times_version{version}.csv".format(version=version), self.returns.to_csv())
+        domino.files_upload("/positions_times_version{version}.csv".format(version=version), self.positions.to_csv())
 
     @staticmethod
     def sort_by_category_assets(values_dict: dict, category_name: list):
