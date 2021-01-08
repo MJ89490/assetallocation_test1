@@ -82,7 +82,11 @@
                     <option>{{v}}</option>
                 {% endfor %}
             </select>
-            <!--<button  type="submit" name="submit_button" value="export_to_csv" class="btn btn-secondary btn-lg btn-dashboard">Export to csv</button>-->
+
+            {% if export_data_sidebar == 'export_data_sidebar' %}
+                {% include 'pop_up_success_save_domino.html' %}
+            {% endif %}
+
         </form>
         <script src="static/js/form_dashboard_times.js"></script>
     </div>

@@ -31,6 +31,7 @@ def times_dashboard():
     form_side_bar = SideBarDataForm()
     show_versions, show_versions_export = 'show_versions_not_available', 'show_versions_not_available'  # TODO move at the top
     positions_chart, do_not_run = False, False
+    export_data_sidebar = 'not_export_data_sidebar'
 
     if request.method == 'POST':
         if form.submit_ok_positions.data:
@@ -41,32 +42,27 @@ def times_dashboard():
         elif request.form['submit_button'] == 'dashboard':
             obj_received_data_times.receive_data_latest_version_dashboard()
 
-        # obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
-        #                                              obj_received_data_times.version_strategy)
-        # template_data = run_times_charts_data_computations(obj_times_charts_data,
-        #                                                    obj_received_data_times.strategy_weight,
-        #                                                    start_date_sum=None, start_date=None, end_date=None)
     else:
         if obj_received_data_times.type_of_request == 'export_data_sidebar':
             obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
                                                          obj_received_data_times.version_strategy)
+            export_data_sidebar = 'export_data_sidebar'
             obj_times_charts_data.export_times_data_to_csv()
 
         obj_received_data_times.receive_data_selected_version_sidebar_dashboard()
 
     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
-                                                     obj_received_data_times.version_strategy)
+                                                 obj_received_data_times.version_strategy)
     template_data = run_times_charts_data_computations(obj_times_charts_data,
-                                                           obj_received_data_times.strategy_weight,
-                                                           start_date_sum=None, start_date=None, end_date=None)
+                                                       obj_received_data_times.strategy_weight,
+                                                       start_date_sum=None, start_date=None, end_date=None)
     if positions_chart:
         template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, dates_pos, names_pos
 
     return render_template('times_dashboard.html',
                            title='Dashboard',
                            form=form,
-                           show_versions=show_versions,
-                           show_versions_export=show_versions_export,
+                           export_data_sidebar=export_data_sidebar,
                            form_side_bar=form_side_bar,
                            fund_strategy=obj_received_data_times.fund_strategy_dict,
                            fund_list=form_side_bar.input_fund_name_times,
