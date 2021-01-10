@@ -1,4 +1,4 @@
-# Import packages
+# Import packages, classes and functions
 import blpapi
 import pandas as pd
 import datetime as dt
@@ -31,6 +31,10 @@ class Bloomberg:
             self.active = False
 
     def referenceRequest(self, securities, fields, overrides={}, **kwargs):
+        """
+
+
+        """
         if len(securities) == 0 or len(fields) == 0:
             return pd.DataFrame()
 
@@ -49,6 +53,7 @@ class Bloomberg:
                 securitiesData = msg.getElement('securityData')
                 for securityData in securitiesData.values():
                     security = securityData.getElementValue('security')
+
                     # We check for errors at the security level
                     if securityData.hasElement('securityError'):
                         # We have an incorrect security
@@ -61,6 +66,7 @@ class Bloomberg:
                         # We have a correct security
                         # We get the field data
                         fieldData = securityData.getElement('fieldData')
+
                         # We iterate for each field data
                         for each in fieldData.elements():
                             bbergfield = str(each.name())

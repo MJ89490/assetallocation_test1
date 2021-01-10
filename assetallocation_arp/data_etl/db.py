@@ -1,3 +1,4 @@
+import pandas as pd
 from typing import List, Any, Dict
 from os import environ
 from json import loads
@@ -45,7 +46,22 @@ class Db:
         """Write df to staging.asset"""
         df.to_sql(name='asset', con=self.engine, schema='staging', if_exists='append', index=False, **kwargs)
 
+    def read_from_db(self):
 
+        df = pd.read_sql_table(table_name='asset', schema='staging', columns=["ticker",
+                                                                              "name",
+                                                                              "description",
+                                                                              "asset_category",
+                                                                              "asset_subcategory",
+                                                                              "currency",
+                                                                              "country",
+                                                                              "is_tr",
+                                                                              "analytic_category",
+                                                                              "source",
+                                                                              "value",
+                                                                              "business_datetime"], con=self.engine)
+
+        return df
 # if __name__ == '__main__':
 #     import pandas as pd
 #

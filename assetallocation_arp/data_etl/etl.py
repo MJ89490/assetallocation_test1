@@ -7,16 +7,16 @@
 import os
 import pandas as pd
 import logging
-from assetallocation_arp.data_etl import bloomberg_data
-from assetallocation_arp.data_etl.db import Db
+import bloomberg_data
+from db import Db
 
 # Define logging configuration
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 
 class ETLProcess:
-    def __init__(self):
-        self.df_securities = pd.read_csv("instruments_list_snippet.csv")
+    def __init__(self, df_input):
+        self.df_securities = df_input
         self.df_iteration = pd.DataFrame()
         self.df_bbg = pd.DataFrame()
 
@@ -81,7 +81,7 @@ class ETLProcess:
 
     def upload_data(self):
 
-        # Call function that uploads data frame to SQL database from respective class and module
+        # Call function that uploads data frame to SQL database from respective class
         db = Db()
         db.df_to_staging_asset(self.df_bbg)
 
@@ -90,8 +90,8 @@ class ETLProcess:
         return
 
 
-if __name__ == '__main__':
-    etl = ETLProcess()
-    etl.bbg_data()
-    etl.clean_data()
-    etl.upload_data()
+# if __name__ == '__main__':
+#     etl = ETLProcess()
+#     etl.bbg_data()
+#     etl.clean_data()
+#     etl.upload_data()
