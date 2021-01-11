@@ -98,7 +98,7 @@
 
         <!--Asset Allocation chart-->
         <div class="row row-asset-alloc-chart">
-             <form class="center" action="/times_dashboard" method="POST" novalidate>
+             <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
                 <div class="btn-group">
                     <!--Start date-->
                     <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
