@@ -93,24 +93,40 @@ class TimesChartsDataComputations(object):
         self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')
         self.positions = weight_df
 
-    def export_times_data_to_csv(self, version):
-        # Columns name are the same for signals, returns, positions
-        common_col = self.signals.columns.tolist()
-        # Renaming columns names
-        self.signals.columns = [n + "_signals" for n in common_col]
-        self.returns.columns = [n + "_returns" for n in common_col]
-        self.positions.columns = [n + "_positions" for n in common_col]
-
-        # Save signals, returns and positions in different csvs
+    @staticmethod
+    def call_domino_object():
         domino = Domino(
             "{domino_username}/{domino_project_name}".format(domino_username=os.environ['DOMINO_STARTING_USERNAME'],
                                                              domino_project_name=os.environ['DOMINO_PROJECT_NAME']),
             api_key=os.environ['DOMINO_USER_API_KEY'],
             host=os.environ['DOMINO_API_HOST'])
 
+        return domino
+
+    def export_times_data_to_csv(self, version):
+        # Columns name are the same for signals, returns, positions
+        common_col = self.signals.columns.tolist()
+        # # Renaming columns names
+        # self.signals.columns = [n + "_signals" for n in common_col]
+        # self.returns.columns = [n + "_returns" for n in common_col]
+        # self.positions.columns = [n + "_positions" for n in common_col]
+
+        # Save signals, returns and positions in different csvs
+        # domino = Domino(
+        #     "{domino_username}/{domino_project_name}".format(domino_username=os.environ['DOMINO_STARTING_USERNAME'],
+        #                                                      domino_project_name=os.environ['DOMINO_PROJECT_NAME']),
+        #     api_key=os.environ['DOMINO_USER_API_KEY'],
+        #     host=os.environ['DOMINO_API_HOST'])
+        domino = self.call_domino_object()
+
         domino.files_upload("/signals_times_version{version}.csv".format(version=version), self.signals.to_csv())
         domino.files_upload("/returns_times_version{version}.csv".format(version=version), self.returns.to_csv())
         domino.files_upload("/positions_times_version{version}.csv".format(version=version), self.positions.to_csv())
+
+    def export_times_positions_data_to_csv(self):
+
+        domino = self.call_domino_object()
+        domino.files_upload("/positions_charts_times_version.csv", self.positions.to_csv())
 
     @staticmethod
     def sort_by_category_assets(values_dict: dict, category_name: list):
@@ -392,6 +408,7 @@ class TimesChartsDataComputations(object):
         :return:
         """
         positions, sparklines_pos = [], []
+
         # Start and end dates positions
         self.positions_start_date, self.positions_end_date = start_date, end_date
         columns = self.positions.columns.tolist()

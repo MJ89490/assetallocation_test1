@@ -41,6 +41,9 @@ def times_dashboard():
         elif request.form['submit_button'] == 'dashboard':
             obj_received_data_times.receive_data_latest_version_dashboard()
 
+        elif request.form['submit_button'] == 'assets_positions':
+            obj_times_charts_data.export_times_positions_data_to_csv()
+
     else:
         if obj_received_data_times.type_of_request == 'export_data_sidebar':
             version = obj_received_data_times.version_strategy
