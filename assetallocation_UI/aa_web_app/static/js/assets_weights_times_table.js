@@ -1,29 +1,54 @@
-var rowData = [
-  {asset: 'US Equities', category: 'Equities', signal_ticker: 'SPXT Index',future_ticker: 'CD1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'EU Equities', category: 'Equities', signal_ticker: 'SX5T Index', future_ticker: 'AD1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'JP Equities', category: 'Equities', signal_ticker: 'TPXDDVD Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'HK Equities', category: 'Equities', signal_ticker: 'HSI 1 A:00_0_R Index', future_ticker: 'B1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'US 10y Bonds', category: 'Bonds', signal_ticker: 'MLT1US10 Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'UK 10y Bonds', category: 'Bonds', signal_ticker: 'G 1 A:00_0_R Comdty', future_ticker: 'CN1 A:00_0_R Comdty', costs:  0.0002, s_leverage: 1},
-  {asset: 'EU 10y Bonds', category: 'Bonds', signal_ticker: 'SRX1 A:00_0_R Comdty', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'JPY', category: 'FX', signal_ticker: 'JPYUSD Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'EUR', category: 'FX', signal_ticker: 'EURUSD Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'AUD', category: 'FX', signal_ticker: 'AUDUSD Curncy', future_ticker: 'AUDUSD Curncy', costs:  0.0002, s_leverage: 1},
-  {asset: 'CAD', category: 'FX', signal_ticker: 'CADUSD Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
-  {asset: 'GBP', category: 'FX', signal_ticker: 'EURGBP Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1}
-];
+var colDefs = [];
+var rowsDefs = [];
 
-console.log(rowData);
+function createRowsTable(col, rowsValues){
+    var rows = {};
+//    var rowsValues = ['US Equities', 'Equities', 'SPXT Index']
+
+//    for (var i = 0; i < rowsValues.length; i++) {
+//        rows[col[i]] = rowsValues[i];
+//    }
+//    console.log(rows);
+//
+//    rowDefs.push(rows);
+//
+//    console.log(rowDefs);
+
+//    var rowsValues = [[1, 2, 10], [4, 5, 40], [7, 8, 45]];
+//    var rowsDefs = [];
+
+    l = 0;
+    if (rowsValues[0].length != col.length){l = 1};
+
+    for (var val = 0; val < rowsValues.length - l; val++){
+      rows = {};
+      let counter = 0;
+
+      for (var name = 0; name < col.length; name++){
+        rows[col[name]] = rowsValues[counter][val];
+        counter++;
+
+      }
+      rowsDefs.push(rows);
+    }
+
+    console.log(rowsDefs);
+
+}
+
+
+function createColumnsTable(val){
+    for (var i = 0; i < val.length; i++) {
+      var dict = {headerName: val[i], field: val[i]};
+      colDefs.push(dict);
+    }
+}
+
+var columnDefs = colDefs;
+var rowData = rowsDefs;
 
 var gridOptions = {
-  columnDefs: [
-    { headerName: 'Asset', field: 'asset' },
-    { headerName: 'Category', field: 'category' },
-    { headerName: 'Signal Ticker', field: 'signal_ticker' },
-    { headerName: 'Future Ticker', field: 'future_ticker' },
-    { headerName: 'Costs', field: 'costs' },
-    { headerName: 'Leverage', field: 's_leverage' }
-  ],
+  columnDefs: columnDefs ,
   defaultColDef: {flex: 1, editable: true},
   rowData: rowData,
   rowSelection: 'multiple',
@@ -167,5 +192,8 @@ $(function(){
 // ag-Grid will not find the div in the document.
 document.addEventListener('DOMContentLoaded', function () {
   var eGridDiv = document.querySelector('#myGrid');
+
+
+
   new agGrid.Grid(eGridDiv, gridOptions);
 });

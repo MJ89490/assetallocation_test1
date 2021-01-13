@@ -69,6 +69,8 @@ def times_dashboard():
                            fund_strategy=obj_received_data_times.fund_strategy_dict,
                            fund_list=form_side_bar.input_fund_name_times,
                            versions_list=form_side_bar.input_versions_times,
+                           columns_ag_grid=obj_times_charts_data.positions.columns.to_list(),
+                           rows_ag_grid=obj_times_charts_data.positions.values.tolist(),
                            **template_data)
 
 

@@ -7,7 +7,11 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/ag-grid-community.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-grid.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-theme-bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-theme-balham.min.css">
 
         <!--Calendar import-->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -96,6 +100,35 @@
         <h2 class="title-dashboard">TIMES Dashboard</h2>
         <h6 class="sub-title-dashboard"><i>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</i></h6>
 
+        <!--Assets weights table-->
+        <div class="row-dashboard-times-ag-grid" style="height: 30%; display: flex; flex-direction: column;">
+             <h2 class="title-models-ag-grid">Assets Weights</h2>
+                <!--<div style="margin-bottom: 4px;">-->
+                    <!--<button class="btn btn-outline-secondary" onclick="onAddRow()">Add Input</button>-->
+                    <!--<button class="btn btn-outline-secondary" onclick="onRemoveSelected()">Remove Selected</button>-->
+                    <!--<button class="btn btn-outline-secondary" onclick="clearData()">Clear Data</button>-->
+                <!--</div>-->
+                <div style="flex-grow: 1;">
+                    <div id="myGrid" style="height: 100%;" class="ag-theme-alpine text-center"></div>
+                </div>
+        </div>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/assets_weights_times_table.js') }}"></script>
+        <script type="text/javascript">
+           createColumnsTable({{columns_ag_grid|tojson}});
+           createRowsTable({{columns_ag_grid|tojson}}, {{rows_ag_grid|tojson}});
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
         <!--Asset Allocation chart-->
         <div class="row row-asset-alloc-chart">
              <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
@@ -134,6 +167,7 @@
                 </script>
             </div>
         </div>
+
         <!--Positions and Performance Titles-->
         <div class="row row-tables-positions">
              <div class="col-lg-9">
@@ -155,6 +189,7 @@
                  </table>
              </div>
         </div>
+
         <!--Positions and Performance Tables (overall)-->
         <div class="row row-table-overall">
             <div class="col-lg-9">

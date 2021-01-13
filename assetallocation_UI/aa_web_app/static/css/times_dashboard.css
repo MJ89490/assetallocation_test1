@@ -38,6 +38,7 @@
                   display: inline-block;
                   z-index: 2;}
 
+.row-dashboard-times-ag-grid{ margin-left: 200px; margin-bottom: 100px;}
 .sub-title-dashboard{margin-left: 205px;}
 
 .row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
