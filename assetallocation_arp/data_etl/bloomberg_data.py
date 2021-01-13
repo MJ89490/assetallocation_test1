@@ -85,7 +85,7 @@ class Bloomberg:
                             else:
                                 value = each.getValue()
 
-                            bbg_data.append([security, bbergfield, value, "DONE - " + timerequest])
+                            bbg_data.append([security, bbergfield, value, timerequest])
 
                         # We check if we have incorrect fields
                         if securityData.hasElement('fieldExceptions'):
@@ -97,7 +97,7 @@ class Bloomberg:
                                 errorInfo = fieldException.getElement("errorInfo")
                                 # bbergvalue = errorInfo.getElementValue('subcategory')
                                 bbergvalue = "ERROR - " + errorInfo.getElementValue("message")
-                                status = "DONE - " + timerequest
+                                status = timerequest
                                 bbg_data.append([security, bbergfield, bbergvalue, status])
 
         bbg_data = pd.DataFrame(bbg_data, columns=data.columns)

@@ -1,9 +1,12 @@
+# Import packages, classes and functions
 import pandas as pd
+import os
+import logging
 from typing import List, Any, Dict
-from os import environ
-from json import loads
-
 from sqlalchemy import create_engine
+
+# Define logging configuration
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 
 class Db:
@@ -46,42 +49,19 @@ class Db:
         """Write df to staging.asset"""
         df.to_sql(name='asset', con=self.engine, schema='staging', if_exists='append', index=False, **kwargs)
 
+        return
+
     def read_from_db(self):
 
-        df = pd.read_sql_table(table_name='asset', schema='staging', columns=["ticker",
-                                                                              "name",
-                                                                              "description",
-                                                                              "asset_category",
-                                                                              "asset_subcategory",
-                                                                              "currency",
-                                                                              "country",
-                                                                              "is_tr",
-                                                                              "analytic_category",
-                                                                              "source",
-                                                                              "value",
-                                                                              "business_datetime"], con=self.engine)
+        df = pd.read_sql_table(table_name='asset',
+                               schema='staging',
+                               columns=["ticker",
+                                        "description",
+                                        "value",
+                                        "business_datetime"],
+                               con=self.engine)
+
+        # Convert date column to python datetime
+        df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
 
         return df
-# if __name__ == '__main__':
-#     import pandas as pd
-#
-#     df = pd.DataFrame([['HSI Index', 'asset name', 'some description', 'Equity', 'US Equities', 'USD', 'AUD', True, 'd', 'Bloomberg', 1.5, '2020-01-02']],
-#                       columns=['ticker', 'name', 'description', 'asset_category', 'asset_subcategory', 'currency',
-#                                'country', 'is_tr', 'analytic_category', 'source', 'value', 'business_datetime'])
-#
-#     # loads the dataframe into staging.asset
-#     d = Db()
-#     d.df_to_staging_asset(df)
-#
-#     # staging.load_assets proc is not yet implemented. Once finished it will copy the data from staging.asset
-#     # to asset.asset, asset.asset_group and asset.asset_analytics
-#     d.call_proc('staging.load_assets', [])
-#
-#     # see data for testing purposes. avoid calling engine.execute() with raw sql in production code
-#     selected = d.engine.execute('SELECT * FROM staging.asset')
-#     for i in selected:
-#         print(i)
-#
-#     # empty staging.asset table for testing purposes. avoid calling engine.execute() with raw sql in production code
-#
-#     d.engine.execute('DELETE FROM staging.asset')
