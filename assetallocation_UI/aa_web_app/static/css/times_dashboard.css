@@ -29,7 +29,7 @@
                                        .sidenav a {font-size: 18px;}
                                       }
 
-.title-dashboard {color: #005774;
+.title-dashboard {color: rgb(0, 176, 80);
                   font-size: 2rem;
                   line-height: 1.4;
                   margin-top: 60px;
@@ -38,13 +38,14 @@
                   display: inline-block;
                   z-index: 2;}
 
-.row-dashboard-times-ag-grid{ margin-left: 200px; margin-bottom: 100px;}
+.row-dashboard-times-ag-grid{ margin-left: 200px; margin-bottom: 150px; margin-top: 40px;}
 .sub-title-dashboard{margin-left: 205px;}
 
 .row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
-.row-table-overall{margin-left: 210px;}
-.row-tables-positions{margin-left: 210px;}
-.row-positions-assets-charts{margin-left: 210px;}
+.row-table-overall{margin-left: 187px;}
+.row-tables-positions{margin-left: 187px;}
+.row-positions-assets-charts{margin-left: 187px;}
+. row-asset-alloc-chart{margin-left: 187px;}
 
 .pos-perf-title{background-color: #005774; color: #fff;}
 .signal-as-off-date{color: #005774;}
@@ -166,3 +167,26 @@
                 background-color:  #585858 !important;
                 border-color: #585858 !important;
                 width: 160px;}
+
+/* TITLES */
+.title-models-ag-grid {color: #005774 !important; margin-top: 20px;  text-align: center;}
+
+/* AG GRID TABLE: ASSETS WEIGHTS */
+.ag-theme-alpine {
+    /* use theme parameters where possible */
+    --ag-foreground-color: #999999;
+    border-color: ag-derived(background-color, $mix: foreground-color 25%),
+    --ag-background-color: pink;
+    font-size: 9px;
+    justify-content: center;
+}
+
+.ag-theme-alpine .ag-header {
+    --ag-foreground-color: #fff;
+    background-color: #005774;
+    font-size: 12px;
+}
+
+.ag-header-cell-label {
+   justify-content: center;
+}

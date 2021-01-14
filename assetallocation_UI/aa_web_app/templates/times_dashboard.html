@@ -97,19 +97,17 @@
 
     <!-- ============================= CHARTS AREA ============================= -->
     <div class="container-fluid">
-        <h2 class="title-dashboard">TIMES Dashboard</h2>
+        <h2 class="title-dashboard"><b>TIMES Dashboard</b></h2>
         <h6 class="sub-title-dashboard"><i>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</i></h6>
 
         <!--Assets weights table-->
-        <div class="row-dashboard-times-ag-grid" style="height: 30%; display: flex; flex-direction: column;">
-             <h2 class="title-models-ag-grid">Assets Weights</h2>
-                <!--<div style="margin-bottom: 4px;">-->
-                    <!--<button class="btn btn-outline-secondary" onclick="onAddRow()">Add Input</button>-->
-                    <!--<button class="btn btn-outline-secondary" onclick="onRemoveSelected()">Remove Selected</button>-->
-                    <!--<button class="btn btn-outline-secondary" onclick="clearData()">Clear Data</button>-->
-                <!--</div>-->
+        <div class="row-dashboard-times-ag-grid" style="height: 80%; display: flex; flex-direction: column;">
+             <h4 class="title-models-ag-grid">Assets Weights</h4>
+                <div style="margin-bottom: 4px;">
+                    <button class="btn btn-outline-secondary" onclick="getDataFromTable()">Export to the database</button>
+                </div>
                 <div style="flex-grow: 1;">
-                    <div id="myGrid" style="height: 100%;" class="ag-theme-alpine text-center"></div>
+                    <div id="myGrid" style="height: 100%;" class="ag-theme-alpine"></div>
                 </div>
         </div>
         <script type="text/javascript" src="{{ url_for('static', filename='js/assets_weights_times_table.js') }}"></script>
@@ -118,55 +116,6 @@
            createRowsTable({{columns_ag_grid|tojson}}, {{rows_ag_grid|tojson}});
         </script>
 
-
-
-
-
-
-
-
-
-
-
-
-        <!--Asset Allocation chart-->
-        <div class="row row-asset-alloc-chart">
-             <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
-                <div class="btn-group">
-                    <!--Start date-->
-                    <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
-                        <script type="text/javascript">
-                            $('#start_date_box_times').datepicker({
-                                uiLibrary: 'bootstrap',
-                                 todayHighlight: true,
-                                 autoclose: true,
-                                 format: 'dd/mm/yyyy'
-                            });
-                        </script>
-                    <!--End date-->
-                    <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-times rounded-lg" value="End date" required>
-                        <script type="text/javascript">
-                            $('#end_date_box_times').datepicker({
-                                uiLibrary: 'bootstrap',
-                                 todayHighlight: true,
-                                 autoclose: true,
-                                 format: 'dd/mm/yyyy'
-                            });
-                        </script>
-                    <!--Submit button-->
-                    {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
-                    <!--Download button-->
-                    <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
-                </div>
-             </form>
-            <div class="col-lg-12">
-                <div id="asset_allocation_over_time" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
-                <script type="text/javascript">
-                    assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
-                </script>
-            </div>
-        </div>
 
         <!--Positions and Performance Titles-->
         <div class="row row-tables-positions">
@@ -328,6 +277,45 @@
                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_ytd_performance.js') }}"></script>
                 <script type="text/javascript">
                     ytdPerformanceChart({{ytd_performance_all_currencies|tojson}})
+                </script>
+            </div>
+        </div>
+
+        <!--Asset Allocation chart-->
+        <div class="row row-asset-alloc-chart">
+             <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                <div class="btn-group">
+                    <!--Start date-->
+                    <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
+                        <script type="text/javascript">
+                            $('#start_date_box_times').datepicker({
+                                uiLibrary: 'bootstrap',
+                                 todayHighlight: true,
+                                 autoclose: true,
+                                 format: 'dd/mm/yyyy'
+                            });
+                        </script>
+                    <!--End date-->
+                    <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-times rounded-lg" value="End date" required>
+                        <script type="text/javascript">
+                            $('#end_date_box_times').datepicker({
+                                uiLibrary: 'bootstrap',
+                                 todayHighlight: true,
+                                 autoclose: true,
+                                 format: 'dd/mm/yyyy'
+                            });
+                        </script>
+                    <!--Submit button-->
+                    {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
+                    <!--Download button-->
+                    <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                </div>
+             </form>
+            <div class="col-lg-12">
+                <div id="asset_allocation_over_time" class="responsive-plot"></div>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
+                <script type="text/javascript">
+                    assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
                 </script>
             </div>
         </div>
