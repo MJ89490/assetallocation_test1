@@ -23,7 +23,7 @@ function createRowsTable(col, rowsValues){
 function createColumnsTable(val){
     for (var i = 0; i < val.length; i++) {
       //var dict = {headerName: val[i], field: val[i]}; AJOUTER DATES NON EDITABLES
-      var dictField = {field: val[i]};
+      var dictField = {field: val[i], cellRenderer: 'agAnimateShowChangeCellRenderer', cellStyle: CellValueChanged};
       colDefs.push(dictField);
     }
 }
@@ -35,7 +35,13 @@ var gridOptions = {
     flex: 1,
     editable: true
   },
-  onCellClicked: onCellClicked,
+  //onCellClicked: onCellClicked,
+  //onCellValueChanged: CellValueChanged,
+
+
+
+
+
   rowData: rowsDefs,
   groupDefaultExpanded: 1,
   enableCellChangeFlash: true,
@@ -60,10 +66,64 @@ var gridOptions = {
 //        });
 //}
 
+function CellValueChanged(params){
+//    console.log(event.api.getFocusedCell());
+//    console.log(event.column.colDef.field);
+//
+//    const rowNum = event.api.getFocusedCell().rowIndex;
+//    const colNum = event.column.colDef.field;
+
+//    console.log(event.column.colDef.cellStyle);
+
+//    event.colDef.cellStyle = { 'background-color': '#b7e4ff' };
+
+    console.log(params.oldValue);
+    console.log(params.newValue)
+
+//    event.colDef.cellStyle = {backgroundColor: 'green'};
+
+    const cell = params.api.getFocusedCell();
+    if (params.oldValue !== params.newValue) {
+            return { 'background-color': 'yellow' };
+            //cell.column.colDef.cellStyle = { 'background-color': 'yellow' };
+         }
+//         let refreshParams = {
+//            force: true,
+//            rowNodes: [event.node]
+//        };
+//        event.api.refreshCells(refreshParams);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    event.data.EUR.cellStyle = { 'background-color': '#b7e4ff' };
+//
+//    event.api.refreshCells({
+//            force: true,
+//            columns: [colNum],
+//            rowNodes: [rowNum]
+//        });
+
+}
 
 function onCellClicked(params) {
         const focusedCell =  params.api.getFocusedCell();
         const rowNode = params.api.getRowNode(focusedCell.rowIndex);
+
         const column = focusedCell.column.colDef.field;
         focusedCell.column.colDef.cellStyle = { 'background-color': '#b7e4ff' };
         params.api.refreshCells({

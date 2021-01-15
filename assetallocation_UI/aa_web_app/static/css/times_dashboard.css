@@ -190,3 +190,8 @@
 .ag-header-cell-label {
    justify-content: center;
 }
+
+
+.sick-days-warning {
+  background-color: sandybrown !important;
+}
