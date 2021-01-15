@@ -35,40 +35,46 @@ var gridOptions = {
     flex: 1,
     editable: true
   },
-  onCellValueChanged: onCellValueChanged,
+  onCellClicked: onCellClicked,
   rowData: rowsDefs,
   groupDefaultExpanded: 1,
   enableCellChangeFlash: true,
   animateRows: true,
+  singleClickEdit: true
 };
-
-function onCellValueChanged(params){
-      //params.colDef.cellStyle = {backgroundColor: 'green'};
-      //gridOptions.api.refreshCells({force : true});
-
-
+//
+//function onCellClicked(params){
+////      params.colDef.cellStyle = {backgroundColor: 'green'};
+//      //gridOptions.api.refreshCells({force : true});
+////      gridOptions.api.stopEditing(cancel=false);
+//
 //      const focusedCell =  params.api.getFocusedCell();
-//      focusedCell.column.colDef.cellStyle = { 'background-color': '#b7e4ff' };
-//      params.api.refreshCells({force: true });
+//      const rowNode = params.api.getRowNode(focusedCell.rowIndex);
+//      const column = focusedCell.column.colDef.field;
+//      focusedCell.column.colDef.cellStyle = { 'background-color': 'rgb(49, 134, 155)', 'color': '#fff'};
+//
+//      params.api.refreshCells({
+//            force: false,
+//            columns: [column],
+//            rowNodes: [rowNode]
+//        });
+//}
 
-      const focusedCell =  params.api.getFocusedCell();
-      const rowNode = params.api.getRowNode(focusedCell.rowIndex);
-      const column = focusedCell.column.colDef.field;
-      focusedCell.column.colDef.cellStyle = { 'background-color': 'green'};
-      console.log(rowNode);
-      console.log(column);
 
-      params.api.refreshCells({
+function onCellClicked(params) {
+        const focusedCell =  params.api.getFocusedCell();
+        const rowNode = params.api.getRowNode(focusedCell.rowIndex);
+        const column = focusedCell.column.colDef.field;
+        focusedCell.column.colDef.cellStyle = { 'background-color': '#b7e4ff' };
+        params.api.refreshCells({
             force: true,
             columns: [column],
             rowNodes: [rowNode]
         });
+    }
 
 
 
-
-
-}
 
 
 // Get the data from AG grid table   TO AUTOMATE BECAUSE COL MAY CHANGE
