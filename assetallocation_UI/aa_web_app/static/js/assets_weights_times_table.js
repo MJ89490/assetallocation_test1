@@ -3,6 +3,7 @@ var rowsDefs = [];
 
 // coloring cells: https://www.ag-grid.com/documentation/javascript/row-styles/#example-row-class-rules
 
+//https://plnkr.co/edit/?p=preview&preview  POUR LES DATES NON EDITABLES
 
 // Add rows to table
 function createRowsTable(col, rowsValues){
@@ -18,26 +19,57 @@ function createRowsTable(col, rowsValues){
     }
 }
 
-
 // Add columns to table
 function createColumnsTable(val){
     for (var i = 0; i < val.length; i++) {
-      var dict = {headerName: val[i], field: val[i]};
-      colDefs.push(dict);
+      //var dict = {headerName: val[i], field: val[i]}; AJOUTER DATES NON EDITABLES
+      var dictField = {field: val[i]};
+      colDefs.push(dictField);
     }
 }
 
-var columnDefs = colDefs;
-var rowData = rowsDefs;
-
 // GridOptions for the table
 var gridOptions = {
-  columnDefs: columnDefs ,
-  defaultColDef: {flex: 1, editable: true},
-  rowData: rowData,
-  rowSelection: 'multiple',
+  columnDefs: colDefs ,
+  defaultColDef: {
+    flex: 1,
+    editable: true
+  },
+  onCellValueChanged: onCellValueChanged,
+  rowData: rowsDefs,
+  groupDefaultExpanded: 1,
+  enableCellChangeFlash: true,
   animateRows: true,
 };
+
+function onCellValueChanged(params){
+      //params.colDef.cellStyle = {backgroundColor: 'green'};
+      //gridOptions.api.refreshCells({force : true});
+
+
+//      const focusedCell =  params.api.getFocusedCell();
+//      focusedCell.column.colDef.cellStyle = { 'background-color': '#b7e4ff' };
+//      params.api.refreshCells({force: true });
+
+      const focusedCell =  params.api.getFocusedCell();
+      const rowNode = params.api.getRowNode(focusedCell.rowIndex);
+      const column = focusedCell.column.colDef.field;
+      focusedCell.column.colDef.cellStyle = { 'background-color': 'green'};
+      console.log(rowNode);
+      console.log(column);
+
+      params.api.refreshCells({
+            force: true,
+            columns: [column],
+            rowNodes: [rowNode]
+        });
+
+
+
+
+
+}
+
 
 // Get the data from AG grid table   TO AUTOMATE BECAUSE COL MAY CHANGE
 function getDataFromTable(){
