@@ -65,3 +65,20 @@ class Db:
         df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
 
         return df
+
+    def get_tickers(self):
+
+        query = """
+                SELECT DISTINCT ON (ticker) ticker, description, business_datetime  
+                FROM staging.asset
+                ORDER BY ticker, business_datetime DESC
+                """
+
+        df = pd.read_sql(query, con=self.engine)
+
+        # Convert date column to python datetime
+        df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
+        df["business_datetime"] = df["business_datetime"] + pd.Timedelta(days=1)
+        df["business_datetime"] = df["business_datetime"].dt.strftime('%Y%m%d')
+
+        return df

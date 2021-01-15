@@ -32,6 +32,7 @@ class ETLProcess:
         self.df_input["country"] = self.df_input["country"].astype(str)
         self.df_input["is_tr"] = self.df_input["is_tr"].astype(str)
         self.df_input["analytic_category"] = self.df_input["analytic_category"].astype(str)
+        self.df_input["business_datetime"] = datetime(1900, 1, 1).strftime('%Y%m%d')
 
         return self.df_input
 
@@ -39,14 +40,14 @@ class ETLProcess:
         logging.info("Start of module")
         # Call Bloomberg class
         bbg = bloomberg_data.Bloomberg()
-
+        self.df_input.to_csv("inspect1.csv", index=None)
         # Create empty list to append multiple data frames to
         df_list = []
         # Loop through each security and respective fields to get data as a data frame
         for index, row in self.df_input.iterrows():
             self.df_iteration = bbg.historicalRequest(securities=row["ticker"],
                                                       fields=row["description"],
-                                                      startdate="19000101",
+                                                      startdate=row["business_datetime"],
                                                       enddate=datetime.today().strftime('%Y%m%d'))
 
             # Append data frame to df list
@@ -57,6 +58,8 @@ class ETLProcess:
         # Concat df list into one large data frame
         self.df_bbg = pd.concat(df_list, axis=0, ignore_index=True)
         logging.info(f"Master data frame created")
+
+        self.df_bbg.to_csv("inspect2.csv", index=None)
 
         return self.df_bbg
 

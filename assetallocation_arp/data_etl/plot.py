@@ -9,7 +9,7 @@ from datetime import datetime
 from bokeh.io import curdoc
 from bokeh.plotting import figure
 from bokeh.layouts import row, column
-from bokeh.models import Select, PreText, HoverTool, FileInput
+from bokeh.models import Select, PreText, HoverTool, FileInput, Button
 from bokeh.palettes import Dark2_5 as palette
 from db import Db
 from etl import ETLProcess
@@ -68,6 +68,8 @@ line_chart.add_tools(HoverTool(tooltips=tooltips, formatters={'@business_datetim
 drop_down = Select(title="Instrument", options=drop_down_options, width=200)
 # Create text entry instrument widget
 file_input = FileInput()
+# Create refresh button widget
+refresh_button = Button(label='Refresh', width=200)
 # Create stats describe
 stats = PreText(text='Statistics', width=500)
 stats.text = str(df[df["ticker"] == instrument_list[0]]["value"].describe())
@@ -97,9 +99,11 @@ def drop_down_handle(attr, old, new):
 
     line_chart.add_tools(HoverTool(tooltips=tooltips, formatters={'@business_datetime': 'datetime'}))
 
+    stats = PreText(text='Statistics', width=500)
     stats.text = str(df[df["ticker"] == drop_down.value]["value"].describe())
 
     layout_with_widgets.children[2].children[0] = line_chart
+    layout_with_widgets.children[3].children[0] = stats
 
     return
 
@@ -127,12 +131,30 @@ def file_input_handle(attr, old, new):
     return
 
 
+def button_handle():
+    """
+    This function handles when the refresh button is changed
+    :return:
+    """
+    # Run data frame through ETL class
+    db = Db()
+    # Read .csv as data frame
+    df_tickers = db.get_tickers()
+    etl = ETLProcess(df_input=df_tickers)
+    etl.bbg_data()
+    etl.clean_data()
+    etl.upload_data()
+
+    return
+
 # Registering widget attribute change
 drop_down.on_change("value", drop_down_handle)
 file_input.on_change("value", file_input_handle)
+refresh_button.on_click(button_handle)
+
 
 # Widgets Layout
-layout_with_widgets = column(row(drop_down), row(file_input), row(line_chart), row(stats))
+layout_with_widgets = column(row(drop_down), row(file_input, refresh_button), row(line_chart), row(stats))
 
 # Creating Dashboard
 curdoc().add_root(layout_with_widgets)
