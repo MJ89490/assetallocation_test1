@@ -2,8 +2,12 @@
 import pandas as pd
 import os
 import logging
+from dotenv import load_dotenv
 from typing import List, Any, Dict
 from sqlalchemy import create_engine
+
+# Load .env file to get database attributes
+load_dotenv()
 
 # Define logging configuration
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
@@ -14,12 +18,11 @@ class Db:
 
     def __init__(self) -> None:
         """Db class for interacting with a database"""
-        config = loads(environ.get('DATABASE', '{}'))
-        user = config.get('USER')
-        password = config.get('PASSWORD')
-        host = config.get('HOST')
-        port = config.get('PORT')
-        database = config.get('DATABASE')
+        user = os.getenv('USER')
+        password = os.getenv('PASSWORD')
+        host = os.getenv('HOST')
+        port = os.getenv('PORT')
+        database = os.getenv('DATABASE')
         self.engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database}')
 
     def call_proc(self, proc_name: str, proc_params: List[Any]) -> List[Dict[str, Any]]:

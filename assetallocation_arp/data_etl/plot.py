@@ -158,3 +158,4 @@ layout_with_widgets = column(row(drop_down), row(file_input, refresh_button), ro
 
 # Creating Dashboard
 curdoc().add_root(layout_with_widgets)
+
