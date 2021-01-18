@@ -20,7 +20,8 @@ CREATE TABLE "config"."model"
 (
 	"id" serial NOT NULL,
   "execution_state_id" integer NOT NULL,
-  "name" varchar(100) NOT NULL
+  "name" text NOT NULL,
+	"description" text NOT NULL
 )
 ;
 
@@ -28,6 +29,10 @@ CREATE TABLE "config"."model"
 
 ALTER TABLE "config"."model" ADD CONSTRAINT "model_pkey"
 	PRIMARY KEY ("id")
+;
+
+ALTER TABLE "config"."model" ADD CONSTRAINT "model_name_key"
+	UNIQUE ("name")
 ;
 
 /* Create Foreign Key Constraints */

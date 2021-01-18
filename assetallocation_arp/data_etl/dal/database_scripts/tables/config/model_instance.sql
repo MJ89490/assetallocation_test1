@@ -21,8 +21,8 @@ CREATE TABLE "config"."model_instance"
 	"id" serial NOT NULL,
   "model_id" integer NOT NULL,
 	"execution_state_id" integer NOT NULL,
-  "python_code_verion" varchar(50) NOT NULL,
-  "business_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)'),
+  "python_code_version" varchar(50) NOT NULL,
+  "business_tstzrange" tstzrange NOT NULL,
   "system_datetime" timestamp with time zone NOT NULL DEFAULT now()
 )
 ;
