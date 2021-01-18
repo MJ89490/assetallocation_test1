@@ -1,9 +1,7 @@
--- TODO remove business_tstzrange from arp.fx and dependent functions
 CREATE OR REPLACE FUNCTION arp.insert_fx_strategy(
   description varchar,
   user_id varchar,
   model varchar,
-  business_tstzrange tstzrange,
   signal varchar,
   currency varchar,
   response_function  boolean,
@@ -33,7 +31,6 @@ BEGIN
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
 	SELECT arp.insert_fx(
     model,
-    business_tstzrange,
     signal,
     currency,
     response_function ,
@@ -56,7 +53,6 @@ $$;
 
 CREATE OR REPLACE FUNCTION arp.insert_fx(
   model varchar,
-  business_tstzrange tstzrange,
   signal varchar,
   currency varchar,
   response_function  boolean,
@@ -79,7 +75,6 @@ $$
 BEGIN
 	INSERT INTO arp.fx (
 	  model,
-    business_tstzrange,
     signal,
     currency,
     response_function ,
@@ -98,7 +93,6 @@ BEGIN
 	)
 	VALUES(
 	  model,
-    business_tstzrange,
     signal,
     currency,
     response_function ,

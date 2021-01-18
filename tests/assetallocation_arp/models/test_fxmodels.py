@@ -18,7 +18,6 @@ def fx_strategy():
 
         f = Fx(
             fxmodels_inputs['model'].iat[0].lower(),
-            DateTimeTZRange(fxmodels_inputs['date_from'].iat[0], fxmodels_inputs['date_to'].iat[0]),
             fxmodels_inputs['signal'].iat[0],
             fxmodels_inputs['currency'].iat[0],
             fxmodels_inputs['response function'].iat[0],

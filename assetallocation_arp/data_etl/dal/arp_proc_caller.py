@@ -291,7 +291,7 @@ class FxProcCaller(StrategyProcCaller):
         res = self.call_proc(
             'arp.insert_fx_strategy',
             [
-                fx.description, user_id, fx.model, fx.business_tstzrange, fx.signal, fx.currency, fx.response_function,
+                fx.description, user_id, fx.model, fx.signal, fx.currency, fx.response_function,
                 fx.exposure, fx.momentum_weights, fx.transaction_cost, fx.top_crosses, fx.vol_window, fx.value_window,
                 fx.sharpe_cutoff, fx.mean_reversion, fx.historical_base, fx.defensive
             ]
@@ -369,7 +369,7 @@ class FxProcCaller(StrategyProcCaller):
         r = res[0]
 
         f = Fx(
-            r['model'], r['business_tstzrange'], r['signal'], r['currency'], r['response_function'],
+            r['model'], r['signal'], r['currency'], r['response_function'],
             float(r['exposure']), r['momentum_weights'], float(r['transaction_cost'])
         )
         f.top_crosses = r.get('top_crosses')

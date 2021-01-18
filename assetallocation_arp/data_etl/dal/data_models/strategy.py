@@ -379,12 +379,11 @@ class Effect(Strategy):
 # noinspection PyAttributeOutsideInit
 class Fx(Strategy):
     def __init__(
-            self, model: str, business_tstzrange: DateTimeTZRange, signal: str, currency: str, response_function: bool,
+            self, model: str, signal: str, currency: str, response_function: bool,
             exposure: float, momentum_weights: List[float], transaction_cost: float
     ) -> None:
         super().__init__(Name.fx)
         self.model = model
-        self.business_tstzrange = business_tstzrange
         self.signal = signal
         self.currency = currency
         self.response_function = response_function
