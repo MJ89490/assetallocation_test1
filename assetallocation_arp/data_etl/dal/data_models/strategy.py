@@ -145,13 +145,11 @@ class Times(Strategy):
     
 
 class Fica(Strategy):
-    def __init__(self, coupon: float, curve: Union[str, CurveName], business_tstzrange: DateTimeTZRange,
-                 strategy_weights: List[float], tenor: int, trading_cost: int) -> None:
+    def __init__(self, coupon: float, curve: Union[str, CurveName], strategy_weights: List[float], tenor: int, trading_cost: int) -> None:
         """Fica class to hold data from database"""
         super().__init__(Name.fica)
         self._coupon = coupon
         self._curve = curve
-        self._business_tstzrange = business_tstzrange
         self._strategy_weights = strategy_weights
         self._tenor = tenor
         self._trading_cost = trading_cost
@@ -180,14 +178,6 @@ class Fica(Strategy):
     @curve.setter
     def curve(self, x: str) -> None:
         self._curve = x if isinstance(x, CurveName) else CurveName[x]
-    
-    @property
-    def business_tstzrange(self) -> DateTimeTZRange:
-        return self._business_tstzrange
-
-    @business_tstzrange.setter
-    def business_tstzrange(self, x: DateTimeTZRange) -> None:
-        self._business_tstzrange = x
     
     @property
     def strategy_weights(self) -> List[float]:

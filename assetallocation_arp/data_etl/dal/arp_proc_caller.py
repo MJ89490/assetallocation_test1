@@ -550,7 +550,7 @@ class FicaProcCaller(StrategyProcCaller):
     def _insert_fica_strategy(self, fica: Fica, user_id: str) -> int:
         """Insert data from an instance of Fica into database"""
         res = self.call_proc('arp.insert_fica_strategy',
-                             [fica.description, user_id, fica.coupon, fica.curve, fica.business_tstzrange,
+                             [fica.description, user_id, fica.coupon, fica.curve,
                               fica.strategy_weights, fica.tenor, fica.trading_cost])
 
         return res[0]['f_version']
@@ -583,8 +583,7 @@ class FicaProcCaller(StrategyProcCaller):
             return
 
         row = res[0]
-        f = Fica(row['coupon'], row['curve'], row['business_tstzrange'], row['strategy_weights'], row['tenor'],
-                 row['trading_cost'])
+        f = Fica(row['coupon'], row['curve'], row['strategy_weights'], row['tenor'], row['trading_cost'])
         f.version = fica_version
         f.description = row['description']
         return f

@@ -3,7 +3,6 @@ CREATE OR REPLACE FUNCTION arp.insert_fica_strategy(
   user_id varchar,
   coupon numeric,
   curve varchar,
-  business_tstzrange tstzrange,
   strategy_weights numeric[],
   tenor int,
   trading_cost int,
@@ -21,7 +20,7 @@ BEGIN
 	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
-  SELECT arp.insert_fica(coupon, curve, business_tstzrange, strategy_weights, tenor, trading_cost, execution_state_id,
+  SELECT arp.insert_fica(coupon, curve, strategy_weights, tenor, trading_cost, execution_state_id,
                          strategy_id) into f_version;
 	return;
 END
@@ -30,7 +29,6 @@ $$;
 CREATE OR REPLACE FUNCTION arp.insert_fica(
   coupon numeric,
   curve varchar,
-  business_tstzrange tstzrange,
   strategy_weights numeric[],
   tenor int,
   trading_cost int,
@@ -47,7 +45,6 @@ BEGIN
     coupon,
     curve,
     trading_cost,
-    business_tstzrange,
     strategy_weights,
     execution_state_id
   )
@@ -57,7 +54,6 @@ BEGIN
     coupon,
     curve,
     trading_cost,
-    business_tstzrange,
     strategy_weights,
     execution_state_id
     )

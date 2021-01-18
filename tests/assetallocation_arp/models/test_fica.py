@@ -90,7 +90,6 @@ def fica_strategy(fica_inputs, asset_inputs, all_data) -> Fica:
     data = all_data.loc[fica_inputs['date_from'].iat[0]:fica_inputs['date_to'].iat[0]]
 
     f = Fica(fica_inputs['coupon'].iat[0], fica_inputs['curve'].iat[0],
-             DateTimeTZRange(fica_inputs['date_from'].iat[0], fica_inputs['date_to'].iat[0]),
              [fica_inputs[f'strategy_weights_{i}'].iat[0] for i in range(1, 11)],
              fica_inputs['tenor'].iat[0], fica_inputs['trading_costs'].iat[0])
 
