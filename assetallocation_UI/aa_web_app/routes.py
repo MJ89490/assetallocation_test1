@@ -61,20 +61,6 @@ def times_dashboard():
     if positions_chart:
         template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, dates_pos, names_pos
 
-    # TODO put somewhere else + lst comprehension
-    pos = []
-
-    for value in range(obj_times_charts_data.positions.shape[1]):
-        pos.append(list(obj_times_charts_data.positions.values[:, value]))
-
-    # Add dates values
-    pos.insert(0, obj_times_charts_data.positions.index.strftime("%Y-%m-%d").tolist())
-
-    col = obj_times_charts_data.positions.columns.to_list()
-
-    # Add dates as a column
-    col.insert(0, 'DATES')
-
     return render_template('times_dashboard.html',
                            title='Dashboard',
                            form=form,
@@ -83,8 +69,6 @@ def times_dashboard():
                            fund_strategy=obj_received_data_times.fund_strategy_dict,
                            fund_list=form_side_bar.input_fund_name_times,
                            versions_list=form_side_bar.input_versions_times,
-                           columns_ag_grid=col,
-                           rows_ag_grid=pos,
                            **template_data)
 
 

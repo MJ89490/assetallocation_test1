@@ -1,0 +1,98 @@
+
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/ag-grid-community.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-grid.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-theme-bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/23.2.1/styles/ag-theme-balham.min.css">
+    <style>
+        .pt-3-half {
+padding-top: 1.4rem;
+}
+        .card-header{background-color: #005774; color: #fff;}
+
+        .card-body{border-radius: 20%;}
+        body{background-color: rgb(248, 248, 248);}
+
+        div.card {
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+    </style>
+
+</head>
+
+
+
+<body>
+
+<!-- Editable table -->
+<div class="row"></div>
+
+<div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+
+        <div class="card">
+          <h4 class="card-header text-center">Positions</h4>
+          <div class="card-body">
+            <div id="table" class="table-editable table-hover">
+              <table class="table table-responsive-md text-center">
+                <thead>
+                  <tr>
+                    <th class="text-muted text-center">Person Name</th>
+                    <th class="text-muted text-center">Age</th>
+                    <th class="text-muted text-center">Company Name</th>
+                    <th class="text-muted text-center">Country</th>
+                    <th class="text-muted text-center">City</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-muted pt-3-half" contenteditable="false">Aurelia Vega</td>
+                    <td class="text-muted pt-3-half" contenteditable="true">30</td>
+                    <td class="text-muted pt-3-half" contenteditable="true">Deepends</td>
+                    <td class="text-muted pt-3-half" contenteditable="true">Spain</td>
+                    <td class="text-muted pt-3-half" contenteditable="true">Madrid</td>
+                  </tr>
+                  <!-- This is our clonable table line -->
+                  <tr>
+                    <td class="pt-3-half" contenteditable="true">Guerra Cortez</td>
+                    <td class="pt-3-half" contenteditable="true">45</td>
+                    <td class="pt-3-half" contenteditable="true">Insectus</td>
+                    <td class="pt-3-half" contenteditable="true">USA</td>
+                    <td class="pt-3-half" contenteditable="true">San Francisco</td>
+                  </tr>
+                  <!-- This is our clonable table line -->
+                  <tr>
+                    <td class="pt-3-half" contenteditable="true">Guadalupe House</td>
+                    <td class="pt-3-half" contenteditable="true">26</td>
+                    <td class="pt-3-half" contenteditable="true">Isotronic</td>
+                    <td class="pt-3-half" contenteditable="true">Germany</td>
+                    <td class="pt-3-half" contenteditable="true">Frankfurt am Main</td>
+                  </tr>
+                  <!-- This is our clonable table line -->
+                  <tr class="hide">
+                    <td class="pt-3-half" contenteditable="true">Elisa Gallagher</td>
+                    <td class="pt-3-half" contenteditable="true">31</td>
+                    <td class="pt-3-half" contenteditable="true">Portica</td>
+                    <td class="pt-3-half" contenteditable="true">United Kingdom</td>
+                    <td class="pt-3-half" contenteditable="true">London</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+<!-- Editable table -->
+</div>
+</body>

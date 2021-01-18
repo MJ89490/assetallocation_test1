@@ -1,9 +1,6 @@
-var colDefs = [];
+var colDef = [];
 var rowsDefs = [];
 
-// coloring cells: https://www.ag-grid.com/documentation/javascript/row-styles/#example-row-class-rules
-
-//https://plnkr.co/edit/?p=preview&preview  POUR LES DATES NON EDITABLES
 
 // Add rows to table
 function createRowsTable(col, rowsValues){
@@ -23,118 +20,61 @@ function createRowsTable(col, rowsValues){
 function createColumnsTable(val){
     for (var i = 0; i < val.length; i++) {
       //var dict = {headerName: val[i], field: val[i]}; AJOUTER DATES NON EDITABLES
-      var dictField = {field: val[i], cellRenderer: 'agAnimateShowChangeCellRenderer', cellStyle: CellValueChanged};
-      colDefs.push(dictField);
+      var dictField = {field: val[i], cellRenderer: 'agAnimateShowChangeCellRenderer'};
+      colDef.push(dictField);
     }
 }
 
 // GridOptions for the table
 var gridOptions = {
-  columnDefs: colDefs ,
+  columnDefs: colDef,
   defaultColDef: {
     flex: 1,
     editable: true
   },
-  //onCellClicked: onCellClicked,
   //onCellValueChanged: CellValueChanged,
-
-
-
-
-
   rowData: rowsDefs,
   groupDefaultExpanded: 1,
   enableCellChangeFlash: true,
   animateRows: true,
   singleClickEdit: true
 };
+
+//function CellValueChanged(params){
 //
-//function onCellClicked(params){
-////      params.colDef.cellStyle = {backgroundColor: 'green'};
-//      //gridOptions.api.refreshCells({force : true});
-////      gridOptions.api.stopEditing(cancel=false);
+//    const focusedCell =  params.api.getFocusedCell();
+//    const rowNode = params.api.getRowNode(focusedCell.rowIndex);
+//    const column = focusedCell.column.colDef.field;
+//    //focusedCell.column.colDef.cellStyle = { 'background-color': '#b7e4ff' };
 //
-//      const focusedCell =  params.api.getFocusedCell();
-//      const rowNode = params.api.getRowNode(focusedCell.rowIndex);
-//      const column = focusedCell.column.colDef.field;
-//      focusedCell.column.colDef.cellStyle = { 'background-color': 'rgb(49, 134, 155)', 'color': '#fff'};
 //
-//      params.api.refreshCells({
-//            force: false,
-//            columns: [column],
-//            rowNodes: [rowNode]
-//        });
+//
+////    focusedCell.column.colDef.cellStyle : function(params) {
+////                                                                if (params.oldValue!=params.newValue) {
+////                                                                    //mark police cells as red
+////                                                                    console.log('coucou');
+////                                                                    return {color: 'red', backgroundColor: 'green'};
+////                                                                }
+////                                                                }
+//    //console.log(focusedCell.column.colDef);
+//
+////    console.log(params.data.CAD);
+////
+////
+////    gridOptions.rowClassRules = {
+////  // apply green to 2008
+////  console.log('coucou');
+////  'rag-green-outer': function(params) { return params.data.CAD === 1}
 //}
 
-function CellValueChanged(params){
-//    console.log(event.api.getFocusedCell());
-//    console.log(event.column.colDef.field);
-//
-//    const rowNum = event.api.getFocusedCell().rowIndex;
-//    const colNum = event.column.colDef.field;
 
-//    console.log(event.column.colDef.cellStyle);
+//    focusedCell.column.colDef.cellClassRules= {'rag-green-outer': function(params) { return params.value === 2008}}
 
-//    event.colDef.cellStyle = { 'background-color': '#b7e4ff' };
-
-    console.log(params.oldValue);
-    console.log(params.newValue)
-
-//    event.colDef.cellStyle = {backgroundColor: 'green'};
-
-    const cell = params.api.getFocusedCell();
-    if (params.oldValue !== params.newValue) {
-            return { 'background-color': 'yellow' };
-            //cell.column.colDef.cellStyle = { 'background-color': 'yellow' };
-         }
-//         let refreshParams = {
-//            force: true,
-//            rowNodes: [event.node]
-//        };
-//        event.api.refreshCells(refreshParams);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    event.data.EUR.cellStyle = { 'background-color': '#b7e4ff' };
-//
-//    event.api.refreshCells({
-//            force: true,
-//            columns: [colNum],
-//            rowNodes: [rowNum]
-//        });
-
-}
-
-function onCellClicked(params) {
-        const focusedCell =  params.api.getFocusedCell();
-        const rowNode = params.api.getRowNode(focusedCell.rowIndex);
-
-        const column = focusedCell.column.colDef.field;
-        focusedCell.column.colDef.cellStyle = { 'background-color': '#b7e4ff' };
-        params.api.refreshCells({
-            force: true,
-            columns: [column],
-            rowNodes: [rowNode]
-        });
-    }
-
-
-
+//    params.api.refreshCells({
+//        force: true,
+//        columns: [column.colId],
+//        rowNodes: [rowNode.__objectId]
+//    });
 
 
 // Get the data from AG grid table   TO AUTOMATE BECAUSE COL MAY CHANGE

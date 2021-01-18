@@ -9,12 +9,10 @@ function assetAllocationChart(positions, dates_pos, names_pos)
     var names = names_pos.map(function(n) { return {name: n}; });
 
     var layout = {
-                    title: 'Asset Allocation Over Time'.bold(),
-                    titlefont: {color: '#007faa',family: 'Arial, serif'},
                     showlegend: true,
                     legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                    margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 },
-                    width: 1290
+                    margin: { l: 'auto', r: 0, b: 0, t: 25, pad: 4 }
+
                  };
 
     var config = { 'displayModeBar': false, 'responsive': true };

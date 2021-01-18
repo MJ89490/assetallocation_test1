@@ -1,3 +1,37 @@
+/* BODY */
+/*rgb(248, 248, 248)*/
+body{background-color: #fff ;}
+
+/* TITLES */
+.h6, h6 {font-size: .625rem;}
+.header-pretitle {text-transform: uppercase;
+                  letter-spacing: .08em;
+                  color: #95aac9;
+                   margin-top: 60px;
+                 }
+.header-body {padding-bottom: 1.5rem;
+              border-bottom: 1px solid #e3ebf6;
+              margin-left: 200px;
+             }
+
+/* CARD */
+/*.card-header{background-color: #005774; color: #fff;}*/
+
+.card-header {padding: 1rem 1.5rem;
+              margin-bottom: 0;
+              background-color: transparent;
+              border-bottom: 1px solid #edf2f9;
+              letter-spacing: -.02em;
+              font-size: .9475rem;
+              color: #005774;
+}
+
+
+
+
+.card-body{border-radius: 20%;}
+div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}
+
 /* SIDEBAR */
 .sidenav {height: 100%;
           width: 180px;
@@ -28,24 +62,26 @@
 @media screen and (max-height: 450px) {.sidenav {padding-top: 15px;}
                                        .sidenav a {font-size: 18px;}
                                       }
-
-.title-dashboard {color: rgb(0, 176, 80);
+/*color: rgb(0, 176, 80);*/
+.title-dashboard {color: #005774;
                   font-size: 2rem;
                   line-height: 1.4;
-                  margin-top: 60px;
-                  margin-left: 200px;
+
                   max-width: 75%;
                   display: inline-block;
                   z-index: 2;}
 
 .row-dashboard-times-ag-grid{ margin-left: 200px; margin-bottom: 150px; margin-top: 40px;}
-.sub-title-dashboard{margin-left: 205px;}
+.sub-title-dashboard{margin-left: 205px;
+                     text-transform: uppercase;
+                     letter-spacing: .08em;
+                     color: #95aac9;}
 
-.row-asset-alloc-chart{margin-left: 130px; margin-bottom: 60px;}
+.row-asset-alloc-chart{margin-left: 190px; margin-bottom: 60px; margin-top: 40px;}
 .row-table-overall{margin-left: 187px;}
 .row-tables-positions{margin-left: 187px;}
 .row-positions-assets-charts{margin-left: 187px;}
-. row-asset-alloc-chart{margin-left: 187px;}
+
 
 .pos-perf-title{background-color: #005774; color: #fff;}
 .signal-as-off-date{color: #005774;}
@@ -192,6 +228,4 @@
 }
 
 
-.sick-days-warning {
-  background-color: sandybrown !important;
-}
+.rag-green-outer {background-color: 'cyan';}
