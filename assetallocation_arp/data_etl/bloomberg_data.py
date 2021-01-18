@@ -132,7 +132,7 @@ class Bloomberg:
                     'periodicitySelection': 'DAILY',  # 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'SEMI_ANNUALLY', 'YEARLY'
                     # 'currency'
                     'pricingOption': 'PRICING_OPTION_PRICE',  # 'PRICING_OPTION_YIELD'
-                    'nonTradingDayFillOption': 'NON_TRADING_WEEKDAYS',
+                    'nonTradingDayFillOption': 'ALL_CALENDAR_DAYS',
                     # 'ACTIVE_DAYS_ONLY', 'NON_TRADING_WEEKDAYS', 'ALL_CALENDAR_DAYS'
                     'nonTradingDayFillMethod': 'PREVIOUS_VALUE',  # 'NIL_VALUE'
                     # 'maxDataPoints'

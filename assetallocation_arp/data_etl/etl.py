@@ -1,13 +1,8 @@
-# TODO: timeit, log file
-# TODO: DB: frequency of data updating then uploading; data types (update everyday / wednesday)
-# stage is one table (asset table in staging schema) and then into 3: asset, asset analytic, asset group (asset schema)
-
-
 # Import packages, classes and functions
 import os
 import pandas as pd
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import bloomberg_data
 from db import Db
 
@@ -39,16 +34,15 @@ class ETLProcess:
     def bbg_data(self):
         logging.info("Start of module")
         # Call Bloomberg class
-        bbg = bloomberg_data.Bloomberg()
-        self.df_input.to_csv("inspect1.csv", index=None)
         # Create empty list to append multiple data frames to
+        bbg = bloomberg_data.Bloomberg()
         df_list = []
         # Loop through each security and respective fields to get data as a data frame
         for index, row in self.df_input.iterrows():
             self.df_iteration = bbg.historicalRequest(securities=row["ticker"],
                                                       fields=row["description"],
                                                       startdate=row["business_datetime"],
-                                                      enddate=datetime.today().strftime('%Y%m%d'))
+                                                      enddate=(datetime.today() - timedelta(days=1)).strftime('%Y%m%d'))
 
             # Append data frame to df list
             df_list.append(self.df_iteration)
@@ -58,8 +52,6 @@ class ETLProcess:
         # Concat df list into one large data frame
         self.df_bbg = pd.concat(df_list, axis=0, ignore_index=True)
         logging.info(f"Master data frame created")
-
-        self.df_bbg.to_csv("inspect2.csv", index=None)
 
         return self.df_bbg
 
@@ -100,10 +92,3 @@ class ETLProcess:
         logging.info("Data written to database")
 
         return
-
-
-# if __name__ == '__main__':
-#     etl = ETLProcess()
-#     etl.bbg_data()
-#     etl.clean_data()
-#     etl.upload_data()
