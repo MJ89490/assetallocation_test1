@@ -1,8 +1,8 @@
 CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_results(
   fund_name varchar,
-  business_tstzrange tstzrange,
   strategy_name varchar,
   strategy_version int,
+  business_tstzrange tstzrange,
   weight numeric,
   user_id varchar,
   python_code_version text,

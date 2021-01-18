@@ -63,8 +63,8 @@ class ArpProcCaller(Db):
         res = self.call_proc(
             'arp.insert_fund_strategy_results',
             [
-                fund_strategy.fund_name, business_tstzrange, fund_strategy.strategy_name.name,
-                fund_strategy.strategy_version, fund_strategy.weight, user_id, fund_strategy.python_code_version,
+                fund_strategy.fund_name, fund_strategy.strategy_name.name, fund_strategy.strategy_version,
+                business_tstzrange, fund_strategy.weight, user_id, fund_strategy.python_code_version,
                 asset_weights, strategy_analytics, strategy_asset_analytics
             ]
         )
@@ -598,7 +598,8 @@ class FicaProcCaller(StrategyProcCaller):
         for r in res:
             curve_tenor, fica_asset_category = r['fica_asset_name'].split('_', 1)
             f = FicaAssetInput(r['asset_ticker'], fica_asset_category, curve_tenor)
-            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], []).append(f)
+            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], [])
+            fica_asset_inputs[r['asset_subcategory']].append(f)
 
         grouped_asset_inputs = [FicaAssetInputGroup(key, val) for key, val in fica_asset_inputs.items()]
         return grouped_asset_inputs
@@ -627,7 +628,8 @@ class FicaProcCaller(StrategyProcCaller):
             curve_tenor, fica_asset_category = r['fica_asset_name'].split('_', 1)
             f = FicaAssetInput(r['asset_ticker'], fica_asset_category, curve_tenor)
             f.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
-            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], []).append(f)
+            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], [])
+            fica_asset_inputs[r['asset_subcategory']].append(f)
 
         grouped_asset_inputs = [FicaAssetInputGroup(key, val) for key, val in fica_asset_inputs.items()]
         return grouped_asset_inputs
