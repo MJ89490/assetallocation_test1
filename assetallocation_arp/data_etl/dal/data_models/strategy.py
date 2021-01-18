@@ -20,8 +20,8 @@ class Strategy(ABC):
     def __init__(self, name: Union[str, Name]):
         """Strategy class to hold data from database"""
         self.name = name
-        self._description = ''
-        self._version = None
+        self.description = ''
+        self.version = None
 
     @property
     def name(self) -> Name:
@@ -40,11 +40,11 @@ class Strategy(ABC):
         self._description = x
 
     @property
-    def version(self) -> int:
+    def version(self) -> Optional[int]:
         return self._version
 
     @version.setter
-    def version(self, x: int) -> None:
+    def version(self, x: Optional[int]) -> None:
         self._version = x
 
     @abstractmethod

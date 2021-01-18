@@ -193,7 +193,6 @@ class TimesProcCaller(StrategyProcCaller):
                 strategy.version, business_date_from, business_date_to
             )
 
-    # TODO add business_tstzrange to sql function arp.select_times_assets_with_analytics
     def _select_times_assets_with_analytics(
             self, times_version, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[List[TimesAssetInput]]:
@@ -320,7 +319,6 @@ class FxProcCaller(StrategyProcCaller):
             spot_tickers = FxAssetInput.get_spot_tickers(strategy.asset_inputs)
             strategy.spot_assets = self._select_assets_with_analytics(spot_tickers, business_tstzrange)
 
-    # TODO add business_tstzrange to sql function arp.select_fx_assets_with_analytics
     def _select_fx_assets_with_analytics(self, fx_version, business_tstzrange: DateTimeTZRange) -> Optional[List[FxAssetInput]]:
         """Select assets and asset analytics data for a version of fx"""
         res = self.call_proc('arp.select_fx_assets_with_analytics', [fx_version, business_tstzrange])
@@ -518,7 +516,6 @@ class EffectProcCaller(StrategyProcCaller):
 
         return effect
 
-    # TODO add business_tstzrange to arp.select_effect_assets_with_analytics
     def _select_effect_assets_with_analytics(
             self, effect_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[List[EffectAssetInput]]:
@@ -616,7 +613,6 @@ class FicaProcCaller(StrategyProcCaller):
                 strategy.version, business_date_from, business_date_to
             )
 
-    # TODO add business_tstzrange to arp.select_fica_assets_with_analytics
     def _select_fica_assets_with_analytics(
             self, fica_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[List[FicaAssetInputGroup]]:
@@ -691,7 +687,6 @@ class MavenProcCaller(StrategyProcCaller):
                 strategy, business_date_from, business_date_to
             )
 
-    # TODO add business_tstzrange to arp.select_maven_assets_with_analytics
     def _select_maven_assets_with_analytics(
             self, strategy: Maven, business_date_from: dt.date, business_date_to: dt.date
     ) -> List[MavenAssetInput]:

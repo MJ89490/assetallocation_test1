@@ -1,3 +1,4 @@
+-- TODO remove business_tstzrange from arp.fx and dependent functions
 CREATE OR REPLACE FUNCTION arp.insert_fx_strategy(
   description varchar,
   user_id varchar,

@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.select_effect_assets_with_analytics(
   strategy_version int,
-  business_datetime timestamp with time zone
+  business_tstzrange tstzrange
 )
   RETURNS TABLE(
     asset_ticker varchar,
@@ -32,7 +32,7 @@ BEGIN
       JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
       e.version = strategy_version
-      AND aa.business_datetime >= select_effect_assets_with_analytics.business_datetime
+      AND aa.business_datetime <@ select_effect_assets_with_analytics.business_tstzrange
     GROUP BY
       eag.strategy_asset_group_id,
       eag.ndf_code,

@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.select_fica_assets_with_analytics(
   strategy_version int,
-  business_datetime timestamp with time zone
+  business_tstzrange tstzrange
 )
   RETURNS TABLE(
     asset_subcategory varchar,
@@ -41,7 +41,7 @@ BEGIN
         JOIN asset.asset a1 on fa2.asset_id = a1.id
         JOIN asset.asset_analytic aa on a1.id = aa.asset_id
       WHERE
-        aa.business_datetime >= select_fica_assets_with_analytics.business_datetime
+        aa.business_datetime <@ select_fica_assets_with_analytics.business_tstzrange
       GROUP BY
         fa2.asset_id,
         a1.name,

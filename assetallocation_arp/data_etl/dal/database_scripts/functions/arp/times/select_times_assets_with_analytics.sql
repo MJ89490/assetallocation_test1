@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.select_times_assets_with_analytics(
   strategy_version int,
-  business_datetime timestamp with time zone
+  business_tstzrange tstzrange
 )
   RETURNS TABLE(
     asset_subcategory varchar,
@@ -48,7 +48,7 @@ BEGIN
         JOIN asset.asset a on ta2.signal_asset_id = a.id
         JOIN asset.asset_analytic aa on a.id = aa.asset_id
       WHERE
-        aa.business_datetime >= select_times_assets_with_analytics.business_datetime
+        aa.business_datetime <@ select_times_assets_with_analytics.business_tstzrange
       GROUP BY
         ta2.signal_asset_id,
         a.ticker
@@ -63,7 +63,7 @@ BEGIN
         JOIN asset.asset a on ta3.future_asset_id = a.id
         JOIN asset.asset_analytic aa on a.id = aa.asset_id
       WHERE
-        aa.business_datetime >= select_times_assets_with_analytics.business_datetime
+        aa.business_datetime <@ select_times_assets_with_analytics.business_tstzrange
       GROUP BY
         ta3.future_asset_id,
         a.ticker

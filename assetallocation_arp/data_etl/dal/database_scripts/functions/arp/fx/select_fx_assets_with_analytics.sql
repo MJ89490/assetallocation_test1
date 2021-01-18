@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.select_fx_assets_with_analytics(
   strategy_version int,
-  business_datetime timestamp with time zone
+  business_tstzrange tstzrange
 )
   RETURNS TABLE(
     ppp_ticker varchar,
@@ -31,7 +31,7 @@ BEGIN
       JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
         f.version = strategy_version
-        AND aa.business_datetime >= select_fx_assets_with_analytics.business_datetime
+        AND aa.business_datetime <@ select_fx_assets_with_analytics.business_tstzrange
       GROUP BY
         fag.strategy_asset_group_id,
         c.currency
