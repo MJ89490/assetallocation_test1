@@ -21,6 +21,7 @@ CREATE TABLE "arp"."strategy_asset_weight"
 	"id" serial NOT NULL,
 	"strategy_id" integer NOT NULL,
 	"asset_id" integer NOT NULL,
+	"model_instance_id"  integer NOT NULL,
 	"business_date" date NOT NULL,
 	"frequency" frequency NOT NULL,
 	"theoretical_weight" numeric(32,16) NOT NULL,

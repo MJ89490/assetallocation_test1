@@ -138,8 +138,7 @@ def test_insert_fund_strategy_results_calls_call_proc(MockFundStrategy, mock_cal
     a.insert_fund_strategy_results(fund_strategy, user_id)
 
     mock_call_proc.assert_called_once_with(a, 'arp.insert_fund_strategy_results',
-                                          [fund_strategy.fund_name,
-                                           fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
+                                          [fund_strategy.fund_name, fund_strategy.strategy_name.name,
                                            fund_strategy.strategy_version, fund_strategy.weight, user_id,
                                            fund_strategy.python_code_version, [], []])
 
