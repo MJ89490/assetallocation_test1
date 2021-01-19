@@ -47,6 +47,18 @@ body{background-color: #fff ;}
 .card-body{border-radius: 20%;}
 div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}
 
+/* BUTTONS */
+.btn-white {border-color: rgb(166, 166, 166);
+            background-color: #fff;
+}
+
+.btn-white:hover,
+.btn-white:active,
+.btn-white:focus,
+.btn-white:visited{background-color: rgba(217, 217,217, 0.5);
+                   border-color:#e3ebf6 !important;
+}
+
 /* SIDEBAR */
 .sidenav {height: 100%;
           width: 180px;
