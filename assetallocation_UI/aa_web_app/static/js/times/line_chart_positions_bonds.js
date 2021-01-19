@@ -24,11 +24,10 @@ function positionsBonds(bonds, percentile_fifth, equities_ninety_five_percentile
 
     var data = [trace1, trace2, trace3];
 
-    var layout = {title: 'Bonds'.bold(),
-                  titlefont: {color: '#007faa',family: 'Arial, serif'},
-                  showlegend: false,
+    var layout = {showlegend: false,
                   legend: { xanchor: 'center', x: 0.5, orientation: 'h' },
-                  yaxis: {tickformat: ',.3%'}
+                  yaxis: {tickformat: ',.3%'},
+                  margin: {t:0}
                  };
 
     var config = { 'displayModeBar': false, 'responsive': true };

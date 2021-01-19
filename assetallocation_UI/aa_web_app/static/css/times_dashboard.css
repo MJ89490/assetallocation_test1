@@ -9,6 +9,15 @@ body{background-color: #fff ;}
                   color: #95aac9;
                    margin-top: 60px;
                  }
+
+.header-pretitle-card {text-transform: uppercase;
+                       letter-spacing: .08em;
+                       color: #95aac9;
+                       margin-top: 5px;
+                       margin-left: 10px;
+                       margib-bottom: 0px;
+                      }
+
 .header-body {padding-bottom: 1.5rem;
               border-bottom: 1px solid #e3ebf6;
               margin-left: 200px;
@@ -17,8 +26,9 @@ body{background-color: #fff ;}
 /* CARD */
 /*.card-header{background-color: #005774; color: #fff;}*/
 
-.card-header {padding: 1rem 1.5rem;
-              margin-bottom: 0;
+.card-header {margin-bottom: 0;
+              margin-top: 5px;
+              margin-left: 5px;
               background-color: transparent;
               border-bottom: 1px solid #edf2f9;
               letter-spacing: -.02em;
@@ -26,9 +36,14 @@ body{background-color: #fff ;}
               color: #005774;
 }
 
-
-
-
+.card-header-overview {margin-bottom: 0;
+                       margin-left: 10px;
+                       background-color: transparent;
+                       border-bottom: 1px solid #edf2f9;
+                       letter-spacing: -.02em;
+                       font-size: .9475rem;
+                       color: #005774;
+}
 .card-body{border-radius: 20%;}
 div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}
 
@@ -78,9 +93,9 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                      color: #95aac9;}
 
 .row-asset-alloc-chart{margin-left: 190px; margin-bottom: 60px; margin-top: 40px;}
-.row-table-overall{margin-left: 187px;}
-.row-tables-positions{margin-left: 187px;}
-.row-positions-assets-charts{margin-left: 187px;}
+.row-table-overall{margin-left: 187px; margin-bottom: 40px;}
+.row-tables-positions{margin-left: 187px; margin-bottom: 40px;}
+.row-positions-assets-charts{margin-left: 187px; margin-bottom: 40px;}
 
 
 .pos-perf-title{background-color: #005774; color: #fff;}

@@ -12,11 +12,7 @@ function momSignalsChart(mom_signals, assets_names)
     var data = [trace0];
 
     var config = { 'displayModeBar': false, 'responsive': true };
-    var layout = {title: 'Mom signals'.bold(),
-                  titlefont: {color: '#007faa',
-                              family: 'Arial, serif'},
-                  margin: {l: 100}
-                 };
+    var layout = {margin: {l: 100, t:0}};
 
     Plotly.newPlot(MOM_SIGNALS, data, layout, config);
 }

@@ -158,58 +158,48 @@
             </div>
         </div>
 
-        <!--Positions and Performance Titles-->
-        <div class="row row-tables-positions">
-             <div class="col-lg-9">
-                 <table class="table table-hover">
-                     <thead>
-                        <tr>
-                            <th class="text-center pos-perf-title" scope="col">Positions</th>
-                        </tr>
-                     </thead>
-                 </table>
-             </div>
-            <div class="col-lg-3">
-                 <table class="table table-hover">
-                     <thead>
-                        <tr>
-                            <th class="text-center pos-perf-title" scope="col">Performance</th>
-                        </tr>
-                     </thead>
-                 </table>
-             </div>
-        </div>
 
         <!--Positions and Performance Tables (overall)-->
         <div class="row row-table-overall">
+            <!--Positions-->
             <div class="col-lg-9">
-                 <table class="table table-hover">
-                     <thead>
-                        <tr>
-                            <th class="text-muted text-center" scope="col">Signal as off <i class="signal-as-off-date">{{signal_as_off}}</i></th>
-                            <th class="text-muted text-center" scope="col">Previous (%)</th>
-                            <th class="text-muted text-center" scope="col">New (%)</th>
-                        </tr>
-                     </thead>
+                 <div class="card">
+                     <h6 class="header-pretitle-card">Overview</h6>
+                     <h4 class="card-header-overview"><b>Positions (%)</b></h4>
+                     <div class="card-body">
+                         <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                    <th class="text-muted text-center" scope="col">Signal as off <i class="signal-as-off-date">{{signal_as_off}}</i></th>
+                                    <th class="text-muted text-center" scope="col">Previous</th>
+                                    <th class="text-muted text-center" scope="col">New</th>
+                                </tr>
+                              </thead>
 
-                     <tbody>
-                        {% for category, pre_overall, new_overall in zip_results_pos_overall %}
-                        <tr>
-                            <td class="text-muted text-center">{{category}}</td>
-                            <td class="text-muted text-center">{{pre_overall}}</td>
-                            <td class="text-muted text-center">{{new_overall}}</td>
-                        </tr>
-                        {% endfor %}
-                     </tbody>
-                 </table>
-             </div>
-
+                             <tbody>
+                                {% for category, pre_overall, new_overall in zip_results_pos_overall %}
+                                <tr>
+                                    <td class="text-muted text-center">{{category}}</td>
+                                    <td class="text-muted text-center">{{pre_overall}}</td>
+                                    <td class="text-muted text-center">{{new_overall}}</td>
+                                </tr>
+                                {% endfor %}
+                             </tbody>
+                          </table>
+                     </div>
+                 </div>
+            </div>
+            <!--Performance-->
             <div class="col-lg-3">
-                 <table class="table table-hover ">
+                <div class="card">
+                    <h6 class="header-pretitle-card">Overview</h6>
+                    <h4 class="card-header-overview"><b>Performance (%)</b></h4>
+                    <div class="card-body">
+                        <table class="table table-hover ">
                      <thead>
                         <tr>
-                            <th class="text-muted text-center" scope="col">Weekly (%)</th>
-                            <th class="text-muted text-center" scope="col">YTD (%)</th>
+                            <th class="text-muted text-center" scope="col">Weekly</th>
+                            <th class="text-muted text-center" scope="col">YTD</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -221,13 +211,18 @@
                         {% endfor %}
                      </tbody>
                  </table>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!--Positions and Performance Tables-->
         <div class="row row-tables-positions">
             <div class="col-lg-9">
-                 <table class="table table-hover">
+                <div class="card">
+                    <h4 class="card-header"><b>Positions</b></h4>
+                    <div class="card-body">
+                        <table class="table table-hover">
                      <thead>
                         <tr>
                             <th class="text-muted text-center" scope="col"></th>
@@ -267,14 +262,19 @@
                         {% endfor %}
                      </tbody>
                  </table>
+                    </div>
+                </div>
             </div>
 
             <div class="col-lg-3">
-                 <table class="table table-hover">
+                <div class="card">
+                    <h4 class="card-header"><b>Performance (%)</b></h4>
+                    <div class="card-body">
+                        <table class="table table-hover">
                      <thead>
                         <tr>
-                            <th class="text-muted text-center" scope="col">Weekly (%)</th>
-                            <th class="text-muted text-center" scope="col">YTD (%)</th>
+                            <th class="text-muted text-center" scope="col">Weekly</th>
+                            <th class="text-muted text-center" scope="col">YTD</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -286,114 +286,132 @@
                         {% endfor %}
                      </tbody>
                  </table>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!--Performance Title-->
-        <div class="row row-tables-positions">
-             <div class="col-lg-12">
-                 <table class="table table-hover">
-                     <thead>
-                        <tr>
-                            <th class="text-center pos-perf-title" scope="col">Performance</th>
-                        </tr>
-                     </thead>
-                 </table>
-             </div>
-        </div>
 
         <!--Performance bar charts-->
         <div class="row row-positions-assets-charts">
             <!--Weekly Performance-->
             <div class="col-lg-6">
-                <div id="weekly_performance" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_weekly_performance.js') }}"></script>
-                <script type="text/javascript">
-                    weeklyPerformanceChart({{weekly_performance_all_currencies|tojson}}, {{assets_names|tojson}})
-                </script>
+                <div class="card">
+                    <h4 class="card-header"><b>Weekly performance</b></h4>
+                    <div class="card-body">
+                        <div id="weekly_performance" class="responsive-plot"></div>
+                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_weekly_performance.js') }}"></script>
+                        <script type="text/javascript">
+                            weeklyPerformanceChart({{weekly_performance_all_currencies|tojson}}, {{assets_names|tojson}})
+                        </script>
+                    </div>
+                </div>
             </div>
             <!--YTD Performance-->
             <div class="col-lg-6">
-                <div id="ytd_performance" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_ytd_performance.js') }}"></script>
-                <script type="text/javascript">
-                    ytdPerformanceChart({{ytd_performance_all_currencies|tojson}})
-                </script>
+                 <div class="card">
+                     <h4 class="card-header"><b>Year-to-Date performance</b></h4>
+                      <div class="card-body">
+                          <div id="ytd_performance" class="responsive-plot"></div>
+                          <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_ytd_performance.js') }}"></script>
+                          <script type="text/javascript">
+                            ytdPerformanceChart({{ytd_performance_all_currencies|tojson}}, {{assets_names|tojson}})
+                          </script>
+                      </div>
+                 </div>
             </div>
         </div>
 
-        <!--Positions Title-->
-        <div class="row row-tables-positions">
-             <div class="col-lg-12">
-                 <table class="table table-hover">
-                     <thead>
-                        <tr>
-                            <th class="text-center pos-perf-title" scope="col">Positions</th>
-                        </tr>
-                     </thead>
-                 </table>
-             </div>
-        </div>
 
         <!-- Positions bar charts -->
         <div class="row row-positions-assets-charts">
             <!--Mom signals-->
             <div class="col-lg-4">
-                <div id="mom_signals" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_mom_signals.js') }}"></script>
-                <script type="text/javascript">
-                    momSignalsChart({{mom_signals|tojson}}, {{assets_names|tojson}})
-                </script>
+                 <div class="card">
+                     <h4 class="card-header"><b>Mom signals positions</b></h4>
+                     <div class="card-body">
+                        <div id="mom_signals" class="responsive-plot"></div>
+                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_mom_signals.js') }}"></script>
+                        <script type="text/javascript">
+                            momSignalsChart({{mom_signals|tojson}}, {{assets_names|tojson}})
+                        </script>
+                     </div>
+                 </div>
             </div>
             <!--Previous Positions-->
             <div class="col-lg-4">
-                <div id="previous_positions" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_previous_positions.js') }}"></script>
-                <script type="text/javascript">
-                    previousPositionsChart({{prev_positions|tojson}})
-                </script>
+                <div class="card">
+                    <h4 class="card-header"><b>Previous positions</b></h4>
+                    <div class="card-body">
+                        <div id="previous_positions" class="responsive-plot"></div>
+                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_previous_positions.js') }}"></script>
+                        <script type="text/javascript">
+                            previousPositionsChart({{prev_positions|tojson}}, {{assets_names|tojson}})
+                        </script>
+                    </div>
+                </div>
             </div>
             <!--New Positions-->
             <div class="col-lg-4">
-                <div id="new_positions" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_new_positions.js') }}"></script>
-                <script type="text/javascript">
-                    newPositionsChart({{new_positions|tojson}})
-                </script>
+                <div class="card">
+                    <h4 class="card-header"><b>New positions</b></h4>
+                    <div class="card-body">
+                        <div id="new_positions" class="responsive-plot"></div>
+                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_new_positions.js') }}"></script>
+                        <script type="text/javascript">
+                            newPositionsChart({{new_positions|tojson}}, {{assets_names|tojson}})
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!--Positions assets charts-->
         <div class="row row-positions-assets-charts">
             <div class="col-lg-4">
-                <div id="positions_equities" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_equities.js') }}"></script>
-                <script type="text/javascript">
-                    positionsEquities({{positions_assets_sum['equities_pos_sum']|tojson}},
-                                      {{equities_fifth_percentile|tojson}},
-                                      {{equities_ninety_five_percentile|tojson}},
-                                      {{positions_assets_sum['dates_positions_assets']|tojson}})
-                </script>
+                 <div class="card">
+                      <h4 class="card-header"><b>Equities</b></h4>
+                      <div class="card-body">
+                          <div id="positions_equities" class="responsive-plot"></div>
+                          <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_equities.js') }}"></script>
+                          <script type="text/javascript">
+                            positionsEquities({{positions_assets_sum['equities_pos_sum']|tojson}},
+                                              {{equities_fifth_percentile|tojson}},
+                                              {{equities_ninety_five_percentile|tojson}},
+                                              {{positions_assets_sum['dates_positions_assets']|tojson}})
+                          </script>
+                      </div>
+                 </div>
             </div>
             <div class="col-lg-4">
-                <div id="positions_bonds" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_bonds.js') }}"></script>
-                <script type="text/javascript">
-                    positionsBonds({{positions_assets_sum['bonds_pos_sum']|tojson}},
-                                   {{bonds_fifth_percentile|tojson}},
-                                   {{bonds_ninety_five_percentile|tojson}},
-                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
-                </script>
+                <div class="card">
+                    <h4 class="card-header"><b>Bonds</b></h4>
+                    <div class="card-body">
+                        <div id="positions_bonds" class="responsive-plot"></div>
+                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_bonds.js') }}"></script>
+                        <script type="text/javascript">
+                            positionsBonds({{positions_assets_sum['bonds_pos_sum']|tojson}},
+                                           {{bonds_fifth_percentile|tojson}},
+                                           {{bonds_ninety_five_percentile|tojson}},
+                                           {{positions_assets_sum['dates_positions_assets']|tojson}})
+                        </script>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4">
-                <div id="positions_forex" class="responsive-plot"></div>
-                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_forex.js') }}"></script>
-                <script type="text/javascript">
-                    positionsForex({{positions_assets_sum['forex_pos_sum']|tojson}},
-                                   {{forex_fifth_percentile|tojson}},
-                                   {{forex_ninety_five_percentile|tojson}},
-                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
-                </script>
+                <div class="card">
+                    <h4 class="card-header"><b>Forex</b></h4>
+                    <div class="card-body">
+                        <div id="positions_forex" class="responsive-plot"></div>
+                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_forex.js') }}"></script>
+                        <script type="text/javascript">
+                            positionsForex({{positions_assets_sum['forex_pos_sum']|tojson}},
+                                           {{forex_fifth_percentile|tojson}},
+                                           {{forex_ninety_five_percentile|tojson}},
+                                           {{positions_assets_sum['dates_positions_assets']|tojson}})
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
 
