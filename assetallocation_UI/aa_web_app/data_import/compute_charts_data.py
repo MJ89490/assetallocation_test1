@@ -304,11 +304,22 @@ class TimesChartsDataComputations(object):
         :return: a list with previous positions for each asset
         """
         # Find out the date of 7 days ago
-        last_date = self.positions.index.get_loc(self.positions.last_valid_index()) - 1
+        last_date = self.positions.index.get_loc(self.positions.last_valid_index())-1
         before_last_date = self.returns.index[last_date]
         prev_7_days_date = before_last_date - datetime.timedelta(days=7)
 
         return self.round_results_all_assets_overview(self.positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
+
+    def compute_implemented_weight_overview(self):
+        """
+        Compute the implemented weight for each asset at the latest date
+        :return: a list with the latest positions for each asset
+        """
+
+        # Find out the last date
+        last_date = self.positions.last_valid_index()
+
+        return self.round_results_all_assets_overview(self.positions.loc[last_date].tolist())
 
     def compute_new_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
         """

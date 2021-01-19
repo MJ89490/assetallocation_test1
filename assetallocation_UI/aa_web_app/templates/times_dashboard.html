@@ -218,54 +218,57 @@
 
         <!--Positions and Performance Tables-->
         <div class="row row-tables-positions">
+            <!--Positions-->
             <div class="col-lg-9">
                 <div class="card">
                     <h4 class="card-header"><b>Positions</b></h4>
                     <div class="card-body">
-                        <table class="table table-hover">
-                     <thead>
-                        <tr>
-                            <th class="text-muted text-center" scope="col"></th>
-                            <th class="text-muted text-center" scope="col"></th>
-                            <th class="text-muted text-center" scope="col">Mom Signals</th>
-                            <th class="text-muted text-center" scope="col">Previous (%)</th>
-                            <th class="text-muted text-center" scope="col">New (%)</th>
-                            <th class="text-muted text-center" scope="col">Delta (%)</th>
-                            <th class="text-muted text-center" scope="col">Trade</th>
-                            <th class="text-muted text-center" scope="col">Size</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {% for category, name, mom, prev_pos, new_pos, delta, trade, size in zip_results_pos %}
-                        <tr>
-                            <td class="text-muted text-center">{{category}}</td>
-                            <td class="text-muted text-center">{{name}}</td>
-                            <td class="text-muted text-center">{{mom}}</td>
-                            <td class="text-muted text-center">{{prev_pos}}</td>
-                            <td class="text-muted text-center">{{new_pos}}</td>
-                            {% if delta > 0 %}
-                                <td class="text-center" style="color:rgb(0, 128, 0);">{{delta}}</td>
-                            {% else %}
-                                <td class="text-center" style="color:rgb(255, 0, 0);">{{delta}}</td>
-                            {% endif %}
-                            {% if trade == 'BUY' %}
-                                <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
-                            {% else %}
-                                <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
-                            {% endif %}
-                            {% if size > 0 %}
-                                <td class="text-center" style="color:rgb(0, 128, 0);">{{size}}</td>
-                            {% else %}
-                                <td class="text-center" style="color:rgb(255, 0, 0);">{{size}}</td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                     </tbody>
-                 </table>
+                        <table class="table table-editable table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-muted text-center" scope="col">Category</th>
+                                    <th class="text-muted text-center" scope="col">Asset</th>
+                                    <th class="text-muted text-center" scope="col">Mom Signals</th>
+                                    <th class="text-muted text-center" scope="col">Previous (%)</th>
+                                    <th class="text-muted text-center" scope="col">New (%)</th>
+                                    <th class="text-muted text-center" scope="col">Delta (%)</th>
+                                    <th class="text-muted text-center" scope="col">Trade</th>
+                                    <th class="text-muted text-center" scope="col">Size</th>
+                                    <th class="text-muted text-center" scope="col">Implemented weight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category, name, mom, prev_pos, new_pos, delta, trade, size, imp_weight in zip_results_pos %}
+                                    <tr>
+                                        <td class="text-muted text-center">{{category}}</td>
+                                        <td class="text-muted text-center">{{name}}</td>
+                                        <td class="text-muted text-center">{{mom}}</td>
+                                        <td class="text-muted text-center">{{prev_pos}}</td>
+                                        <td class="text-muted text-center">{{new_pos}}</td>
+                                        {% if delta > 0 %}
+                                            <td class="text-center" style="color:rgb(0, 128, 0);">{{delta}}</td>
+                                        {% else %}
+                                            <td class="text-center" style="color:rgb(255, 0, 0);">{{delta}}</td>
+                                        {% endif %}
+                                        {% if trade == 'BUY' %}
+                                            <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
+                                        {% else %}
+                                            <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
+                                        {% endif %}
+                                        {% if size > 0 %}
+                                            <td class="text-center" style="color:rgb(0, 128, 0);">{{size}}</td>
+                                        {% else %}
+                                            <td class="text-center" style="color:rgb(255, 0, 0);">{{size}}</td>
+                                        {% endif %}
+                                        <td class="text-muted text-center" contenteditable="true">{{imp_weight}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
+            <!--Performance-->
             <div class="col-lg-3">
                 <div class="card">
                     <h4 class="card-header"><b>Performance (%)</b></h4>
@@ -368,6 +371,7 @@
 
         <!--Positions assets charts-->
         <div class="row row-positions-assets-charts">
+            <!--Equities-->
             <div class="col-lg-4">
                  <div class="card">
                       <h4 class="card-header"><b>Equities</b></h4>
@@ -383,6 +387,7 @@
                       </div>
                  </div>
             </div>
+            <!--Bonds-->
             <div class="col-lg-4">
                 <div class="card">
                     <h4 class="card-header"><b>Bonds</b></h4>
@@ -398,6 +403,7 @@
                     </div>
                 </div>
             </div>
+            <!--Forex-->
             <div class="col-lg-4">
                 <div class="card">
                     <h4 class="card-header"><b>Forex</b></h4>

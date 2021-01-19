@@ -16,6 +16,8 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
     previous_positions = obj_charts_data.compute_previous_positions_all_assets_overview(strategy_weight)
     new_positions = obj_charts_data.compute_new_positions_all_assets_overview(strategy_weight)
 
+    implemented_weight = obj_charts_data.compute_implemented_weight_overview()
+
     delta_positions = obj_charts_data.compute_delta_positions_all_assets_overview(previous_positions, new_positions)
     trade_positions = obj_charts_data.compute_trade_positions_all_assets_overview(delta_positions)
 
@@ -68,7 +70,7 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
 
     # Create a zip to build performance and positions tables in dashboard
     pos_keys = ["category_name", "names_weekly_perf", "mom_signals", "prev_positions", "new_positions",
-                "delta_positions", "trade_positions", "size_positions"]
+                "delta_positions", "trade_positions", "size_positions", "imp_weight"]
     perf_keys = ["weekly_performance_all_currencies", "ytd_performance_all_currencies"]
     pos_overall_keys = ["category_name",  "pre_overall", "new_overall"]
     perf_overall_keys = ["weekly_overall", "ytd_overall"]
@@ -81,6 +83,7 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
                                                                  delta_positions,
                                                                  trade_positions,
                                                                  size_pos,
+                                                                 implemented_weight,
                                                                  keys=pos_keys)
     results_perf = obj_charts_data.build_dict_ready_for_zip(weekly_all_perf['weekly_performance_all_currencies'],
                                                             ytd_all_perf['ytd_performance_all_currencies'],
