@@ -1,5 +1,6 @@
 import mock
 from datetime import date
+from enum import Enum
 
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAssetAnalytic, \
@@ -45,25 +46,35 @@ def mock_fund_strategy_analytic(business_date: date, category: str, subcategory:
     return mock_fsa
 
 
-# TODO adapt below for new methods!
-# def test_analytics_to_composite_returns_expected_value_asset_analytic():
-#     mock_fsaa1 = mock_fund_strategy_asset_analytic('a', date(2020, 1, 2), 'b', 'c', float(1), 'g', 'i')
-#     mock_fsaa2 = mock_fund_strategy_asset_analytic('b', date(2020, 1, 3), 'e', 'f', float(2), 'h', 'j')
-#
-#     returns = ArpTypeConverter.analytics_to_composite([mock_fsaa1, mock_fsaa2])
-#
-#     expected = ['("a","2020-01-02","i","b","c","g",1.0)', '("b","2020-01-03","j","e","f","h",2.0)']
-#     assert expected == returns
-#
-#
-# def test_analytics_to_composite_returns_expected_value_strategy_analytic():
-#     mock_fsaa1 = mock_fund_strategy_analytic(date(2020, 1, 2), 'b', 'c', float(1), 'g', 'i')
-#     mock_fsaa2 = mock_fund_strategy_analytic(date(2020, 1, 3), 'e', 'f', float(2), 'h', 'j')
-#
-#     returns = ArpTypeConverter.analytics_to_composite([mock_fsaa1, mock_fsaa2])
-#
-#     expected = ['(,"2020-01-02","i","b","c","g",1.0)', '(,"2020-01-03","j","e","f","h",2.0)']
-#     assert expected == returns
+def test_strategy_asset_analytics_to_composite_returns_expected_value():
+    mock_fsaa1 = mock_fund_strategy_asset_analytic('a', date(2020, 1, 2), 'b', 'c', float(1), 'g', 'i')
+    mock_fsaa1.asset_ticker = 'z'
+    mock_fsaa2 = mock_fund_strategy_asset_analytic('b', date(2020, 1, 3), 'e', 'f', float(2), 'h', 'j')
+    mock_fsaa2.asset_ticker = 'y'
+    returns = ArpTypeConverter._strategy_asset_analytics_to_composite([mock_fsaa1, mock_fsaa2])
+
+    expected = ['("z","2020-01-02","b","c","g",1.0)', '("y","2020-01-03","e","f","h",2.0)']
+    assert expected == returns
+
+
+def test_strategy_analytics_to_composite_returns_expected_value():
+    class TestEnum(Enum):
+        cat = 1
+        subcat = 2
+        weekly = 3
+        cat1 = 4
+        subcat1 = 5
+        daily = 6
+
+    analytics = {
+        (date(2020, 1, 2), TestEnum.cat, TestEnum.subcat, TestEnum.weekly): [1.0, None, None],
+        (date(2020, 1, 3), TestEnum.cat1, TestEnum.subcat1, TestEnum.daily): [2.0, 'comp', 6.0]
+    }
+
+    returns = ArpTypeConverter._strategy_analytics_to_composite(analytics)
+
+    expected = ['("2020-01-02","cat","subcat","weekly",1.0,,)', '("2020-01-03","cat1","subcat1","daily",2.0,"comp",6.0)']
+    assert expected == returns
 
 
 def test_weight_to_composite_returns_expected_value():

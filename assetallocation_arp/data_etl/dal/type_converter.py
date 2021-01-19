@@ -109,7 +109,7 @@ class ArpTypeConverter(DbTypeConverter):
         """Format to match database type arp.date_category_subcategory_frequency_value_comp_name_comp_value[]"""
         return [DbTypeConverter.to_composite(
             k[0], k[1].name, k[2].name, k[3].name, v[0], v[1], v[2]
-        ) for k, v in analytics]
+        ) for k, v in analytics.items()]
 
     @staticmethod
     def _strategy_asset_analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]) -> List[str]:
