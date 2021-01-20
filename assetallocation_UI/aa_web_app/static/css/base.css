@@ -8,6 +8,20 @@
 
 .navbar-default .nav-item:hover .nav-link {color: #FFEBCD;}
 
+/* CARDS */
+.card-header {margin-bottom: 0;
+              margin-top: 5px;
+              margin-left: 5px;
+              background-color: transparent;
+              border-bottom: 1px solid #edf2f9;
+              letter-spacing: -.02em;
+              font-size: .9475rem;
+              color: #005774;
+}
+
+.card-body{border-radius: 20%;}
+div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}
+
 
 /* JUMBOTRON */
 .jumbotron-image {
@@ -39,6 +53,11 @@
 .row_risk_returns{margin-top: 40px;}
 .ag-header-cell-label {justify-content: center;}
 .dates-times{margin-top: 20px;}
+.sub-title-dashboard{margin-top: 30px;
+                     margin-bottom: 40px;
+                     text-transform: uppercase;
+                     letter-spacing: .08em;
+                     color: #95aac9;}
 
 /* TIMES PAGE */
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
@@ -56,6 +75,7 @@
 .table-existing-version{margin-top: 40px;}
 .table-existing-version > thead {background-color: #005774; color: #fff;}
 .input_existing_version{color: #005774; font-weight: bold;}
+.row-model-inputs{margin-top: 40px;}
 
 /* EFFECT PAGE */
 .btn-outline-secondary {background-color:#fff !important; color: #C0C0C0 !important; border-color: #C0C0C0 !important;}

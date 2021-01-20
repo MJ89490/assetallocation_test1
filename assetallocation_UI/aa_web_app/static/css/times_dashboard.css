@@ -26,6 +26,10 @@ body{background-color: #fff ;}
 /* TABLE */
 .table-performance{margin-top: 35px;}
 
+.table-model-assets>thead>tr {
+  border-top: none;
+}
+
 /* CARD */
 /*.card-header{background-color: #005774; color: #fff;}*/
 
