@@ -22,7 +22,7 @@ obj_times_charts_data = TimesChartsDataComputations()
 
 @app.route('/')
 def home():
-    return render_template('boot_dyna.html', title='HomePage')
+    return render_template('home.html', title='HomePage')
 
 
 @app.route('/times_dashboard',  methods=['GET', 'POST'])
