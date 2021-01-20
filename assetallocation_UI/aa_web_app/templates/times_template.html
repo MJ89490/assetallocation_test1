@@ -29,6 +29,33 @@
                             {{ form.versions(class="form-control", id="selectVersionFund")}}
                              <a href="#"><button type="submit" name="submit_button" value="select-versions" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
                         </div>
+
+                        <!--<div class="form-group dates-times">-->
+                            <!--<label>Date from</label>-->
+                             <!--<label>Date to</label>-->
+                            <!--<div class="btn-group">-->
+                                <!--&lt;!&ndash;Date from&ndash;&gt;-->
+                                <!--<input id="" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2000" required>-->
+                                <!---->
+                                <!--&lt;!&ndash;Date to&ndash;&gt;-->
+                                <!--<input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2000" required>-->
+                                <!--<script type="text/javascript">-->
+                                    <!--$('#input_date_from_times').datepicker({-->
+                                        <!--uiLibrary: 'bootstrap',-->
+                                         <!--todayHighlight: true,-->
+                                         <!--autoclose: true,-->
+                                         <!--format: 'dd/mm/yyyy'-->
+                                    <!--});-->
+                                <!--</script>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+
+
+
+
+
                     {% endif %}
                 </form>
                 {% if show_dashboard == 'show_dashboard' %}
@@ -39,6 +66,8 @@
             </div>
             <div class="col-lg-4"></div>
         </div>
+
+
         {% if run_model_page == 'run_new_version' %}
             <div class="row row-effect-ag-grid"></div>
             <h2 class="title-models-ag-grid">Model assets</h2>
