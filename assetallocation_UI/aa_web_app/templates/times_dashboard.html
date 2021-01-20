@@ -28,7 +28,15 @@
 
         <style>
 
+            .badge-soft-secondary {
+    color: #6e84a3;
+    background-color: #e2e6ed;
+}
 
+.badge {
+    vertical-align: middle;
+
+}
 
 
 
@@ -228,9 +236,10 @@
             <div class="col-lg-9">
                 <div class="card">
                     <h4 class="card-header"><b>Positions</b></h4>
-                    <button type="button" class="btn btn-warning" id="export-btn">EXPORT</button>
                     <div class="card-body">
-                         <div id="table" class="table-editable">
+                        <button type="button" class="btn btn-white card-header" id="export-btn"><span class="badge badge-soft-secondary">export implemented weight</span></button>
+
+                        <div id="table" class="table-editable">
                             <table class="table table-editable table-hover" id="table_positions">
                                 <thead>
                                     <tr>

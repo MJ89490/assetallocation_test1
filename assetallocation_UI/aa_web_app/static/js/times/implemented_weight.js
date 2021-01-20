@@ -37,7 +37,8 @@ const $BTN = $('#export-btn');
 
 
    json_data = JSON.stringify(data);
-
+   alert('The implemented weights have been saved!');
+   console.log(json_data);
     //   $.ajax({
     //    url: "receive_sidebar_data_times_form",
     //    data: {json_data: json_data},
