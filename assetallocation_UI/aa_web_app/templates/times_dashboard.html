@@ -38,9 +38,21 @@
 
 }
 
+.sidebar-brand, .sidebar-brand:hover {
+    padding: 1rem;
+    margin-top: 0px;
+    background: #153d77;
+    font-size: 1.175rem;
+    font-weight: 500;
+    color: #fff;
+    width: 100%;
+    display: block;
+    text-decoration: none;
+}
 
+.content-sidebar{ background-color: #005774; height: 80px;}
 
-
+#logo-lgim{margin-left: 20px;}
 
     </style>
 
@@ -49,24 +61,14 @@
 
     <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top navbar-default py-lg-0 ">
-        <button class="navbar-toggler" type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-            </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target=""><b>Support</b></a></li>
-            </ul>
-        </div>
-    </nav>
 
+    <!--SIDEBAR-->
     <div class="sidenav">
-        <a href="{{url_for('home')}}"><img alt="Legal and General" width="90px;" height="auto" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg"></a>
+
+        <a class="content-sidebar" href="{{url_for('home')}}">
+            <img id="logo-lgim" alt="Legal and General" width="70px;" height="70px;" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+        </a>
+
 
         <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
 
@@ -120,15 +122,35 @@
         <script src="static/js/form_dashboard_times.js"></script>
     </div>
 
-    <!-- ============================= CHARTS AREA ============================= -->
-    <div class="container-fluid">
-        <div class="header-body">
-            <h6 class="header-pretitle">Overview</h6>
-            <h2 class="title-dashboard"><b>TIMES Dashboard</b></h2>
-        </div>
-        <h7 class="sub-title-dashboard"><i>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</i></h7><br>
-        <h7 class="sub-title-dashboard"><i>Date run: </i></h7>
 
+    <!-- ============================= CHARTS AREA ============================= -->
+    <div class="content">
+
+         <div class="container-fluid">
+             <!--NAVBAR-->
+             <nav class="navbar navbar-expand-lg fixed-top navbar-default py-lg-0 ">
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse"
+                data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target=""><b>Support</b></a></li>
+            </ul>
+        </div>
+    </nav>
+             <div class="row">
+                <div class="header-body">
+                    <h6 class="header-pretitle">Overview</h6>
+                    <h2 class="title-dashboard"><b>TIMES Dashboard</b></h2>
+                    <h6 class="sub-title-dashboard"><i>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</i></h6><br>
+                    <h6 class="sub-title-dashboard"><i>Date run: </i></h6>
+                </div>
+             </div>
         <!--Asset Allocation chart-->
         <div class="row row-asset-alloc-chart">
             <div class="col-lg-12">
@@ -172,6 +194,9 @@
                 </div>
             </div>
         </div>
+
+
+
 
 
         <!--Positions and Performance Tables (overall)-->
@@ -460,7 +485,7 @@
                 </div>
             </div>
         </div>
-
+</div>
     </div>
 </body>
 </html>

@@ -94,6 +94,8 @@ def times_strategy():
                 assets = obj_received_data_times.receive_data_existing_versions(strategy_version=version_strategy)
 
         elif request.form['submit_button'] == 'run-strategy-existing-versions':
+            # TODO: when we change the inputs: 1. do we create a new version?
+            # TODO: read inputs from table
             obj_received_data_times.run_existing_strategy()
 
             return redirect(url_for('times_dashboard'))

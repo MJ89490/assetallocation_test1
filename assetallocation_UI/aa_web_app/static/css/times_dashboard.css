@@ -1,6 +1,6 @@
 /* BODY */
-/*rgb(248, 248, 248)*/
-body{background-color: #fff ;}
+/**/
+body{background-color: rgb(248, 248, 248) ;}
 
 /* TITLES */
 .h6, h6 {font-size: .625rem;}
@@ -19,9 +19,13 @@ body{background-color: #fff ;}
                       }
 
 .header-body {padding-bottom: 1.5rem;
-              border-bottom: 1px solid #e3ebf6;
+              color: #fff;
               margin-left: 200px;
              }
+
+/* CONTENT */
+.container-fluid{background-color: #005774; height: 400px; }
+
 
 /* TABLE */
 .table-performance{margin-top: 35px;}
@@ -75,15 +79,17 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 /* SIDEBAR */
 .sidenav {height: 100%;
-          width: 180px;
+          width: 190px;
           position: fixed;
           z-index: 1;
           top: 0;
           left: 0;
-          background-color: #005774;
+
           overflow-x: hidden;
-          padding-top: 20px;
          }
+
+
+.sidenav {background-color: rgba(83,104,120, 0.85);}
 
 .sidenav a {padding-left: 16px;
             margin-bottom: 20px;
@@ -103,18 +109,25 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 @media screen and (max-height: 450px) {.sidenav {padding-top: 15px;}
                                        .sidenav a {font-size: 18px;}
                                       }
+
+/* NAVBAR */
+.navbar-default {margin-left: 180px;  background-color: #005774;}
+.navbar-default .navbar-nav .nav-link {color: #fff;}
+.navbar-default .nav-item:hover .nav-link {color: rgb(102, 204, 238);}
+
+
 /*color: rgb(0, 176, 80);*/
-.title-dashboard {color: #005774;
+.title-dashboard {color: #fff;
                   font-size: 2rem;
                   line-height: 1.4;
 
-                  max-width: 75%;
+
                   display: inline-block;
                   z-index: 2;}
 
 .row-dashboard-times-ag-grid{ margin-left: 200px; margin-bottom: 150px; margin-top: 40px;}
-.sub-title-dashboard{margin-left: 205px;
-                     text-transform: uppercase;
+
+.sub-title-dashboard{text-transform: uppercase;
                      letter-spacing: .08em;
                      color: #95aac9;}
 
@@ -232,9 +245,8 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                    }
 
 .title-date-box{margin-left: 70px;}
-.navbar-default {margin-left: 180px;}
-.navbar-default .navbar-nav .nav-link {color: #007faa;}
-.navbar-default .nav-item:hover .nav-link {color: rgb(102, 204, 238);}
+
+
 
 
 .btn-dashboard {height: 35px;
