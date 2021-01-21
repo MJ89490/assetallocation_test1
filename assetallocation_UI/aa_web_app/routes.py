@@ -50,11 +50,14 @@ def times_dashboard():
             obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name, version)
             export_data_sidebar = 'export_data_sidebar'
             obj_times_charts_data.export_times_data_to_csv(version)
-
+        else:
+            # date_from_sidebar, date_to_sidebar =
+            pass
         obj_received_data_times.receive_data_selected_version_sidebar_dashboard()
 
     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
                                                  obj_received_data_times.version_strategy)
+
     template_data = run_times_charts_data_computations(obj_times_charts_data,
                                                        obj_received_data_times.strategy_weight,
                                                        start_date_sum=None, start_date=None, end_date=None)

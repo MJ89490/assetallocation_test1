@@ -2,6 +2,8 @@ version_data_to_send_to_python = []
 fund_data_to_send_to_python = []
 ready_to_send = false
 type_of_request = 'charts_data_sidebar'
+dateFrom = []
+dateTo = []
 
 function sideBarFund() {
         var select_box = document.getElementById("send_data_fund_from_sidebar");
@@ -17,14 +19,12 @@ function sideBarFund() {
 function sideBarVersion() {
         var select_box = document.getElementById("send_data_version_from_sidebar");
         var version = select_box.options[select_box.selectedIndex].value;
-        ready_to_send = true;
+
         version_data_to_send_to_python.push(parseInt(version));
 
         if (version_data_to_send_to_python.length != 1){
             version_data_to_send_to_python.splice(0, version_data_to_send_to_python.length-1);
         }
-
-        this.sendDataToPython();
 }
 
 function sideBarExportFund() {
@@ -52,11 +52,35 @@ function sideBarExportVersion() {
         this.sendDataToPython();
 }
 
+
+function selectDateFrom(){
+    var dateFromSidebar =  document.getElementById("input_date_from_side_bar_times").value;
+    dateFrom.push(dateFromSidebar);
+
+}
+
+function selectDateTo(){
+    var dateToSidebar =  document.getElementById("input_date_to_side_bar_times").value;
+    ready_to_send = true;
+    dateTo.push(dateToSidebar);
+    this.sendDataToPython();
+}
+
 function sendDataToPython(){
+    console.log('send date');
+    console.log(dateFrom);
 
     if (ready_to_send == true){
+        console.log(dateFrom);
 
-        var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0], "inputs_version": version_data_to_send_to_python[0], "type_of_request": type_of_request});
+        var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
+                                        "inputs_version": version_data_to_send_to_python[0],
+                                        "inputs_date_from": dateFrom[0],
+                                        "inputs_date_to": dateTo[0],
+                                        "type_of_request": type_of_request,
+                                        });
+
+        console.log(json_data);
 
         $.ajax({
                 url: "receive_sidebar_data_times_form",

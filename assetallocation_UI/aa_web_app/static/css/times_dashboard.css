@@ -92,7 +92,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .sidenav {background-color: rgba(83,104,120, 0.85);}
 
 .sidenav a {padding-left: 16px;
-            margin-bottom: 20px;
+
             text-decoration: none;
             font-size: 23px;
             color: #fff;
@@ -100,6 +100,8 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
            }
 
 .sidenav a:hover {color: #f1f1f1;}
+
+.sidenav-home{margin-bottom: 20px;}
 
 .container {margin-left: 180px; /* Same as the width of the sidenav */
             font-size: 28px; /* Increased text to enable scrolling */
@@ -140,7 +142,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .pos-perf-title{background-color: #005774; color: #fff;}
 .signal-as-off-date{color: #005774;}
 
-.sidenav-home{margin-top: 40px;}
+/*.sidenav-home{margin-top: 5px;}*/
 
 
 #selectFund {color: #005774 !important;

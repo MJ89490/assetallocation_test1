@@ -35,6 +35,8 @@ class TimesChartsDataComputations(object):
         self.positions_start_date = None
         self.positions_end_date = None
 
+        self.date_from_sidebar, self.date_to_sidebar = None, None
+
     @property
     def signal_as_off(self) -> datetime:
         return self.signals.last_valid_index().strftime('%d-%m-%Y')
@@ -42,6 +44,22 @@ class TimesChartsDataComputations(object):
     @property
     def positions_sum_start_date(self) -> str:
         return self._positions_sum_start_date
+
+    @property
+    def date_from_sidebar(self) -> datetime:
+        return self._date_from_sidebar
+
+    @date_from_sidebar.setter
+    def date_from_sidebar(self, value: datetime) -> None:
+        self._date_from_sidebar = value
+
+    @property
+    def date_to_sidebar(self) -> datetime:
+        return self._date_to_sidebar
+
+    @date_to_sidebar.setter
+    def date_to_sidebar(self, value: datetime) -> None:
+        self._date_to_sidebar = value
 
     @positions_sum_start_date.setter
     def positions_sum_start_date(self, value: str) -> None:
@@ -77,11 +95,13 @@ class TimesChartsDataComputations(object):
     def positions_assets_length(self):
         return len(self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):])
 
-    def call_times_proc_caller(self, fund_name: str, version_strategy: int) -> None:
+    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_from_sidebar=None, date_to_sidebar=None) -> None:
         """
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)
         :param version_strategy: version of the current strategy (version1, version2, ...)
+        :param date_from_sidebar: date from sidebar
+        :param date_to_sidebar: date to sidebar
         :return: None
         """
         apc = TimesProcCaller()
@@ -92,6 +112,17 @@ class TimesChartsDataComputations(object):
         self.signals = analytic_df.xs(Signal.momentum, level='analytic_subcategory')
         self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')
         self.positions = weight_df
+
+        if date_from_sidebar and date_to_sidebar is not None:
+            self.signals = self.signals.loc[date_from_sidebar:date_to_sidebar]
+            self.returns = self.returns.loc[date_from_sidebar:date_to_sidebar]
+            self.positions = self.positions.loc[date_from_sidebar:date_to_sidebar]
+
+
+
+        print()
+
+
 
     @staticmethod
     def call_domino_object():

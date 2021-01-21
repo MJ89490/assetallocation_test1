@@ -65,10 +65,10 @@
     <!--SIDEBAR-->
     <div class="sidenav">
 
+        <!--Logo-->
         <a class="content-sidebar" href="{{url_for('home')}}">
             <img id="logo-lgim" alt="Legal and General" width="70px;" height="70px;" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
         </a>
-
 
         <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
 
@@ -91,6 +91,28 @@
                     <option>{{v}}</option>
                 {% endfor %}
             </select>
+
+            <label class="label-models-date-sidebar">Step <b>3</b>: date from</label>
+            <input id="input_date_from_side_bar_times" name="input_date_from_side_bar_times" class="form-control selectFund" value="11/02/2000" onchange='selectDateFrom()' required>
+            <script>
+                $('#input_date_from_side_bar_times').datepicker({uiLibrary: 'bootstrap',
+                                                                 todayHighlight: true,
+                                                                 autoclose: true,
+                                                                 format: 'dd/mm/yyyy'
+                                                                 });
+            </script>
+
+            <label class="label-models-date-sidebar">Step <b>4</b>: date to</label>
+            <input id="input_date_to_side_bar_times" name="input_date_to_side_bar_times" class="form-control selectFund" value="27/08/2020" onchange='selectDateTo()' required>
+            <script>
+                $('#input_date_to_side_bar_times').datepicker({uiLibrary: 'bootstrap',
+                                                               todayHighlight: true,
+                                                               autoclose: true,
+                                                               format: 'dd/mm/yyyy'
+                                                               });
+            </script>
+
+
         </form>
         <script src="static/js/form_dashboard_times.js"></script>
 
@@ -126,7 +148,7 @@
     <!-- ============================= CHARTS AREA ============================= -->
     <div class="content">
 
-         <div class="container-fluid">
+        <div class="container-fluid">
              <!--NAVBAR-->
              <nav class="navbar navbar-expand-lg fixed-top navbar-default py-lg-0 ">
         <button class="navbar-toggler" type="button"
@@ -151,8 +173,8 @@
                     <h6 class="sub-title-dashboard"><i>Date run: </i></h6>
                 </div>
              </div>
-        <!--Asset Allocation chart-->
-        <div class="row row-asset-alloc-chart">
+            <!--Asset Allocation chart-->
+            <div class="row row-asset-alloc-chart">
             <div class="col-lg-12">
                 <div class="card">
                     <h4 class="card-header"><b>Asset allocation over time</b></h4>
