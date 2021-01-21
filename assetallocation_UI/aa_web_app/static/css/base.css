@@ -1,3 +1,8 @@
+/* BODY */
+/*rgb(248, 248, 248)*/
+/*body{background-color: #f4f7fc;}*/
+
+
 /* NAVBAR */
 .navbar-default {
     background-color:  #005774 !important;
@@ -16,7 +21,8 @@
               border-bottom: 1px solid #edf2f9;
               letter-spacing: -.02em;
               font-size: .9475rem;
-              color: #005774;
+              color: rgb(22, 54, 92);
+               line-height: 1.5;
 }
 
 .card-body{border-radius: 20%;}
@@ -49,15 +55,31 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 /* COMMON FEATURES */
 .container .title-page{padding-top:100px; color: #005774 !important;}
-.title-page-model{padding-top:75px; color: #005774 !important;}
+.title-page-model{padding-top:75px; color: #005774 !important; font-size: 2rem;}
 .row_risk_returns{margin-top: 40px;}
 .ag-header-cell-label {justify-content: center;}
 .dates-times{margin-top: 20px;}
-.sub-title-dashboard{margin-top: 30px;
-                     margin-bottom: 40px;
-                     text-transform: uppercase;
-                     letter-spacing: .08em;
-                     color: #95aac9;}
+.sub-title-fund-version-dashboard{text-transform: uppercase;
+                                  letter-spacing: .08em;
+                                  color: #95aac9;
+                                  margin-top: 35px;
+}
+.sub-title-date-dashboard{text-transform: uppercase;
+                          letter-spacing: .08em;
+                          color: #95aac9;
+                          margin-bottom: 35px;
+}
+
+/* TABLE */
+tr td{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.table-existing-version > thead > tr {border-top:none !important;}
+.table-existing-version td,
+.table-existing-version th {border: 0;}
+
 
 /* TIMES PAGE */
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
@@ -71,10 +93,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .form-models-select-times{color: #005774 !important; border-color: #007faa !important; width: 230px; margin-right: 15px;}
 #input_fund_name_times{color: #005774 !important; border-color: #007faa !important;}
 .btn-run-model-times{width: 475px; margin-top: 15px; height: 38px; padding-top: 0px;}
-.btn-run-model-existing-versions-times{width: 475px; margin-top: 15px; height: 38px; padding-top: 0px; margin-bottom: 20px;}
-.table-existing-version{margin-top: 40px;}
-.table-existing-version > thead {background-color: #005774; color: #fff;}
-.input_existing_version{color: #005774; font-weight: bold;}
+.btn-run-model-existing-versions-times{width: 250px; margin-top: 15px; height: 38px; padding-top: 0px; margin-bottom: 20px; float: right;}
 .row-model-inputs{margin-top: 40px;}
 
 /* EFFECT PAGE */
