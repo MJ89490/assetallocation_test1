@@ -307,7 +307,6 @@
                     <div class="card">
                         <h4 class="card-header"><b>Model inputs</b></h4>
                         <div class="card-body">
-                            <div id="table" class="table-editable">
                                 <table class="table table-existing-version table-hover">
                                     <thead>
                                         <tr>
@@ -320,12 +319,11 @@
                                             <th class="text-muted text-center" scope="col">Week day</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         <tr>
                                             <td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_strategy_weight_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_time_lag_times']}}</td>
+                                            <td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>
+                                            <td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>
                                             <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>
                                             <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_vol_window_times']}}</td>
                                             <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>
@@ -333,7 +331,6 @@
                                         </tr>
                                     </tbody>
                             </table>
-                            </div>
 
                             <div id="table-signals" class="table-editable">
                                 <table class="table table-existing-version table-hover">

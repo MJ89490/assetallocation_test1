@@ -35,7 +35,6 @@ class TimesChartsDataComputations(object):
         self.positions_start_date = None
         self.positions_end_date = None
 
-        self.date_from_sidebar, self.date_to_sidebar = None, None
 
     @property
     def signal_as_off(self) -> datetime:
@@ -44,22 +43,6 @@ class TimesChartsDataComputations(object):
     @property
     def positions_sum_start_date(self) -> str:
         return self._positions_sum_start_date
-
-    @property
-    def date_from_sidebar(self) -> datetime:
-        return self._date_from_sidebar
-
-    @date_from_sidebar.setter
-    def date_from_sidebar(self, value: datetime) -> None:
-        self._date_from_sidebar = value
-
-    @property
-    def date_to_sidebar(self) -> datetime:
-        return self._date_to_sidebar
-
-    @date_to_sidebar.setter
-    def date_to_sidebar(self, value: datetime) -> None:
-        self._date_to_sidebar = value
 
     @positions_sum_start_date.setter
     def positions_sum_start_date(self, value: str) -> None:
@@ -118,12 +101,6 @@ class TimesChartsDataComputations(object):
             self.returns = self.returns.loc[date_from_sidebar:date_to_sidebar]
             self.positions = self.positions.loc[date_from_sidebar:date_to_sidebar]
 
-
-
-        print()
-
-
-
     @staticmethod
     def call_domino_object():
         domino = Domino(
@@ -135,19 +112,6 @@ class TimesChartsDataComputations(object):
         return domino
 
     def export_times_data_to_csv(self, version):
-        # Columns name are the same for signals, returns, positions
-        common_col = self.signals.columns.tolist()
-        # # Renaming columns names
-        # self.signals.columns = [n + "_signals" for n in common_col]
-        # self.returns.columns = [n + "_returns" for n in common_col]
-        # self.positions.columns = [n + "_positions" for n in common_col]
-
-        # Save signals, returns and positions in different csvs
-        # domino = Domino(
-        #     "{domino_username}/{domino_project_name}".format(domino_username=os.environ['DOMINO_STARTING_USERNAME'],
-        #                                                      domino_project_name=os.environ['DOMINO_PROJECT_NAME']),
-        #     api_key=os.environ['DOMINO_USER_API_KEY'],
-        #     host=os.environ['DOMINO_API_HOST'])
         domino = self.call_domino_object()
 
         domino.files_upload("/signals_times_version{version}.csv".format(version=version), self.signals.to_csv())

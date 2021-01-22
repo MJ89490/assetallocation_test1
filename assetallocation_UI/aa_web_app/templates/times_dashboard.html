@@ -92,17 +92,8 @@
                 {% endfor %}
             </select>
 
-            <label class="label-models-date-sidebar">Step <b>3</b>: date from</label>
-            <input id="input_date_from_side_bar_times" name="input_date_from_side_bar_times" class="form-control selectFund" value="11/02/2000" onchange='selectDateFrom()' required>
-            <script>
-                $('#input_date_from_side_bar_times').datepicker({uiLibrary: 'bootstrap',
-                                                                 todayHighlight: true,
-                                                                 autoclose: true,
-                                                                 format: 'dd/mm/yyyy'
-                                                                 });
-            </script>
 
-            <label class="label-models-date-sidebar">Step <b>4</b>: date to</label>
+            <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
             <input id="input_date_to_side_bar_times" name="input_date_to_side_bar_times" class="form-control selectFund" value="27/08/2020" onchange='selectDateTo()' required>
             <script>
                 $('#input_date_to_side_bar_times').datepicker({uiLibrary: 'bootstrap',
@@ -173,56 +164,10 @@
                     <h6 class="sub-title-dashboard"><i>Date run: </i></h6>
                 </div>
              </div>
-            <!--Asset Allocation chart-->
-            <div class="row row-asset-alloc-chart">
-            <div class="col-lg-12">
-                <div class="card">
-                    <h4 class="card-header"><b>Asset allocation over time</b></h4>
-                    <div class="card-body">
-                        <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
-                            <div class="btn-group">
-                                <!--Start date-->
-                                <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
-                                    <script type="text/javascript">
-                                        $('#start_date_box_times').datepicker({
-                                            uiLibrary: 'bootstrap',
-                                             todayHighlight: true,
-                                             autoclose: true,
-                                             format: 'dd/mm/yyyy'
-                                        });
-                                    </script>
-                                <!--End date-->
-                                <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-times rounded-lg" value="End date" required>
-                                    <script type="text/javascript">
-                                        $('#end_date_box_times').datepicker({
-                                            uiLibrary: 'bootstrap',
-                                             todayHighlight: true,
-                                             autoclose: true,
-                                             format: 'dd/mm/yyyy'
-                                        });
-                                    </script>
-                                <!--Submit button-->
-                                {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
-                                <!--Download button-->
-                                <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
-                            </div>
-                        </form>
-                        <div id="asset_allocation_over_time" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
-                        <script type="text/javascript">
-                            assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
-                        </script>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
-
-
-
-        <!--Positions and Performance Tables (overall)-->
-        <div class="row row-table-overall">
+            <!--Positions and Performance Tables (overall)-->
+            <div class="row row-table-overall">
             <!--Positions-->
             <div class="col-lg-9">
                  <div class="card">
@@ -288,102 +233,146 @@
         </div>
 
 
-        <!--Positions and Performance Tables-->
-        <div class="row row-tables-positions">
-            <!--Positions-->
-            <div class="col-lg-9">
-                <div class="card">
-                    <h4 class="card-header"><b>Positions</b></h4>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-white card-header" id="export-btn"><span class="badge badge-soft-secondary">export implemented weight</span></button>
+            <!--Positions and Performance Tables-->
+            <div class="row row-tables-positions">
+                <!--Positions-->
+                <div class="col-lg-9">
+                    <div class="card">
+                        <h4 class="card-header"><b>Positions</b></h4>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-white card-header" id="export-btn"><span class="badge badge-soft-secondary">save implemented weight</span></button>
 
-                        <div id="table" class="table-editable">
-                            <table class="table table-editable table-hover" id="table_positions">
-                                <thead>
-                                    <tr>
-                                        <th class="text-muted text-center" scope="col">Category</th>
-                                        <th class="text-muted text-center" scope="col">Asset</th>
-                                        <th class="text-muted text-center" scope="col">Mom Signals</th>
-                                        <th class="text-muted text-center" scope="col">Previous (%)</th>
-                                        <th class="text-muted text-center" scope="col">New (%)</th>
-                                        <th class="text-muted text-center" scope="col">Delta (%)</th>
-                                        <th class="text-muted text-center" scope="col">Trade</th>
-                                        <th class="text-muted text-center" scope="col">Size</th>
-                                        <th class="text-muted text-center" scope="col">Weight</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for category, name, mom, prev_pos, new_pos, delta, trade, size, imp_weight in zip_results_pos %}
+                            <div id="table" class="table-editable">
+                                <table class="table table-editable table-hover" id="table_positions">
+                                    <thead>
                                         <tr>
-                                            <td class="text-muted text-center">{{category}}</td>
-                                            <td class="text-muted text-center">{{name}}</td>
-                                            <td class="text-muted text-center">{{mom}}</td>
-                                            <td class="text-muted text-center">{{prev_pos}}</td>
-                                            <td class="text-muted text-center">{{new_pos}}</td>
-                                            {% if delta > 0 %}
-                                                <td class="text-center" style="color:rgb(0, 128, 0);">{{delta}}</td>
-                                            {% else %}
-                                                <td class="text-center" style="color:rgb(255, 0, 0);">{{delta}}</td>
-                                            {% endif %}
-                                            {% if trade == 'BUY' %}
-                                                <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
-                                            {% else %}
-                                                <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
-                                            {% endif %}
-                                            {% if size > 0 %}
-                                                <td class="text-center" style="color:rgb(0, 128, 0);">{{size}}</td>
-                                            {% else %}
-                                                <td class="text-center" style="color:rgb(255, 0, 0);">{{size}}</td>
-                                            {% endif %}
-                                            <td class="text-muted text-center" contenteditable="true">{{imp_weight}}</td>
+                                            <th class="text-muted text-center" scope="col">Category</th>
+                                            <th class="text-muted text-center" scope="col">Asset</th>
+                                            <th class="text-muted text-center" scope="col">Mom Signals</th>
+                                            <th class="text-muted text-center" scope="col">Previous (%)</th>
+                                            <th class="text-muted text-center" scope="col">New (%)</th>
+                                            <th class="text-muted text-center" scope="col">Delta (%)</th>
+                                            <th class="text-muted text-center" scope="col">Trade</th>
+                                            <th class="text-muted text-center" scope="col">Size</th>
+                                            <th class="text-muted text-center" scope="col">Implemented</th>
                                         </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                         </div>
+                                    </thead>
+                                    <tbody>
+                                        {% for category, name, mom, prev_pos, new_pos, delta, trade, size, imp_weight in zip_results_pos %}
+                                            <tr>
+                                                <td class="text-muted text-center">{{category}}</td>
+                                                <td class="text-muted text-center">{{name}}</td>
+                                                <td class="text-muted text-center">{{mom}}</td>
+                                                <td class="text-muted text-center">{{prev_pos}}</td>
+                                                <td class="text-muted text-center">{{new_pos}}</td>
+                                                {% if delta > 0 %}
+                                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{delta}}</td>
+                                                {% else %}
+                                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{delta}}</td>
+                                                {% endif %}
+                                                {% if trade == 'BUY' %}
+                                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
+                                                {% else %}
+                                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
+                                                {% endif %}
+                                                {% if size > 0 %}
+                                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{size}}</td>
+                                                {% else %}
+                                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{size}}</td>
+                                                {% endif %}
+                                                <td class="text-muted text-center" contenteditable="true">{{imp_weight}}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                 <script src="static/js/times/implemented_weight.js"></script>
+
+                <!--Performance-->
+                <div class="col-lg-3">
+                    <div class="card">
+                        <h4 class="card-header"><b>Performance (%)</b></h4>
+                        <div class="card-body">
+                            <table class="table table-hover table-performance">
+                         <thead>
+                            <tr>
+                                <th class="text-muted text-center" style="padding-top:35px;" scope="col">Weekly </th>
+                                <th class="text-muted text-center" style="padding-top:35px;" scope="col">YTD</th>
+                            </tr>
+                         </thead>
+                         <tbody>
+                            {% for weekly, ytd in zip_results_perf %}
+                            <tr>
+                                {% if weekly > 0 %}
+                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{weekly}}</td>
+                                {% else %}
+                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{weekly}}</td>
+                                {% endif %}
+
+                                {% if ytd > 0 %}
+                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{ytd}}</td>
+                                {% else %}
+                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{ytd}}</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                         </tbody>
+                     </table>
+                        </div>
                     </div>
                 </div>
             </div>
-             <script src="static/js/times/implemented_weight.js"></script>
 
-            <!--Performance-->
-            <div class="col-lg-3">
+
+                        <!--Asset Allocation chart-->
+            <div class="row row-asset-alloc-chart">
+            <div class="col-lg-12">
                 <div class="card">
-                    <h4 class="card-header"><b>Performance (%)</b></h4>
+                    <h4 class="card-header"><b>Asset allocation over time</b></h4>
                     <div class="card-body">
-                        <table class="table table-hover table-performance">
-                     <thead>
-                        <tr>
-                            <th class="text-muted text-center" scope="col">Weekly </th>
-                            <th class="text-muted text-center" scope="col">YTD</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {% for weekly, ytd in zip_results_perf %}
-                        <tr>
-                            {% if weekly > 0 %}
-                                <td class="text-center" style="color:rgb(0, 128, 0);">{{weekly}}</td>
-                            {% else %}
-                                <td class="text-center" style="color:rgb(255, 0, 0);">{{weekly}}</td>
-                            {% endif %}
-
-                            {% if ytd > 0 %}
-                                <td class="text-center" style="color:rgb(0, 128, 0);">{{ytd}}</td>
-                            {% else %}
-                                <td class="text-center" style="color:rgb(255, 0, 0);">{{ytd}}</td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                     </tbody>
-                 </table>
+                        <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                            <div class="btn-group">
+                                <!--Start date-->
+                                <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
+                                    <script type="text/javascript">
+                                        $('#start_date_box_times').datepicker({
+                                            uiLibrary: 'bootstrap',
+                                             todayHighlight: true,
+                                             autoclose: true,
+                                             format: 'dd/mm/yyyy'
+                                        });
+                                    </script>
+                                <!--End date-->
+                                <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-times rounded-lg" value="End date" required>
+                                    <script type="text/javascript">
+                                        $('#end_date_box_times').datepicker({
+                                            uiLibrary: 'bootstrap',
+                                             todayHighlight: true,
+                                             autoclose: true,
+                                             format: 'dd/mm/yyyy'
+                                        });
+                                    </script>
+                                <!--Submit button-->
+                                {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
+                                <!--Download button-->
+                                <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                            </div>
+                        </form>
+                        <div id="asset_allocation_over_time" class="responsive-plot"></div>
+                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
+                        <script type="text/javascript">
+                            assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
+                        </script>
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <!--Performance bar charts-->
-        <div class="row row-positions-assets-charts">
+            <!--Performance bar charts-->
+            <div class="row row-positions-assets-charts">
             <!--Weekly Performance-->
             <div class="col-lg-6">
                 <div class="card">
@@ -413,8 +402,8 @@
         </div>
 
 
-        <!-- Positions bar charts -->
-        <div class="row row-positions-assets-charts">
+            <!-- Positions bar charts -->
+           <div class="row row-positions-assets-charts">
             <!--Mom signals-->
             <div class="col-lg-4">
                  <div class="card">
@@ -456,8 +445,8 @@
             </div>
         </div>
 
-        <!--Positions assets charts-->
-        <div class="row row-positions-assets-charts">
+           <!--Positions assets charts-->
+          <div class="row row-positions-assets-charts">
             <!--Equities-->
             <div class="col-lg-4">
                  <div class="card">
@@ -507,7 +496,7 @@
                 </div>
             </div>
         </div>
-</div>
+        </div>
     </div>
 </body>
 </html>

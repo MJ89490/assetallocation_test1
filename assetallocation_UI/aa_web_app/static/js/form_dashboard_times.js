@@ -2,7 +2,6 @@ version_data_to_send_to_python = []
 fund_data_to_send_to_python = []
 ready_to_send = false
 type_of_request = 'charts_data_sidebar'
-dateFrom = []
 dateTo = []
 
 function sideBarFund() {
@@ -52,13 +51,6 @@ function sideBarExportVersion() {
         this.sendDataToPython();
 }
 
-
-function selectDateFrom(){
-    var dateFromSidebar =  document.getElementById("input_date_from_side_bar_times").value;
-    dateFrom.push(dateFromSidebar);
-
-}
-
 function selectDateTo(){
     var dateToSidebar =  document.getElementById("input_date_to_side_bar_times").value;
     ready_to_send = true;
@@ -67,15 +59,12 @@ function selectDateTo(){
 }
 
 function sendDataToPython(){
-    console.log('send date');
-    console.log(dateFrom);
 
     if (ready_to_send == true){
         console.log(dateFrom);
 
         var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
                                         "inputs_version": version_data_to_send_to_python[0],
-                                        "inputs_date_from": dateFrom[0],
                                         "inputs_date_to": dateTo[0],
                                         "type_of_request": type_of_request,
                                         });

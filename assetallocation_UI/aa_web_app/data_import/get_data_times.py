@@ -1,4 +1,7 @@
 import os
+import pandas as pd
+from datetime import datetime
+
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
@@ -17,6 +20,7 @@ class ReceivedDataTimes:
         self.fund_name = None
         self.strategy = None
         self.type_of_request = None
+        self.date_from_sidebar, self.date_to_sidebar = None, None
 
     @property
     def strategy(self) -> Times:
@@ -77,6 +81,22 @@ class ReceivedDataTimes:
     @assets_existing_versions_times.setter
     def assets_existing_versions_times(self, value):
         self._assets_existing_versions_times = value
+
+    @property
+    def date_from_sidebar(self) -> datetime:
+        return self._date_from_sidebar
+
+    @date_from_sidebar.setter
+    def date_from_sidebar(self, value: datetime) -> None:
+        self._date_from_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
+
+    @property
+    def date_to_sidebar(self) -> datetime:
+        return self._date_to_sidebar
+
+    @date_to_sidebar.setter
+    def date_to_sidebar(self, value: datetime) -> None:
+        self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
 
     def receive_data_latest_version_dashboard(self):
         apc = TimesProcCaller()
