@@ -38,12 +38,17 @@ class AssetInputForm(FlaskForm):
 
 
 class InputsTimesModel(FlaskForm):
-    # Versions
+    # Versions TO REMOVE later
     existing_versions = get_strategy_versions(Name.times)
     version_choices = [('New Version', 'New Version')]
     version_choices.extend(list(zip(existing_versions, format_versions(existing_versions))))
     versions = SelectField('Versions', choices=version_choices)
     submit_versions = SubmitField('Select this version')
+
+    # Versions of the strategy
+    existing_versions = get_strategy_versions(Name.times)
+    version_choices = list(zip(existing_versions, existing_versions))
+    input_versions_times = existing_versions
 
     # Fund names
     existing_funds = get_fund_names()

@@ -83,6 +83,16 @@ def times_strategy():
     assets = []
 
     if request.method == 'POST':
+        # try:
+        #     outputs_page_times = json.loads(request.form['json_data'])
+        #     version_strategy = outputs_page_times['inputs_version']
+        #     if version_strategy == 'New version':
+        #         run_model_page = 'run_new_version'
+        #     else:
+        #         run_model_page = 'run_existing_version'
+        #         assets = obj_received_data_times.receive_data_existing_versions(strategy_version=version_strategy)
+        # except:
+
         if request.form['submit_button'] == 'select-fund':
             obj_received_data_times.fund_name = form.input_fund_name_times.data
             show_versions = 'show_versions_available'
@@ -96,8 +106,6 @@ def times_strategy():
                 assets = obj_received_data_times.receive_data_existing_versions(strategy_version=version_strategy)
 
         elif request.form['submit_button'] == 'run-strategy-existing-versions':
-            # TODO: when we change the inputs: 1. do we create a new version?
-            # TODO: read inputs from table
             obj_received_data_times.run_existing_strategy()
 
             return redirect(url_for('times_dashboard'))
@@ -109,6 +117,7 @@ def times_strategy():
                            run_model_page=run_model_page,
                            show_dashboard=show_dashboard,
                            assets=assets,
+                           versions_list=form.input_versions_times,
                            inputs_versions=obj_received_data_times.inputs_existing_versions_times)
 
 
