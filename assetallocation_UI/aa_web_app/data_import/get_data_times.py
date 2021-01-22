@@ -20,7 +20,7 @@ class ReceivedDataTimes:
         self.fund_name = None
         self.strategy = None
         self.type_of_request = None
-        self.date_from_sidebar, self.date_to_sidebar = None, None
+        self.date_to_sidebar = None
 
     @property
     def strategy(self) -> Times:
@@ -81,14 +81,6 @@ class ReceivedDataTimes:
     @assets_existing_versions_times.setter
     def assets_existing_versions_times(self, value):
         self._assets_existing_versions_times = value
-
-    @property
-    def date_from_sidebar(self) -> datetime:
-        return self._date_from_sidebar
-
-    @date_from_sidebar.setter
-    def date_from_sidebar(self, value: datetime) -> None:
-        self._date_from_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
 
     @property
     def date_to_sidebar(self) -> datetime:

@@ -78,7 +78,7 @@ class TimesChartsDataComputations(object):
     def positions_assets_length(self):
         return len(self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):])
 
-    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_from_sidebar=None, date_to_sidebar=None) -> None:
+    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to_sidebar=None) -> None:
         """
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)
@@ -96,10 +96,10 @@ class TimesChartsDataComputations(object):
         self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')
         self.positions = weight_df
 
-        if date_from_sidebar and date_to_sidebar is not None:
-            self.signals = self.signals.loc[date_from_sidebar:date_to_sidebar]
-            self.returns = self.returns.loc[date_from_sidebar:date_to_sidebar]
-            self.positions = self.positions.loc[date_from_sidebar:date_to_sidebar]
+        if date_to_sidebar is not None:
+            self.signals = self.signals.loc[:date_to_sidebar]
+            self.returns = self.returns.loc[:date_to_sidebar]
+            self.positions = self.positions.loc[:date_to_sidebar]
 
     @staticmethod
     def call_domino_object():
@@ -304,17 +304,6 @@ class TimesChartsDataComputations(object):
         prev_7_days_date = before_last_date - datetime.timedelta(days=7)
 
         return self.round_results_all_assets_overview(self.positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
-
-    def compute_implemented_weight_overview(self):
-        """
-        Compute the implemented weight for each asset at the latest date
-        :return: a list with the latest positions for each asset
-        """
-
-        # Find out the last date
-        last_date = self.positions.last_valid_index()
-
-        return self.round_results_all_assets_overview(self.positions.loc[last_date].tolist())
 
     def compute_new_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
         """

@@ -55,7 +55,6 @@ def times_dashboard():
 
     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
                                                  obj_received_data_times.version_strategy,
-                                                 date_from_sidebar=obj_received_data_times.date_from_sidebar,
                                                  date_to_sidebar=obj_received_data_times.date_to_sidebar)
 
     template_data = run_times_charts_data_computations(obj_times_charts_data,
@@ -128,7 +127,6 @@ def receive_sidebar_data_times_form():
     obj_received_data_times.version_strategy = outputs_sidebar['inputs_version']
     obj_received_data_times.fund_name = outputs_sidebar['input_fund']
     obj_received_data_times.type_of_request = outputs_sidebar['type_of_request']
-    obj_received_data_times.date_from_sidebar = outputs_sidebar['inputs_date_from']
     obj_received_data_times.date_to_sidebar = outputs_sidebar['inputs_date_to']
     return json.dumps({'status': 'OK'})
 

@@ -16,7 +16,7 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
     previous_positions = obj_charts_data.compute_previous_positions_all_assets_overview(strategy_weight)
     new_positions = obj_charts_data.compute_new_positions_all_assets_overview(strategy_weight)
 
-    implemented_weight = obj_charts_data.compute_implemented_weight_overview()
+    implemented_weight = new_positions
 
     delta_positions = obj_charts_data.compute_delta_positions_all_assets_overview(previous_positions, new_positions)
     trade_positions = obj_charts_data.compute_trade_positions_all_assets_overview(delta_positions)
