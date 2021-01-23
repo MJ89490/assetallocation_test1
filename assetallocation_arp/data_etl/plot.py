@@ -1,22 +1,27 @@
 # Import packages, classes and functions
 import logging
-# Define logging configuration
-log = "\\PycharmProjects\\assetallocation_arp\\assetallocation_arp\data_etl\\bbg_data.log"
-# logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
-logging.basicConfig(filename=log,filemode='w',level=logging.INFO,format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
-import pandas as pd
+import logging.config
 import os
+
+logging.config.fileConfig(f"{os.path.dirname(os.path.abspath(__file__))}/logging.ini", disable_existing_loggers=False)
+logger = logging.getLogger('sLogger')
+
+import pandas as pd
 import itertools
 from pybase64 import b64decode
 import io
 from datetime import datetime
 from bokeh.io import curdoc
 from bokeh.plotting import figure
-from bokeh.layouts import row, column
-from bokeh.models import Select, PreText, HoverTool, FileInput, Button
+from bokeh.layouts import row, column, gridplot
+from bokeh.models import ColumnDataSource, Select, PreText, HoverTool, FileInput, Button
 from bokeh.palettes import Dark2_5 as palette
 from db import Db
 from etl import ETLProcess
+
+
+# Logs
+logger.info('An info message')
 
 
 # Define proxy settings to run local Bokeh server
@@ -29,51 +34,57 @@ os.environ['https_proxy'] = local_proxy
 # Read .csv as data frame
 db = Db()
 df = db.read_from_db()
-if df.empty:
-    df = pd.DataFrame({"ticker": ["N/A", "N/A"],
-                       "value": [0, 0],
-                       "business_datetime": [datetime.today().strftime('%Y/%m/%d'),
-                                             datetime.today().strftime('%Y/%m/%d')],
-                       "description": ["N/A", "N/A"]
-                       })
-else:
-    pass
-
 # Get list of instruments from data frame as a unique list
 instrument_list = df["ticker"].unique().tolist()
 
-# Define drop down options
-# Define colours which iterates through the Bokeh palette function, providing a new line colour with each instrument
-# Format the tooltip
-drop_down_options = instrument_list
-colors = itertools.cycle(palette)
-tooltips = [('Value', '@value'),
-            ('Date', '@business_datetime{%F}'),
-            ('Field', '@description')]
 
-# Initial line chart
-# Create figure for graph
-# Add line to line, which is the first instrument in our data
-line_chart = figure(plot_width=1000, plot_height=400, x_axis_type="datetime", title="Instrument Price")
-line_chart.line(x="business_datetime",
-                y="value",
-                line_width=0.5,
-                line_color=next(colors),
-                legend_label=instrument_list[0],
-                source=df[df["ticker"] == instrument_list[0]])
+def get_data(df, name):
+    if df.empty:
+        df = pd.DataFrame({"ticker": ["N/A", "N/A"],
+                           "value": [0, 0],
+                           "business_datetime": [datetime.today().strftime('%Y/%m/%d'),
+                                                 datetime.today().strftime('%Y/%m/%d')],
+                           "description": ["N/A", "N/A"]
+                           })
+    else:
+        pass
 
-# Define chart properties
-line_chart.xaxis.axis_label = 'Time'
-line_chart.yaxis.axis_label = 'Price (GBP)'
-line_chart.legend.location = "top_left"
-line_chart.add_tools(HoverTool(tooltips=tooltips, formatters={'@business_datetime': 'datetime'}))
+    df = df[df.ticker == name]
 
-# Create drop down, file input, refresh and stats widgets
-drop_down = Select(title="Instrument", options=drop_down_options, width=200)
-file_input = FileInput()
-refresh_button = Button(label='Refresh', width=200)
-stats = PreText(text='Statistics', width=500)
-stats.text = str(df[df["ticker"] == instrument_list[0]]["value"].describe())
+    stats.text = str(df["value"].describe())
+
+    source = ColumnDataSource(df)
+
+    return source
+
+
+def make_plot(source):
+    # Define colours which iterates through the Bokeh palette function, providing a new line colour with each instrument
+    # Format the tooltip
+    colors = itertools.cycle(palette)
+    tooltips = [('Value', '@value'),
+                ('Date', '@business_datetime{%F}'),
+                ('Field', '@description')]
+
+    # Initial line chart
+    # Create figure for graph
+    # Add line to line, which is the first instrument in our data
+    line_chart = figure(plot_width=1000, plot_height=400, x_axis_type="datetime", title="Instrument Price")
+    line_chart.line(x="business_datetime",
+                    y="value",
+                    line_width=0.5,
+                    line_color=next(colors),
+                    source=source)
+
+    # Define chart properties
+    line_chart.xaxis.axis_label = 'Time'
+    line_chart.yaxis.axis_label = 'Price'
+    line_chart.legend.location = "top_left"
+    line_chart.add_tools(HoverTool(tooltips=tooltips, formatters={'@business_datetime': 'datetime'}))
+
+
+
+    return line_chart
 
 
 def drop_down_handle(attr, old, new):
@@ -84,24 +95,11 @@ def drop_down_handle(attr, old, new):
     :param new:
     :return:
     """
-    line_chart = figure(plot_width=1000, plot_height=400, x_axis_type="datetime", title="Instrument Price")
-    line_chart.line(x="business_datetime",
-                    y="value",
-                    line_width=0.5,
-                    line_color=next(colors),
-                    legend_label=drop_down.value,
-                    source=df[df["ticker"] == drop_down.value]
-                    )
-    line_chart.xaxis.axis_label = 'Time'
-    line_chart.yaxis.axis_label = 'Price (GBP)'
-    line_chart.legend.location = "top_left"
-    line_chart.add_tools(HoverTool(tooltips=tooltips, formatters={'@business_datetime': 'datetime'}))
+    instrument = drop_down.value
 
-    stats = PreText(text='Statistics', width=500)
-    stats.text = str(df[df["ticker"] == drop_down.value]["value"].describe())
+    source_update = get_data(df=df, name=instrument)
 
-    layout_with_widgets.children[2].children[0] = line_chart
-    layout_with_widgets.children[3].children[0] = stats
+    source.data.update(source_update.data)
 
     return
 
@@ -146,6 +144,15 @@ def button_handle():
     return
 
 
+# Create drop down, file input, refresh and stats widgets
+drop_down = Select(title="Instrument", options=instrument_list)
+refresh_button = Button(label='Refresh')
+file_input = FileInput()
+stats = PreText()
+
+source = get_data(df=df, name=instrument_list[0])
+line_chart = make_plot(source=source)
+
 # Registering widget attribute change
 drop_down.on_change("value", drop_down_handle)
 file_input.on_change("value", file_input_handle)
@@ -153,7 +160,10 @@ refresh_button.on_click(button_handle)
 
 
 # Widgets Layout
-layout_with_widgets = column(row(drop_down), row(file_input, refresh_button), row(line_chart), row(stats))
+# layout_with_widgets = column(row(drop_down), row(file_input, refresh_button), row(line_chart), row(stats))
+layout_with_widgets = gridplot([[column(drop_down, refresh_button, file_input, stats), line_chart]])
+# layout_with_widgets.children[2].children[0] = line_chart
+# layout_with_widgets.children[3].children[0] = stats
 
 # Creating Dashboard
 curdoc().add_root(layout_with_widgets)

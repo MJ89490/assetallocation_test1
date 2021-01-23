@@ -8,16 +8,16 @@ from sqlalchemy import create_engine
 
 # Load .env file to get database attributes
 load_dotenv()
+logger = logging.getLogger('sLogger')
 
-# Define logging configuration
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
-
-
+logger.info("db open 1")
 class Db:
     procs = ['staging.load_assets']
 
     def __init__(self) -> None:
-        """Db class for interacting with a database"""
+        """
+        Db class for interacting with a database
+        """
         user = os.getenv('USER')
         password = os.getenv('PASSWORD')
         host = os.getenv('HOST')
@@ -26,7 +26,8 @@ class Db:
         self.engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database}')
 
     def call_proc(self, proc_name: str, proc_params: List[Any]) -> List[Dict[str, Any]]:
-        """Call database stored procedure and return results.
+        """
+        Call database stored procedure and return results.
         Raises ValueError if stored procedure is not in self.procs
         """
         if proc_name not in self.procs:
@@ -49,7 +50,9 @@ class Db:
         return results
 
     def df_to_staging_asset(self, df: 'pd.DataFrame', **kwargs):
-        """Write df to staging.asset"""
+        """
+        Write df to staging.asset
+        """
         df.to_sql(name='asset', con=self.engine, schema='staging', if_exists='append', index=False, **kwargs)
 
         return
