@@ -13,7 +13,7 @@ import os
 
 CURRENT_PATH = os.path.dirname(__file__)
 
-# Set the origin template (templates) of Flask and add subfolders
+# Set the origin templates (templates) of Flask and add subfolders
 origin_path = "templates"
 modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsIcons"))
 modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
