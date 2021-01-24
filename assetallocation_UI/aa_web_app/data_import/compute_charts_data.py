@@ -18,6 +18,7 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 
+
 class TimesChartsDataComputations(object):
     """Class doing computations for the data of the times dashboard"""
 

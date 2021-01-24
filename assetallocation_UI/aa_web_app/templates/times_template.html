@@ -20,48 +20,56 @@
 
         <!--Select a version and a fund-->
         <div class="row">
-            <div class="col-lg-4"></div>
-            <div class="col-lg-4">
+
+            <div class="col-lg-12 text-center">
                 <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
-                    {{ form.hidden_tag() }}
-                    <div class="btn-group">
-                        {{ form.input_fund_name_times(class="form-control", id="selectVersionFund")}}
-                         <a href="#"><button type="submit" name="submit_button" value="select-fund" class="btn btn-secondary btn-lg btn-select">Select this fund</button></a>
-                    </div>
-                    <!-- Form: select the version for the model -->
-                     {% if show_versions == 'show_versions_available' %}
 
-                        <!--Versions-->
-                        <div class="btn-group">
-                            {{ form.versions(class="form-control", id="selectVersionFund")}}
-                             <a href="#"><button type="submit" name="submit_button" value="select-versions" class="btn btn-secondary btn-lg btn-select">Select this version</button></a>
+                    <!--Select a fund-->
+                    <label class="header-pretitle-card">1. Select a fund</label>
+
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <select class="form-control select-form-fund" id="select-fund-from-strategy-page" onchange='selectFund()'>
+                                {% for f in existing_funds %}
+                                <option value="" selected disabled>Fund</option>
+                                <option>{{f}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
+                    </div>
 
-                        <!--<select class="form-control selectFund" id="send_data_version_from_page_times" onchange='selectVersionPage()'>-->
-                <!--{% for v in versions_list %}-->
-                    <!--<option value="" selected disabled>Version</option>-->
-                    <!--<option>{{v}}</option>-->
-                <!--{% endfor %}-->
-            <!--</select>-->
+                    <!--Select a version -->
+                     {% if show_versions == 'show_versions_available' %}
+                        <label class="header-pretitle-version-card">2. Select a version</label>
+
+                        <h6 class="subtitle-strategy">Create a new version of the strategy <span class="subsubtitle-strategy">OR</span> Choose an existing version</h6>
+
+                        <div class="btn-group">
+                            <!--New version-->
+                            <a href="#"><button  type="submit" name="submit_button" value="new-version" class="btn btn-secondary btn-lg btn-new-version">Create a new version</button></a>
+                            <!--Existing versions-->
+                             <select class="form-control select-form-version" id="select-version-from-strategy-page" onchange='selectVersion()'>
+                                {% for v in versions_list %}
+                                    <option value="" selected disabled>Version</option>
+                                    <option>{{v}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if show_calendar == 'show_calendar' %}
+
+                              <!--Date to-->
+                                <input id="input_date_to_times" name="input_date_to_times" class="form-control form-date-to-select-times rounded-lg text-center" onchange='selectDateTo()' value="12/08/2020" required>
+                                <script type="text/javascript">
+                                    $('#input_date_to_times').datepicker({
+                                        uiLibrary: 'bootstrap',
+                                         todayHighlight: true,
+                                         autoclose: true,
+                                         format: 'dd/mm/yyyy'
+                                    });
+                                </script>
+                         {% endif %}
 
 
-
-
-
-
-                        <!--<div class="form-group dates-times">-->
-                              <!--<label class="header-pretitle-card">Select a date to</label>-->
-                                <!--&lt;!&ndash;Date to&ndash;&gt;-->
-                                <!--<input id="input_date_to_times" name="input_date_to_times" class="form-control form-date-to-select-times rounded-lg text-center" onchange='selectDateTo()' value="12/08/2020" required>-->
-                                <!--<script type="text/javascript">-->
-                                    <!--$('#input_date_to_times').datepicker({-->
-                                        <!--uiLibrary: 'bootstrap',-->
-                                         <!--todayHighlight: true,-->
-                                         <!--autoclose: true,-->
-                                         <!--format: 'dd/mm/yyyy'-->
-                                    <!--});-->
-                                <!--</script>-->
-                        <!--</div>-->
                     {% endif %}
                 </form>
                 {% if show_dashboard == 'show_dashboard' %}
@@ -70,7 +78,7 @@
                     </form>
                 {% endif %}
             </div>
-            <div class="col-lg-4"></div>
+
         </div>
          <script src="static/js/form_strategy_page_times.js"></script>
 
@@ -265,6 +273,7 @@
                 </div>
             </div>
             <script src="static/js/form_data_times.js"></script>
+
 
         {% elif run_model_page == 'run_existing_version' %}
             <h6 class="sub-title-fund-version-dashboard"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>

@@ -19,7 +19,9 @@ obj_download_data_effect = DownloadDataChartEffect()
 
 obj_times_charts_data = TimesChartsDataComputations()
 
+SHOW_CALENDAR = ''
 
+# https://mdbootstrap.com/snippets/jquery/temp/2856277?action=prism_export#html-tab-view
 @app.route('/')
 def home():
     return render_template('home.html', title='HomePage')
@@ -81,44 +83,56 @@ def times_strategy():
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets = []
+    show_calendar =''
 
     if request.method == 'POST':
-        # try:
-        #     outputs_page_times = json.loads(request.form['json_data'])
-        #     version_strategy = outputs_page_times['inputs_version']
-        #     if version_strategy == 'New version':
-        #         run_model_page = 'run_new_version'
-        #     else:
-        #         run_model_page = 'run_existing_version'
-        #         assets = obj_received_data_times.receive_data_existing_versions(strategy_version=version_strategy)
-        # except:
-
-        if request.form['submit_button'] == 'select-fund':
-            obj_received_data_times.fund_name = form.input_fund_name_times.data
-            show_versions = 'show_versions_available'
-            show_dashboard = 'show_dashboard'
-        elif request.form['submit_button'] == 'select-versions':
-            version_strategy = form.versions.data
-            if version_strategy == 'New Version':
-                run_model_page = 'run_new_version'
-            else:
-                run_model_page = 'run_existing_version'
-                assets = obj_received_data_times.receive_data_existing_versions(strategy_version=version_strategy)
+        if request.form['submit_button'] == 'new-version':
+            run_model_page = 'run_new_version'
 
         elif request.form['submit_button'] == 'run-strategy-existing-versions':
             obj_received_data_times.run_existing_strategy()
 
             return redirect(url_for('times_dashboard'))
 
+    else:
+        if obj_received_data_times.type_of_request == 'fund_selected':
+            show_versions, show_dashboard = 'show_versions_available', 'show_dashboard'
+
+        elif obj_received_data_times.type_of_request == 'version_selected':
+            show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
+
+            # run_model_page = 'run_existing_version'
+            # /assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+
     return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
+                           existing_funds=form.existing_funds,
+                           show_calendar=show_calendar,
                            show_versions=show_versions,
                            run_model_page=run_model_page,
                            show_dashboard=show_dashboard,
                            assets=assets,
                            versions_list=form.input_versions_times,
                            inputs_versions=obj_received_data_times.inputs_existing_versions_times)
+
+
+@app.route('/receive_data_from_times_strategy_page', methods=['POST'])
+def receive_data_from_times_strategy_page():
+    json_data = json.loads(request.form['json_data'])
+    obj_received_data_times.type_of_request = json_data['type_request']
+    global SHOW_CALENDAR
+
+    if json_data['type_request'] == 'version_selected':
+        obj_received_data_times.version_strategy = json_data['version']
+        SHOW_CALENDAR = json_data['show_calendar']
+    else:
+        obj_received_data_times.fund_name = json_data['fund']
+
+    return json.dumps({'status': 'OK'})
+
+
+
 
 
 @app.route('/received_data_times_form', methods=['POST'])
