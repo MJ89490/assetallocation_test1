@@ -1,16 +1,19 @@
 # Import packages, classes and functions
-import pandas as pd
 import os
 import logging
+import logging.config
+import pandas as pd
 from dotenv import load_dotenv
 from typing import List, Any, Dict
 from sqlalchemy import create_engine
-
 # Load .env file to get database attributes
 load_dotenv()
-logger = logging.getLogger('sLogger')
 
-logger.info("db open 1")
+# Get logging config from .ini file
+logging.config.fileConfig(f"{os.path.dirname(os.path.abspath(__file__))}/logging.ini", disable_existing_loggers=False)
+logger = logging.getLogger("sLogger")
+
+
 class Db:
     procs = ['staging.load_assets']
 
@@ -58,7 +61,14 @@ class Db:
         return
 
     def read_from_db(self):
+        """
+        This function reads a given table from the postgres database as a pandas data frame. Relevant columns are
+        converted to pandas datetime.
+        :return: table as pandas data frame
+        """
+        logger.info("Reading table from database")
 
+        # Read given table from database as data frame
         df = pd.read_sql_table(table_name='asset',
                                schema='staging',
                                columns=["ticker",
@@ -70,21 +80,32 @@ class Db:
         # Convert date column to python datetime
         df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
 
+        logger.info("Reading from data base complete")
+
         return df
 
     def get_tickers(self):
+        """
+        This function retrieves the latest tickets table as a pandas data frame.
+        :return: tickers with latest price as pandas data frame
+        """
+        logger.info("Reading tickers with latest price from database")
 
+        # Define postgreSQL query to get table of tickers with the latest price
+        # Read table as pandas data frame
         query = """
                 SELECT DISTINCT ON (ticker) ticker, description, business_datetime  
                 FROM staging.asset
                 ORDER BY ticker, business_datetime DESC
                 """
-
         df = pd.read_sql(query, con=self.engine)
 
         # Convert date column to python datetime
+        # Add 1 day to date column
         df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
         df["business_datetime"] = df["business_datetime"] + pd.Timedelta(days=1)
         df["business_datetime"] = df["business_datetime"].dt.strftime('%Y%m%d')
+
+        logger.info("Reading tickers with latest price complete")
 
         return df
