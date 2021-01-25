@@ -84,6 +84,16 @@
 
 
         {% if run_model_page == 'run_new_version' %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <center>
+                        <label class="header-pretitle-version-name">Enter a version name</label>
+                        <input type="text" class="form-control version-name-form text-center" id="input_version_name_strategy" placeholder="Version name">
+                    </center>
+                </div>
+            </div>
+
             <div class="row row-effect-ag-grid"></div>
             <h4 class="title-models-ag-grid">Model assets</h4>
             <div style="height: 30%; display: flex; flex-direction: column;">
@@ -127,7 +137,7 @@
                                                     </div>
                                                       <!--Date to-->
                                                     <div class="form-group">
-                                                        <label>Date from</label>
+                                                        <label class="subtitle-model-input">Date to</label>
                                                         <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="12/08/2020" required>
                                                         <script type="text/javascript">
                                                             $('#input_date_to_new_version_times').datepicker({
@@ -142,7 +152,7 @@
                                                 <div class="btn-group">
                                                     <!--Strategy weight-->
                                                     <div class="form-group">
-                                                        <label>Strategy weight</label>
+                                                        <label class="subtitle-model-input">Strategy weight</label>
                                                         <input type="number" id="input_strategy_weight_times" name="input_strategy_weight_times" class="form-control form-models-select-times" placeholder="Strategy weight" required>
                                                         <script type="text/javascript">
                                                             document.getElementById('input_strategy_weight_times').value = 0.46;
@@ -150,7 +160,7 @@
                                                     </div>
                                                     <!--Time lag-->
                                                     <div class="form-group">
-                                                        <label>Time lag</label>
+                                                        <label class="subtitle-model-input">Time lag</label>
                                                         <input type="number" id="input_time_lag_times" name="input_time_lag_times" class="form-control form-models-select-times" placeholder="Time lag" required>
                                                         <script type="text/javascript">
                                                             document.getElementById('input_time_lag_times').value = 2;
@@ -160,57 +170,57 @@
                                             </div>
                                          </div>
                                          <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="btn-group">
-                                            <!--Leverage type-->
-                                            <div class="form-group">
-                                                <label>Leverage type</label>
-                                                <select id="input_leverage_times" name="input_leverage_times" class="form-control form-models-select-times">
-                                                    <option>v</option>
-                                                    <option>e</option>
-                                                    <option>n</option>
-                                                    <option>s</option>
-                                                </select>
-                                            </div>
-                                            <!--Volatility window-->
-                                            <div class="form-group">
-                                                <label>Volatility window</label>
+                                             <div class="col-lg-6">
+                                                 <div class="btn-group">
+                                                    <!--Leverage type-->
+                                                    <div class="form-group">
+                                                        <label class="subtitle-model-input">Leverage type</label>
+                                                        <select id="input_leverage_times" name="input_leverage_times" class="form-control form-models-select-times">
+                                                            <option>v</option>
+                                                            <option>e</option>
+                                                            <option>n</option>
+                                                            <option>s</option>
+                                                        </select>
+                                                    </div>
+                                                     <!--Volatility window-->
+                                                     <div class="form-group">
+                                                <label class="subtitle-model-input">Volatility window</label>
                                                 <input type="number" id="input_vol_window_times" name="input_vol_window_times" class="form-control form-models-select-times" placeholder="Volatility window" required>
                                                  <script type="text/javascript">
                                                     document.getElementById('input_vol_window_times').value = 90;
                                                 </script>
                                             </div>
-                                         </div>
-                                    </div>
-                                </div>
+                                                 </div>
+                                            </div>
+                                        </div>
                                          <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="btn-group">
-                                            <!--Frequency-->
-                                            <div class="form-group">
-                                                <label>Frequency</label>
+                                             <div class="col-lg-6">
+                                                 <div class="btn-group">
+                                                     <!--Frequency-->
+                                                     <div class="form-group">
+                                                <label class="subtitle-model-input">Frequency</label>
                                                 <select id="input_frequency_times" name="input_frequency_times" class="form-control form-models-select-times">
                                                     <option>weekly</option>
                                                     <option>monthly</option>
                                                     <option>daily</option>
                                                 </select>
                                             </div>
-                                            <!--Week day-->
-                                            <div class="form-group">
-                                                <label>Week day</label>
-                                                 <select id="input_weekday_times" name="input_weekday_times" class="form-control form-models-select-times">
-                                                     <option>MON</option>
-                                                     <option>TUE</option>
-                                                     <option>WED</option>
-                                                     <option>THU</option>
-                                                     <option>FRI</option>
-                                                     <option>SAT</option>
-                                                     <option>SUN</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                     <!--Week day-->
+                                                     <div class="form-group">
+                                                         <label class="subtitle-model-input">Week day</label>
+                                                         <select id="input_weekday_times" name="input_weekday_times" class="form-control form-models-select-times">
+                                                             <option>MON</option>
+                                                             <option>TUE</option>
+                                                             <option>WED</option>
+                                                             <option>THU</option>
+                                                             <option>FRI</option>
+                                                             <option>SAT</option>
+                                                             <option>SUN</option>
+                                                        </select>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
 
                                      </div>
                                  </div>
@@ -221,32 +231,32 @@
                                     <div class="card-body">
 
                                         <div class="row">
-                                    <div class="col-lg-6">
-                                        <!--Signal1 short-->
-                                        <div class="btn-group">
-                                            <div class="form-group">
-                                                <label>Signal1 short</label>
+                                            <div class="col-lg-6">
+                                                <!--Signal1 short-->
+                                                <div class="btn-group">
+                                                    <div class="form-group">
+                                                <label class="subtitle-model-input">Signal1 short</label>
                                                 <input type="number" id="input_signal_one_short_times" name="input_signal_one_short_times" class="form-control form-models-select-times" placeholder="Signal1 short" required>
                                                  <script type="text/javascript">
                                                     document.getElementById('input_signal_one_short_times').value = 15;
                                                 </script>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Signal1 long</label>
+                                                    <div class="form-group">
+                                                <label class="subtitle-model-input">Signal1 long</label>
                                                 <input type="number" id="input_signal_one_long_times" name="input_signal_one_long_times" class="form-control form-models-select-times" placeholder="Signal1 long" required>
                                                  <script type="text/javascript">
                                                     document.getElementById('input_signal_one_long_times').value = 30;
                                                 </script>
                                             </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="btn-group">
                                                     <!--Signal2 short-->
                                                     <div class="form-group">
-                                                        <label>Signal2 short</label>
+                                                        <label class="subtitle-model-input">Signal2 short</label>
                                                         <input type="number" id="input_signal_two_short_times" name="input_signal_two_short_times" class="form-control form-models-select-times" placeholder="Signal2 short" required>
                                                          <script type="text/javascript">
                                                             document.getElementById('input_signal_two_short_times').value = 30;
@@ -254,7 +264,7 @@
                                                     </div>
                                                     <!--Signal2 long-->
                                                     <div class="form-group">
-                                                        <label>Signal2 long</label>
+                                                        <label class="subtitle-model-input">Signal2 long</label>
                                                         <input type="number" id="input_signal_two_long_times" name="input_signal_two_long_times" class="form-control form-models-select-times" placeholder="Signal2 long" required>
                                                         <script type="text/javascript">
                                                             document.getElementById('input_signal_two_long_times').value = 60;
@@ -262,13 +272,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="btn-group">
                                                     <!--Signal3 short-->
                                                     <div class="form-group">
-                                                        <label>Signal3 short</label>
+                                                        <label class="subtitle-model-input">Signal3 short</label>
                                                         <input type="number" id="input_signal_three_short_times" name="input_signal_three_short_times" class="form-control form-models-select-times" placeholder="Signal3 short" required>
                                                          <script type="text/javascript">
                                                             document.getElementById('input_signal_three_short_times').value = 60;
@@ -276,7 +286,7 @@
                                                     </div>
                                                     <!--Signal3 long-->
                                                     <div class="form-group">
-                                                        <label>Signal3 long</label>
+                                                        <label class="subtitle-model-input">Signal3 long</label>
                                                         <input type="number" id="input_signal_three_long_times" name="input_signal_three_long_times" class="form-control form-models-select-times" placeholder="Signal3 long" required>
                                                            <script type="text/javascript">
                                                             document.getElementById('input_signal_three_long_times').value = 120;

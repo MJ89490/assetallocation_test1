@@ -84,6 +84,20 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                                margin-bottom: 10px;
 }
 
+
+.header-pretitle-version-name {text-transform: uppercase;
+                               letter-spacing: .08em;
+                               color: #95aac9;
+                               margin-top: 30px;
+                               margin-bottom: 10px;
+                               color: #005774;
+}
+
+
+
+
+
+
 .subtitle-strategy{text-decoration: underline; margin-top: 15px;}
 
 .subtitle-date-calendar{letter-spacing: .08em;
@@ -126,6 +140,7 @@ tr td{
 
 .subtitle-model-input{text-transform: uppercase;
                        letter-spacing: .08em;
+                       font-size: 13px;
                        color: #005774;
 }
 
@@ -137,9 +152,11 @@ tr td{
 
 
 #input_fund_name_times{color: #005774 !important; border-color: #007faa !important;}
-.btn-run-model-times{width: 230px; margin-top: 32px; height: 38px; padding-top: 0px; margin-left: 15px; margin-bottom: 15px;}
+.btn-run-model-times{width: 230px; margin-top: 32px; height: 38px; padding-top: 0px; margin-left: 15px; margin-bottom: 11px;}
 .btn-run-model-existing-versions-times{width: 250px; margin-top: 15px; height: 38px; padding-top: 0px; margin-bottom: 20px; float: right;}
 .row-model-inputs{margin-top: 40px;}
+
+.version-name-form{width: 150px; margin-left: 20px;}
 
 /* EFFECT PAGE */
 .btn-outline-secondary {background-color:#fff !important; color: #C0C0C0 !important; border-color: #C0C0C0 !important;}

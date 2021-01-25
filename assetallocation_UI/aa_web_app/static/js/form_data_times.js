@@ -81,12 +81,15 @@ function getDataFromTable(){
         input_leverage.push(rowNode.data.s_leverage);
     });
 
+    var versionName = document.getElementById('input_version_name_strategy').value;
+
     var json_data = JSON.stringify({"input_asset": input_asset,
                                     "input_category": input_category,
                                     "input_signal_ticker": input_signal_ticker,
                                     "input_future_ticker": input_future_ticker,
                                     "input_costs": input_costs,
-                                    "input_leverage": input_leverage});
+                                    "input_leverage": input_leverage,
+                                    "input_version_name_strategy": versionName});
     return json_data;
 }
 
@@ -105,7 +108,6 @@ function checkArray(array) {
 function checkReceivedDataTimes(){
     var lag = parseInt(document.getElementById('input_time_lag_times').value);
     var vol = parseInt(document.getElementById('input_vol_window_times').value);
-
     var signalOneShort = parseInt(document.getElementById('input_signal_one_short_times').value);
     var signalOneLong = parseInt(document.getElementById('input_signal_one_long_times').value);
     var signalTwoShort = parseInt(document.getElementById('input_signal_two_short_times').value);

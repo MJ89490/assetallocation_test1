@@ -161,8 +161,8 @@ class ReceivedDataTimes:
         if self.is_new_strategy:
             tmp = {}
             for idx, val in enumerate(form_data):
-                if idx > 1:
-                    tmp[val.split('=', 1)[0]] = val.split('=', 1)[1]
+                # if idx > 1:
+                tmp[val.split('=', 1)[0]] = val.split('=', 1)[1]
             # Process date under format '12%2F09%2F2000 to 01/01/2000
             tmp['input_date_from_times'] = '/'.join(tmp['input_date_from_times'].split('%2F'))
             self.times_form = tmp
@@ -187,6 +187,8 @@ class ReceivedDataTimes:
                       self.times_form['input_leverage_times'], long_signals, short_signals,
                       int(self.times_form['input_time_lag_times']),
                       int(self.times_form['input_vol_window_times']))
+
+        Times.description = self.times_form['input_version_name']
 
         times.asset_inputs = [
             TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
