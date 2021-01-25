@@ -111,7 +111,6 @@ class Db:
                 """
         try:
             df = pd.read_sql(query, con=self.engine)
-            logger.info("Tickers table import as data frame")
 
             # Convert date column to python datetime
             # Add 1 day to date column
@@ -122,7 +121,7 @@ class Db:
             # Get existing tickers from database as list
             ticker_list = df["ticker"].tolist()
 
-            logger.info("Reading tickers with latest price complete")
+            logger.info("Table of tickers imported")
 
             return df, ticker_list
 

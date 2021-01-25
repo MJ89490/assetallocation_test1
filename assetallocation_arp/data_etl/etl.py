@@ -13,8 +13,8 @@ logger = logging.getLogger("sLogger")
 
 
 class ETLProcess:
-    def __init__(self, df_input):
-        self.df_input = df_input
+    def __init__(self, df):
+        self.df = df
         self.df_iteration = pd.DataFrame()
         self.df_bbg = pd.DataFrame()
 
@@ -29,26 +29,26 @@ class ETLProcess:
         db = Db()
         _, tickers_in_db = db.get_tickers()
         # Filter data frame to not include instruments already in the data frame
-        self.df_input = self.df_input[~self.df_input["ticker"].isin(tickers_in_db)]
+        self.df = self.df[~self.df["ticker"].isin(tickers_in_db)]
 
         try:
             # Convert columns to respective format types
-            self.df_input["ticker"] = self.df_input["ticker"].astype(str)
-            self.df_input["name"] = self.df_input["name"].astype(str)
-            self.df_input["description"] = self.df_input["description"].astype(str)
-            self.df_input["asset_category"] = self.df_input["asset_category"].astype(str)
-            self.df_input["asset_subcategory"] = self.df_input["asset_subcategory"].astype(str)
-            self.df_input["currency"] = self.df_input["currency"].astype(str)
-            self.df_input["country"] = self.df_input["country"].astype(str)
-            self.df_input["is_tr"] = self.df_input["is_tr"].astype(str)
-            self.df_input["analytic_category"] = self.df_input["analytic_category"].astype(str)
-            self.df_input["business_datetime"] = datetime(1900, 1, 1).strftime("%Y%m%d")
+            self.df["ticker"] = self.df["ticker"].astype(str)
+            self.df["name"] = self.df["name"].astype(str)
+            self.df["description"] = self.df["description"].astype(str)
+            self.df["asset_category"] = self.df["asset_category"].astype(str)
+            self.df["asset_subcategory"] = self.df["asset_subcategory"].astype(str)
+            self.df["currency"] = self.df["currency"].astype(str)
+            self.df["country"] = self.df["country"].astype(str)
+            self.df["is_tr"] = self.df["is_tr"].astype(str)
+            self.df["analytic_category"] = self.df["analytic_category"].astype(str)
+            self.df["business_datetime"] = datetime(1900, 1, 1).strftime("%Y%m%d")
         except ValueError:
             logging.info("Invalid data type inside input data")
 
         logger.info("Cleaning of input table complete")
 
-        return self.df_input
+        return self.df
 
     def bbg_data(self):
         """
@@ -62,7 +62,7 @@ class ETLProcess:
         # Loop through each security and respective fields to get data as a data frame
         bbg = bloomberg_data.Bloomberg()
         df_list = []
-        for index, row in self.df_input.iterrows():
+        for index, row in self.df.iterrows():
             self.df_iteration = bbg.historicalRequest(securities=row["ticker"],
                                                       fields=row["description"],
                                                       startdate=row["business_datetime"],
@@ -71,7 +71,7 @@ class ETLProcess:
             # Append data frame to df list
             df_list.append(self.df_iteration)
 
-            logger.info(f"Loop {index + 1}/{len(self.df_input.index)} complete - \"{row['ticker']}\" imported")
+            logger.info(f"Loop {index +  1}/{len(self.df.index)} complete - \"{row['ticker']}\" imported")
 
         # Concat df list into single, large data frame
         self.df_bbg = pd.concat(df_list, axis=0, ignore_index=True)
