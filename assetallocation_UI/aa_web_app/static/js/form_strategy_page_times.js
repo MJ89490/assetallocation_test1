@@ -1,28 +1,28 @@
-version_data_to_send_to_python = []
-
 ready_to_send = false
-type_of_request = 'send_data_for_times_strategy'
+type_of_request = ''
 dateTo = []
 
-var type_request = ''
+var type_of_request = ''
 // Funds to select from strategy page
-fund_selected_from_strategy_page = []
+fundSelectedFromStrategyPage = []
 
 // Versions to select from strategy page
-version_selected_from_strategy_page = []
+versionSelectedFromStrategyPage = []
+
+// Calendar
 show_calendar = ''
 
 function selectFund() {
         var select_box = document.getElementById("select-fund-from-strategy-page");
         var fund = select_box.options[select_box.selectedIndex].value;
 
-        fund_selected_from_strategy_page.push(fund);
+        fundSelectedFromStrategyPage.push(fund);
 
-        if (fund_selected_from_strategy_page.length != 1){
-            fund_selected_from_strategy_page.splice(0, fund_selected_from_strategy_page.length-1);
+        if (fundSelectedFromStrategyPage.length != 1){
+            fundSelectedFromStrategyPage.splice(0, fundSelectedFromStrategyPage.length-1);
         }
 
-        type_request = 'fund_selected';
+         type_of_request = 'fund_selected';
         ready_to_send = true;
         sendDataToPython();
 }
@@ -31,13 +31,13 @@ function selectVersion() {
         var select_box = document.getElementById("select-version-from-strategy-page");
         var version = select_box.options[select_box.selectedIndex].value;
 
-        version_selected_from_strategy_page.push(parseInt(version));
+        versionSelectedFromStrategyPage.push(parseInt(version));
 
-        if (version_selected_from_strategy_page.length != 1){
-            version_selected_from_strategy_page.splice(0, version_selected_from_strategy_page.length-1);
+        if (versionSelectedFromStrategyPage.length != 1){
+            versionSelectedFromStrategyPage.splice(0, versionSelectedFromStrategyPage.length-1);
         }
-        console.log(version_selected_from_strategy_page);
-        type_request = 'version_selected';
+        console.log(versionSelectedFromStrategyPage);
+         type_of_request = 'version_selected';
         show_calendar = 'show_calendar';
         ready_to_send = true;
         sendDataToPython();
@@ -47,6 +47,7 @@ function selectVersion() {
 function selectDateTo(){
     var dateToPage =  document.getElementById("input_date_to_times").value;
     console.log(dateToPage);
+    type_of_request = 'date_selected';
     ready_to_send = true;
     dateTo.push(dateToPage);
     this.sendDataToPython();
@@ -55,15 +56,11 @@ function selectDateTo(){
 function sendDataToPython(){
 
     if (ready_to_send == true){
-//        var json_data = JSON.stringify({
-//                                        "inputs_version": version_data_to_send_to_python[0],
-//                                        "inputs_date_to": dateTo[0],
-//                                        "type_of_request": type_of_request,
-//                                        });
-       var json_data = JSON.stringify({'fund': fund_selected_from_strategy_page[0],
-                                       'version': version_selected_from_strategy_page[0],
+       var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
+                                       'version': versionSelectedFromStrategyPage[0],
+                                       'date_to': dateTo[0],
                                        'show_calendar': show_calendar,
-                                       'type_request': type_request});
+                                       'type_of_request':  type_of_request});
 
        console.log(json_data);
 

@@ -48,28 +48,28 @@
                             <!--New version-->
                             <a href="#"><button  type="submit" name="submit_button" value="new-version" class="btn btn-secondary btn-lg btn-new-version">Create a new version</button></a>
                             <!--Existing versions-->
-                             <select class="form-control select-form-version" id="select-version-from-strategy-page" onchange='selectVersion()'>
-                                {% for v in versions_list %}
-                                    <option value="" selected disabled>Version</option>
-                                    <option>{{v}}</option>
-                                {% endfor %}
-                            </select>
+                            <div class="btn-group-vertical">
+                                <select class="form-control select-form-version" id="select-version-from-strategy-page" onchange='selectVersion()'>
+                                    {% for v in versions_list %}
+                                        <option value="" selected disabled>Version</option>
+                                        <option>{{v}}</option>
+                                    {% endfor %}
+                                </select>
+                                <!--Date to-->
+                                {% if show_calendar == 'show_calendar' %}
+                                    <label class="subtitle-date-calendar">Select date to below</label>
+                                    <input id="input_date_to_times" name="input_date_to_times" class="form-control text-center form-date-to-select-times rounded-lg" onchange='selectDateTo()' value="12/08/2020" required>
+                                    <script type="text/javascript">
+                                        $('#input_date_to_times').datepicker({
+                                            uiLibrary: 'bootstrap',
+                                             todayHighlight: true,
+                                             autoclose: true,
+                                             format: 'dd/mm/yyyy'
+                                        });
+                                    </script>
+                                {% endif %}
+                            </div>
                         </div>
-                        {% if show_calendar == 'show_calendar' %}
-
-                              <!--Date to-->
-                                <input id="input_date_to_times" name="input_date_to_times" class="form-control form-date-to-select-times rounded-lg text-center" onchange='selectDateTo()' value="12/08/2020" required>
-                                <script type="text/javascript">
-                                    $('#input_date_to_times').datepicker({
-                                        uiLibrary: 'bootstrap',
-                                         todayHighlight: true,
-                                         autoclose: true,
-                                         format: 'dd/mm/yyyy'
-                                    });
-                                </script>
-                         {% endif %}
-
-
                     {% endif %}
                 </form>
                 {% if show_dashboard == 'show_dashboard' %}
@@ -386,7 +386,7 @@
             <!--Earth img-->
              <div class="row">
                 <div class="col-lg-12 text-center">
-                    <img alt="Legal and General" width="950px" height="450px;" src="static/img/model_image.png">
+                    <img alt="Legal and General" width="750px" height="auto" src="static/img/model_image.png">
                 </div>
              </div>
         {% endif %}

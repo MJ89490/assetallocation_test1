@@ -101,8 +101,9 @@ def times_strategy():
         elif obj_received_data_times.type_of_request == 'version_selected':
             show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
 
-            # run_model_page = 'run_existing_version'
-            # /assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+        elif obj_received_data_times.type_of_request == 'date_selected':
+            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+            run_model_page = 'run_existing_version'
 
     return render_template('times_template.html',
                            title='TimesPage',
@@ -120,19 +121,18 @@ def times_strategy():
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
 def receive_data_from_times_strategy_page():
     json_data = json.loads(request.form['json_data'])
-    obj_received_data_times.type_of_request = json_data['type_request']
+    obj_received_data_times.type_of_request = json_data['type_of_request']
     global SHOW_CALENDAR
 
-    if json_data['type_request'] == 'version_selected':
+    if json_data['type_of_request'] == 'version_selected':
         obj_received_data_times.version_strategy = json_data['version']
         SHOW_CALENDAR = json_data['show_calendar']
+    elif json_data['type_of_request'] == 'date_selected':
+        obj_received_data_times.date_to = json_data['date_to']
     else:
         obj_received_data_times.fund_name = json_data['fund']
 
     return json.dumps({'status': 'OK'})
-
-
-
 
 
 @app.route('/received_data_times_form', methods=['POST'])

@@ -16,11 +16,21 @@ class ReceivedDataTimes:
         self.assets_existing_versions_times = {}
         self.version_strategy = 0
         self.strategy_weight = 0
+        self.date_to = None
         self.is_new_strategy = None
         self.fund_name = None
         self.strategy = None
         self.type_of_request = None
         self.date_to_sidebar = None
+
+    @property
+    def date_to(self) -> datetime:
+        return self._date_to
+
+    @date_to.setter
+    def date_to(self, x) -> None:
+        self._date_to = x
+
 
     @property
     def strategy(self) -> Times:
