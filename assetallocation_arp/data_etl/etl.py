@@ -23,20 +23,28 @@ class ETLProcess:
         This function cleans the input data from the user uploaded .csv file.
         :return: Clean table of uploaded .csv as pandas data frame
         """
-        
         logger.info("Cleaning user uploaded .csv file")
-        
-        # Convert columns to respective format types
-        self.df_input["ticker"] = self.df_input["ticker"].astype(str)
-        self.df_input["name"] = self.df_input["name"].astype(str)
-        self.df_input["description"] = self.df_input["description"].astype(str)
-        self.df_input["asset_category"] = self.df_input["asset_category"].astype(str)
-        self.df_input["asset_subcategory"] = self.df_input["asset_subcategory"].astype(str)
-        self.df_input["currency"] = self.df_input["currency"].astype(str)
-        self.df_input["country"] = self.df_input["country"].astype(str)
-        self.df_input["is_tr"] = self.df_input["is_tr"].astype(str)
-        self.df_input["analytic_category"] = self.df_input["analytic_category"].astype(str)
-        self.df_input["business_datetime"] = datetime(1900, 1, 1).strftime("%Y%m%d")
+
+        # Get list of existing tickers from the database
+        db = Db()
+        _, tickers_in_db = db.get_tickers()
+        # Filter data frame to not include instruments already in the data frame
+        self.df_input = self.df_input[~self.df_input["ticker"].isin(tickers_in_db)]
+
+        try:
+            # Convert columns to respective format types
+            self.df_input["ticker"] = self.df_input["ticker"].astype(str)
+            self.df_input["name"] = self.df_input["name"].astype(str)
+            self.df_input["description"] = self.df_input["description"].astype(str)
+            self.df_input["asset_category"] = self.df_input["asset_category"].astype(str)
+            self.df_input["asset_subcategory"] = self.df_input["asset_subcategory"].astype(str)
+            self.df_input["currency"] = self.df_input["currency"].astype(str)
+            self.df_input["country"] = self.df_input["country"].astype(str)
+            self.df_input["is_tr"] = self.df_input["is_tr"].astype(str)
+            self.df_input["analytic_category"] = self.df_input["analytic_category"].astype(str)
+            self.df_input["business_datetime"] = datetime(1900, 1, 1).strftime("%Y%m%d")
+        except ValueError:
+            logging.info("Invalid data type inside input data")
 
         logger.info("Cleaning of input table complete")
 
@@ -48,7 +56,7 @@ class ETLProcess:
         :return: Table of Bloomberg data as pandas data frame
         """
         logger.info("Retrieving Bloomberg data")
-        
+
         # Call Bloomberg class
         # Create empty list to append multiple data frames to
         # Loop through each security and respective fields to get data as a data frame
@@ -63,11 +71,11 @@ class ETLProcess:
             # Append data frame to df list
             df_list.append(self.df_iteration)
 
-            logger.info(f"Loop {index}/{len(self.df_input.index)} complete - \"{row['ticker']}\" imported")
+            logger.info(f"Loop {index + 1}/{len(self.df_input.index)} complete - \"{row['ticker']}\" imported")
 
         # Concat df list into single, large data frame
         self.df_bbg = pd.concat(df_list, axis=0, ignore_index=True)
-        
+
         logger.info("Bloomberg data collected and stored as data frame")
 
         return self.df_bbg
@@ -87,23 +95,25 @@ class ETLProcess:
                     "status": "source"}
         self.df_bbg.columns = [col_dict.get(x, x) for x in self.df_bbg.columns]
 
-        # Convert columns to respective format types and fill in relevant columns needed for database
-        self.df_bbg["ticker"] = self.df_bbg["ticker"].astype(str)
-        self.df_bbg["name"] = "TEST"#self.df_input["name"]
-        self.df_bbg["description"] = self.df_bbg["description"].astype(str)
-        self.df_bbg["asset_category"] = "TEST"# self.df_input["asset_category"]
-        self.df_bbg["asset_subcategory"] = "TEST"# self.df_input["asset_subcategory"]
-        self.df_bbg["currency"] = "TEST"# self.df_input["currency"]
-        self.df_bbg["country"] = "TEST"# self.df_input["country"]
-        self.df_bbg["is_tr"] = "TRUE"# self.df_input["is_tr"]
-        self.df_bbg["analytic_category"] = "TEST"# self.df_input["analytic_category"]
-        self.df_bbg["source"] = self.df_bbg["source"].astype(str)
-        self.df_bbg["value"] = self.df_bbg["value"].astype(float)
-        self.df_bbg["business_datetime"] = pd.to_datetime(self.df_bbg["business_datetime"])
+        try:
+            # Convert columns to respective format types and fill in relevant columns needed for database
+            self.df_bbg["ticker"] = self.df_bbg["ticker"].astype(str)
+            self.df_bbg["name"] = "TEST"#self.df_input["name"]
+            self.df_bbg["description"] = self.df_bbg["description"].astype(str)
+            self.df_bbg["asset_category"] = "TEST"# self.df_input["asset_category"]
+            self.df_bbg["asset_subcategory"] = "TEST"# self.df_input["asset_subcategory"]
+            self.df_bbg["currency"] = "TEST"# self.df_input["currency"]
+            self.df_bbg["country"] = "TEST"# self.df_input["country"]
+            self.df_bbg["is_tr"] = "TRUE"# self.df_input["is_tr"]
+            self.df_bbg["analytic_category"] = "TEST"# self.df_input["analytic_category"]
+            self.df_bbg["source"] = self.df_bbg["source"].astype(str)
+            self.df_bbg["value"] = self.df_bbg["value"].astype(float)
+            self.df_bbg["business_datetime"] = pd.to_datetime(self.df_bbg["business_datetime"])
+            logger.info("Columns converted to respective data types")
 
-        logger.info("Columns converted to respective data types")
-
-        return self.df_bbg
+            return self.df_bbg
+        except ValueError:
+            logging.info("Invalid data type inside Bloomberg data")
 
     def upload_data(self):
         """
@@ -115,7 +125,6 @@ class ETLProcess:
         # Call function that uploads data frame to SQL database from respective class
         db = Db()
         db.df_to_staging_asset(self.df_bbg)
-
         logger.info("Data written to database")
 
         return

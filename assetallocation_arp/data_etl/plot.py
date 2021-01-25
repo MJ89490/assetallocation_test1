@@ -3,7 +3,6 @@ import os
 import logging
 import logging.config
 import pandas as pd
-import itertools
 from pybase64 import b64decode
 import io
 from datetime import datetime
@@ -62,7 +61,6 @@ def make_plot(source):
     :param source: Input data in ColumnDataSource format
     :return: Line chart figure in Bokeh format
     """
-    # Define colours which iterates through the Bokeh palette function, providing a new line colour with each instrument
     # Format the tooltip
     tooltips = [("Value", "@value"),
                 ("Date", "@business_datetime{%F}"),
@@ -121,7 +119,6 @@ def file_input_handle(attr, old, new):
     data_input = b64decode(new)
     data_input_bytes = io.BytesIO(data_input)
     df_input = pd.read_csv(data_input_bytes)
-
     logger.info(".csv file read as data frame")
 
     # Run data frame through ETL class
@@ -130,7 +127,6 @@ def file_input_handle(attr, old, new):
     etl.bbg_data()
     etl.clean_data()
     etl.upload_data()
-
     logger.info("File input handle complete")
 
     return
@@ -150,7 +146,7 @@ def refresh_button_handle():
     etl.clean_data()
     etl.upload_data()
 
-    logger.info("Refresh buttom handle complete")
+    logger.info("Refresh button handle complete")
 
     return
 

@@ -6,6 +6,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from typing import List, Any, Dict
 from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
+
 # Load .env file to get database attributes
 load_dotenv()
 
@@ -15,18 +17,18 @@ logger = logging.getLogger("sLogger")
 
 
 class Db:
-    procs = ['staging.load_assets']
+    procs = ["staging.load_assets"]
 
     def __init__(self) -> None:
         """
         Db class for interacting with a database
         """
-        user = os.getenv('USER')
-        password = os.getenv('PASSWORD')
-        host = os.getenv('HOST')
-        port = os.getenv('PORT')
-        database = os.getenv('DATABASE')
-        self.engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{database}')
+        user = os.getenv("USER")
+        password = os.getenv("PASSWORD")
+        host = os.getenv("HOST")
+        port = os.getenv("PORT")
+        database = os.getenv("DATABASE")
+        self.engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{database}")
 
     def call_proc(self, proc_name: str, proc_params: List[Any]) -> List[Dict[str, Any]]:
         """
@@ -34,7 +36,7 @@ class Db:
         Raises ValueError if stored procedure is not in self.procs
         """
         if proc_name not in self.procs:
-            raise ValueError(f'The stored procedure "{proc_name}" is not defined for class {self.__class__}')
+            raise ValueError(f"The stored procedure '{proc_name}' is not defined for class {self.__class__}")
 
         dbapi_conn = self.engine.raw_connection()
 
@@ -52,13 +54,19 @@ class Db:
 
         return results
 
-    def df_to_staging_asset(self, df: 'pd.DataFrame', **kwargs):
+    def df_to_staging_asset(self, df: "pd.DataFrame", **kwargs):
         """
-        Write df to staging.asset
+        Write data frame to asset staging table.
+        :return:
         """
-        df.to_sql(name='asset', con=self.engine, schema='staging', if_exists='append', index=False, **kwargs)
-
-        return
+        logging.info("Writing data frame to SQL")
+        # Write pandas data frame to SQL table
+        try:
+            df.to_sql(name="asset", con=self.engine, schema="staging", if_exists="append", index=False, **kwargs)
+            logging.info("Data frame written to SQL")
+            return
+        except SQLAlchemyError as e:
+            logger.info(e)
 
     def read_from_db(self):
         """
@@ -68,26 +76,29 @@ class Db:
         """
         logger.info("Reading table from database")
 
-        # Read given table from database as data frame
-        df = pd.read_sql_table(table_name='asset',
-                               schema='staging',
-                               columns=["ticker",
-                                        "description",
-                                        "value",
-                                        "business_datetime"],
-                               con=self.engine)
+        try:
+            # Read given table from database as data frame
+            df = pd.read_sql_table(table_name="asset",
+                                   schema="staging",
+                                   columns=["ticker",
+                                            "description",
+                                            "value",
+                                            "business_datetime"],
+                                   con=self.engine)
 
-        # Convert date column to python datetime
-        df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
+            # Convert date column to python datetime
+            df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
+            logger.info("Reading from data base complete")
 
-        logger.info("Reading from data base complete")
+            return df
 
-        return df
+        except SQLAlchemyError as e:
+            logger.info(e)
 
     def get_tickers(self):
         """
         This function retrieves the latest tickets table as a pandas data frame.
-        :return: tickers with latest price as pandas data frame
+        :return: tickers with latest price as pandas data frame and also list
         """
         logger.info("Reading tickers with latest price from database")
 
@@ -98,14 +109,22 @@ class Db:
                 FROM staging.asset
                 ORDER BY ticker, business_datetime DESC
                 """
-        df = pd.read_sql(query, con=self.engine)
+        try:
+            df = pd.read_sql(query, con=self.engine)
+            logger.info("Tickers table import as data frame")
 
-        # Convert date column to python datetime
-        # Add 1 day to date column
-        df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
-        df["business_datetime"] = df["business_datetime"] + pd.Timedelta(days=1)
-        df["business_datetime"] = df["business_datetime"].dt.strftime('%Y%m%d')
+            # Convert date column to python datetime
+            # Add 1 day to date column
+            df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
+            df["business_datetime"] = df["business_datetime"] + pd.Timedelta(days=1)
+            df["business_datetime"] = df["business_datetime"].dt.strftime("%Y%m%d")
 
-        logger.info("Reading tickers with latest price complete")
+            # Get existing tickers from database as list
+            ticker_list = df["ticker"].tolist()
 
-        return df
+            logger.info("Reading tickers with latest price complete")
+
+            return df, ticker_list
+
+        except SQLAlchemyError as e:
+            logger.info(e)
