@@ -146,7 +146,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_asset_weights(
   strategy_id int,
   model_instance_id int,
   set_by_id int,
-  weights arp.asset_date_frequency_weight_weight[],
+  weights arp.ticker_date_frequency_weight[],
   execution_state_id int
 )
 RETURNS void
@@ -196,7 +196,7 @@ BEGIN
   FROM
     unnest(weights) as aw
     JOIN asset.asset a ON a.ticker = (aw).ticker
-  RETURNING array_agg(arp.strategy_asset_weight.id, arp.strategy_asset_weight.theoretical_weight::id_weight) into id_weights;
+  RETURNING array_agg(arp.strategy_asset_weight.id, arp.strategy_asset_weight.theoretical_weight::arp.id_weight) into id_weights;
   RETURN;
 END
 $$
@@ -205,7 +205,7 @@ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION arp.insert_fund_asset_weights(
     fund_id int,
-    id_weights id_weight[],
+    id_weights arp.id_weight[],
     set_by_id int,
     execution_state_id int
 )

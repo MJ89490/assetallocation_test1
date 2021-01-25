@@ -1,4 +1,4 @@
-DROP FUNCTION arp.select_fica_assets(integer);
+DROP FUNCTION IF EXISTS arp.select_fica_assets(integer);
 CREATE OR REPLACE FUNCTION arp.select_fica_assets(
   strategy_version int
 )

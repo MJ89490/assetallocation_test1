@@ -1,4 +1,4 @@
-DROP FUNCTION arp.insert_strategy_asset(integer,integer,character varying,character varying);
+DROP FUNCTION IF EXISTS arp.insert_strategy_asset(integer,integer,character varying,character varying);
 CREATE OR REPLACE FUNCTION arp.insert_strategy_asset(
   strategy_asset_group_id int,
   execution_state_id int,
