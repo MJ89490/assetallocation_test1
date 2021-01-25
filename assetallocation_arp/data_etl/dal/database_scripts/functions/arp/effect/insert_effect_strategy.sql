@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION arp.insert_effect_strategy(
   closing_threshold numeric,
   cost numeric,
   day_of_week int,
-  frequency frequency,
+  frequency arp.frequency,
   include_shorts boolean,
   inflation_lag interval,
   interest_rate_cut_off_long numeric,

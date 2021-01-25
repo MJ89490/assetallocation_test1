@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS "arp"."effect" CASCADE
 
 CREATE TABLE "arp"."effect"
 (
-	"frequency" frequency NOT NULL,
+	"frequency" arp.frequency NOT NULL,
 	"day_of_week" integer NOT NULL,
 	"trend_indicator" varchar(50)	 NOT NULL,
 	"moving_average_short_term" int NOT NULL,

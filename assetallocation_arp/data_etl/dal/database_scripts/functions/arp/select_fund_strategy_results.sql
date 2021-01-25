@@ -10,7 +10,7 @@ RETURNS TABLE(
   strategy_weight numeric,
   asset_subcategory varchar,
   business_date date,
-  asset_weight_frequency frequency,
+  asset_weight_frequency arp.frequency,
   theoretical_asset_weight numeric,
   implemented_asset_weight numeric,
   strategy_analytics arp.category_subcategory_frequency_value_comp_name_comp_value,

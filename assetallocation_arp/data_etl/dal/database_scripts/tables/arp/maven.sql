@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS "arp"."maven" CASCADE
 CREATE TABLE "arp"."maven"
 (
 	"er_tr" varchar(25) NOT NULL,
-	"frequency" frequency NOT NULL,
+	"frequency" arp.frequency NOT NULL,
 	"day_of_week" integer NOT NULL,
 	"asset_count" integer NOT NULL,
 	"long_cutoff" integer NOT NULL,

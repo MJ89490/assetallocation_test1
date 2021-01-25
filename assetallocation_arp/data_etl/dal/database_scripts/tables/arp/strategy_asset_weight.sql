@@ -23,7 +23,7 @@ CREATE TABLE "arp"."strategy_asset_weight"
 	"asset_id" integer NOT NULL,
 	"model_instance_id"  integer NOT NULL,
 	"business_date" date NOT NULL,
-	"frequency" frequency NOT NULL,
+	"frequency" arp.frequency NOT NULL,
 	"theoretical_weight" numeric(32,16) NOT NULL,
 	"execution_state_id" integer NOT NULL
 )

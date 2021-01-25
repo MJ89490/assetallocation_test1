@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION arp.select_maven_strategy(
   strategy_version int,
   OUT description varchar,
   OUT er_tr varchar,
-  OUT frequency frequency,
+  OUT frequency arp.frequency,
   OUT day_of_week integer,
   OUT asset_count integer,
   OUT long_cutoff integer,

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION arp.insert_times_strategy(
   volatility_window int,
   short_signals numeric[],
   long_signals numeric[],
-  frequency frequency,
+  frequency arp.frequency,
   day_of_week int,
   OUT t_version int
 )
@@ -34,7 +34,7 @@ CREATE OR REPLACE FUNCTION arp.insert_times(
   volatility_window int,
   short_signals numeric[],
   long_signals numeric[],
-  frequency frequency,
+  frequency arp.frequency,
   day_of_week int,
   execution_state_id int,
   strategy_id int,

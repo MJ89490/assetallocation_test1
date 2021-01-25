@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION arp.insert_maven_strategy(
   description varchar,
   user_id varchar,
   er_tr varchar,
-	frequency frequency,
+	frequency arp.frequency,
 	day_of_week integer,
 	asset_count integer,
 	long_cutoff integer,
@@ -35,7 +35,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION arp.insert_maven(
   er_tr varchar,
-	frequency frequency,
+	frequency arp.frequency,
 	day_of_week integer,
 	asset_count integer,
 	long_cutoff integer,

@@ -24,7 +24,7 @@ CREATE TABLE "arp"."strategy_analytic"
 	"business_date" date NOT NULL,
 	"category" varchar(50)	 NOT NULL,
 	"subcategory" varchar(50)	 NOT NULL,
-	"frequency" frequency NOT NULL,
+	"frequency" arp.frequency NOT NULL,
 	"value" numeric(32,16) NOT NULL,
 	"comparator_name" varchar(50) NOT NULL,
 	"comparator_value" varchar(50) NOT NULL
