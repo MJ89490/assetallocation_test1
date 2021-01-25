@@ -57,7 +57,7 @@
                                 </select>
                                 <!--Date to-->
                                 {% if show_calendar == 'show_calendar' %}
-                                    <label class="subtitle-date-calendar">Select date to below</label>
+                                    <label class="subtitle-date-calendar">Select a date_to below</label>
                                     <input id="input_date_to_times" name="input_date_to_times" class="form-control text-center form-date-to-select-times rounded-lg" onchange='selectDateTo()' value="12/08/2020" required>
                                     <script type="text/javascript">
                                         $('#input_date_to_times').datepicker({
@@ -85,7 +85,7 @@
 
         {% if run_model_page == 'run_new_version' %}
             <div class="row row-effect-ag-grid"></div>
-            <h2 class="title-models-ag-grid">Model assets</h2>
+            <h4 class="title-models-ag-grid">Model assets</h4>
             <div style="height: 30%; display: flex; flex-direction: column;">
                 <div style="margin-bottom: 4px;">
                     <button class="btn btn-outline-secondary" onclick="onAddRow()">Add Input</button>
@@ -102,48 +102,64 @@
             <div class="row">
                 <div class="col-lg-12">
                     <form class="form-signin" role="form">
-                        <h2 class="title-models-ag-grid">Model inputs</h2>
+                        <h4 class="title-models-ag-grid">Model inputs</h4>
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="btn-group">
-                                            <!--Date from-->
-                                            <div class="form-group">
-                                                <label>Date from</label>
-                                                <input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2000" required>
-                                                <script type="text/javascript">
-                                                    $('#input_date_from_times').datepicker({
-                                                        uiLibrary: 'bootstrap',
-                                                         todayHighlight: true,
-                                                         autoclose: true,
-                                                         format: 'dd/mm/yyyy'
-                                                    });
-                                                </script>
-                                            </div>
-                                        </div>
-                                        <div class="btn-group">
-                                            <!--Strategy weight-->
-                                            <div class="form-group">
-                                                <label>Strategy weight</label>
-                                                <input type="number" id="input_strategy_weight_times" name="input_strategy_weight_times" class="form-control form-models-select-times" placeholder="Strategy weight" required>
-                                                <script type="text/javascript">
-                                                    document.getElementById('input_strategy_weight_times').value = 0.46;
-                                                </script>
-                                            </div>
-                                            <!--Time lag-->
-                                            <div class="form-group">
-                                                <label>Time lag</label>
-                                                <input type="number" id="input_time_lag_times" name="input_time_lag_times" class="form-control form-models-select-times" placeholder="Time lag" required>
-                                                <script type="text/javascript">
-                                                    document.getElementById('input_time_lag_times').value = 2;
-                                                </script>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                 <div class="card">
 
-                                <div class="row">
+                                     <div class="card-body">
+
+                                         <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="btn-group">
+                                                    <!--Date from-->
+                                                    <div class="form-group">
+                                                        <label class="subtitle-model-input">Date from</label>
+                                                        <input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2000" required>
+                                                        <script type="text/javascript">
+                                                            $('#input_date_from_times').datepicker({
+                                                                uiLibrary: 'bootstrap',
+                                                                 todayHighlight: true,
+                                                                 autoclose: true,
+                                                                 format: 'dd/mm/yyyy'
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                      <!--Date to-->
+                                                    <div class="form-group">
+                                                        <label>Date from</label>
+                                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="12/08/2020" required>
+                                                        <script type="text/javascript">
+                                                            $('#input_date_to_new_version_times').datepicker({
+                                                                uiLibrary: 'bootstrap',
+                                                                 todayHighlight: true,
+                                                                 autoclose: true,
+                                                                 format: 'dd/mm/yyyy'
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <!--Strategy weight-->
+                                                    <div class="form-group">
+                                                        <label>Strategy weight</label>
+                                                        <input type="number" id="input_strategy_weight_times" name="input_strategy_weight_times" class="form-control form-models-select-times" placeholder="Strategy weight" required>
+                                                        <script type="text/javascript">
+                                                            document.getElementById('input_strategy_weight_times').value = 0.46;
+                                                        </script>
+                                                    </div>
+                                                    <!--Time lag-->
+                                                    <div class="form-group">
+                                                        <label>Time lag</label>
+                                                        <input type="number" id="input_time_lag_times" name="input_time_lag_times" class="form-control form-models-select-times" placeholder="Time lag" required>
+                                                        <script type="text/javascript">
+                                                            document.getElementById('input_time_lag_times').value = 2;
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                         <div class="row">
                                     <div class="col-lg-6">
                                         <div class="btn-group">
                                             <!--Leverage type-->
@@ -167,8 +183,7 @@
                                          </div>
                                     </div>
                                 </div>
-
-                                <div class="row">
+                                         <div class="row">
                                     <div class="col-lg-6">
                                         <div class="btn-group">
                                             <!--Frequency-->
@@ -196,10 +211,16 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                     </div>
+                                 </div>
                             </div>
 
                             <div class="col-lg-6">
-                                <div class="row">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <div class="row">
                                     <div class="col-lg-6">
                                         <!--Signal1 short-->
                                         <div class="btn-group">
@@ -220,51 +241,54 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row row-signal2">
-                                    <div class="col-lg-6">
-                                        <div class="btn-group">
-                                            <!--Signal2 short-->
-                                            <div class="form-group">
-                                                <label>Signal2 short</label>
-                                                <input type="number" id="input_signal_two_short_times" name="input_signal_two_short_times" class="form-control form-models-select-times" placeholder="Signal2 short" required>
-                                                 <script type="text/javascript">
-                                                    document.getElementById('input_signal_two_short_times').value = 30;
-                                                </script>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="btn-group">
+                                                    <!--Signal2 short-->
+                                                    <div class="form-group">
+                                                        <label>Signal2 short</label>
+                                                        <input type="number" id="input_signal_two_short_times" name="input_signal_two_short_times" class="form-control form-models-select-times" placeholder="Signal2 short" required>
+                                                         <script type="text/javascript">
+                                                            document.getElementById('input_signal_two_short_times').value = 30;
+                                                        </script>
+                                                    </div>
+                                                    <!--Signal2 long-->
+                                                    <div class="form-group">
+                                                        <label>Signal2 long</label>
+                                                        <input type="number" id="input_signal_two_long_times" name="input_signal_two_long_times" class="form-control form-models-select-times" placeholder="Signal2 long" required>
+                                                        <script type="text/javascript">
+                                                            document.getElementById('input_signal_two_long_times').value = 60;
+                                                        </script>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <!--Signal2 long-->
-                                            <div class="form-group">
-                                                <label>Signal2 long</label>
-                                                <input type="number" id="input_signal_two_long_times" name="input_signal_two_long_times" class="form-control form-models-select-times" placeholder="Signal2 long" required>
-                                                <script type="text/javascript">
-                                                    document.getElementById('input_signal_two_long_times').value = 60;
-                                                </script>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="btn-group">
-                                            <!--Signal3 short-->
-                                            <div class="form-group">
-                                                <label>Signal3 short</label>
-                                                <input type="number" id="input_signal_three_short_times" name="input_signal_three_short_times" class="form-control form-models-select-times" placeholder="Signal3 short" required>
-                                                 <script type="text/javascript">
-                                                    document.getElementById('input_signal_three_short_times').value = 60;
-                                                </script>
-                                            </div>
-                                            <!--Signal3 long-->
-                                            <div class="form-group">
-                                                <label>Signal3 long</label>
-                                                <input type="number" id="input_signal_three_long_times" name="input_signal_three_long_times" class="form-control form-models-select-times" placeholder="Signal3 long" required>
-                                                   <script type="text/javascript">
-                                                    document.getElementById('input_signal_three_long_times').value = 120;
-                                                </script>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="btn-group">
+                                                    <!--Signal3 short-->
+                                                    <div class="form-group">
+                                                        <label>Signal3 short</label>
+                                                        <input type="number" id="input_signal_three_short_times" name="input_signal_three_short_times" class="form-control form-models-select-times" placeholder="Signal3 short" required>
+                                                         <script type="text/javascript">
+                                                            document.getElementById('input_signal_three_short_times').value = 60;
+                                                        </script>
+                                                    </div>
+                                                    <!--Signal3 long-->
+                                                    <div class="form-group">
+                                                        <label>Signal3 long</label>
+                                                        <input type="number" id="input_signal_three_long_times" name="input_signal_three_long_times" class="form-control form-models-select-times" placeholder="Signal3 long" required>
+                                                           <script type="text/javascript">
+                                                            document.getElementById('input_signal_three_long_times').value = 120;
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <button class="btn btn-secondary btn-lg btn-run-model-times" type="button" id="contact-form-button-times">Run strategy</button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <button class="btn btn-secondary btn-lg btn-run-model-times" type="button" id="contact-form-button-times">Run strategy</button>
+
                                     </div>
                                 </div>
                             </div>
@@ -278,6 +302,8 @@
         {% elif run_model_page == 'run_existing_version' %}
             <h6 class="sub-title-fund-version-dashboard"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>
             <h6 class="sub-title-date-dashboard"><i>Date run:</i></h6>
+
+
             <!--Assets-->
             <div class="row">
                 <div class="col-lg-12">
@@ -322,6 +348,7 @@
                                     <thead>
                                         <tr>
                                             <th class="text-muted text-center" scope="col">Date from</th>
+                                            <th class="text-muted text-center" scope="col">Date to</th>
                                             <th class="text-muted text-center" scope="col">Strategy weight</th>
                                             <th class="text-muted text-center" scope="col">Times lag</th>
                                             <th class="text-muted text-center" scope="col">Leverage</th>
@@ -333,6 +360,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>
+                                            <td class="text-muted text-center">-</td>
                                             <td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>
                                             <td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>
                                             <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>
@@ -386,7 +414,7 @@
             <!--Earth img-->
              <div class="row">
                 <div class="col-lg-12 text-center">
-                    <img alt="Legal and General" width="750px" height="auto" src="static/img/model_image.png">
+                    <img alt="Legal and General" width="850px" height="auto" style="margin-top: 50px;" src="static/img/model_image.png">
                 </div>
              </div>
         {% endif %}

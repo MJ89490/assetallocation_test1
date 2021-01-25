@@ -74,7 +74,6 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                        letter-spacing: .08em;
                        color: #95aac9;
                        margin-top: 10px;
-
                        margin-bottom: 10px;
                       }
 
@@ -119,16 +118,26 @@ tr td{
 
 .btn-select {margin-top: 12px; height: 38px; margin-left: 10px; padding-top: 2px;}
 .btn-ag-grid {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; background-color: #fff !important;}
-.title-models-ag-grid {color: #005774 !important;}
+
+
+.title-models-ag-grid{letter-spacing: .08em;
+                      color: #95aac9;
+}
+
+.subtitle-model-input{text-transform: uppercase;
+                       letter-spacing: .08em;
+                       color: #005774;
+}
+
+
 .row-ag-grid {margin-top: 70px;}
 .row-model_form {margin-top: 70px;}
-.row-signal2{margin-top: 16px;}
-.form-models-select-times{color: #005774 !important; border-color: #007faa !important; width: 230px; margin-right: 15px;}
+.form-models-select-times{color: #005774 !important; width: 230px; margin-right: 15px;}
 .form-date-to-select-times{width: 150px; margin-left: 125px;}
 
 
 #input_fund_name_times{color: #005774 !important; border-color: #007faa !important;}
-.btn-run-model-times{width: 475px; margin-top: 15px; height: 38px; padding-top: 0px;}
+.btn-run-model-times{width: 230px; margin-top: 32px; height: 38px; padding-top: 0px; margin-left: 15px; margin-bottom: 15px;}
 .btn-run-model-existing-versions-times{width: 250px; margin-top: 15px; height: 38px; padding-top: 0px; margin-bottom: 20px; float: right;}
 .row-model-inputs{margin-top: 40px;}
 
