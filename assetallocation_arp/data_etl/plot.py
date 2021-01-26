@@ -46,10 +46,12 @@ def get_data(df, name):
     else:
         logger.info(f"Data retrieved from database for: {name}")
 
-    # Calculate log return in daily rolling window
-    df["log_return"] = np.log(df["value"]).diff()
     # Filter data frame for specific ticker
     df = df[df["ticker"] == name]
+    # Sort data frame by latest date
+    df.sort_values(by=["business_datetime"], inplace=True, ascending=True)
+    # Calculate daily return (natural log of today's value / yesterday's value)
+    df["log_return"] = np.log(df["value"]).diff()
 
     # Get basic stats for value and log return columns
     stats.text = str(df[["value", "log_return"]].describe())
