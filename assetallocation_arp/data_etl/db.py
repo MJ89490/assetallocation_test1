@@ -63,7 +63,7 @@ class Db:
         # Write pandas data frame to SQL table
         try:
             df.to_sql(name="asset", con=self.engine, schema="staging", if_exists="append", index=False, **kwargs)
-            logging.info("Data frame written to SQL")
+            logging.info("Data frame written to Asset table")
             return
         except SQLAlchemyError as e:
             logger.info(e)

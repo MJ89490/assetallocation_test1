@@ -29,7 +29,7 @@ class ETLProcess:
         db = Db()
         _, tickers_in_db = db.get_tickers()
         # Filter data frame to not include instruments already in the data frame
-        self.df = self.df[~self.df["ticker"].isin(tickers_in_db)]
+        self.df = self.df[~self.df["ticker"].isin(tickers_in_db)].reset_index()
 
         try:
             # Convert columns to respective format types
