@@ -51,8 +51,8 @@ def get_data(df, name):
     # Filter data frame for specific ticker
     df = df[df["ticker"] == name]
 
-    # Get basic stats for value column of data frame
-    stats.text = str(df[["value", "business_datetime"]].describe())
+    # Get basic stats for value and log return columns
+    stats.text = str(df[["value", "log_return"]].describe())
     logger.info("Data frame converted to ColumnDataSource")
 
     return ColumnDataSource(df)
@@ -189,22 +189,22 @@ db_df = db.read_from_db()
 instrument_list = db_df["ticker"].unique().tolist()
 
 # Create drop down, file input, refresh and stats widgets
-drop_down = Select(options=instrument_list)
-refresh_button = Button(label="Refresh")
+drop_down = Select(options=instrument_list, width=200)
+refresh_button = Button(label="Refresh", width=200)
 file_input = FileInput()
+stats = PreText()
 columns = [TableColumn(field="ticker", title="ticker"),
            TableColumn(field="description", title="description"),
            TableColumn(field="value", title="value"),
            TableColumn(field="log_return", title="log_return"),
            TableColumn(field="business_datetime", title="business_datetime", formatter=DateFormatter())]
-stats = PreText(text="Stats")
 
 # Get latest data from database and create plot and data table
 col_data_source = get_data(df=db_df, name=instrument_list[0])
 price_chart, return_chart = make_plot(source=col_data_source)
-data_table = DataTable(source=col_data_source, columns=columns, width=800, height=600)
+data_table = DataTable(source=col_data_source, columns=columns, width=800, height=590)
 
-# Registering widget attribute change
+# Register widget attribute change
 drop_down.on_change("value", drop_down_handle)
 file_input.on_change("value", file_input_handle)
 refresh_button.on_click(refresh_button_handle)
