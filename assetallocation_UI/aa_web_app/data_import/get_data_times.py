@@ -20,7 +20,7 @@ class ReceivedDataTimes:
         self.is_new_strategy = None
         self.fund_name = None
         self.strategy = None
-        self.type_of_request = None
+        self.type_of_request = str
         self.date_to_sidebar = None
 
     @property
@@ -30,7 +30,6 @@ class ReceivedDataTimes:
     @date_to.setter
     def date_to(self, x) -> None:
         self._date_to = x
-
 
     @property
     def strategy(self) -> Times:

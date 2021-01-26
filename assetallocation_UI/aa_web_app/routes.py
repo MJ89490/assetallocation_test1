@@ -19,9 +19,9 @@ obj_download_data_effect = DownloadDataChartEffect()
 
 obj_times_charts_data = TimesChartsDataComputations()
 
-SHOW_CALENDAR = ''
-
 # https://mdbootstrap.com/snippets/jquery/temp/2856277?action=prism_export#html-tab-view
+
+
 @app.route('/')
 def home():
     return render_template('home.html', title='HomePage')
@@ -83,7 +83,7 @@ def times_strategy():
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets = []
-    show_calendar =''
+    show_calendar = ''
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'new-version':
