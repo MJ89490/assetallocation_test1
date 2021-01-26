@@ -140,10 +140,10 @@ def determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility):
         signal_rank = np.abs(signal).rank(axis=1, method='first', ascending=False)
         exposure = (signal_rank <= top_fx) * np.sign(signal).astype(float)
         exposure_vol = np.abs(exposure) * (1 / volatility)
-        exposure = np.sign(exposure) * pc.cap_and_redistribute((exposure_vol.T / exposure_vol.sum(axis=1)).T, 0.5)
+        exposure = leverage * np.sign(exposure) * pc.cap_and_redistribute((exposure_vol.T / exposure_vol.sum(axis=1)).T, 0.5)
     elif signal_type == 'ppp':
         signal_rank = np.abs(signal).rank(axis=1, method='first', ascending=False)
-        exposure = (signal_rank <= top_fx) * np.sign(signal).astype(float) / top_fx
+        exposure = leverage * (signal_rank <= top_fx) * np.sign(signal).astype(float) / top_fx
     else:
         map = create_sizing_mapping()
         exposure = signal.applymap(lambda x: map.index[(x >= map).sum() - 1].item())
