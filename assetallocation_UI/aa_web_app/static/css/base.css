@@ -1,6 +1,6 @@
 /* BODY */
 /*rgb(248, 248, 248)*/
-/*body{background-color: #f4f7fc;}*/
+body{background-color: #fff;}
 
 
 /* NAVBAR */
@@ -28,30 +28,36 @@
 .card-body{border-radius: 20%;}
 div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}
 
+.card-strategy-home{height: 150px;}
+
+.row-card-strategy{margin-top: 25px; margin-bottom: 50px;}
 
 /* JUMBOTRON */
 .jumbotron-image {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 550px !important;
-}
-
-.jumbotron-image-models {
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 550px !important;
-  margin-top: 40px;
+  height: 600px !important;
+  padding-top: 450px;
 }
 
 .jumbotron-image .display-4 {color: #005774 !important;
-                             font-size: 3rem;
-                             font-weight: 800;}
+                             font-size: 2rem;
+                             font-weight: 700;
+}
 
 /* CONTAINER MODELS */
 .container .link-model {color: #005774 !important;}
 .btn {background-color:  #005774 !important; border-color: #005774 !important; width: 200px; }
+.title-decorative {
+    font-size: 0.975rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #adb5bd;
+    display: block;
+    font-weight: 520;
+    margin-bottom: 30px;
+}
 
 /* COMMON FEATURES */
 .container .title-page{padding-top:100px; color: #005774 !important;}
