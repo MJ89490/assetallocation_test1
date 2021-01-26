@@ -3,13 +3,15 @@ import os
 import logging
 import logging.config
 import pandas as pd
+import numpy as np
 from pybase64 import b64decode
 import io
 from datetime import datetime
 from bokeh.io import curdoc
 from bokeh.plotting import figure
-from bokeh.layouts import column, gridplot
-from bokeh.models import ColumnDataSource, Select, PreText, HoverTool, FileInput, Button, TableColumn, DateFormatter, DataTable
+from bokeh.layouts import row, column, gridplot
+from bokeh.models import ColumnDataSource, Select, PreText, HoverTool, FileInput, Button, TableColumn, DateFormatter, \
+    DataTable
 from db import Db
 from etl import ETLProcess
 
@@ -43,15 +45,15 @@ def get_data(df, name):
         logger.info("No data retrieved from database - initial graph defaulted to null")
     else:
         logger.info(f"Data retrieved from database for: {name}")
-        # Filter data frame for specific ticker
-        df = df[df["ticker"] == name]
 
-        latest_date = PreText(text="Date")
+    # Calculate log return in daily rolling window
+    df["log_return"] = np.log(df["value"]).diff()
+    # Filter data frame for specific ticker
+    df = df[df["ticker"] == name]
 
-        # Get basic stats for value column of data frame
-        stats.text = str(df[["value", "business_datetime"]].describe())
-        latest_date.text = str(df["business_datetime"].max())
-
+    # Get basic stats for value column of data frame
+    latest_date.text = str(df["business_datetime"].max())
+    stats.text = str(df[["value", "business_datetime"]].describe())
     logger.info("Data frame converted to ColumnDataSource")
 
     return ColumnDataSource(df)
@@ -65,14 +67,19 @@ def make_plot(source):
     :return: Line chart figure in Bokeh format
     """
     # Format the tooltip
-    tooltips = [("Value", "@value"),
-                ("Date", "@business_datetime{%F}"),
-                ("Field", "@description")]
+    price_tooltips = [("Value", "@value"),
+                      ("Date", "@business_datetime{%F}"),
+                      ("Field", "@description")]
+
+    # Format the tooltip
+    return_tooltips = [("Log Return", "@log_return"),
+                       ("Date", "@business_datetime{%F}"),
+                       ("Field", "@description")]
 
     # Create figure for graph
     # Initial line chart
-    bokeh_fig = figure(plot_width=1000, plot_height=400, x_axis_type="datetime", title="Instrument Price")
-    bokeh_fig.line(x="business_datetime",
+    price_fig = figure(plot_width=1000, plot_height=300, x_axis_type="datetime", title="Instrument Price")
+    price_fig.line(x="business_datetime",
                    y="value",
                    line_width=2,
                    line_color="orange",
@@ -80,17 +87,34 @@ def make_plot(source):
                    source=source)
 
     # Define figure properties
-    bokeh_fig.background_fill_color = "whitesmoke"
-    bokeh_fig.xaxis.axis_label = "Time"
-    bokeh_fig.yaxis.axis_label = "Price"
-    bokeh_fig.xaxis.axis_label_text_font_style = "bold"
-    bokeh_fig.yaxis.axis_label_text_font_style = "bold"
-    bokeh_fig.legend.location = "top_left"
-    bokeh_fig.add_tools(HoverTool(tooltips=tooltips, formatters={"@business_datetime": "datetime"}))
+    price_fig.background_fill_color = "whitesmoke"
+    price_fig.xaxis.axis_label = "Time"
+    price_fig.yaxis.axis_label = "Price"
+    price_fig.xaxis.axis_label_text_font_style = "bold"
+    price_fig.yaxis.axis_label_text_font_style = "bold"
+    price_fig.legend.location = "top_left"
+    price_fig.add_tools(HoverTool(tooltips=price_tooltips, formatters={"@business_datetime": "datetime"}))
 
-    logger.info("Bokeh line chart created")
+    return_fig = figure(plot_width=1000, plot_height=300, x_axis_type="datetime", title="Instrument Log Return")
+    return_fig.line(x="business_datetime",
+                    y="log_return",
+                    line_width=2,
+                    line_color="red",
+                    legend_field="ticker",
+                    source=source)
 
-    return bokeh_fig
+    # Define figure properties
+    return_fig.background_fill_color = "whitesmoke"
+    return_fig.xaxis.axis_label = "Time"
+    return_fig.yaxis.axis_label = "Log return"
+    return_fig.xaxis.axis_label_text_font_style = "bold"
+    return_fig.yaxis.axis_label_text_font_style = "bold"
+    return_fig.legend.location = "top_left"
+    return_fig.add_tools(HoverTool(tooltips=return_tooltips, formatters={"@business_datetime": "datetime"}))
+
+    logger.info("Bokeh charts created")
+
+    return price_fig, return_fig
 
 
 def drop_down_handle(attr, old, new):
@@ -166,20 +190,21 @@ db_df = db.read_from_db()
 instrument_list = db_df["ticker"].unique().tolist()
 
 # Create drop down, file input, refresh and stats widgets
-drop_down = Select(title="Instrument", options=instrument_list)
+drop_down = Select(options=instrument_list)
 refresh_button = Button(label="Refresh")
 file_input = FileInput()
-stats = PreText()
+stats = PreText(text="Stats")
 latest_date = PreText(text="Date")
 columns = [TableColumn(field="ticker", title="ticker"),
            TableColumn(field="description", title="description"),
            TableColumn(field="value", title="value"),
+           TableColumn(field="log_return", title="log_return"),
            TableColumn(field="business_datetime", title="business_datetime", formatter=DateFormatter())]
 
 # Get latest data from database and create plot and data table
 col_data_source = get_data(df=db_df, name=instrument_list[0])
-line_chart = make_plot(source=col_data_source)
-data_table = DataTable(source=col_data_source, columns=columns, width=1000, height=400)
+price_chart, return_chart = make_plot(source=col_data_source)
+data_table = DataTable(source=col_data_source, columns=columns, width=800, height=600)
 
 # Registering widget attribute change
 drop_down.on_change("value", drop_down_handle)
@@ -187,8 +212,10 @@ file_input.on_change("value", file_input_handle)
 refresh_button.on_click(refresh_button_handle)
 
 # Define layout of dashboard
-layout_with_widgets = gridplot(
-    [[column(drop_down, refresh_button, file_input, latest_date, stats), column(line_chart, data_table)]])
+widgets = row(drop_down, refresh_button, file_input)
+charts = column(price_chart, return_chart)
+charts_with_table = row(charts, data_table)
+layout_with_widgets = column(widgets, charts_with_table)
 
 # Create Dashboard with respective layout
 curdoc().add_root(layout_with_widgets)
