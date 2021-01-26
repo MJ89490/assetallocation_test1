@@ -72,14 +72,14 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 .header-pretitle-card {text-transform: uppercase;
                        letter-spacing: .08em;
-                       color: #95aac9;
+                       color: rgb(87, 90, 123);
                        margin-top: 10px;
                        margin-bottom: 10px;
                       }
 
 .header-pretitle-version-card {text-transform: uppercase;
                                letter-spacing: .08em;
-                               color: #95aac9;
+                               color: rgb(87, 90, 123);
                                margin-top: 30px;
                                margin-bottom: 10px;
 }
@@ -98,10 +98,10 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 
 
-.subtitle-strategy{text-decoration: underline; margin-top: 15px;}
+.subtitle-strategy{margin-top: 15px; color: rgb(87, 90, 123); font-weight: 650px;}
 
 .subtitle-date-calendar{letter-spacing: .08em;
-                        color: #95aac9;
+                        color: rgb(87, 90, 123);
                         margin-left: 125px;
                         margin-top: 15px;
 
@@ -128,7 +128,7 @@ tr td{
 .select-form-version{margin-left: 125px; margin-top: 15px; width: 150px;}
 .select-form-fund{width: 150px;}
 
-.subsubtitle-strategy{margin-left: 20px; margin-right: 20px;}
+.subsubtitle-strategy{margin-left: 20px; margin-right: 20px; font-weight: 500px;}
 
 .btn-select {margin-top: 12px; height: 38px; margin-left: 10px; padding-top: 2px;}
 .btn-ag-grid {color: #005774 !important; border-color: #007faa !important; width: 200px; height: 48px; background-color: #fff !important;}
