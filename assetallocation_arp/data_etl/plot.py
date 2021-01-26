@@ -9,7 +9,7 @@ import io
 from datetime import datetime
 from bokeh.io import curdoc
 from bokeh.plotting import figure
-from bokeh.layouts import row, column, gridplot
+from bokeh.layouts import row, column
 from bokeh.models import ColumnDataSource, Select, PreText, HoverTool, FileInput, Button, TableColumn, DateFormatter, \
     DataTable
 from db import Db
