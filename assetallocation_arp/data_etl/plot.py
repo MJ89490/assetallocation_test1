@@ -52,7 +52,6 @@ def get_data(df, name):
     df = df[df["ticker"] == name]
 
     # Get basic stats for value column of data frame
-    latest_date.text = str(df["business_datetime"].max())
     stats.text = str(df[["value", "business_datetime"]].describe())
     logger.info("Data frame converted to ColumnDataSource")
 
@@ -193,13 +192,12 @@ instrument_list = db_df["ticker"].unique().tolist()
 drop_down = Select(options=instrument_list)
 refresh_button = Button(label="Refresh")
 file_input = FileInput()
-stats = PreText(text="Stats")
-latest_date = PreText(text="Date")
 columns = [TableColumn(field="ticker", title="ticker"),
            TableColumn(field="description", title="description"),
            TableColumn(field="value", title="value"),
            TableColumn(field="log_return", title="log_return"),
            TableColumn(field="business_datetime", title="business_datetime", formatter=DateFormatter())]
+stats = PreText(text="Stats")
 
 # Get latest data from database and create plot and data table
 col_data_source = get_data(df=db_df, name=instrument_list[0])
@@ -215,7 +213,7 @@ refresh_button.on_click(refresh_button_handle)
 widgets = row(drop_down, refresh_button, file_input)
 charts = column(price_chart, return_chart)
 charts_with_table = row(charts, data_table)
-layout_with_widgets = column(widgets, charts_with_table)
+layout_with_widgets = column(widgets, charts_with_table, stats)
 
 # Create Dashboard with respective layout
 curdoc().add_root(layout_with_widgets)
