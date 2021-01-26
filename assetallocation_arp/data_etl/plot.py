@@ -79,7 +79,7 @@ def make_plot(source):
 
     # Create figure for graph
     # Initial line chart
-    price_fig = figure(plot_width=1000, plot_height=300, x_axis_type="datetime", title="Instrument Price")
+    price_fig = figure(plot_width=1000, plot_height=300, x_axis_type="datetime", title="Daily Instrument Price")
     price_fig.line(x="business_datetime",
                    y="value",
                    line_width=2,
@@ -96,10 +96,10 @@ def make_plot(source):
     price_fig.legend.location = "top_left"
     price_fig.add_tools(HoverTool(tooltips=price_tooltips, formatters={"@business_datetime": "datetime"}))
 
-    return_fig = figure(plot_width=1000, plot_height=300, x_axis_type="datetime", title="Instrument Log Return")
+    return_fig = figure(plot_width=1000, plot_height=300, x_axis_type="datetime", title="Daily Instrument Return")
     return_fig.line(x="business_datetime",
                     y="log_return",
-                    line_width=2,
+                    line_width=0.5,
                     line_color="red",
                     legend_field="ticker",
                     source=source)
@@ -107,7 +107,7 @@ def make_plot(source):
     # Define figure properties
     return_fig.background_fill_color = "whitesmoke"
     return_fig.xaxis.axis_label = "Time"
-    return_fig.yaxis.axis_label = "Log return"
+    return_fig.yaxis.axis_label = "Natural logarithmic return"
     return_fig.xaxis.axis_label_text_font_style = "bold"
     return_fig.yaxis.axis_label_text_font_style = "bold"
     return_fig.legend.location = "top_left"
