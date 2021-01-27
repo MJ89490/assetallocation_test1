@@ -18,7 +18,6 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 
-
 class TimesChartsDataComputations(object):
     """Class doing computations for the data of the times dashboard"""
 
@@ -35,7 +34,6 @@ class TimesChartsDataComputations(object):
         self.positions_sum_start_date = None
         self.positions_start_date = None
         self.positions_end_date = None
-
 
     @property
     def signal_as_off(self) -> datetime:
@@ -92,10 +90,6 @@ class TimesChartsDataComputations(object):
         fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy)
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
-
-
-
-
 
         self.signals = analytic_df.xs(Signal.momentum, level='analytic_subcategory')
         self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')

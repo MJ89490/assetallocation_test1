@@ -23,8 +23,8 @@
                         <div class="row justify-content-center">
                             <select class="form-control select-form-fund" id="select-fund-from-strategy-page" onchange='selectFund()'>
                                 {% for f in existing_funds %}
-                                <option value="" selected disabled>Fund</option>
-                                <option>{{f}}</option>
+                                 <option hidden >Funds available</option>
+                                 <option>{{f}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -41,7 +41,7 @@
                         <div class="btn-group-vertical">
                             <select class="form-control select-form-version" id="select-version-from-strategy-page" onchange='selectVersion()'>
                                 {% for v in versions_list %}
-                                    <option value="" selected disabled>Version</option>
+                                    <option hidden >Versions available</option>
                                     <option>{{v}}</option>
                                 {% endfor %}
                             </select>

@@ -45,7 +45,7 @@
             <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
             <select class="form-control selectFund" id="send_data_fund_from_sidebar" onchange='sideBarFund()'>
                 {% for f in fund_list %}
-                    <option value="" selected disabled>Fund</option>
+                    <option hidden >Funds available</option>
                     <option>{{f}}</option>
                 {% endfor %}
             </select>
@@ -54,7 +54,7 @@
             <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
             <select class="form-control selectFund" id="send_data_version_from_sidebar" onchange='sideBarVersion()'>
                 {% for v in versions_list %}
-                    <option value="" selected disabled>Version</option>
+                    <option hidden >Versions available</option>
                     <option>{{v}}</option>
                 {% endfor %}
             </select>
@@ -82,7 +82,7 @@
             <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
             <select class="form-control selectFund" id="send_data_fund_export_from_sidebar" onchange='sideBarExportFund()'>
                 {% for f in fund_list %}
-                    <option value="" selected disabled>Fund</option>
+                    <option hidden >Funds available</option>
                     <option>{{f}}</option>
                 {% endfor %}
             </select>
@@ -90,10 +90,24 @@
             <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
             <select class="form-control selectFund" id="send_data_version_export_from_sidebar" onchange='sideBarExportVersion()'>
                 {% for v in versions_list %}
-                    <option value="" selected disabled>Version</option>
+                    <option hidden >Versions available</option>
                     <option>{{v}}</option>
                 {% endfor %}
             </select>
+
+            <!--Date to-->
+            <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
+            <input id="input_date_to_side_bar_export_times" name="input_date_to_side_bar_export_times" class="form-control selectSideBar" value="27/08/2020" onchange='selectDateToExport()' required>
+            <script>
+                $('#input_date_to_side_bar_export_times').datepicker({uiLibrary: 'bootstrap',
+                                                                      todayHighlight: true,
+                                                               autoclose: true,
+                                                               format: 'dd/mm/yyyy',
+                                                               startDate: '01/01/2009'
+
+                                             <!--datesDisabled: ['25/01/2021', '27/01/2021']-->
+                                                               });
+            </script>
 
             {% if export_data_sidebar == 'export_data_sidebar' %}
                 {% include 'pop_up_success_save_domino.html' %}
