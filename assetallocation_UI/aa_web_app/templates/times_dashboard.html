@@ -19,60 +19,26 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
-
         <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
-
-
 
         <link rel="stylesheet" href="static/css/times_dashboard.css">
 
-        <style>
-
-            .badge-soft-secondary {
-    color: #6e84a3;
-    background-color: #e2e6ed;
-}
-
-.badge {
-    vertical-align: middle;
-
-}
-
-.sidebar-brand, .sidebar-brand:hover {
-    padding: 1rem;
-    margin-top: 0px;
-    background: #153d77;
-    font-size: 1.175rem;
-    font-weight: 500;
-    color: #fff;
-    width: 100%;
-    display: block;
-    text-decoration: none;
-}
-
-.content-sidebar{ background-color: #005774; height: 80px;}
-
-#logo-lgim{margin-left: 20px;}
-
-    </style>
-
-
     </head>
+
 
     <body>
 
+        <!-- ============================= SIDEBAR ============================= -->
+        <div class="sidenav">
 
-    <!--SIDEBAR-->
-    <div class="sidenav">
-
-        <!--Logo-->
+        <!-- LGIM Logo-->
         <a class="content-sidebar" href="{{url_for('home')}}">
             <img id="logo-lgim" alt="Legal and General" width="70px;" height="70px;" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
         </a>
 
         <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
 
-        <!-- ============================= CHARTS DATA ============================= -->
+        <!-- CHARTS DATA -->
         <a class="sidenav-item" href="#">Charts Data</a>
         <form>
             <!-- Fund name -->
@@ -84,6 +50,7 @@
                 {% endfor %}
             </select>
 
+            <!--Versions-->
             <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
             <select class="form-control selectFund" id="send_data_version_from_sidebar" onchange='sideBarVersion()'>
                 {% for v in versions_list %}
@@ -92,7 +59,7 @@
                 {% endfor %}
             </select>
 
-
+            <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
             <input id="input_date_to_side_bar_times" name="input_date_to_side_bar_times" class="form-control selectFund" value="27/08/2020" onchange='selectDateTo()' required>
             <script>
@@ -105,12 +72,10 @@
                                              <!--datesDisabled: ['25/01/2021', '27/01/2021']-->
                                                                });
             </script>
-
-
         </form>
         <script src="static/js/form_dashboard_times.js"></script>
 
-        <!-- ============================= EXPORT DATA ============================= -->
+        <!-- EXPORT DATA -->
         <a class="sidenav-item" href="#">Export Data</a>
         <form>
             <!-- Fund name -->
@@ -138,176 +103,81 @@
         <script src="static/js/form_dashboard_times.js"></script>
     </div>
 
-
-    <!-- ============================= CHARTS AREA ============================= -->
-    <div class="content">
-
-        <div class="container-fluid">
-             <!--NAVBAR-->
-             <nav class="navbar navbar-expand-lg fixed-top navbar-default py-lg-0 ">
-        <button class="navbar-toggler" type="button"
-                data-toggle="collapse"
-                data-target="#navbarResponsive"
-                aria-controls="navbarResponsive"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target=""><b>Support</b></a></li>
-            </ul>
-        </div>
-    </nav>
-             <div class="row">
-                <div class="header-body">
-                    <h6 class="header-pretitle">Overview</h6>
-                    <h2 class="title-dashboard"><b>TIMES Dashboard</b></h2>
-                    <h6 class="sub-title-dashboard"><i>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</i></h6><br>
-                    <h6 class="sub-title-dashboard"><i>Date run: </i></h6>
-                </div>
-             </div>
-
-
-            <!--Positions and Performance Tables (overall)-->
-            <div class="row row-table-overall">
-            <!--Positions-->
-            <div class="col-lg-9">
-                 <div class="card">
-                     <h6 class="header-pretitle-card">Overview</h6>
-                     <h4 class="card-header-overview"><b>Positions (%)</b></h4>
-                     <div class="card-body">
-                         <table class="table table-hover">
-                              <thead>
-                                <tr>
-                                    <th class="text-muted text-center" scope="col">Signal as off <i class="signal-as-off-date">{{signal_as_off}}</i></th>
-                                    <th class="text-muted text-center" scope="col">Previous</th>
-                                    <th class="text-muted text-center" scope="col">New</th>
-                                </tr>
-                              </thead>
-
-                             <tbody>
-                                {% for category, pre_overall, new_overall in zip_results_pos_overall %}
-                                <tr>
-                                    <td class="text-muted text-center">{{category}}</td>
-                                    <td class="text-muted text-center">{{pre_overall}}</td>
-                                    <td class="text-muted text-center">{{new_overall}}</td>
-                                </tr>
-                                {% endfor %}
-                             </tbody>
-                          </table>
-                     </div>
+        <!-- ============================= CHARTS AREA ============================= -->
+        <div class="content">
+            <div class="container-fluid">
+                 <!-- NAVBAR -->
+                 <nav class="navbar navbar-expand-lg fixed-top navbar-default py-lg-0 ">
+            <button class="navbar-toggler" type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target=""><b>Support</b></a></li>
+                </ul>
+            </div>
+        </nav>
+                 <div class="row">
+                    <div class="header-body">
+                        <h6 class="header-pretitle">Overview</h6>
+                        <h2 class="title-dashboard"><b>TIMES Dashboard</b></h2>
+                        <h6 class="sub-title-dashboard"><i>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</i></h6><br>
+                        <h6 class="sub-title-dashboard"><i>Date run: </i></h6>
+                    </div>
                  </div>
-            </div>
-            <!--Performance-->
-            <div class="col-lg-3">
-                <div class="card">
-                    <h6 class="header-pretitle-card">Overview</h6>
-                    <h4 class="card-header-overview"><b>Performance (%)</b></h4>
-                    <div class="card-body">
-                        <table class="table table-hover ">
-                     <thead>
-                        <tr>
-                            <th class="text-muted text-center" scope="col">Weekly</th>
-                            <th class="text-muted text-center" scope="col">YTD</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {% for weekly, ytd in zip_results_perf_overall %}
-                        <tr>
-                            {% if weekly > 0 %}
-                                <td class="text-center" style="color:rgb(0, 128, 0);">{{weekly}}</td>
-                            {% else %}
-                                <td class="text-center" style="color:rgb(255, 0, 0);">{{weekly}}</td>
-                            {% endif %}
 
-                            {% if ytd > 0 %}
-                                <td class="text-center" style="color:rgb(0, 128, 0);">{{ytd}}</td>
-                            {% else %}
-                                <td class="text-center" style="color:rgb(255, 0, 0);">{{ytd}}</td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                     </tbody>
-                 </table>
-                    </div>
+                <!-- Positions and Performance Tables (overall) -->
+                <div class="row row-table-overall">
+
+                    <!--Positions-->
+                    <div class="col-lg-9">
+                     <div class="card">
+                         <h6 class="header-pretitle-card">Overview</h6>
+                         <h4 class="card-header-overview"><b>Positions (%)</b></h4>
+                         <div class="card-body">
+                             <table class="table table-hover">
+                                  <thead>
+                                    <tr>
+                                        <th class="text-muted text-center" scope="col">Signal as off <i class="signal-as-off-date">{{signal_as_off}}</i></th>
+                                        <th class="text-muted text-center" scope="col">Previous</th>
+                                        <th class="text-muted text-center" scope="col">New</th>
+                                    </tr>
+                                  </thead>
+
+                                 <tbody>
+                                    {% for category, pre_overall, new_overall in zip_results_pos_overall %}
+                                    <tr>
+                                        <td class="text-muted text-center">{{category}}</td>
+                                        <td class="text-muted text-center">{{pre_overall}}</td>
+                                        <td class="text-muted text-center">{{new_overall}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                 </tbody>
+                              </table>
+                         </div>
+                     </div>
                 </div>
-            </div>
-        </div>
 
-
-            <!--Positions and Performance Tables-->
-            <div class="row row-tables-positions">
-                <!--Positions-->
-                <div class="col-lg-9">
+                    <!--Performance-->
+                    <div class="col-lg-3">
                     <div class="card">
-                        <h4 class="card-header"><b>Positions</b></h4>
+                        <h6 class="header-pretitle-card">Overview</h6>
+                        <h4 class="card-header-overview"><b>Performance (%)</b></h4>
                         <div class="card-body">
-                            <button type="button" class="btn btn-white card-header" id="export-btn"><span class="badge badge-soft-secondary">save implemented weight</span></button>
-
-                            <div id="table" class="table-editable">
-                                <table class="table table-editable table-hover" id="table_positions">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-muted text-center" scope="col">Category</th>
-                                            <th class="text-muted text-center" scope="col">Asset</th>
-                                            <th class="text-muted text-center" scope="col">Mom Signals</th>
-                                            <th class="text-muted text-center" scope="col">Previous (%)</th>
-                                            <th class="text-muted text-center" scope="col">New (%)</th>
-                                            <th class="text-muted text-center" scope="col">Delta (%)</th>
-                                            <th class="text-muted text-center" scope="col">Trade</th>
-                                            <th class="text-muted text-center" scope="col">Size</th>
-                                            <th class="text-muted text-center" scope="col">Implemented</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for category, name, mom, prev_pos, new_pos, delta, trade, size, imp_weight in zip_results_pos %}
-                                            <tr>
-                                                <td class="text-muted text-center">{{category}}</td>
-                                                <td class="text-muted text-center">{{name}}</td>
-                                                <td class="text-muted text-center">{{mom}}</td>
-                                                <td class="text-muted text-center">{{prev_pos}}</td>
-                                                <td class="text-muted text-center">{{new_pos}}</td>
-                                                {% if delta > 0 %}
-                                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{delta}}</td>
-                                                {% else %}
-                                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{delta}}</td>
-                                                {% endif %}
-                                                {% if trade == 'BUY' %}
-                                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
-                                                {% else %}
-                                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
-                                                {% endif %}
-                                                {% if size > 0 %}
-                                                    <td class="text-center" style="color:rgb(0, 128, 0);">{{size}}</td>
-                                                {% else %}
-                                                    <td class="text-center" style="color:rgb(255, 0, 0);">{{size}}</td>
-                                                {% endif %}
-                                                <td class="text-muted text-center" contenteditable="true">{{imp_weight}}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-                 <script src="static/js/times/implemented_weight.js"></script>
-
-                <!--Performance-->
-                <div class="col-lg-3">
-                    <div class="card">
-                        <h4 class="card-header"><b>Performance (%)</b></h4>
-                        <div class="card-body">
-                            <table class="table table-hover table-performance">
+                            <table class="table table-hover ">
                          <thead>
                             <tr>
-                                <th class="text-muted text-center" style="padding-top:35px;" scope="col">Weekly </th>
-                                <th class="text-muted text-center" style="padding-top:35px;" scope="col">YTD</th>
+                                <th class="text-muted text-center" scope="col">Weekly</th>
+                                <th class="text-muted text-center" scope="col">YTD</th>
                             </tr>
                          </thead>
                          <tbody>
-                            {% for weekly, ytd in zip_results_perf %}
+                            {% for weekly, ytd in zip_results_perf_overall %}
                             <tr>
                                 {% if weekly > 0 %}
                                     <td class="text-center" style="color:rgb(0, 128, 0);">{{weekly}}</td>
@@ -327,179 +197,270 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
 
+                <!--Positions and Performance Tables-->
+                <div class="row row-tables-positions">
+                    <!--Positions-->
+                    <div class="col-lg-9">
+                        <div class="card">
+                            <h4 class="card-header"><b>Positions</b></h4>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-white card-header" id="export-btn"><span class="badge badge-soft-secondary">save implemented weight</span></button>
 
-            <!--Asset Allocation chart-->
-            <div class="row row-asset-alloc-chart">
-            <div class="col-lg-12">
-                <div class="card">
-                    <h4 class="card-header"><b>Asset allocation over time</b></h4>
-                    <div class="card-body">
-                        <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
-                            <div class="btn-group">
-                                <!--Start date-->
-                                <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
-                                    <script type="text/javascript">
-                                        $('#start_date_box_times').datepicker({
-                                            uiLibrary: 'bootstrap',
-                                             todayHighlight: true,
-                                             autoclose: true,
-                                             format: 'dd/mm/yyyy'
-                                        });
-                                    </script>
-                                <!--End date-->
-                                <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-times rounded-lg" value="End date" required>
-                                    <script type="text/javascript">
-                                        $('#end_date_box_times').datepicker({
-                                            uiLibrary: 'bootstrap',
-                                             todayHighlight: true,
-                                             autoclose: true,
-                                             format: 'dd/mm/yyyy'
-                                        });
-                                    </script>
-                                <!--Submit button-->
-                                {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
-                                <!--Download button-->
-                                <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                                <div id="table" class="table-editable">
+                                    <table class="table table-editable table-hover" id="table_positions">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-muted text-center" scope="col">Category</th>
+                                                <th class="text-muted text-center" scope="col">Asset</th>
+                                                <th class="text-muted text-center" scope="col">Mom Signals</th>
+                                                <th class="text-muted text-center" scope="col">Previous (%)</th>
+                                                <th class="text-muted text-center" scope="col">New (%)</th>
+                                                <th class="text-muted text-center" scope="col">Delta (%)</th>
+                                                <th class="text-muted text-center" scope="col">Trade</th>
+                                                <th class="text-muted text-center" scope="col">Size</th>
+                                                <th class="text-muted text-center" scope="col">Implemented</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for category, name, mom, prev_pos, new_pos, delta, trade, size, imp_weight in zip_results_pos %}
+                                                <tr>
+                                                    <td class="text-muted text-center">{{category}}</td>
+                                                    <td class="text-muted text-center">{{name}}</td>
+                                                    <td class="text-muted text-center">{{mom}}</td>
+                                                    <td class="text-muted text-center">{{prev_pos}}</td>
+                                                    <td class="text-muted text-center">{{new_pos}}</td>
+                                                    {% if delta > 0 %}
+                                                        <td class="text-center" style="color:rgb(0, 128, 0);">{{delta}}</td>
+                                                    {% else %}
+                                                        <td class="text-center" style="color:rgb(255, 0, 0);">{{delta}}</td>
+                                                    {% endif %}
+                                                    {% if trade == 'BUY' %}
+                                                        <td class="text-center" style="color:rgb(0, 128, 0);">{{trade}}</td>
+                                                    {% else %}
+                                                        <td class="text-center" style="color:rgb(255, 0, 0);">{{trade}}</td>
+                                                    {% endif %}
+                                                    {% if size > 0 %}
+                                                        <td class="text-center" style="color:rgb(0, 128, 0);">{{size}}</td>
+                                                    {% else %}
+                                                        <td class="text-center" style="color:rgb(255, 0, 0);">{{size}}</td>
+                                                    {% endif %}
+                                                    <td class="text-muted text-center" contenteditable="true">{{imp_weight}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                 </div>
                             </div>
-                        </form>
-                        <div id="asset_allocation_over_time" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
-                        <script type="text/javascript">
-                            assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
-                        </script>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                     <script src="static/js/times/implemented_weight.js"></script>
 
-            <!--Performance bar charts-->
-            <div class="row row-positions-assets-charts">
-            <!--Weekly Performance-->
-            <div class="col-lg-6">
-                <div class="card">
-                    <h4 class="card-header"><b>Weekly performance</b></h4>
-                    <div class="card-body">
-                        <div id="weekly_performance" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_weekly_performance.js') }}"></script>
-                        <script type="text/javascript">
-                            weeklyPerformanceChart({{weekly_performance_all_currencies|tojson}}, {{assets_names|tojson}})
-                        </script>
-                    </div>
-                </div>
-            </div>
-            <!--YTD Performance-->
-            <div class="col-lg-6">
-                 <div class="card">
-                     <h4 class="card-header"><b>Year-to-Date performance</b></h4>
-                      <div class="card-body">
-                          <div id="ytd_performance" class="responsive-plot"></div>
-                          <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_ytd_performance.js') }}"></script>
-                          <script type="text/javascript">
-                            ytdPerformanceChart({{ytd_performance_all_currencies|tojson}}, {{assets_names|tojson}})
-                          </script>
-                      </div>
-                 </div>
-            </div>
-        </div>
+                    <!--Performance-->
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <h4 class="card-header"><b>Performance (%)</b></h4>
+                            <div class="card-body">
+                                <table class="table table-hover table-performance">
+                             <thead>
+                                <tr>
+                                    <th class="text-muted text-center" style="padding-top:35px;" scope="col">Weekly </th>
+                                    <th class="text-muted text-center" style="padding-top:35px;" scope="col">YTD</th>
+                                </tr>
+                             </thead>
+                             <tbody>
+                                {% for weekly, ytd in zip_results_perf %}
+                                <tr>
+                                    {% if weekly > 0 %}
+                                        <td class="text-center" style="color:rgb(0, 128, 0);">{{weekly}}</td>
+                                    {% else %}
+                                        <td class="text-center" style="color:rgb(255, 0, 0);">{{weekly}}</td>
+                                    {% endif %}
 
+                                    {% if ytd > 0 %}
+                                        <td class="text-center" style="color:rgb(0, 128, 0);">{{ytd}}</td>
+                                    {% else %}
+                                        <td class="text-center" style="color:rgb(255, 0, 0);">{{ytd}}</td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                             </tbody>
+                         </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Positions bar charts -->
-           <div class="row row-positions-assets-charts">
-            <!--Mom signals-->
-            <div class="col-lg-4">
-                 <div class="card">
-                     <h4 class="card-header"><b>Mom signals positions</b></h4>
-                     <div class="card-body">
-                        <div id="mom_signals" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_mom_signals.js') }}"></script>
-                        <script type="text/javascript">
-                            momSignalsChart({{mom_signals|tojson}}, {{assets_names|tojson}})
-                        </script>
-                     </div>
-                 </div>
-            </div>
-            <!--Previous Positions-->
-            <div class="col-lg-4">
-                <div class="card">
-                    <h4 class="card-header"><b>Previous positions</b></h4>
-                    <div class="card-body">
-                        <div id="previous_positions" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_previous_positions.js') }}"></script>
-                        <script type="text/javascript">
-                            previousPositionsChart({{prev_positions|tojson}}, {{assets_names|tojson}})
-                        </script>
+                <!--Asset Allocation chart-->
+                <div class="row row-asset-alloc-chart">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <h4 class="card-header"><b>Asset allocation over time</b></h4>
+                            <div class="card-body">
+                                <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                                    <div class="btn-group">
+                                        <!--Start date-->
+                                        <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
+                                            <script type="text/javascript">
+                                                $('#start_date_box_times').datepicker({
+                                                    uiLibrary: 'bootstrap',
+                                                     todayHighlight: true,
+                                                     autoclose: true,
+                                                     format: 'dd/mm/yyyy'
+                                                });
+                                            </script>
+                                        <!--End date-->
+                                        <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-times rounded-lg" value="End date" required>
+                                            <script type="text/javascript">
+                                            $('#end_date_box_times').datepicker({
+                                                uiLibrary: 'bootstrap',
+                                                 todayHighlight: true,
+                                                 autoclose: true,
+                                                 format: 'dd/mm/yyyy'
+                                            });
+                                        </script>
+                                    <!--Submit button-->
+                                    {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
+                                    <!--Download button-->
+                                    <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                                </div>
+                            </form>
+                                <div id="asset_allocation_over_time" class="responsive-plot"></div>
+                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
+                                <script type="text/javascript">
+                                    assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
+                                </script>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!--New Positions-->
-            <div class="col-lg-4">
-                <div class="card">
-                    <h4 class="card-header"><b>New positions</b></h4>
-                    <div class="card-body">
-                        <div id="new_positions" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_new_positions.js') }}"></script>
-                        <script type="text/javascript">
-                            newPositionsChart({{new_positions|tojson}}, {{assets_names|tojson}})
-                        </script>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-           <!--Positions assets charts-->
-          <div class="row row-positions-assets-charts">
-            <!--Equities-->
-            <div class="col-lg-4">
-                 <div class="card">
-                      <h4 class="card-header"><b>Equities</b></h4>
-                      <div class="card-body">
-                          <div id="positions_equities" class="responsive-plot"></div>
-                          <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_equities.js') }}"></script>
-                          <script type="text/javascript">
-                            positionsEquities({{positions_assets_sum['equities_pos_sum']|tojson}},
-                                              {{equities_fifth_percentile|tojson}},
-                                              {{equities_ninety_five_percentile|tojson}},
-                                              {{positions_assets_sum['dates_positions_assets']|tojson}})
-                          </script>
-                      </div>
-                 </div>
-            </div>
-            <!--Bonds-->
-            <div class="col-lg-4">
-                <div class="card">
-                    <h4 class="card-header"><b>Bonds</b></h4>
-                    <div class="card-body">
-                        <div id="positions_bonds" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_bonds.js') }}"></script>
-                        <script type="text/javascript">
-                            positionsBonds({{positions_assets_sum['bonds_pos_sum']|tojson}},
-                                           {{bonds_fifth_percentile|tojson}},
-                                           {{bonds_ninety_five_percentile|tojson}},
-                                           {{positions_assets_sum['dates_positions_assets']|tojson}})
-                        </script>
+                <!--Performance bar charts-->
+                <div class="row row-positions-assets-charts">
+                    <!--Weekly Performance-->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <h4 class="card-header"><b>Weekly performance</b></h4>
+                            <div class="card-body">
+                                <div id="weekly_performance" class="responsive-plot"></div>
+                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_weekly_performance.js') }}"></script>
+                                <script type="text/javascript">
+                                    weeklyPerformanceChart({{weekly_performance_all_currencies|tojson}}, {{assets_names|tojson}})
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <!--YTD Performance-->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <h4 class="card-header"><b>Year-to-Date performance</b></h4>
+                            <div class="card-body">
+                                <div id="ytd_performance" class="responsive-plot"></div>
+                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_ytd_performance.js') }}"></script>
+                                <script type="text/javascript">
+                                    ytdPerformanceChart({{ytd_performance_all_currencies|tojson}}, {{assets_names|tojson}})
+                                </script>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!--Forex-->
-            <div class="col-lg-4">
-                <div class="card">
-                    <h4 class="card-header"><b>Forex</b></h4>
-                    <div class="card-body">
-                        <div id="positions_forex" class="responsive-plot"></div>
-                        <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_forex.js') }}"></script>
-                        <script type="text/javascript">
-                            positionsForex({{positions_assets_sum['forex_pos_sum']|tojson}},
-                                           {{forex_fifth_percentile|tojson}},
-                                           {{forex_ninety_five_percentile|tojson}},
-                                           {{positions_assets_sum['dates_positions_assets']|tojson}})
-                        </script>
+
+                <!-- Positions bar charts -->
+               <div class="row row-positions-assets-charts">
+                   <!--Mom signals-->
+                   <div class="col-lg-4">
+                       <div class="card">
+                           <h4 class="card-header"><b>Mom signals positions</b></h4>
+                           <div class="card-body">
+                               <div id="mom_signals" class="responsive-plot"></div>
+                               <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_mom_signals.js') }}"></script>
+                                <script type="text/javascript">
+                                    momSignalsChart({{mom_signals|tojson}}, {{assets_names|tojson}})
+                                </script>
+                           </div>
+                       </div>
+                   </div>
+                   <!--Previous Positions-->
+                   <div class="col-lg-4">
+                       <div class="card">
+                           <h4 class="card-header"><b>Previous positions</b></h4>
+                           <div class="card-body">
+                               <div id="previous_positions" class="responsive-plot"></div>
+                               <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_previous_positions.js') }}"></script>
+                                <script type="text/javascript">
+                                    previousPositionsChart({{prev_positions|tojson}}, {{assets_names|tojson}})
+                                </script>
+                           </div>
+                       </div>
+                   </div>
+                   <!--New Positions-->
+                   <div class="col-lg-4">
+                       <div class="card">
+                           <h4 class="card-header"><b>New positions</b></h4>
+                           <div class="card-body">
+                               <div id="new_positions" class="responsive-plot"></div>
+                               <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_new_positions.js') }}"></script>
+                                <script type="text/javascript">
+                                    newPositionsChart({{new_positions|tojson}}, {{assets_names|tojson}})
+                                </script>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+
+                <!--Positions assets charts-->
+                <div class="row row-positions-assets-charts">
+                    <!--Equities-->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <h4 class="card-header"><b>Equities</b></h4>
+                            <div class="card-body">
+                                <div id="positions_equities" class="responsive-plot"></div>
+                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_equities.js') }}"></script>
+                                <script type="text/javascript">
+                                    positionsEquities({{positions_assets_sum['equities_pos_sum']|tojson}},
+                                                      {{equities_fifth_percentile|tojson}},
+                                                      {{equities_ninety_five_percentile|tojson}},
+                                                      {{positions_assets_sum['dates_positions_assets']|tojson}})
+                                 </script>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Bonds-->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <h4 class="card-header"><b>Bonds</b></h4>
+                            <div class="card-body">
+                                <div id="positions_bonds" class="responsive-plot"></div>
+                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_bonds.js') }}"></script>
+                                <script type="text/javascript">
+                                    positionsBonds({{positions_assets_sum['bonds_pos_sum']|tojson}},
+                                                   {{bonds_fifth_percentile|tojson}},
+                                                   {{bonds_ninety_five_percentile|tojson}},
+                                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Forex-->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <h4 class="card-header"><b>Forex</b></h4>
+                            <div class="card-body">
+                                <div id="positions_forex" class="responsive-plot"></div>
+                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_forex.js') }}"></script>
+                                <script type="text/javascript">
+                                    positionsForex({{positions_assets_sum['forex_pos_sum']|tojson}},
+                                                   {{forex_fifth_percentile|tojson}},
+                                                   {{forex_ninety_five_percentile|tojson}},
+                                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
+                                </script>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-    </div>
-</body>
+    </body>
 </html>

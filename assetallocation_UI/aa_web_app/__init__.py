@@ -36,24 +36,6 @@ app.wsgi_app = ReverseProxied(app.wsgi_app)
 app.debug = True
 CORS(app)
 
-# Set the origin template (templates) of Flask and add subfolders
-# origin_path = "templates"
-# modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsIcons"))
-# modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
-# inputs_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\inputs_models"))
-# javascript_charts_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\js"))
-
-# template_folders = [origin_path, modals_icons_path, modals_models_path, inputs_models_path, javascript_charts_path]
-
-
-# Change the original folder of Flask by adding subfolders
-# app.jinja_loader = jinja2.ChoiceLoader([
-# #     app.jinja_loader,
-# #     jinja2.FileSystemLoader(template_folders),
-# # ])
-
-# app.config.from_object(config.DevelopmentConfig)
-# CSRFProtect(app).init_app(app)
 bootstrap = Bootstrap(app)
 
 login_manager = LoginManager()
@@ -65,41 +47,3 @@ app.config['SECRET_KEY'] = 'secret*'
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
-
-
-
-
-
-
-
-# Set the origin template (templates) of Flask and add subfolders
-# origin_path = "templates"
-# modals_icons_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsIcons"))
-# modals_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\modalsModels"))
-# inputs_models_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\inputs_models"))
-# javascript_charts_path = os.path.abspath(os.path.join(CURRENT_PATH, "templates\js"))
-
-# app_old = Flask(__name__)
-
-# template_folders = [origin_path, modals_icons_path, modals_models_path, inputs_models_path, javascript_charts_path]
-
-
-# # Change the original folder of Flask by adding subfolders
-# app_old.jinja_loader = jinja2.ChoiceLoader([
-#     app_old.jinja_loader,
-#     jinja2.FileSystemLoader(template_folders),
-# ])
-#
-# app_old.config.from_object(config.DevelopmentConfig)
-# CSRFProtect(app_old).init_app(app_old)
-# bootstrap = Bootstrap(app_old)
-#
-# login_manager = LoginManager()
-# login_manager.init_app(app_old)
-# login_manager.login_view = 'login'
-# app_old.config['SECRET_KEY'] = 'secret*'
-
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User(user_id)
