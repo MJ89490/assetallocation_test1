@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 from pybase64 import b64decode
 import io
-from datetime import datetime
+from datetime import datetime, timedelta
 from bokeh.io import curdoc
 from bokeh.plotting import figure
 from bokeh.layouts import row, column
@@ -170,15 +170,18 @@ def refresh_button_handle():
     This function handles when the refresh button Bokeh widget is changed.
     :return:
     """
-    # Run data frame through ETL class
-    db = Db()
-    # Get tickers from database and retrieve latest prices for these
-    df_tickers, _ = db.get_tickers()
-    etl = ETLProcess(df=df_tickers)
-    etl.bbg_data()
-    etl.clean_data()
-    etl.upload_data()
 
+    if db_df["business_datetime"].max().date() != datetime.today().date() - timedelta(days=1):
+        # Run data frame through ETL class
+        db = Db()
+        # Get tickers from database and retrieve latest prices for these
+        df_tickers, _ = db.get_tickers()
+        etl = ETLProcess(df=df_tickers)
+        etl.bbg_data()
+        etl.clean_data()
+        etl.upload_data()
+    else:
+        logging.info("Data is up to date")
     logger.info("Refresh button handle complete")
 
     return
