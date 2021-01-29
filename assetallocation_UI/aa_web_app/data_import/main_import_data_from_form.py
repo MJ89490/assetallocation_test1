@@ -1,7 +1,7 @@
 from typing import Tuple
 
-from assetallocation_UI.aa_web_app.data_import.import_data_from_form import TimesInputs
-from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel
+from assetallocation_UI import TimesInputs
+from assetallocation_UI import InputsTimesModel
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times
 
 

@@ -2,7 +2,7 @@ import pandas as pd
 from numpy import nan
 import mock
 
-from assetallocation_UI.aa_web_app.data_import import main_import_data as main_in
+from assetallocation_UI import main_import_data as main_in
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
 

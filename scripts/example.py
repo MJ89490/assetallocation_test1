@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""An example python script template.
+"""An example python script templates.
 
 Argv:
     infile: Input file

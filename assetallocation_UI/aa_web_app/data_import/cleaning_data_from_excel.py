@@ -1,6 +1,6 @@
-from assetallocation_UI.aa_web_app.data_import.read_data_from_excel import ReadDataFromExcel
+from assetallocation_UI import ReadDataFromExcel
 from common_libraries.dal_enums.asset import Assets
-from assetallocation_UI.aa_web_app.data_import import constant
+from assetallocation_UI import constant
 import pandas as pd
 
 
