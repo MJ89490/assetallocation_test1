@@ -17,7 +17,7 @@ declare
 	strategy_id int;
 BEGIN
   name := 'fica';
-	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
+	SELECT config.insert_execution_state('arp.insert_fica_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
 	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
   SELECT arp.insert_fica(coupon, curve, strategy_weights, tenor, trading_cost, execution_state_id,
