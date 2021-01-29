@@ -83,7 +83,7 @@ def times_strategy():
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets = []
-    show_calendar = ''
+    show_calendar, fund_selected = '', ''
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'new-version':
@@ -97,6 +97,7 @@ def times_strategy():
     else:
         if obj_received_data_times.type_of_request == 'fund_selected':
             show_versions, show_dashboard = 'show_versions_available', 'show_dashboard'
+            fund_selected = obj_received_data_times.fund_name
 
         elif obj_received_data_times.type_of_request == 'version_selected':
             show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
@@ -108,6 +109,7 @@ def times_strategy():
     return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
+                           fund_selected=fund_selected,
                            existing_funds=form.existing_funds,
                            show_calendar=show_calendar,
                            show_versions=show_versions,

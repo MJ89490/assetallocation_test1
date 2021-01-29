@@ -114,7 +114,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .header-pretitle-version-card {text-transform: uppercase;
                                letter-spacing: .08em;
                                color: rgb(87, 90, 123);
-                               margin-top: 30px;
+                               margin-top: 20px;
                                margin-bottom: 10px;
 }
 
@@ -198,4 +198,7 @@ tr td{padding: 0 !important;
 #input_fund_name_times{color: #005774 !important; border-color: #007faa !important;}
 
 .form-models-select-effect{color: #005774 !important; border-color: #007faa !important; width: 230px;}
+
+/* PARAGRAPH */
+.select-fund-choice{margin-top: 10px:}
 
