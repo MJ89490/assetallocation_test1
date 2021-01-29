@@ -34,8 +34,7 @@ ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_pkey"
 ;
 
 -- ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_name_system_tstzrange_excl" EXCLUDE USING GIST (name WITH =, system_tstzrange WITH &&)
-
-ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_name_check" CHECK (name in ('times', 'effect', 'fica'))
+ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_name_check" CHECK (name in ('times', 'effect', 'fica', 'maven', 'fx'))
 ;
 
 /* Create Foreign Key Constraints */

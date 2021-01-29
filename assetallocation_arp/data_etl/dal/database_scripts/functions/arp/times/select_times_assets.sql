@@ -14,19 +14,25 @@ $$
 BEGIN
   return query
     SELECT
-      ta.asset_subcategory,
-      a1.ticker as future_ticker,
-      a2.ticker as signal_ticker,
-      ta.cost,
-      ta.s_leverage
+      string_agg(ag.subcategory, '') FILTER (WHERE sa.name = 'future') as asset_subcategory,
+      string_agg(a.ticker, '') FILTER (WHERE sa.name = 'future') as future_ticker,
+      string_agg(a.ticker, '') FILTER (WHERE sa.name = 'signal') as signal_ticker,
+      tag.cost,
+      tag.s_leverage
     FROM
-      arp.times_asset ta
-      JOIN asset.asset a1 on ta.future_asset_id = a1.id
-      JOIN asset.asset a2 on ta.signal_asset_id = a2.id
-      JOIN arp.times t on ta.strategy_id = t.strategy_id
+      arp.times t
+      JOIN arp.strategy_asset_group sag ON t.strategy_id = sag.strategy_id
+      JOIN arp.times_asset_group tag ON sag.id = tag.strategy_asset_group_id
+      JOIN arp.strategy_asset sa ON sag.id = sa.strategy_asset_group_id
+      JOIN asset.asset a ON sa.asset_id = a.id
+      JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
       t.version = strategy_version
-    GROUP BY a1.id, a2.id
+      AND sa.name in ('future', 'signal')
+    GROUP BY
+      tag.strategy_asset_group_id,
+      tag.cost,
+      tag.s_leverage
   ;
 END
 $$;

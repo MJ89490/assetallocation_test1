@@ -13,6 +13,7 @@ ArpProc = Enum(
         ('arp.insert_app_user', auto()),
         ('arp.select_strategy_versions', auto()),
         ('fund.select_fund_names', auto()),
+        ('asset.select_assets_with_analytics', auto()),
     ]
 )
 

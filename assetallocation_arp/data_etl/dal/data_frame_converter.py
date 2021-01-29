@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple
+from typing import List, Union, Tuple, Optional
 from itertools import chain
 
 import pandas as pd
@@ -63,10 +63,11 @@ class DataFrameConverter:
     @staticmethod
     def series_to_strategy_analytics(
             analytics: pd.Series, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
-            frequency: Union[None, str, Frequency] = None, aggregation_level: Union[None, str, AggregationLevel] = None
+            frequency: Union[None, str, Frequency] = None, aggregation_level: Union[None, str, AggregationLevel] = None,
+            comparator_name: Optional[str] = None
     ) -> List[FundStrategyAnalytic]:
         """Transform Series with index of business_date and to list of FundStrategyAnalytics"""
-        return [FundStrategyAnalytic(index, category, subcategory, float(val), frequency, aggregation_level) for
+        return [FundStrategyAnalytic(index, category, subcategory, float(val), frequency, aggregation_level, comparator_name) for
                 index, val in analytics.iteritems() if pd.notna(val)]
 
     @staticmethod
@@ -156,9 +157,9 @@ class FicaDataFrameConverter(DataFrameConverter):
         :return:
         """
         analytics = []
-        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.Signal, Signal.carry, Frequency.daily, AggregationLevel.comparator))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return'], Category.Performance, Performance['total return index'], Frequency.daily, AggregationLevel.comparator))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return%'], Category.Performance, Performance['total return'], Frequency.daily, AggregationLevel.comparator))
+        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.Signal, Signal.carry, Frequency.daily, AggregationLevel.comparator, 'G3'))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return'], Category.Performance, Performance['total return index'], Frequency.daily, AggregationLevel.comparator, 'G3'))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return%'], Category.Performance, Performance['total return'], Frequency.daily, AggregationLevel.comparator, 'G3'))
 
         return analytics
 

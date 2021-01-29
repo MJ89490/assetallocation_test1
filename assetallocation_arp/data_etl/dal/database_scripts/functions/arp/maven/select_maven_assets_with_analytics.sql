@@ -1,5 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.select_maven_assets_with_analytics(
-  strategy_version int
+  strategy_version int,
+  business_tstzrange tstzrange
 )
   RETURNS TABLE(
     bbg_tr_ticker varchar,
@@ -8,7 +9,6 @@ CREATE OR REPLACE FUNCTION arp.select_maven_assets_with_analytics(
     bbg_er_asset_analytics asset.category_datetime_value[],
     cash_ticker varchar,
     cash_asset_analytics asset.category_datetime_value[],
-    asset_category varchar,
     asset_subcategory varchar,
     currency varchar,
     is_excess boolean,
@@ -20,87 +20,43 @@ AS
 $$
 BEGIN
   return query
-    WITH maven_assets as (
-      SELECT
-        ma.bbg_tr_asset_id,
-        ma.bbg_er_asset_id,
-        ma.cash_asset_id,
-        ma.asset_category,
-        ma.asset_subcategory,
-        ma.currency,
-        ma.is_excess,
-        ma.asset_weight,
-        ma.transaction_cost,
-        m.business_tstzrange
-      FROM
-        arp.maven_asset ma
-        JOIN arp.maven m on ma.strategy_id = m.strategy_id
-      WHERE
-        m.version = strategy_version
-    ),
-    bbg_ers as (
-      SELECT
-        ta2.bbg_er_asset_id,
-        a.ticker as bbg_er_ticker,
-        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as bbg_er_asset_analytics
-      FROM
-        maven_assets ta2
-        JOIN asset.asset a on ta2.bbg_er_asset_id = a.id
-        JOIN asset.asset_analytic aa on a.id = aa.asset_id
-      WHERE
-        aa.business_datetime <@ maven_assets.business_tstzrange
-      GROUP BY
-        ta2.bbg_er_asset_id,
-        a.ticker
-    ),
-    bbg_trs as (
-      SELECT
-        ta3.bbg_tr_asset_id,
-        a.ticker as bbg_tr_ticker,
-        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as bbg_tr_asset_analytics
-      FROM
-        maven_assets ta3
-        JOIN asset.asset a on ta3.bbg_tr_asset_id = a.id
-        JOIN asset.asset_analytic aa on a.id = aa.asset_id
-      WHERE
-        aa.business_datetime <@ maven_assets.business_tstzrange
-      GROUP BY
-        ta3.bbg_tr_asset_id,
-        a.ticker
-    ),
-    cash as (
-      SELECT
-        ma4.cash_asset_id,
-        a.ticker as cash_ticker,
-        array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) as cash_asset_analytics
-      FROM
-        maven_assets ma4
-        JOIN asset.asset a on ma4.cash_asset_id = a.id
-        JOIN asset.asset_analytic aa on a.id = aa.asset_id
-      WHERE
-        aa.business_datetime <@ maven_assets.business_tstzrange
-      GROUP BY
-        ma4.cash_asset_id,
-        a.ticker
-    )
     SELECT
-      t.bbg_tr_ticker,
-      t.bbg_tr_asset_analytics,
-      e.bbg_er_ticker,
-      e.bbg_er_asset_analytics,
-      c.cash_ticker,
-      c.cash_asset_analytics,
-      ma5.asset_category,
-      ma5.asset_subcategory,
-      ma5.currency,
-      ma5.is_excess,
-      ma5.asset_weight,
-      ma5.transaction_cost
+      max(a.ticker) FILTER (WHERE sa.name = 'bbg_tr') as bbg_tr_ticker,
+      array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) FILTER (WHERE sa.name = 'bbg_tr') as bbg_tr_asset_analytics,
+      max(a.ticker) FILTER (WHERE sa.name = 'bbg_er') as bbg_er_ticker,
+      array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) FILTER (WHERE sa.name = 'bbg_er') as bbg_er_asset_analytics,
+      max(a.ticker) FILTER (WHERE sa.name = 'cash') as cash_ticker,
+      array_agg((aa.category, aa.business_datetime, aa.value)::asset.category_datetime_value) FILTER (WHERE sa.name = 'cash') as cash_asset_analytics,
+      string_agg(ag.subcategory, '') FILTER (
+        WHERE sa.name = (
+          CASE
+            WHEN m.er_tr = 'excess' THEN 'bbg_er'
+            ELSE 'bbg_tr'
+          END
+        )
+      ) as asset_subcategory,
+      c.currency,
+      mag.is_excess,
+      mag.asset_weight,
+      mag.transaction_cost
     FROM
-      maven_assets ma5
-      JOIN bbg_trs t on ma5.bbg_tr_asset_id = t.bbg_tr_asset_id
-      JOIN bbg_ers e on ma5.bbg_er_asset_id = e.bbg_er_asset_id
-      JOIN cash c on ma5.cash_asset_id = c.cash_asset_id
+      arp.maven m
+      JOIN arp.strategy_asset_group sag ON m.strategy_id = sag.strategy_id
+      JOIN arp.maven_asset_group mag ON sag.id = mag.strategy_asset_group_id
+      JOIN lookup.currency c on mag.currency_id = c.id
+      JOIN arp.strategy_asset sa ON sag.id = sa.strategy_asset_group_id
+      JOIN asset.asset a ON sa.asset_id = a.id
+      JOIN asset.asset_analytic aa ON a.id = aa.asset_id
+      JOIN asset.asset_group ag ON a.asset_group_id = ag.id
+    WHERE
+        m.version = strategy_version
+        AND aa.business_datetime <@ select_maven_assets_with_analytics.business_tstzrange
+      GROUP BY
+        mag.strategy_asset_group_id,
+        c.currency,
+        mag.is_excess,
+        mag.asset_weight,
+        mag.transaction_cost
   ;
 END
 $$;

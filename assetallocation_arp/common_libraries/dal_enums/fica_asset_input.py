@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 
-class Category(Enum):
+class CurveName(Enum):
     sovereign = auto()
     swap = auto()
     swap_cr = auto()

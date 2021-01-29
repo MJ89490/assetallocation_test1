@@ -2,7 +2,6 @@ CREATE OR REPLACE FUNCTION arp.select_fx_strategy(
   strategy_version int,
   OUT description varchar(25),
   OUT model varchar(25),
-	OUT business_tstzrange tstzrange,
 	OUT signal varchar(25),
   OUT currency varchar(25),
 	OUT response_function  boolean,
@@ -23,7 +22,6 @@ BEGIN
 	SELECT
 	  s.description,
 	  f.model,
-	  f.business_tstzrange,
 	  f.signal,
 	  f.currency,
 	  f.response_function,
@@ -40,7 +38,6 @@ BEGIN
   INTO
     description,
 	  model,
-	  business_tstzrange,
 	  signal,
 	  currency,
 	  response_function,

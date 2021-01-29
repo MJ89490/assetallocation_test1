@@ -51,44 +51,63 @@ class ArpProcCaller(Db):
         self.call_proc('arp.insert_app_user', [app_user.user_id, app_user.name, app_user.email])
         return True
 
-    def insert_fund_strategy_results(self, fund_strategy: FundStrategy, user_id: str) -> bool:
+    def insert_fund_strategy_results(
+            self, fund_strategy: FundStrategy, user_id: str, business_date_from: dt.date, business_date_to: dt.date
+    ) -> bool:
         """Insert data from an instance of FundStrategy into database"""
+        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
         asset_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
-        analytics = ArpTypeConverter.analytics_to_composite(fund_strategy.analytics)
+        strategy_analytics, strategy_asset_analytics = \
+            ArpTypeConverter.fund_strategy_analytics_to_composites(fund_strategy.analytics)
 
-        res = self.call_proc('arp.insert_fund_strategy_results',
-                             [fund_strategy.fund_name, fund_strategy.output_is_saved, fund_strategy.strategy_name.name,
-                              fund_strategy.strategy_version, fund_strategy.weight, user_id,
-                              fund_strategy.python_code_version, asset_weights, analytics])
+        res = self.call_proc(
+            'arp.insert_fund_strategy_results',
+            [
+                fund_strategy.fund_name, fund_strategy.strategy_name.name, fund_strategy.strategy_version,
+                business_tstzrange, fund_strategy.weight, user_id, fund_strategy.python_code_version,
+                asset_weights, strategy_analytics, strategy_asset_analytics
+            ]
+        )
         fund_strategy_id = res[0].get('fund_strategy_id')
 
         return fund_strategy_id is not None
 
-    def select_fund_strategy_results(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int) -> \
-            Optional[FundStrategy]:
-        """Select the most recent FundStrategy data for a strategy as at business_datetime and system_datetime"""
+    def select_fund_strategy_results(
+            self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, business_date_from: dt.date,
+            business_date_to: dt.date
+    ) -> Optional[FundStrategy]:
+        """Select the FundStrategy data for strategy where name equals strategy_name and version equals strategy version
+        and model_instance.business_tstzrange equals DateTimeTZRange(business_date_from, business_date_to, '[]')"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
-
-        res = self.call_proc('arp.select_fund_strategy_results', [fund_name, strategy_name, strategy_version])
+        # TODO find out if below is equal to a exclusive range with timedelta + 1
+        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+        res = self.call_proc(
+            'arp.select_fund_strategy_results', [fund_name, strategy_name, strategy_version, business_tstzrange]
+        )
 
         if not res:
             return
 
-        fund_strategy = FundStrategy(fund_name, strategy_name, strategy_version, float(res[0]['weight']))
-        fund_strategy.output_is_saved = res[0]['output_is_saved']
+        fund_strategy = FundStrategy(fund_name, strategy_name, strategy_version, float(res[0]['strategy_weight']))
         fund_strategy.python_code_version = res[0]['python_code_version']
 
         for row in res:
             if pd.notna(row['strategy_weight']):
                 aw = FundStrategyAssetWeight(
-                    row['asset_subcategory'], row['business_date'], float(row['strategy_weight']), row['weight_frequency']
+                    row['asset_subcategory'], row['business_date'], float(row['theoretical_asset_weight']),
+                    row['weight_frequency']
                 )
-                aw.implemented_weight = float(row['implemented_weight'])
+                aw.implemented_weight = float(row['implemented_asset_weight'])
                 fund_strategy.add_asset_weight(aw)
 
             fund_strategy.add_analytics(
                 ArpTypeConverter.fund_strategy_analytics_str_to_objects(
-                    row['asset_subcategory'], row['business_date'], row['analytics']
+                    row['business_date'], row['strategy_analytics']
+                )
+            )
+            fund_strategy.add_analytics(
+                ArpTypeConverter.fund_strategy_asset_analytics_str_to_objects(
+                    row['asset_subcategory'], row['business_date'], row['strategy_asset_analytics']
                 )
             )
 
@@ -127,12 +146,14 @@ class StrategyProcCaller(ABC, ArpProcCaller):
 
     @abstractmethod
     def select_strategy_with_asset_analytics(
-            self, strategy_version: int, business_datetime: Optional[dt.datetime]
+            self, strategy_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[Strategy]:
         pass
 
     @abstractmethod
-    def add_asset_analytics_to_strategy(self, strategy: Strategy, business_datetime: Optional[dt.datetime]) -> None:
+    def add_asset_analytics_to_strategy(
+            self, strategy: Strategy, business_date_from: dt.date, business_date_to: dt.date
+    ) -> None:
         """Add asset analytics to strategy."""
         pass
 
@@ -163,14 +184,21 @@ class TimesProcCaller(StrategyProcCaller):
         self.call_proc('arp.insert_times_assets', [times_version, times_assets])
         return True
 
-    def add_asset_analytics_to_strategy(self, strategy: Times, business_datetime: Optional[dt.datetime]) -> None:
+    def add_asset_analytics_to_strategy(
+            self, strategy: Times, business_date_from: dt.date, business_date_to: dt.date
+    ) -> None:
         """Add asset analytics to strategy."""
         if strategy.asset_inputs:
-            strategy.asset_inputs = self._select_times_assets_with_analytics(strategy.version, business_datetime)
+            strategy.asset_inputs = self._select_times_assets_with_analytics(
+                strategy.version, business_date_from, business_date_to
+            )
 
-    def _select_times_assets_with_analytics(self, times_version, business_datetime) -> Optional[List[TimesAssetInput]]:
+    def _select_times_assets_with_analytics(
+            self, times_version, business_date_from: dt.date, business_date_to: dt.date
+    ) -> Optional[List[TimesAssetInput]]:
         """Select assets and asset analytics data for a version of times, as at business_datetime"""
-        res = self.call_proc('arp.select_times_assets_with_analytics', [times_version, business_datetime])
+        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+        res = self.call_proc('arp.select_times_assets_with_analytics', [times_version, business_tstzrange])
         if not res:
             return
 
@@ -234,13 +262,15 @@ class TimesProcCaller(StrategyProcCaller):
         return times_asset_inputs
 
     def select_strategy_with_asset_analytics(
-            self, strategy_version: int, business_datetime: Optional[dt.datetime]
+            self, strategy_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[Times]:
         """Select strategy, assets and asset analytics data for a version of times, as at business_datetime"""
         times = self._select_times_strategy(strategy_version)
 
         if times is not None:
-            times.asset_inputs = self._select_times_assets_with_analytics(strategy_version, business_datetime)
+            times.asset_inputs = self._select_times_assets_with_analytics(
+                strategy_version, business_date_from, business_date_to
+            )
 
         return times
 
@@ -261,7 +291,7 @@ class FxProcCaller(StrategyProcCaller):
         res = self.call_proc(
             'arp.insert_fx_strategy',
             [
-                fx.description, user_id, fx.model, fx.business_tstzrange, fx.signal, fx.currency, fx.response_function,
+                fx.description, user_id, fx.model, fx.signal, fx.currency, fx.response_function,
                 fx.exposure, fx.momentum_weights, fx.transaction_cost, fx.top_crosses, fx.vol_window, fx.value_window,
                 fx.sharpe_cutoff, fx.mean_reversion, fx.historical_base, fx.defensive
             ]
@@ -275,20 +305,23 @@ class FxProcCaller(StrategyProcCaller):
         self.call_proc('arp.insert_fx_assets', [fx_version, fx_assets])
         return True
 
-    def add_asset_analytics_to_strategy(self, strategy: Fx, business_datetime: Optional[dt.datetime] = None) -> None:
+    def add_asset_analytics_to_strategy(
+            self, strategy: Fx, business_date_from: dt.date, business_date_to: dt.date
+    ) -> None:
         """Add asset analytics to strategy."""
         if strategy.asset_inputs:
-            strategy.asset_inputs = self._select_fx_assets_with_analytics(strategy.version)
+            business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+            strategy.asset_inputs = self._select_fx_assets_with_analytics(strategy.version, business_tstzrange)
 
             carry_tickers = FxAssetInput.get_carry_tickers(strategy.asset_inputs)
-            strategy.carry_assets = self._select_assets_with_analytics(carry_tickers, strategy.business_tstzrange)
+            strategy.carry_assets = self._select_assets_with_analytics(carry_tickers, business_tstzrange)
 
             spot_tickers = FxAssetInput.get_spot_tickers(strategy.asset_inputs)
-            strategy.spot_assets = self._select_assets_with_analytics(spot_tickers, strategy.business_tstzrange)
+            strategy.spot_assets = self._select_assets_with_analytics(spot_tickers, business_tstzrange)
 
-    def _select_fx_assets_with_analytics(self, fx_version) -> Optional[List[FxAssetInput]]:
+    def _select_fx_assets_with_analytics(self, fx_version, business_tstzrange: DateTimeTZRange) -> Optional[List[FxAssetInput]]:
         """Select assets and asset analytics data for a version of fx"""
-        res = self.call_proc('arp.select_fx_assets_with_analytics', [fx_version])
+        res = self.call_proc('arp.select_fx_assets_with_analytics', [fx_version, business_tstzrange])
         if not res:
             return
 
@@ -308,7 +341,7 @@ class FxProcCaller(StrategyProcCaller):
         return fx_assets
 
     def _select_assets_with_analytics(self, tickers: List[str], business_tstzrange: DateTimeTZRange) -> List[Asset]:
-        res = self.call_proc('arp.select_assets_with_analytics', [tickers, business_tstzrange])
+        res = self.call_proc('asset.select_assets_with_analytics', [tickers, business_tstzrange])
         assets = []
         for r in res:
             a = Asset(r['ticker'])
@@ -336,7 +369,7 @@ class FxProcCaller(StrategyProcCaller):
         r = res[0]
 
         f = Fx(
-            r['model'], r['business_tstzrange'], r['signal'], r['currency'], r['response_function'],
+            r['model'], r['signal'], r['currency'], r['response_function'],
             float(r['exposure']), r['momentum_weights'], float(r['transaction_cost'])
         )
         f.top_crosses = r.get('top_crosses')
@@ -423,9 +456,13 @@ class EffectProcCaller(StrategyProcCaller):
         asset_ids = res[0].get('asset_ids')
         return bool(asset_ids)
 
-    def add_asset_analytics_to_strategy(self, strategy: Effect, business_datetime: Optional[dt.datetime]) -> None:
+    def add_asset_analytics_to_strategy(
+            self, strategy: Effect, business_date_from: dt.date, business_date_to: dt.date
+    ) -> None:
         if strategy.asset_inputs:
-            strategy.asset_inputs = self._select_effect_assets_with_analytics(strategy.version, business_datetime)
+            strategy.asset_inputs = self._select_effect_assets_with_analytics(
+                strategy.version, business_date_from, business_date_to
+            )
 
     def select_strategy(self, strategy_version: int) -> Optional[Effect]:
         """Select strategy and asset data for a version of effect"""
@@ -452,7 +489,7 @@ class EffectProcCaller(StrategyProcCaller):
         e.description = row['description']
         return e
 
-    def _select_effect_assets(self, effect_version) -> Optional[List[EffectAssetInput]]:
+    def _select_effect_assets(self, effect_version: int) -> Optional[List[EffectAssetInput]]:
         """Select asset data for a version of effect"""
         res = self.call_proc('arp.select_effect_assets', [effect_version])
 
@@ -467,21 +504,24 @@ class EffectProcCaller(StrategyProcCaller):
         return effect_assets
 
     def select_strategy_with_asset_analytics(
-            self, strategy_version: int, business_datetime: Optional[dt.datetime]
+            self, strategy_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[Effect]:
         """Select strategy, assets and asset analytics data for a version of effect, as at business_datetime"""
         effect = self._select_effect_strategy(strategy_version)
 
         if effect is not None:
-            effect.asset_inputs = self._select_effect_assets_with_analytics(strategy_version, business_datetime)
+            effect.asset_inputs = self._select_effect_assets_with_analytics(
+                strategy_version, business_date_from, business_date_to
+            )
 
         return effect
 
     def _select_effect_assets_with_analytics(
-            self, effect_version: int, business_datetime: dt.datetime
+            self, effect_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[List[EffectAssetInput]]:
         """Select assets and asset analytics data for a version of effect, as at business_datetime"""
-        res = self.call_proc('arp.select_effect_assets_with_analytics', [effect_version, business_datetime])
+        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+        res = self.call_proc('arp.select_effect_assets_with_analytics', [effect_version, business_tstzrange])
 
         if not res:
             return
@@ -510,7 +550,7 @@ class FicaProcCaller(StrategyProcCaller):
     def _insert_fica_strategy(self, fica: Fica, user_id: str) -> int:
         """Insert data from an instance of Fica into database"""
         res = self.call_proc('arp.insert_fica_strategy',
-                             [fica.description, user_id, fica.coupon, fica.curve, fica.business_tstzrange,
+                             [fica.description, user_id, fica.coupon, fica.curve,
                               fica.strategy_weights, fica.tenor, fica.trading_cost])
 
         return res[0]['f_version']
@@ -518,14 +558,13 @@ class FicaProcCaller(StrategyProcCaller):
     def _insert_fica_assets(self, fica_version: int, fica_asset_groups: List[FicaAssetInputGroup]) -> None:
         """Insert asset data for a version of Fica"""
         for i in fica_asset_groups:
-            asset_tickers, categories, curve_tenors = [], [], []
+            asset_tickers, names = [], []
             for j in i.fica_asset_inputs:
                 asset_tickers.append(j.ticker)
-                categories.append(j.input_category)
-                curve_tenors.append(j.curve_tenor)
+                names.append(f'{j.curve_tenor}_{j.input_category}')
 
             self.call_proc(
-                'arp.insert_fica_assets', [fica_version, i.asset_subcategory, asset_tickers, categories, curve_tenors]
+                'arp.insert_fica_assets', [fica_version, asset_tickers, names]
             )
 
     def select_strategy(self, strategy_version: int) -> Optional[Fica]:
@@ -544,8 +583,7 @@ class FicaProcCaller(StrategyProcCaller):
             return
 
         row = res[0]
-        f = Fica(row['coupon'], row['curve'], row['business_tstzrange'], row['strategy_weights'], row['tenor'],
-                 row['trading_cost'])
+        f = Fica(row['coupon'], row['curve'], row['strategy_weights'], row['tenor'], row['trading_cost'])
         f.version = fica_version
         f.description = row['description']
         return f
@@ -558,41 +596,54 @@ class FicaProcCaller(StrategyProcCaller):
 
         fica_asset_inputs = {}
         for r in res:
-            f = FicaAssetInput(r['asset_ticker'], r['fica_asset_category'], r['curve_tenor'])
-            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], []).append(f)
+            curve_tenor, fica_asset_category = r['fica_asset_name'].split('_', 1)
+            f = FicaAssetInput(r['asset_ticker'], fica_asset_category, curve_tenor)
+            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], [])
+            fica_asset_inputs[r['asset_subcategory']].append(f)
 
         grouped_asset_inputs = [FicaAssetInputGroup(key, val) for key, val in fica_asset_inputs.items()]
         return grouped_asset_inputs
 
-    def add_asset_analytics_to_strategy(self, strategy: Fica, business_datetime: Optional[dt.datetime] = None) -> None:
+    def add_asset_analytics_to_strategy(
+            self, strategy: Fica, business_date_from: dt.date, business_date_to: dt.date
+    ) -> None:
         """Add asset analytics to strategy."""
         if strategy.grouped_asset_inputs:
-            strategy.grouped_asset_inputs = self._select_fica_assets_with_analytics(strategy.version)
+            strategy.grouped_asset_inputs = self._select_fica_assets_with_analytics(
+                strategy.version, business_date_from, business_date_to
+            )
 
-    def _select_fica_assets_with_analytics(self, fica_version) -> Optional[List[FicaAssetInputGroup]]:
+    def _select_fica_assets_with_analytics(
+            self, fica_version: int, business_date_from: dt.date, business_date_to: dt.date
+    ) -> Optional[List[FicaAssetInputGroup]]:
         """Select assets and asset analytics data for a version of fica, as at business_datetime"""
-        res = self.call_proc('arp.select_fica_assets_with_analytics', [fica_version])
+        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+        res = self.call_proc('arp.select_fica_assets_with_analytics', [fica_version, business_tstzrange])
 
         if not res:
             return
 
         fica_asset_inputs = {}
         for r in res:
-            f = FicaAssetInput(r['asset_ticker'], r['fica_asset_category'], r['curve_tenor'])
+            curve_tenor, fica_asset_category = r['fica_asset_name'].split('_', 1)
+            f = FicaAssetInput(r['asset_ticker'], fica_asset_category, curve_tenor)
             f.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(r['asset_ticker'], r['asset_analytics'])
-            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], []).append(f)
+            fica_asset_inputs[r['asset_subcategory']] = fica_asset_inputs.get(r['asset_subcategory'], [])
+            fica_asset_inputs[r['asset_subcategory']].append(f)
 
         grouped_asset_inputs = [FicaAssetInputGroup(key, val) for key, val in fica_asset_inputs.items()]
         return grouped_asset_inputs
 
     def select_strategy_with_asset_analytics(
-            self, strategy_version: int, business_datetime: Optional[dt.datetime] = None
+            self, strategy_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[Fica]:
         """Select strategy, assets and asset analytics data for a version of fica, as at business_datetime"""
         fica = self._select_fica_strategy(strategy_version)
 
         if fica is not None:
-            fica.grouped_asset_inputs = self._select_fica_assets_with_analytics(strategy_version)
+            fica.grouped_asset_inputs = self._select_fica_assets_with_analytics(
+                strategy_version, business_date_from, business_date_to
+            )
 
         return fica
 
@@ -628,14 +679,21 @@ class MavenProcCaller(StrategyProcCaller):
         self.call_proc('arp.insert_maven_assets', [strategy.version, maven_assets])
         return True
 
-    def add_asset_analytics_to_strategy(self, strategy: Maven, business_datetime: Optional[dt.datetime] = None) -> None:
+    def add_asset_analytics_to_strategy(
+            self, strategy: Maven, business_date_from: dt.date, business_date_to: dt.date
+    ) -> None:
         """Add asset analytics to strategy."""
         if strategy.asset_inputs:
-            strategy.asset_inputs = self._select_maven_assets_with_analytics(strategy)
+            strategy.asset_inputs = self._select_maven_assets_with_analytics(
+                strategy, business_date_from, business_date_to
+            )
 
-    def _select_maven_assets_with_analytics(self, strategy: Maven) -> List[MavenAssetInput]:
+    def _select_maven_assets_with_analytics(
+            self, strategy: Maven, business_date_from: dt.date, business_date_to: dt.date
+    ) -> List[MavenAssetInput]:
         """Select assets and asset analytics data for a version of fx"""
-        res = self.call_proc('arp.select_maven_assets_with_analytics', [strategy.version])
+        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+        res = self.call_proc('arp.select_maven_assets_with_analytics', [strategy.version, business_tstzrange])
         if not res:
             return []
 
@@ -699,16 +757,18 @@ class MavenProcCaller(StrategyProcCaller):
         return asset_inputs
 
     def select_strategy_with_asset_analytics(
-            self, strategy_version: int, business_datetime: Optional[dt.datetime]
+            self, strategy_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[Maven]:
         """Select strategy, assets and asset analytics data for a version of maven"""
         strategy = self._select_maven_strategy(strategy_version)
         if strategy is not None:
-            strategy.asset_inputs = self._select_maven_assets_with_analytics(strategy)
+            strategy.asset_inputs = self._select_maven_assets_with_analytics(
+                strategy, business_date_from, business_date_to
+            )
             return strategy
 
 
 if __name__ == '__main__':
-    apc = ArpProcCaller()
-    fs = apc.select_fund_strategy_results('f1', 'times', 432)
+    apc = TimesProcCaller()
+    fs = apc.select_strategy(1087)
     print(fs)

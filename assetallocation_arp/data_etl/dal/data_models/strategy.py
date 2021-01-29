@@ -5,6 +5,7 @@ from psycopg2.extras import DateTimeTZRange
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import TrendIndicator, CarryType, Frequency, DayOfWeek, \
     Leverage, Name, FxModel
+from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import CurveName
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput, TimesAssetInput, \
     FxAssetInput, Asset, FicaAssetInputGroup, MavenAssetInput
@@ -19,8 +20,8 @@ class Strategy(ABC):
     def __init__(self, name: Union[str, Name]):
         """Strategy class to hold data from database"""
         self.name = name
-        self._description = ''
-        self._version = None
+        self.description = ''
+        self.version = None
 
     @property
     def name(self) -> Name:
@@ -39,11 +40,11 @@ class Strategy(ABC):
         self._description = x
 
     @property
-    def version(self) -> int:
+    def version(self) -> Optional[int]:
         return self._version
 
     @version.setter
-    def version(self, x: int) -> None:
+    def version(self, x: Optional[int]) -> None:
         self._version = x
 
     @abstractmethod
@@ -144,13 +145,11 @@ class Times(Strategy):
     
 
 class Fica(Strategy):
-    def __init__(self, coupon: float, curve: str, business_tstzrange: DateTimeTZRange,
-                 strategy_weights: List[float], tenor: int, trading_cost: int) -> None:
+    def __init__(self, coupon: float, curve: Union[str, CurveName], strategy_weights: List[float], tenor: int, trading_cost: int) -> None:
         """Fica class to hold data from database"""
         super().__init__(Name.fica)
         self._coupon = coupon
         self._curve = curve
-        self._business_tstzrange = business_tstzrange
         self._strategy_weights = strategy_weights
         self._tenor = tenor
         self._trading_cost = trading_cost
@@ -173,20 +172,12 @@ class Fica(Strategy):
         self._coupon = x
     
     @property
-    def curve(self) -> str:
+    def curve(self) -> CurveName:
         return self._curve
 
     @curve.setter
     def curve(self, x: str) -> None:
-        self._curve = x
-    
-    @property
-    def business_tstzrange(self) -> DateTimeTZRange:
-        return self._business_tstzrange
-
-    @business_tstzrange.setter
-    def business_tstzrange(self, x: DateTimeTZRange) -> None:
-        self._business_tstzrange = x
+        self._curve = x if isinstance(x, CurveName) else CurveName[x]
     
     @property
     def strategy_weights(self) -> List[float]:
@@ -388,12 +379,11 @@ class Effect(Strategy):
 # noinspection PyAttributeOutsideInit
 class Fx(Strategy):
     def __init__(
-            self, model: str, business_tstzrange: DateTimeTZRange, signal: str, currency: str, response_function: bool,
+            self, model: str, signal: str, currency: str, response_function: bool,
             exposure: float, momentum_weights: List[float], transaction_cost: float
     ) -> None:
         super().__init__(Name.fx)
         self.model = model
-        self.business_tstzrange = business_tstzrange
         self.signal = signal
         self.currency = currency
         self.response_function = response_function
