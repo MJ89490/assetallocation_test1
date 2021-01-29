@@ -8,6 +8,7 @@
 <body>
     {% block timespage %}
         <div class="container">
+
             <!--Title-->
             <div class="row">
                 <h1 class="title-page-model">TIMES Strategy</h1>
@@ -16,7 +17,7 @@
             <!--Select a version and a fund-->
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
+                    <form class="center" action="{{url_for('times_strategy_bp.times_strategy')}}" method="POST" novalidate>
                     <!--Select a fund-->
                     <label class="header-pretitle-card">1. Select a fund</label>
                     <div class="container">
@@ -68,13 +69,13 @@
                     </form>
                     <!--Dashboard-->
                     {% if show_dashboard == 'show_dashboard' %}
-                    <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
-                        <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg btn-dashboard">Dashboard</button>
-                    </form>
+                        <form class="center" action="{{url_for('times_strategy_bp.times_dashboard')}}" method="POST" novalidate>
+                            <button  type="submit" name="submit_button" value="dashboard" class="btn btn-secondary btn-lg btn-dashboard">Dashboard</button>
+                        </form>
                     {% endif %}
                 </div>
             </div>
-            <script src="static/js/form_strategy_page_times.js"></script>
+            <script src="{{url_for('times_strategy_bp.static', filename='js/form_strategy_page_times.js')}}"></script>
 
 
         {% if run_model_page == 'run_new_version' %}
@@ -307,8 +308,7 @@
                     </form>
                 </div>
             </div>
-            <script src="static/js/form_data_times.js"></script>
-
+            <script src="{{url_for('times_strategy_bp.static', filename='js/form_data_times.js')}}"></script>
 
         {% elif run_model_page == 'run_existing_version' %}
             <h6 class="sub-title-fund-version-dashboard"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>
@@ -410,7 +410,7 @@
                 </div>
             </div>
 
-            <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
+            <form class="center" action="{{url_for('times_strategy_bp.times_strategy')}}" method="POST" novalidate>
                 <div class="row">
                     <div class="col-lg-12">
                         <button class="btn btn-secondary btn-lg btn-run-model-existing-versions-times" type="submit" name="submit_button" value="run-strategy-existing-versions">Run strategy</button>
@@ -422,7 +422,7 @@
             <!--Earth img-->
              <div class="row">
                 <div class="col-lg-12 text-center">
-                    <img alt="Legal and General" width="850px" height="auto" style="margin-top: 50px;" src="static/img/model_image.png">
+                    <img alt="Legal and General" width="850px" height="auto" style="margin-top: 50px;" src="{{url_for('times_strategy_bp.static', filename='img/model_image.png')}}">
                 </div>
              </div>
         {% endif %}

@@ -57,7 +57,7 @@ def times_dashboard():
     if positions_chart:
         template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, dates_pos, names_pos
 
-    return render_template('times_dashboard_old.html',
+    return render_template('times_dashboard.html',
                            title='Dashboard',
                            form=form,
                            export_data_sidebar=export_data_sidebar,
@@ -98,7 +98,7 @@ def times_strategy():
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
             run_model_page = 'run_existing_version'
 
-    return render_template('times_template_old.html',
+    return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
                            fund_selected=fund_selected,
