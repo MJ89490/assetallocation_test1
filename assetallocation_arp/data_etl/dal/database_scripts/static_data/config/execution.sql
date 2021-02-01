@@ -12,7 +12,8 @@ VALUES
   ('arp.insert_maven_assets', 'Insert maven assets into arp.maven_asset and asset.asset', 't'),
   ('arp.insert_fund_strategy_results', 'Insert fund strategy results', 't'),
   ('fund.insert_fund', 'Insert fund', 't'),
-  ('arp.insert_app_user', 'Insert app user into arp.app_user', 't')
+  ('arp.insert_app_user', 'Insert app user into arp.app_user', 't'),
+  ('config.insert_model', 'Insert model into config.model', 't')
 ON CONFLICT DO NOTHING
 ;
 

@@ -2,8 +2,8 @@ CREATE OR REPLACE FUNCTION arp.select_effect_assets(
   strategy_version int
 )
 RETURNS TABLE(
-    asset_name varchar,
     asset_ticker varchar,
+    asset_subcategory varchar,
     ndf_code varchar,
     spot_code varchar,
     position_size numeric(32, 16)
@@ -11,26 +11,23 @@ RETURNS TABLE(
 LANGUAGE plpgsql
 AS
 $$
-DECLARE
-  strategy_name varchar;
 BEGIN
-  strategy_name := 'effect';
-
   return query
     SELECT
-      a.name as asset_name,
       a.ticker as asset_ticker,
-      ea.ndf_code,
-      ea.spot_code,
-      ea.position_size
+      ag.subcategory as asset_subcategory,
+      eag.ndf_code,
+      eag.spot_code,
+      eag.position_size
     FROM
-      arp.effect_asset ea
-      JOIN asset.asset a on ea.future_asset_id = a.id
-      JOIN arp.effect e on ea.strategy_id = e.strategy_id
-      JOIN arp.strategy s on e.strategy_id = s.id
+      arp.effect e
+      JOIN arp.strategy_asset_group sag ON e.strategy_id = sag.strategy_id
+      JOIN arp.effect_asset_group eag ON sag.id = eag.strategy_asset_group_id
+      JOIN arp.strategy_asset sa ON sag.id = sa.strategy_asset_group_id
+      JOIN asset.asset a ON sa.asset_id = a.id
+      JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
-      s.name = strategy_name
-      AND e.version = strategy_version
+      e.version = strategy_version
   ;
 END
 $$;

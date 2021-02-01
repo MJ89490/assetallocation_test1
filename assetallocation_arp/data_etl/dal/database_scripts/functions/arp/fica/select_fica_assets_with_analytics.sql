@@ -1,10 +1,10 @@
 CREATE OR REPLACE FUNCTION arp.select_fica_assets_with_analytics(
-  strategy_version int
+  strategy_version int,
+  business_tstzrange tstzrange
 )
   RETURNS TABLE(
     asset_subcategory varchar,
-    fica_asset_category varchar,
-    curve_tenor varchar,
+    fica_asset_name varchar,
     asset_ticker varchar,
     asset_analytics asset.category_datetime_value[]
   )
@@ -15,17 +15,21 @@ BEGIN
   return query
     WITH fica_assets as (
       SELECT
-        fag.asset_subcategory,
-        fa.asset_id,
-        fa.category as fica_asset_category,
-        fa.curve_tenor,
-        f.business_tstzrange
+        string_agg(ag.subcategory, '') FILTER (WHERE sa.name = concat('yr', f.tenor, '_', f.curve)) as asset_subcategory,
+        sa.asset_id,
+        sa.name as fica_asset_name
       FROM
-        arp.fica_asset fa
-        JOIN arp.fica_asset_group fag on fa.fica_asset_group_id = fag.id
-        JOIN arp.fica f on fag.strategy_id = f.strategy_id
+        arp.fica f
+        JOIN arp.strategy_asset_group sag ON f.strategy_id = sag.strategy_id
+        JOIN arp.strategy_asset sa ON sag.id = sa.strategy_asset_group_id
+        JOIN asset.asset a ON sa.asset_id = a.id
+        JOIN asset.asset_group ag ON a.asset_group_id = ag.id
       WHERE
         f.version = strategy_version
+      GROUP BY
+        sa.strategy_asset_group_id,
+        sa.asset_id,
+        sa.name
     ),
     assets as (
       SELECT
@@ -37,7 +41,7 @@ BEGIN
         JOIN asset.asset a1 on fa2.asset_id = a1.id
         JOIN asset.asset_analytic aa on a1.id = aa.asset_id
       WHERE
-        aa.business_datetime <@ fica_assets.business_tstzrange
+        aa.business_datetime <@ select_fica_assets_with_analytics.business_tstzrange
       GROUP BY
         fa2.asset_id,
         a1.name,
@@ -45,8 +49,7 @@ BEGIN
     )
     SELECT
       fa3.asset_subcategory,
-      fa3.fica_asset_category,
-      fa3.curve_tenor,
+      fa3.fica_asset_name,
       a2.asset_ticker,
       a2.asset_analytics
     FROM

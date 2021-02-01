@@ -2,7 +2,8 @@ import xlwings as xw
 
 
 # def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview, rates):
-def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates):
+def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates, date_run):
+
     weekly_total_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_total_weekly_notional']
     weekly_spot_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_spot_weekly_notional']
     weekly_carry_not = p_and_l_overview['profit_and_loss_notional']['profit_and_loss_carry_weekly_notional']
@@ -20,6 +21,9 @@ def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overvi
     ytd_carry_matr = p_and_l_overview['profit_and_loss_matr']['profit_and_loss_carry_ytd_matr']
 
     sheet_effect_input = xw.Book.caller().sheets['EFFECT']
+
+    # Date run
+    sheet_effect_input.range('rng_effect_date_run').value = date_run.item()
 
     # Profit and Loss overview
     sheet_effect_input.range('profit_and_loss_total_weekly_notional').value = weekly_total_not
@@ -66,34 +70,34 @@ def write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overvi
 def write_outputs_risk_return_overview(risk_returns):
     sheet_risk_returns = xw.Book.caller().sheets['RiskReturns']
 
-    sheet_risk_returns.range('logs_excess_ret_no_signals').options(transpose=True).value = \
+    sheet_risk_returns.range('rng_excess_ret_no_signals').options(transpose=True).value = \
     risk_returns['excess_returns']['excess_returns_no_signals']
-    sheet_risk_returns.range('logs_excess_ret_signals').options(transpose=True).value = risk_returns['excess_returns'][
+    sheet_risk_returns.range('rng_excess_ret_signals').options(transpose=True).value = risk_returns['excess_returns'][
         'excess_returns_with_signals']
 
-    sheet_risk_returns.range('logs_std_dev_no_signals').options(transpose=True).value = risk_returns['std_dev'][
+    sheet_risk_returns.range('rng_std_dev_no_signals').options(transpose=True).value = risk_returns['std_dev'][
         'std_dev_no_signals']
-    sheet_risk_returns.range('logs_std_dev_signals').options(transpose=True).value = risk_returns['std_dev'][
+    sheet_risk_returns.range('rng_std_dev_signals').options(transpose=True).value = risk_returns['std_dev'][
         'std_dev_with_signals']
 
-    sheet_risk_returns.range('logs_sharpe_ratio_no_signals').options(transpose=True).value = \
+    sheet_risk_returns.range('rng_sharpe_ratio_no_signals').options(transpose=True).value = \
     risk_returns['sharpe_ratio']['sharpe_ratio_no_signals']
-    sheet_risk_returns.range('logs_sharpe_ratio_signals').options(transpose=True).value = risk_returns['sharpe_ratio'][
+    sheet_risk_returns.range('rng_sharpe_ratio_signals').options(transpose=True).value = risk_returns['sharpe_ratio'][
         'sharpe_ratio_with_signals']
 
-    sheet_risk_returns.range('logs_max_drawdown_no_signals').options(transpose=True).value = \
+    sheet_risk_returns.range('rng_max_drawdown_no_signals').options(transpose=True).value = \
     risk_returns['max_drawdown']['max_drawdown_no_signals']
-    sheet_risk_returns.range('logs_max_drawdown_signals').options(transpose=True).value = risk_returns['max_drawdown'][
+    sheet_risk_returns.range('rng_max_drawdown_signals').options(transpose=True).value = risk_returns['max_drawdown'][
         'max_drawdown_with_signals']
 
-    sheet_risk_returns.range('logs_calmar_no_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
+    sheet_risk_returns.range('rng_calmar_no_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
         'calmar_ratio_no_signals']
-    sheet_risk_returns.range('logs_calmar_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
+    sheet_risk_returns.range('rng_calmar_signals').options(transpose=True).value = risk_returns['calmar_ratio'][
         'calmar_ratio_with_signals']
 
-    sheet_risk_returns.range('logs_equity_corr_no_signals').options(transpose=True).value = risk_returns['equity_corr'][
+    sheet_risk_returns.range('rng_equity_corr_no_signals').options(transpose=True).value = risk_returns['equity_corr'][
         'equity_corr_no_signals']
-    sheet_risk_returns.range('logs_equity_corr_signals').options(transpose=True).value = risk_returns['equity_corr'][
+    sheet_risk_returns.range('rng_equity_corr_signals').options(transpose=True).value = risk_returns['equity_corr'][
         'equity_corr_with_signals']
 
 
@@ -156,9 +160,9 @@ def add_color_scheme_to_tables():
 
 def run_write_outputs_effect_model(model_outputs: dict):
     p_and_l_overview, signals_overview, trades_overview, rates, risk_returns, combo, \
-    total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals = model_outputs['effect']
+    total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals, date_run = model_outputs['effect']
 
-    write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates)
+    write_outputs_controls_tab(p_and_l_overview, signals_overview, trades_overview,  rates, date_run)
     write_outputs_risk_return_overview(risk_returns)
     write_outputs_effect(combo, total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals)
 

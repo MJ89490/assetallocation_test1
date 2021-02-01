@@ -9,7 +9,7 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 
 def run_strategy(
         fund_name: str, strategy_weight: float, strategy: Strategy, user_id: str,
-        business_datetime: dt.datetime = dt.datetime.today() - dt.timedelta(365), is_new_strategy: bool = True
+        business_date_from: dt.date, business_date_to: dt.date
 ) -> FundStrategy:
     """Inserts strategy object data into database. Reads asset analytics from
     database to enable running of strategy, producing outputs of
@@ -18,15 +18,11 @@ def run_strategy(
     :return FundStrategy object containing outputs of strategy run
     """
     pc = StrategyProcCallerFactory.get_proc_caller(strategy.name)()
-    if is_new_strategy:
-        pc.insert_strategy(strategy, user_id)
-
-    pc.add_asset_analytics_to_strategy(strategy, business_datetime)
+    pc.insert_strategy(strategy, user_id)
+    pc.add_asset_analytics_to_strategy(strategy, business_date_from, business_date_to)
     fs = FundStrategy(fund_name, strategy.name, strategy.version, strategy_weight)
     fs.analytics, fs.asset_weights = strategy.run()
-
-    pc.insert_fund_strategy_results(fs, user_id)
-
+    pc.insert_fund_strategy_results(fs, user_id, business_date_from, business_date_to)
     return fs
 
 

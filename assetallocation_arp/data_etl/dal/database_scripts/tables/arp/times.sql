@@ -23,7 +23,7 @@ CREATE TABLE "arp"."times"
 	"volatility_window" integer NOT NULL,
 	"short_signals" numeric(32,16)[] NOT NULL,
 	"long_signals" numeric(32,16)[] NOT NULL,
-	"frequency" frequency NOT NULL,
+	"frequency" arp.frequency NOT NULL,
 	"day_of_week" integer NOT NULL,
 	"execution_state_id" integer NOT NULL,
 	"strategy_id" integer NOT NULL,

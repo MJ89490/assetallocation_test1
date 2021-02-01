@@ -2,11 +2,9 @@ CREATE OR REPLACE FUNCTION arp.select_fx_assets(
   strategy_version int
 )
 RETURNS TABLE(
-    ppp_name varchar,
-    ppp_ticker varchar,
-    cash_rate_name varchar,
-    cash_rate_ticker varchar,
-    currency char(3)
+  ppp_ticker text,
+  cash_ticker text,
+  currency text
   )
 LANGUAGE plpgsql
 AS
@@ -14,20 +12,21 @@ $$
 BEGIN
   return query
     SELECT
-      a1.name as ppp_name,
-      a1.ticker as ppp_ticker,
-      a2.name as cash_rate_name,
-      a2.ticker as cash_rate_ticker,
-      fa.currency
-    FROM
-      arp.fx_asset fa
-      JOIN asset.asset a1 on fa.ppp_asset_id = a1.id
-      JOIN asset.asset a2 on fa.cash_rate_asset_id = a2.id
-      JOIN arp.fx f on fa.strategy_id = f.strategy_id
-      JOIN arp.strategy s on f.strategy_id = s.id
+      string_agg(a.ticker, '') FILTER (WHERE sa.name = 'ppp') as ppp_ticker,
+      string_agg(a.ticker, '') FILTER (WHERE sa.name = 'cash') as cash_ticker,
+      c.currency
+     FROM
+      arp.fx f
+      JOIN arp.strategy_asset_group sag ON f.strategy_id = sag.strategy_id
+      JOIN arp.fx_asset_group fag ON sag.id = fag.strategy_asset_group_id
+      JOIN lookup.currency c on fag.currency_id = c.id
+      JOIN arp.strategy_asset sa ON sag.id = sa.strategy_asset_group_id
+      JOIN asset.asset a ON sa.asset_id = a.id
     WHERE
       f.version = strategy_version
-    GROUP BY a1.id, a2.id
+    GROUP BY
+      fag.strategy_asset_group_id,
+      c.currency
   ;
 END
 $$;

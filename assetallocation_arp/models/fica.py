@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
 
-from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import Category
+from assetallocation_arp.common_libraries.dal_enums.fica_asset_input import CurveName
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 
@@ -18,7 +18,7 @@ def format_data(strategy: 'Fica'):
     :return: dataframe with historical yield curves per country
     """
     # selecting which yield curve to use
-    curve_category = Category.sovereign if strategy.curve == Category.sovereign.name else Category.swap
+    curve_category = CurveName.sovereign if strategy.curve == CurveName.sovereign else CurveName.swap
     analytics = [
         (asset.ticker, analytic) for group in strategy.grouped_asset_inputs for asset in
         group.fica_asset_inputs for analytic in asset.asset_analytics if asset.input_category == curve_category
@@ -119,11 +119,11 @@ def run_daily_attribution(strategy, signals):
     swap_cr_tickers, swap_crs = [], []
     for group in strategy.grouped_asset_inputs:
         for asset in group.fica_asset_inputs:
-            if asset.input_category == Category.future and group.asset_subcategory.name in ('EUR', 'GBP', 'USD'):
+            if asset.input_category == CurveName.future and group.asset_subcategory.name in ('EUR', 'GBP', 'USD'):
                 future_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
                     futures.append((asset.ticker, analytic))
-            elif asset.input_category == Category.swap_cr:
+            elif asset.input_category == CurveName.swap_cr:
                 swap_cr_tickers.append(asset.ticker)
                 for analytic in asset.asset_analytics:
                     swap_crs.append((asset.ticker, analytic))

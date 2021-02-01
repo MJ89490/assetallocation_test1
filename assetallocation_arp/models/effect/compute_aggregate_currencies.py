@@ -1,9 +1,9 @@
+from assetallocation_arp.common_libraries.names_columns_calculations import CurrencyAggregate
+
 import pandas as pd
 import statistics as stats
 import math
 import numpy as np
-
-from assetallocation_arp.common_libraries.names_columns_calculations import CurrencyAggregate
 
 
 class ComputeAggregateCurrencies:
@@ -220,7 +220,7 @@ class ComputeAggregateCurrencies:
     @staticmethod
     def compute_weighted_performance(log_returns_excl, combo_curr, weight_value):
         """
-        Function computing the weighted performancen
+        Function comptuing the weighted performancen
         :param log_returns_excl: log of retuns excl costs values
         :param combo_curr: combo of currencies from compute_currencies class
         :param weight_value: weight value (pos attr from the inputs)

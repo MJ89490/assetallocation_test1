@@ -16,14 +16,14 @@ class FundStrategy:
     _config.read(Path(__file__).parents[4] / '.bumpversion.cfg')
     _python_code_version = _config['bumpversion']['current_version']
 
-    def __init__(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: float,
-                 analytics: List['FundStrategyAnalytic'] = None,
-                 asset_weights: List['FundStrategyAssetWeight'] = None):
+    def __init__(
+            self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: float,
+            analytics: List['FundStrategyAnalytic'] = None, asset_weights: List['FundStrategyAssetWeight'] = None
+    ) -> None:
         """FundStrategy class to hold data from database"""
         self.fund_name = fund_name
         self.strategy_name = strategy_name
         self.weight = weight
-        self.output_is_saved = True
         self.strategy_version = strategy_version
         self.asset_weights = asset_weights or []
         self.analytics = analytics or []
@@ -77,14 +77,6 @@ class FundStrategy:
         self._strategy_version = x
 
     @property
-    def output_is_saved(self) -> bool:
-        return self._output_is_saved
-
-    @output_is_saved.setter
-    def output_is_saved(self, x: bool) -> None:
-        self._output_is_saved = x
-
-    @property
     def weight(self) -> float:
         return self._weight
 
@@ -105,14 +97,14 @@ class FundStrategy:
 # noinspection PyAttributeOutsideInit
 class FundStrategyAssetWeight:
     def __init__(
-            self, asset_subcategory: Union[str, AssetSubcategory], business_date: date, strategy_weight: float,
+            self, asset_subcategory: Union[str, AssetSubcategory], business_date: date, theoretical_weight: float,
             frequency: Union[str, Frequency]
     ) -> None:
         """FundStrategyAssetWeight class to hold data from database"""
         self.asset_subcategory = asset_subcategory
         self.business_date = business_date
         self.frequency = frequency
-        self.strategy_weight = strategy_weight
+        self.strategy_weight = theoretical_weight
         self.implemented_weight = nan
 
     @property
@@ -160,7 +152,8 @@ class FundStrategyAssetWeight:
 class FundStrategyAnalytic:
     def __init__(
             self,  business_date: date, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
-            value: float, frequency: Union[str, Frequency], aggregation_level: Union[None, str, AggregationLevel] = None
+            value: float, frequency: Union[str, Frequency], aggregation_level: Union[None, str, AggregationLevel] = None,
+            comparator_name: Optional[str] = None
     ) -> None:
         """FundStrategyAnalytic class to hold data from database"""
         self.business_date = business_date
@@ -169,6 +162,19 @@ class FundStrategyAnalytic:
         self.subcategory = subcategory
         self.value = value
         self.aggregation_level = aggregation_level
+        self.comparator_name = comparator_name
+
+    @property
+    def comparator_name(self) -> Optional[str]:
+        return self._comparator_name
+
+    @comparator_name.setter
+    def comparator_name(self, x: str) -> None:
+        if self.aggregation_level == AggregationLevel.comparator:
+            self._comparator_name = x
+        else:
+            self._comparator_name = None
+
 
     @property
     def aggregation_level(self) -> AggregationLevel:
@@ -235,6 +241,15 @@ class FundStrategyAssetAnalytic(FundStrategyAnalytic):
         """FundStrategyAssetAnalytic class to hold data from database"""
         super().__init__(business_date, category, subcategory, value, frequency)
         self.asset_subcategory = asset_subcategory
+        self.asset_ticker = None
+
+    @property
+    def asset_ticker(self) -> Optional[str]:
+        return self._asset_ticker
+
+    @asset_ticker.setter
+    def asset_ticker(self, x: Optional[str]) -> None:
+        self._asset_ticker = x
 
     @property
     def asset_subcategory(self) -> str:

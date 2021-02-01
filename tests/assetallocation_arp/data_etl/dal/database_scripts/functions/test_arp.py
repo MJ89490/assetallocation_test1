@@ -138,7 +138,7 @@ def test_insert_fica_strategy_inserts_values_into_fica_table(valid_fica):
 
     # function to test
     cursor.callproc('arp.insert_fica_strategy',
-                    [valid_fica.description, 'test_u', valid_fica.coupon, valid_fica.curve, valid_fica.business_tstzrange,
+                    [valid_fica.description, 'test_u', valid_fica.coupon, valid_fica.curve,
                               valid_fica.strategy_weights, valid_fica.tenor, valid_fica.trading_cost])
 
     # get results
@@ -146,8 +146,7 @@ def test_insert_fica_strategy_inserts_values_into_fica_table(valid_fica):
     SELECT 
       s.description, 
       t.coupon, 
-      t.curve, 
-      t.business_tstzrange, 
+      t.curve,
       t.strategy_weights, 
       t.tenor, 
       t.trading_cost
@@ -171,4 +170,3 @@ def test_insert_fica_strategy_inserts_values_into_fica_table(valid_fica):
     assert valid_fica.strategy_weights == results[0].get('strategy_weights')
     assert valid_fica.tenor == results[0].get('tenor')
     assert valid_fica.trading_cost == results[0].get('trading_cost')
-    assert valid_fica.business_tstzrange == results[0].get('business_tstzrange')

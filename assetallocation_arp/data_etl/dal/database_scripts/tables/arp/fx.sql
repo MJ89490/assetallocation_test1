@@ -19,7 +19,6 @@ DROP TABLE IF EXISTS "arp"."fx" CASCADE
 CREATE TABLE "arp"."fx"
 (
 	"model" varchar(25) NOT NULL,
-	"business_tstzrange" tstzrange NOT NULL,
 	"signal" varchar(25)	 NOT NULL,
   "currency" varchar(25)	 NOT NULL,
 	"response_function" boolean NOT NULL,

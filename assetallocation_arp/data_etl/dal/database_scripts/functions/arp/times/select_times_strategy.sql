@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION arp.select_times_strategy(
   OUT volatility_window int,
   OUT short_signals numeric[],
   OUT long_signals numeric[],
-  OUT frequency frequency,
+  OUT frequency arp.frequency,
   OUT day_of_week int
 )
 AS
