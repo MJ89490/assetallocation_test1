@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from assetallocation_arp.arp_strategies import run_effect_strategy
+from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 
