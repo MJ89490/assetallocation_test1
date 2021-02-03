@@ -58,7 +58,7 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         fx_model, exposure, exposure_agg = fxmodels.determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility)
         # calculate returns
         base_fx, returns, contribution, carry_base = fxmodels.calculate_returns(fxmodels_inputs, carry, signal,
-                                                                                exposure, exposure_agg)
+                                                                                exposure, exposure_agg, spx)
         # write results to output sheet
         write_output_to_excel({Name.fxmodels.name: (fx_model, base_fx, signal, exposure, exposure_agg,
                                                              returns, contribution, carry_base, fxmodels_inputs,
