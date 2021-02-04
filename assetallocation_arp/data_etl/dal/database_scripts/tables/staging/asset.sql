@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS "staging"."asset" CASCADE
 
 CREATE TABLE "staging"."asset"
 (
+	"id" serial NOT NULL,
 	"ticker" text NOT NULL,
 	"name" text	NULL,
 	"description" text NULL,

@@ -5,11 +5,13 @@ AS
 $$
 DECLARE
   _execution_state_id INT;
+  _staging_asset_ids INT[];
 BEGIN
   SELECT INTO _execution_state_id config.insert_execution_state('staging.load_assets');
   PERFORM staging.load_asset_groups_from_asset(_execution_state_id);
   PERFORM staging.load_assets_from_asset(_execution_state_id);
-  PERFORM staging.load_asset_analytics_from_asset(_execution_state_id);
+  SELECT INTO _staging_asset_ids staging.load_asset_analytics_from_asset(_execution_state_id);
+  DELETE FROM staging.asset sa where sa.id = ANY(SELECT unnest(_staging_asset_ids));
 END
 $$;
 
@@ -89,26 +91,40 @@ $$;
 
 
 CREATE OR REPLACE FUNCTION staging.load_asset_analytics_from_asset(
-  _execution_state_id INT
+  _execution_state_id INT,
+  OUT staging_asset_ids INT[]
 )
-  RETURNS VOID
 LANGUAGE plpgsql
 AS
 $$
 BEGIN
-  INSERT INTO asset.asset_analytic (category, asset_id, value, source_id, business_datetime, execution_state_id)
-  SELECT DISTINCT
+  with ins_rows as (
+    SELECT
     sa.analytic_category,
-    aa.id,
+    aa.id as asset_id,
     sa.value,
-    ls.id,
+    ls.id as source_id,
     sa.business_datetime,
-    _execution_state_id
-  FROM staging.asset sa
-  JOIN asset.asset aa on sa.ticker = aa.ticker
-  JOIN lookup.source ls on sa.source = ls.source
-  ON CONFLICT (asset_id, business_datetime, category) WHERE upper(system_tstzrange) = 'infinity'
-  DO NOTHING
+    load_asset_analytics_from_asset._execution_state_id,
+    sa.id as staging_asset_id
+    FROM staging.asset sa
+    JOIN asset.asset aa on sa.ticker = aa.ticker
+    JOIN lookup.source ls on sa.source = ls.source
+  ),
+  ins as (
+    INSERT INTO asset.asset_analytic (category, asset_id, value, source_id, business_datetime, execution_state_id)
+    SELECT DISTINCT
+      ir.analytic_category,
+      ir.asset_id,
+      ir.value,
+      ir.source_id,
+      ir.business_datetime,
+      load_asset_analytics_from_asset._execution_state_id
+    FROM ins_rows ir
+    ON CONFLICT (asset_id, business_datetime, category) WHERE upper(system_tstzrange) = 'infinity'
+    DO NOTHING
+  )
+  SELECT array_agg(ir.staging_asset_id) FROM ins_rows ir INTO staging_asset_ids
   ;
 END
 $$;
