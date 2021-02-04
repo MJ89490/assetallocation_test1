@@ -31,6 +31,10 @@ ALTER TABLE "asset"."asset_group" ADD CONSTRAINT "asset_group_pkey"
 	PRIMARY KEY ("id")
 ;
 
+ALTER TABLE "asset"."asset_group" ADD CONSTRAINT "asset_group_category_subcategory_key"
+	UNIQUE (category, subcategory)
+;
+
 /* Create Foreign Key Constraints */
 ALTER TABLE "asset"."asset_group" ADD CONSTRAINT "asset_group_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
