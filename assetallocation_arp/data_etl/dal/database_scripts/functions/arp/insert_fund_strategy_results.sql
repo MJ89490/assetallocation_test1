@@ -96,7 +96,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_weight(
 AS
 $$
 BEGIN
-  INSERT INTO arp.fund_strategy_wieght(
+  INSERT INTO arp.fund_strategy_weight(
     fund_id,
     strategy_id,
     weight,
@@ -110,7 +110,7 @@ BEGIN
     app_user_id,
     execution_state_id
   )
-  RETURNING arp.fund_strategy_wieght.id into fund_strategy_id;
+  RETURNING arp.fund_strategy_weight.id into fund_strategy_id;
   RETURN;
 END
 $$
