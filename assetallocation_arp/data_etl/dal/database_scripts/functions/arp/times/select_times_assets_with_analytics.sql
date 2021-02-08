@@ -3,12 +3,12 @@ CREATE OR REPLACE FUNCTION arp.select_times_assets_with_analytics(
   business_tstzrange tstzrange
 )
   RETURNS TABLE(
-    asset_subcategory varchar,
+    asset_subcategory text,
     cost numeric(32, 16),
     s_leverage integer,
-    future_ticker varchar,
+    future_ticker text,
     future_asset_analytics asset.category_datetime_value[],
-    signal_ticker varchar,
+    signal_ticker text,
     signal_asset_analytics asset.category_datetime_value[]
   )
 LANGUAGE plpgsql
@@ -18,8 +18,8 @@ BEGIN
   return query
     WITH times_assets as (
     SELECT
-      string_agg(a.id, '') FILTER (WHERE sa.name = 'future') as future_asset_id,
-      string_agg(a.id, '') FILTER (WHERE sa.name = 'signal') as signal_asset_id,
+      max(a.id) FILTER (WHERE sa.name = 'future') as future_asset_id,
+      max(a.id) FILTER (WHERE sa.name = 'signal') as signal_asset_id,
       string_agg(ag.subcategory, '') FILTER (WHERE sa.name = 'future') as asset_subcategory,
       tag.cost,
       tag.s_leverage
@@ -72,9 +72,9 @@ BEGIN
       ta4.asset_subcategory,
       ta4.cost,
       ta4.s_leverage,
-      f.future_ticker,
+      f.future_ticker::text,
       f.future_asset_analytics,
-      s.signal_ticker,
+      s.signal_ticker::text,
       s.signal_asset_analytics
     FROM
       times_assets ta4

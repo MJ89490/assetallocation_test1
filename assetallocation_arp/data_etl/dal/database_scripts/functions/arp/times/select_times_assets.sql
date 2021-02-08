@@ -1,10 +1,11 @@
+DROP FUNCTION arp.select_times_assets(integer);
 CREATE OR REPLACE FUNCTION arp.select_times_assets(
   strategy_version int
 )
 RETURNS TABLE(
-    asset_subcategory varchar,
-    future_ticker varchar,
-    signal_ticker varchar,
+    asset_subcategory text,
+    future_ticker text,
+    signal_ticker text,
     cost numeric(32, 16),
     s_leverage integer
   )

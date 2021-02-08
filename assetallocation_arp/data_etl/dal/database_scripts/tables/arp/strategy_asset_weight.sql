@@ -48,6 +48,10 @@ ALTER TABLE "arp"."strategy_asset_weight" ADD CONSTRAINT "strategy_asset_weight_
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
+ALTER TABLE "arp"."strategy_asset_weight" ADD CONSTRAINT "strategy_asset_weight_model_instance_fkey"
+	FOREIGN KEY ("model_instance_id") REFERENCES "config"."model_instance" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
 ALTER TABLE "arp"."strategy_asset_weight" ADD CONSTRAINT "strategy_asset_weight_strategy_fkey"
 	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE No Action ON UPDATE No Action
 ;

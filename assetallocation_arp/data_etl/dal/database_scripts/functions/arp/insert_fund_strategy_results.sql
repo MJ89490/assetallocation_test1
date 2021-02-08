@@ -145,7 +145,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_asset_weights(
   fund_id int,
   strategy_id int,
   model_instance_id int,
-  set_by_id int,
+  set_by_id varchar,
   weights arp.ticker_date_frequency_weight[],
   execution_state_id int
 )
@@ -155,11 +155,11 @@ $$
 DECLARE
   id_weights arp.id_weight[];
 BEGIN
-  SELECT arp.insert_strategy_asset_weights(
+  SELECT array_agg((id, theoretical_weight)::arp.id_weight) from arp.insert_strategy_asset_weights(
       strategy_id, model_instance_id, weights, execution_state_id
   ) into id_weights;
   PERFORM arp.insert_fund_asset_weights(
-      fund_id, set_by_id, id_weights, execution_state_id
+      fund_id, id_weights, set_by_id, execution_state_id
   );
 END
 $$
@@ -170,12 +170,16 @@ CREATE OR REPLACE FUNCTION arp.insert_strategy_asset_weights(
     strategy_id int,
     model_instance_id int,
     weights arp.ticker_date_frequency_weight[],
-    execution_state_id int,
-    out id_weights arp.id_weight[]
+    execution_state_id int
 )
+  RETURNS TABLE(
+    id int,
+    theoretical_weight numeric(32,16)
+  )
 AS
 $$
 BEGIN
+  RETURN QUERY
   INSERT INTO arp.strategy_asset_weight(
     strategy_id,
     asset_id,
@@ -196,8 +200,8 @@ BEGIN
   FROM
     unnest(weights) as aw
     JOIN asset.asset a ON a.ticker = (aw).ticker
-  RETURNING array_agg(arp.strategy_asset_weight.id, arp.strategy_asset_weight.theoretical_weight::arp.id_weight) into id_weights;
-  RETURN;
+  RETURNING arp.strategy_asset_weight.id, arp.strategy_asset_weight.theoretical_weight
+  ;
 END
 $$
 LANGUAGE PLPGSQL;
@@ -206,7 +210,7 @@ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION arp.insert_fund_asset_weights(
     fund_id int,
     id_weights arp.id_weight[],
-    set_by_id int,
+    set_by_id varchar,
     execution_state_id int
 )
   RETURNS VOID
@@ -227,7 +231,7 @@ BEGIN
 
   UPDATE arp.fund_strategy_asset_weight
   SET system_tstzrange =  tstzrange(
-        lower(system_tstzrange),
+        lower(fsaw.system_tstzrange),
         now(),
         '[)'
     )
@@ -235,7 +239,7 @@ BEGIN
     arp.fund_strategy_asset_weight fsaw
     JOIN arp.strategy_asset_weight saw ON fsaw.strategy_asset_weight_id = saw.id
   WHERE
-    saw.business_date <@ insert_fund_asset_weights.business_date_range
+    saw.business_date <@ business_date_range
   ;
 
   INSERT INTO arp.fund_strategy_asset_weight(
