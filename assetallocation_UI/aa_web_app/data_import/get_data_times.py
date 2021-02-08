@@ -164,6 +164,7 @@ class ReceivedDataTimes:
                 tmp[val.split('=', 1)[0]] = val.split('=', 1)[1]
             # Process date under format '12%2F09%2F2000 to 01/01/2000
             tmp['input_date_from_times'] = '/'.join(tmp['input_date_from_times'].split('%2F'))
+            tmp['input_date_to_new_version_times'] = '/'.join(tmp['input_date_to_new_version_times'].split('%2F'))
             self.times_form = tmp
 
         print(self.times_form)
@@ -198,7 +199,9 @@ class ReceivedDataTimes:
         ]
 
         fund_strategy = run_strategy(self.fund_name, float(self.times_form['input_strategy_weight_times']),
-                                     times, os.environ.get('USERNAME'), self.times_form['input_date_from_times']
+                                     times, os.environ.get('USERNAME'),
+                                     datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
+                                     datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
                                      )
         self.version_strategy = fund_strategy.strategy_version
 
