@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple, Optional
+from typing import List, Union, Tuple, Optional, Dict
 from itertools import chain
 
 import pandas as pd
@@ -71,12 +71,15 @@ class DataFrameConverter:
                 index, val in analytics.iteritems() if pd.notna(val)]
 
     @staticmethod
-    def df_to_asset_weights(weights: pd.DataFrame, frequency: Union[str, Frequency]) -> List[FundStrategyAssetWeight]:
+    def df_to_asset_weights(
+            weights: pd.DataFrame, frequency: Union[str, Frequency], ticker_map: Optional[Dict[str, str]] = None
+    ) -> List[FundStrategyAssetWeight]:
         """Transform DataFrame with index of business_date and columns of asset_subcategory to list of
         FundStrategyAssetWeights
         """
+        ticker_map = ticker_map or {}
         return [
-            FundStrategyAssetWeight(col, index, float(val), frequency) for col, data in weights.items() for index, val
+            FundStrategyAssetWeight(col, index, float(val), frequency, ticker_map.get(col)) for col, data in weights.items() for index, val
             in data.iteritems() if pd.notna(val)
         ]
 

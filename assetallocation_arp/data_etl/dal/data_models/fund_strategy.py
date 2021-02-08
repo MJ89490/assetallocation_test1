@@ -98,7 +98,7 @@ class FundStrategy:
 class FundStrategyAssetWeight:
     def __init__(
             self, asset_subcategory: Union[str, AssetSubcategory], business_date: date, theoretical_weight: float,
-            frequency: Union[str, Frequency]
+            frequency: Union[str, Frequency], ticker: Optional[str] = None
     ) -> None:
         """FundStrategyAssetWeight class to hold data from database"""
         self.asset_subcategory = asset_subcategory
@@ -106,6 +106,7 @@ class FundStrategyAssetWeight:
         self.frequency = frequency
         self.strategy_weight = theoretical_weight
         self.implemented_weight = nan
+        self.ticker = ticker
 
     @property
     def business_date(self) -> date:

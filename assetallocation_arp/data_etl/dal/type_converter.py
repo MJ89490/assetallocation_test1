@@ -59,7 +59,7 @@ class ArpTypeConverter(DbTypeConverter):
     def times_assets_to_composite(times_assets: List[TimesAssetInput]) -> List[str]:
         """Format to match database type arp.asset_ticker_ticker_cost_leverage[]"""
         return [
-            DbTypeConverter.to_composite(i.asset_subcategory.name, i.signal_ticker, i.future_ticker, i.cost, i.s_leverage)
+            DbTypeConverter.to_composite(i.signal_ticker, i.future_ticker, i.cost, i.s_leverage)
             for i in times_assets
         ]
 
@@ -120,9 +120,9 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def weights_to_composite(weights: List[FundStrategyAssetWeight]) -> List[str]:
-        """Format to match database type arp.asset_date_frequency_weight_weight[]"""
+        """Format to match database type arp.ticker_date_frequency_weight[]"""
         return [DbTypeConverter.to_composite(
-            i.asset_subcategory, i.business_date, i.frequency.name, i.strategy_weight, i.implemented_weight
+            i.ticker, i.business_date, i.frequency.name, i.strategy_weight
         ) for i in weights]
 
     @staticmethod
