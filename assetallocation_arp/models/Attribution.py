@@ -4,12 +4,13 @@ Created on Tue Jul 11 17:15:00 2020
 
 @author: WK68945
 """
-import sys
-sys.path.append(r'S:\Shared\Front Office\Asset Allocation\Analytics\libs')
+# import sys
+# sys.path.append(r'S:\Shared\Front Office\Asset Allocation\Analytics\libs')
 import numpy as np
 import pandas as pd
 import xlwings as xw
 import bloomberg
+from comca_attribution import comca_att, factor_att
 
 
 def calculate_comca():
@@ -122,6 +123,15 @@ def calculate_comca():
     last_row = wb.sheets['ModelOutput'].range('B' + str(wb.sheets['ModelOutput'].cells.last_cell.row)).end('up').row
     wb.sheets['ModelOutput'].range("B3:AZ" + str(last_row)).clear_contents()
     wb.sheets['ModelOutput'].range('rngOutput').value = output
+
+    # Calculate final attribution
+    _ = comca_att(workbook=wb,
+                  input_data=output,
+                  year=2020)
+
+    # Test sheets - to be deleted
+    wb.sheets['python_model_output'].range('A1').value = output
+
     return output
 
 
@@ -164,4 +174,13 @@ def calculate_factor():
     last_row = wb.sheets['ModelOutput'].range('B' + str(wb.sheets['ModelOutput'].cells.last_cell.row)).end('up').row
     wb.sheets['ModelOutput'].range("B3:Z" + str(last_row)).clear_contents()
     wb.sheets['ModelOutput'].range('rngOutput').value = index_return
+
+    # Calculate final attribution
+    _ = factor_att(workbook=wb,
+                   input_data=index_return,
+                   year=2020,
+                   ac_weights=[0.4, 0.425, 0.175, 0, -1, 19],
+                   dev_weights=[0.4, 0.425, 0.175, 0, -1, 19],
+                   eafe_weights=[0.4, 0.425, 0.175, 0, -1, 19])
+
     return index_return
