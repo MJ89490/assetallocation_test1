@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import xlwings as xw
 import bloomberg
-from comca_attribution import comca_att, factor_att
+from attribution_calculations import comca_att, factor_att
 
 
 def calculate_comca():
