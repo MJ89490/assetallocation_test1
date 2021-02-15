@@ -127,7 +127,7 @@ def calculate_comca():
     # Calculate final attribution
     _ = comca_att(workbook=wb,
                   input_data=output,
-                  year=2020)
+                  year=2019)
 
     return output
 
@@ -175,7 +175,7 @@ def calculate_factor():
     # Calculate final attribution
     _ = factor_att(workbook=wb,
                    input_data=index_return,
-                   year=2020,
+                   year=2019,
                    ac_weights=[0.4, 0.425, 0.175, 0, -1, 19],
                    dev_weights=[0.4, 0.425, 0.175, 0, -1, 19],
                    eafe_weights=[0.4, 0.425, 0.175, 0, -1, 19])

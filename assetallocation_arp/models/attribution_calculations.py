@@ -1,4 +1,5 @@
-# TODO Replace weights from list to dict
+# TODO Replace weights from list to dict for FACTOR
+# TODO Check agriculture calculations for COMCA
 
 
 def comca_att(workbook, input_data, year):
