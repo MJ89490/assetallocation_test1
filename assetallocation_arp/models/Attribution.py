@@ -129,9 +129,6 @@ def calculate_comca():
                   input_data=output,
                   year=2020)
 
-    # Test sheets - to be deleted
-    wb.sheets['python_model_output'].range('A1').value = output
-
     return output
 
 
