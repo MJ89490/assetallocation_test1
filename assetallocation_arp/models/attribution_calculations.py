@@ -1,3 +1,6 @@
+# TODO Replace weights from list to dict
+
+
 def comca_att(workbook, input_data, year):
     """
     This function calculates the attribution for COMCA. This takes the input data for COMCA instruments and aggregates
