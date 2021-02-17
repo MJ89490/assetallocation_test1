@@ -127,7 +127,12 @@ def calculate_comca():
     # Calculate final attribution
     _ = comca_att(workbook=wb,
                   input_data=output,
-                  year=2019)
+                  year=2020,
+                  commodity_dict={"energy": ["CL", "CO", "HO", "XB", "QS"],
+                                  "agriculture": ["BO", "C ", "CT", "KC", "KW", "LC", "LH", "S ", "SB", "SM", "W "],
+                                  "industrial_metals": ["HG", "LA", "LN", "LX"],
+                                  "precious_metals": ["GC", "SI"],
+                                  "natural_gas": ["NG"]})
 
     return output
 
@@ -175,9 +180,12 @@ def calculate_factor():
     # Calculate final attribution
     _ = factor_att(workbook=wb,
                    input_data=index_return,
-                   year=2019,
-                   ac_weights=[0.4, 0.425, 0.175, 0, -1, 19],
-                   dev_weights=[0.4, 0.425, 0.175, 0, -1, 19],
-                   eafe_weights=[0.4, 0.425, 0.175, 0, -1, 19])
+                   year=2020,
+                   strat_dict={"quality": ["M1WDQU", 0.4],
+                               "value": ["M1WDOV", 0.425],
+                               "min_vol": ["M00IWD$O", 0.175],
+                               "momentum": ["M1WD000$", 0],
+                               "main": ["M1WD", -1],
+                               "cost": [None, 19]})
 
     return index_return
