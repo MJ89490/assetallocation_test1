@@ -36,14 +36,14 @@ def comca_att(workbook, input_data, year, commodity_dict):
     return df_att
 
 
-def factor_att(workbook, input_data, year, strat_dict):
+def factor_att(workbook, input_data, year, strategy_dict):
     """
     This function calculates the attribution for a given model. This takes the input data different strategies, with
     respective weights and aggregates the return. The output is exported to an Excel sheet.
     :param workbook: Excel workbook used to output to, xlwings function
     :param input_data: Raw data to attribute, pandas data frame
     :param year: User inputs year to attribute, integer
-    :param strat_dict: Dictionary of lists. Key is type of strategy, position one of value is strategy and position two
+    :param strategy_dict: Dictionary of lists. Key is type of strategy, position one of value is strategy and position two
                         is the weight. Note cost does not have a strategy name and is set to None.
     :return: Attribution as pandas data frame
     """
@@ -51,16 +51,16 @@ def factor_att(workbook, input_data, year, strat_dict):
     df_att = input_data.loc[f"01/01/{year}":f"31/12/{year}"]
 
     # Calculate relative, contribution and total net values
-    df_att["relative_quality"] = df_att[strat_dict["quality"][0]] - df_att[strat_dict["main"][0]]
-    df_att["relative_value"] = df_att[strat_dict["value"][0]] - df_att[strat_dict["main"][0]]
-    df_att["relative_min_vol"] = df_att[strat_dict["min_vol"][0]] - df_att[strat_dict["main"][0]]
-    df_att["relative_momentum"] = df_att[strat_dict["momentum"][0]] - df_att[strat_dict["main"][0]]
-    df_att["contribution_quality"] = df_att["relative_quality"] * strat_dict["quality"][1]
-    df_att["contribution_value"] = df_att["relative_value"] * strat_dict["value"][1]
-    df_att["contribution_min_vol"] = df_att["relative_min_vol"] * strat_dict["min_vol"][1]
-    df_att["contribution_momentum"] = df_att["relative_momentum"] * strat_dict["momentum"][1]
+    df_att["relative_quality"] = df_att[strategy_dict["quality"][0]] - df_att[strategy_dict["main"][0]]
+    df_att["relative_value"] = df_att[strategy_dict["value"][0]] - df_att[strategy_dict["main"][0]]
+    df_att["relative_min_vol"] = df_att[strategy_dict["min_vol"][0]] - df_att[strategy_dict["main"][0]]
+    df_att["relative_momentum"] = df_att[strategy_dict["momentum"][0]] - df_att[strategy_dict["main"][0]]
+    df_att["contribution_quality"] = df_att["relative_quality"] * strategy_dict["quality"][1]
+    df_att["contribution_value"] = df_att["relative_value"] * strategy_dict["value"][1]
+    df_att["contribution_min_vol"] = df_att["relative_min_vol"] * strategy_dict["min_vol"][1]
+    df_att["contribution_momentum"] = df_att["relative_momentum"] * strategy_dict["momentum"][1]
     df_att["total_net"] = df_att[["contribution_quality", "contribution_value", "contribution_min_vol"]].sum(axis=1)\
-                          - (strat_dict["cost"][1] / (10000 * 12))
+                          - (strategy_dict["cost"][1] / (10000 * 12))
 
     # Transpose data frame to have a horizontal time series view
     # Calculate year to date for all attributes

@@ -181,11 +181,11 @@ def calculate_factor():
     df_factor_att = factor_att(workbook=wb,
                                input_data=index_return,
                                year=2020,
-                               strat_dict={"quality": ["M1WDQU", 0.4],
-                                           "value": ["M1WDOV", 0.425],
-                                           "min_vol": ["M00IWD$O", 0.175],
-                                           "momentum": ["M1WD000$", 0],
-                                           "main": ["M1WD", -1],
-                                           "cost": [None, 19]})
+                               strategy_dict={"quality": ["M1WDQU", 0.4],
+                                              "value": ["M1WDOV", 0.425],
+                                              "min_vol": ["M00IWD$O", 0.175],
+                                              "momentum": ["M1WD000$", 0],
+                                              "main": ["M1WD", -1],
+                                              "cost": [None, 19]})
 
     return index_return, df_factor_att
