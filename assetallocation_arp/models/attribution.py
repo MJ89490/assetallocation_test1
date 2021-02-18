@@ -125,16 +125,16 @@ def calculate_comca():
     wb.sheets['ModelOutput'].range('rngOutput').value = output
 
     # Calculate final attribution
-    _ = comca_att(workbook=wb,
-                  input_data=output,
-                  year=2020,
-                  commodity_dict={"energy": ["CL", "CO", "HO", "XB", "QS"],
-                                  "agriculture": ["BO", "C ", "CT", "KC", "KW", "LC", "LH", "S ", "SB", "SM", "W "],
-                                  "industrial_metals": ["HG", "LA", "LN", "LX"],
-                                  "precious_metals": ["GC", "SI"],
-                                  "natural_gas": ["NG"]})
+    df_comca_att = comca_att(workbook=wb,
+                             input_data=output,
+                             year=2020,
+                             commodity_dict={"energy": ["CL", "CO", "HO", "XB", "QS"],
+                                             "agriculture": ["BO", "C ", "CT", "KC", "KW", "LC", "LH", "S ", "SB", "SM", "W "],
+                                             "industrial_metals": ["HG", "LA", "LN", "LX"],
+                                             "precious_metals": ["GC", "SI"],
+                                             "natural_gas": ["NG"]})
 
-    return output
+    return output, df_comca_att
 
 
 def calculate_factor():
@@ -178,14 +178,14 @@ def calculate_factor():
     wb.sheets['ModelOutput'].range('rngOutput').value = index_return
 
     # Calculate final attribution
-    _ = factor_att(workbook=wb,
-                   input_data=index_return,
-                   year=2020,
-                   strat_dict={"quality": ["M1WDQU", 0.4],
-                               "value": ["M1WDOV", 0.425],
-                               "min_vol": ["M00IWD$O", 0.175],
-                               "momentum": ["M1WD000$", 0],
-                               "main": ["M1WD", -1],
-                               "cost": [None, 19]})
+    df_factor_att = factor_att(workbook=wb,
+                               input_data=index_return,
+                               year=2020,
+                               strat_dict={"quality": ["M1WDQU", 0.4],
+                                           "value": ["M1WDOV", 0.425],
+                                           "min_vol": ["M00IWD$O", 0.175],
+                                           "momentum": ["M1WD000$", 0],
+                                           "main": ["M1WD", -1],
+                                           "cost": [None, 19]})
 
-    return index_return
+    return index_return, df_factor_att

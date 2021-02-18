@@ -6,7 +6,7 @@ def comca_att(workbook, input_data, year, commodity_dict):
     :param input_data: Data to attribute, pandas data frame
     :param year: User inputs year to attribute, integer
     :param commodity_dict: Key-value pairs for commodity categories, dictionary
-    :return: n/a
+    :return: Attribution as pandas data frame
     """
     # Filter data for one calender year
     df_att = input_data.loc[f"01/01/{year}":f"31/12/{year}"]
@@ -33,7 +33,7 @@ def comca_att(workbook, input_data, year, commodity_dict):
     # Output attribution data frame to sheet
     workbook.sheets["python_dashboard"].range("A1").value = df_att
 
-    return
+    return df_att
 
 
 def factor_att(workbook, input_data, year, strat_dict):
@@ -45,7 +45,7 @@ def factor_att(workbook, input_data, year, strat_dict):
     :param year: User inputs year to attribute, integer
     :param strat_dict: Dictionary of lists. Key is type of strategy, position one of value is strategy and position two
                         is the weight. Note cost does not have a strategy name and is set to None.
-    :return: n/a
+    :return: Attribution as pandas data frame
     """
     # Filter data for one calender year
     df_att = input_data.loc[f"01/01/{year}":f"31/12/{year}"]
@@ -70,4 +70,4 @@ def factor_att(workbook, input_data, year, strat_dict):
     # Output attribution data frame to sheet
     workbook.sheets["python_dashboard"].range("A1").value = df_att
 
-    return
+    return df_att
