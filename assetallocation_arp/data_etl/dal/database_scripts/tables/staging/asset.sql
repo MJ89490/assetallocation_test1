@@ -21,7 +21,6 @@ CREATE TABLE "staging"."asset"
 	"asset_subcategory" text NOT NULL,
 	"currency" text NULL,
 	"country" text NULL,
-	"is_tr" boolean NULL,
 	"analytic_category" text NOT NULL,
 	"source" text NULL,
 	"value" numeric(32,16) NOT NULL,

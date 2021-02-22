@@ -41,7 +41,7 @@ LANGUAGE plpgsql
 AS
 $$
 BEGIN
-  INSERT INTO asset.asset (name, description, currency_id, country_id, execution_state_id, asset_group_id, is_tr, ticker)
+  INSERT INTO asset.asset (name, description, currency_id, country_id, execution_state_id, asset_group_id, ticker)
   SELECT DISTINCT
     sa.name,
     sa.description,
@@ -49,7 +49,6 @@ BEGIN
     lco.id as country_id,
     _execution_state_id,
     aag.id as asset_group_id,
-    sa.is_tr,
     sa.ticker
   FROM staging.asset sa
   JOIN lookup.currency lcu ON sa.currency = lcu.currency
@@ -63,8 +62,7 @@ BEGIN
       currency_id = EXCLUDED.currency_id,
       country_id = EXCLUDED.country_id,
       execution_state_id = EXCLUDED.execution_state_id,
-      asset_group_id = EXCLUDED.asset_group_id,
-      is_tr = EXCLUDED.is_tr
+      asset_group_id = EXCLUDED.asset_group_id
 
     /* AVOID NET ZERO CHANGES */
     where exists
@@ -74,16 +72,14 @@ BEGIN
           asset.asset.description,
           asset.asset.currency_id,
           asset.asset.country_id,
-          asset.asset.asset_group_id,
-          asset.asset.is_tr
+          asset.asset.asset_group_id
         EXCEPT
         SELECT
           EXCLUDED.name,
           EXCLUDED.description,
           EXCLUDED.currency_id,
           EXCLUDED.country_id,
-          EXCLUDED.asset_group_id,
-          EXCLUDED.is_tr
+          EXCLUDED.asset_group_id
         )
   ;
 END
