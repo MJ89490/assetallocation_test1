@@ -1,3 +1,11 @@
+/* WHEN inserting a new row into asset_analytics,
+GIVEN there already exists a row where
+  system_tstzrange  = 'infinity'
+  asset_id, business_datetime, category equal to inserting row
+  value not equal to inserting row
+THEN update existing row
+  set upper(system_tstzrange) to now() i.e. time of new record insert
+*/
 CREATE OR REPLACE FUNCTION asset.close_off_asset_analytic()
   RETURNS TRIGGER
    LANGUAGE PLPGSQL

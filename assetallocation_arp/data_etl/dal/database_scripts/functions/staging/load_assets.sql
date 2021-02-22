@@ -1,3 +1,9 @@
+/* Load asset data from staging.asset into asset.asset_group, asset.asset and asset.asset_analytic
+asset.asset_analytic has fkey linked to asset.asset
+asset.asset has fkey linked to asset.asset_group
+Hence insertion order is required to be asset.asset_group then asset.asset then asset.asset_analytic
+Delete any records from staging.asset that were inserted into asset.asset_analytic
+*/
 CREATE OR REPLACE FUNCTION staging.load_assets()
   RETURNS VOID
 LANGUAGE plpgsql
@@ -16,6 +22,12 @@ END
 $$;
 
 
+/* Load asset data from staging.asset into asset.group
+WHEN inserting a row from staging.asset
+GIVEN there already exists a row where
+  category, subcategory equal to inserting row
+THEN do not insert this row
+*/
 CREATE OR REPLACE FUNCTION staging.load_asset_groups_from_asset(
     _execution_state_id INT
 )
@@ -33,6 +45,14 @@ END
 $$;
 
 
+/* Load asset data from staging.asset into asset.asset
+WHEN inserting a row from staging.asset
+GIVEN there already exists a row where
+  ticker equal to inserting row
+  any of (name, description, currency_id, country_id, asset_group_id) not equal to inserting row
+THEN update existing row
+  set name, description, currency_id, country_id, asset_group_id, execution_state_id to inserting row values
+*/
 CREATE OR REPLACE FUNCTION staging.load_assets_from_asset(
   _execution_state_id INT
 )
@@ -85,7 +105,17 @@ BEGIN
 END
 $$;
 
+/* Load asset data from staging.asset into asset.asset_analytic
+trigger before_insert_close_off_old_record will fire on insertion of row
 
+WHEN inserting a row from staging.asset
+GIVEN there already exists a row where
+  system_tstzrange  = 'infinity'
+  asset_id, business_datetime, category, value equal to inserting row
+THEN do not insert this row
+
+Return ids from staging.asset of rows inserted
+*/
 CREATE OR REPLACE FUNCTION staging.load_asset_analytics_from_asset(
   _execution_state_id INT,
   OUT staging_asset_ids INT[]
