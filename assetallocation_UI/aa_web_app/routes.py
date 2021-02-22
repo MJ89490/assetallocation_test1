@@ -103,7 +103,8 @@ def times_strategy():
             show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
 
         elif obj_received_data_times.type_of_request == 'date_selected':
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy,
+                                                                            date_to=obj_received_data_times.date_to )
             run_model_page = 'run_existing_version'
 
     return render_template('times_template.html',

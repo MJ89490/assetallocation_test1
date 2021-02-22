@@ -110,12 +110,17 @@ class ReceivedDataTimes:
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy)
         self.strategy_weight = fs.weight
 
-    def receive_data_existing_versions(self, strategy_version):
+    def receive_data_existing_versions(self, strategy_version, date_to):
         apc = TimesProcCaller()
         self.version_strategy = strategy_version
         self.strategy = apc.select_strategy(strategy_version)
         # Inputs
-        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, strategy_version)
+        fs = apc.select_fund_strategy_results(fund_name=self.fund_name,
+                                              strategy_name=Name.times,
+                                              strategy_version=strategy_version,
+                                              business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
+                                              business_date_to=date_to)
+
         self.strategy_weight = fs.weight
 
         inputs_versions = {'fund': self.fund_name, 'version': strategy_version,
