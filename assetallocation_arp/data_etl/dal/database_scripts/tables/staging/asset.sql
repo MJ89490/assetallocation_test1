@@ -21,10 +21,6 @@ CREATE TABLE "staging"."asset"
 	"asset_subcategory" text NOT NULL,
 	"currency" text NULL,
 	"country" text NULL,
-	"analytic_category" text NOT NULL,
-	"source" text NULL,
-	"value" numeric(32,16) NOT NULL,
-	"business_datetime" timestamp with time zone NOT NULL,
-	"system_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)')
+	"system_datetime" timestamp with time zone NOT NULL DEFAULT now()
 )
 ;
