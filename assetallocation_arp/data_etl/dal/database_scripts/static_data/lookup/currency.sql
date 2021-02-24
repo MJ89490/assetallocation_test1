@@ -33,6 +33,7 @@ VALUES
   ('RUB'),
   ('THB'),
   ('TRY'),
-  ('ZAR')
+  ('ZAR'),
+  ('NGN')
 ON CONFLICT DO NOTHING
 ;

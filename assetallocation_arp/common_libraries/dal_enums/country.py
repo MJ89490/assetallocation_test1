@@ -41,6 +41,9 @@ class Country(Enum):
     AU = auto()
     NZ = auto()
     GB = auto()
+    EM = auto()
+    IT = auto()
+    SP = auto()
 
 
 country_region = {
@@ -82,5 +85,8 @@ country_region = {
     'US': 'North America',
     'AU': 'Pacific',
     'NZ': 'Pacific',
-    'GB': 'United Kingdom'
+    'GB': 'United Kingdom',
+    'EM': 'EM',
+    'IT': 'EU',
+    'SP': 'EU'
 }

@@ -38,6 +38,9 @@ VALUES
   ('US', 'North America'),
   ('AU', 'Pacific'),
   ('NZ', 'Pacific'),
-  ('GB', 'United Kingdom')
+  ('GB', 'United Kingdom'),
+  ('EM', 'EM'),
+  ('IT', 'EU'),
+  ('SP', 'EU')
 ON CONFLICT Do NOTHING
 ;

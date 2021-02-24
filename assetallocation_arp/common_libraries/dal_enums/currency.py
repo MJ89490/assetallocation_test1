@@ -36,3 +36,4 @@ class Currency(Enum):
     THB = auto()
     TRY = auto()
     ZAR = auto()
+    NGN = auto()
