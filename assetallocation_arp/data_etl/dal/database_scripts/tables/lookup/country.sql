@@ -18,8 +18,8 @@ DROP TABLE IF EXISTS "lookup"."country" CASCADE
 
 CREATE TABLE "lookup"."country"
 (
-	"country" char(2)	 NOT NULL,
-	"region" varchar(50)	 NULL,
+	"country" varchar(10)	 NOT NULL,
+	"region" text NULL,
 	"id" serial NOT NULL
 )
 ;
