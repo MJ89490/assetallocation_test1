@@ -4,18 +4,19 @@ import mock
 
 from assetallocation_UI.aa_web_app.data_import import main_import_data as main_in
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
+from assetallocation_arp.common_libraries.dal_enums.asset import FixedIncome, Equity
 
 
 @mock.patch("assetallocation_UI.aa_web_app.data_import.main_import_data.TimesProcCaller")
 def test_main_data_throws_no_errors_valid_inputs(mock_times_proc_caller):
     weights_df = pd.DataFrame([[float(1), nan], [nan, float(4)]],
-                              columns=['US_Equities', 'US_10_y_Bonds'],
+                              columns=[Equity.REITS, FixedIncome['EM Debt Hard']],
                               index=pd.DatetimeIndex(['2020-01-02', '2020-01-09'], dtype='datetime64[ns]',
                                                      name='business_date'))
 
     analytic_df = pd.DataFrame(
         [[float(1), nan], [nan, float(2)], [float(3), nan], [nan, float(4)], [float(5), nan], [nan, float(6)]],
-        columns=pd.MultiIndex(levels=[['a', 'd'], ['US_Equities', 'US_10_y_Bonds']], codes=[[0, 1], [1, 0]],
+        columns=pd.MultiIndex(levels=[['a', 'd'], [Equity.REITS, FixedIncome['EM Debt Hard']]], codes=[[0, 1], [1, 0]],
                               names=['ticker', 'asset_subcategory']), index=pd.MultiIndex(
             levels=[pd.DatetimeIndex(['2019-12-31', '2020-01-02', '2020-01-09'], dtype='datetime64[ns]'),
                     [Signal.momentum, Performance['excess return']]], codes=[[0, 0, 1, 1, 2, 2], [0, 1, 0, 1, 0, 1]],
