@@ -3,9 +3,10 @@ import os
 import logging
 import logging.config
 import pandas as pd
+from datetime import datetime
 from dotenv import load_dotenv
 from typing import List, Any, Dict
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
 # Load .env file to get database attributes
@@ -17,11 +18,11 @@ logger = logging.getLogger("sLogger")
 
 
 class Db:
-    procs = ["staging.load_assets"]
+    procs = ["staging.load_assets", "staging.load_asset_analytics"]
 
     def __init__(self) -> None:
         """
-        Db class for interacting with a database
+        Db class for interacting with a database
         """
         user = os.getenv("USER")
         password = os.getenv("PASSWORD")
@@ -59,11 +60,26 @@ class Db:
         Write data frame to asset staging table.
         :return:
         """
-        logging.info("Writing data frame to SQL")
+        logging.info("Writing data frame to Asset staging table")
         # Write pandas data frame to SQL table
         try:
             df.to_sql(name="asset", con=self.engine, schema="staging", if_exists="append", index=False, **kwargs)
-            logging.info("Data frame written to Asset table")
+            logging.info("Data frame written to Asset staging table")
+            return
+        except SQLAlchemyError as e:
+            logger.info(e)
+
+    def df_to_staging_asset_analytic(self, df: "pd.DataFrame", **kwargs):
+        """
+        Write data frame to asset analytic staging table.
+        :return:
+        """
+        logging.info("Writing data frame to Asset Analytic staging table")
+        # Write pandas data frame to SQL table
+        try:
+            df.to_sql(name="asset_analytic", con=self.engine, schema="staging", if_exists="append", index=False,
+                      **kwargs)
+            logging.info("Data frame written to Asset Analytic table")
             return
         except SQLAlchemyError as e:
             logger.info(e)
@@ -76,15 +92,15 @@ class Db:
         """
         logger.info("Reading table from database")
 
+        query = """
+                SELECT ticker, description, value, business_datetime
+                FROM asset.asset_analytic
+                LEFT JOIN asset.asset
+                ON asset_analytic.asset_id = asset.id
+                """
         try:
             # Read given table from database as data frame
-            df = pd.read_sql_table(table_name="asset",
-                                   schema="staging",
-                                   columns=["ticker",
-                                            "description",
-                                            "value",
-                                            "business_datetime"],
-                                   con=self.engine)
+            df = pd.read_sql(query, con=self.engine)
 
             # Convert date column to python datetime
             df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
@@ -106,7 +122,9 @@ class Db:
         # Read table as pandas data frame
         query = """
                 SELECT DISTINCT ON (ticker) ticker, description, business_datetime  
-                FROM staging.asset
+                FROM asset.asset
+                LEFT JOIN asset.asset_analytic
+                ON asset.id = asset_analytic.id
                 ORDER BY ticker, business_datetime DESC
                 """
         try:
@@ -114,6 +132,7 @@ class Db:
 
             # Convert date column to python datetime
             # Add 1 day to date column
+            df["business_datetime"].fillna(datetime(1900, 1, 1).strftime("%Y%m%d"), inplace=True)
             df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
             df["business_datetime"] = df["business_datetime"] + pd.Timedelta(days=1)
             df["business_datetime"] = df["business_datetime"].dt.strftime("%Y%m%d")

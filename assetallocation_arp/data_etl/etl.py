@@ -38,10 +38,8 @@ class ETLProcess:
             self.df["description"] = self.df["description"].astype(str)
             self.df["asset_category"] = self.df["asset_category"].astype(str)
             self.df["asset_subcategory"] = self.df["asset_subcategory"].astype(str)
-            self.df["currency"] = self.df["currency"].astype(str)
-            self.df["country"] = self.df["country"].astype(str)
-            self.df["is_tr"] = self.df["is_tr"].astype(str)
-            self.df["analytic_category"] = self.df["analytic_category"].astype(str)
+            self.df["currency"] = self.df["currency"].astype(int)
+            self.df["country"] = self.df["country"].astype(int)
             self.df["business_datetime"] = datetime(1900, 1, 1).strftime("%Y%m%d")
         except ValueError:
             logging.info("Invalid data type inside input data")
@@ -64,7 +62,7 @@ class ETLProcess:
         df_list = []
         for index, row in self.df.iterrows():
             self.df_iteration = bbg.historicalRequest(securities=row["ticker"],
-                                                      fields=row["description"],
+                                                      fields="PX_LAST",
                                                       startdate=row["business_datetime"],
                                                       enddate=(datetime.today() - timedelta(days=1)).strftime("%Y%m%d"))
 
@@ -89,7 +87,7 @@ class ETLProcess:
 
         # Rename column headers to match table in database
         col_dict = {"bbergsymbol": "ticker",
-                    "bbergfield": "description",
+                    "bbergfield": "analytic_category",
                     "bbergdate": "business_datetime",
                     "bbergvalue": "value",
                     "status": "source"}
@@ -97,16 +95,9 @@ class ETLProcess:
 
         try:
             # Convert columns to respective format types and fill in relevant columns needed for database
+            del self.df_bbg['source']
             self.df_bbg["ticker"] = self.df_bbg["ticker"].astype(str)
-            self.df_bbg["name"] = "TEST"#self.df_input["name"]
-            self.df_bbg["description"] = self.df_bbg["description"].astype(str)
-            self.df_bbg["asset_category"] = "TEST"# self.df_input["asset_category"]
-            self.df_bbg["asset_subcategory"] = "TEST"# self.df_input["asset_subcategory"]
-            self.df_bbg["currency"] = "TEST"# self.df_input["currency"]
-            self.df_bbg["country"] = "TEST"# self.df_input["country"]
-            self.df_bbg["is_tr"] = "TRUE"# self.df_input["is_tr"]
-            self.df_bbg["analytic_category"] = "TEST"# self.df_input["analytic_category"]
-            self.df_bbg["source"] = self.df_bbg["source"].astype(str)
+            self.df_bbg["source"] = "Bloomberg"
             self.df_bbg["value"] = self.df_bbg["value"].astype(float)
             self.df_bbg["business_datetime"] = pd.to_datetime(self.df_bbg["business_datetime"])
             logger.info("Columns converted to respective data types")
@@ -115,16 +106,32 @@ class ETLProcess:
         except ValueError:
             logging.info("Invalid data type inside Bloomberg data")
 
-    def upload_data(self):
+    def upload_asset_analytic(self):
         """
         This function uploads the cleaned Bloomberg data to the postgreSQL database.
         :return:
         """
-        logger.info("Writing data to database")
+        logger.info("Writing data Asset Analytic")
 
         # Call function that uploads data frame to SQL database from respective class
         db = Db()
-        db.df_to_staging_asset(self.df_bbg)
-        logger.info("Data written to database")
+        db.df_to_staging_asset_analytic(self.df_bbg)
+        db.call_proc(proc_name="staging.load_asset_analytics", proc_params=[])
+        logger.info("Data written to Asset Analytic")
+
+        return
+
+    def upload_asset(self):
+        """
+        This function uploads the cleaned Bloomberg data to the postgreSQL database.
+        :return:
+        """
+        logger.info("Writing data to Asset")
+
+        # Call function that uploads data frame to SQL database from respective class
+        db = Db()
+        db.df_to_staging_asset(self.df)
+        db.call_proc(proc_name="staging.load_assets", proc_params=[])
+        logger.info("Data written to Asset")
 
         return

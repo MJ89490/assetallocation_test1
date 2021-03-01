@@ -50,8 +50,11 @@ def get_data(df, name):
     df = df[df["ticker"] == name]
     # Sort data frame by latest date
     df.sort_values(by=["business_datetime"], inplace=True, ascending=True)
-    # Calculate daily return (natural log of today's value / yesterday's value)
-    df["log_return"] = np.log(df["value"]).diff()
+    try:
+        # Calculate daily return (natural log of today's value / yesterday's value)
+        df["log_return"] = np.log(df["value"]).diff()
+    except AttributeError:
+        df["log_return"] = 100
 
     # Get basic stats for value and log return columns
     stats.text = str(df[["value", "log_return"]].describe())
@@ -156,10 +159,11 @@ def file_input_handle(attr, old, new):
 
     # Run data frame through ETL class
     etl = ETLProcess(df=df_input)
-    etl.clean_input()
-    etl.bbg_data()
-    etl.clean_data()
-    etl.upload_data()
+    # etl.clean_input()
+    # etl.upload_asset_analytic()
+    # etl.bbg_data()
+    # etl.clean_data()
+    etl.upload_asset()
     logger.info("File input handle complete")
 
     return
@@ -170,7 +174,6 @@ def refresh_button_handle():
     This function handles when the refresh button Bokeh widget is changed.
     :return:
     """
-
     if db_df["business_datetime"].max().date() != datetime.today().date() - timedelta(days=1):
         # Run data frame through ETL class
         db = Db()
@@ -179,7 +182,7 @@ def refresh_button_handle():
         etl = ETLProcess(df=df_tickers)
         etl.bbg_data()
         etl.clean_data()
-        etl.upload_data()
+        etl.upload_asset_analytic()
     else:
         logging.info("Data is up to date")
     logger.info("Refresh button handle complete")
@@ -192,6 +195,11 @@ def refresh_button_handle():
 db = Db()
 db_df = db.read_from_db()
 instrument_list = db_df["ticker"].unique().tolist()
+
+if not instrument_list:
+    instrument_list = ["Instrument A"]
+else:
+    pass
 
 # Create drop down, file input, refresh and stats widgets
 drop_down = Select(options=instrument_list, width=200)
@@ -222,3 +230,6 @@ layout_with_widgets = column(widgets, charts_with_table, stats)
 
 # Create Dashboard with respective layout
 curdoc().add_root(layout_with_widgets)
+
+
+# bokeh serve assetallocation_arp/data_etl/plot.py
