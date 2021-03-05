@@ -103,10 +103,13 @@ class ReceivedDataTimes:
         apc = TimesProcCaller()
         self.version_strategy = max(apc.select_strategy_versions(Name.times))
         # TODO CHANGE DATE TO TO FLEXIBLE DATE
-        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
+        # TODO EACH STRATEGY VERSIONS RETURN NONE
+        # for v in apc.select_strategy_versions(Name.times):
+        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy ,
                                               business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
                                               business_date_to=pd.to_datetime('12/08/2000', format='%d/%m/%Y')
                                               )
+        print(fs)
         self.strategy_weight = fs.weight
 
     def receive_data_selected_version_sidebar_dashboard(self):
