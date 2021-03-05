@@ -25,7 +25,6 @@ CREATE TABLE "asset"."asset"
 	"country_id" integer NULL,
 	"execution_state_id" integer NULL,
 	"asset_group_id" integer NOT NULL,
-	"is_tr" boolean NULL,
 	"ticker" varchar(50)	 NOT NULL
 )
 ;
