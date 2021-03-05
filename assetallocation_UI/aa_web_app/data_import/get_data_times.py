@@ -115,11 +115,16 @@ class ReceivedDataTimes:
         self.version_strategy = strategy_version
         self.strategy = apc.select_strategy(strategy_version)
         # Inputs
+        print(self.fund_name)
+        print(Name.times)
+        print(strategy_version)
+        print(pd.to_datetime('01/01/2000', format='%d/%m/%Y'))
+        print(date_to)
         fs = apc.select_fund_strategy_results(fund_name=self.fund_name,
                                               strategy_name=Name.times,
                                               strategy_version=strategy_version,
                                               business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
-                                              business_date_to=date_to)
+                                              business_date_to=pd.to_datetime(date_to, format='%d/%m/%Y'))
 
         self.strategy_weight = fs.weight
 
