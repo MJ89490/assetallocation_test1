@@ -8,20 +8,20 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy_results(
 RETURNS TABLE(
   python_code_version varchar,
   strategy_weight numeric,
-  asset_subcategory varchar,
+  asset_subcategory text,
   business_date date,
   asset_weight_frequency arp.frequency,
   theoretical_asset_weight numeric,
   implemented_asset_weight numeric,
-  strategy_analytics arp.category_subcategory_frequency_value_comp_name_comp_value,
-  strategy_asset_analytics arp.category_subcategory_frequency_value
+  strategy_analytics arp.category_subcategory_frequency_value_comp_name_comp_value[],
+  strategy_asset_analytics arp.category_subcategory_frequency_value[]
 )
 AS
 $$
 DECLARE
-  strategy_id int;
+  _strategy_id int;
 BEGIN
-  select arp.select_strategy_id(strategy_name, strategy_version) into strategy_id;
+  select arp.select_strategy_id(strategy_name, strategy_version) into _strategy_id;
 
   RETURN QUERY
     WITH fund_strategy_weight_cte (fund_id, weight) as (
@@ -33,8 +33,8 @@ BEGIN
         JOIN arp.fund_strategy_weight fsw ON fsw.fund_id = f.id
       WHERE
         f.name = select_fund_strategy_results.fund_name
-        AND fsw.strategy_id = select_fund_strategy_results.strategy_id
-        AND upper_inf(fsw.system_tstzrange)
+        AND fsw.strategy_id = _strategy_id
+        AND upper(fsw.system_tstzrange) = 'infinity'
     ),
     fund_strategy_asset_weight_cte (fund_id, model_instance_id, asset_subcategory, business_date, frequency, theoretical_weight, implemented_weight) as (
       SELECT
@@ -52,14 +52,14 @@ BEGIN
         JOIN asset.asset a on a.id = saw.asset_id
         JOIN asset.asset_group ag on ag.id = a.asset_group_id
       WHERE
-        upper_inf(fsaw.system_tstzrange)
-        AND saw.strategy_id = select_fund_strategy_results.strategy_id
+        upper(fsaw.system_tstzrange) = 'infinity'
+        AND saw.strategy_id = _strategy_id
     ),
     model_instance_cte (fund_id, model_instance_id, python_code_version) as (
       SELECT
-        fund_id,
-        model_instance_id,
-        python_code_version
+        fsawc.fund_id,
+        fsawc.model_instance_id,
+        mi.python_code_version
       FROM
         fund_strategy_asset_weight_cte fsawc
         JOIN config.model_instance mi ON mi.id = fsawc.model_instance_id
@@ -132,6 +132,14 @@ BEGIN
           ON fund_strategy_asset_weight_cte.model_instance_id = fund_strategy_asset_weight_cte.model_instance_id
           AND fund_strategy_asset_weight_cte.asset_subcategory = fund_strategy_asset_weight_cte.asset_subcategory
           AND fund_strategy_asset_weight_cte.business_date = fund_strategy_asset_weight_cte.business_date
+      GROUP BY
+        model_instance_cte.python_code_version,
+        fund_strategy_weight_cte.weight,
+        fund_strategy_asset_weight_cte.asset_subcategory,
+        fund_strategy_asset_weight_cte.business_date,
+        fund_strategy_asset_weight_cte.frequency,
+        fund_strategy_asset_weight_cte.theoretical_weight,
+        fund_strategy_asset_weight_cte.implemented_weight
   ;
 END
 $$

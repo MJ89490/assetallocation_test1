@@ -1,6 +1,5 @@
 DROP TYPE IF EXISTS  arp.category_subcategory_frequency_value_comp_name_comp_value CASCADE;
 CREATE TYPE arp.category_subcategory_frequency_value_comp_name_comp_value AS (
-  business_date date,
   category text,
   subcategory text,
   frequency arp.frequency,
