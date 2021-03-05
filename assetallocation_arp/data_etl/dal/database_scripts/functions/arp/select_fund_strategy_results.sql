@@ -34,7 +34,7 @@ BEGIN
       WHERE
         f.name = select_fund_strategy_results.fund_name
         AND fsw.strategy_id = select_fund_strategy_results.strategy_id
-        AND upper_inf(fsw.system_tstzrange)
+        AND upper(fsw.system_tstzrange) = 'infinity'
     ),
     fund_strategy_asset_weight_cte (fund_id, model_instance_id, asset_subcategory, business_date, frequency, theoretical_weight, implemented_weight) as (
       SELECT
@@ -52,7 +52,7 @@ BEGIN
         JOIN asset.asset a on a.id = saw.asset_id
         JOIN asset.asset_group ag on ag.id = a.asset_group_id
       WHERE
-        upper_inf(fsaw.system_tstzrange)
+        upper(fsaw.system_tstzrange) = 'infinity'
         AND saw.strategy_id = select_fund_strategy_results.strategy_id
     ),
     model_instance_cte (fund_id, model_instance_id, python_code_version) as (

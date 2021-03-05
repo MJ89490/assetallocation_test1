@@ -6,21 +6,19 @@
 
 /* Drop Tables */
 
-DROP TABLE IF EXISTS "staging"."asset" CASCADE
+DROP TABLE IF EXISTS "staging"."asset_analytic" CASCADE
 ;
 
 /* Create Tables */
 
-CREATE TABLE "staging"."asset"
+CREATE TABLE "staging"."asset_analytic"
 (
 	"id" serial NOT NULL,
 	"ticker" text NOT NULL,
-	"name" text	NULL,
-	"description" text NULL,
-	"asset_category" text NOT NULL,
-	"asset_subcategory" text NOT NULL,
-	"currency" text NULL,
-	"country" text NULL,
-	"system_datetime" timestamp with time zone NOT NULL DEFAULT now()
+	"analytic_category" text NOT NULL,
+	"source" text NOT NULL,
+	"value" numeric(32,16) NOT NULL,
+	"business_datetime" timestamp with time zone NOT NULL,
+	"system_datetime" timestamp with time zone  NOT NULL DEFAULT now()
 )
 ;
