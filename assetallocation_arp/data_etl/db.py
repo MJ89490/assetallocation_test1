@@ -55,20 +55,6 @@ class Db:
 
         return results
 
-    def df_to_staging_asset(self, df: "pd.DataFrame", **kwargs):
-        """
-        Write data frame to asset staging table.
-        :return:
-        """
-        logging.info("Writing data frame to Asset staging table")
-        # Write pandas data frame to SQL table
-        try:
-            df.to_sql(name="asset", con=self.engine, schema="staging", if_exists="append", index=False, **kwargs)
-            logging.info("Data frame written to Asset staging table")
-            return
-        except SQLAlchemyError as e:
-            logger.info(e)
-
     def df_to_staging_asset_analytic(self, df: "pd.DataFrame", **kwargs):
         """
         Write data frame to asset analytic staging table.
@@ -84,13 +70,13 @@ class Db:
         except SQLAlchemyError as e:
             logger.info(e)
 
-    def read_from_db(self):
+    def read_from_asset(self):
         """
-        This function reads a given table from the postgres database as a pandas data frame. Relevant columns are
+        This function reads the Asset table from the postgres database as a pandas data frame. Relevant columns are
         converted to pandas datetime.
         :return: table as pandas data frame
         """
-        logger.info("Reading table from database")
+        logger.info("Reading Asset table from database")
 
         query = """
                 SELECT ticker, description, value, business_datetime
@@ -104,7 +90,7 @@ class Db:
 
             # Convert date column to python datetime
             df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
-            logger.info("Reading from data base complete")
+            logger.info("Reading completed from Asset table")
 
             return df
 
@@ -116,7 +102,7 @@ class Db:
         This function retrieves the latest tickets table as a pandas data frame.
         :return: tickers with latest price as pandas data frame and also list
         """
-        logger.info("Reading tickers with latest price from database")
+        logger.info("Reading tickers from database")
 
         # Define postgreSQL query to get table of tickers with the latest price
         # Read table as pandas data frame
@@ -140,7 +126,7 @@ class Db:
             # Get existing tickers from database as list
             ticker_list = df["ticker"].tolist()
 
-            logger.info("Table of tickers imported")
+            logger.info("Reading completed for tickers")
 
             return df, ticker_list
 

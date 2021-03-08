@@ -108,30 +108,16 @@ class ETLProcess:
 
     def upload_asset_analytic(self):
         """
-        This function uploads the cleaned Bloomberg data to the postgreSQL database.
+        This function uploads the cleaned Bloomberg data to the Asset Analytic postgreSQL database.
         :return:
         """
-        logger.info("Writing data Asset Analytic")
+        logger.info("Writing data Asset Analytic staging table")
 
         # Call function that uploads data frame to SQL database from respective class
         db = Db()
         db.df_to_staging_asset_analytic(self.df_bbg)
         db.call_proc(proc_name="staging.load_asset_analytics", proc_params=[])
-        logger.info("Data written to Asset Analytic")
 
-        return
-
-    def upload_asset(self):
-        """
-        This function uploads the cleaned Bloomberg data to the postgreSQL database.
-        :return:
-        """
-        logger.info("Writing data to Asset")
-
-        # Call function that uploads data frame to SQL database from respective class
-        db = Db()
-        db.df_to_staging_asset(self.df)
-        db.call_proc(proc_name="staging.load_assets", proc_params=[])
-        logger.info("Data written to Asset")
+        logger.info("Data written to Asset Analytic staging table")
 
         return

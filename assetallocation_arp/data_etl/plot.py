@@ -4,13 +4,11 @@ import logging
 import logging.config
 import pandas as pd
 import numpy as np
-from pybase64 import b64decode
-import io
 from datetime import datetime, timedelta
 from bokeh.io import curdoc
 from bokeh.plotting import figure
 from bokeh.layouts import row, column
-from bokeh.models import ColumnDataSource, Select, PreText, HoverTool, FileInput, Button, TableColumn, DateFormatter, \
+from bokeh.models import ColumnDataSource, Select, PreText, HoverTool, Button, TableColumn, DateFormatter, \
     DataTable
 from db import Db
 from etl import ETLProcess
@@ -143,32 +141,6 @@ def drop_down_handle(attr, old, new):
     return
 
 
-def file_input_handle(attr, old, new):
-    """
-    This function handles when a file is uploaded to the FileInput Bokeh widget.
-    :param attr:
-    :param old:
-    :param new:
-    :return:
-    """
-    # Read user input .csv file as pandas data frame
-    data_input = b64decode(new)
-    data_input_bytes = io.BytesIO(data_input)
-    df_input = pd.read_csv(data_input_bytes)
-    logger.info(".csv file read as data frame")
-
-    # Run data frame through ETL class
-    etl = ETLProcess(df=df_input)
-    # etl.clean_input()
-    # etl.upload_asset_analytic()
-    # etl.bbg_data()
-    # etl.clean_data()
-    etl.upload_asset()
-    logger.info("File input handle complete")
-
-    return
-
-
 def refresh_button_handle():
     """
     This function handles when the refresh button Bokeh widget is changed.
@@ -193,7 +165,7 @@ def refresh_button_handle():
 # Open data base connection and read current data as data frame
 # Get list of instruments from data frame as a unique list
 db = Db()
-db_df = db.read_from_db()
+db_df = db.read_from_asset()
 instrument_list = db_df["ticker"].unique().tolist()
 
 if not instrument_list:
@@ -204,7 +176,6 @@ else:
 # Create drop down, file input, refresh and stats widgets
 drop_down = Select(options=instrument_list, width=200)
 refresh_button = Button(label="Refresh", width=200)
-file_input = FileInput()
 stats = PreText()
 columns = [TableColumn(field="ticker", title="ticker"),
            TableColumn(field="description", title="description"),
@@ -219,11 +190,10 @@ data_table = DataTable(source=col_data_source, columns=columns, width=800, heigh
 
 # Register widget attribute change
 drop_down.on_change("value", drop_down_handle)
-file_input.on_change("value", file_input_handle)
 refresh_button.on_click(refresh_button_handle)
 
 # Define layout of dashboard
-widgets = row(drop_down, refresh_button, file_input)
+widgets = row(drop_down, refresh_button)
 charts = column(price_chart, return_chart)
 charts_with_table = row(charts, data_table)
 layout_with_widgets = column(widgets, charts_with_table, stats)
