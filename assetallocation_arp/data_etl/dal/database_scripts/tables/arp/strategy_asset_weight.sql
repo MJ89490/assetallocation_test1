@@ -34,6 +34,9 @@ ALTER TABLE "arp"."strategy_asset_weight" ADD CONSTRAINT "strategy_asset_weight_
 	PRIMARY KEY ("id")
 ;
 
+CREATE INDEX "arp"."strategy_asset_weight_business_date_idx" ON "arp"."strategy_asset_weight" (business_date)
+;
+
 ALTER TABLE
 	"arp"."strategy_asset_weight"
 ADD CONSTRAINT

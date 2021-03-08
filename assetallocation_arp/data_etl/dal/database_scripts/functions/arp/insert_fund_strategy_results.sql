@@ -78,7 +78,7 @@ BEGIN
     fsw.fund_id = select_current_fund_strategy_weight_id_for_weight.fund_id
     AND fsw.strategy_id = select_current_fund_strategy_weight_id_for_weight.strategy_id
     AND fsw.weight = select_current_fund_strategy_weight_id_for_weight.weight
-    AND upper_inf(fsw.system_tstzrange)
+    AND upper(fsw.system_tstzrange) = 'infinity'
   ;
 END
 $$
@@ -159,7 +159,7 @@ BEGIN
       strategy_id, model_instance_id, weights, execution_state_id
   ) into id_weights;
   PERFORM arp.insert_fund_asset_weights(
-      fund_id, id_weights, set_by_id, execution_state_id
+      fund_id, strategy_id, id_weights, set_by_id, execution_state_id
   );
 END
 $$
@@ -206,9 +206,9 @@ END
 $$
 LANGUAGE PLPGSQL;
 
-
 CREATE OR REPLACE FUNCTION arp.insert_fund_asset_weights(
     fund_id int,
+    strategy_id int,
     id_weights arp.id_weight[],
     set_by_id varchar,
     execution_state_id int
@@ -219,7 +219,7 @@ $$
 DECLARE
   business_date_range daterange;
 BEGIN
-  -- per fund, per strategy, per asset_id per business datetime there should be one value
+--   per fund, per strategy version / id, per asset_id per business datetime there should be one value
   SELECT
     daterange(min(saw.business_date), max(saw.business_date) + 1)
   INTO
@@ -229,18 +229,21 @@ BEGIN
     JOIN unnest(id_weights) as iw ON saw.id = (iw).id
   ;
 
-  UPDATE arp.fund_strategy_asset_weight
-  SET system_tstzrange =  tstzrange(
-        lower(fsaw.system_tstzrange),
-        now(),
-        '[)'
-    )
-  FROM
-    arp.fund_strategy_asset_weight fsaw
-    JOIN arp.strategy_asset_weight saw ON fsaw.strategy_asset_weight_id = saw.id
-  WHERE
-    saw.business_date <@ business_date_range
-  ;
+   UPDATE arp.fund_strategy_asset_weight fsaw
+   SET system_tstzrange =  tstzrange(
+         lower(fsaw.system_tstzrange),
+         now(),
+         '[)'
+     )
+   FROM
+     arp.strategy_asset_weight saw
+   WHERE
+     fsaw.strategy_asset_weight_id = saw.id
+     AND saw.business_date <@ business_date_range
+     AND fsaw.fund_id = insert_fund_asset_weights.fund_id
+     AND saw.strategy_id = insert_fund_asset_weights.strategy_id
+     AND upper(fsaw.system_tstzrange) = 'infinity'
+   ;
 
   INSERT INTO arp.fund_strategy_asset_weight(
     fund_id,
