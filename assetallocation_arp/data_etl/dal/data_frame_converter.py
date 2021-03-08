@@ -50,13 +50,13 @@ class DataFrameConverter:
     @staticmethod
     def df_to_asset_analytics(
             analytics: pd.DataFrame, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
-            frequency: Union[None, str, Frequency] = None
+            ticker_map: [Dict[str, str]], frequency: Union[None, str, Frequency] = None
     ) -> List[FundStrategyAssetAnalytic]:
         """Transform DataFrame with index of business_date and columns of asset_subcategory to list of
         FundStrategyAssetAnalytics
         """
         return [
-            FundStrategyAssetAnalytic(asset_subcategory, index, category, subcategory, float(val), frequency)
+            FundStrategyAssetAnalytic(ticker_map.get(asset_subcategory, ''), asset_subcategory, index, category, subcategory, float(val), frequency)
             for asset_subcategory, data in analytics.items() for index, val in data.iteritems() if pd.notna(val)
         ]
 
@@ -87,7 +87,8 @@ class DataFrameConverter:
 class TimesDataFrameConverter(DataFrameConverter):
     @classmethod
     def create_asset_analytics(
-            cls, signals: pd.DataFrame, returns: pd.DataFrame, r: pd.DataFrame, signals_frequency: Frequency
+            cls, signals: pd.DataFrame, returns: pd.DataFrame, r: pd.DataFrame, signals_frequency: Frequency,
+            ticker_map: Optional[Dict[str, str]] = None
     ) -> List[FundStrategyAssetAnalytic]:
         """
         :param signals: columns named after asset_subcategory, index of dates
@@ -97,18 +98,21 @@ class TimesDataFrameConverter(DataFrameConverter):
         :return:
         """
         analytics = []
+        ticker_map = ticker_map or {}
 
-        analytics.extend(cls.df_to_asset_analytics(signals, Category.signal, Signal.momentum, signals_frequency))
-        analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"], Frequency.daily))
-        analytics.extend(cls.df_to_asset_analytics(r, Category.performance, Performance["excess return index"], Frequency.daily))
+        analytics.extend(cls.df_to_asset_analytics(signals, Category.signal, Signal.momentum, ticker_map, signals_frequency))
+        analytics.extend(cls.df_to_asset_analytics(returns, Category.performance, Performance["excess return"], ticker_map, Frequency.daily))
+        analytics.extend(cls.df_to_asset_analytics(r, Category.performance, Performance["excess return index"], ticker_map, Frequency.daily))
 
         return analytics
 
 
 class FicaDataFrameConverter(DataFrameConverter):
     @classmethod
-    def create_asset_analytics(cls, carry_roll: pd.DataFrame, cum_contribution: pd.DataFrame, carry_daily: pd.DataFrame,
-                               return_daily: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
+    def create_asset_analytics(
+            cls, carry_roll: pd.DataFrame, cum_contribution: pd.DataFrame, carry_daily: pd.DataFrame,
+            return_daily: pd.DataFrame, ticker_map: Optional[Dict[str, str]] = None
+    ) -> List[FundStrategyAssetAnalytic]:
         """
         :param carry_roll: columns named after countries, index of dates
         :param cum_contribution: columns named after countries, index of dates
@@ -117,11 +121,12 @@ class FicaDataFrameConverter(DataFrameConverter):
         :return:
         """
         analytics = []
+        ticker_map = ticker_map or {}
 
-        analytics.extend(cls.df_to_asset_analytics(carry_roll, Category.signal, Signal.carry, Frequency.monthly))
-        analytics.extend(cls.df_to_asset_analytics(cum_contribution, Category.performance, Performance['total return'], Frequency.monthly))
-        analytics.extend(cls.df_to_asset_analytics(return_daily, Category.Performance, Performance['total return'], Frequency.daily))
-        analytics.extend(cls.df_to_asset_analytics(carry_daily, Category.performance, Performance["excess return index"]))
+        analytics.extend(cls.df_to_asset_analytics(carry_roll, Category.signal, Signal.carry, ticker_map, Frequency.monthly))
+        analytics.extend(cls.df_to_asset_analytics(cum_contribution, Category.performance, Performance['total return'], ticker_map, Frequency.monthly))
+        analytics.extend(cls.df_to_asset_analytics(return_daily, Category.Performance, Performance['total return'], ticker_map, Frequency.daily))
+        analytics.extend(cls.df_to_asset_analytics(carry_daily, Category.performance, Performance["excess return index"], ticker_map))
 
         return analytics
 
@@ -169,12 +174,13 @@ class FicaDataFrameConverter(DataFrameConverter):
 
 class FxDataFrameConverter(DataFrameConverter):
     @classmethod
-    def create_asset_analytics(cls, contribution: pd.DataFrame) -> List[FundStrategyAssetAnalytic]:
+    def create_asset_analytics(cls, contribution: pd.DataFrame, ticker_map: Optional[Dict[str, str]] = None) -> List[FundStrategyAssetAnalytic]:
         """
         :param contribution: columns named after countries, index of dates
         :return:
         """
-        return cls.df_to_asset_analytics(contribution, Category.Performance, Performance['total return'], Frequency.monthly)
+        ticker_map = ticker_map or {}
+        return cls.df_to_asset_analytics(contribution, Category.Performance, Performance['total return'], ticker_map, Frequency.monthly)
 
     @classmethod
     def create_strategy_analytics(
@@ -200,15 +206,17 @@ class FxDataFrameConverter(DataFrameConverter):
 class MavenDataFrameConverter(DataFrameConverter):
     @classmethod
     def create_asset_analytics(
-            cls, value: pd.DataFrame, momentum: pd.DataFrame, frequency: Frequency
+            cls, value: pd.DataFrame, momentum: pd.DataFrame, frequency: Frequency,
+            ticker_map: Optional[Dict[str, str]] = None
     ) -> List[FundStrategyAssetAnalytic]:
         """
         :param value: columns named after asset subcategory, index of dates
         :param momentum: columns named after asset subcategory, index of dates
         :return:
         """
-        analytics = cls.df_to_asset_analytics(value, Category.Signal, Signal.value, frequency)
-        analytics.extend(cls.df_to_asset_analytics(momentum, Category.Signal, Signal.momentum, frequency))
+        ticker_map = ticker_map or {}
+        analytics = cls.df_to_asset_analytics(value, Category.Signal, Signal.value, ticker_map, frequency)
+        analytics.extend(cls.df_to_asset_analytics(momentum, Category.Signal, Signal.momentum, ticker_map, frequency))
         return analytics
 
     @classmethod

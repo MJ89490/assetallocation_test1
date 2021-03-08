@@ -236,13 +236,13 @@ class FundStrategyAnalytic:
 # noinspection PyAttributeOutsideInit
 class FundStrategyAssetAnalytic(FundStrategyAnalytic):
     def __init__(
-            self, asset_subcategory: Union[str, AssetSubcategory], business_date: date, category: Union[str, Category],
+            self, asset_ticker: str, asset_subcategory: Union[str, AssetSubcategory], business_date: date, category: Union[str, Category],
             subcategory: Union[str, Performance, Signal], value: float, frequency: Union[str, Frequency]
     ) -> None:
         """FundStrategyAssetAnalytic class to hold data from database"""
         super().__init__(business_date, category, subcategory, value, frequency)
         self.asset_subcategory = asset_subcategory
-        self.asset_ticker = None
+        self.asset_ticker = asset_ticker
 
     @property
     def asset_ticker(self) -> Optional[str]:
