@@ -33,6 +33,8 @@ ALTER TABLE "arp"."fund_strategy_asset_weight" ADD CONSTRAINT "fund_strategy_ass
 	PRIMARY KEY ("id")
 ;
 
+CREATE INDEX "fund_strategy_asset_weight_upper_system_tstzrange_idx" ON "arp"."fund_strategy_asset_weight" (upper(system_tstzrange));
+
 /* Create Foreign Key Constraints */
 
 ALTER TABLE "arp"."fund_strategy_asset_weight" ADD CONSTRAINT "fund_strategy_asset_weight_execution_state_fkey"
