@@ -82,6 +82,7 @@ def times_strategy():
     show_versions = 'show_versions_not_available'
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
+    show_earth = 'show_earth'
     assets = []
     show_calendar, fund_selected = '', ''
 
@@ -96,7 +97,7 @@ def times_strategy():
 
     else:
         if obj_received_data_times.type_of_request == 'fund_selected':
-            show_versions, show_dashboard = 'show_versions_available', 'show_dashboard'
+            show_versions, show_dashboard, show_earth = 'show_versions_available', 'show_dashboard', 'not_show_earth'
             fund_selected = obj_received_data_times.fund_name
 
         elif obj_received_data_times.type_of_request == 'version_selected':
@@ -114,6 +115,7 @@ def times_strategy():
                            existing_funds=form.existing_funds,
                            show_calendar=show_calendar,
                            show_versions=show_versions,
+                           show_earth=show_earth,
                            run_model_page=run_model_page,
                            show_dashboard=show_dashboard,
                            assets=assets,

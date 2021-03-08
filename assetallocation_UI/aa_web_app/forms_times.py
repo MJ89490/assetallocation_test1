@@ -50,6 +50,9 @@ class InputsTimesModel(FlaskForm):
     version_choices = list(zip(existing_versions, existing_versions))
     input_versions_times = existing_versions
 
+    # Weight of the strategy
+
+
     # Fund names
     existing_funds = get_fund_names()
     input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
