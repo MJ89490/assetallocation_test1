@@ -3,35 +3,6 @@
 <html>
     <head>
         <title>{{ title }}</title>
-
-        <style>
-            .card-custom-wide {
-  overflow: hidden;
-  border: 0;
-  width: 50%;
-  box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
-  background-color: pink;
-}
-
-
-
-
-.card {
-  border-radius: 90%;
-  box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
-  position: absolute;
-  top: 20px;
-  left: 43.3%;
-  left: calc(50% - 75px);
-  width: 140px;
-  height: 150px;
-   background-color: pink;
-}
-
-
-
-
-        </style>
     </head>
 
 <body>
@@ -42,8 +13,7 @@
                 <h1 class="title-page-model"></h1>
             </div>
 
-
-            <div class="row">
+            <div class="row row-model">
                 <div class="col-lg-3"></div>
                 <div class="col-lg-6">
                     <div class="card card-custom-wide">
@@ -74,39 +44,35 @@
                                 <center>
                                     <label class="header-pretitle-version-card"><b>3. Select a version</b></label>
                                     <p class="select-fund-choice">In this section, you have the possibility to
-                                        <u>create a new version of a strategy</u> for {{fund_selected}} <b>OR</b> to <u>run an existing version</u> of {{fund_selected}}</p>
+                                        <u>create a new version of a strategy</u> <b>OR</b> to <u>run an existing version</u></p>
+
+                                     <div class="row-border-top border-top"></div>
+
 
                                     <h6 class="subtitle-strategy">Create a new version of the strategy</h6>
                                     <a href="#"><button  type="submit" name="submit_button" value="new-version" class="btn btn-secondary btn-lg btn-new-version">Create a new version</button></a>
                                 </center>
 
                                 <!--Existing version-->
+                                <div class="row-border-top border-top"></div>
+
                                 <center>
-                                    <h6 class="subtitle-strategy">Select an existing strategy</h6>
+                                    <h6 class="subtitle-strategy">Select an existing version of the strategy</h6>
                                     <div class="btn-group-vertical">
-                                    <select class="form-control select-form-version" id="select-version-from-strategy-page" onchange='selectVersion()'>
-                                        {% for v in versions_list %}
-                                            <option hidden >Versions available</option>
-                                            <option>{{v}}</option>
-                                        {% endfor %}
-                                    </select>
+                                        <select class="form-control select-form-version" id="select-version-from-strategy-page" onchange='selectVersion()'>
+                                            {% for v in versions_list %}
+                                                <option hidden >Versions available</option>
+                                                <option>{{v}}</option>
+                                            {% endfor %}
+                                        </select>
 
-                                      <!--Date to-->
-                                    {% if show_calendar == 'show_calendar' %}
-                                        <label class="subtitle-date-calendar">Select a date_to below</label>
-                                        <input id="input_date_to_times" name="input_date_to_times" class="form-control text-center form-date-to-select-times rounded-lg" onchange='selectDateTo()' value="12/08/2020" required>
-                                        <script type="text/javascript">
-                                            $('#input_date_to_times').datepicker({
-                                                uiLibrary: 'bootstrap',
-                                                 todayHighlight: true,
-                                                 autoclose: true,
-                                                 format: 'dd/mm/yyyy',
-                                                 startDate: '01/01/2009'
-
-                                                 <!--datesDisabled: ['25/01/2021', '27/01/2021']-->
-                                            });
-                                        </script>
-                                    {% endif %}
+                                        <!--Date to-->
+                                        <select class="form-control select-form-date-to" id="select-date-to-from-strategy-page" onchange='selectDateTo()'>
+                                            {% for d in existing_date_to %}
+                                                <option hidden >Date_to available</option>
+                                                <option>{{d}}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 </center>
                        </form>
@@ -115,8 +81,6 @@
                 </div>
                 <div class="col-lg-3"></div>
             </div>
-
-
             <script src="static/js/form_strategy_page_times.js"></script>
 
 
@@ -125,6 +89,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <center>
+                        <h4 class="title-page-model">Create a new version of the strategy</h4>
                         <label class="header-pretitle-version-name">Enter a version name</label>
                         <input type="text" class="form-control version-name-form text-center" id="input_version_name_strategy" placeholder="Version name">
                     </center>
@@ -146,7 +111,7 @@
 
             <div class="row row-effect-ag-grid-bottom"></div>
 
-            <div class="row">
+            <div class="row row-model-inputs">
                 <div class="col-lg-12">
                     <form class="form-signin" role="form">
                         <h4 class="title-models-ag-grid">Model inputs</h4>

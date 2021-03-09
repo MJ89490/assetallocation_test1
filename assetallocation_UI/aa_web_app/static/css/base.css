@@ -22,7 +22,7 @@ body{background-color: #fff;}
               line-height: 1.5;
 }
 
-.card-body{border-radius: 20%;}
+.card-body{border-radius: 40%;}
 
 div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}
 
@@ -31,6 +31,12 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .card-title-risk-returns{color: #005774;}
 
 /* ROWS */
+.row-model{margin-bottom: 30px; margin-top: 75px;}
+
+.row-model-inputs{margin-bottom: 15px;}
+
+.row-border-top{margin-top: 20px;}
+
 .row-card-strategy{margin-top: 25px; margin-bottom: 50px;}
 
 .row_risk_returns{margin-top: 40px;}
@@ -129,14 +135,11 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 .subtitle-strategy{margin-top: 15px; color: rgb(87, 90, 123); font-weight: 650px;}
 
-.subtitle-date-calendar{letter-spacing: .08em;
-                        color: rgb(87, 90, 123);
-                        margin-top: 15px;
-}
+.subtitle-date-calendar{color: rgb(87, 90, 123); margin-top: 10px;}
 
 .dates-times{margin-top: 20px;}
 
-.title-page-model{padding-top:75px; color: #005774 !important; font-size: 2rem;}
+.title-page-model{color: #005774 !important; font-size: 2rem;}
 
 .sub-title-fund-version-dashboard{text-transform: uppercase;
                                   letter-spacing: .08em;
@@ -185,6 +188,8 @@ tr td{padding: 0 !important;
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
 
 .select-form-version{margin-top: 15px; width: 173px;}
+
+.select-form-date-to{width: 173px; margin-top: 10px;}
 
 .select-form-fund{width: 155px; margin-left: 20px; margin-bottom: 15px;}
 

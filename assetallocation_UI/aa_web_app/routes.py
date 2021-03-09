@@ -1,5 +1,5 @@
 import json
-
+import pandas as pd
 from flask import render_template
 from flask import request, redirect, url_for
 
@@ -112,7 +112,9 @@ def times_strategy():
                            title='TimesPage',
                            form=form,
                            fund_selected=fund_selected,
+                           version_selected=obj_received_data_times.version_strategy,
                            existing_funds=form.existing_funds,
+                           existing_date_to=['12/08/2020'],
                            show_calendar=show_calendar,
                            show_versions=show_versions,
                            show_earth=show_earth,
@@ -126,16 +128,19 @@ def times_strategy():
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
 def receive_data_from_times_strategy_page():
     json_data = json.loads(request.form['json_data'])
-    obj_received_data_times.type_of_request = json_data['type_of_request']
-    global SHOW_CALENDAR
+    # obj_received_data_times.type_of_request = json_data['type_of_request']
+    # global SHOW_CALENDAR
 
-    if json_data['type_of_request'] == 'version_selected':
-        obj_received_data_times.version_strategy = json_data['version']
-        SHOW_CALENDAR = json_data['show_calendar']
-    elif json_data['type_of_request'] == 'date_selected':
-        obj_received_data_times.date_to = json_data['date_to']
-    else:
-        obj_received_data_times.fund_name = json_data['fund']
+    # if json_data['type_of_request'] == 'send_data':
+    obj_received_data_times.version_strategy = json_data['version']
+    obj_received_data_times.strategy_weight_user = json_data['fund_weight']
+    obj_received_data_times.fund_name = json_data['fund']
+    obj_received_data_times.date_to = json_data['date_to']
+    #     # SHOW_CALENDAR = json_data['show_calendar']
+    # elif json_data['type_of_request'] == 'date_selected':
+    #
+    # else:
+    #     obj_received_data_times.fund_name = json_data['fund']
 
     return json.dumps({'status': 'OK'})
 
