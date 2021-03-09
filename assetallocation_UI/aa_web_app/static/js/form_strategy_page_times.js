@@ -57,7 +57,8 @@ function sendDataToPython(){
        var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
                                        'version': versionSelectedFromStrategyPage[0],
                                        'fund_weight': weightFund[0],
-                                       'date_to': dateTo[0]});
+                                       'date_to': dateTo[0],
+                                       'type_of_request': 'run_existing_version'});
 
         $.ajax({
                 url: "receive_data_from_times_strategy_page",
@@ -65,7 +66,7 @@ function sendDataToPython(){
                 type: 'POST',
                 success: function(response){
                     console.log('success');
-                     window.location.href = "times_strategy";
+                    window.location.href = "times_strategy";
                 },
                 error: function(error){
                     console.log(error);

@@ -94,18 +94,18 @@ def times_strategy():
             obj_received_data_times.run_existing_strategy()
 
             return redirect(url_for('times_dashboard'))
-
     else:
-        if obj_received_data_times.type_of_request == 'fund_selected':
-            show_versions, show_dashboard, show_earth = 'show_versions_available', 'show_dashboard', 'not_show_earth'
-            fund_selected = obj_received_data_times.fund_name
 
-        elif obj_received_data_times.type_of_request == 'version_selected':
-            show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
+        # if obj_received_data_times.type_of_request == 'fund_selected':
+        #     show_versions, show_dashboard, show_earth = 'show_versions_available', 'show_dashboard', 'not_show_earth'
+        #     fund_selected = obj_received_data_times.fund_name
+        #
+        # elif obj_received_data_times.type_of_request == 'version_selected':
+        #     show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
 
-        elif obj_received_data_times.type_of_request == 'date_selected':
+        if obj_received_data_times.type_of_request == 'run_existing_version':
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy,
-                                                                            date_to=obj_received_data_times.date_to )
+                                                                            date_to=obj_received_data_times.date_to)
             run_model_page = 'run_existing_version'
 
     return render_template('times_template.html',
@@ -128,7 +128,7 @@ def times_strategy():
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
 def receive_data_from_times_strategy_page():
     json_data = json.loads(request.form['json_data'])
-    # obj_received_data_times.type_of_request = json_data['type_of_request']
+    obj_received_data_times.type_of_request = json_data['type_of_request']
     # global SHOW_CALENDAR
 
     # if json_data['type_of_request'] == 'send_data':
