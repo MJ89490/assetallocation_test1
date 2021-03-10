@@ -151,12 +151,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="btn-group">
-                                                    <!--Strategy weight-->
+                                                    <!--Volatility window-->
                                                     <div class="form-group">
-                                                        <label class="subtitle-model-input">Strategy weight</label>
-                                                        <input type="number" id="input_strategy_weight_times" name="input_strategy_weight_times" class="form-control form-models-select-times" placeholder="Strategy weight" required>
-                                                        <script type="text/javascript">
-                                                            document.getElementById('input_strategy_weight_times').value = 0.46;
+                                                         <label class="subtitle-model-input">Volatility window</label>
+                                                         <input type="number" id="input_vol_window_times" name="input_vol_window_times" class="form-control form-models-select-times" placeholder="Volatility window" required>
+                                                         <script type="text/javascript">
+                                                            document.getElementById('input_vol_window_times').value = 90;
                                                         </script>
                                                     </div>
                                                     <!--Time lag-->
@@ -183,29 +183,21 @@
                                                             <option>s</option>
                                                         </select>
                                                     </div>
-                                                     <!--Volatility window-->
+                                                     <!--Frequency-->
                                                      <div class="form-group">
-                                                <label class="subtitle-model-input">Volatility window</label>
-                                                <input type="number" id="input_vol_window_times" name="input_vol_window_times" class="form-control form-models-select-times" placeholder="Volatility window" required>
-                                                 <script type="text/javascript">
-                                                    document.getElementById('input_vol_window_times').value = 90;
-                                                </script>
-                                            </div>
+                                                         <label class="subtitle-model-input">Frequency</label>
+                                                         <select id="input_frequency_times" name="input_frequency_times" class="form-control form-models-select-times">
+                                                             <option>weekly</option>
+                                                             <option>monthly</option>
+                                                             <option>daily</option>
+                                                        </select>
+                                                    </div>
                                                  </div>
                                             </div>
                                         </div>
                                          <div class="row">
                                              <div class="col-lg-6">
                                                  <div class="btn-group">
-                                                     <!--Frequency-->
-                                                     <div class="form-group">
-                                                <label class="subtitle-model-input">Frequency</label>
-                                                <select id="input_frequency_times" name="input_frequency_times" class="form-control form-models-select-times">
-                                                    <option>weekly</option>
-                                                    <option>monthly</option>
-                                                    <option>daily</option>
-                                                </select>
-                                            </div>
                                                      <!--Week day-->
                                                      <div class="form-group">
                                                          <label class="subtitle-model-input">Week day</label>
