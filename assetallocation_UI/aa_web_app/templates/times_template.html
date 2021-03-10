@@ -127,20 +127,10 @@
                                                     <!--Date from-->
                                                     <div class="form-group">
                                                         <label class="subtitle-model-input">Date from</label>
-                                                        <input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2000" required>
+                                                        <input type="text" class="form-control form-models-select-times" id="input_date_from_times" name="input_date_from_times" readonly>
+                                                        <!--<input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2000" required>-->
                                                         <script type="text/javascript">
-                                                            $('#input_date_from_times').datepicker({
-                                                                uiLibrary: 'bootstrap',
-                                                                 todayHighlight: true,
-                                                                 autoclose: true,
-                                                                 format: 'dd/mm/yyyy',
-                                                                 startDate: '01/01/2009'
-
-                                             <!--datesDisabled: ['25/01/2021', '27/01/2021']-->
-                                                            });
-
-
-
+                                                           document.getElementById('input_date_from_times').value = "01/01/2000"
                                                         </script>
                                                     </div>
                                                       <!--Date to-->
