@@ -128,7 +128,6 @@
                                                     <div class="form-group">
                                                         <label class="subtitle-model-input">Date from</label>
                                                         <input type="text" class="form-control form-models-select-times" id="input_date_from_times" name="input_date_from_times" readonly>
-                                                        <!--<input id="input_date_from_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="01/01/2000" required>-->
                                                         <script type="text/javascript">
                                                            document.getElementById('input_date_from_times').value = "01/01/2000"
                                                         </script>
@@ -136,18 +135,7 @@
                                                       <!--Date to-->
                                                     <div class="form-group">
                                                         <label class="subtitle-model-input">Date to</label>
-                                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="12/08/2020" required>
-                                                        <script type="text/javascript">
-                                                            $('#input_date_to_new_version_times').datepicker({
-                                                                uiLibrary: 'bootstrap',
-                                                                 todayHighlight: true,
-                                                                 autoclose: true,
-                                                                 format: 'dd/mm/yyyy',
-                                                                 startDate: '01/01/2009'
-
-                                             <!--datesDisabled: ['25/01/2021', '27/01/2021']-->
-                                                            });
-                                                        </script>
+                                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="12/08/2020" required oninput="selectDateToCalendar()">
                                                     </div>
                                                 </div>
                                                 <div class="btn-group">
@@ -201,15 +189,7 @@
                                                      <!--Week day-->
                                                      <div class="form-group">
                                                          <label class="subtitle-model-input">Week day</label>
-                                                         <select id="input_weekday_times" name="input_weekday_times" class="form-control form-models-select-times">
-                                                             <option>MON</option>
-                                                             <option>TUE</option>
-                                                             <option>WED</option>
-                                                             <option>THU</option>
-                                                             <option>FRI</option>
-                                                             <option>SAT</option>
-                                                             <option>SUN</option>
-                                                        </select>
+                                                        <input id="input_weekday_times" name="input_date_from_times" class="form-control form-models-select-times rounded-lg" value="WED" readonly>
                                                      </div>
                                                  </div>
                                              </div>

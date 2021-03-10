@@ -139,6 +139,33 @@ function checkReceivedDataTimes(){
 
 }
 
+function selectDateToCalendar() {
+    var date_to = document.getElementById("input_date_to_new_version_times").value;
+
+    var gsDayNames = ['Sunday',
+                      'Monday',
+                      'Tuesday',
+                      'Wednesday',
+                      'Thursday',
+                      'Friday',
+                      'Saturday'
+                    ];
+
+    var fields = date_to.split('/');
+
+    var day = fields[0];
+    var month = fields[1];
+    var year = fields[2];
+
+    date_from_new = year + "/" + month + "/" + day
+
+    var d = new Date(date_from_new);
+    var dayName = gsDayNames[d.getDay()];
+
+    document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
+}
+
+
 $(function(){
 	$('#contact-form-button-times').click(function(){
 

@@ -18,6 +18,8 @@ show_calendar = ''
 function selectFund() {
         var select_box = document.getElementById("select-fund-from-strategy-page");
         var fund = select_box.options[select_box.selectedIndex].value;
+        console.log(select_box);
+        console.log(fund);
 
         fundSelectedFromStrategyPage.push(fund);
 
