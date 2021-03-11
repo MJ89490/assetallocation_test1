@@ -87,7 +87,10 @@ class TimesChartsDataComputations(object):
         :return: None
         """
         apc = TimesProcCaller()
-        fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy)
+        fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy,
+                                              business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
+                                              business_date_to=pd.to_datetime('12/08/2020', format='%d/%m/%Y')
+                                              )
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 

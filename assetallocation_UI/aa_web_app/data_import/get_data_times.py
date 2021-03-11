@@ -16,6 +16,7 @@ class ReceivedDataTimes:
         self.assets_existing_versions_times = {}
         self.version_strategy = 0
         self.strategy_weight = 0
+        self.strategy_weight_user = 0
         self.date_to = None
         self.is_new_strategy = None
         self.fund_name = None
@@ -64,6 +65,14 @@ class ReceivedDataTimes:
         self._strategy_weight = value
 
     @property
+    def strategy_weight_user(self):
+        return self._strategy_weight_user
+
+    @strategy_weight_user.setter
+    def strategy_weight_user(self, value):
+        self._strategy_weight_user = value
+
+    @property
     def fund_name(self):
         return self._fund_name
 
@@ -107,7 +116,7 @@ class ReceivedDataTimes:
         # for v in apc.select_strategy_versions(Name.times):
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy ,
                                               business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
-                                              business_date_to=pd.to_datetime('12/08/2000', format='%d/%m/%Y')
+                                              business_date_to=pd.to_datetime('12/08/2020', format='%d/%m/%Y')
                                               )
         print(fs)
         self.strategy_weight = fs.weight
@@ -116,9 +125,10 @@ class ReceivedDataTimes:
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
                                               business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
-                                              business_date_to=pd.to_datetime('12/08/2000', format='%d/%m/%Y')
+                                              business_date_to=pd.to_datetime('12/08/2020', format='%d/%m/%Y')
                                               )
-        self.strategy_weight = fs.weight
+        # self.strategy_weight = fs.weight
+        self.strategy_weight = 0.46
 
     def receive_data_existing_versions(self, strategy_version, date_to):
         apc = TimesProcCaller()
@@ -136,7 +146,11 @@ class ReceivedDataTimes:
                                               business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
                                               business_date_to=pd.to_datetime(date_to, format='%d/%m/%Y'))
 
-        self.strategy_weight = fs.weight
+        # self.strategy_weight = fs.weight
+        try:
+            self.strategy_weight = fs.weight
+        except AttributeError:
+            self.strategy_weight = int(self.strategy_weight_user)
 
         inputs_versions = {'fund': self.fund_name, 'version': strategy_version,
                            'input_date_from_times': '01/01/2000',

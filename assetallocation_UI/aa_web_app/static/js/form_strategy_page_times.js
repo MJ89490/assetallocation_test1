@@ -9,12 +9,17 @@ fundSelectedFromStrategyPage = []
 // Versions to select from strategy page
 versionSelectedFromStrategyPage = []
 
+// Weight
+weightFund = []
+
 // Calendar
 show_calendar = ''
 
 function selectFund() {
         var select_box = document.getElementById("select-fund-from-strategy-page");
         var fund = select_box.options[select_box.selectedIndex].value;
+        console.log(select_box);
+        console.log(fund);
 
         fundSelectedFromStrategyPage.push(fund);
 
@@ -22,9 +27,9 @@ function selectFund() {
             fundSelectedFromStrategyPage.splice(0, fundSelectedFromStrategyPage.length-1);
         }
 
-         type_of_request = 'fund_selected';
-        ready_to_send = true;
-        sendDataToPython();
+         // type_of_request = 'fund_selected';
+        // ready_to_send = true;
+        // sendDataToPython();
 }
 
 function selectVersion() {
@@ -36,18 +41,13 @@ function selectVersion() {
         if (versionSelectedFromStrategyPage.length != 1){
             versionSelectedFromStrategyPage.splice(0, versionSelectedFromStrategyPage.length-1);
         }
-        console.log(versionSelectedFromStrategyPage);
-         type_of_request = 'version_selected';
-        show_calendar = 'show_calendar';
-        ready_to_send = true;
-        sendDataToPython();
-
+        weightFund.push(parseFloat(document.getElementById("input_weight_fund_strategy").value))
 }
 
 function selectDateTo(){
-    var dateToPage =  document.getElementById("input_date_to_times").value;
+    var dateToPage =  document.getElementById("select-date-to-from-strategy-page").value;
+    type_of_request = 'send_data';
     console.log(dateToPage);
-    type_of_request = 'date_selected';
     ready_to_send = true;
     dateTo.push(dateToPage);
     this.sendDataToPython();
@@ -58,11 +58,9 @@ function sendDataToPython(){
     if (ready_to_send == true){
        var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
                                        'version': versionSelectedFromStrategyPage[0],
+                                       'fund_weight': weightFund[0],
                                        'date_to': dateTo[0],
-                                       'show_calendar': show_calendar,
-                                       'type_of_request':  type_of_request});
-
-       console.log(json_data);
+                                       'type_of_request': 'run_existing_version'});
 
         $.ajax({
                 url: "receive_data_from_times_strategy_page",
@@ -70,7 +68,7 @@ function sendDataToPython(){
                 type: 'POST',
                 success: function(response){
                     console.log('success');
-                     window.location.href = "times_strategy";
+                    window.location.href = "times_strategy";
                 },
                 error: function(error){
                     console.log(error);

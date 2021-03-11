@@ -1,5 +1,5 @@
 import json
-
+import pandas as pd
 from flask import render_template
 from flask import request, redirect, url_for
 
@@ -82,6 +82,7 @@ def times_strategy():
     show_versions = 'show_versions_not_available'
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
+    show_earth = 'show_earth'
     assets = []
     show_calendar, fund_selected = '', ''
 
@@ -93,27 +94,30 @@ def times_strategy():
             obj_received_data_times.run_existing_strategy()
 
             return redirect(url_for('times_dashboard'))
-
     else:
-        if obj_received_data_times.type_of_request == 'fund_selected':
-            show_versions, show_dashboard = 'show_versions_available', 'show_dashboard'
-            fund_selected = obj_received_data_times.fund_name
 
-        elif obj_received_data_times.type_of_request == 'version_selected':
-            show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
+        # if obj_received_data_times.type_of_request == 'fund_selected':
+        #     show_versions, show_dashboard, show_earth = 'show_versions_available', 'show_dashboard', 'not_show_earth'
+        #     fund_selected = obj_received_data_times.fund_name
+        #
+        # elif obj_received_data_times.type_of_request == 'version_selected':
+        #     show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
 
-        elif obj_received_data_times.type_of_request == 'date_selected':
+        if obj_received_data_times.type_of_request == 'run_existing_version':
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy,
-                                                                            date_to=obj_received_data_times.date_to )
+                                                                            date_to=obj_received_data_times.date_to)
             run_model_page = 'run_existing_version'
 
     return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
                            fund_selected=fund_selected,
+                           version_selected=obj_received_data_times.version_strategy,
                            existing_funds=form.existing_funds,
+                           existing_date_to=['12/08/2020'],
                            show_calendar=show_calendar,
                            show_versions=show_versions,
+                           show_earth=show_earth,
                            run_model_page=run_model_page,
                            show_dashboard=show_dashboard,
                            assets=assets,
@@ -125,15 +129,18 @@ def times_strategy():
 def receive_data_from_times_strategy_page():
     json_data = json.loads(request.form['json_data'])
     obj_received_data_times.type_of_request = json_data['type_of_request']
-    global SHOW_CALENDAR
+    # global SHOW_CALENDAR
 
-    if json_data['type_of_request'] == 'version_selected':
-        obj_received_data_times.version_strategy = json_data['version']
-        SHOW_CALENDAR = json_data['show_calendar']
-    elif json_data['type_of_request'] == 'date_selected':
-        obj_received_data_times.date_to = json_data['date_to']
-    else:
-        obj_received_data_times.fund_name = json_data['fund']
+    # if json_data['type_of_request'] == 'send_data':
+    obj_received_data_times.version_strategy = json_data['version']
+    obj_received_data_times.strategy_weight_user = json_data['fund_weight']
+    obj_received_data_times.fund_name = json_data['fund']
+    obj_received_data_times.date_to = json_data['date_to']
+    #     # SHOW_CALENDAR = json_data['show_calendar']
+    # elif json_data['type_of_request'] == 'date_selected':
+    #
+    # else:
+    #     obj_received_data_times.fund_name = json_data['fund']
 
     return json.dumps({'status': 'OK'})
 
