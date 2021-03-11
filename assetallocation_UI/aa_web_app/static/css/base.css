@@ -150,6 +150,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .sub-title-date-dashboard{text-transform: uppercase;
                           letter-spacing: .08em;
                           color: #95aac9;
+                          margin-top: 35px;
                           margin-bottom: 35px;
 }
 

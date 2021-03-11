@@ -95,14 +95,6 @@ def times_strategy():
 
             return redirect(url_for('times_dashboard'))
     else:
-
-        # if obj_received_data_times.type_of_request == 'fund_selected':
-        #     show_versions, show_dashboard, show_earth = 'show_versions_available', 'show_dashboard', 'not_show_earth'
-        #     fund_selected = obj_received_data_times.fund_name
-        #
-        # elif obj_received_data_times.type_of_request == 'version_selected':
-        #     show_versions, show_dashboard, show_calendar = 'show_versions_available', 'show_dashboard', 'show_calendar'
-
         if obj_received_data_times.type_of_request == 'run_existing_version':
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy,
                                                                             date_to=obj_received_data_times.date_to)

@@ -283,8 +283,10 @@
 
 
         {% elif run_model_page == 'run_existing_version' %}
-            <h6 class="sub-title-fund-version-dashboard"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>
-            <h6 class="sub-title-date-dashboard"><i>Date run:</i></h6>
+
+            <h4 class="title-page-model text-center">Run an existing version of the strategy {{inputs_versions['version']}} for {{inputs_versions['fund']}}</h4>
+            <!--<h6 class="sub-title-fund-version-dashboard text-center"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>-->
+            <h6 class="sub-title-date-dashboard text-center"><i>Date run:</i></h6>
 
             <!--Assets-->
             <div class="row">
