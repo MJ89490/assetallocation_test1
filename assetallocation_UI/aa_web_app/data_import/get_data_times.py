@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date
 
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
@@ -114,9 +114,8 @@ class ReceivedDataTimes:
         # TODO CHANGE DATE TO TO FLEXIBLE DATE
         # TODO EACH STRATEGY VERSIONS RETURN NONE
         # for v in apc.select_strategy_versions(Name.times):
-        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy ,
-                                              business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
-                                              business_date_to=pd.to_datetime('12/08/2020', format='%d/%m/%Y')
+        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
+                                              business_date_from=date(2000, 1, 1), business_date_to=date(2020, 8, 12)
                                               )
         print(fs)
         self.strategy_weight = fs.weight
@@ -124,8 +123,8 @@ class ReceivedDataTimes:
     def receive_data_selected_version_sidebar_dashboard(self):
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
-                                              business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
-                                              business_date_to=pd.to_datetime('12/08/2020', format='%d/%m/%Y')
+                                              business_date_from=date(2000, 1, 1),
+                                              business_date_to=date(2020, 8, 12)
                                               )
         # self.strategy_weight = fs.weight
         self.strategy_weight = 0.46
@@ -138,13 +137,13 @@ class ReceivedDataTimes:
         print(self.fund_name)
         print(Name.times)
         print(strategy_version)
-        print(pd.to_datetime('01/01/2000', format='%d/%m/%Y'))
+        print(date(2000, 1, 1))
         print(date_to)
         fs = apc.select_fund_strategy_results(fund_name=self.fund_name,
                                               strategy_name=Name.times,
                                               strategy_version=strategy_version,
-                                              business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
-                                              business_date_to=pd.to_datetime(date_to, format='%d/%m/%Y'))
+                                              business_date_from=date(2000, 1, 1),
+                                              business_date_to=datetime.strptime(date_to, '%d/%m/%Y').date())
 
         # self.strategy_weight = fs.weight
         try:
