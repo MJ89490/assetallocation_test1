@@ -1,3 +1,4 @@
+
 var rowData = [
   {asset: 'DM FX', category: 'FX', signal_ticker: 'SPXT Index',future_ticker: 'CD1 A:00_0_R Curncy', costs:  0.0002, s_leverage: 1},
   {asset: 'DM Equity', category: 'Equities', signal_ticker: 'TPXDDVD Index', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1},
@@ -166,6 +167,7 @@ function selectDateToCalendar() {
 }
 
 
+
 $(function(){
 	$('#contact-form-button-times').click(function(){
 
@@ -174,6 +176,8 @@ $(function(){
 
         var check = checkReceivedDataTimes();
         console.log(check);
+
+
 
         if (check != 'error'){
             $.ajax({

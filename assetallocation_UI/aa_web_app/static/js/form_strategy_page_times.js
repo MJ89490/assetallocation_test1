@@ -27,9 +27,21 @@ function selectFund() {
             fundSelectedFromStrategyPage.splice(0, fundSelectedFromStrategyPage.length-1);
         }
 
-         // type_of_request = 'fund_selected';
-        // ready_to_send = true;
-        // sendDataToPython();
+        console.log(fundSelectedFromStrategyPage);
+        var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
+                                        'type_of_request': 'selected_fund'});
+
+        $.ajax({
+                url: "receive_data_from_times_strategy_page",
+                data: {json_data: json_data},
+                type: 'POST',
+                success: function(response){
+                    console.log('success');
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
 }
 
 function selectVersion() {
@@ -54,9 +66,10 @@ function selectDateTo(){
 }
 
 function sendDataToPython(){
+//    'fund': fundSelectedFromStrategyPage[0],
 
     if (ready_to_send == true){
-       var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
+       var json_data = JSON.stringify({
                                        'version': versionSelectedFromStrategyPage[0],
                                        'fund_weight': weightFund[0],
                                        'date_to': dateTo[0],

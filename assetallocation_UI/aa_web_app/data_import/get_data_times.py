@@ -205,7 +205,7 @@ class ReceivedDataTimes:
 
     def call_run_times(self, assets_input_times):
 
-        self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
+        # self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
 
         long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
                                         self.times_form['input_signal_two_long_times'],
@@ -221,7 +221,8 @@ class ReceivedDataTimes:
                       int(self.times_form['input_time_lag_times']),
                       int(self.times_form['input_vol_window_times']))
 
-        Times.description = self.times_form['input_version_name']
+        # Times.description = self.times_form['input_version_name']
+        Times.description = self.fund_name
 
         times.asset_inputs = [
             TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
@@ -231,7 +232,8 @@ class ReceivedDataTimes:
             )
         ]
 
-        fund_strategy = run_strategy(self.fund_name, float(self.times_form['input_strategy_weight_times']),
+        # self.times_form['input_strategy_weight_times'] had been removed from the inputs!!!
+        fund_strategy = run_strategy(self.fund_name, float(0.46),
                                      times, os.environ.get('USERNAME'),
                                      datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
                                      datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
