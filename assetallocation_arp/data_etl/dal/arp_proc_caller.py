@@ -5,15 +5,17 @@ from abc import ABC, abstractmethod
 import datetime as dt
 
 import pandas as pd
-from psycopg2.extras import DateTimeTZRange
+from psycopg2.extras import DateTimeTZRange, DateRange
 
 from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica, Fx, Strategy, Maven
-from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetWeight)
+from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategy, FundStrategyAssetWeight,
+                                                                        FundStrategyAssetAnalytic, FundStrategyAnalytic)
 from assetallocation_arp.data_etl.dal.type_converter import ArpTypeConverter
 from assetallocation_arp.data_etl.dal.data_models.asset import TimesAssetInput, EffectAssetInput, Asset, \
     FicaAssetInput, FxAssetInput, FicaAssetInputGroup, MavenAssetInput
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import AggregationLevel
 from assetallocation_arp.data_etl.dal.data_models.app_user import AppUser
 from assetallocation_arp.data_etl.dal.proc import ArpProc, StrategyProcFactory
 
@@ -55,7 +57,7 @@ class ArpProcCaller(Db):
             self, fund_strategy: FundStrategy, user_id: str, business_date_from: dt.date, business_date_to: dt.date
     ) -> bool:
         """Insert data from an instance of FundStrategy into database"""
-        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+        business_date_range = DateRange(business_date_from, business_date_to, '[]')
         asset_weights = ArpTypeConverter.weights_to_composite(fund_strategy.asset_weights)
         strategy_analytics, strategy_asset_analytics = \
             ArpTypeConverter.fund_strategy_analytics_to_composites(fund_strategy.analytics)
@@ -64,7 +66,7 @@ class ArpProcCaller(Db):
             'arp.insert_fund_strategy_results',
             [
                 fund_strategy.fund_name, fund_strategy.strategy_name.name, fund_strategy.strategy_version,
-                business_tstzrange, fund_strategy.weight, user_id, fund_strategy.python_code_version,
+                business_date_range, fund_strategy.weight, user_id, fund_strategy.python_code_version,
                 asset_weights, strategy_analytics, strategy_asset_analytics
             ]
         )
@@ -77,39 +79,57 @@ class ArpProcCaller(Db):
             business_date_to: dt.date
     ) -> Optional[FundStrategy]:
         """Select the FundStrategy data for strategy where name equals strategy_name and version equals strategy version
-        and model_instance.business_tstzrange equals DateTimeTZRange(business_date_from, business_date_to, '[]')"""
+        and model_instance.business_daterange equals DateRange(business_date_from, business_date_to, '[]')"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
-        # TODO find out if below is equal to a exclusive range with timedelta + 1
-        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
-        res = self.call_proc(
-            'arp.select_fund_strategy_results', [fund_name, strategy_name, strategy_version, business_tstzrange]
+        strategy_id = self.call_proc('arp.select_strategy_id', [strategy_name, strategy_version])[0]['strategy_id']
+        fs_weights = self.call_proc(
+            'arp.select_fund_strategy_weights', [fund_name, strategy_id, business_date_from, business_date_to]
         )
-
-        if not res:
+        if not fs_weights:
             return
 
-        fund_strategy = FundStrategy(fund_name, strategy_name, strategy_version, float(res[0]['strategy_weight']))
-        fund_strategy.python_code_version = res[0]['python_code_version']
+        fund_strategy = FundStrategy(fund_name, strategy_name, strategy_version, float(fs_weights[0]['strategy_weight']))
+        fund_strategy.python_code_version = fs_weights[0]['python_code_version']
 
-        for row in res:
+        for row in fs_weights:
             if pd.notna(row['strategy_weight']):
                 aw = FundStrategyAssetWeight(
                     row['asset_subcategory'], row['business_date'], float(row['theoretical_asset_weight']),
-                    row['weight_frequency']
+                    row['asset_weight_frequency']
                 )
                 aw.implemented_weight = float(row['implemented_asset_weight'])
                 fund_strategy.add_asset_weight(aw)
 
-            fund_strategy.add_analytics(
-                ArpTypeConverter.fund_strategy_analytics_str_to_objects(
-                    row['business_date'], row['strategy_analytics']
-                )
+        fs_analytics = self.call_proc(
+            'arp.select_fund_strategy_analytics', [fund_name, strategy_id, business_date_from, business_date_to]
+        )
+        strategy_analytics = []
+        for row in fs_analytics:
+            strategy_analytics.append(FundStrategyAnalytic(
+                row['business_date'], row['category'], row['subcategory'], row['value'], row['frequency'])
             )
-            fund_strategy.add_analytics(
-                ArpTypeConverter.fund_strategy_asset_analytics_str_to_objects(
-                    row['asset_subcategory'], row['business_date'], row['strategy_asset_analytics']
+
+            if row['comparator_name'] is not None:
+                c = FundStrategyAnalytic(
+                    row['business_date'], row['category'], row['subcategory'], row['comparator_value'],
+                    row['frequency'], aggregation_level=AggregationLevel.comparator
                 )
-            )
+                c.comparator_name = row['comparator_name']
+                strategy_analytics.append(c)
+
+        fund_strategy.add_analytics(strategy_analytics)
+
+        fs_asset_analytics = self.call_proc(
+            'arp.select_fund_strategy_asset_analytics', [fund_name, strategy_id, business_date_from, business_date_to]
+        )
+        asset_analytics = []
+        for row in fs_asset_analytics:
+            asset_analytics.append(FundStrategyAssetAnalytic(
+                row['asset_ticker'], row['asset_subcategory'], row['business_date'], row['category'],
+                row['subcategory'], row['value'], row['frequency']
+            ))
+
+        fund_strategy.add_analytics(asset_analytics)
 
         return fund_strategy
 
@@ -770,5 +790,6 @@ class MavenProcCaller(StrategyProcCaller):
 
 if __name__ == '__main__':
     apc = TimesProcCaller()
-    fs = apc.select_strategy(1087)
+    fs = apc.select_fund_strategy_results('test_fund', Name.times, 96, business_date_from=dt.date(2000, 1, 1),
+                                          business_date_to=dt.date(2020, 8, 12))
     print(fs)

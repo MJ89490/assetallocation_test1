@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_results(
   fund_name varchar,
   strategy_name varchar,
   strategy_version int,
-  business_tstzrange tstzrange,
+  business_daterange daterange,
   weight numeric,
   user_id varchar,
   python_code_version text,
@@ -29,7 +29,7 @@ BEGIN
 
   select config.insert_execution_state('arp.insert_fund_strategy_results') into execution_state_id;
   SELECT
-    config.insert_model_instance('ARP', business_tstzrange, python_code_version, execution_state_id)
+    config.insert_model_instance('ARP', business_daterange, python_code_version, execution_state_id)
   into
     model_instance_id;
   select select_fund.fund_id from fund.select_fund(fund_name) into fund_id;

@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS "arp"."app_user" CASCADE
 
 CREATE TABLE "arp"."app_user"
 (
-	"id" varchar(7)	 NOT NULL,
+	"id" varchar	 NOT NULL,
 	"name" varchar(100)	 NOT NULL,
 	"email" varchar(200)	 NULL,
 	"execution_state_id" integer NOT NULL

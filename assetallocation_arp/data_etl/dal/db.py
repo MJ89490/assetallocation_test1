@@ -21,6 +21,7 @@ class Db:
 
         try:
             cursor = dbapi_conn.cursor()
+            cursor.itersize = 100
             cursor.callproc(proc_name, proc_params)
             column_names_list = [x[0] for x in cursor.description]
             res = cursor.fetchall()
