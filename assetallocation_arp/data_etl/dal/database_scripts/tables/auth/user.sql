@@ -34,6 +34,14 @@ ALTER TABLE "auth"."user" ADD CONSTRAINT "user_pkey"
 	PRIMARY KEY ("id")
 ;
 
+ALTER TABLE "auth"."user" ADD CONSTRAINT "user_domino_username_key"
+	UNIQUE ("domino_username")
+;
+
+ALTER TABLE "auth"."user" ADD CONSTRAINT "user_windows_username_key"
+	UNIQUE ("windows_username")
+;
+
 ALTER TABLE "auth"."user" ADD CONSTRAINT "user_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
 ;
