@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+import datetime
 from pandas.tseries import offsets
 from calendar import monthrange
 from typing import Dict
@@ -7,7 +7,6 @@ from typing import Tuple
 import numpy as np
 
 import pandas as pd
-import datetime
 from domino import Domino
 import os
 
@@ -88,8 +87,8 @@ class TimesChartsDataComputations(object):
         """
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy,
-                                              business_date_from=pd.to_datetime('01/01/2000', format='%d/%m/%Y'),
-                                              business_date_to=pd.to_datetime('12/08/2020', format='%d/%m/%Y')
+                                              business_date_from=datetime.date(2000, 1, 1),
+                                              business_date_to=datetime.date(2020, 8, 12)
                                               )
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
@@ -199,7 +198,8 @@ class TimesChartsDataComputations(object):
         :param results: list of results that should be round up
         :return: rounded list
         """
-        return np.around(results, 4)
+
+        return [round(d, 4) for d in results]
 
     @staticmethod
     def classify_assets_by_category(names_assets: list, values_perf=None) -> Tuple[List[str], Dict[str, float]]:
@@ -245,7 +245,7 @@ class TimesChartsDataComputations(object):
         weekly_perf = (v1 - v2).apply(lambda x: x * 100)
 
         names_weekly_perf = weekly_perf.index.to_list()
-        values_weekly_perf = weekly_perf.to_list()
+        values_weekly_perf = [float(dec) for dec in weekly_perf.to_list()]
 
         category_name,  weekly_perf_dict, = self.classify_assets_by_category(names_weekly_perf, values_weekly_perf)
 
@@ -285,7 +285,7 @@ class TimesChartsDataComputations(object):
         sort_ytd_perf = self.sort_by_category_assets(ytd_perf_dict, category_name)
         return {'ytd_performance_all_currencies': self.round_results_all_assets_overview(sort_ytd_perf['values'])}
 
-    def compute_mom_signals_all_assets_overview(self) -> np.ndarray:
+    def compute_mom_signals_all_assets_overview(self) -> List[float]:
         """
         Compute the Mom signals for each asset
         :return: a list with signals for each asset
@@ -293,7 +293,9 @@ class TimesChartsDataComputations(object):
         # Find out the last date
         last_date = self.signals.last_valid_index()
 
-        return self.round_results_all_assets_overview(self.signals.loc[last_date].values.tolist())
+        res = self.round_results_all_assets_overview(self.signals.loc[last_date].values.tolist())
+
+        return [float(dec) for dec in res]
 
     def compute_previous_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
         """
@@ -347,7 +349,7 @@ class TimesChartsDataComputations(object):
 
         return self.round_results_all_assets_overview(size)
 
-    def compute_overall_performance_all_assets_overview(self, values: list, names: list, category_name: list) -> np.ndarray:
+    def compute_overall_performance_all_assets_overview(self, values: list, names: list, category_name: list) -> List[float]:
         """
         Function whic computes the performance for each asset
         :param values:
@@ -359,10 +361,12 @@ class TimesChartsDataComputations(object):
         df['Assets'] = names
         df['Category'] = category_name
 
-        return self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum(),
-                                                       df.loc[df['Category'] == 'FX', 'Values'].sum(),
-                                                       df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
-                                                       df.Values.sum()])
+        res = self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum(),
+                                                      df.loc[df['Category'] == 'FX', 'Values'].sum(),
+                                                      df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
+                                                      df.Values.sum()])
+
+        return [float(dec) for dec in res]
 
     def compute_sum_positions_assets_charts(self, strategy_weight: float, start_date: str) -> Dict[str, List[float]]:
         """

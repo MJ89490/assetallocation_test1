@@ -360,6 +360,7 @@
                                 <div id="weekly_performance" class="responsive-plot"></div>
                                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_weekly_performance.js') }}"></script>
                                 <script type="text/javascript">
+
                                     weeklyPerformanceChart({{weekly_performance_all_currencies|tojson}}, {{assets_names|tojson}})
                                 </script>
                             </div>
