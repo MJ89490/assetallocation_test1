@@ -168,7 +168,8 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 }
 
 .version-name-form{width: 150px; margin-left: 20px;}
-.weight-fund-form{width: 150px; margin-left: 20px;}
+.weight-fund-form{width: 170px; margin-left: 20px;}
+
 /* AG GRID */
 .ag-header-cell-label {justify-content: center;}
 
@@ -192,7 +193,7 @@ tr td{padding: 0 !important;
 
 .select-form-date-to{width: 173px; margin-top: 10px;}
 
-.select-form-fund{width: 155px; margin-left: 20px; margin-bottom: 15px;}
+.select-form-fund{width: 170px; margin-left: 20px; margin-bottom: 15px;}
 
 .form-models-select-times{color: #005774 !important; width: 230px; margin-right: 15px;}
 
@@ -202,6 +203,10 @@ tr td{padding: 0 !important;
 
 .form-models-select-effect{color: #005774 !important; border-color: #007faa !important; width: 230px;}
 
+select {text-align: center;
+        text-align-last: center;
+        -moz-text-align-last: center;
+}
 /* PARAGRAPH */
 .select-fund-choice{letter-spacing: .08em;
                     color: rgb(87, 90, 123);

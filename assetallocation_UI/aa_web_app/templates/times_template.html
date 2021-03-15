@@ -27,9 +27,9 @@
                                 <!--Select a fund-->
                                 <center>
                                     <label class="header-pretitle-card"><b>1. Select a fund</b></label><br>
-                                    <select class="form-control select-form-fund" id="select-fund-from-strategy-page" onchange='selectFund()'>
+                                    <select class="form-control select-form-fund text-center" id="select-fund-from-strategy-page">
+                                        <option disabled selected value>  pick up a fund  </option>
                                         {% for f in existing_funds %}
-                                            <option hidden >Funds available</option>
                                             <option>{{f}}</option>
                                         {% endfor %}
                                     </select>
@@ -38,7 +38,7 @@
                                 <!--Choose a weight for the fund-->
                                  <center>
                                      <label class="header-pretitle-card"><b>2. Choose a weight for the fund</b></label><br>
-                                     <input type="text" class="form-control weight-fund-form text-center" id="input_weight_fund_strategy" placeholder="Fund weight">
+                                     <input type="text" class="form-control weight-fund-form text-center" id="input_weight_fund_strategy" placeholder="fund weight">
                                  </center>
 
                                 <!--Select a version -->
