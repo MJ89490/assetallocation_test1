@@ -1,18 +1,27 @@
+DROP FUNCTION arp.select_strategy_versions(character varying);
 CREATE OR REPLACE FUNCTION arp.select_strategy_versions(
-  strategy_name varchar,
-  OUT strategy_versions integer[]
+  strategy_name varchar
+)
+  RETURNS TABLE(
+  version int,
+  description varchar
 )
 AS
 $$
 BEGIN
-  SELECT
-  CASE
-    WHEN strategy_name = 'times' THEN (SELECT array_agg(t.version) from arp.times t)
-    WHEN strategy_name = 'effect' THEN (SELECT array_agg(e.version) from arp.effect e)
-    WHEN strategy_name = 'fica' THEN (SELECT array_agg(f.version) from arp.fica f)
-    WHEN strategy_name = 'fx' THEN (SELECT array_agg(fx.version) from arp.fx fx)
-    WHEN strategy_name = 'maven' THEN (SELECT array_agg(m.version) from arp.maven m)
-  END INTO strategy_versions
+  RETURN QUERY
+    SELECT
+      COALESCE(t.version, e.version, fi.version, fx.version, m.version) as version,
+      s.description
+    FROM
+      arp.strategy s
+      LEFT JOIN arp.times t on t.strategy_id = s.id
+      LEFT JOIN arp.effect e on e.strategy_id = s.id
+      LEFT JOIN arp.fica fi on fi.strategy_id = s.id
+      LEFT JOIN arp.fx fx on fx.strategy_id = s.id
+      LEFT JOIN arp.maven m on m.strategy_id = s.id
+    WHERE
+      s.name = strategy_name
   ;
 END;
 $$

@@ -133,11 +133,12 @@ class ArpProcCaller(Db):
 
         return fund_strategy
 
-    def select_strategy_versions(self, strategy_name: Union[str, Name]) -> List[int]:
+    def select_strategy_versions(self, strategy_name: Union[str, Name]) -> Dict[int, str]:
+        """return dict of keys of version and values of description"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
         res = self.call_proc('arp.select_strategy_versions', [strategy_name])
-        return res[0].get('strategy_versions') or []
+        return {row['version']: row['description'] for row in res}
 
     def select_fund_names(self) -> List[str]:
         res = self.call_proc('fund.select_fund_names', [])
