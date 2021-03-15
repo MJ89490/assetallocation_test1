@@ -53,7 +53,7 @@ def times_dashboard():
             export_data_sidebar = 'export_data_sidebar'
             obj_times_charts_data.export_times_data_to_csv(version)
 
-        obj_received_data_times.receive_data_selected_version_sidebar_dashboard()
+        obj_received_data_times.receive_data_selected_version_sidebar_dashboard(obj_received_data_times.date_to)
 
     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
                                                  obj_received_data_times.version_strategy,
@@ -68,6 +68,7 @@ def times_dashboard():
     return render_template('times_dashboard.html',
                            title='Dashboard',
                            form=form,
+                           existing_date_to=['12/08/2020'],
                            export_data_sidebar=export_data_sidebar,
                            form_side_bar=form_side_bar,
                            fund_strategy=obj_received_data_times.fund_strategy_dict,

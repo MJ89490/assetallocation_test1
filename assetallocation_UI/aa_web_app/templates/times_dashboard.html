@@ -61,17 +61,15 @@
 
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
-            <input id="input_date_to_side_bar_times" name="input_date_to_side_bar_times" class="form-control selectFund" value="27/08/2020" onchange='selectDateTo()' required>
-            <script>
-                $('#input_date_to_side_bar_times').datepicker({uiLibrary: 'bootstrap',
-                                                               todayHighlight: true,
-                                                               autoclose: true,
-                                                               format: 'dd/mm/yyyy',
-                                                               startDate: '01/01/2009'
 
-                                             <!--datesDisabled: ['25/01/2021', '27/01/2021']-->
-                                                               });
-            </script>
+            <!--Date to-->
+            <select class="form-control selectSideBar" id="input_date_to_side_bar_times" onchange='selectDateTo()' required>
+                {% for d in existing_date_to %}
+                    <option hidden >Date_to available</option>
+                    <option>{{d}}</option>
+                {% endfor %}
+            </select>
+
         </form>
         <script src="static/js/form_dashboard_times.js"></script>
 
@@ -97,17 +95,14 @@
 
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
-            <input id="input_date_to_side_bar_export_times" name="input_date_to_side_bar_export_times" class="form-control selectSideBar" value="27/08/2020" onchange='selectDateToExport()' required>
-            <script>
-                $('#input_date_to_side_bar_export_times').datepicker({uiLibrary: 'bootstrap',
-                                                                      todayHighlight: true,
-                                                               autoclose: true,
-                                                               format: 'dd/mm/yyyy',
-                                                               startDate: '01/01/2009'
 
-                                             <!--datesDisabled: ['25/01/2021', '27/01/2021']-->
-                                                               });
-            </script>
+             <!--Date to-->
+            <select class="form-control selectSideBar" id="input_date_to_side_bar_export_times" onchange='selectDateToExport()' required>
+                {% for d in existing_date_to %}
+                    <option hidden >Date_to available</option>
+                    <option>{{d}}</option>
+                {% endfor %}
+            </select>
 
             {% if export_data_sidebar == 'export_data_sidebar' %}
                 {% include 'pop_up_success_save_domino.html' %}

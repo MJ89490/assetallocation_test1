@@ -89,7 +89,7 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
                                                             ytd_all_perf['ytd_performance_all_currencies'],
                                                             keys=perf_keys)
     results_positions_overall = obj_charts_data.build_dict_ready_for_zip(
-                                                            ['Equities', 'FX', 'Bonds', 'Total'],
+                                                            ['Equity', 'FX', 'Nominal Bond', 'Total'],
                                                             pre_overall,
                                                             new_overall,
                                                             keys=pos_overall_keys)

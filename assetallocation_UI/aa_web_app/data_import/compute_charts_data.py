@@ -81,14 +81,13 @@ class TimesChartsDataComputations(object):
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)
         :param version_strategy: version of the current strategy (version1, version2, ...)
-        :param date_from_sidebar: date from sidebar
         :param date_to_sidebar: date to sidebar
         :return: None
         """
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy,
                                               business_date_from=datetime.date(2000, 1, 1),
-                                              business_date_to=datetime.date(2020, 8, 12)
+                                              business_date_to=date_to_sidebar
                                               )
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
@@ -135,21 +134,21 @@ class TimesChartsDataComputations(object):
         df = pd.DataFrame(values_dict.items(), columns=['Assets', 'Values'])
         df['Category'] = category_name
         # Assets
-        assets = df.loc[df['Category'] == 'Equities'].Assets.tolist()
+        assets = df.loc[df['Category'] == 'Equity'].Assets.tolist()
         fx = df.loc[df['Category'] == 'FX'].Assets.tolist()
-        bonds = df.loc[df['Category'] == 'Bonds'].Assets.tolist()
+        bonds = df.loc[df['Category'] == 'Nominal Bond'].Assets.tolist()
         assets.extend(fx)
         assets.extend(bonds)
         # Category
-        category = df.loc[df['Category'] == 'Equities'].Category.tolist()
+        category = df.loc[df['Category'] == 'Equity'].Category.tolist()
         category_fx = df.loc[df['Category'] == 'FX'].Category.tolist()
-        category_bonds = df.loc[df['Category'] == 'Bonds'].Category.tolist()
+        category_bonds = df.loc[df['Category'] == 'Nominal Bond'].Category.tolist()
         category.extend(category_fx)
         category.extend(category_bonds)
         # Values of these assets
-        values = df.loc[df['Category'] == 'Equities'].Values.tolist()
+        values = df.loc[df['Category'] == 'Equity'].Values.tolist()
         values_fx = df.loc[df['Category'] == 'FX'].Values.tolist()
-        values_bond = df.loc[df['Category'] == 'Bonds'].Values.tolist()
+        values_bond = df.loc[df['Category'] == 'Nominal Bond'].Values.tolist()
         values.extend(values_fx)
         values.extend(values_bond)
 
@@ -212,10 +211,10 @@ class TimesChartsDataComputations(object):
         category_name, perf_dict = [], {}
         for name in range(len(names_assets)):
             perf_dict[names_assets[name]] = values_perf[name]
-            if 'Equities' in names_assets[name]:   # TODO improve it with Jess category from db?
-                category_name.append('Equities')
-            elif 'Bonds' in names_assets[name]:
-                category_name.append('Bonds')
+            if 'Equity' in names_assets[name]:   # TODO improve it with Jess category from db?
+                category_name.append('Equity')
+            elif 'Bond' in names_assets[name]:
+                category_name.append('Nominal Bond')
             else:
                 category_name.append('FX')
 
@@ -278,7 +277,7 @@ class TimesChartsDataComputations(object):
         ytd_perf = (v1 - v2).apply(lambda x: x * 100)
 
         names_ytd_perf = ytd_perf.index.to_list()
-        values_ytd_perf = ytd_perf.to_list()
+        values_ytd_perf = [float(dec) for dec in ytd_perf.to_list()]
 
         category_name, ytd_perf_dict = self.classify_assets_by_category(names_ytd_perf, values_ytd_perf)
 
@@ -339,9 +338,9 @@ class TimesChartsDataComputations(object):
         df['Assets'] = names
         df['Category'] = category_name
 
-        equities = (df.loc[df['Category'] == 'Equities', 'Values'] / new_overall[0]).tolist()
+        equities = (df.loc[df['Category'] == 'Equity', 'Values'] / new_overall[0]).tolist()
         forex = (df.loc[df['Category'] == 'FX', 'Values'] / new_overall[1]).tolist()
-        bonds = (df.loc[df['Category'] == 'Bonds', 'Values'] / new_overall[2]).tolist()
+        bonds = (df.loc[df['Category'] == 'Nominal Bond', 'Values'] / new_overall[2]).tolist()
 
         size = []
 
@@ -361,9 +360,9 @@ class TimesChartsDataComputations(object):
         df['Assets'] = names
         df['Category'] = category_name
 
-        res = self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equities', 'Values'].sum(),
+        res = self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equity', 'Values'].sum(),
                                                       df.loc[df['Category'] == 'FX', 'Values'].sum(),
-                                                      df.loc[df['Category'] == 'Bonds', 'Values'].sum(),
+                                                      df.loc[df['Category'] == 'Nominal Bond', 'Values'].sum(),
                                                       df.Values.sum()])
 
         return [float(dec) for dec in res]
@@ -379,9 +378,9 @@ class TimesChartsDataComputations(object):
         names = self.positions.columns.to_list()
 
         for name in names:
-            if 'Equities' in name:
+            if 'Equity' in name:
                 equities_names.append(name)
-            elif 'Bonds' in name:
+            elif 'Nominal Bond' in name:
                 bonds_names.append(name)
             else:
                 forex_names.append(name)

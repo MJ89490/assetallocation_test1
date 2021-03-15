@@ -108,23 +108,23 @@ class ReceivedDataTimes:
     def date_to_sidebar(self, value: datetime) -> None:
         self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
 
-    def receive_data_latest_version_dashboard(self):
+    def receive_data_latest_version_dashboard(self, business_date_to):
         apc = TimesProcCaller()
         self.version_strategy = max(apc.select_strategy_versions(Name.times))
         # TODO CHANGE DATE TO TO FLEXIBLE DATE
         # TODO EACH STRATEGY VERSIONS RETURN NONE
         # for v in apc.select_strategy_versions(Name.times):
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
-                                              business_date_from=date(2000, 1, 1), business_date_to=date(2020, 8, 12)
+                                              business_date_from=date(2000, 1, 1), business_date_to=business_date_to
                                               )
         print(fs)
         self.strategy_weight = fs.weight
 
-    def receive_data_selected_version_sidebar_dashboard(self):
+    def receive_data_selected_version_sidebar_dashboard(self, business_date_to):
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
                                               business_date_from=date(2000, 1, 1),
-                                              business_date_to=date(2020, 8, 12)
+                                              business_date_to=business_date_to
                                               )
         # self.strategy_weight = fs.weight
         self.strategy_weight = 0.46
@@ -134,11 +134,6 @@ class ReceivedDataTimes:
         self.version_strategy = strategy_version
         self.strategy = apc.select_strategy(strategy_version)
         # Inputs
-        print(self.fund_name)
-        print(Name.times)
-        print(strategy_version)
-        print(date(2000, 1, 1))
-        print(date_to)
         fs = apc.select_fund_strategy_results(fund_name=self.fund_name,
                                               strategy_name=Name.times,
                                               strategy_version=strategy_version,
@@ -223,6 +218,8 @@ class ReceivedDataTimes:
 
         # Times.description = self.times_form['input_version_name']
         Times.description = self.fund_name
+
+        self.date_to = datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
 
         times.asset_inputs = [
             TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
