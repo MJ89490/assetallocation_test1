@@ -1,4 +1,4 @@
-from typing import List, Union, Optional, Type
+from typing import List, Union, Optional, Type, Dict
 from os import environ
 from json import loads
 from abc import ABC, abstractmethod
@@ -133,11 +133,12 @@ class ArpProcCaller(Db):
 
         return fund_strategy
 
-    def select_strategy_versions(self, strategy_name: Union[str, Name]) -> List[int]:
+    def select_strategy_versions(self, strategy_name: Union[str, Name]) -> Dict[int, str]:
+        """return dict of keys of version and values of description"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
         res = self.call_proc('arp.select_strategy_versions', [strategy_name])
-        return res[0].get('strategy_versions') or []
+        return {row['version']: row['description'] for row in res}
 
     def select_fund_names(self) -> List[str]:
         res = self.call_proc('fund.select_fund_names', [])
@@ -294,7 +295,7 @@ class TimesProcCaller(StrategyProcCaller):
 
         return times
 
-    def select_fund_strategy_result_dates(self, fund_name: str, strategy_version: int) -> Dict[str, Optional[boolean]]:
+    def select_fund_strategy_result_dates(self, fund_name: str, strategy_version: int) -> Dict[str, Optional[bool]]:
         return {dt.date(2020, 8, 11): False}
 
 
