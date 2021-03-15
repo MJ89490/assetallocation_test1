@@ -294,6 +294,9 @@ class TimesProcCaller(StrategyProcCaller):
 
         return times
 
+    def select_fund_strategy_result_dates(self, fund_name: str, strategy_version: int) -> Dict[str, Optional[boolean]]:
+        return {dt.date(2020, 8, 11): False}
+
 
 class FxProcCaller(StrategyProcCaller):
     @property
