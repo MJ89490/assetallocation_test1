@@ -1,6 +1,7 @@
 import os
 import pandas as pd
-from datetime import datetime, date
+# from datetime import datetime, date
+import datetime as dt
 
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
@@ -17,20 +18,40 @@ class ReceivedDataTimes:
         self.version_strategy = 0
         self.strategy_weight = 0
         self.strategy_weight_user = 0
+        self.match_date_db = None
         self.date_to = None
         self.is_new_strategy = None
         self.fund_name = None
         self.strategy = None
-        self.type_of_request = str
+        self.type_of_request = None
         self.date_to_sidebar = None
 
     @property
-    def date_to(self) -> datetime:
+    def match_date_db(self) -> bool:
+        return self._match_date_db
+
+    @match_date_db.setter
+    def match_date_db(self, x) -> None:
+        self._match_date_db = x
+
+    @property
+    def type_of_request(self) -> bool:
+        return self._type_of_request
+
+    @type_of_request.setter
+    def type_of_request(self, x) -> None:
+        if x is None:
+            x = False
+        self._type_of_request = x
+
+    @property
+    def date_to(self):
         return self._date_to
 
     @date_to.setter
     def date_to(self, x) -> None:
-        self._date_to = x
+        if x is not None:
+            self._date_to = dt.datetime.strptime(x, '%d/%m/%Y').date()
 
     @property
     def strategy(self) -> Times:
@@ -101,12 +122,19 @@ class ReceivedDataTimes:
         self._assets_existing_versions_times = value
 
     @property
-    def date_to_sidebar(self) -> datetime:
+    def date_to_sidebar(self):
         return self._date_to_sidebar
 
     @date_to_sidebar.setter
-    def date_to_sidebar(self, value: datetime) -> None:
+    def date_to_sidebar(self, value) -> None:
         self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
+
+    def check_in_date_to_existing_version(self):
+        apc = TimesProcCaller()
+        match_date = apc.select_fund_strategy_result_dates(fund_name=self.fund_name,
+                                                           strategy_version=self.version_strategy)
+
+        return match_date[dt.date(self.date_to.year, self.date_to.month, self.date_to.day)]
 
     def receive_data_latest_version_dashboard(self, business_date_to):
         apc = TimesProcCaller()
@@ -115,7 +143,7 @@ class ReceivedDataTimes:
         # TODO EACH STRATEGY VERSIONS RETURN NONE
         # for v in apc.select_strategy_versions(Name.times):
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
-                                              business_date_from=date(2000, 1, 1), business_date_to=business_date_to
+                                              business_date_from=dt.date(2000, 1, 1), business_date_to=business_date_to
                                               )
         print(fs)
         self.strategy_weight = fs.weight
@@ -123,13 +151,13 @@ class ReceivedDataTimes:
     def receive_data_selected_version_sidebar_dashboard(self, business_date_to):
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
-                                              business_date_from=date(2000, 1, 1),
+                                              business_date_from=dt.date(2000, 1, 1),
                                               business_date_to=business_date_to
                                               )
         # self.strategy_weight = fs.weight
         self.strategy_weight = 0.46
 
-    def receive_data_existing_versions(self, strategy_version, date_to):
+    def receive_data_existing_versions(self, strategy_version):
         apc = TimesProcCaller()
         self.version_strategy = strategy_version
         self.strategy = apc.select_strategy(strategy_version)
@@ -137,17 +165,20 @@ class ReceivedDataTimes:
         fs = apc.select_fund_strategy_results(fund_name=self.fund_name,
                                               strategy_name=Name.times,
                                               strategy_version=strategy_version,
-                                              business_date_from=date(2000, 1, 1),
-                                              business_date_to=datetime.strptime(date_to, '%d/%m/%Y').date())
+                                              business_date_from=dt.date(2000, 1, 1),
+                                              business_date_to=dt.date(self.date_to.year, self.date_to.month, self.date_to.day)
+                                              )
 
         # self.strategy_weight = fs.weight
         try:
             self.strategy_weight = fs.weight
         except AttributeError:
-            self.strategy_weight = int(self.strategy_weight_user)
+            self.strategy_weight = self.strategy_weight_user
 
-        inputs_versions = {'fund': self.fund_name, 'version': strategy_version,
+        inputs_versions = {'fund': self.fund_name,
+                           'version': strategy_version,
                            'input_date_from_times': '01/01/2000',
+                           'input_date_to_times': self.date_to,
                            'input_strategy_weight_times': self.strategy_weight,
                            'input_time_lag_times': self.strategy.time_lag_in_months,
                            'input_leverage_times': self.strategy.leverage_type.name,
@@ -219,7 +250,8 @@ class ReceivedDataTimes:
         # Times.description = self.times_form['input_version_name']
         Times.description = self.fund_name
 
-        self.date_to = datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
+        # self.date_to = datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
+        self.date_to = self.times_form['input_date_to_new_version_times']
 
         times.asset_inputs = [
             TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
@@ -229,20 +261,32 @@ class ReceivedDataTimes:
             )
         ]
 
-        # self.times_form['input_strategy_weight_times'] had been removed from the inputs!!!
+        # TODO self.times_form['input_strategy_weight_times'] had been removed from the inputs!!!
         fund_strategy = run_strategy(self.fund_name, float(0.46),
                                      times, os.environ.get('USERNAME'),
-                                     datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
-                                     datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
+                                     dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
+                                     dt.datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
                                      )
         self.version_strategy = fund_strategy.strategy_version
 
         return fund_strategy
 
     def run_existing_strategy(self):
-        fund_strategy = run_strategy(
-            self.fund_name, float(self.strategy_weight), self.strategy, os.environ.get('USERNAME'),
-            self.inputs_existing_versions_times['input_date_from_times'], self.is_new_strategy
-        )
-        self.version_strategy = fund_strategy.strategy_version
+        fund_strategy = run_strategy(self.fund_name,
+                                     float(self.strategy_weight),
+                                     self.strategy,
+                                     os.environ.get('USERNAME'),
+                                     dt.datetime.strptime(self.inputs_existing_versions_times['input_date_from_times'],
+                                                          '%d/%m/%Y').date(),
+                                     self.inputs_existing_versions_times['input_date_to_times']
+                                     )
+
+        # fund_strategy = run_strategy(
+        #     self.fund_name, float(self.strategy_weight), self.strategy, os.environ.get('USERNAME'),
+        #     self.inputs_existing_versions_times['input_date_from_times'], self.is_new_strategy
+        # )
+        # TODO CREATE A NEW VERSION !!!
+        self.version_strategy = 179
+
+        # self.version_strategy = fund_strategy.strategy_version
         return fund_strategy

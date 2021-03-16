@@ -28,7 +28,7 @@
                                 <center>
                                     <label class="header-pretitle-card"><b>1. Select a fund</b></label><br>
                                     <select class="form-control select-form-fund text-center" id="select-fund-from-strategy-page">
-                                        <option disabled selected value>  pick up a fund  </option>
+                                        <option disabled selected value>  -- fund --  </option>
                                         {% for f in existing_funds %}
                                             <option>{{f}}</option>
                                         {% endfor %}
@@ -38,7 +38,7 @@
                                 <!--Choose a weight for the fund-->
                                  <center>
                                      <label class="header-pretitle-card"><b>2. Choose a weight for the fund</b></label><br>
-                                     <input type="text" class="form-control weight-fund-form text-center" id="input_weight_fund_strategy" placeholder="fund weight">
+                                     <input type="text" class="form-control weight-fund-form text-center" id="input_weight_fund_strategy" placeholder="-- fund weight --">
                                  </center>
 
                                 <!--Select a version -->
@@ -61,17 +61,17 @@
                                 <center>
                                     <h6 class="subtitle-strategy">Select an existing version of the strategy</h6>
                                     <div class="btn-group-vertical">
-                                        <select class="form-control select-form-version" id="select-version-from-strategy-page" onchange='selectVersion()'>
+                                        <select class="form-control select-form-version" id="select-version-from-strategy-page">
+                                            <option disabled selected value>  -- version --  </option>
                                             {% for v in versions_list %}
-                                                <option hidden >Versions available</option>
                                                 <option>{{v}}</option>
                                             {% endfor %}
                                         </select>
 
                                         <!--Date to-->
-                                        <select class="form-control select-form-date-to" id="select-date-to-from-strategy-page" onchange='selectDateTo()'>
+                                        <select class="form-control select-form-date-to" id="select-date-to-strategy-page">
+                                            <option disabled selected value>  -- date to --  </option>
                                             {% for d in existing_date_to %}
-                                                <option hidden >Date_to available</option>
                                                 <option>{{d}}</option>
                                             {% endfor %}
                                         </select>
@@ -86,7 +86,8 @@
             <script src="static/js/form_strategy_page_times.js"></script>
 
 
-        {% if run_model_page == 'run_new_version' %}
+            {% if run_model_page == 'run_new_version' %}
+
 
             <div class="row">
                 <div class="col-lg-12">
@@ -135,7 +136,7 @@
                                                       <!--Date to-->
                                                     <div class="form-group">
                                                         <label class="subtitle-model-input">Date to</label>
-                                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="12/08/2020" required oninput="selectDateToCalendar()">
+                                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="13/08/2020" required oninput="selectDateToCalendar()">
                                                     </div>
                                                 </div>
                                                 <div class="btn-group">
@@ -282,7 +283,7 @@
             <script src="static/js/form_data_times.js"></script>
 
 
-        {% elif run_model_page == 'run_existing_version' %}
+            {% elif run_model_page == 'run_existing_version' %}
 
             <h4 class="title-page-model text-center">Run an existing version of the strategy {{inputs_versions['version']}} for {{inputs_versions['fund']}}</h4>
             <!--<h6 class="sub-title-fund-version-dashboard text-center"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>-->
@@ -343,7 +344,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>
-                                            <td class="text-muted text-center">-</td>
+                                            <td class="text-muted text-center">{{inputs_versions['input_date_to_times']}}</td>
                                             <td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>
                                             <td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>
                                             <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>
@@ -391,7 +392,54 @@
                     </div>
                 </div>
             </form>
-        {% endif %}
+
+
+            {% elif pop_up_message == 'pop_up_message' %}
+                <!-- Modal -->
+                  <!-- Modal -->
+                  <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Existing version: 179 with the date to 13/08/2020</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center">This version already exists in the database.</p>
+                            <p class="text-center">Would you like: </p>
+
+
+                                <!--Date from-->
+                                <div class="btn-group">
+
+                                    <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
+                                        <button class="btn btn-primary btn-sm btn-run-model-existing-versions-times-pop-up" type="submit" name="submit_button" value="run-strategy-existing-versions">Run this version again?</button>
+                                    </form>
+
+                                    <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                                        <button class="btn btn-primary btn-sm btn-dashboard-existing-versions-times-pop-up" type="submit" name="submit_button" value="dashboard-strategy-existing-versions">See the dashboard of this version?</button>
+                                    </form>
+                                </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-primary btn-close-existing-versions-times-pop-up" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <script>
+                    window.$('#myModal').modal();
+                </script>
+
+
+            {% endif %}
     </div>
-    {% endblock %}
+            {% endblock %}
 </body>

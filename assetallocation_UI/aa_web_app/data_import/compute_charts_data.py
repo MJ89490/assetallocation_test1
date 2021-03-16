@@ -1,4 +1,5 @@
 import datetime
+# from datetime import datetime, date
 from pandas.tseries import offsets
 from calendar import monthrange
 from typing import Dict
@@ -76,7 +77,7 @@ class TimesChartsDataComputations(object):
     def positions_assets_length(self):
         return len(self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):])
 
-    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to_sidebar=None) -> None:
+    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to, date_to_sidebar=None) -> None:
         """
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)
@@ -86,8 +87,8 @@ class TimesChartsDataComputations(object):
         """
         apc = TimesProcCaller()
         fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy,
-                                              business_date_from=datetime.date(2000, 1, 1),
-                                              business_date_to=date_to_sidebar
+                                              business_date_from=datetime.datetime.strptime('01/01/2000', '%d/%m/%Y').date(),
+                                              business_date_to=date_to
                                               )
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)

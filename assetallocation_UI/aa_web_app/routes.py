@@ -27,56 +27,6 @@ def home():
     return render_template('home.html', title='HomePage')
 
 
-@app.route('/times_dashboard',  methods=['GET', 'POST'])
-def times_dashboard():
-    form = InputsTimesModel()
-    form_side_bar = SideBarDataForm()
-    positions_chart = False
-    export_data_sidebar = 'not_export_data_sidebar'
-
-    if request.method == 'POST':
-        if form.submit_ok_positions.data:
-            positions_chart = True
-            start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
-            positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start,
-                                                                                             end_date=end)
-        elif request.form['submit_button'] == 'dashboard':
-            obj_received_data_times.receive_data_latest_version_dashboard()
-
-        elif request.form['submit_button'] == 'assets_positions':
-            obj_times_charts_data.export_times_positions_data_to_csv()
-
-    else:
-        if obj_received_data_times.type_of_request == 'export_data_sidebar':
-            version = obj_received_data_times.version_strategy
-            obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name, version)
-            export_data_sidebar = 'export_data_sidebar'
-            obj_times_charts_data.export_times_data_to_csv(version)
-
-        obj_received_data_times.receive_data_selected_version_sidebar_dashboard(obj_received_data_times.date_to)
-
-    obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
-                                                 obj_received_data_times.version_strategy,
-                                                 date_to_sidebar=obj_received_data_times.date_to_sidebar)
-
-    template_data = run_times_charts_data_computations(obj_times_charts_data,
-                                                       obj_received_data_times.strategy_weight,
-                                                       start_date_sum=None, start_date=None, end_date=None)
-    if positions_chart:
-        template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, dates_pos, names_pos
-
-    return render_template('times_dashboard.html',
-                           title='Dashboard',
-                           form=form,
-                           existing_date_to=['12/08/2020'],
-                           export_data_sidebar=export_data_sidebar,
-                           form_side_bar=form_side_bar,
-                           fund_strategy=obj_received_data_times.fund_strategy_dict,
-                           fund_list=form_side_bar.input_fund_name_times,
-                           versions_list=form_side_bar.input_versions_times,
-                           **template_data)
-
-
 @app.route('/times_strategy', methods=['GET', 'POST'])
 def times_strategy():
     form = InputsTimesModel()
@@ -84,16 +34,24 @@ def times_strategy():
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets = []
-    show_calendar, fund_selected = '', ''
+    show_calendar, fund_selected, pop_up_message = '', '', ''
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'new-version':
             run_model_page = 'run_new_version'
+        else:
+            obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+            obj_received_data_times.run_existing_strategy()
+            return redirect(url_for('times_dashboard'))
     else:
-        if obj_received_data_times.type_of_request == 'run_existing_version':
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy,
-                                                                            date_to=obj_received_data_times.date_to)
+        if obj_received_data_times.match_date_db is False:
+            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+            obj_received_data_times.run_existing_strategy()
             run_model_page = 'run_existing_version'
+            return redirect(url_for('times_dashboard'))
+        if obj_received_data_times.match_date_db:
+            pop_up_message = 'pop_up_message'
+            # create popup run or dashboard?
 
     return render_template('times_template.html',
                            title='TimesPage',
@@ -101,8 +59,9 @@ def times_strategy():
                            fund_selected=obj_received_data_times.fund_name,
                            version_selected=obj_received_data_times.version_strategy,
                            existing_funds=form.existing_funds,
-                           existing_date_to=['12/08/2020'],
+                           existing_date_to=['13/08/2020'],
                            show_calendar=show_calendar,
+                           pop_up_message=pop_up_message,
                            show_versions=show_versions,
                            run_model_page=run_model_page,
                            show_dashboard=show_dashboard,
@@ -114,15 +73,20 @@ def times_strategy():
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
 def receive_data_from_times_strategy_page():
     json_data = json.loads(request.form['json_data'])
-    obj_received_data_times.type_of_request = json_data['type_of_request']
+    try:
+        obj_received_data_times.type_of_request = json_data['run_existing-version']
+    except KeyError:
+        pass
 
     if json_data['type_of_request'] == 'selected_fund':
         obj_received_data_times.fund_name = json_data['fund']
-    else:
-        obj_received_data_times.version_strategy = json_data['version']
+    elif json_data['type_of_request'] == 'selected_fund_weight':
         obj_received_data_times.strategy_weight_user = json_data['fund_weight']
-        # obj_received_data_times.fund_name = json_data['fund']
+    elif json_data['type_of_request'] == 'selected_version':
+        obj_received_data_times.version_strategy = json_data['version']
+    else:
         obj_received_data_times.date_to = json_data['date_to']
+        obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
 
     return json.dumps({'status': 'OK'})
 
@@ -148,6 +112,57 @@ def receive_sidebar_data_times_form():
     obj_received_data_times.type_of_request = outputs_sidebar['type_of_request']
     obj_received_data_times.date_to_sidebar = outputs_sidebar['inputs_date_to']
     return json.dumps({'status': 'OK'})
+
+
+@app.route('/times_dashboard',  methods=['GET', 'POST'])
+def times_dashboard():
+    form = InputsTimesModel()
+    form_side_bar = SideBarDataForm()
+    positions_chart = False
+    export_data_sidebar = 'not_export_data_sidebar'
+
+    if request.method == 'POST':
+        if form.submit_ok_positions.data:
+            positions_chart = True
+            start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
+            positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start,
+                                                                                             end_date=end)
+        # elif request.form['submit_button'] == 'dashboard':
+        #     obj_received_data_times.receive_data_latest_version_dashboard(obj_received_data_times.date_to)
+
+        elif request.form['submit_button'] == 'assets_positions':
+            obj_times_charts_data.export_times_positions_data_to_csv()
+
+    else:
+        # if obj_received_data_times.type_of_request == 'export_data_sidebar':
+        #     version = obj_received_data_times.version_strategy
+        #     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name, version)
+        #     export_data_sidebar = 'export_data_sidebar'
+        #     obj_times_charts_data.export_times_data_to_csv(version)
+
+        obj_received_data_times.receive_data_selected_version_sidebar_dashboard(obj_received_data_times.date_to)
+
+    obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
+                                                 obj_received_data_times.version_strategy,
+                                                 date_to=obj_received_data_times.date_to,
+                                                 date_to_sidebar=obj_received_data_times.date_to_sidebar)
+
+    template_data = run_times_charts_data_computations(obj_times_charts_data,
+                                                       obj_received_data_times.strategy_weight,
+                                                       start_date_sum=None, start_date=None, end_date=None)
+    if positions_chart:
+        template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, dates_pos, names_pos
+
+    return render_template('times_dashboard.html',
+                           title='Dashboard',
+                           form=form,
+                           existing_date_to=['13/08/2020'],
+                           export_data_sidebar=export_data_sidebar,
+                           form_side_bar=form_side_bar,
+                           fund_strategy=obj_received_data_times.fund_strategy_dict,
+                           fund_list=form_side_bar.input_fund_name_times,
+                           versions_list=form_side_bar.input_versions_times,
+                           **template_data)
 
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])

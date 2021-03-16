@@ -296,7 +296,7 @@ class TimesProcCaller(StrategyProcCaller):
         return times
 
     def select_fund_strategy_result_dates(self, fund_name: str, strategy_version: int) -> Dict[str, Optional[bool]]:
-        return {dt.date(2020, 8, 11): False}
+        return {dt.date(2020, 8, 13): True}
 
 
 class FxProcCaller(StrategyProcCaller):

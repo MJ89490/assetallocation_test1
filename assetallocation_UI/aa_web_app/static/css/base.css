@@ -95,6 +95,12 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                                        float: right;
 }
 
+.btn-run-model-existing-versions-times-pop-up{width: 200px; margin-right: 10px;}
+
+.btn-dashboard-existing-versions-times-pop-up{width: 250px;}
+
+.btn-close-existing-versions-times-pop-up{width: 60px; font-size: 12px;}
+
 /* CONTAINER MODELS */
 .container .link-model {color: #005774 !important;}
 
@@ -168,7 +174,10 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 }
 
 .version-name-form{width: 150px; margin-left: 20px;}
+
 .weight-fund-form{width: 170px; margin-left: 20px;}
+
+.modal-title{font-size: 20px; color: #005774;}
 
 /* AG GRID */
 .ag-header-cell-label {justify-content: center;}
@@ -189,9 +198,9 @@ tr td{padding: 0 !important;
 /* FORMS */
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
 
-.select-form-version{margin-top: 15px; width: 173px;}
+.select-form-version{margin-top: 15px; width: 175px;}
 
-.select-form-date-to{width: 173px; margin-top: 10px;}
+.select-form-date-to{width: 175px; margin-top: 10px;}
 
 .select-form-fund{width: 170px; margin-left: 20px; margin-bottom: 15px;}
 
