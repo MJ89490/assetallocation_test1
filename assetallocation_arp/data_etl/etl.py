@@ -2,6 +2,7 @@
 import os
 import logging
 import logging.config
+import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 import bloomberg_data
@@ -63,7 +64,7 @@ class ETLProcess:
         for index, row in self.df.iterrows():
             self.df_iteration = bbg.historicalRequest(securities=row["ticker"],
                                                       fields="PX_LAST",
-                                                      startdate=row["business_datetime"],
+                                                      startdate=datetime(1900, 1, 1).strftime("%Y%m%d"),
                                                       enddate=(datetime.today() - timedelta(days=1)).strftime("%Y%m%d"))
 
             # Append data frame to df list
@@ -105,6 +106,45 @@ class ETLProcess:
             return self.df_bbg
         except ValueError:
             logging.info("Invalid data type inside Bloomberg data")
+
+    def data_validation(self):
+        """
+
+        :return:
+        """
+        xl_writer = pd.ExcelWriter("data_validation.xlsx", engine="xlsxwriter")
+
+        df_date_diff = self.df_bbg.copy()
+        df_date_diff = df_date_diff[df_date_diff["business_datetime"].diff() != timedelta(days=1)]
+        df_date_diff.to_excel(xl_writer, sheet_name="inconsistent_dates")
+
+        df_value_zero_null = self.df_bbg.copy()
+        df_value_zero_null = df_value_zero_null[df_value_zero_null["value"] == 0 | df_value_zero_null["value"].isna()]
+        df_value_zero_null.to_excel(xl_writer, sheet_name="zero_or_null_prices")
+
+        df_value_outliers = self.df_bbg.copy()
+        df_value_outliers["value_mean"] = df_value_outliers.groupby("ticker").value.transform('mean')
+        df_value_outliers["value_standard_deviation"] = df_value_outliers.groupby("ticker").value.transform('std')
+        df_value_outliers["value_z_score"] = (df_value_outliers["value"] - df_value_outliers["value_mean"]) \
+                                             / df_value_outliers["value_standard_deviation"]
+        df_value_outliers = df_value_outliers[df_value_outliers["value_z_score"] > 2]
+        df_value_outliers.to_excel(xl_writer, sheet_name="daily_value_outliers")
+
+        df_return_outliers = self.df_bbg.copy()
+        df_return_outliers = df_return_outliers.assign(log_return=np.log(df_return_outliers.value)
+                                             .groupby(df_return_outliers.ticker).diff())
+        df_return_outliers["log_return_mean"] = df_return_outliers.groupby("ticker").log_return.transform('mean')
+        df_return_outliers["log_return_standard_deviation"] = df_return_outliers.groupby("ticker")\
+            .log_return.transform('std')
+        df_return_outliers["log_return_z_score"] = (df_return_outliers["log_return"]
+                                                    - df_return_outliers["log_return_mean"])\
+                                                   / df_return_outliers["log_return_standard_deviation"]
+        df_return_outliers = df_return_outliers[df_return_outliers["log_return_z_score"] > 2]
+        df_return_outliers.to_excel(xl_writer, sheet_name="daily_log_return_outliers")
+
+        xl_writer.save()
+
+        return
 
     def upload_asset_analytic(self):
         """

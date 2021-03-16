@@ -154,6 +154,7 @@ def refresh_button_handle():
         etl = ETLProcess(df=df_tickers)
         etl.bbg_data()
         etl.clean_data()
+        etl.data_validation()
         etl.upload_asset_analytic()
     else:
         logging.info("Data is up to date")
