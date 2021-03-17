@@ -3,6 +3,12 @@
 <html>
     <head>
         <title>{{ title }}</title>
+
+        <style>
+                form{
+        margin: 20px 0;
+    }
+        </style>
     </head>
 
 <body>
@@ -87,6 +93,105 @@
 
 
             {% if run_model_page == 'run_new_version' %}
+        <script>
+            var faqs_row = 0;
+function addfaqs() {
+html = '<tr id="faqs-row' + faqs_row + '">';
+    html += '<td><input type="text" class="form-control" placeholder="asset"></td>';
+    html += '<td><input type="text" placeholder="category" class="form-control"></td>';
+    html += '<td><input type="text" placeholder="signal ticker" class="form-control"></td>';
+    html += '<td><input type="text" placeholder="future ticker" class="form-control"></td>';
+    html += '<td><input type="text" placeholder="costs" class="form-control"></td>';
+    html += '<td><input type="text" placeholder="leverage" class="form-control"></td>';
+    html += '<td class="mt-10"><button class="badge badge-danger" onclick="$(\'#faqs-row' + faqs_row + '\').remove();"><i class="fa fa-trash"></i> Delete</button></td>';
+
+    html += '</tr>';
+
+$('#faqs tbody').append(html);
+
+faqs_row++;
+}
+
+
+
+</script>
+
+            <div class="row row-model">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <div class="card card-custom-wide">
+                        <img src="static/img/color-background.PNG" height="70px"/>
+                        <div class="card-body">
+                            <center>
+                                <h4 class="card-title-label">Create a new version of the strategy for {{fund_selected}}</h4>
+
+
+                                <div class="btn-group version-name-form-btn-group">
+                                    <label class="header-pretitle-version-name">Enter a version name</label>
+                                    <input type="text" class="form-control version-name-form text-center" id="input_version_name_strategy" placeholder="Version name">
+                                </div>
+                            </center>
+                            <h4 class="card-title-version_form">Model assets</h4>
+                            <div class="table-responsive">
+                                <table id="faqs" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Asset</th>
+                                        <th>Category</th>
+                                        <th>Signal ticker</th>
+                                        <th>Future ticker</th>
+                                        <th>Costs</th>
+                                        <th>Leverage</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" class="form-control" placeholder="asset"></td>
+                                            <td><input type="text" placeholder="category" class="form-control"></td>
+                                            <td><input type="text" placeholder="signal ticker" class="form-control"></td>
+                                            <td><input type="text" placeholder="future ticker" class="form-control"></td>
+                                            <td><input type="text" placeholder="costs" class="form-control"></td>
+                                            <td><input type="text" placeholder="leverage" class="form-control"></td>
+                                            <td class="mt-10"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center"><button onclick="addfaqs();" class="badge badge-success"><i class="fa fa-plus"></i>Add asset</button></div>
+
+                             <h4 class="second-card-title-version_form">Model inputs</h4>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             <div class="row">
@@ -283,115 +388,115 @@
             <script src="static/js/form_data_times.js"></script>
 
 
-            {% elif run_model_page == 'run_existing_version' %}
+            <!--{% elif run_model_page == 'run_existing_version' %}-->
 
-            <h4 class="title-page-model text-center">Run an existing version of the strategy {{inputs_versions['version']}} for {{inputs_versions['fund']}}</h4>
-            <!--<h6 class="sub-title-fund-version-dashboard text-center"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>-->
-            <h6 class="sub-title-date-dashboard text-center"><i>Date run:</i></h6>
+            <!--<h4 class="title-page-model text-center">Run an existing version of the strategy {{inputs_versions['version']}} for {{inputs_versions['fund']}}</h4>-->
+            <!--&lt;!&ndash;<h6 class="sub-title-fund-version-dashboard text-center"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>&ndash;&gt;-->
+            <!--<h6 class="sub-title-date-dashboard text-center"><i>Date run:</i></h6>-->
 
-            <!--Assets-->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <h4 class="card-header"><b>Model assets</b></h4>
-                        <div class="card-body">
-                            <table class="table table-existing-version table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="text-muted text-center" scope="col">Asset</th>
-                                    <th class="text-muted text-center" scope="col">Signal ticker</th>
-                                    <th class="text-muted text-center" scope="col">Future ticker</th>
-                                    <th class="text-muted text-center" scope="col">Costs</th>
-                                    <th class="text-muted text-center" scope="col">Leverage</th>
-                                </tr>
-                            </thead>
+            <!--&lt;!&ndash;Assets&ndash;&gt;-->
+            <!--<div class="row">-->
+                <!--<div class="col-lg-12">-->
+                    <!--<div class="card">-->
+                        <!--<h4 class="card-header"><b>Model assets</b></h4>-->
+                        <!--<div class="card-body">-->
+                            <!--<table class="table table-existing-version table-hover">-->
+                            <!--<thead>-->
+                                <!--<tr>-->
+                                    <!--<th class="text-muted text-center" scope="col">Asset</th>-->
+                                    <!--<th class="text-muted text-center" scope="col">Signal ticker</th>-->
+                                    <!--<th class="text-muted text-center" scope="col">Future ticker</th>-->
+                                    <!--<th class="text-muted text-center" scope="col">Costs</th>-->
+                                    <!--<th class="text-muted text-center" scope="col">Leverage</th>-->
+                                <!--</tr>-->
+                            <!--</thead>-->
 
-                            <tbody>
-                                {% for asset in assets: %}
-                                <tr>
-                                    {% for a in asset: %}
-                                        <td class="text-muted text-center">{{a}}</td>
-                                    {% endfor %}
-                                </tr>
-                                {% endfor %}
-                          </tbody>
-                          </table>
+                            <!--<tbody>-->
+                                <!--{% for asset in assets: %}-->
+                                <!--<tr>-->
+                                    <!--{% for a in asset: %}-->
+                                        <!--<td class="text-muted text-center">{{a}}</td>-->
+                                    <!--{% endfor %}-->
+                                <!--</tr>-->
+                                <!--{% endfor %}-->
+                          <!--</tbody>-->
+                          <!--</table>-->
 
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <!--Inputs-->
-            <div class="row row-model-inputs">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <h4 class="card-header"><b>Model inputs</b></h4>
-                        <div class="card-body">
-                                <table class="table table-existing-version table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-muted text-center" scope="col">Date from</th>
-                                            <th class="text-muted text-center" scope="col">Date to</th>
-                                            <th class="text-muted text-center" scope="col">Strategy weight</th>
-                                            <th class="text-muted text-center" scope="col">Times lag</th>
-                                            <th class="text-muted text-center" scope="col">Leverage</th>
-                                            <th class="text-muted text-center" scope="col">Volatility</th>
-                                            <th class="text-muted text-center" scope="col">Frequency</th>
-                                            <th class="text-muted text-center" scope="col">Week day</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>
-                                            <td class="text-muted text-center">{{inputs_versions['input_date_to_times']}}</td>
-                                            <td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>
-                                            <td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_vol_window_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>
-                                             <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>
-                                        </tr>
-                                    </tbody>
-                            </table>
+            <!--&lt;!&ndash;Inputs&ndash;&gt;-->
+            <!--<div class="row row-model-inputs">-->
+                <!--<div class="col-lg-12">-->
+                    <!--<div class="card">-->
+                        <!--<h4 class="card-header"><b>Model inputs</b></h4>-->
+                        <!--<div class="card-body">-->
+                                <!--<table class="table table-existing-version table-hover">-->
+                                    <!--<thead>-->
+                                        <!--<tr>-->
+                                            <!--<th class="text-muted text-center" scope="col">Date from</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Date to</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Strategy weight</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Times lag</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Leverage</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Volatility</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Frequency</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Week day</th>-->
+                                        <!--</tr>-->
+                                    <!--</thead>-->
+                                    <!--<tbody>-->
+                                        <!--<tr>-->
+                                            <!--<td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>-->
+                                            <!--<td class="text-muted text-center">{{inputs_versions['input_date_to_times']}}</td>-->
+                                            <!--<td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>-->
+                                            <!--<td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_vol_window_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>-->
+                                             <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>-->
+                                        <!--</tr>-->
+                                    <!--</tbody>-->
+                            <!--</table>-->
 
-                            <div id="table-signals" class="table-editable">
-                                <table class="table table-existing-version table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-muted text-center" scope="col">Signal1 short</th>
-                                            <th class="text-muted text-center" scope="col">Signal2 short</th>
-                                            <th class="text-muted text-center" scope="col">Signal3 short</th>
-                                            <th class="text-muted text-center" scope="col">Signal1 long</th>
-                                            <th class="text-muted text-center" scope="col">Signal2 long</th>
-                                            <th class="text-muted text-center" scope="col">Signal3 long</th>
-                                        </tr>
-                                    </thead>
+                            <!--<div id="table-signals" class="table-editable">-->
+                                <!--<table class="table table-existing-version table-hover">-->
+                                    <!--<thead>-->
+                                        <!--<tr>-->
+                                            <!--<th class="text-muted text-center" scope="col">Signal1 short</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Signal2 short</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Signal3 short</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Signal1 long</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Signal2 long</th>-->
+                                            <!--<th class="text-muted text-center" scope="col">Signal3 long</th>-->
+                                        <!--</tr>-->
+                                    <!--</thead>-->
 
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_short_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_short_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_short_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_long_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_long_times']}}</td>
-                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_long_times']}}</td>
-                                        </tr>
-                                    </tbody>
-                            </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                    <!--<tbody>-->
+                                        <!--<tr>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_short_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_short_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_short_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_long_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_long_times']}}</td>-->
+                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_long_times']}}</td>-->
+                                        <!--</tr>-->
+                                    <!--</tbody>-->
+                            <!--</table>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <button class="btn btn-secondary btn-lg btn-run-model-existing-versions-times" type="submit" name="submit_button" value="run-strategy-existing-versions">Run strategy</button>
-                    </div>
-                </div>
-            </form>
+            <!--<form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>-->
+                <!--<div class="row">-->
+                    <!--<div class="col-lg-12">-->
+                        <!--<button class="btn btn-secondary btn-lg btn-run-model-existing-versions-times" type="submit" name="submit_button" value="run-strategy-existing-versions">Run strategy</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</form>-->
 
 
             {% elif pop_up_message == 'pop_up_message' %}
@@ -530,14 +635,10 @@
                     </div>
                   </div>
 
-                </div>
-
                 <script>
                     $('#myModal').modal('show');
                 </script>
-
-
             {% endif %}
-    </div>
-            {% endblock %}
+        </div>
+    {% endblock %}
 </body>

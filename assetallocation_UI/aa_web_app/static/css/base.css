@@ -30,6 +30,12 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 .card-title-risk-returns{color: #005774;}
 
+.card-title-label{color: #005774; margin-bottom: 40px;}
+
+.card-title-version_form{color: #005774; margin-top: 30px;}
+
+.second-card-title-version_form{color: #005774; margin-top: 30px;}
+
 /* ROWS */
 .row-model{margin-bottom: 30px; margin-top: 75px;}
 
@@ -50,6 +56,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .row-ag-grid {margin-top: 70px;}
 
 .row-model_form {margin-top: 70px;}
+
 
 /* JUMBOTRON */
 .jumbotron-image {background-position: center center;
@@ -134,8 +141,8 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .header-pretitle-version-name {text-transform: uppercase;
                                letter-spacing: .08em;
                                color: #95aac9;
-                               margin-top: 30px;
                                margin-bottom: 10px;
+                               margin-top: 5px;
                                color: #005774;
 }
 
