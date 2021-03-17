@@ -194,6 +194,8 @@ tr td{padding: 0 !important;
 
 .table-existing-version th {border: 0;}
 
+.table-existing-version{font-size: 14px;}
+
 
 /* FORMS */
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}

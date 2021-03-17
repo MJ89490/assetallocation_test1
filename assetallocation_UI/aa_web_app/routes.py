@@ -51,6 +51,7 @@ def times_strategy():
             return redirect(url_for('times_dashboard'))
         if obj_received_data_times.match_date_db:
             pop_up_message = 'pop_up_message'
+            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
             # create popup run or dashboard?
 
     return render_template('times_template.html',

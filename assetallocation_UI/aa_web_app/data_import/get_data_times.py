@@ -177,7 +177,7 @@ class ReceivedDataTimes:
 
         inputs_versions = {'fund': self.fund_name,
                            'version': strategy_version,
-                           'input_date_from_times': '01/01/2000',
+                           'input_date_from_times': '2000-01-01',
                            'input_date_to_times': self.date_to,
                            'input_strategy_weight_times': self.strategy_weight,
                            'input_time_lag_times': self.strategy.time_lag_in_months,
@@ -269,6 +269,8 @@ class ReceivedDataTimes:
                                      )
         self.version_strategy = fund_strategy.strategy_version
 
+        print(self.version_strategy)
+
         return fund_strategy
 
     def run_existing_strategy(self):
@@ -286,7 +288,7 @@ class ReceivedDataTimes:
         #     self.inputs_existing_versions_times['input_date_from_times'], self.is_new_strategy
         # )
         # TODO CREATE A NEW VERSION !!!
-        self.version_strategy = 179
+        self.version_strategy = 188
 
         # self.version_strategy = fund_strategy.strategy_version
         return fund_strategy

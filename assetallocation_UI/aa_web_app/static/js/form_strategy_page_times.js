@@ -24,13 +24,13 @@ window.onload = function() {
     console.log(sessionStorage.getItem("SelItemWeight"));
     $('#input_weight_fund_strategy').val(selItemWeight);
 
-    var selValVersion = sessionStorage.getItem("selValVersion");
-    console.log(sessionStorage.getItem("selValVersion"));
-    $('#select-version-from-strategy-page').val(selValVersion);
-
-    var selValDateTo = sessionStorage.getItem("selValDateTo");
-    console.log(sessionStorage.getItem("selValDateTo"));
-    $('#select-date-to-strategy-page').val(selValDateTo);
+//    var selValVersion = sessionStorage.getItem("selValVersion");
+//    console.log(sessionStorage.getItem("selValVersion"));
+//    $('#select-version-from-strategy-page').val(selValVersion);
+//
+//    var selValDateTo = sessionStorage.getItem("selValDateTo");
+//    console.log(sessionStorage.getItem("selValDateTo"));
+//    $('#select-date-to-strategy-page').val(selValDateTo);
 }
 
 // SELECT A FUND
@@ -136,8 +136,8 @@ $('#input_weight_fund_strategy').change(function() {
 
 
 $('#select-version-from-strategy-page').change(function() {
-        var selValVersion = $(this).val();
-        sessionStorage.setItem("selValVersion", selValVersion);
+//        var selValVersion = $(this).val();
+//        sessionStorage.setItem("selValVersion", selValVersion);
 
         version = document.getElementById("select-version-from-strategy-page").value
 
@@ -166,18 +166,18 @@ $('#select-version-from-strategy-page').change(function() {
 
 
 
-function selectDateTo(){
-    var dateToPage =  document.getElementById("select-date-to-from-strategy-page").value;
-    type_of_request = 'send_data';
-    console.log(dateToPage);
-    ready_to_send = true;
-    dateTo.push(dateToPage);
-    this.sendDataToPython();
-}
+//function selectDateTo(){
+//    var dateToPage =  document.getElementById("select-date-to-from-strategy-page").value;
+//    type_of_request = 'send_data';
+//    console.log(dateToPage);
+//    ready_to_send = true;
+//    dateTo.push(dateToPage);
+//    this.sendDataToPython();
+//}
 
 $('#select-date-to-strategy-page').change(function() {
-        var selValDateTo = $(this).val();
-        sessionStorage.setItem("selValDateTo", selValDateTo);
+//        var selValDateTo = $(this).val();
+//        sessionStorage.setItem("selValDateTo", selValDateTo);
 
         dateToPage = document.getElementById("select-date-to-strategy-page").value
 
@@ -225,31 +225,31 @@ $('#select-date-to-strategy-page').change(function() {
 
 
 
-
-
-function sendDataToPython(){
-//    'fund': fundSelectedFromStrategyPage[0],
-
-    if (ready_to_send == true){
-       var json_data = JSON.stringify({
-                                       'version': versionSelectedFromStrategyPage[0],
-                                       'fund_weight': weightFund[0],
-                                       'date_to': dateTo[0],
-                                       'type_of_request': 'run_existing_version'});
-
-        $.ajax({
-                url: "receive_data_from_times_strategy_page",
-                data: {json_data: json_data},
-                type: 'POST',
-                success: function(response){
-                    console.log('success');
-                    window.location.href = "times_strategy";
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
-    }
-}
+//
+//
+//function sendDataToPython(){
+////    'fund': fundSelectedFromStrategyPage[0],
+//
+//    if (ready_to_send == true){
+//       var json_data = JSON.stringify({
+//                                       'version': versionSelectedFromStrategyPage[0],
+//                                       'fund_weight': weightFund[0],
+//                                       'date_to': dateTo[0],
+//                                       'type_of_request': 'run_existing_version'});
+//
+//        $.ajax({
+//                url: "receive_data_from_times_strategy_page",
+//                data: {json_data: json_data},
+//                type: 'POST',
+//                success: function(response){
+//                    console.log('success');
+//                    window.location.href = "times_strategy";
+//                },
+//                error: function(error){
+//                    console.log(error);
+//                }
+//            });
+//    }
+//}
 
 
