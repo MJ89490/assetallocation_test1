@@ -124,13 +124,12 @@ faqs_row++;
                         <div class="card-body">
                             <center>
                                 <h4 class="card-title-label">Create a new version of the strategy for {{fund_selected}}</h4>
-
-
                                 <div class="btn-group version-name-form-btn-group">
                                     <label class="header-pretitle-version-name">Enter a version name</label>
                                     <input type="text" class="form-control version-name-form text-center" id="input_version_name_strategy" placeholder="Version name">
                                 </div>
                             </center>
+
                             <h4 class="card-title-version_form">Model assets</h4>
                             <div class="table-responsive">
                                 <table id="faqs" class="table table-hover">
@@ -162,6 +161,40 @@ faqs_row++;
 
                              <h4 class="second-card-title-version_form">Model inputs</h4>
 
+                            <form class="form-signin" role="form">
+                                <div class="row">
+                                    <div class="col-lg-12">
+
+                                                <div class="btn-group">
+                                                    <!--Date from-->
+                                                    <div class="form-group">
+                                                        <label class="subtitle-model-input">Date from</label>
+                                                        <input type="text" class="form-control form-models-select-times" id="input_date_from_times" name="input_date_from_times" readonly>
+                                                        <script type="text/javascript">
+                                                           document.getElementById('input_date_from_times').value = "01/01/2000"
+                                                        </script>
+                                                    </div>
+                                                      <!--Date to-->
+                                                    <div class="form-group">
+                                                        <label class="subtitle-model-input">Date to</label>
+                                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="13/08/2020" required oninput="selectDateToCalendar()">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="subtitle-model-input">Date to</label>
+                                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="13/08/2020" required oninput="selectDateToCalendar()">
+                                                    </div>
+                                                </div>
+
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </form>
                         </div>
                     </div>
                 </div>
