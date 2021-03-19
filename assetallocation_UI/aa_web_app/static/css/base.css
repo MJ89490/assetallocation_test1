@@ -108,6 +108,14 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 .btn-close-existing-versions-times-pop-up{width: 60px; font-size: 12px;}
 
+.btn-delete-assets-existing-version{background-color: rgb(155, 35, 53);
+                                    border-color: rgb(155, 35, 53);
+                                    color: #fff;
+                                    margin-left: 5px;
+                                    }
+
+.btn-add-assets-existing-version{background-color:  #005774; border-color:  #005774; color: #fff;}
+
 /* CONTAINER MODELS */
 .container .link-model {color: #005774 !important;}
 
@@ -203,6 +211,8 @@ tr td{padding: 0 !important;
 
 .table-existing-version{font-size: 14px;}
 
+.table-assets-existing-version > thead > tr {font-size: 14px;}
+
 
 /* FORMS */
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
@@ -213,7 +223,7 @@ tr td{padding: 0 !important;
 
 .select-form-fund{width: 170px; margin-left: 20px; margin-bottom: 15px;}
 
-.form-models-select-times{color: #005774 !important; width: 220px; margin-right: 5px;}
+.form-models-select-times{color: #005774 !important; margin-right: 5px;}
 
 .form-date-to-select-times{width: 150px;}
 
@@ -225,6 +235,9 @@ select {text-align: center;
         text-align-last: center;
         -moz-text-align-last: center;
 }
+
+.form-control-assets-table{font-size: 14px;}
+
 /* PARAGRAPH */
 .select-fund-choice{letter-spacing: .08em;
                     color: rgb(87, 90, 123);
