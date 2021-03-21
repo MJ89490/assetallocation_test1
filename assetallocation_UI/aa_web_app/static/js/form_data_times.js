@@ -45,21 +45,6 @@ function getDataFromTable()
 
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Checking if the values of the signals are in the ascending order, otherwise the signals are wrong
 function checkArray(array) {
     var aa = array.slice(1);
