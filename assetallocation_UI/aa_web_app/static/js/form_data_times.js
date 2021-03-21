@@ -65,24 +65,83 @@ function onRemoveSelected() {
 }
 
 // Get the data from assets table
-function getDataFromTable(){
-    var asset = $("#input_asset_from_times").val();
-    var category = $("#input_category_from_times").val();
-    var signalTicker = $("#input_signal_ticker_from_times").val();
-    var futureTicker = $("#input_future_ticker_from_times").val();
-    var costs = parseFloat($("#input_costs_from_times").val());
-    var leverage = parseFloat($("#input_leverage_from_times").val());
-    var versionName = $("#input_version_name_strategy").val();
+//function getDataFromTable(){
+////    var asset = $("#input_asset_from_times").val();
+////    var category = $("#input_category_from_times").val();
+////    var signalTicker = $("#input_signal_ticker_from_times").val();
+////    var futureTicker = $("#input_future_ticker_from_times").val();
+////    var costs = parseFloat($("#input_costs_from_times").val());
+////    var leverage = parseFloat($("#input_leverage_from_times").val());
+////    var versionName = $("#input_version_name_strategy").val();
+////
+////    var json_data = JSON.stringify({"input_asset": asset,
+////                                    "input_category": category,
+////                                    "input_signal_ticker": signalTicker,
+////                                    "input_future_ticker": futureTicker,
+////                                    "input_costs": costs,
+////                                    "input_leverage": leverage,
+////                                    "input_version_name_strategy": versionName});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+////    return json_data;
+//}
 
-    var json_data = JSON.stringify({"input_asset": asset,
-                                    "input_category": category,
-                                    "input_signal_ticker": signalTicker,
-                                    "input_future_ticker": futureTicker,
-                                    "input_costs": costs,
-                                    "input_leverage": leverage,
-                                    "input_version_name_strategy": versionName});
-    return json_data;
-}
+
+
+
+
+$(function()
+{
+   $("#contact-form-button-times").click(function()
+   {
+      $("#faqs").find('tr').each(function(){
+
+         var asset_title = $(this).find("th:eq(0)").val();
+
+
+         var asset = $(this).find("td:eq(0) input[type='text']").val();
+         var category = $(this).find("td:eq(1) input[type='text']").val();
+         var signalTicker = $(this).find("td:eq(2) input[type='text']").val();
+         var futureTicker = $(this).find("td:eq(3) input[type='text']").val();
+         var costs = $(this).find("td:eq(4) input[type='text']").val();
+         var leverage = $(this).find("td:eq(5) input[type='text']").val();
+
+        console.log(asset_title);
+         console.log(asset);
+         console.log(category);
+        console.log(signalTicker);
+        console.log(futureTicker);
+        console.log(costs);
+        console.log(leverage);
+   });
+ });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Checking if the values of the signals are in the ascending order, otherwise the signals are wrong
 function checkArray(array) {
@@ -155,36 +214,36 @@ function selectDateToCalendar() {
 
 
 
-$(function(){
-	$('#contact-form-button-times').click(function(){
-
-	    var json_data = getDataFromTable();
-        var form_data = $('form').serialize();
-        var check = checkReceivedDataTimes();
-
-        if (check != 'error'){
-            $.ajax({
-                url: "received_data_times_form",
-                data: {form_data: form_data, json_data:json_data},
-                type: 'POST',
-                success: function(response){
-                    console.log(response);
-                    alert('The strategy has been run successfully!');
-                    window.location.href = "times_dashboard";
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
-
-		}
-	});
-});
+//$(function(){
+//	$('#contact-form-button-times').click(function(){
+//
+//	    var json_data = getDataFromTable();
+//        var form_data = $('form').serialize();
+//        var check = checkReceivedDataTimes();
+//
+//        if (check != 'error'){
+//            $.ajax({
+//                url: "received_data_times_form",
+//                data: {form_data: form_data, json_data:json_data},
+//                type: 'POST',
+//                success: function(response){
+//                    console.log(response);
+//                    alert('The strategy has been run successfully!');
+//                    window.location.href = "times_dashboard";
+//                },
+//                error: function(error){
+//                    console.log(error);
+//                }
+//            });
+//
+//		}
+//	});
+//});
 
 
 // wait for the document to be loaded, otherwise
 // ag-Grid will not find the div in the document.
-document.addEventListener('DOMContentLoaded', function () {
-  var eGridDiv = document.querySelector('#myGrid');
-  new agGrid.Grid(eGridDiv, gridOptions);
-});
+//document.addEventListener('DOMContentLoaded', function () {
+//  var eGridDiv = document.querySelector('#myGrid');
+//  new agGrid.Grid(eGridDiv, gridOptions);
+//});
