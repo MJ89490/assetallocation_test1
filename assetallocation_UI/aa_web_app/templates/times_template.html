@@ -18,17 +18,14 @@
                 <div class="col-lg-8">
                     <div class="card card-custom-wide">
                         <img src="static/img/color-background.PNG" height="150px"/>
-
-                        <!--<img src="http://res.cloudinary.com/d3/image/upload/c_scale,q_auto:good,w_1110/trianglify-v1-cs85g_cc5d2i.jpg" height="150px"/>-->
                         <div class="card-body">
                             <h4 class="card-title">TIMES Strategy</h4>
                             <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
-
                                 <!--Select a fund-->
                                 <center>
                                     <label class="header-pretitle-card"><b>1. Select a fund</b></label><br>
                                     <select class="form-control select-form-fund text-center" id="select-fund-from-strategy-page">
-                                        <option disabled selected value>  -- fund --  </option>
+                                        <option disabled selected value>fund</option>
                                         {% for f in existing_funds %}
                                             <option>{{f}}</option>
                                         {% endfor %}
@@ -38,7 +35,7 @@
                                 <!--Choose a weight for the fund-->
                                  <center>
                                      <label class="header-pretitle-card"><b>2. Choose a weight for the fund</b></label><br>
-                                     <input type="text" class="form-control weight-fund-form text-center" id="input_weight_fund_strategy" placeholder="-- fund weight --">
+                                     <input type="text" class="form-control input-weight-fund-form text-center" id="input_weight_fund_strategy" placeholder="fund weight">
                                  </center>
 
                                 <!--Select a version -->
@@ -52,7 +49,7 @@
 
 
                                     <h6 class="subtitle-strategy">Create a new version of the strategy</h6>
-                                    <a href="#"><button  type="submit" name="submit_button" value="new-version" class="btn btn-secondary btn-lg btn-new-version">Create a new version</button></a>
+                                    <a href="#"><button  type="submit" name="submit_button" value="new-version" class="btn-sm btn-new-version">Create a new version</button></a>
                                 </center>
 
                                 <!--Existing version-->
@@ -62,7 +59,7 @@
                                     <h6 class="subtitle-strategy">Select an existing version of the strategy</h6>
                                     <div class="btn-group-vertical">
                                         <select class="form-control select-form-version" id="select-version-from-strategy-page">
-                                            <option disabled selected value>  -- version --  </option>
+                                            <option disabled selected value>version</option>
                                             {% for v in versions_list %}
                                                 <option>{{v}}</option>
                                             {% endfor %}
@@ -70,7 +67,7 @@
 
                                         <!--Date to-->
                                         <select class="form-control select-form-date-to" id="select-date-to-strategy-page">
-                                            <option disabled selected value>  -- date to --  </option>
+                                            <option disabled selected value>date to</option>
                                             {% for d in existing_date_to %}
                                                 <option>{{d}}</option>
                                             {% endfor %}
@@ -120,15 +117,16 @@ faqs_row++;
                                 <h4 class="card-title-label">Create a new version of the strategy for {{fund_selected}}</h4>
                                 <div class="btn-group version-name-form-btn-group">
                                     <label class="header-pretitle-version-name">Enter a version name</label>
-                                    <input type="text" class="form-control version-name-form text-center" id="input_version_name_strategy" placeholder="Version name">
+                                    <input type="text" class="form-control input-version-name-form text-center" id="input_version_name_strategy" name="input_version_name_strategy" placeholder="Version name">
                                 </div>
                             </center>
 
                             <h4 class="card-title-version_form">Model assets</h4>
-                            <div class="table-responsive">
-                                <table id="faqs" class="table table-assets-existing-version">
-                                    <thead>
-                                    <tr>
+
+                                <div class="table-responsive">
+                                    <table id="faqs" class="table table-assets-existing-version">
+                                        <thead>
+                                        <tr>
                                         <th class="text-center">Asset</th>
                                         <th class="text-center">Category</th>
                                         <th class="text-center">Signal ticker</th>
@@ -137,24 +135,25 @@ faqs_row++;
                                         <th class="text-center">Leverage</th>
                                         <th></th>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         <tr>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" placeholder="asset"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" placeholder="category"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" placeholder="signal ticker"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" placeholder="future ticker"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" placeholder="leverage"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="DM FX"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="FX"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="SPXT Index"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CD1 A:00_0_R Curncy"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
                                             <td class="mt-10"></td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="text-center"><button onclick="addfaqs();" class="btn-sm btn-add-assets-existing-version">Add asset</button></div>
+                                </div>
+                                <div class="text-center"><button onclick="addfaqs();" class="btn-sm btn-add-assets-existing-version">Add asset</button></div>
 
-                             <h4 class="second-card-title-version_form">Model inputs</h4>
 
+
+                            <h4 class="second-card-title-version_form">Model inputs</h4>
                             <form class="form-signin" role="form">
                                 <div class="row">
                                     <!--Date from-->
@@ -281,9 +280,8 @@ faqs_row++;
                                      </div>
                                 </div>
 
-                                 <div class="row">
-                                     <button class="btn btn-secondary btn-lg btn-run-model-times" type="button" id="contact-form-button-times">Run strategy</button>
-                                 </div>
+                                <div class="text-center"><button class="btn-sm btn-run-model-times" type="button" id="contact-form-button-times">Run strategy</button></div>
+
                             </form>
                         </div>
                     </div>

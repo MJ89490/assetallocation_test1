@@ -17,8 +17,6 @@ var rowData = [
 //  {asset: 'GBP', category: 'FX', signal_ticker: 'EURGBP Curncy', future_ticker: 'SPXT Index', costs:  0.0002, s_leverage: 1}
 ];
 
-console.log(rowData);
-
 var gridOptions = {
   columnDefs: [
     { headerName: 'Asset', field: 'asset' },
@@ -66,33 +64,22 @@ function onRemoveSelected() {
   printResult(res);
 }
 
-// Get the data from AG grid table
+// Get the data from assets table
 function getDataFromTable(){
+    var asset = $("#input_asset_from_times").val();
+    var category = $("#input_category_from_times").val();
+    var signalTicker = $("#input_signal_ticker_from_times").val();
+    var futureTicker = $("#input_future_ticker_from_times").val();
+    var costs = parseFloat($("#input_costs_from_times").val());
+    var leverage = parseFloat($("#input_leverage_from_times").val());
+    var versionName = $("#input_version_name_strategy").val();
 
-    var input_asset = [];
-    var input_category = [];
-    var input_signal_ticker = [];
-    var input_future_ticker = [];
-    var input_costs = [];
-    var input_leverage = [];
-
-    gridOptions.api.forEachNode(function(rowNode, index) {
-        input_asset.push(rowNode.data.asset);
-        input_category.push(rowNode.data.category);
-        input_signal_ticker.push(rowNode.data.signal_ticker);
-        input_future_ticker.push(rowNode.data.future_ticker);
-        input_costs.push(rowNode.data.costs);
-        input_leverage.push(rowNode.data.s_leverage);
-    });
-
-    var versionName = document.getElementById('input_version_name_strategy').value;
-
-    var json_data = JSON.stringify({"input_asset": input_asset,
-                                    "input_category": input_category,
-                                    "input_signal_ticker": input_signal_ticker,
-                                    "input_future_ticker": input_future_ticker,
-                                    "input_costs": input_costs,
-                                    "input_leverage": input_leverage,
+    var json_data = JSON.stringify({"input_asset": asset,
+                                    "input_category": category,
+                                    "input_signal_ticker": signalTicker,
+                                    "input_future_ticker": futureTicker,
+                                    "input_costs": costs,
+                                    "input_leverage": leverage,
                                     "input_version_name_strategy": versionName});
     return json_data;
 }
@@ -108,7 +95,7 @@ function checkArray(array) {
 
 }
 
-// Checking the values of the form before running the model
+// Checking the values of the form before running the model CHANGE TO JQUERY
 function checkReceivedDataTimes(){
     var lag = parseInt(document.getElementById('input_time_lag_times').value);
     var vol = parseInt(document.getElementById('input_vol_window_times').value);
@@ -173,16 +160,12 @@ $(function(){
 
 	    var json_data = getDataFromTable();
         var form_data = $('form').serialize();
-
         var check = checkReceivedDataTimes();
-        console.log(check);
-
-
 
         if (check != 'error'){
             $.ajax({
                 url: "received_data_times_form",
-                data: {form_data: form_data, json_data: json_data},
+                data: {form_data: form_data, json_data:json_data},
                 type: 'POST',
                 success: function(response){
                     console.log(response);

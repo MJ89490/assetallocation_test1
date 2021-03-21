@@ -78,7 +78,14 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 }
 .btn-dashboard {height: 38px; padding-top: 4px; margin-top: 15px; font-size: 18px;}
 
-.btn-new-version {height: 38px; padding-top: 2px; margin-top: 15px; font-size: 18px; margin-bottom: 10px;}
+.btn-new-version {padding-top: 2px;
+                  margin-top: 15px;
+                  font-size: 18px;
+                  margin-bottom: 10px;
+                  background-color:  #005774;
+                  border-color:  #005774;
+                  color: #fff;
+ }
 
 .btn-select {margin-top: 12px; height: 38px; margin-left: 10px; padding-top: 2px;}
 
@@ -92,7 +99,13 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                         border-color: #C0C0C0 !important;
 }
 
-.btn-run-model-times{width: 230px; margin-top: 32px; height: 38px; padding-top: 0px; margin-left: 15px; margin-bottom: 11px;}
+.btn-run-model-times{margin-top: 32px;
+                     margin-left: 15px;
+                     margin-bottom: 11px;
+                     background-color:  #005774;
+                     border-color:  #005774;
+                     color: #fff;
+}
 
 .btn-run-model-existing-versions-times{width: 250px;
                                        margin-top: 15px;
@@ -188,9 +201,9 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                        color: #005774;
 }
 
-.version-name-form{width: 150px; margin-left: 20px;}
+.input-version-name-form{width: 150px; margin-left: 20px; border-color: #005774;}
 
-.weight-fund-form{width: 170px; margin-left: 20px;}
+.input-weight-fund-form{width: 175px; border-color: #005774;}
 
 .modal-title{font-size: 20px; color: #005774;}
 
@@ -217,13 +230,13 @@ tr td{padding: 0 !important;
 /* FORMS */
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
 
-.select-form-version{margin-top: 15px; width: 175px;}
+.select-form-version{margin-top: 15px; width: 175px; border-color: #005774;}
 
-.select-form-date-to{width: 175px; margin-top: 10px;}
+.select-form-date-to{width: 175px; margin-top: 10px; border-color: #005774;}
 
-.select-form-fund{width: 170px; margin-left: 20px; margin-bottom: 15px;}
+.select-form-fund{width: 175px; margin-bottom: 15px; border-color: #005774;}
 
-.form-models-select-times{color: #005774 !important; margin-right: 5px;}
+.form-models-select-times{margin-right: 5px;}
 
 .form-date-to-select-times{width: 150px;}
 
