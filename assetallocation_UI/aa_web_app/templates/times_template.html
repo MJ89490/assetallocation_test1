@@ -84,32 +84,29 @@
 
 
             {% if run_model_page == 'run_new_version' %}
-        <script>
-            var faqs_row = 0;
-function addfaqs() {
-html = '<tr id="faqs-row' + faqs_row + '">';
-    html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="asset"></td>';
-    html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="category" ></td>';
-    html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="signal ticker"></td>';
-    html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="future ticker"></td>';
-    html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs"></td>';
-    html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="leverage"></td>';
-    html += '<td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version" onclick="$(\'#faqs-row' + faqs_row + '\').remove();"><i class="fa fa-trash"></i> Delete</button></td>';
+                <script>
+                    var faqs_row = 0;
+                    function addfaqs() {
+                    html = '<tr id="faqs-row' + faqs_row + '">';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="asset"></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="category" ></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="signal ticker"></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="future ticker"></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs"></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="leverage"></td>';
+                        html += '<td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version" onclick="$(\'#faqs-row' + faqs_row + '\').remove();"><i class="fa fa-trash"></i> Delete</button></td>';
 
-    html += '</tr>';
+                        html += '</tr>';
 
-$('#faqs tbody').append(html);
+                    $('#faqs tbody').append(html);
 
-faqs_row++;
-}
+                    faqs_row++;
+                    }
+                </script>
 
-
-
-</script>
-
-            <div class="row row-model">
-                <div class="col-lg-2"></div>
-                <div class="col-lg-8">
+                <div class="row row-model">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-8">
                     <div class="card card-custom-wide">
                         <img src="static/img/color-background.PNG" height="70px"/>
                         <div class="card-body">
@@ -123,7 +120,7 @@ faqs_row++;
 
                             <h4 class="card-title-version_form">Model assets</h4>
 
-                                <div class="table-responsive">
+                            <div class="table-responsive">
                                     <table id="faqs" class="table table-assets-existing-version">
                                         <thead>
                                         <tr>
@@ -146,32 +143,10 @@ faqs_row++;
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
                                             <td class="mt-10"></td>
                                         </tr>
-
-                                        <tr class="rowUpdate">
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="DM Equity"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="Equities"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="TPXDDVD Index"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="SPXT Index"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
-                                            <td class="mt-10"></td>
-                                        </tr>
-
-                                        <tr class="rowUpdate">
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="Nominal Bond"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="Fixed Income"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="G 1 A:00_0_R Comdty"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CN1 A:00_0_R Comdty"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
-                                            <td class="mt-10"></td>
-                                        </tr>
                                     </tbody>
                                 </table>
                                 </div>
-                                <div class="text-center"><button onclick="addfaqs();" class="btn-sm btn-add-assets-existing-version">Add asset</button></div>
-
-
+                            <div class="text-center"><button onclick="addfaqs();" class="btn-sm btn-add-assets-existing-version">Add asset</button></div>
 
                             <h4 class="second-card-title-version_form">Model inputs</h4>
                             <form class="form-signin" role="form">
@@ -301,350 +276,128 @@ faqs_row++;
                                 </div>
 
                                 <div class="text-center"><button class="btn-sm btn-run-model-times" type="button" id="contact-form-button-times">Run strategy</button></div>
-
                             </form>
                         </div>
                     </div>
                 </div>
-            </div>
-            <script src="static/js/form_data_times.js"></script>
+                </div>
+                <script src="static/js/form_data_times.js"></script>
+
+            {% elif run_model_page == 'run_existing_version' %}
+
+                <div class="row row-model">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-8">
+                        <div class="card card-custom-wide">
+                            <img src="static/img/color-background.PNG" height="70px"/>
+                            <div class="card-body">
+                                <center>
+                                    <h4 class="card-title-label">Existing version: {{inputs_versions['version']}} with the date to 13/08/2020</h4>
+                                </center>
+
+                                <p class="text-center">This version does not exist in the database with this date.</p>
+
+                                <!--Assets-->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4 class="card-header"><b>Model assets</b></h4>
+                                        <table class="table table-existing-version table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-muted text-center" scope="col">Asset</th>
+                                                    <th class="text-muted text-center" scope="col">Signal ticker</th>
+                                                    <th class="text-muted text-center" scope="col">Future ticker</th>
+                                                    <th class="text-muted text-center" scope="col">Costs</th>
+                                                    <th class="text-muted text-center" scope="col">Leverage</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                {% for asset in assets: %}
+                                                <tr>
+                                                    {% for a in asset: %}
+                                                        <td class="text-muted text-center">{{a}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                {% endfor %}
+                                          </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!--Inputs-->
+                                <div class="row row-model-inputs">
+                                    <div class="col-lg-12">
+                                        <h4 class="card-header"><b>Model inputs</b></h4>
+
+                                        <table class="table table-existing-version table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-muted text-center" scope="col">Date from</th>
+                                                    <th class="text-muted text-center" scope="col">Date to</th>
+                                                    <th class="text-muted text-center" scope="col">Strategy weight</th>
+                                                    <th class="text-muted text-center" scope="col">Times lag</th>
+                                                    <th class="text-muted text-center" scope="col">Leverage</th>
+                                                    <th class="text-muted text-center" scope="col">Volatility</th>
+                                                    <th class="text-muted text-center" scope="col">Frequency</th>
+                                                    <th class="text-muted text-center" scope="col">Week day</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>
+                                                    <td class="text-muted text-center">{{inputs_versions['input_date_to_times']}}</td>
+                                                    <td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>
+                                                    <td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>
+                                                    <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>
+                                                    <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_vol_window_times']}}</td>
+                                                    <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>
+                                                     <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div id="table-signals" class="table-editable">
+                                                <table class="table table-existing-version table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-muted text-center" scope="col">Signal1 short</th>
+                                                            <th class="text-muted text-center" scope="col">Signal2 short</th>
+                                                            <th class="text-muted text-center" scope="col">Signal3 short</th>
+                                                            <th class="text-muted text-center" scope="col">Signal1 long</th>
+                                                            <th class="text-muted text-center" scope="col">Signal2 long</th>
+                                                            <th class="text-muted text-center" scope="col">Signal3 long</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_short_times']}}</td>
+                                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_short_times']}}</td>
+                                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_short_times']}}</td>
+                                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_long_times']}}</td>
+                                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_long_times']}}</td>
+                                                            <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_long_times']}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
+                                </div>
+
+                                 <div class="text-center"><button class="btn-sm btn-run-model-times" type="submit" name="submit_button" value="run-existing-version" id="contact-form-button-times">Run strategy</button></div
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <!--<div class="row">-->
-                <!--<div class="col-lg-12">-->
-                    <!--<center>-->
-                        <!--<h4 class="title-page-model">Create a new version of the strategy for {{fund_selected}}</h4>-->
-                        <!--<label class="header-pretitle-version-name">Enter a version name</label>-->
-                        <!--<input type="text" class="form-control version-name-form text-center" id="input_version_name_strategy" placeholder="Version name">-->
-                    <!--</center>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="row row-effect-ag-grid"></div>-->
-            <!--<h4 class="title-models-ag-grid">Model assets</h4>-->
-            <!--<div style="height: 30%; display: flex; flex-direction: column;">-->
-                <!--<div style="margin-bottom: 4px;">-->
-                    <!--<button class="btn btn-outline-secondary" onclick="onAddRow()">Add Input</button>-->
-                    <!--<button class="btn btn-outline-secondary" onclick="onRemoveSelected()">Remove Selected</button>-->
-                    <!--<button class="btn btn-outline-secondary" onclick="clearData()">Clear Data</button>-->
-                <!--</div>-->
-                <!--<div style="flex-grow: 1;">-->
-                    <!--<div id="myGrid" style="height: 100%;" class="ag-theme-alpine text-center"></div>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="row row-effect-ag-grid-bottom"></div>-->
-
-            <!--<div class="row row-model-inputs">-->
-                <!--<div class="col-lg-12">-->
-                    <!--<form class="form-signin" role="form">-->
-                        <!--<h4 class="title-models-ag-grid">Model inputs</h4>-->
-                        <!--<div class="row">-->
-                            <!--<div class="col-lg-6">-->
-                                 <!--<div class="card">-->
-                                     <!--<div class="card-body">-->
-                                         <!--<div class="row">-->
-                                            <!--<div class="col-lg-6">-->
-                                                <!--<div class="btn-group">-->
-                                                    <!--&lt;!&ndash;Date from&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Date from</label>-->
-                                                        <!--<input type="text" class="form-control form-models-select-times" id="input_date_from_times" name="input_date_from_times" readonly>-->
-                                                        <!--<script type="text/javascript">-->
-                                                           <!--document.getElementById('input_date_from_times').value = "01/01/2000"-->
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                                      <!--&lt;!&ndash;Date to&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Date to</label>-->
-                                                        <!--<input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg" value="13/08/2020" required oninput="selectDateToCalendar()">-->
-                                                    <!--</div>-->
-                                                <!--</div>-->
-                                                <!--<div class="btn-group">-->
-                                                    <!--&lt;!&ndash;Volatility window&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                         <!--<label class="subtitle-model-input">Volatility window</label>-->
-                                                         <!--<input type="number" id="input_vol_window_times" name="input_vol_window_times" class="form-control form-models-select-times" placeholder="Volatility window" required>-->
-                                                         <!--<script type="text/javascript">-->
-                                                            <!--document.getElementById('input_vol_window_times').value = 90;-->
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                                    <!--&lt;!&ndash;Time lag&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Time lag</label>-->
-                                                        <!--<input type="number" id="input_time_lag_times" name="input_time_lag_times" class="form-control form-models-select-times" placeholder="Time lag" required>-->
-                                                        <!--<script type="text/javascript">-->
-                                                            <!--document.getElementById('input_time_lag_times').value = 2;-->
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                         <!--</div>-->
-                                         <!--<div class="row">-->
-                                             <!--<div class="col-lg-6">-->
-                                                 <!--<div class="btn-group">-->
-                                                    <!--&lt;!&ndash;Leverage type&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Leverage type</label>-->
-                                                        <!--<select id="input_leverage_times" name="input_leverage_times" class="form-control form-models-select-times">-->
-                                                            <!--<option>v</option>-->
-                                                            <!--<option>e</option>-->
-                                                            <!--<option>n</option>-->
-                                                            <!--<option>s</option>-->
-                                                        <!--</select>-->
-                                                    <!--</div>-->
-                                                     <!--&lt;!&ndash;Frequency&ndash;&gt;-->
-                                                     <!--<div class="form-group">-->
-                                                         <!--<label class="subtitle-model-input">Frequency</label>-->
-                                                         <!--<select id="input_frequency_times" name="input_frequency_times" class="form-control form-models-select-times">-->
-                                                             <!--<option>weekly</option>-->
-                                                             <!--<option>monthly</option>-->
-                                                             <!--<option>daily</option>-->
-                                                        <!--</select>-->
-                                                    <!--</div>-->
-                                                 <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                         <!--<div class="row">-->
-                                             <!--<div class="col-lg-6">-->
-                                                 <!--<div class="btn-group">-->
-                                                     <!--&lt;!&ndash;Week day&ndash;&gt;-->
-                                                     <!--<div class="form-group">-->
-                                                         <!--<label class="subtitle-model-input">Week day</label>-->
-                                                        <!--<input id="input_weekday_times" name="input_weekday_times" class="form-control form-models-select-times rounded-lg" value="WED" readonly>-->
-                                                     <!--</div>-->
-                                                 <!--</div>-->
-                                             <!--</div>-->
-                                         <!--</div>-->
-
-                                     <!--</div>-->
-                                 <!--</div>-->
-                            <!--</div>-->
-
-                            <!--<div class="col-lg-6">-->
-                                <!--<div class="card">-->
-                                    <!--<div class="card-body">-->
-
-                                        <!--<div class="row">-->
-                                            <!--<div class="col-lg-6">-->
-                                                <!--&lt;!&ndash;Signal1 short&ndash;&gt;-->
-                                                <!--<div class="btn-group">-->
-                                                    <!--<div class="form-group">-->
-                                                <!--<label class="subtitle-model-input">Signal1 short</label>-->
-                                                <!--<input type="number" id="input_signal_one_short_times" name="input_signal_one_short_times" class="form-control form-models-select-times" placeholder="Signal1 short" required>-->
-                                                 <!--<script type="text/javascript">-->
-                                                    <!--document.getElementById('input_signal_one_short_times').value = 15;-->
-                                                <!--</script>-->
-                                            <!--</div>-->
-                                                    <!--<div class="form-group">-->
-                                                <!--<label class="subtitle-model-input">Signal1 long</label>-->
-                                                <!--<input type="number" id="input_signal_one_long_times" name="input_signal_one_long_times" class="form-control form-models-select-times" placeholder="Signal1 long" required>-->
-                                                 <!--<script type="text/javascript">-->
-                                                    <!--document.getElementById('input_signal_one_long_times').value = 30;-->
-                                                <!--</script>-->
-                                            <!--</div>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                        <!--<div class="row">-->
-                                            <!--<div class="col-lg-6">-->
-                                                <!--<div class="btn-group">-->
-                                                    <!--&lt;!&ndash;Signal2 short&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Signal2 short</label>-->
-                                                        <!--<input type="number" id="input_signal_two_short_times" name="input_signal_two_short_times" class="form-control form-models-select-times" placeholder="Signal2 short" required>-->
-                                                         <!--<script type="text/javascript">-->
-                                                            <!--document.getElementById('input_signal_two_short_times').value = 30;-->
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                                    <!--&lt;!&ndash;Signal2 long&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Signal2 long</label>-->
-                                                        <!--<input type="number" id="input_signal_two_long_times" name="input_signal_two_long_times" class="form-control form-models-select-times" placeholder="Signal2 long" required>-->
-                                                        <!--<script type="text/javascript">-->
-                                                            <!--document.getElementById('input_signal_two_long_times').value = 60;-->
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                        <!--<div class="row">-->
-                                            <!--<div class="col-lg-6">-->
-                                                <!--<div class="btn-group">-->
-                                                    <!--&lt;!&ndash;Signal3 short&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Signal3 short</label>-->
-                                                        <!--<input type="number" id="input_signal_three_short_times" name="input_signal_three_short_times" class="form-control form-models-select-times" placeholder="Signal3 short" required>-->
-                                                         <!--<script type="text/javascript">-->
-                                                            <!--document.getElementById('input_signal_three_short_times').value = 60;-->
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                                    <!--&lt;!&ndash;Signal3 long&ndash;&gt;-->
-                                                    <!--<div class="form-group">-->
-                                                        <!--<label class="subtitle-model-input">Signal3 long</label>-->
-                                                        <!--<input type="number" id="input_signal_three_long_times" name="input_signal_three_long_times" class="form-control form-models-select-times" placeholder="Signal3 long" required>-->
-                                                           <!--<script type="text/javascript">-->
-                                                            <!--document.getElementById('input_signal_three_long_times').value = 120;-->
-                                                        <!--</script>-->
-                                                    <!--</div>-->
-                                                <!--</div>-->
-                                                <!--<div class="row">-->
-                                                    <!--<button class="btn btn-secondary btn-lg btn-run-model-times" type="button" id="contact-form-button-times">Run strategy</button>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</form>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<script src="static/js/form_data_times.js"></script>-->
-
-
-            <!--{% elif run_model_page == 'run_existing_version' %}-->
-
-            <!--<h4 class="title-page-model text-center">Run an existing version of the strategy {{inputs_versions['version']}} for {{inputs_versions['fund']}}</h4>-->
-            <!--&lt;!&ndash;<h6 class="sub-title-fund-version-dashboard text-center"><i>Fund name: {{inputs_versions['fund']}} Strategy version: {{inputs_versions['version']}}</i></h6>&ndash;&gt;-->
-            <!--<h6 class="sub-title-date-dashboard text-center"><i>Date run:</i></h6>-->
-
-            <!--&lt;!&ndash;Assets&ndash;&gt;-->
-            <!--<div class="row">-->
-                <!--<div class="col-lg-12">-->
-                    <!--<div class="card">-->
-                        <!--<h4 class="card-header"><b>Model assets</b></h4>-->
-                        <!--<div class="card-body">-->
-                            <!--<table class="table table-existing-version table-hover">-->
-                            <!--<thead>-->
-                                <!--<tr>-->
-                                    <!--<th class="text-muted text-center" scope="col">Asset</th>-->
-                                    <!--<th class="text-muted text-center" scope="col">Signal ticker</th>-->
-                                    <!--<th class="text-muted text-center" scope="col">Future ticker</th>-->
-                                    <!--<th class="text-muted text-center" scope="col">Costs</th>-->
-                                    <!--<th class="text-muted text-center" scope="col">Leverage</th>-->
-                                <!--</tr>-->
-                            <!--</thead>-->
-
-                            <!--<tbody>-->
-                                <!--{% for asset in assets: %}-->
-                                <!--<tr>-->
-                                    <!--{% for a in asset: %}-->
-                                        <!--<td class="text-muted text-center">{{a}}</td>-->
-                                    <!--{% endfor %}-->
-                                <!--</tr>-->
-                                <!--{% endfor %}-->
-                          <!--</tbody>-->
-                          <!--</table>-->
-
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash;Inputs&ndash;&gt;-->
-            <!--<div class="row row-model-inputs">-->
-                <!--<div class="col-lg-12">-->
-                    <!--<div class="card">-->
-                        <!--<h4 class="card-header"><b>Model inputs</b></h4>-->
-                        <!--<div class="card-body">-->
-                                <!--<table class="table table-existing-version table-hover">-->
-                                    <!--<thead>-->
-                                        <!--<tr>-->
-                                            <!--<th class="text-muted text-center" scope="col">Date from</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Date to</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Strategy weight</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Times lag</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Leverage</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Volatility</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Frequency</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Week day</th>-->
-                                        <!--</tr>-->
-                                    <!--</thead>-->
-                                    <!--<tbody>-->
-                                        <!--<tr>-->
-                                            <!--<td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>-->
-                                            <!--<td class="text-muted text-center">{{inputs_versions['input_date_to_times']}}</td>-->
-                                            <!--<td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>-->
-                                            <!--<td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_vol_window_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>-->
-                                             <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_frequency_times']}}</td>-->
-                                        <!--</tr>-->
-                                    <!--</tbody>-->
-                            <!--</table>-->
-
-                            <!--<div id="table-signals" class="table-editable">-->
-                                <!--<table class="table table-existing-version table-hover">-->
-                                    <!--<thead>-->
-                                        <!--<tr>-->
-                                            <!--<th class="text-muted text-center" scope="col">Signal1 short</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Signal2 short</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Signal3 short</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Signal1 long</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Signal2 long</th>-->
-                                            <!--<th class="text-muted text-center" scope="col">Signal3 long</th>-->
-                                        <!--</tr>-->
-                                    <!--</thead>-->
-
-                                    <!--<tbody>-->
-                                        <!--<tr>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_short_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_short_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_short_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_one_long_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_two_long_times']}}</td>-->
-                                            <!--<td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_signal_three_long_times']}}</td>-->
-                                        <!--</tr>-->
-                                    <!--</tbody>-->
-                            <!--</table>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--<form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>-->
-                <!--<div class="row">-->
-                    <!--<div class="col-lg-12">-->
-                        <!--<button class="btn btn-secondary btn-lg btn-run-model-existing-versions-times" type="submit" name="submit_button" value="run-strategy-existing-versions">Run strategy</button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</form>-->
 
 
             {% elif pop_up_message == 'pop_up_message' %}
                 <!-- Modal -->
-                  <!-- Modal -->
-                  <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal fade" id="myModal" role="dialog">
                     <div class="modal-dialog modal-lg">
 
                       <!-- Modal content-->

@@ -279,7 +279,7 @@ class ReceivedDataTimes:
                                      self.strategy,
                                      os.environ.get('USERNAME'),
                                      dt.datetime.strptime(self.inputs_existing_versions_times['input_date_from_times'],
-                                                          '%d/%m/%Y').date(),
+                                                          '%Y-%m-%d').date(),
                                      self.inputs_existing_versions_times['input_date_to_times']
                                      )
 

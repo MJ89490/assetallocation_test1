@@ -46,9 +46,7 @@ def times_strategy():
     else:
         if obj_received_data_times.match_date_db is False:
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
-            obj_received_data_times.run_existing_strategy()
             run_model_page = 'run_existing_version'
-            return redirect(url_for('times_dashboard'))
         if obj_received_data_times.match_date_db:
             pop_up_message = 'pop_up_message'
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
