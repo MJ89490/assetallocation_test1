@@ -33,6 +33,7 @@ BEGIN
     WHERE
       e.version = strategy_version
       AND aa.business_datetime <@ select_effect_assets_with_analytics.business_tstzrange
+      AND upper(aa.system_tstzrange) = 'infinity'
     GROUP BY
       eag.strategy_asset_group_id,
       eag.ndf_code,
