@@ -23,7 +23,7 @@ class DataFrameConverter:
         df = pd.DataFrame(data, columns=['label', 'business_datetime', 'value'])
         df = df.drop_duplicates()
         # df = df.sort_values(by='label')
-        df = df.sort_values(by='business_datetime')
+        # df = df.sort_values(by='business_datetime')
         df = df.pivot(index='business_datetime', columns='label', values='value')
         df.index = pd.DatetimeIndex(df.index)
         return df
