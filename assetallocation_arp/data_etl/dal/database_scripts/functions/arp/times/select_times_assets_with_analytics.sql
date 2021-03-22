@@ -49,6 +49,7 @@ BEGIN
         JOIN asset.asset_analytic aa on a.id = aa.asset_id
       WHERE
         aa.business_datetime <@ select_times_assets_with_analytics.business_tstzrange
+        AND upper(aa.system_tstzrange) = 'infinity'
       GROUP BY
         ta2.signal_asset_id,
         a.ticker
@@ -64,6 +65,7 @@ BEGIN
         JOIN asset.asset_analytic aa on a.id = aa.asset_id
       WHERE
         aa.business_datetime <@ select_times_assets_with_analytics.business_tstzrange
+        AND upper(aa.system_tstzrange) = 'infinity'
       GROUP BY
         ta3.future_asset_id,
         a.ticker

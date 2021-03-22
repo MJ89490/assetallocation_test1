@@ -51,6 +51,7 @@ BEGIN
     WHERE
         m.version = strategy_version
         AND aa.business_datetime <@ select_maven_assets_with_analytics.business_tstzrange
+        AND upper(aa.system_tstzrange) = 'infinity'
       GROUP BY
         mag.strategy_asset_group_id,
         c.currency,

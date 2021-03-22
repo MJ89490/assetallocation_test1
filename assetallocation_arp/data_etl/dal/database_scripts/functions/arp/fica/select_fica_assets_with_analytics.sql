@@ -42,6 +42,7 @@ BEGIN
         JOIN asset.asset_analytic aa on a1.id = aa.asset_id
       WHERE
         aa.business_datetime <@ select_fica_assets_with_analytics.business_tstzrange
+        AND upper(aa.system_tstzrange) = 'infinity'
       GROUP BY
         fa2.asset_id,
         a1.name,
