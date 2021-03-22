@@ -20,11 +20,19 @@ class ReceivedDataTimes:
         self.strategy_weight_user = 0
         self.match_date_db = None
         self.date_to = None
-        self.is_new_strategy = None
         self.fund_name = None
         self.strategy = None
         self.type_of_request = None
         self.date_to_sidebar = None
+        self.version_description = ''
+
+    @property
+    def version_description(self) -> bool:
+        return self._version_description
+
+    @version_description.setter
+    def version_description(self, x) -> None:
+        self._version_description = x
 
     @property
     def match_date_db(self) -> bool:
@@ -60,14 +68,6 @@ class ReceivedDataTimes:
     @strategy.setter
     def strategy(self, x: Times) -> None:
         self._strategy = x
-
-    @property
-    def is_new_strategy(self) -> bool:
-        return bool(self._is_new_strategy)
-
-    @is_new_strategy.setter
-    def is_new_strategy(self, value: bool):
-        self._is_new_strategy = value
 
     @property
     def version_strategy(self):
@@ -248,7 +248,7 @@ class ReceivedDataTimes:
                       int(self.times_form['input_vol_window_times']))
 
         # Times.description = self.times_form['input_version_name']
-        Times.description = self.fund_name
+        times.description = ''
 
         # self.date_to = datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
         self.date_to = self.times_form['input_date_to_new_version_times']
@@ -265,7 +265,8 @@ class ReceivedDataTimes:
         fund_strategy = run_strategy(self.fund_name, float(0.46),
                                      times, os.environ.get('USERNAME'),
                                      dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
-                                     dt.datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
+                                     dt.datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date(),
+                                     is_new_strategy=True
                                      )
         self.version_strategy = fund_strategy.strategy_version
 
@@ -280,7 +281,8 @@ class ReceivedDataTimes:
                                      os.environ.get('USERNAME'),
                                      dt.datetime.strptime(self.inputs_existing_versions_times['input_date_from_times'],
                                                           '%Y-%m-%d').date(),
-                                     self.inputs_existing_versions_times['input_date_to_times']
+                                     self.inputs_existing_versions_times['input_date_to_times'],
+                                     is_new_strategy=False
                                      )
 
         # fund_strategy = run_strategy(
@@ -288,7 +290,7 @@ class ReceivedDataTimes:
         #     self.inputs_existing_versions_times['input_date_from_times'], self.is_new_strategy
         # )
         # TODO CREATE A NEW VERSION !!!
-        self.version_strategy = 188
+        self.version_strategy = 179
 
         # self.version_strategy = fund_strategy.strategy_version
         return fund_strategy

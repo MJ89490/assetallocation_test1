@@ -138,6 +138,7 @@ class ArpProcCaller(Db):
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
         res = self.call_proc('arp.select_strategy_versions', [strategy_name])
+        print(res)
         return {row['version']: row['description'] for row in res}
 
     def select_fund_names(self) -> List[str]:
