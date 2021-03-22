@@ -23,8 +23,7 @@ def run_strategy(
         pc.insert_strategy(strategy, user_id)
 
     # Find the analytics in the db we are going to use
-    # TODO renamme get_
-    pc.add_asset_analytics_to_strategy(strategy, business_date_from, business_date_to)
+    pc.get_asset_analytics_to_strategy(strategy, business_date_from, business_date_to)
     fs = FundStrategy(fund_name, strategy.name, strategy.version, strategy_weight)
     fs.analytics, fs.asset_weights = strategy.run()
     pc.insert_fund_strategy_results(fs, user_id, business_date_from, business_date_to)

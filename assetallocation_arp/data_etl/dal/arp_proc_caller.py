@@ -173,7 +173,7 @@ class StrategyProcCaller(ABC, ArpProcCaller):
         pass
 
     @abstractmethod
-    def add_asset_analytics_to_strategy(
+    def get_asset_analytics_to_strategy(
             self, strategy: Strategy, business_date_from: dt.date, business_date_to: dt.date
     ) -> None:
         """Add asset analytics to strategy."""
@@ -206,7 +206,7 @@ class TimesProcCaller(StrategyProcCaller):
         self.call_proc('arp.insert_times_assets', [times_version, times_assets])
         return True
 
-    def add_asset_analytics_to_strategy(
+    def get_asset_analytics_to_strategy(
             self, strategy: Times, business_date_from: dt.date, business_date_to: dt.date
     ) -> None:
         """Add asset analytics to strategy."""
