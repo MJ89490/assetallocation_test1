@@ -147,6 +147,8 @@ $('#select-version-from-strategy-page').change(function() {
             versionSelectedFromStrategyPage.splice(0, versionSelectedFromStrategyPage.length-1);
         }
 
+
+
         var json_data = JSON.stringify({'version': versionSelectedFromStrategyPage[0],
                                         'type_of_request': 'selected_version'});
 

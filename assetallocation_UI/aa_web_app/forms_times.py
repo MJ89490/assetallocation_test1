@@ -11,26 +11,33 @@ from assetallocation_UI.aa_web_app.service.formatter import format_versions
 class SideBarDataForm(FlaskForm):
     # Versions of the strategy
     existing_versions = get_strategy_versions(Name.times)
-    version_choices = list(zip(existing_versions, existing_versions))
-    input_versions_times = existing_versions
+    versions = []
+
+    # for key, value in existing_versions.items():
+    #     if value == '':
+    #         value = 'no description'
+    #     versions.append(str(key) + ": " + value)
+
+    # version_choices = list(zip(versions, versions))
+    input_versions_times = format_versions(existing_versions)
     # version_choices = list(zip(existing_versions, format_versions(existing_versions)))
 
     # Chart Data
-    versions_for_charts = SelectField('Versions', choices=version_choices)
-    submit_ok_versions_data = SubmitField('ok')
+    # versions_for_charts = SelectField('Versions', choices=format_versions(existing_versions))
+    # submit_ok_versions_data = SubmitField('ok')
 
     # Fund name
     existing_funds = get_fund_names()
     input_fund_name_times = existing_funds
     # input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
-    submit_ok_charts_fund_data = SubmitField('ok')
+    # submit_ok_charts_fund_data = SubmitField('ok')
 
     # Export data
-    versions_for_export = SelectField('Versions', choices=version_choices)
-    start_date_export = StringField()
-    end_date_export = StringField()
-    submit_ok_export_data = SubmitField('ok')
-    submit_ok_export_fund_data = SubmitField('ok')
+    # versions_for_export = SelectField('Versions', choices=format_versions(existing_versions))
+    # start_date_export = StringField()
+    # end_date_export = StringField()
+    # submit_ok_export_data = SubmitField('ok')
+    # submit_ok_export_fund_data = SubmitField('ok')
 
 
 class AssetInputForm(FlaskForm):
@@ -38,21 +45,33 @@ class AssetInputForm(FlaskForm):
 
 
 class InputsTimesModel(FlaskForm):
-    # Versions TO REMOVE later
+    # # Versions TO REMOVE later
     existing_versions = get_strategy_versions(Name.times)
-    version_choices = [('New Version', 'New Version')]
-    version_choices.extend(list(zip(existing_versions, format_versions(existing_versions))))
-    versions = SelectField('Versions', choices=version_choices)
-    submit_versions = SubmitField('Select this version')
+    # version_choices = [('New Version', 'New Version')]
+    # versions_dict = {}
+    #
+    # for key, value in existing_versions.items():
+    #     if value == '':
+    #         value = 'no description'
+    #     versions_dict[str(key) + ": " + value] = key
+        # versions.append(str(key) + ": " + value)
+
+
+    # version_choices = list(zip(versions, versions))
+    #
+    # # version_choices.extend(list(zip(versions, format_versions(existing_versions))))
+    # versions = SelectField('Versions', choices=version_choices)
+    # submit_versions = SubmitField('Select this version')
 
     # Versions of the strategy
-    existing_versions = get_strategy_versions(Name.times)
-    version_choices = list(zip(existing_versions, existing_versions))
-    input_versions_times = existing_versions
-
-    # Weight of the strategy
+    # existing_versions = get_strategy_versions(Name.times)
 
 
+
+    # version_choices = list(zip(existing_versions, existing_versions))
+    # input_versions_times = existing_versions
+
+    input_versions_times = format_versions(existing_versions)
     # Fund names
     existing_funds = get_fund_names()
     input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))

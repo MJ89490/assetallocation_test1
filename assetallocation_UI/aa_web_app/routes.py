@@ -49,6 +49,7 @@ def times_strategy():
             run_model_page = 'run_existing_version'
         if obj_received_data_times.match_date_db:
             pop_up_message = 'pop_up_message'
+            print(obj_received_data_times.version_strategy)
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
             # create popup run or dashboard?
 
