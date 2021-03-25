@@ -25,29 +25,19 @@ os.environ["https_proxy"] = local_proxy
 logger.info("Proxy settings defined")
 
 
-def get_data(df, name):
+def get_data(df, name) -> ColumnDataSource:
     """
     This function takes a data frame and name entry and return data in ColumnDataSource format for Bokeh
     :param df: Data as pandas data frame
     :param name: Ticker/instrument name as string
     :return: ColumnDataSource format data
     """
-    # If data frame is empty, default output to be a "null" data frame which can be shown in Bokeh
-    if df.empty:
-        df = pd.DataFrame({"ticker": ["N/A", "N/A"],
-                           "value": [0, 0],
-                           "business_datetime": [datetime.today().strftime("%Y/%m/%d"),
-                                                 datetime.today().strftime("%Y/%m/%d")],
-                           "description": ["N/A", "N/A"]
-                           })
-        logger.info("No data retrieved from database - initial graph defaulted to null")
-    else:
-        logger.info(f"Data retrieved from database for: {name}")
-
+    logger.info(f"Data retrieved for: {name}")
     # Filter data frame for specific ticker
-    df = df[df["ticker"] == name]
     # Sort data frame by latest date
+    df = df[df["ticker"] == name]
     df.sort_values(by=["business_datetime"], inplace=True, ascending=True)
+
     try:
         # Calculate daily return (natural log of today's value / yesterday's value)
         df["log_return"] = np.log(df["value"]).diff()
@@ -113,52 +103,68 @@ def make_plot(source):
     return_fig.yaxis.axis_label_text_font_style = "bold"
     return_fig.legend.location = "top_left"
     return_fig.add_tools(HoverTool(tooltips=return_tooltips, formatters={"@business_datetime": "datetime"}))
-
     logger.info("Bokeh charts created")
 
     return price_fig, return_fig
 
 
-def drop_down_handle(attr, old, new):
+def drop_down_handle(attr, old, new) -> None:
     """
     This function handles when the drop down Bokeh widget is changed.
     :param attr:
     :param old:
     :param new:
-    :return: n/a
+    :return: None
     """
     # Define the value chosen from the drop down
     instrument = drop_down.value
 
     # Get filtered data frame database in ColumnDataSource format
     # Update source data
-    source_update = get_data(df=db_df, name=instrument)
+    source_update = get_data(df=df_db, name=instrument)
     col_data_source.data.update(source_update.data)
     col_data_source.selected.indices = []
-
     logger.info(f"{instrument} chosen from drop down")
 
     return
 
 
-def refresh_button_handle():
+def refresh_button_handle() -> None:
     """
     This function handles when the refresh button Bokeh widget is changed.
     :return:
     """
-    if db_df["business_datetime"].max().date() != datetime.today().date() - timedelta(days=1):
+    logger.info("Refresh button handle started")
+    if df_db["business_datetime"].max().date() != datetime.today().date() - timedelta(days=1):
         # Run data frame through ETL class
         db = Db()
         # Get tickers from database and retrieve latest prices for these
-        df_tickers, _ = db.get_tickers()
+        df_tickers = db.get_tickers()
         etl = ETLProcess(df=df_tickers)
         etl.bbg_data()
-        etl.clean_data()
-        etl.data_validation()
-        etl.upload_asset_analytic()
+        df_clean = etl.clean_data()
+        db.df_to_staging_asset_analytic(df_clean)
+        db.call_proc(proc_name="staging.load_asset_analytics", proc_params=[])
+
     else:
-        logging.info("Data is up to date")
+        logging.info("Data is up to date - no refresh is required")
     logger.info("Refresh button handle complete")
+
+    return
+
+
+def data_validation_handle() -> None:
+    """
+    This function handles when the data validation button Bokeh widget is changed.
+    :return:
+    """
+    logger.info("Data validation handle started")
+    db = Db()
+    # Get analytic data and run data validation against this
+    df_analytic, _ = db.get_analytic()
+    etl = ETLProcess(df=df_analytic)
+    etl.data_validation()
+    logger.info("Data validation button handle complete")
 
     return
 
@@ -166,17 +172,15 @@ def refresh_button_handle():
 # Open data base connection and read current data as data frame
 # Get list of instruments from data frame as a unique list
 db = Db()
-db_df = db.read_from_asset()
-instrument_list = db_df["ticker"].unique().tolist()
+df_db, instrument_list = db.get_analytic()
 
-if not instrument_list:
-    instrument_list = ["Instrument A"]
-else:
-    pass
+# df_db = pd.DataFrame({"ticker": ["N/A", "N/A"], "value": [0, 0], "business_datetime":[datetime.today(), datetime.today()], "description": ["N/A", "N/A"]})
+# instrument_list = df_db["ticker"].unique().tolist()
 
 # Create drop down, file input, refresh and stats widgets
 drop_down = Select(options=instrument_list, width=200)
 refresh_button = Button(label="Refresh", width=200)
+data_val_button = Button(label="Data Validation", width=200)
 stats = PreText()
 columns = [TableColumn(field="ticker", title="ticker"),
            TableColumn(field="description", title="description"),
@@ -185,22 +189,22 @@ columns = [TableColumn(field="ticker", title="ticker"),
            TableColumn(field="business_datetime", title="business_datetime", formatter=DateFormatter())]
 
 # Get latest data from database and create plot and data table
-col_data_source = get_data(df=db_df, name=instrument_list[0])
+col_data_source = get_data(df=df_db, name=instrument_list[0])
 price_chart, return_chart = make_plot(source=col_data_source)
 data_table = DataTable(source=col_data_source, columns=columns, width=800, height=590)
 
 # Register widget attribute change
 drop_down.on_change("value", drop_down_handle)
 refresh_button.on_click(refresh_button_handle)
+data_val_button.on_click(data_validation_handle)
 
 # Define layout of dashboard
-widgets = row(drop_down, refresh_button)
+widgets = row(drop_down, refresh_button, data_val_button)
 charts = column(price_chart, return_chart)
 charts_with_table = row(charts, data_table)
 layout_with_widgets = column(widgets, charts_with_table, stats)
 
 # Create Dashboard with respective layout
 curdoc().add_root(layout_with_widgets)
-
 
 # bokeh serve assetallocation_arp/data_etl/plot.py
