@@ -57,7 +57,7 @@ BEGIN
         fund_strategy_asset_weight_cte fsawc
         JOIN config.model_instance mi ON mi.id = fsawc.model_instance_id
       WHERE
-        mi.business_daterange = daterange(business_date_from, business_date_to, '[]')
+        mi.business_daterange && daterange(business_date_from, business_date_to, '[]')
     )
     SELECT DISTINCT
       model_instance_cte.python_code_version,

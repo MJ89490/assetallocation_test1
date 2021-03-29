@@ -44,23 +44,24 @@ def test_re_run_strategy_returns_same_results():
         connection.execute(del_strategy, {'strategy_version': strategy.version})
 
 
-def test_select_fund_strategy_results_correct_number_of_weights_after_re_running_strategy_overlapping_dates():
+def test_select_fund_strategy_results_gets_inserted_after_re_running_strategy_overlapping_dates():
     # set up
     fund_name = 'test_fund'
     strategy_weight = 0.1
-    strategy = Times(2, 'weekly', 'e', [30, 60, 120], [15, 30, 60], 2, 90)
+    strategy = Times(4, 'weekly', 'e', [30, 60, 120], [15, 30, 60], 2, 90)
     strategy.asset_inputs = [TimesAssetInput(Equity['DM Equity'], 1, 'F25915Y Index', 'SPXT Index', 0.5)]
     user_id = os.environ.get('USERNAME')
     business_date_from = dt.date(2018, 1, 1)
     business_date_to1 = dt.date(2020, 1, 1)
     business_date_to2 = dt.date(2020, 2, 1)
     s.run_strategy(fund_name, strategy_weight, strategy, user_id, business_date_from, business_date_to1, True)
-    s.run_strategy(fund_name, strategy_weight, strategy, user_id, business_date_from, business_date_to2, False)
 
     # test
-    fs = ArpProcCaller().select_fund_strategy_results(fund_name, strategy.name, strategy.version, business_date_from, business_date_to2)
+    expected = s.run_strategy(fund_name, strategy_weight, strategy, user_id, business_date_from, business_date_to2, False)
+    actual = ArpProcCaller().select_fund_strategy_results(fund_name, strategy.name, strategy.version, business_date_from, business_date_to2)
 
-    assert (business_date_to2 - business_date_from).days == len(fs.asset_weights)
+    assert len(actual.analytics) == len(expected.analytics)
+    assert len(actual.asset_weights) == len(expected.asset_weights)
 
     # tear down
     del_strategy = text("""
