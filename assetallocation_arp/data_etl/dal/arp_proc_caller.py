@@ -211,10 +211,14 @@ class TimesProcCaller(StrategyProcCaller):
 
     def _insert_times_strategy(self, times: Times, user_id: str) -> int:
         """Insert data from an instance of Times into database"""
-        res = self.call_proc('arp.insert_times_strategy',
-                             [times.description, user_id, times.time_lag_interval, times.leverage_type.name,
-                              times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
-                              times.day_of_week.value])
+        res = self.call_proc(
+            'arp.insert_times_strategy',
+            [
+                times.business_date_from, times.description, user_id, times.time_lag_interval, times.leverage_type.name,
+                times.volatility_window, times.short_signals, times.long_signals, times.frequency.name,
+                times.day_of_week.value
+            ]
+        )
 
         return res[0]['t_version']
 
@@ -285,6 +289,7 @@ class TimesProcCaller(StrategyProcCaller):
                   -ArpTypeConverter.month_interval_to_int(row['time_lag']), row['volatility_window'])
         t.version = times_version
         t.description = row['description']
+        t.business_date_from = row['business_date_from']
         return t
 
     def _select_times_assets(self, times_version) -> Optional[List[TimesAssetInput]]:
@@ -334,7 +339,7 @@ class FxProcCaller(StrategyProcCaller):
         res = self.call_proc(
             'arp.insert_fx_strategy',
             [
-                fx.description, user_id, fx.model, fx.signal, fx.currency, fx.response_function,
+                fx.business_date_from, fx.description, user_id, fx.model, fx.signal, fx.currency, fx.response_function,
                 fx.exposure, fx.momentum_weights, fx.transaction_cost, fx.top_crosses, fx.vol_window, fx.value_window,
                 fx.sharpe_cutoff, fx.mean_reversion, fx.historical_base, fx.defensive
             ]
@@ -426,6 +431,7 @@ class FxProcCaller(StrategyProcCaller):
 
         f.version = fx_version
         f.description = r['description']
+        f.business_date_from = r['business_date_from']
 
         return f
 
@@ -482,14 +488,16 @@ class EffectProcCaller(StrategyProcCaller):
 
     def _insert_effect_strategy(self, effect: Effect, user_id: str) -> int:
         """Insert data from an instance of Effect into database"""
-        res = self.call_proc('arp.insert_effect_strategy',
-                             [effect.description, user_id, effect.carry_type.name, effect.closing_threshold,
-                              effect.cost, effect.day_of_week.value, effect.frequency.name, effect.include_shorts,
-                              effect.inflation_lag_interval, effect.interest_rate_cut_off_long,
-                              effect.interest_rate_cut_off_short, effect.moving_average_long_term,
-                              effect.moving_average_short_term, effect.is_realtime_inflation_forecast,
-                              effect.trend_indicator.name])
-
+        res = self.call_proc(
+            'arp.insert_effect_strategy',
+            [
+                effect.business_date_from, effect.description, user_id, effect.carry_type.name,
+                effect.closing_threshold, effect.cost, effect.day_of_week.value, effect.frequency.name,
+                effect.include_shorts, effect.inflation_lag_interval, effect.interest_rate_cut_off_long,
+                effect.interest_rate_cut_off_short, effect.moving_average_long_term, effect.moving_average_short_term,
+                effect.is_realtime_inflation_forecast, effect.trend_indicator.name
+            ]
+        )
         return res[0]['e_version']
 
     def _insert_effect_assets(self, effect_version: int, effect_assets: List[EffectAssetInput]) -> bool:
@@ -530,6 +538,7 @@ class EffectProcCaller(StrategyProcCaller):
                    row['is_realtime_inflation_forecast'], row['trend_indicator'])
         e.version = effect_version
         e.description = row['description']
+        e.business_date_from = row['business_date_from']
         return e
 
     def _select_effect_assets(self, effect_version: int) -> Optional[List[EffectAssetInput]]:
@@ -592,10 +601,13 @@ class FicaProcCaller(StrategyProcCaller):
 
     def _insert_fica_strategy(self, fica: Fica, user_id: str) -> int:
         """Insert data from an instance of Fica into database"""
-        res = self.call_proc('arp.insert_fica_strategy',
-                             [fica.description, user_id, fica.coupon, fica.curve,
-                              fica.strategy_weights, fica.tenor, fica.trading_cost])
-
+        res = self.call_proc(
+            'arp.insert_fica_strategy',
+            [
+                fica.business_date_from, fica.description, user_id, fica.coupon, fica.curve, fica.strategy_weights,
+                fica.tenor, fica.trading_cost
+            ]
+        )
         return res[0]['f_version']
 
     def _insert_fica_assets(self, fica_version: int, fica_asset_groups: List[FicaAssetInputGroup]) -> None:
@@ -629,6 +641,7 @@ class FicaProcCaller(StrategyProcCaller):
         f = Fica(row['coupon'], row['curve'], row['strategy_weights'], row['tenor'], row['trading_cost'])
         f.version = fica_version
         f.description = row['description']
+        f.business_date_from = row['business_date_from']
         return f
 
     def _select_fica_assets(self, fica_version) -> Optional[List[FicaAssetInputGroup]]:
@@ -707,7 +720,7 @@ class MavenProcCaller(StrategyProcCaller):
         res = self.call_proc(
             'arp.insert_maven_strategy',
             [
-                strategy.description, user_id, strategy.er_tr, strategy.frequency.name,
+                strategy.business_date_from, strategy.description, user_id, strategy.er_tr, strategy.frequency.name,
                 strategy.day_of_week.value, strategy.business_tstzrange, strategy.asset_count,
                 strategy.long_cutoff, strategy.short_cutoff, strategy.val_period_months,
                 strategy.val_period_base, strategy.momentum_weights, strategy.volatility_weights

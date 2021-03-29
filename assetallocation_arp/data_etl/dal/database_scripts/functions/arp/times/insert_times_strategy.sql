@@ -1,5 +1,6 @@
 CREATE OR REPLACE FUNCTION arp.insert_times_strategy(
-  description varchar,
+  business_date_from date,
+	description varchar,
   user_id varchar,
   time_lag interval,
   leverage_type char,
@@ -13,7 +14,7 @@ CREATE OR REPLACE FUNCTION arp.insert_times_strategy(
 LANGUAGE plpgsql
 AS
 $$
-declare
+DECLARE
   name varchar;
 	execution_state_id int;
 	strategy_id int;
@@ -21,7 +22,7 @@ BEGIN
   name := 'times';
 	SELECT config.insert_execution_state('arp.insert_times_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
-	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
+	SELECT arp.insert_strategy(name, business_date_from, description, user_id, execution_state_id) into strategy_id;
 	SELECT arp.insert_times(time_lag, leverage_type, volatility_window, short_signals, long_signals, frequency, day_of_week,
 	  execution_state_id, strategy_id) into t_version;
 	return;

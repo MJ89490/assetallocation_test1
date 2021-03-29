@@ -1,4 +1,5 @@
 CREATE OR REPLACE FUNCTION arp.insert_fx_strategy(
+  business_date_from date,
   description varchar,
   user_id varchar,
   model varchar,
@@ -28,7 +29,7 @@ BEGIN
   name := 'fx';
 	SELECT config.insert_execution_state('arp.insert_fx_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
-	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
+	SELECT arp.insert_strategy(name, business_date_from, description, user_id, execution_state_id) into strategy_id;
 	SELECT arp.insert_fx(
     model,
     signal,

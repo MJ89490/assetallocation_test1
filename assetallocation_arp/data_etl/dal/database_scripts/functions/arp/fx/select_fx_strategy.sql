@@ -1,5 +1,7 @@
+DROP FUNCTION arp.select_fx_strategy(integer);
 CREATE OR REPLACE FUNCTION arp.select_fx_strategy(
   strategy_version int,
+  OUT business_date_from date,
   OUT description varchar(25),
   OUT model varchar(25),
 	OUT signal varchar(25),
@@ -20,6 +22,7 @@ AS
 $$
 BEGIN
 	SELECT
+    s.business_date_from,
 	  s.description,
 	  f.model,
 	  f.signal,
@@ -36,6 +39,7 @@ BEGIN
     f.historical_base,
 		f.defensive
   INTO
+    business_date_from,
     description,
 	  model,
 	  signal,

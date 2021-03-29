@@ -1,4 +1,5 @@
 CREATE OR REPLACE FUNCTION arp.insert_maven_strategy(
+  business_date_from date,
   description varchar,
   user_id varchar,
   er_tr varchar,
@@ -11,7 +12,7 @@ CREATE OR REPLACE FUNCTION arp.insert_maven_strategy(
 	val_period_base integer,
 	momentum_weights numeric[],
 	volatility_weights numeric[],
-  OUT t_version int
+  OUT t_version char
 )
 LANGUAGE plpgsql
 AS
@@ -24,7 +25,7 @@ BEGIN
   name := 'maven';
 	SELECT config.insert_execution_state('arp.insert_maven_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
-	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
+	SELECT arp.insert_strategy(name, business_date_from, description, user_id, execution_state_id) into strategy_id;
 	SELECT arp.insert_maven(
       er_tr, frequency, day_of_week, asset_count, long_cutoff, short_cutoff, val_period_months,
       val_period_base, momentum_weights, volatility_weights, execution_state_id, strategy_id

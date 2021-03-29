@@ -1,5 +1,7 @@
+DROP FUNCTION arp.select_fica_strategy(integer);
 CREATE OR REPLACE FUNCTION arp.select_fica_strategy(
   strategy_version int,
+  OUT business_date_from date,
   OUT description varchar,
   OUT coupon numeric,
   OUT curve varchar,
@@ -15,6 +17,7 @@ BEGIN
   strategy_name := 'fica';
   
 	SELECT
+    s.business_date_from,
 	  s.description,
 	  f.coupon,
 	  f.curve,
@@ -22,6 +25,7 @@ BEGIN
 	  f.tenor,
 	  f.trading_cost
   INTO
+    business_date_from,
     description,
     coupon,
     curve,

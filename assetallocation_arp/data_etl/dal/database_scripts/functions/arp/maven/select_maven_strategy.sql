@@ -1,5 +1,7 @@
+DROP FUNCTION arp.select_maven_strategy(integer);
 CREATE OR REPLACE FUNCTION arp.select_maven_strategy(
   strategy_version int,
+  OUT business_date_from date,
   OUT description varchar,
   OUT er_tr varchar,
   OUT frequency arp.frequency,
@@ -16,6 +18,7 @@ AS
 $$
 BEGIN
 	SELECT
+    s.business_date_from,
 	  s.description,
 	  m.er_tr,
     m.frequency,
@@ -28,6 +31,7 @@ BEGIN
     m.momentum_weights,
     m.volatility_weights
   INTO
+    business_date_from,
     description,
 	  er_tr,
     frequency,

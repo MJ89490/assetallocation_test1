@@ -1,5 +1,7 @@
+DROP FUNCTION arp.select_effect_strategy(integer);
 CREATE OR REPLACE FUNCTION arp.select_effect_strategy(
   strategy_version int,
+  OUT business_date_from date,
   OUT description varchar,
   OUT frequency varchar,
 	OUT day_of_week integer,
@@ -23,6 +25,7 @@ BEGIN
   strategy_name := 'effect';
 
 	SELECT
+    s.business_date_from,
 	  s.description,
 	  e.frequency,
 	  e.day_of_week,
@@ -38,6 +41,7 @@ BEGIN
     e.closing_threshold,
     e.cost
   INTO
+    business_date_from,
     description,
 	  frequency,
 	  day_of_week,

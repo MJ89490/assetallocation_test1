@@ -1,5 +1,7 @@
+DROP FUNCTION arp.select_times_strategy(integer);
 CREATE OR REPLACE FUNCTION arp.select_times_strategy(
   strategy_version int,
+  OUT business_date_from date,
   OUT description varchar,
   OUT time_lag varchar,
   OUT leverage_type varchar,
@@ -13,6 +15,7 @@ AS
 $$
 BEGIN
 	SELECT
+    s.business_date_from,
 	  s.description,
 	  t.time_lag,
 	  t.leverage_type,
@@ -22,6 +25,7 @@ BEGIN
 	  t.frequency,
 	  t.day_of_week
   INTO
+    business_date_from,
     description,
     time_lag,
     leverage_type,

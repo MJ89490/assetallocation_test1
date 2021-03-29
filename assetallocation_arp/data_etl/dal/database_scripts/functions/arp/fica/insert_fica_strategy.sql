@@ -1,4 +1,5 @@
 CREATE OR REPLACE FUNCTION arp.insert_fica_strategy(
+  business_date_from date,
   description varchar,
   user_id varchar,
   coupon numeric,
@@ -19,7 +20,7 @@ BEGIN
   name := 'fica';
 	SELECT config.insert_execution_state('arp.insert_fica_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
-	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
+	SELECT arp.insert_strategy(name, business_date_from, description, user_id, execution_state_id) into strategy_id;
   SELECT arp.insert_fica(coupon, curve, strategy_weights, tenor, trading_cost, execution_state_id,
                          strategy_id) into f_version;
 	return;

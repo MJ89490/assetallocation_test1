@@ -20,6 +20,7 @@ CREATE TABLE "arp"."strategy"
 (
 	"id" serial NOT NULL,
 	"name" varchar(50)	 NOT NULL,
+	"business_date_from" date NOT NULL,
 	"description" varchar(100)	 NULL,
 	"app_user_id" varchar(7)	 NOT NULL,
 	"system_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)'),

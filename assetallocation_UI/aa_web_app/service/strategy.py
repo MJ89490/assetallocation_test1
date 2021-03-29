@@ -18,11 +18,10 @@ def run_strategy(
     :return FundStrategy object containing outputs of strategy run
     """
     pc = StrategyProcCallerFactory.get_proc_caller(strategy.name)()
-
+    strategy.business_date_from = business_date_from
     if is_new_strategy:
         pc.insert_strategy(strategy, user_id)
 
-    # Find the analytics in the db we are going to use
     pc.get_asset_analytics_for_strategy(strategy, business_date_from, business_date_to)
     fs = FundStrategy(fund_name, strategy.name, strategy.version, strategy_weight)
     fs.analytics, fs.asset_weights = strategy.run()

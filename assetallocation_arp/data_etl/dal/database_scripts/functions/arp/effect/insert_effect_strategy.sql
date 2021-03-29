@@ -1,4 +1,5 @@
 CREATE OR REPLACE FUNCTION arp.insert_effect_strategy(
+  business_date_from date,
   description varchar,
   user_id varchar,
   carry_type varchar,
@@ -28,7 +29,7 @@ BEGIN
   
 	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
-	SELECT arp.insert_strategy(name, description, user_id, execution_state_id) into strategy_id;
+	SELECT arp.insert_strategy(name, business_date_from, description, user_id, execution_state_id) into strategy_id;
 INSERT INTO arp.effect (
   strategy_id,
   carry_type,

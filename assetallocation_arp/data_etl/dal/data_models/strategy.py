@@ -1,5 +1,6 @@
 from typing import List, Union, Optional, Tuple
 from abc import ABC, abstractmethod
+import datetime as dt
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -22,6 +23,7 @@ class Strategy(ABC):
         self.name = name
         self.description = ''
         self.version = None
+        self.business_date_from = None
 
     @property
     def name(self) -> Name:
@@ -38,6 +40,14 @@ class Strategy(ABC):
     @description.setter
     def description(self, x: str) -> None:
         self._description = x
+
+    @property
+    def business_date_from(self) -> Optional[dt.date]:
+        return self._business_date_from
+
+    @business_date_from.setter
+    def business_date_from(self, x: Optional[dt.date]) -> None:
+        self._business_date_from = x
 
     @property
     def version(self) -> Optional[int]:
