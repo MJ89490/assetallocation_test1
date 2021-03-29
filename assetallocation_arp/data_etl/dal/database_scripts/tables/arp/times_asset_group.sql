@@ -32,5 +32,5 @@ ALTER TABLE "arp"."times_asset_group" ADD CONSTRAINT "times_asset_group_executio
 ;
 
 ALTER TABLE "arp"."times_asset_group" ADD CONSTRAINT "times_asset_group_strategy_asset_group_fkey"
-	FOREIGN KEY ("strategy_asset_group_id") REFERENCES "arp"."strategy_asset_group" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("strategy_asset_group_id") REFERENCES "arp"."strategy_asset_group" ("id") ON DELETE CASCADE ON UPDATE No Action
 ;

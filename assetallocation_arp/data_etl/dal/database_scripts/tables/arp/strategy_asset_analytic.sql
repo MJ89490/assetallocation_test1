@@ -59,5 +59,5 @@ ALTER TABLE "arp"."strategy_asset_analytic" ADD CONSTRAINT "strategy_asset_analy
 ;
 
 ALTER TABLE "arp"."strategy_asset_analytic" ADD CONSTRAINT "strategy_asset_analytic_strategy_fkey"
-	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE CASCADE ON UPDATE No Action
 ;

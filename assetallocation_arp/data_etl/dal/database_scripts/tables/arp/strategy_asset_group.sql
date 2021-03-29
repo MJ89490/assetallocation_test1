@@ -32,7 +32,7 @@ ALTER TABLE "arp"."strategy_asset_group" ADD CONSTRAINT "strategy_asset_group_pk
 /* Create Foreign Key Constraints */
 
 ALTER TABLE "arp"."strategy_asset_group" ADD CONSTRAINT "strategy_asset_group_strategy_fkey"
-	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE CASCADE ON UPDATE No Action
 ;
 
 ALTER TABLE "arp"."strategy_asset_group" ADD CONSTRAINT "strategy_asset_group_execution_state_fkey"

@@ -50,5 +50,5 @@ ALTER TABLE "arp"."times" ADD CONSTRAINT "times_execution_state_fkey"
 ;
 
 ALTER TABLE "arp"."times" ADD CONSTRAINT "times_strategy_fkey"
-	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE CASCADE ON UPDATE No Action
 ;

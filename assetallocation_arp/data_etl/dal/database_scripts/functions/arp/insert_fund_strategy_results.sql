@@ -200,6 +200,32 @@ BEGIN
   FROM
     unnest(weights) as aw
     JOIN asset.asset a ON a.ticker = (aw).ticker
+  ON CONFLICT ON CONSTRAINT strategy_asset_weight_strategy_id_asset_id_business_date_key DO UPDATE
+    SET
+      strategy_id = EXCLUDED.strategy_id,
+      asset_id = EXCLUDED.asset_id,
+      model_instance_id = EXCLUDED.model_instance_id,
+      business_date = EXCLUDED.business_date,
+      theoretical_weight = EXCLUDED.theoretical_weight,
+      frequency = EXCLUDED.frequency
+
+    /* AVOID NET ZERO CHANGES */
+    where exists
+        (
+        SELECT
+          arp.strategy_asset_weight.strategy_id,
+          arp.strategy_asset_weight.asset_id,
+          arp.strategy_asset_weight.business_date,
+          arp.strategy_asset_weight.theoretical_weight,
+          arp.strategy_asset_weight.frequency
+        EXCEPT
+        SELECT
+          EXCLUDED.strategy_id,
+          EXCLUDED.asset_id,
+          EXCLUDED.business_date,
+          EXCLUDED.theoretical_weight,
+          EXCLUDED.frequency
+        )
   RETURNING arp.strategy_asset_weight.id, arp.strategy_asset_weight.theoretical_weight
   ;
 END
@@ -301,7 +327,44 @@ BEGIN
     (a).comparator_value,
     insert_strategy_analytics.execution_state_id
   FROM
-    unnest(analytics) as a;
+    unnest(analytics) as a
+  ON CONFLICT ON CONSTRAINT strategy_analytic_strategy_id__business_date_category_subcategory_key DO UPDATE
+  SET
+    strategy_id = EXCLUDED.strategy_id,
+    model_instance_id = EXCLUDED.model_instance_id,
+    business_date = EXCLUDED.business_date,
+    category = EXCLUDED.category,
+    subcategory = EXCLUDED.subcategory,
+    frequency = EXCLUDED.frequency,
+    value = EXCLUDED.value,
+    comparator_name = EXCLUDED.comparator_name,
+    comparator_value = EXCLUDED.comparator_value,
+    execution_state_id = EXCLUDED.execution_state_id
+
+  /* AVOID NET ZERO CHANGES */
+  where exists
+    (
+    SELECT
+      arp.strategy_analytic.strategy_id,
+      arp.strategy_analytic.business_date,
+      arp.strategy_analytic.category,
+      arp.strategy_analytic.subcategory,
+      arp.strategy_analytic.frequency,
+      arp.strategy_analytic.value,
+      arp.strategy_analytic.comparator_name,
+      arp.strategy_analytic.comparator_value
+    EXCEPT
+    SELECT
+      EXCLUDED.strategy_id,
+      EXCLUDED.business_date,
+      EXCLUDED.category,
+      EXCLUDED.subcategory,
+      EXCLUDED.frequency,
+      EXCLUDED.value,
+      EXCLUDED.comparator_name,
+      EXCLUDED.comparator_value
+    )
+  ;
   RETURN;
 END
 $$
@@ -342,6 +405,39 @@ BEGIN
   FROM
     unnest(analytics) as a
     JOIN asset.asset aa on (a).ticker = aa.ticker
+  ON CONFLICT ON CONSTRAINT strategy_asset_analytic_strategy_id_asset_id_business_date_category_subcategory_key DO UPDATE
+  SET
+    strategy_id = EXCLUDED.strategy_id,
+    model_instance_id = EXCLUDED.model_instance_id,
+    asset_id = EXCLUDED.asset_id,
+    business_date = EXCLUDED.business_date,
+    category = EXCLUDED.category,
+    subcategory = EXCLUDED.subcategory,
+    frequency = EXCLUDED.frequency,
+    value = EXCLUDED.value,
+    execution_state_id = EXCLUDED.execution_state_id
+
+  /* AVOID NET ZERO CHANGES */
+  where exists
+    (
+    SELECT
+      arp.strategy_asset_analytic.strategy_id,
+      arp.strategy_asset_analytic.asset_id,
+      arp.strategy_asset_analytic.business_date,
+      arp.strategy_asset_analytic.category,
+      arp.strategy_asset_analytic.subcategory,
+      arp.strategy_asset_analytic.frequency,
+      arp.strategy_asset_analytic.value
+    EXCEPT
+    SELECT
+      EXCLUDED.strategy_id,
+      EXCLUDED.asset_id,
+      EXCLUDED.business_date,
+      EXCLUDED.category,
+      EXCLUDED.subcategory,
+      EXCLUDED.frequency,
+      EXCLUDED.value
+    )
   ;
   RETURN;
 END

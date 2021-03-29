@@ -56,7 +56,7 @@ ALTER TABLE "arp"."strategy_asset_weight" ADD CONSTRAINT "strategy_asset_weight_
 ;
 
 ALTER TABLE "arp"."strategy_asset_weight" ADD CONSTRAINT "strategy_asset_weight_strategy_fkey"
-	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE CASCADE ON UPDATE No Action
 ;
 
 ALTER TABLE "arp"."strategy_asset_weight" ADD CONSTRAINT "strategy_asset_weight_asset_fkey"

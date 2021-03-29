@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, Dict
 import datetime as dt
 
 from assetallocation_arp.data_etl.dal.arp_proc_caller import StrategyProcCallerFactory, ArpProcCaller
@@ -23,14 +23,14 @@ def run_strategy(
         pc.insert_strategy(strategy, user_id)
 
     # Find the analytics in the db we are going to use
-    pc.get_asset_analytics_to_strategy(strategy, business_date_from, business_date_to)
+    pc.get_asset_analytics_for_strategy(strategy, business_date_from, business_date_to)
     fs = FundStrategy(fund_name, strategy.name, strategy.version, strategy_weight)
     fs.analytics, fs.asset_weights = strategy.run()
     pc.insert_fund_strategy_results(fs, user_id, business_date_from, business_date_to)
     return fs
 
 
-def get_strategy_versions(strategy_name: Union[str, Name]) -> List[int]:
+def get_strategy_versions(strategy_name: Union[str, Name]) -> Dict[int, str]:
     """Get list of existing strategy versions from database"""
     apc = ArpProcCaller()
     return apc.select_strategy_versions(strategy_name)
