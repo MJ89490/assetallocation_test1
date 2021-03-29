@@ -145,6 +145,24 @@ class ArpProcCaller(Db):
         res = self.call_proc('fund.select_fund_names', [])
         return res[0].get('fund_names') or []
 
+    def select_asset_tickers_names_subcategories(self) -> pd.DataFrame:
+        """
+        :return: DataFrame with columns ticker, name, subcategory
+        """
+        query = """
+        SELECT 
+          a.ticker,
+          a.name,
+          ag.subcategory
+        FROM
+          asset.asset a
+          JOIN asset.asset_group ag ON a.asset_group_id = ag.id  
+        """
+        with self.engine.connect() as connection:
+            assets = pd.read_sql(query, connection)
+
+        return assets
+
 
 # noinspection PyAttributeOutsideInit
 class StrategyProcCaller(ABC, ArpProcCaller):
