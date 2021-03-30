@@ -87,7 +87,7 @@ def get_encoding(file_path):
 
 def get_footer_of_csv_file(file_path):
     """
-    IMF weo data file contains a fppter with name of the dataset and year month
+    IMF weo data file contains a footer with name of the dataset and year month
     :param file_path:
     :return:
     """
@@ -188,7 +188,7 @@ def extract_required_fields(downloaded_file, target_dir):
     return True
 
 
-def download_weo_data_from_imf_website(date_arg, path_parser=None):
+def download_weo_data_from_imf_website(date_arg):
     """
     downloads the data from imf weo website
     :param date_arg: date argument in string format, if not given, today's date is taken as input by default
@@ -215,13 +215,11 @@ def download_weo_data_from_imf_website(date_arg, path_parser=None):
             dataset_name = os.path.basename(dataset_url)
             dataset_name = dataset_name.split(".")[0]+".csv"
             dataset_names.append(dataset_name)
-            # if excel != 'excel':
-            #     file_name = args.target_dir / dataset_name
-            file_name = path_parser / dataset_name
+            file_name = args.target_dir / dataset_name
 
             with file_name.open("w") as f:
                 try:
-                    f.write(weo_response.content.decode('utf-16'))
+                    f.write(weo_response.content.decode('utf-16-le'))
                 except (UnicodeDecodeError, UnicodeEncodeError):
                     f.write(weo_response.content.decode('latin1'))
 
@@ -233,55 +231,47 @@ def parser_data():
     set the arguments for the parser
     :return: tuple of arguments (target_dir, date, log)
     """
-    path_parser = Path(__file__).parents[2] / 'data_effect' / 'data' / 'data_imf'
-    today = date.today()
-    date_parser = today.strftime("%d-%m-%Y")
 
-    return path_parser, date_parser
+    global args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--target_dir', type=Path, help='path of target directory containing data as provided by IMF')
+    parser.add_argument('--date', type=str, help='date when the imf data is required, it should be in the format dd-mm-yyyy.'
+                                                 ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
+    parser.add_argument('--log', default='INFO', help='level of logging messages')
+    args = parser.parse_args()
+    if args.target_dir is None:
+        args.target_dir = Path(__file__).parents[2] / 'data_effect' / 'data' / 'data_imf'
+    else:
+        args.target_dir = Path(args.target_dir)
 
-# if excel != 'excel':
-#     global args
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('--target_dir', type=Path, help='path of target directory containing data as provided by IMF')
-#     parser.add_argument('--date', type=str, help='date when the imf data is required, it should be in the format dd-mm-yyyy.'
-#                                                  ' eg: if you want data for imf oct 2014 enter the date as 01-10-2014')
-#     parser.add_argument('--log', default='INFO', help='level of logging messages')
-#     args = parser.parse_args()
-#     if args.target_dir is None:
-#         args.target_dir = Path(__file__).parents[2] / 'data_effect' / 'data' / 'data_imf'
-#     else:
-#         args.target_dir = Path(args.target_dir)
-#
-#     if args.date is None:
-#         today = date.today()
-#         args.date = today.strftime("%d-%m-%Y")
-#
-#     return args.target_dir, args.date, args.log
+    if args.date is None:
+        today = date.today()
+        args.date = today.strftime("%d-%m-%Y")
+
+    return args.target_dir, args.date, args.log
 
 
 def scrape_imf_data():
+    args_target, args_date, args_log = parser_data()
+    numeric_level = getattr(logging, args_log.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: {}'.format(args_log))
+    logging.basicConfig(
+        format="%(levelname)s:%(name)s:%(asctime)s:%(message)s",
+        level=numeric_level,
+        stream=sys.stdout,
+    )
+    logging.getLogger("urllib3").setLevel(logging.INFO)
+    # Download IMF WEO datasets.
+    log.info("Download IMF WEO Dataset")
+    downloaded_file = download_weo_data_from_imf_website(args_date)
+    # Extract only those fields required for Asset allocation.
+    log.info("Extract only those fields required for Asset allocation")
+    print(log)
+    extract_required_fields(downloaded_file, args_target)
 
-    path_parser, date_parser = parser_data()
-    downloaded_file = download_weo_data_from_imf_website(date_parser, path_parser)
-    extract_required_fields(downloaded_file, path_parser)
     return 0
 
-# args_target, args_date, args_log = parser_data()
-# numeric_level = getattr(logging, args_log.upper(), None)
-# if not isinstance(numeric_level, int):
-#     raise ValueError('Invalid log level: {}'.format(args_log))
-# logging.basicConfig(
-#     format="%(levelname)s:%(name)s:%(asctime)s:%(message)s",
-#     level=numeric_level,
-#     stream=sys.stdout,
-# )
-# logging.getLogger("urllib3").setLevel(logging.INFO)
-# # Download IMF WEO datasets.
-# log.info("Download IMF WEO Dataset")
-# downloaded_file = download_weo_data_from_imf_website(args_date)
-# # Extract only those fields required for Asset allocation.
-# log.info("Extract only those fields required for Asset allocation")
-# print(log)
-# extract_required_fields(downloaded_file, args_target)
-#
-# return 0
+
+if __name__ == '__main__':
+    sys.exit(scrape_imf_data())
