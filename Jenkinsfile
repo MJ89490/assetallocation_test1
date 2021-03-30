@@ -7,7 +7,6 @@ pipeline {
         skipDefaultCheckout(true)
         // Keep the 10 most recent builds
         buildDiscarder(logRotator(numToKeepStr: '10'))
-        timestamps()
     }
     environment {
       PATH="<python_path>:$PATH"
@@ -34,38 +33,11 @@ pipeline {
                     '''
             }
         }
-        stage('Check sonarcube') {
+        stage('Check SonarQube') {
             steps {
                 sh '''env ${BUILD_TAG}
                       source activate ${BUILD_TAG}
                       sonar-scanner
-                    '''
-            }
-        }
-        stage('Create package') {
-            steps {
-                sh '''env ${BUILD_TAG}
-                      source activate ${BUILD_TAG}
-                      #create a package for deploying in nexus
-                      python setup.py sdist bdist_whl
-                    '''
-            }
-        }
-        stage('Depploy package') {
-            steps {
-                sh '''env ${BUILD_TAG}
-                      source activate ${BUILD_TAG}
-                      #create a checklist with all the details of dashboard and
-                      #send the sheet to the developer to create a ServiceNow ticket
-                    '''
-            }
-        }
-        stage('Depploy package') {
-            steps {
-                sh '''env ${BUILD_TAG}
-                      source activate ${BUILD_TAG}
-                      #deploy in nexus or tag the release
-                      twine-upload <credentials> <package_name>
                     '''
             }
         }

@@ -18,7 +18,6 @@ def fx_strategy():
 
         f = Fx(
             fxmodels_inputs['model'].iat[0].lower(),
-            DateTimeTZRange(fxmodels_inputs['date_from'].iat[0], fxmodels_inputs['date_to'].iat[0]),
             fxmodels_inputs['signal'].iat[0],
             fxmodels_inputs['currency'].iat[0],
             fxmodels_inputs['response function'].iat[0],
@@ -34,6 +33,7 @@ def fx_strategy():
         f.sharpe_cutoff = fxmodels_inputs['sharpe cutoff'].iat[0]
         f.historical_base = fxmodels_inputs['historical base'].iat[0]
         f.mean_reversion = fxmodels_inputs['mean reversion'].iat[0]
+        f.defensive = True
 
         if asset_inputs is not None:
             data = all_data.loc[fxmodels_inputs['date_from'].iat[0]:fxmodels_inputs['date_to'].iat[0]]

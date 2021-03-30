@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Tuple, Dict, Any
 from datetime import datetime, date
+from enum import Enum
 
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import (FundStrategyAssetAnalytic, FundStrategyAnalytic,
                                                                         FundStrategyAssetWeight)
@@ -58,7 +59,7 @@ class ArpTypeConverter(DbTypeConverter):
     def times_assets_to_composite(times_assets: List[TimesAssetInput]) -> List[str]:
         """Format to match database type arp.asset_ticker_ticker_cost_leverage[]"""
         return [
-            DbTypeConverter.to_composite(i.asset_subcategory.name, i.signal_ticker, i.future_ticker, i.cost, i.s_leverage)
+            DbTypeConverter.to_composite(i.signal_ticker, i.future_ticker, i.cost, i.s_leverage)
             for i in times_assets
         ]
 
@@ -76,22 +77,52 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def fx_assets_to_composite(fx_assets: List[FxAssetInput]) -> List[str]:
-        """Format to match database type arp.ticker_ticker_cost_leverage[]"""
+        """Format to match database type arp.ticker_ticker_currency[]"""
         return [DbTypeConverter.to_composite(i.ppp_ticker, i.cash_rate_ticker, i.currency) for i in fx_assets]
 
     @staticmethod
-    def analytics_to_composite(analytics: List[FundStrategyAnalytic]) -> List[str]:
-        """Format to match database type arp.asset_date_aggregation_category_subcategory_frequency_value[]"""
+    def fund_strategy_analytics_to_composites(analytics: List[FundStrategyAnalytic]) -> Tuple[List[str], List[str]]:
+        """Return strategy_analytics and strategy_asset_analytics. Format to match database type
+        strategy_asset_analytics::arp.ticker_date_category_subcategory_frequency_value[],
+        strategy_analytics::arp.date_category_subcategory_frequency_value_comp_name_comp_value[]"""
+        strategy_analytics = {}
+        strategy_asset_analytics = []
+        for i in analytics:
+            if i.aggregation_level == AggregationLevel.asset:
+                strategy_asset_analytics.append(i)
+
+            elif i.aggregation_level == AggregationLevel.strategy:
+                strategy_analytics.setdefault(
+                    (i.business_date, i.category, i.subcategory, i.frequency), [None, None, None]
+                )[0] = i.value
+
+            elif i.aggregation_level == AggregationLevel.comparator:
+                strategy_analytics.setdefault(
+                    (i.business_date, i.category, i.subcategory, i.frequency), [None, None, None]
+                )[1:2] = i.comparator_name, i.value
+
+        return ArpTypeConverter._strategy_analytics_to_composite(strategy_analytics), \
+               ArpTypeConverter._strategy_asset_analytics_to_composite(strategy_asset_analytics)
+
+    @staticmethod
+    def _strategy_analytics_to_composite(analytics: Dict[Tuple[date, Enum, Enum, Enum], List[Any]]) -> List[str]:
+        """Format to match database type arp.date_category_subcategory_frequency_value_comp_name_comp_value[]"""
         return [DbTypeConverter.to_composite(
-            getattr(i, "asset_subcategory", None), i.business_date, i.aggregation_level.name, i.category.name,
-            i.subcategory.name, i.frequency.name, i.value
-        )for i in analytics]
+            k[0], k[1].name, k[2].name, k[3].name, v[0], v[1], v[2]
+        ) for k, v in analytics.items()]
+
+    @staticmethod
+    def _strategy_asset_analytics_to_composite(analytics: List[FundStrategyAssetAnalytic]) -> List[str]:
+        """Format to match database type arp.ticker_date_category_subcategory_frequency_value[]"""
+        return [DbTypeConverter.to_composite(
+            i.asset_ticker, i.business_date, i.category.name, i.subcategory.name, i.frequency.name, i.value
+        ) for i in analytics]
 
     @staticmethod
     def weights_to_composite(weights: List[FundStrategyAssetWeight]) -> List[str]:
-        """Format to match database type arp.asset_date_frequency_weight_weight[]"""
+        """Format to match database type arp.ticker_date_frequency_weight[]"""
         return [DbTypeConverter.to_composite(
-            i.asset_subcategory, i.business_date, i.frequency.name, i.strategy_weight, i.implemented_weight
+            i.ticker, i.business_date, i.frequency.name, i.strategy_weight
         ) for i in weights]
 
     @staticmethod
@@ -115,19 +146,39 @@ class ArpTypeConverter(DbTypeConverter):
 
     @staticmethod
     def fund_strategy_analytics_str_to_objects(
-            asset_subcategory: str, business_date: date, asset_analytics_str: str
+            business_date: date, strategy_analytics_str: str
     ) -> List[FundStrategyAnalytic]:
-        """analytics is a str of the format aggregation_category_subcategory_frequency_value
-        '{"(aggregation_level1,category1,subcategory1,frequency1,value1)",...
-        "(aggregation_levelN,categoryN,subcategoryN,frequencyN,valueN)"}'
+        """strategy_analytics_str is a str of the format category_subcategory_frequency_value_comp_name_comp_value
+        '{"(category1,subcategory1,frequency1,value1,comp_name1,comp_value1)",...
+        "(aggregation_levelN,categoryN,subcategoryN,frequencyN,valueN,comp_nameN,comp_valueN)"}'
         """
         analytics = []
-        for i in asset_analytics_str[2:-2].split('","'):
-            aggregation_level, category, subcategory, frequency, value = DbTypeConverter.from_composite(i)
-            if aggregation_level == AggregationLevel.asset.name:
-                a = FundStrategyAssetAnalytic(asset_subcategory, business_date, category, subcategory, value, frequency)
-            else:
-                a = FundStrategyAnalytic(business_date, category, subcategory, value, frequency, aggregation_level)
-            analytics.append(a)
+        for i in strategy_analytics_str[2:-2].split('","'):
+            category, subcategory, frequency, value, comparator_name, comparator_value = DbTypeConverter.from_composite(i)
+            analytics.append(FundStrategyAnalytic(business_date, category, subcategory, value, frequency))
+
+            if comparator_name is not None:
+                c = FundStrategyAnalytic(
+                    business_date, category, subcategory, comparator_value, frequency,
+                    aggregation_level=AggregationLevel.comparator
+                )
+                c.comparator_name = comparator_name
+                analytics.append(c)
+
+        return analytics
+
+    @staticmethod
+    def fund_strategy_asset_analytics_str_to_objects(
+            asset_subcategory: str, business_date: date, strategy_asset_analytics_str: str
+    ) -> List[FundStrategyAssetAnalytic]:
+        """strategy_asset_analytics_str is a str of the format category_subcategory_frequency_value
+        '{"(category1,subcategory1,frequency1,value1)",..."(categoryN,subcategoryN,frequencyN,valueN)"}'
+        """
+        analytics = []
+        for i in strategy_asset_analytics_str[2:-2].split('","'):
+            category, subcategory, frequency, value = DbTypeConverter.from_composite(i)
+            analytics.append(FundStrategyAssetAnalytic(
+                asset_subcategory, business_date, category, subcategory, value, frequency
+            ))
 
         return analytics

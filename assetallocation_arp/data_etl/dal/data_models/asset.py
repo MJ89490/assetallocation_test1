@@ -18,7 +18,6 @@ class Asset:
         self._description = ''
         self._name = None
         self._ticker = ticker
-        self._is_tr = None
         self._subcategory = None
         self._asset_analytics = []
 
@@ -90,14 +89,6 @@ class Asset:
     def description(self, x: str) -> None:
         self._description = x
 
-    @property
-    def is_tr(self) -> bool:
-        return self._is_tr
-
-    @is_tr.setter
-    def is_tr(self, x: bool) -> None:
-        self._is_tr = x
-
     def add_analytic(self, asset_analytic: AssetAnalytic) -> None:
         if asset_analytic.asset_ticker == self.ticker:
             self._asset_analytics.append(asset_analytic)
@@ -113,7 +104,7 @@ class Asset:
 
 # noinspection PyAttributeOutsideInit
 class FicaAssetInput(Asset):
-    def __init__(self, ticker: str, input_category: Union[str, fica_asset_input.Category],
+    def __init__(self, ticker: str, input_category: Union[str, fica_asset_input.CurveName],
                  curve_tenor: Union[str, fica_asset_input.CurveTenor, None]) -> None:
         """FicaAsset class to hold data from database"""
         super().__init__(ticker)
@@ -130,12 +121,12 @@ class FicaAssetInput(Asset):
             self._curve_tenor = x if isinstance(x, fica_asset_input.CurveTenor) else fica_asset_input.CurveTenor[x]
 
     @property
-    def input_category(self) -> fica_asset_input.Category:
+    def input_category(self) -> fica_asset_input.CurveName:
         return self._input_category
 
     @input_category.setter
-    def input_category(self, x: Union[fica_asset_input.Category, str]) -> None:
-        self._input_category = x if isinstance(x, fica_asset_input.Category) else fica_asset_input.Category[x]
+    def input_category(self, x: Union[fica_asset_input.CurveName, str]) -> None:
+        self._input_category = x if isinstance(x, fica_asset_input.CurveName) else fica_asset_input.CurveName[x]
 
 
 # noinspection PyAttributeOutsideInit
@@ -352,44 +343,28 @@ class EffectAssetInput:
         self._asset_3m = Asset(x)
 
     @property
-    def spot_ticker(self) -> str:
-        return self._spot_asset.ticker
+    def ndf_code(self) -> str:
+        return self._ndf_code
 
-    @spot_ticker.setter
-    def spot_ticker(self, x: str) -> None:
-        self._spot_asset = Asset(x)
-
-    @property
-    def carry_ticker(self) -> str:
-        return self._carry_asset.ticker
-
-    @carry_ticker.setter
-    def carry_ticker(self, x: str) -> None:
-        self._carry_asset = Asset(x)
+    @ndf_code.setter
+    def ndf_code(self, x: str) -> None:
+        self._ndf_code = x
 
     @property
-    def usd_weight(self) -> float:
-        return self._usd_weight
+    def spot_code(self) -> str:
+        return self._spot_code
 
-    @usd_weight.setter
-    def usd_weight(self, x: float) -> None:
-        self._usd_weight = x
-
-    @property
-    def base(self) -> Base:
-        return self._base
-
-    @base.setter
-    def base(self, x: Union[str, Base]) -> None:
-        self._base = x if isinstance(x, Base) else Base[x]
+    @spot_code.setter
+    def spot_code(self, x: str) -> None:
+        self._spot_code = x
 
     @property
-    def region(self) -> str:
-        return self._region
+    def position_size(self) -> float:
+        return self._position_size
 
-    @region.setter
-    def region(self, x: str) -> None:
-        self._region = x
+    @position_size.setter
+    def position_size(self, x: float) -> None:
+        self._position_size = x
 
 
 # noinspection PyAttributeOutsideInit
@@ -419,7 +394,10 @@ class MavenAssetInput:
 
     @asset_subcategory.setter
     def asset_subcategory(self, x: Union[str, Subcategory]) -> None:
-        self._asset_subcategory = x if isinstance(x, Subcategory) else Subcategory[x]
+        if isinstance(x, Subcategory):
+            self._asset_subcategory = x
+        else:
+            self._asset_subcategory = subcategory_map[x]
 
     @property
     def bbg_tr_ticker(self) -> str:

@@ -1,7 +1,0 @@
-projectKey='assetallocation_arp':project
-serverUrl=https://n00-sonar/sonar
-serverVersion=8.1.0.31237
-branch=flask_ui_development
-dashboardUrl=https://n00-sonar/sonar/dashboard?id=%27assetallocation_arp%27%3Aproject&branch=flask_ui_development
-ceTaskId=AXIYFpze08wZcXIVfzI3
-ceTaskUrl=https://n00-sonar/sonar/api/ce/task?id=AXIYFpze08wZcXIVfzI3

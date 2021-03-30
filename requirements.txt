@@ -26,5 +26,4 @@ QuantLib-python==1.16
 bumpversion
 setuptools
 pytest-runner
-parameterized==0.7.4
-
+Domino

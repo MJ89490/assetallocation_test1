@@ -11,7 +11,8 @@ from configparser import ConfigParser
 
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
-# from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
+from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
+from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 
 
 class ComputeInflationDifferential:
@@ -39,8 +40,9 @@ class ComputeInflationDifferential:
 
         for date_index in self.dates_index:
 
-            if not realtime_inflation_forecast:
+            if realtime_inflation_forecast.lower() != 'yes':
                 weo_date = "Latest"
+                # weo_dates.append(weo_date)
             else:
                 counter = 0
                 date_publication = pd.to_datetime(list(dates_imf_publishing)[0], format='%d-%m-%Y')
@@ -182,7 +184,8 @@ class ComputeInflationDifferential:
 
         return inflation_bloomberg_values
 
-    def compute_inflation_differential(self, realtime_inflation_forecast: bool, currencies_spot, currencies_usd, imf_data_update):
+    def compute_inflation_differential(self, realtime_inflation_forecast, currencies_spot, currencies_usd,
+                                       imf_data_update):
         """
         Function computing the inflation differential for usd and eur countries
         :return: a dataFrame  inflation_differential with all inflation differential data
@@ -191,10 +194,11 @@ class ComputeInflationDifferential:
         inflation_bloomberg_values = self.process_inflation_differential_bloomberg()
 
         # Grab the latest inflation differential data
-        # if imf_data_update:
-        #     scrape_imf_data()
+        if imf_data_update:
+            scrape_imf_data()
 
-        inflation_release, years_zero_inflation, months_inflation = self.compute_inflation_release(realtime_inflation_forecast)
+        inflation_release, years_zero_inflation, months_inflation = \
+            self.compute_inflation_release(realtime_inflation_forecast)
 
         years_one_inflation = years_zero_inflation.apply(lambda y: y + 1)
         years_zero_inflation = years_zero_inflation['Years'].tolist()
@@ -210,7 +214,7 @@ class ComputeInflationDifferential:
 
         inflation_differential = pd.DataFrame()
 
-        currency_logs, counter = [], 8
+        counter = 8
 
         for currency in currencies_spot:
             inflation_year_zero_value = []
@@ -220,8 +224,7 @@ class ComputeInflationDifferential:
 
             flag_imf = ''
             print(currency)
-
-            currency_logs.append(currency[:3])
+            write_logs_effect(currency, counter, True)
 
             for inflation, year_zero, year_one in zip(inflation_release_values, years_zero_inflation, years_one_inflation):
 
@@ -293,16 +296,4 @@ class ComputeInflationDifferential:
         new_index = np.delete(self.dates_index, 0)
         inflation_differential = inflation_differential.set_index(new_index)
 
-        return inflation_differential, currency_logs
-
-
-
-
-
-
-
-
-
-
-
-
+        return inflation_differential

@@ -19,7 +19,6 @@ DROP TABLE IF EXISTS "arp"."fx" CASCADE
 CREATE TABLE "arp"."fx"
 (
 	"model" varchar(25) NOT NULL,
-	"business_tstzrange" tstzrange NOT NULL,
 	"signal" varchar(25)	 NOT NULL,
   "currency" varchar(25)	 NOT NULL,
 	"response_function" boolean NOT NULL,
@@ -32,6 +31,7 @@ CREATE TABLE "arp"."fx"
 	"sharpe_cutoff" integer NULL,
 	"mean_reversion" integer NULL,
 	"historical_base" integer NULL,
+	"defensive" boolean NULL,
 	"execution_state_id" integer NOT NULL,
 	"strategy_id" integer NOT NULL,
 	"version" serial NOT NULL

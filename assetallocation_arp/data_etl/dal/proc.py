@@ -8,10 +8,13 @@ ArpProc = Enum(
     names=[
         ('fund.select_fund', auto()),
         ('fund.insert_fund', auto()),
-        ('arp.select_fund_strategy_results', auto()),
+        ('arp.select_fund_strategy_weights', auto()),
+        ('arp.select_fund_strategy_analytics', auto()),
+        ('arp.select_fund_strategy_asset_analytics', auto()),
         ('arp.insert_fund_strategy_results', auto()),
         ('arp.insert_app_user', auto()),
         ('arp.select_strategy_versions', auto()),
+        ('arp.select_strategy_id', auto()),
         ('fund.select_fund_names', auto()),
         ('asset.select_assets_with_analytics', auto()),
     ]
