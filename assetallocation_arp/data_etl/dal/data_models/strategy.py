@@ -249,7 +249,7 @@ class Effect(Strategy):
             carry_type: Union[str, CarryType], closing_threshold: float, day_of_week: Union[int, DayOfWeek],
             frequency: Union[str, Frequency], include_shorts: bool, interest_rate_cut_off_long: float,
             interest_rate_cut_off_short: float, moving_average_long_term: int, moving_average_short_term: int,
-            is_real_time_inflation_forecast: bool, trend_indicator: Union[str, TrendIndicator]
+            is_real_time_inflation_forecast: bool, trend_indicator: Union[str, TrendIndicator], cost, inflation_lag_in_months
     ) -> None:
         """Effect class to hold data from database"""
         super().__init__(Name.effect)

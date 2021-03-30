@@ -54,7 +54,9 @@ class ReceiveDataEffect:
             float(self.effect_form['input_cut_off_long']), float(self.effect_form['input_cut_off_short']),
             int(self.effect_form['input_long_term_ma']), int(self.effect_form['input_short_term_ma']),
             self.effect_form['input_real_time_inf_effect'].strip().lower() == 'yes',
-            self.effect_form['input_trend_indicator_effect'].strip().lower()
+            self.effect_form['input_trend_indicator_effect'].strip().lower(),
+            cost=0.46,
+
         )
         # TODO effect asset_subcategory is set as currency. refactor once database is restructured to link via asset_id!
         effect.asset_inputs = [EffectAssetInput(h, h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
