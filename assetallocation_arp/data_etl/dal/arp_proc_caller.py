@@ -572,6 +572,14 @@ class EffectProcCaller(StrategyProcCaller):
 
         return effect
 
+    def get_asset_analytics_for_strategy(
+            self, strategy: Effect, business_date_from: dt.date, business_date_to: dt.date
+    ):
+        if strategy.asset_inputs:
+            strategy.asset_inputs = self._select_effect_assets_with_analytics(
+                strategy.version, business_date_from, business_date_to
+            )
+
     def _select_effect_assets_with_analytics(
             self, effect_version: int, business_date_from: dt.date, business_date_to: dt.date
     ) -> Optional[List[EffectAssetInput]]:
@@ -584,8 +592,7 @@ class EffectProcCaller(StrategyProcCaller):
 
         effect_assets = []
         for r in res:
-            # TODO change asset_subcategory when database is restructured
-            e = EffectAssetInput(r['currency'], r['currency'], r['ticker_3m'], r['spot_ticker'],
+            e = EffectAssetInput(r['asset_subcategory'], r['currency'], r['ticker_3m'], r['spot_ticker'],
                                  r['carry_ticker'], float(r['usd_weight']), r['base'], r['region'])
             e.asset_3m.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
                 r['ticker_3m'], r['asset_analytics_3m']

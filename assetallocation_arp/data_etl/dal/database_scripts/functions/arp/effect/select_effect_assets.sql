@@ -18,7 +18,7 @@ $$
 BEGIN
   return query
     SELECT
-      string_agg(ag.subcategory, '') FILTER (WHERE sa.name = 'future') as asset_subcategory,
+      string_agg(ag.subcategory, '') FILTER (WHERE sa.name = 'carry') as asset_subcategory,
       string_agg(a.ticker, '') FILTER (WHERE sa.name = '3m') as ticker_3m,
       string_agg(a.ticker, '') FILTER (WHERE sa.name = 'spot') as spot_ticker,
       string_agg(a.ticker, '') FILTER (WHERE sa.name = 'carry') as carry_ticker,
