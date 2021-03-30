@@ -1,6 +1,10 @@
 from typing import List, Union, Optional, Tuple
 from abc import ABC, abstractmethod
 import datetime as dt
+from pathlib import Path
+from configparser import ConfigParser
+import json
+import pandas as pd
 
 from psycopg2.extras import DateTimeTZRange
 
@@ -12,8 +16,9 @@ from assetallocation_arp.data_etl.dal.data_models.asset import EffectAssetInput,
     FxAssetInput, Asset, FicaAssetInputGroup, MavenAssetInput
 from assetallocation_arp.data_etl.dal.data_models.fund_strategy import FundStrategyAnalytic, FundStrategyAssetWeight
 from assetallocation_arp.data_etl.dal.data_frame_converter import TimesDataFrameConverter, FicaDataFrameConverter, \
-    FxDataFrameConverter, MavenDataFrameConverter
+    FxDataFrameConverter, MavenDataFrameConverter, EffectDataFrameConverter
 from assetallocation_arp.models import times, fica, fxmodels, maven
+from assetallocation_arp.models.effect import main_effect
 
 
 # noinspection PyAttributeOutsideInit
@@ -253,20 +258,90 @@ class Effect(Strategy):
     ) -> None:
         """Effect class to hold data from database"""
         super().__init__(Name.effect)
-        self.carry_type = carry_type
-        self.closing_threshold = closing_threshold
-        self.cost = cost
-        self.day_of_week = day_of_week
-        self.frequency = frequency
-        self.include_shorts = include_shorts
-        self.inflation_lag_in_months = inflation_lag_in_months
-        self.interest_rate_cut_off_long = interest_rate_cut_off_long
-        self.interest_rate_cut_off_short = interest_rate_cut_off_short
-        self.moving_average_long_term = moving_average_long_term
+        self.update_imf = update_imf
         self.moving_average_short_term = moving_average_short_term
-        self.is_realtime_inflation_forecast = is_realtime_inflation_forecast
+        self.is_real_time_inflation_forecast = is_real_time_inflation_forecast
+        self.user_date = user_date
+        self.moving_average_long_term = moving_average_long_term
+        self.closing_threshold = closing_threshold
+        self.signal_date = signal_date
+        self.include_shorts = include_shorts
+        self.risk_weighting = risk_weighting
+        self.day_of_week = day_of_week
+        self.interest_rate_cut_off_long = interest_rate_cut_off_long
+        self.st_dev_window = st_dev_window
+        self.frequency = frequency
+        self.interest_rate_cut_off_short = interest_rate_cut_off_short
+        self.bid_ask_spread = bid_ask_spread
         self.trend_indicator = trend_indicator
+        self.carry_type = carry_type
+        self.position_size = position_size
         self._asset_inputs = []
+        self.config_assets = []
+
+    @property
+    def config_assets(self) -> List[Asset]:
+        return self._currency_assets
+
+    @config_assets.setter
+    def config_assets(self, x: List[Asset]) -> None:
+        self._currency_assets = x
+
+    @property
+    def st_dev_window(self) -> int:
+        return self._st_dev_window
+
+    @st_dev_window.setter
+    def st_dev_window(self, x: int) -> None:
+        self._st_dev_window = x
+
+    @property
+    def bid_ask_spread(self) -> float:
+        return self._bid_ask_spread
+
+    @bid_ask_spread.setter
+    def bid_ask_spread(self, x: float) -> None:
+        self._bid_ask_spread = x
+
+    @property
+    def risk_weighting(self) -> RiskWeighting:
+        return self._risk_weighting
+
+    @risk_weighting.setter
+    def risk_weighting(self, x: Union[str, RiskWeighting]) -> None:
+        self._risk_weighting = x if isinstance(x, RiskWeighting) else RiskWeighting[x]
+
+    @property
+    def update_imf(self) -> bool:
+        return self._update_imf
+
+    @update_imf.setter
+    def update_imf(self, x: bool) -> None:
+        self._update_imf = x
+
+    @property
+    def user_date(self) -> dt.date:
+        return self._user_date
+
+    @user_date.setter
+    def user_date(self, x: dt.date) -> None:
+        self._user_date = x
+
+    @property
+    def signal_date(self) -> dt.date:
+        return self._signal_date
+
+    @signal_date.setter
+    def signal_date(self, x: dt.date) -> None:
+        self._signal_date = x
+
+    @property
+    def position_size(self) -> float:
+        return self._position_size
+
+    @position_size.setter
+    def position_size(self, x: float) -> None:
+        self._position_size = x
 
     @property
     def asset_inputs(self) -> List[EffectAssetInput]:
@@ -275,10 +350,6 @@ class Effect(Strategy):
     @asset_inputs.setter
     def asset_inputs(self, x: List[EffectAssetInput]) -> None:
         self._asset_inputs = x
-
-    @property
-    def inflation_lag_interval(self) -> str:
-        return ArpTypeConverter.month_lag_int_to_interval(self.inflation_lag_in_months)
 
     @property
     def carry_type(self) -> CarryType:
@@ -295,14 +366,6 @@ class Effect(Strategy):
     @closing_threshold.setter
     def closing_threshold(self, x: float) -> None:
         self._closing_threshold = x
-
-    @property
-    def cost(self) -> float:
-        return self._cost
-
-    @cost.setter
-    def cost(self, x: float) -> None:
-        self._cost = x
 
     @property
     def day_of_week(self) -> DayOfWeek:
@@ -327,14 +390,6 @@ class Effect(Strategy):
     @include_shorts.setter
     def include_shorts(self, x: bool) -> None:
         self._include_shorts = x
-
-    @property
-    def inflation_lag_in_months(self) -> int:
-        return self._inflation_lag_in_months
-
-    @inflation_lag_in_months.setter
-    def inflation_lag_in_months(self, x: int):
-        self._inflation_lag_in_months = x
 
     @property
     def interest_rate_cut_off_long(self) -> float:
@@ -369,11 +424,11 @@ class Effect(Strategy):
         self._moving_average_short_term = x
 
     @property
-    def is_realtime_inflation_forecast(self) -> bool:
+    def is_real_time_inflation_forecast(self) -> bool:
         return self._is_realtime_inflation_forecast
 
-    @is_realtime_inflation_forecast.setter
-    def is_realtime_inflation_forecast(self, x: bool) -> None:
+    @is_real_time_inflation_forecast.setter
+    def is_real_time_inflation_forecast(self, x: bool) -> None:
         self._is_realtime_inflation_forecast = x
 
     @property
@@ -384,10 +439,54 @@ class Effect(Strategy):
     def trend_indicator(self, x: Union[str, TrendIndicator]) -> None:
         self._trend_indicator = x if isinstance(x, TrendIndicator) else TrendIndicator[x]
 
+    @property
+    def config_tickers(self) -> List[str]:
+        config = ConfigParser()
+        config.read(Path(__file__).parents[4] / 'config_effect_model' / 'all_currencies_effect.ini')
+        currencies_config = json.loads(config.get('currencies_base_implied', 'currencies_base_implied_data'))
+        spxt_index_config = config.get('spxt_index', 'spxt_index_ticker')
+        eur_usd_cr_config = config.get('eurusdcr_currency', 'eur_usd_cr_ticker')
+        jgenvuug_index_config = config.get('jgenvuug_index', 'jgenvuug_index_ticker')
+
+        all_tickers = [i[0] for i in currencies_config.values()]
+        all_tickers.extend([spxt_index_config, eur_usd_cr_config, jgenvuug_index_config])
+        return all_tickers
+
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
         """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
         # TODO add code to run effect, using Effect object, here
-        pass
+        effect_outputs, write_logs = main_effect.run_effect(self)
+
+        """
+        {'profit_and_loss': profit_and_loss, - dashboard
+          'signals_overview': signals_overview, - dashboard
+          'trades_overview': trades_overview, - dashboard
+          'rates': rates, - dashboard
+          'risk_returns': risk_returns, - dashboard
+          'combo': currencies_calculations['combo_curr'] - dashboard,
+          'log_ret': agg_currencies['log_returns_excl_costs'] - dashboard,
+          'region': process_usd_eur_data_effect['region_config'] - dashboard,
+          'agg_dates': agg_curr['agg_dates'],
+          'total_excl_signals': agg_curr['agg_total_excl_signals'],
+          'total_incl_signals': agg_curr['agg_total_incl_signals'],
+          'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
+          'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
+                  
+                  write_logs = {'currency_logs': currency_logs}
+        """
+        # TODO change depending on Simone's input
+        asset_analytics = EffectDataFrameConverter.create_asset_analytics(contribution, self.frequency)
+        asset_weights = EffectDataFrameConverter.df_to_asset_weights(exposure, self.frequency)
+
+        total_excl_signals = pd.Series(effect_outputs['total_excl_signals'], index=effect_outputs['agg_dates'])
+        total_incl_signals = pd.Series(effect_outputs['total_incl_signals'], index=effect_outputs['agg_dates'])
+        spot_incl_signals = pd.Series(effect_outputs['spot_incl_signals'], index=effect_outputs['agg_dates'])
+        spot_excl_signals = pd.Series(effect_outputs['spot_excl_signals'], index=effect_outputs['agg_dates'])
+        strategy_analytics = EffectDataFrameConverter.create_strategy_analytics(
+            total_excl_signals, total_incl_signals,spot_incl_signals, spot_excl_signals, self.frequency
+        )
+        analytics = asset_analytics + strategy_analytics
+        return analytics, asset_weights
 
 
 # noinspection PyAttributeOutsideInit
