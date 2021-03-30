@@ -9,7 +9,7 @@ Category = Enum(
         ('Fixed Income', auto()),
         ('FX', auto()),
         ('Commodity', auto()),
-        ('Credit', auto())
+        ('Indicator', auto())
     ]
 )
 
@@ -22,10 +22,12 @@ class Subcategory(Enum):
 Equity = Subcategory(
     value='Equity',
     names=[
-        ('US Equities', auto()),
-        ('EU Equities', auto()),
-        ('JP Equities', auto()),
-        ('HK Equities', auto()),
+        ('REITS', auto()),
+        ('Equity Factor', auto()),
+        ('Small Cap Equity', auto()),
+        ('DM Equity', auto()),
+        ('Equity Sector', auto()),
+        ('EM Equity', auto()),
     ]
 )
 
@@ -33,29 +35,51 @@ Equity = Subcategory(
 FixedIncome = Subcategory(
     value='FixedIncome',
     names=[
-        ('US 10y Bonds', auto()),
-        ('UK 10y Bonds', auto()),
-        ('EU 10y Bonds', auto()),
-        ('CA 10y Bonds', auto()),
+        ('EM Debt Local', auto()),
+        ('EM Debt Hard', auto()),
+        ('Nominal Swap', auto()),
+        ('IL Bond', auto()),
+        ('Nominal Bond', auto()),
+        ('Credit', auto()),
     ]
 )
 
+# noinspection PyArgumentList
+FX = Subcategory(
+    value='FX',
+    names=[
+        ('DM FX', auto()),
+        ('EM FX', auto())
+    ]
+)
 
-class FX(Subcategory):
-    AUD = auto()
-    CAD = auto()
-    CHF = auto()
-    EUR = auto()
-    GBP = auto()
-    JPY = auto()
-    NOK = auto()
-    NZD = auto()
-    SEK = auto()
-    USD = auto()
-    EURGBP = auto()  # TODO check this is FX not commodity or credit
+# noinspection PyArgumentList
+Commodity = Subcategory(
+    value='Commodity',
+    names=[
+        ('Natgas', auto()),
+        ('Industrial Metals', auto()),
+        ('Energy', auto()),
+        ('Agriculture', auto()),
+        ('Precious Metals', auto()),
+        ('Commodity', auto()),
+    ]
+)
 
+# noinspection PyArgumentList
+Indicator = Subcategory(
+    value='Indicator',
+    names=[
+        ('IMF Inflation Expectation', auto()),
+        ('OECD PPP', auto())
+    ]
+)
 
-subcategory_map = {j: i[j] for i in (Equity, FixedIncome, FX) for j in i._member_names_}
+subcategory_map = {
+    subcategory: category[subcategory]
+    for category in (Equity, FixedIncome, FX, Commodity, Indicator)
+    for subcategory in category._member_names_
+}
 
 
 class Base(Enum):

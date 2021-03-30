@@ -36,10 +36,15 @@ def calculate_signals_returns_r_positioning(times: 'Times') -> \
 
     if times.leverage_type == Leverage.s:
         returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, False)
-
+    elif times.leverage_type == Leverage.n.name:
+        (returns, r, positioning) = pc.return_ts(signals, future_assets, leverage_data, cost, True)
     else:
         returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, True)
         returns, r, positioning = pc.rescale(returns, positioning, 0.01)
+
+    # Replace inf values with nan values
+    # Replacing infinite with nan
+    positioning.replace([np.inf, -np.inf], np.nan, inplace=True)
 
     return signals, returns, r, positioning
 

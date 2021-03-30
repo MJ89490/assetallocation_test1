@@ -3,6 +3,9 @@ import mock
 from pytest import mark, raises
 from datetime import datetime
 
+from assetallocation_arp.common_libraries.dal_enums.country import Country
+from assetallocation_arp.common_libraries.dal_enums.currency import Currency
+from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.data_etl.dal.data_models.asset import Asset
 
 
@@ -13,7 +16,7 @@ def test_asset_country_setter_raises_key_error_invalid_country():
 
 
 def test_asset_country_setter_sets_country_valid_country():
-    country = 'EUR'
+    country = Country.EU.name
 
     a = Asset('a')
     a.country = country
@@ -28,7 +31,7 @@ def test_asset_category_setter_raises_key_error_invalid_category():
 
 
 def test_asset_category_setter_sets_category_valid_category():
-    category = 'FX'
+    category = Category.FX.name
     a = Asset('a')
     a.category = category
 
@@ -42,7 +45,7 @@ def test_asset_currency_setter_raises_key_error_invalid_currency():
 
 
 def test_asset_currency_setter_sets_currency_valid_currency():
-    currency = 'EUR'
+    currency = Currency.EUR.name
 
     a = Asset('a')
     a.currency = currency
@@ -50,7 +53,7 @@ def test_asset_currency_setter_sets_currency_valid_currency():
     assert a.currency.name == currency
 
 
-@mark.parametrize('country, expected', [('EUR', 'Europe'), ('USD', 'North America')])
+@mark.parametrize('country, expected', [(Country.EU.name, 'Europe ex UK'), (Country.US.name, 'North America')])
 def test_asset_region_property_gets_region_based_on_country(country, expected):
     a = Asset('a')
     a.country = country

@@ -1,10 +1,10 @@
+from assetallocation_arp.common_libraries.names_columns_calculations import CurrencyAggregate
+
 import pandas as pd
 import statistics as stats
 import math
 import numpy as np
 
-from assetallocation_arp.common_libraries.names_columns_calculations import CurrencyAggregate
-from assetallocation_arp.common_libraries.dal_enums.strategy import RiskWeighting
 
 class ComputeAggregateCurrencies:
 
@@ -42,10 +42,7 @@ class ComputeAggregateCurrencies:
 
         for currency_spot in spot_data.columns:
 
-            # tmp_start_date_computations = self.start_date_calc
-            start_date_loc = spot_data.index.get_loc(self.start_date_calc) - 1
-            tmp_start_date_computations = spot_data.index[start_date_loc]
-
+            tmp_start_date_computations = self.start_date_calc
             rows = spot_data[tmp_start_date_computations:].shape[0]
 
             spot_tmp = spot_data.loc[:, currency_spot]
@@ -135,7 +132,7 @@ class ComputeAggregateCurrencies:
 
         total_incl_signals_values = [100]
 
-        if self.weight == RiskWeighting['1/N']:
+        if self.weight == '1/N':
             average_incl_signals = (returns_incl_costs / returns_incl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_incl_signals)):
                 total_incl_signals_values.append(total_incl_signals_values[value] * average_incl_signals[value])
@@ -156,7 +153,7 @@ class ComputeAggregateCurrencies:
 
         total_excl_signals_values = [100]
 
-        if self.weight == RiskWeighting['1/N']:
+        if self.weight == '1/N':
             average_excl_signals = (returns_excl_costs / returns_excl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_excl_signals)):
                 total_excl_signals_values.append(total_excl_signals_values[value] * average_excl_signals[value])
@@ -177,7 +174,7 @@ class ComputeAggregateCurrencies:
 
         spot_incl_signals_values = [100]
 
-        if self.weight == RiskWeighting['1/N']:
+        if self.weight == '1/N':
             average_spot_incl_signals = (spot_incl_costs / spot_incl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_spot_incl_signals)):
                 spot_incl_signals_values.append(spot_incl_signals_values[value] * average_spot_incl_signals[value])
@@ -198,7 +195,7 @@ class ComputeAggregateCurrencies:
 
         spot_excl_signals_values = [100]
 
-        if self.weight == RiskWeighting['1/N']:
+        if self.weight == '1/N':
             average_spot_excl_signals = (spot_excl_costs / spot_excl_costs.shift(1)).mean(axis=1).iloc[1:].tolist()
             for value in range(len(average_spot_excl_signals)):
                 spot_excl_signals_values.append(spot_excl_signals_values[value] * average_spot_excl_signals[value])
@@ -223,7 +220,7 @@ class ComputeAggregateCurrencies:
     @staticmethod
     def compute_weighted_performance(log_returns_excl, combo_curr, weight_value):
         """
-        Function computing the weighted performancen
+        Function comptuing the weighted performancen
         :param log_returns_excl: log of retuns excl costs values
         :param combo_curr: combo of currencies from compute_currencies class
         :param weight_value: weight value (pos attr from the inputs)
@@ -259,7 +256,7 @@ class ComputeAggregateCurrencies:
         :param combo_curr: combo_curr values from compute currencies class
         :return: a dictionary
         """
-        if self.weight != RiskWeighting['1/N']:
+        if self.weight != '1/N':
             inverse_volatility = self.compute_inverse_volatility(spot_data=spot_origin)
         else:
             inverse_volatility = None

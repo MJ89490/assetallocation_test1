@@ -20,6 +20,7 @@ CREATE TABLE "arp"."strategy"
 (
 	"id" serial NOT NULL,
 	"name" varchar(50)	 NOT NULL,
+	"business_date_from" date NOT NULL,
 	"description" varchar(100)	 NULL,
 	"app_user_id" varchar(7)	 NOT NULL,
 	"system_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)'),
@@ -34,8 +35,7 @@ ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_pkey"
 ;
 
 -- ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_name_system_tstzrange_excl" EXCLUDE USING GIST (name WITH =, system_tstzrange WITH &&)
-
-ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_name_check" CHECK (name in ('times', 'effect', 'fica'))
+ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_name_check" CHECK (name in ('times', 'effect', 'fica', 'maven', 'fx'))
 ;
 
 /* Create Foreign Key Constraints */
