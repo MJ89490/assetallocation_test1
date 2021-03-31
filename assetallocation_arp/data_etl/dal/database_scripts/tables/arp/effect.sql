@@ -36,7 +36,7 @@ CREATE TABLE "arp"."effect"
 	"interest_rate_cut_off_short" numeric(32,16) NOT NULL,
 	"carry_type" varchar(50)	 NOT NULL,
 	"version" serial NOT NULL,
-	"is_realtime_inflation_forecast" boolean NOT NULL,
+	"is_real_time_inflation_forecast" boolean NOT NULL,
 	"closing_threshold" numeric(32,16) NOT NULL,
 	"strategy_id" integer NOT NULL
 )
