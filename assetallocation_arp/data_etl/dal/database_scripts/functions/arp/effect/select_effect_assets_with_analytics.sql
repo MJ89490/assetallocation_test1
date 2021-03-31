@@ -39,7 +39,6 @@ BEGIN
       JOIN asset.asset_group ag ON a.asset_group_id = ag.id
     WHERE
       e.version = strategy_version
-      AND sa.name in ('future', 'signal')
     GROUP BY
       eag.strategy_asset_group_id,
       eag.currency,
