@@ -19,7 +19,7 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 def run_effect(strategy: 'Effect'):
     asset_inputs = [
         (
-            i.asset_subcategory, i.ticker_3m, i.spot_ticker, i.carry_ticker, i.usd_weight, i.base.name, i.region
+            i.asset_subcategory, i.asset_3m.ticker, i.spot_asset.ticker, i.carry_asset.ticker, i.usd_weight, i.base.name, i.region
         ) for i in strategy.asset_inputs
     ]
     asset_inputs = pd.DataFrame(
@@ -30,9 +30,9 @@ def run_effect(strategy: 'Effect'):
         ]
     )
 
-    carry_analytics = [(ai.carry_ticker, analytic) for ai in strategy.asset_inputs for analytic in ai.carry_asset.asset_analytics]
-    spot_analytics = [(ai.spot_ticker, analytic) for ai in strategy.asset_inputs for analytic in ai.spot_asset.asset_analytics]
-    analytics_3m = [(ai.ticker_3m, analytic) for ai in strategy.asset_inputs for analytic in ai.asset_3m.asset_analytics]
+    carry_analytics = [(ai.carry_asset.ticker, analytic) for ai in strategy.asset_inputs for analytic in ai.carry_asset.asset_analytics]
+    spot_analytics = [(ai.spot_asset.ticker, analytic) for ai in strategy.asset_inputs for analytic in ai.spot_asset.asset_analytics]
+    analytics_3m = [(ai.asset_3m.ticker, analytic) for ai in strategy.asset_inputs for analytic in ai.asset_3m.asset_analytics]
     analytics_currencies = [(asset.ticker, analytic) for asset in strategy.config_assets for analytic in asset.asset_analytics]
 
     analytics = carry_analytics + spot_analytics + analytics_3m + analytics_currencies
@@ -54,7 +54,7 @@ def run_effect(strategy: 'Effect'):
     # -------------------------- Inflation differential calculations ------------------------------------------------- #
     obj_inflation_differential = ComputeInflationDifferential(dates_index=obj_import_data.dates_index)
 
-    inflation_differential, currency_logs = obj_inflation_differential.compute_inflation_differential(
+    inflation_differential = obj_inflation_differential.compute_inflation_differential(
                                             strategy.is_real_time_inflation_forecast,
                                             obj_import_data.all_currencies_spot,
                                             obj_import_data.currencies_spot['currencies_spot_usd'],
@@ -148,8 +148,6 @@ def run_effect(strategy: 'Effect'):
                                     spxt_index_values=process_usd_eur_data_effect['spxt_index_values'].loc[user_date:],
                                     jgenvuug_index_values=process_usd_eur_data_effect['jgenvuug_index_values'])
 
-    write_logs = {'currency_logs': currency_logs}
-
     agg_curr = read_aggregate_calc(agg_currencies['agg_total_excl_signals'], agg_currencies['agg_total_incl_signals'],
                                    agg_currencies['agg_spot_incl_signals'], agg_currencies['agg_spot_excl_signals'])
 
@@ -168,4 +166,4 @@ def run_effect(strategy: 'Effect'):
                       'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
                       'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
 
-    return effect_outputs, write_logs
+    return effect_outputs

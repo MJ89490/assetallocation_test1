@@ -295,6 +295,14 @@ class EffectAssetInput:
         self.carry_asset = Asset(carry_ticker)
 
     @property
+    def base(self) -> Base:
+        return self._base
+
+    @base.setter
+    def base(self, x: Union[str, Base]) -> None:
+        self._base = x if isinstance(x, Base) else Base[x]
+
+    @property
     def asset_subcategory(self) -> str:
         return self._asset_subcategory
 

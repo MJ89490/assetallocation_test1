@@ -40,12 +40,12 @@ def test_runs_through():
             asset.loc['input_carry_ticker'], asset.loc['input_weight_usd'], asset.loc['input_usd_eur'],
                                asset.loc['input_region'])
 
-        eai.spot_asset.asset_analytics = [AssetAnalytic(eai.spot_ticker, 'PX_LAST', index, float(val)) for
-            index, val in all_data.loc[:, eai.spot_ticker].iteritems()]
-        eai.carry_asset.asset_analytics = [AssetAnalytic(eai.carry_ticker, 'PX_LAST', index, float(val)) for index, val in
-                                          all_data.loc[:, eai.carry_ticker].iteritems()]
-        eai.asset_3m.asset_analytics = [AssetAnalytic(eai.ticker_3m, 'PX_LAST', index, float(val)) for index, val in
-                                          all_data.loc[:, eai.ticker_3m].iteritems()]
+        eai.spot_asset.asset_analytics = [AssetAnalytic(eai.spot_asset.ticker, 'PX_LAST', index, float(val)) for
+            index, val in all_data.loc[:, eai.spot_asset.ticker].iteritems()]
+        eai.carry_asset.asset_analytics = [AssetAnalytic(eai.carry_asset.ticker, 'PX_LAST', index, float(val)) for index, val in
+                                          all_data.loc[:, eai.carry_asset.ticker].iteritems()]
+        eai.asset_3m.asset_analytics = [AssetAnalytic(eai.asset_3m.ticker, 'PX_LAST', index, float(val)) for index, val in
+                                          all_data.loc[:,eai.asset_3m.ticker].iteritems()]
 
         effect_asset_inputs.append(eai)
 

@@ -11,7 +11,6 @@ from configparser import ConfigParser
 
 from assetallocation_arp.common_libraries.names_columns_calculations import CurrencySpot
 from assetallocation_arp.common_libraries.names_currencies_base_spot import CurrencyBaseSpot
-from data_etl.outputs_effect.write_logs_computations_effect import write_logs_effect
 from assetallocation_arp.data_etl.imf_data_download import scrape_imf_data
 
 
@@ -40,7 +39,7 @@ class ComputeInflationDifferential:
 
         for date_index in self.dates_index:
 
-            if realtime_inflation_forecast.lower() != 'yes':
+            if not realtime_inflation_forecast:
                 weo_date = "Latest"
                 # weo_dates.append(weo_date)
             else:
@@ -224,7 +223,6 @@ class ComputeInflationDifferential:
 
             flag_imf = ''
             print(currency)
-            write_logs_effect(currency, counter, True)
 
             for inflation, year_zero, year_one in zip(inflation_release_values, years_zero_inflation, years_one_inflation):
 
