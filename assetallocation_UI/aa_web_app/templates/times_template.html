@@ -59,12 +59,65 @@
                                         </select>
 
                                         <!--Date to-->
-                                        <select class="form-control select-form-date-to" id="select-date-to-strategy-page">
-                                            <option disabled selected value>date to</option>
-                                            {% for d in existing_date_to %}
-                                                <option>{{d}}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <input type="text" class="form-control select-form-date-to text-center" id="select-date-to-strategy-page" name="select-date-to-strategy-page">
+                                        <script type="text/javascript">
+
+                                            switch (new Date().getDay()) {
+                                              case 0:
+                                                day = "Sunday";
+                                                break;
+                                              case 1:
+                                                day = "Monday";
+                                                break;
+                                              case 2:
+                                                day = "Tuesday";
+                                                break;
+                                              case 3:
+                                                day = "Wednesday";
+                                                break;
+                                              case 4:
+                                                day = "Thursday";
+                                                break;
+                                              case 5:
+                                                day = "Friday";
+                                                break;
+                                              case 6:
+                                                day = "Saturday";
+                                            }
+
+                                            var today = new Date()
+                                            var lastTuesday = new Date(today)
+
+                                            var todayWeekDay = today.getDay()-1;
+
+                                            if(todayWeekDay==-1){
+                                              todayWeekDay = 6
+                                            }
+
+
+                                            if (todayWeekDay==1){
+                                              var offset = 7
+
+                                            }
+                                            else{
+                                              var offset = (todayWeekDay-1) % 7
+                                            }
+
+                                            lastTuesday.setDate(lastTuesday.getDate() - offset);
+
+                                            var lastTuesdaySplit = lastTuesday.toLocaleString().split(",");
+
+                                            document.getElementById('select-date-to-strategy-page').value = lastTuesdaySplit[0]
+                                        </script>
+
+
+                                        <!--<select class="form-control select-form-date-to" id="select-date-to-strategy-page">-->
+                                            <!---->
+                                            <!--<option disabled selected value>date to</option>-->
+                                            <!--{% for d in existing_date_to %}-->
+                                                <!--<option>{{d}}</option>-->
+                                            <!--{% endfor %}-->
+                                        <!--</select>-->
                                     </div>
                                 </center>
 
