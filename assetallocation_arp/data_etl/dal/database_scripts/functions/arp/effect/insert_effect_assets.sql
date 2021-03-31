@@ -86,7 +86,7 @@ BEGIN
   INSERT INTO arp.effect_asset_group (strategy_asset_group_id, execution_state_id, currency, usd_weight, base, region)
   VALUES (
     strategy_asset_group_id,
-    insert_effect_asset_group.execution_state_id,
+    insert_strategy_asset.execution_state_id,
     currency,
     usd_weight,
     base,

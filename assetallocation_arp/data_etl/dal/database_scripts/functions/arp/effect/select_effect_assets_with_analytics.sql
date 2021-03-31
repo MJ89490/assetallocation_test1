@@ -42,8 +42,10 @@ BEGIN
       AND sa.name in ('future', 'signal')
     GROUP BY
       eag.strategy_asset_group_id,
-      eag.cost,
-      eag.s_leverage
+      eag.currency,
+      eag.region,
+      eag.base,
+      eag.usd_weight
     ),
     spots as (
       SELECT
