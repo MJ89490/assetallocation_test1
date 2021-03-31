@@ -123,6 +123,8 @@ $(function(){
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
 
+        alert("Strategy is running...");
+
         if (check != 'error'){
             $.ajax({
                 url: "received_data_times_form",

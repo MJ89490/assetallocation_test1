@@ -59,7 +59,6 @@ def times_strategy():
                            fund_selected=obj_received_data_times.fund_name,
                            version_selected=obj_received_data_times.version_strategy,
                            existing_funds=form.existing_funds,
-                           existing_date_to=['13/08/2020'],
                            show_calendar=show_calendar,
                            pop_up_message=pop_up_message,
                            show_versions=show_versions,
@@ -82,9 +81,8 @@ def receive_data_from_times_strategy_page():
         obj_received_data_times.fund_name = json_data['fund']
     elif json_data['type_of_request'] == 'selected_fund_weight':
         obj_received_data_times.strategy_weight_user = json_data['fund_weight']
-    elif json_data['type_of_request'] == 'selected_version':
+    elif json_data['type_of_request'] == 'selected_version_date_to':
         obj_received_data_times.version_strategy = json_data['version']
-    else:
         obj_received_data_times.date_to = json_data['date_to']
         obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
 

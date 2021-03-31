@@ -143,7 +143,10 @@ class ReceivedDataTimes:
         match_date = apc.select_fund_strategy_result_dates(fund_name=self.fund_name,
                                                            strategy_version=self.version_strategy)
 
-        return match_date[dt.date(self.date_to.year, self.date_to.month, self.date_to.day)]
+        try:
+            return match_date[dt.date(self.date_to.year, self.date_to.month, self.date_to.day)]
+        except KeyError:
+            return False
 
     def receive_data_latest_version_dashboard(self, business_date_to):
         apc = TimesProcCaller()

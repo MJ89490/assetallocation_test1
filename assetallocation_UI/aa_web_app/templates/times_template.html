@@ -49,78 +49,68 @@
 
                                     <div class="row-border-top border-top"></div>
                                     <center>
-                                    <h6 class="subtitle-strategy">Select an existing version of the strategy</h6>
-                                    <div class="btn-group-vertical">
-                                        <select class="form-control select-form-version" id="select-version-from-strategy-page">
-                                            <option disabled selected value>version</option>
-                                            {% for v in versions_list %}
-                                                <option>{{v}}</option>
-                                            {% endfor %}
-                                        </select>
-
+                                        <h6 class="subtitle-strategy">Select an existing version of the strategy</h6>
                                         <!--Date to-->
                                         <input type="text" class="form-control select-form-date-to text-center" id="select-date-to-strategy-page" name="select-date-to-strategy-page">
                                         <script type="text/javascript">
 
-                                            switch (new Date().getDay()) {
-                                              case 0:
-                                                day = "Sunday";
-                                                break;
-                                              case 1:
-                                                day = "Monday";
-                                                break;
-                                              case 2:
-                                                day = "Tuesday";
-                                                break;
-                                              case 3:
-                                                day = "Wednesday";
-                                                break;
-                                              case 4:
-                                                day = "Thursday";
-                                                break;
-                                              case 5:
-                                                day = "Friday";
-                                                break;
-                                              case 6:
-                                                day = "Saturday";
-                                            }
+                                                switch (new Date().getDay()) {
+                                                  case 0:
+                                                    day = "Sunday";
+                                                    break;
+                                                  case 1:
+                                                    day = "Monday";
+                                                    break;
+                                                  case 2:
+                                                    day = "Tuesday";
+                                                    break;
+                                                  case 3:
+                                                    day = "Wednesday";
+                                                    break;
+                                                  case 4:
+                                                    day = "Thursday";
+                                                    break;
+                                                  case 5:
+                                                    day = "Friday";
+                                                    break;
+                                                  case 6:
+                                                    day = "Saturday";
+                                                }
 
-                                            var today = new Date()
-                                            var lastTuesday = new Date(today)
+                                                var today = new Date()
+                                                var lastTuesday = new Date(today)
 
-                                            var todayWeekDay = today.getDay()-1;
+                                                var todayWeekDay = today.getDay()-1;
 
-                                            if(todayWeekDay==-1){
-                                              todayWeekDay = 6
-                                            }
-
-
-                                            if (todayWeekDay==1){
-                                              var offset = 7
-
-                                            }
-                                            else{
-                                              var offset = (todayWeekDay-1) % 7
-                                            }
-
-                                            lastTuesday.setDate(lastTuesday.getDate() - offset);
-
-                                            var lastTuesdaySplit = lastTuesday.toLocaleString().split(",");
-
-                                            document.getElementById('select-date-to-strategy-page').value = lastTuesdaySplit[0]
-                                        </script>
+                                                if(todayWeekDay==-1){
+                                                  todayWeekDay = 6
+                                                }
 
 
-                                        <!--<select class="form-control select-form-date-to" id="select-date-to-strategy-page">-->
-                                            <!---->
-                                            <!--<option disabled selected value>date to</option>-->
-                                            <!--{% for d in existing_date_to %}-->
-                                                <!--<option>{{d}}</option>-->
-                                            <!--{% endfor %}-->
-                                        <!--</select>-->
-                                    </div>
-                                </center>
+                                                if (todayWeekDay==1){
+                                                  var offset = 7
 
+                                                }
+                                                else{
+                                                  var offset = (todayWeekDay-1) % 7
+                                                }
+
+                                                lastTuesday.setDate(lastTuesday.getDate() - offset);
+
+                                                var lastTuesdaySplit = lastTuesday.toLocaleString().split(",");
+
+                                                document.getElementById('select-date-to-strategy-page').value = lastTuesdaySplit[0]
+                                            </script>
+                                        <div class="btn-group-vertical">
+                                            <select class="form-control select-form-version" id="select-version-from-strategy-page">
+                                                <option disabled selected value>version</option>
+                                                {% for v in versions_list %}
+                                                    <option>{{v}}</option>
+                                                {% endfor %}
+                                            </select>
+
+                                        </div>
+                                    </center>
                                 </center>
 
                                 <!--New version-->
@@ -219,7 +209,7 @@
                                     <!--Date to-->
                                     <div class="col-lg-6">
                                         <label class="subtitle-model-input">Date to</label>
-                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg text-center" value="13/08/2020" required oninput="selectDateToCalendar()">
+                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg text-center" value="11/08/2020" required oninput="selectDateToCalendar()">
                                     </div>
                                 </div>
 
@@ -269,7 +259,7 @@
                                     <!--Week day-->
                                     <div class="col-lg-6">
                                         <label class="subtitle-model-input">Week day</label>
-                                        <input id="input_weekday_times" name="input_weekday_times" class="form-control form-models-select-times rounded-lg text-center" value="THU" readonly>
+                                        <input id="input_weekday_times" name="input_weekday_times" class="form-control form-models-select-times rounded-lg text-center" value="TUE" readonly>
                                     </div>
                                 </div>
 
@@ -349,7 +339,7 @@
                             <img src="static/img/color-background.PNG" height="70px"/>
                             <div class="card-body">
                                 <center>
-                                    <h4 class="card-title-label">Existing version: {{inputs_versions['version']}} with the date to 13/08/2020</h4>
+                                    <h4 class="card-title-label">Existing version: {{inputs_versions['version']}}</h4>
                                 </center>
 
                                 <p class="text-center">This version does not exist in the database with this date.</p>
@@ -472,7 +462,16 @@
                                     <!--Date from-->
                                     <div class="btn-group">
                                         <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
-                                            <button class="btn btn-primary btn-sm btn-run-model-existing-versions-times-pop-up" type="submit" name="submit_button" value="run-strategy-existing-versions">Run this version again?</button>
+                                            <button class="btn btn-primary btn-sm btn-run-model-existing-versions-times-pop-up" type="submit" name="submit_button" value="run-strategy-existing-versions" onclick="AlertStratRunning()">Run this version again?</button>
+                                             <script type="text/javascript">
+                                                function AlertStratRunning(){
+
+                                                    alert("Strategy is running...");
+                                                }
+
+                                            </script>
+
+
                                         </form>
 
                                         <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
