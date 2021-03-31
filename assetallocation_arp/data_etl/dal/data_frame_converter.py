@@ -55,6 +55,7 @@ class DataFrameConverter:
         """Transform DataFrame with index of business_date and columns of asset_subcategory to list of
         FundStrategyAssetAnalytics
         """
+
         return [
             FundStrategyAssetAnalytic(ticker_map.get(asset_subcategory, ''), asset_subcategory, index, category, subcategory, float(val), frequency)
             for asset_subcategory, data in analytics.items() for index, val in data.iteritems() if pd.notna(val)
@@ -267,8 +268,8 @@ class EffectDataFrameConverter(DataFrameConverter):
         # TODO change depending on Simone's input
         analytics = list(
             chain(
-                cls.df_to_asset_analytics(trend, Category.Signal, Signal.trend, frequency),
-                cls.df_to_asset_analytics(carry, Category.Signal, Signal.carry, frequency)
+                cls.df_to_asset_analytics(trend, Category.signal, Signal.trend, frequency),
+                cls.df_to_asset_analytics(carry, Category.signal, Signal.carry, frequency)
             )
         )
         return analytics

@@ -104,13 +104,25 @@ class ComputeCurrencies(ProcessDataEffect):
                     previous_eleven_start_date_loc = self.data_currencies_usd.index[start_current_date_index_loc - 11]
                     previous_eleven_start_date_index = self.data_currencies_usd.index.get_loc(previous_eleven_start_date_loc)
 
-                    numerator = data_all_currencies_carry[previous_start_date_index] / data_all_currencies_carry[previous_eleven_start_date_index]
-                    denominator = data_all_currencies_spot[previous_start_date_index] / data_all_currencies_spot[previous_eleven_start_date_index]
+                    try:
+                        numerator = data_all_currencies_carry[previous_start_date_index] / data_all_currencies_carry[previous_eleven_start_date_index]
+                        denominator = data_all_currencies_spot[previous_start_date_index] / data_all_currencies_spot[previous_eleven_start_date_index]
+                    except ZeroDivisionError:
+                        numerator = 0
+                        denominator = 0
+                        # print(numerator)
+                        # print(denominator)
 
                     if carry_type == CarryType.real:
-                        carry.append((((numerator / denominator) ** (52/10))-1) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100)
+                        try:
+                            carry.append((((numerator / denominator) ** (52/10))-1) - inflation_differential[CurrencySpot.Inflation_Differential.value + currency_spot].loc[start_current_date_index]/100)
+                        except ZeroDivisionError:
+                            carry.append(0)
                     else:
-                        carry.append((((numerator / denominator) ** (52/10))-1))
+                        try:
+                            carry.append((((numerator / denominator) ** (52/10))-1))
+                        except ZeroDivisionError:
+                            carry.append(0)
 
                 # Error handling when we reach the end of the dates range
                 try:

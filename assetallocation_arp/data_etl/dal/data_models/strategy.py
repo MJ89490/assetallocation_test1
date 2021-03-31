@@ -455,7 +455,7 @@ class Effect(Strategy):
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
         """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
         # TODO add code to run effect, using Effect object, here
-        effect_outputs, write_logs = main_effect.run_effect(self)
+        effect_outputs = main_effect.run_effect(self)
 
         """
         {'profit_and_loss': profit_and_loss, - dashboard
@@ -475,7 +475,8 @@ class Effect(Strategy):
                   write_logs = {'currency_logs': currency_logs}
         """
         # TODO change depending on Simone's input
-        asset_analytics = EffectDataFrameConverter.create_asset_analytics(contribution, self.frequency)
+        # trend: pd.DataFrame, carry: pd.DataFrame, frequency: Frequency
+        asset_analytics = EffectDataFrameConverter.create_asset_analytics(effect_outputs['trend_curr'], effect_outputs['carry_curr'], self.frequency)
         asset_weights = EffectDataFrameConverter.df_to_asset_weights(exposure, self.frequency)
 
         total_excl_signals = pd.Series(effect_outputs['total_excl_signals'], index=effect_outputs['agg_dates'])

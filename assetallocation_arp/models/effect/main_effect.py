@@ -164,6 +164,8 @@ def run_effect(strategy: 'Effect'):
                       'total_excl_signals': agg_curr['agg_total_excl_signals'],
                       'total_incl_signals': agg_curr['agg_total_incl_signals'],
                       'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
-                      'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
+                      'spot_excl_signals': agg_curr['agg_spot_excl_signals'],
+                      'carry_curr': currencies_calculations['carry_curr'],
+                      'trend_curr': currencies_calculations['trend_curr']}
 
     return effect_outputs

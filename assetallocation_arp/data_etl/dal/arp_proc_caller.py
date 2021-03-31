@@ -579,6 +579,8 @@ class EffectProcCaller(StrategyProcCaller):
             strategy.asset_inputs = self._select_effect_assets_with_analytics(
                 strategy.version, business_date_from, business_date_to
             )
+            strategy.config_assets = self._select_config_assets_with_analytics(business_date_from, business_date_to,
+                                                                               strategy.config_tickers)
 
     def _select_effect_assets_with_analytics(
             self, effect_version: int, business_date_from: dt.date, business_date_to: dt.date
@@ -593,7 +595,8 @@ class EffectProcCaller(StrategyProcCaller):
         effect_assets = []
         for r in res:
             e = EffectAssetInput(r['asset_subcategory'], r['currency'], r['ticker_3m'], r['spot_ticker'],
-                                 r['carry_ticker'], float(r['usd_weight']), r['base'], r['region'])
+                                 r['carry_ticker'], float(r['usd_weight']), r['base'], r['region']
+                                 )
             e.asset_3m.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(
                 r['ticker_3m'], r['asset_analytics_3m']
             )
@@ -606,6 +609,17 @@ class EffectProcCaller(StrategyProcCaller):
             effect_assets.append(e)
 
         return effect_assets
+
+    def _select_config_assets_with_analytics(self, business_date_from: dt.date, business_date_to: dt.date, config_tickers:List[str]):
+        business_tstzrange = DateTimeTZRange(business_date_from, business_date_to, '[]')
+        config_assets_res = self.call_proc("asset.select_assets_with_analytics", [config_tickers, business_tstzrange])
+        config_assets = []
+        for row in config_assets_res:
+            asset = Asset(row['ticker'])
+            asset.asset_analytics = ArpTypeConverter.asset_analytics_str_to_objects(row['ticker'], row['analytics'])
+            config_assets.append(asset)
+
+        return config_assets
 
 
 class FicaProcCaller(StrategyProcCaller):
