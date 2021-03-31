@@ -32,7 +32,7 @@ declare
 BEGIN
   name := 'effect';
   
-	SELECT config.insert_execution_state('insert_times_strategy') into execution_state_id;
+	SELECT config.insert_execution_state('arp.insert_effect_strategy') into execution_state_id;
   PERFORM arp.close_off_strategy(name);
 	SELECT arp.insert_strategy(name, business_date_from, description, user_id, execution_state_id) into strategy_id;
 INSERT INTO arp.effect (
