@@ -60,7 +60,8 @@ DECLARE
 BEGIN
 
   SELECT arp.insert_strategy_asset_group(strategy_id, insert_effect_asset_group.execution_state_id) INTO strategy_asset_group_id;
-  PERFORM arp.insert_effect_asset(strategy_asset_group_id, insert_effect_asset_group.execution_state_id, effect_asset.cost, effect_asset.s_leverage);
+  PERFORM arp.insert_effect_asset(strategy_asset_group_id, insert_effect_asset_group.execution_state_id, effect_asset.currency, effect_asset.usd_weight,
+                                  effect_asset.base, effect_asset.region);
   PERFORM arp.insert_strategy_asset(strategy_asset_group_id, insert_effect_asset_group.execution_state_id, '3m', effect_asset.ticker_3m);
   PERFORM arp.insert_strategy_asset(strategy_asset_group_id, insert_effect_asset_group.execution_state_id, 'spot', effect_asset.spot_ticker);
   PERFORM arp.insert_strategy_asset(strategy_asset_group_id, insert_effect_asset_group.execution_state_id, 'carry', effect_asset.carry_ticker);
