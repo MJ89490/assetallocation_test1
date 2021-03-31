@@ -295,6 +295,18 @@ class EffectAssetInput:
         self.carry_asset = Asset(carry_ticker)
 
     @property
+    def spot_ticker(self) -> str:
+        return self._spot_asset.ticker
+
+    @property
+    def carry_ticker(self) -> str:
+        return self._carry_asset.ticker
+
+    @property
+    def ticker_3m(self) -> str:
+        return self._asset_3m.ticker
+
+    @property
     def base(self) -> Base:
         return self._base
 
