@@ -109,9 +109,9 @@ BEGIN
       c.carry_asset_analytics
     FROM
       effect_assets ea5
-      JOIN carries c on ea5.future_asset_id = c.carry_asset_id
-      JOIN spots s on ea5.signal_asset_id = s.spot_asset_id
-      JOIN tm on ea5.signal_asset_id = tm.asset_id_3m
+      JOIN carries c on ea5.carry_asset_id = c.carry_asset_id
+      JOIN spots s on ea5.spot_asset_id = s.spot_asset_id
+      JOIN tm on ea5.asset_id_3m = tm.asset_id_3m
   ;
 END
 $$;
