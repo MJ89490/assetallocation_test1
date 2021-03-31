@@ -13,13 +13,13 @@ CREATE OR REPLACE FUNCTION arp.select_effect_strategy(
   OUT carry_type varchar,
   OUT closing_threshold numeric,
   OUT day_of_week integer,
-  OUT frequency frequency,
+  OUT frequency arp.frequency,
   OUT include_shorts boolean,
   OUT interest_rate_cut_off_long numeric,
   OUT interest_rate_cut_off_short numeric,
   OUT moving_average_long_term int,
   OUT moving_average_short_term int,
-  OUT is_realtime_inflation_forecast boolean,
+  OUT is_real_time_inflation_forecast boolean,
   OUT trend_indicator varchar
 )
 AS
@@ -44,7 +44,7 @@ BEGIN
     e.interest_rate_cut_off_short,
     e.moving_average_long_term,
     e.moving_average_short_term,
-    e.is_realtime_inflation_forecast,
+    e.is_real_time_inflation_forecast,
     e.trend_indicator
   INTO
     business_date_from,
@@ -65,7 +65,7 @@ BEGIN
     interest_rate_cut_off_short,
     moving_average_long_term,
     moving_average_short_term,
-    is_realtime_inflation_forecast,
+    is_real_time_inflation_forecast,
     trend_indicator
 	FROM
 	  arp.strategy s

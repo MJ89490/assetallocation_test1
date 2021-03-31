@@ -16,21 +16,7 @@ BEGIN
 
   SELECT config.insert_execution_state('arp.insert_effect_assets') INTO execution_state_id;
   SELECT arp.select_strategy_id(strategy_name, effect_version) INTO strategy_id;
-  PERFORM arp.delete_effect_assets_from_effect_asset(strategy_id);
   PERFORM arp.insert_effect_asset_groups(strategy_id, execution_state_id, _effect_assets);
-END;
-$$
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION arp.delete_effect_assets_from_effect_asset(
-  strategy_id int
-)
-  RETURNS VOID
-AS
-$$
-BEGIN
-  DELETE FROM arp.effect_asset ea WHERE ea.strategy_id = delete_effect_assets_from_effect_asset.strategy_id;
 END;
 $$
 LANGUAGE plpgsql;
