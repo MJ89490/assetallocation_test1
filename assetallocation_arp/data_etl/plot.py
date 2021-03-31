@@ -2,7 +2,6 @@
 import os
 import logging
 import logging.config
-import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 from bokeh.io import curdoc
@@ -173,9 +172,6 @@ def data_validation_handle() -> None:
 # Get list of instruments from data frame as a unique list
 db = Db()
 df_db, instrument_list = db.get_analytic()
-
-# df_db = pd.DataFrame({"ticker": ["N/A", "N/A"], "value": [0, 0], "business_datetime":[datetime.today(), datetime.today()], "description": ["N/A", "N/A"]})
-# instrument_list = df_db["ticker"].unique().tolist()
 
 # Create drop down, file input, refresh and stats widgets
 drop_down = Select(options=instrument_list, width=200)
