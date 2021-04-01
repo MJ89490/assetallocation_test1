@@ -26,6 +26,24 @@ class ReceivedDataTimes:
         self.date_to_sidebar = None
         self.version_description = ''
         self.is_new_strategy = True
+        self.name_asset = None
+        self.subcategory_asset = None
+
+    @property
+    def name_asset(self) -> str:
+        return self._name_asset
+
+    @name_asset.setter
+    def name_asset(self, x) -> None:
+        self._name_asset = x
+
+    @property
+    def subcategory_asset(self) -> str:
+        return self._subcategory_asset
+
+    @subcategory_asset.setter
+    def subcategory_asset(self, x) -> None:
+        self._subcategory_asset = x
 
     @property
     def is_new_strategy(self) -> bool:
@@ -139,31 +157,36 @@ class ReceivedDataTimes:
         self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
 
     @staticmethod
-    def select_tickers():
+    def _select_asset_tickers_with_names_and_subcategories_from_db():
+        apc = TimesProcCaller()
+
+        asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
+
+        return asset_tickers_names_subcategories.set_index(asset_tickers_names_subcategories.ticker)
+
+    def select_tickers(self):
         """
         Select all asset tickers with names and subcategories that exist in the database
         :return: all asset tickers with names and subcategories
         """
 
-        apc = TimesProcCaller()
-
-        asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
+        asset_tickers_names_subcategories = self._select_asset_tickers_with_names_and_subcategories_from_db()
 
         return asset_tickers_names_subcategories.ticker
 
-    @staticmethod
-    def select_names_subcategories():
+    def select_names_subcategories(self, user_ticker):
         """
         Select all asset tickers with names and subcategories that exist in the database
         :return: all asset tickers with names and subcategories
         """
 
-        apc = TimesProcCaller()
+        asset_tickers_names_subcategories = self._select_asset_tickers_with_names_and_subcategories_from_db()
 
-        asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
+        ticker_selected_data = asset_tickers_names_subcategories.loc[user_ticker]
 
-        return asset_tickers_names_subcategories.ticker
+        name, subcategory = ticker_selected_data.name, ticker_selected_data.subcategory
 
+        return name, subcategory
 
     def check_in_date_to_existing_version(self):
         apc = TimesProcCaller()
@@ -310,10 +333,6 @@ class ReceivedDataTimes:
         self.version_strategy = fund_strategy.strategy_version
 
         print(self.version_strategy)
-
-
-
-
 
         return fund_strategy
 

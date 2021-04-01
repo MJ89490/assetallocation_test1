@@ -114,6 +114,35 @@ function selectDateToCalendar() {
     document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
 }
 
+// KEEP THE SELECTED VALUE WHILE RELOADING PAGE
+window.onload = function() {
+    var selItem = sessionStorage.getItem("selValTicker");
+    $('#input_signal_ticker_from_times').val(selItem);
+}
+
+$('#input_signal_ticker_from_times').change(function() {
+    var selValTicker = $(this).val();
+    sessionStorage.setItem("selValTicker", selValTicker);
+
+    var ticker = document.getElementById('input_signal_ticker_from_times').value;
+    console.log(ticker);
+
+    var jsonData = JSON.stringify({"input_signal_ticker_from_times": ticker,
+                                   "type_of_request": 'selected_ticker'});
+
+    $.ajax({
+            url: "receive_data_from_times_strategy_page",
+            data: {json_data:jsonData},
+            type: 'POST',
+            success: function(response){
+                console.log(response);
+//                window.location.href = "times_strategy";
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+});
 
 
 $(function(){

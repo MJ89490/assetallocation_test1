@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 from flask import render_template
-from flask import request, redirect, url_for
+from flask import request, redirect, url_for, jsonify
 
 from assetallocation_UI.aa_web_app import app
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
@@ -34,12 +34,12 @@ def times_strategy():
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets, asset_tickers_names_subcategories = [], []
-    show_calendar, fund_selected, pop_up_message = '', '', ''
+    show_calendar, fund_selected, pop_up_message, name_asset, subcategory_asset = '', '', '', '', ''
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'new-version':
             run_model_page = 'run_new_version'
-            asset_tickers_names_subcategories = obj_received_data_times.select_tickers_subcategories()
+            asset_tickers_names_subcategories = obj_received_data_times.select_tickers()
         else:
             obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
             obj_received_data_times.run_existing_strategy()
@@ -54,10 +54,18 @@ def times_strategy():
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
             # create popup run or dashboard?
 
+        # Write the name and the subcategory to text boxes
+        if obj_received_data_times.type_of_request == 'selected_ticker':
+            run_model_page = 'run_new_version'
+            asset_tickers_names_subcategories = obj_received_data_times.select_tickers()
+            name_asset, subcategory_asset = obj_received_data_times.name_asset, obj_received_data_times.subcategory_asset
+
     return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
                            fund_selected=obj_received_data_times.fund_name,
+                           name_asset=name_asset,
+                           subcategory_asset=subcategory_asset,
                            asset_tickers_names_subcategories=asset_tickers_names_subcategories,
                            version_selected=obj_received_data_times.version_strategy,
                            existing_funds=form.existing_funds,
@@ -87,6 +95,14 @@ def receive_data_from_times_strategy_page():
         obj_received_data_times.version_strategy = json_data['version']
         obj_received_data_times.date_to = json_data['date_to']
         obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
+    elif json_data['type_of_request'] == 'selected_ticker':
+        obj_received_data_times.type_of_request = json_data['type_of_request']
+        name, subcategory = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
+        obj_received_data_times.name_asset, obj_received_data_times.subcategory_asset = name, subcategory
+
+        return jsonify({'data': render_template('times_template.html', name=name)})
+
+
 
     return json.dumps({'status': 'OK'})
 
