@@ -138,6 +138,33 @@ class ReceivedDataTimes:
     def date_to_sidebar(self, value) -> None:
         self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
 
+    @staticmethod
+    def select_tickers():
+        """
+        Select all asset tickers with names and subcategories that exist in the database
+        :return: all asset tickers with names and subcategories
+        """
+
+        apc = TimesProcCaller()
+
+        asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
+
+        return asset_tickers_names_subcategories.ticker
+
+    @staticmethod
+    def select_names_subcategories():
+        """
+        Select all asset tickers with names and subcategories that exist in the database
+        :return: all asset tickers with names and subcategories
+        """
+
+        apc = TimesProcCaller()
+
+        asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
+
+        return asset_tickers_names_subcategories.ticker
+
+
     def check_in_date_to_existing_version(self):
         apc = TimesProcCaller()
         match_date = apc.select_fund_strategy_result_dates(fund_name=self.fund_name,
@@ -274,7 +301,7 @@ class ReceivedDataTimes:
         ]
 
         # TODO self.times_form['input_strategy_weight_times'] had been removed from the inputs!!!
-        fund_strategy = run_strategy(self.fund_name, float(0.46),
+        fund_strategy = run_strategy(self.fund_name, float(self.strategy_weight_user),
                                      times, os.environ.get('USERNAME'),
                                      dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
                                      dt.datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date(),
@@ -283,6 +310,10 @@ class ReceivedDataTimes:
         self.version_strategy = fund_strategy.strategy_version
 
         print(self.version_strategy)
+
+
+
+
 
         return fund_strategy
 

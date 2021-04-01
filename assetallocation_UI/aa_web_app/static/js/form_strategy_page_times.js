@@ -70,11 +70,11 @@ $('#input_weight_fund_strategy').change(function() {
         var selValWeight = $(this).val();
         sessionStorage.setItem("SelItemWeight", selValWeight);
 
-        weight = document.getElementById("input_weight_fund_strategy").value
+        weight = document.getElementById("input_weight_strategy").value
 
         weightFund.push(parseFloat(document.getElementById("input_weight_fund_strategy").value))
 
-        var json_data = JSON.stringify({'fund_weight': weightFund[0],
+        var json_data = JSON.stringify({'strategy_weight': weightFund[0],
                                         'type_of_request': 'selected_fund_weight'});
 
         $.ajax({

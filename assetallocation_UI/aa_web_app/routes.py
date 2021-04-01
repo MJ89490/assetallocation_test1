@@ -33,12 +33,13 @@ def times_strategy():
     show_versions = 'show_versions_not_available'
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
-    assets = []
+    assets, asset_tickers_names_subcategories = [], []
     show_calendar, fund_selected, pop_up_message = '', '', ''
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'new-version':
             run_model_page = 'run_new_version'
+            asset_tickers_names_subcategories = obj_received_data_times.select_tickers_subcategories()
         else:
             obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
             obj_received_data_times.run_existing_strategy()
@@ -57,6 +58,7 @@ def times_strategy():
                            title='TimesPage',
                            form=form,
                            fund_selected=obj_received_data_times.fund_name,
+                           asset_tickers_names_subcategories=asset_tickers_names_subcategories,
                            version_selected=obj_received_data_times.version_strategy,
                            existing_funds=form.existing_funds,
                            show_calendar=show_calendar,
@@ -80,7 +82,7 @@ def receive_data_from_times_strategy_page():
     if json_data['type_of_request'] == 'selected_fund':
         obj_received_data_times.fund_name = json_data['fund']
     elif json_data['type_of_request'] == 'selected_fund_weight':
-        obj_received_data_times.strategy_weight_user = json_data['fund_weight']
+        obj_received_data_times.strategy_weight_user = json_data['strategy_weight']
     elif json_data['type_of_request'] == 'selected_version_date_to':
         obj_received_data_times.version_strategy = json_data['version']
         obj_received_data_times.date_to = json_data['date_to']

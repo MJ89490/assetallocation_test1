@@ -35,7 +35,7 @@
                                 <!--Choose a weight for the fund-->
                                  <center>
                                      <label class="header-pretitle-card"><b>2. Choose a weight for the strategy</b></label><br>
-                                     <input type="text" class="form-control input-weight-fund-form text-center" id="input_weight_fund_strategy" placeholder="strategy weight">
+                                     <input type="text" class="form-control input-weight-fund-form text-center" id="input_weight_strategy" placeholder="strategy weight">
                                  </center>
 
                                 <!--Select a version -->
@@ -137,8 +137,16 @@
                     html = '<tr id="faqs-row' + faqs_row + '">';
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="asset"></td>';
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="category" ></td>';
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="signal ticker"></td>';
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="future ticker"></td>';
+
+
+
+
+                        html += '<td><select class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times"><option disabled selected value>ticker</option>{% for val in asset_tickers_names_subcategories %}<option>{{val}}</option>{% endfor %}</select></td>';
+
+
+
+
+
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs"></td>';
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="leverage"></td>';
                         html += '<td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version" onclick="$(\'#faqs-row' + faqs_row + '\').remove();"><i class="fa fa-trash"></i> Delete</button></td>';
@@ -171,10 +179,9 @@
                                     <table id="faqs" class="table table-assets-existing-version">
                                         <thead>
                                         <tr>
-                                        <th class="text-center">Asset</th>
-                                        <th class="text-center">Category</th>
-                                        <th class="text-center">Signal ticker</th>
-                                        <th class="text-center">Future ticker</th>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Subcategory</th>
+                                        <th class="text-center">Ticker</th>
                                         <th class="text-center">Costs</th>
                                         <th class="text-center">Leverage</th>
                                         <th></th>
@@ -184,8 +191,26 @@
                                         <tr class="rowUpdate">
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="DM FX"></td>
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="FX"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="SPXT Index"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CD1 A:00_0_R Curncy"></td>
+
+                                            <!--<td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="SPXT Index"></td>-->
+
+                                            <td>
+                                                <select class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times">
+                                                    <option disabled selected value>ticker</option>
+                                                    {% for val in asset_tickers_names_subcategories %}
+                                                        <option>{{val}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+
+
+
+
+
+
+
+
+                                            <!--<td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CD1 A:00_0_R Curncy"></td>-->
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
                                             <td class="mt-10"></td>
