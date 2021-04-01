@@ -27,8 +27,8 @@ CREATE TABLE "arp"."strategy_analytic"
 	"subcategory" varchar(50)	 NOT NULL,
 	"frequency" arp.frequency NOT NULL,
 	"value" numeric(32,16) NOT NULL,
-	"comparator_name" varchar(50) NOT NULL,
-	"comparator_value" varchar(50) NOT NULL
+	"comparator_name" varchar(50) NULL,
+	"comparator_value" numeric(32, 16) NULL
 )
 ;
 /* Create Primary Keys, Indexes, Uniques, Checks */

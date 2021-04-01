@@ -50,7 +50,7 @@ class DataFrameConverter:
     @staticmethod
     def df_to_asset_analytics(
             analytics: pd.DataFrame, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
-            ticker_map: [Dict[str, str]], frequency: Union[None, str, Frequency] = None
+            ticker_map: Dict[str, str], frequency: Union[None, str, Frequency] = None
     ) -> List[FundStrategyAssetAnalytic]:
         """Transform DataFrame with index of business_date and columns of asset_subcategory to list of
         FundStrategyAssetAnalytics
@@ -126,7 +126,7 @@ class FicaDataFrameConverter(DataFrameConverter):
 
         analytics.extend(cls.df_to_asset_analytics(carry_roll, Category.signal, Signal.carry, ticker_map, Frequency.monthly))
         analytics.extend(cls.df_to_asset_analytics(cum_contribution, Category.performance, Performance['total return'], ticker_map, Frequency.monthly))
-        analytics.extend(cls.df_to_asset_analytics(return_daily, Category.Performance, Performance['total return'], ticker_map, Frequency.daily))
+        analytics.extend(cls.df_to_asset_analytics(return_daily, Category.performance, Performance['total return'], ticker_map, Frequency.daily))
         analytics.extend(cls.df_to_asset_analytics(carry_daily, Category.performance, Performance["excess return index"], ticker_map))
 
         return analytics
@@ -144,15 +144,15 @@ class FicaDataFrameConverter(DataFrameConverter):
         """
         analytics = []
 
-        analytics.extend(cls.series_to_strategy_analytics(cum_contribution, Category.Performance, Performance['total return'], Frequency.monthly))
-        analytics.extend(cls.series_to_strategy_analytics(returns['Costs'], Category.Performance, Performance.cost, Frequency.monthly))
-        analytics.extend(cls.series_to_strategy_analytics(returns['Net_Return'], Category.Performance, Performance['net return'], Frequency.monthly))
-        analytics.extend(cls.series_to_strategy_analytics(returns['Arithmetic'], Category.Performance, Performance['net return index'], Frequency.monthly))
-        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.Signal, Signal.carry, Frequency.daily))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['fica_10y_return'], Category.Performance, Performance['total return index'], Frequency.daily))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['fica_10y_return%'], Category.Performance, Performance['total return'], Frequency.daily))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['correlation'], Category.Performance, Performance.correlation, Frequency.daily))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['beta'], Category.Performance, Performance.beta, Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(cum_contribution, Category.performance, Performance['total return'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns['Costs'], Category.performance, Performance.cost, Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns['Net_Return'], Category.performance, Performance['net return'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns['Arithmetic'], Category.performance, Performance['net return index'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.signal, Signal.carry, Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['fica_10y_return'], Category.performance, Performance['total return index'], Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['fica_10y_return%'], Category.performance, Performance['total return'], Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['correlation'], Category.performance, Performance.correlation, Frequency.daily))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['beta'], Category.performance, Performance.beta, Frequency.daily))
 
         return analytics
 
@@ -166,9 +166,9 @@ class FicaDataFrameConverter(DataFrameConverter):
         :return:
         """
         analytics = []
-        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.Signal, Signal.carry, Frequency.daily, AggregationLevel.comparator, 'G3'))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return'], Category.Performance, Performance['total return index'], Frequency.daily, AggregationLevel.comparator, 'G3'))
-        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return%'], Category.Performance, Performance['total return'], Frequency.daily, AggregationLevel.comparator, 'G3'))
+        analytics.extend(cls.series_to_strategy_analytics(carry_roll, Category.signal, Signal.carry, Frequency.daily, AggregationLevel.comparator, 'G3'))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return'], Category.performance, Performance['total return index'], Frequency.daily, AggregationLevel.comparator, 'G3'))
+        analytics.extend(cls.series_to_strategy_analytics(carry_daily['G3_10y_return%'], Category.performance, Performance['total return'], Frequency.daily, AggregationLevel.comparator, 'G3'))
 
         return analytics
 
@@ -181,7 +181,7 @@ class FxDataFrameConverter(DataFrameConverter):
         :return:
         """
         ticker_map = ticker_map or {}
-        return cls.df_to_asset_analytics(contribution, Category.Performance, Performance['total return'], ticker_map, Frequency.monthly)
+        return cls.df_to_asset_analytics(contribution, Category.performance, Performance['total return'], ticker_map, Frequency.monthly)
 
     @classmethod
     def create_strategy_analytics(
@@ -196,10 +196,10 @@ class FxDataFrameConverter(DataFrameConverter):
         """
         analytics = []
 
-        analytics.extend(cls.series_to_strategy_analytics(returns, Category.Performance, Performance['return'], Frequency.monthly))
-        analytics.extend(cls.series_to_strategy_analytics(returns_cum, Category.Performance, Performance['return index'], Frequency.monthly))
-        analytics.extend(cls.series_to_strategy_analytics(returns_net_cum, Category.Performance, Performance['net return index'], Frequency.monthly))
-        analytics.extend(cls.series_to_strategy_analytics(strength_of_signal, Category.Signals, Signal['signal strength'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns, Category.performance, Performance['return'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns_cum, Category.performance, Performance['return index'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(returns_net_cum, Category.performance, Performance['net return index'], Frequency.monthly))
+        analytics.extend(cls.series_to_strategy_analytics(strength_of_signal, Category.signals, Signal['signal strength'], Frequency.monthly))
 
         return analytics
 
@@ -216,8 +216,8 @@ class MavenDataFrameConverter(DataFrameConverter):
         :return:
         """
         ticker_map = ticker_map or {}
-        analytics = cls.df_to_asset_analytics(value, Category.Signal, Signal.value, ticker_map, frequency)
-        analytics.extend(cls.df_to_asset_analytics(momentum, Category.Signal, Signal.momentum, ticker_map, frequency))
+        analytics = cls.df_to_asset_analytics(value, Category.signal, Signal.value, ticker_map, frequency)
+        analytics.extend(cls.df_to_asset_analytics(momentum, Category.signal, Signal.momentum, ticker_map, frequency))
         return analytics
 
     @classmethod
@@ -237,17 +237,17 @@ class MavenDataFrameConverter(DataFrameConverter):
         """
         analytics = list(
             chain(
-                cls.series_to_strategy_analytics(notional, Category.Performance,
+                cls.series_to_strategy_analytics(notional, Category.performance,
                                                  Performance['equal notional return index'], frequency),
-                cls.series_to_strategy_analytics(volatility, Category.Performance,
+                cls.series_to_strategy_analytics(volatility, Category.performance,
                                                  Performance['equal volatility return index'], frequency),
-                cls.series_to_strategy_analytics(long_gross, Category.Performance,
+                cls.series_to_strategy_analytics(long_gross, Category.performance,
                                                  Performance['long gross return index'], frequency),
-                cls.series_to_strategy_analytics(short_gross, Category.Performance,
+                cls.series_to_strategy_analytics(short_gross, Category.performance,
                                                  Performance['short gross return index'], frequency),
-                cls.series_to_strategy_analytics(long_net, Category.Performance, Performance['long net return index'],
+                cls.series_to_strategy_analytics(long_net, Category.performance, Performance['long net return index'],
                                                  frequency),
-                cls.series_to_strategy_analytics(short_net, Category.Performance, Performance['short net return index'],
+                cls.series_to_strategy_analytics(short_net, Category.performance, Performance['short net return index'],
                                                  frequency)
             )
         )
@@ -258,7 +258,7 @@ class MavenDataFrameConverter(DataFrameConverter):
 class EffectDataFrameConverter(DataFrameConverter):
     @classmethod
     def create_asset_analytics(
-            cls, trend: pd.DataFrame, carry: pd.DataFrame, frequency: Frequency
+            cls, trend: pd.DataFrame, carry: pd.DataFrame, ticker_map: Dict[str, str], frequency: Frequency
     ) -> List[FundStrategyAssetAnalytic]:
         """
         :param trend: columns named after asset subcategory, index of dates
@@ -268,8 +268,8 @@ class EffectDataFrameConverter(DataFrameConverter):
         # TODO change depending on Simone's input
         analytics = list(
             chain(
-                cls.df_to_asset_analytics(trend, Category.signal, Signal.trend, frequency),
-                cls.df_to_asset_analytics(carry, Category.signal, Signal.carry, frequency)
+                cls.df_to_asset_analytics(trend, Category.signal, Signal.trend, ticker_map, frequency),
+                cls.df_to_asset_analytics(carry, Category.signal, Signal.carry, ticker_map, frequency)
             )
         )
         return analytics
@@ -290,13 +290,13 @@ class EffectDataFrameConverter(DataFrameConverter):
         # TODO change depending on Simone's input
         analytics = list(
             chain(
-                cls.series_to_strategy_analytics(total_excl_signals, Category.Performance,
+                cls.series_to_strategy_analytics(total_excl_signals, Category.performance,
                                                  Performance['total return index incl signals'], frequency),
-                cls.series_to_strategy_analytics(total_incl_signals, Category.Performance,
+                cls.series_to_strategy_analytics(total_incl_signals, Category.performance,
                                                  Performance['total return index excl signals'], frequency),
-                cls.series_to_strategy_analytics(spot_incl_signals, Category.Performance,
+                cls.series_to_strategy_analytics(spot_incl_signals, Category.performance,
                                                  Performance['spot index incl signals'], frequency),
-                cls.series_to_strategy_analytics(spot_excl_signals, Category.Performance,
+                cls.series_to_strategy_analytics(spot_excl_signals, Category.performance,
                                                  Performance['spot index excl signals'], frequency)
             )
         )

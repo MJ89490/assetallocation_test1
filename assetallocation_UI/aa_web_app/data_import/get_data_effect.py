@@ -67,7 +67,7 @@ class ReceiveDataEffect:
         ]
         # float(self.effect_form['input_strategy_weight_effect']
         fund_strategy = run_strategy(
-            "f1", 0.46,
+            "test_fund", 0.46,
             effect, os.environ.get('USERNAME'),
             dt.date(2000, 1, 1),
             dt.date(2020, 8, 12),

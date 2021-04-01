@@ -476,8 +476,10 @@ class Effect(Strategy):
         """
         # TODO change depending on Simone's input
         # trend: pd.DataFrame, carry: pd.DataFrame, frequency: Frequency
-        asset_analytics = EffectDataFrameConverter.create_asset_analytics(effect_outputs['trend_curr'], effect_outputs['carry_curr'], self.frequency)
-        asset_weights = EffectDataFrameConverter.df_to_asset_weights(exposure, self.frequency)
+        ticker_map = {i.asset_subcategory: i.carry_ticker for i in self.asset_inputs}
+        asset_analytics = EffectDataFrameConverter.create_asset_analytics(effect_outputs['trend_curr'], effect_outputs['carry_curr'], ticker_map, self.frequency)
+        asset_weights = EffectDataFrameConverter.df_to_asset_weights(effect_outputs['combo'], self.frequency, ticker_map)
+
 
         total_excl_signals = pd.Series(effect_outputs['total_excl_signals'], index=effect_outputs['agg_dates'])
         total_incl_signals = pd.Series(effect_outputs['total_incl_signals'], index=effect_outputs['agg_dates'])
