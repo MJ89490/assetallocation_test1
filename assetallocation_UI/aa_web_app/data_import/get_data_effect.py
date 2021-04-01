@@ -3,11 +3,13 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 
+from assetallocation_arp.models.effect.main_effect import run_effect
 from assetallocation_arp.data_etl.dal.data_models.strategy import Effect, EffectAssetInput, DayOfWeek
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 from assetallocation_arp.common_libraries.dal_enums.strategy import DayOfWeek
 from assetallocation_arp.models.effect.read_inputs_effect import read_user_date
+from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
 
 # TODO add class to another module
 
@@ -65,6 +67,12 @@ class ReceiveDataEffect:
                 assets_inputs_effect['input_region']
             )
         ]
+
+
+        # self.effect_outputs = run_effect(effect)
+
+        # print()
+
         # float(self.effect_form['input_strategy_weight_effect']
         fund_strategy = run_strategy(
             "test_fund", 0.46,
@@ -73,7 +81,20 @@ class ReceiveDataEffect:
             dt.date(2020, 8, 12),
             True
         )
-        return fund_strategy
+        return fund_strategy.analytics
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         # self.effect_outputs, self.write_logs = run_strategy(strategy_inputs, asset_inputs,
         #                                                     dt.datetime.strptime(
