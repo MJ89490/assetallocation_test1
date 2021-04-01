@@ -8,7 +8,7 @@ import pandas as pd
 
 from pandas.tseries.offsets import BDay
 
-from common_libraries.dal_enums.strategy import Leverage
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage
 
 
 def apply_leverage(futures_data, leverage_type, leverage):

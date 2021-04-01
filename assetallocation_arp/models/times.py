@@ -7,7 +7,7 @@ TIMES
 import numpy as np
 import pandas as pd
 
-from common_libraries.dal_enums.strategy import Leverage
+from assetallocation_arp.common_libraries.dal_enums.strategy import Leverage
 from assetallocation_arp.models import portfolio_construction as pc
 from assetallocation_arp.models import arp_signals as arp
 from pandas.tseries.offsets import BDay
@@ -17,7 +17,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
 
     # format data and inputs
     asset_inputs_t = asset_inputs.set_index('asset').T
-    all_data = all_data[ all_data.index.values > np.datetime64(times_inputs['date_from'].item())]
+    all_data = all_data[all_data.index.values > np.datetime64(times_inputs['date_from'].item())]
     times_data = all_data[asset_inputs.signal_ticker]
     futures_data = all_data[asset_inputs.future_ticker].pct_change()
     times_data.columns = asset_inputs.asset
