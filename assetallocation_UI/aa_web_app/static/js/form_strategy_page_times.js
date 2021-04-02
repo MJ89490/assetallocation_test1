@@ -70,7 +70,7 @@ $('#input_weight_fund_strategy').change(function() {
         var selValWeight = $(this).val();
         sessionStorage.setItem("SelItemWeight", selValWeight);
 
-        weight = document.getElementById("input_weight_strategy").value
+        weight = document.getElementById("input_weight_fund_strategy").value
 
         weightFund.push(parseFloat(document.getElementById("input_weight_fund_strategy").value))
 

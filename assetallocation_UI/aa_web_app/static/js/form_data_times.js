@@ -3,7 +3,7 @@ function getDataFromTable()
       var assets = [];
       var categories = [];
       var signalTickers = [];
-//      var futureTickers = [];
+      var futureTickers = [];
       var costs = [];
       var leverages = [];
 
@@ -12,14 +12,14 @@ function getDataFromTable()
          var asset = $(this).find("td:eq(0) input[type='text']").val();
          var category = $(this).find("td:eq(1) input[type='text']").val();
          var signalTicker = $(this).find("td:eq(2) input[type='text']").val();
-//         var futureTicker = $(this).find("td:eq(3) input[type='text']").val();
+         var futureTicker = $(this).find("td:eq(3) input[type='text']").val();
          var cost = $(this).find("td:eq(4) input[type='text']").val();
          var leverage = $(this).find("td:eq(5) input[type='text']").val();
 
         assets.push(asset);
         categories.push(category);
         signalTickers.push(signalTicker);
-//        futureTickers.push(futureTicker);
+        futureTickers.push(futureTicker);
         costs.push(parseFloat(cost));
         leverages.push(parseFloat(leverage));
    });
@@ -27,7 +27,7 @@ function getDataFromTable()
     assets.shift();
     categories.shift();
     signalTickers.shift();
-//    futureTickers.shift();
+    futureTickers.shift();
     costs.shift();
     leverages.shift();
 
@@ -36,7 +36,7 @@ function getDataFromTable()
     var jsonData = JSON.stringify({"input_asset": assets,
                                    "input_category": categories,
                                    "input_signal_ticker": signalTickers,
-//                                   "input_future_ticker": futureTickers,
+                                   "input_future_ticker": futureTickers,
                                    "input_costs": costs,
                                    "input_leverage": leverages,
                                    "input_version_name_strategy": versionName});
@@ -114,35 +114,7 @@ function selectDateToCalendar() {
     document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
 }
 
-//// KEEP THE SELECTED VALUE WHILE RELOADING PAGE
-//window.onload = function() {
-//    var selItem = sessionStorage.getItem("selValTicker");
-//    $('#input_signal_ticker_from_times').val(selItem);
-//}
-//
-//$('#input_signal_ticker_from_times').change(function() {
-//    var selValTicker = $(this).val();
-//    sessionStorage.setItem("selValTicker", selValTicker);
-//
-//    var ticker = document.getElementById('input_signal_ticker_from_times').value;
-//    console.log(ticker);
-//
-//    var jsonData = JSON.stringify({"input_signal_ticker_from_times": ticker,
-//                                   "type_of_request": 'selected_ticker'});
-//
-//    $.ajax({
-//            url: "receive_data_from_times_strategy_page",
-//            data: {json_data:jsonData},
-//            type: 'POST',
-//            success: function(response){
-//                console.log(response);
-////                window.location.href = "times_strategy";
-//            },
-//            error: function(error){
-//                console.log(error);
-//            }
-//        });
-//});
+
 
 
 $(function(){
