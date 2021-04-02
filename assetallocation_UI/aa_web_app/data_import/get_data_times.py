@@ -162,6 +162,9 @@ class ReceivedDataTimes:
 
         asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
 
+        asset_tickers_names_subcategories.to_csv('assets_tickers.csv')
+
+
         return asset_tickers_names_subcategories.set_index(asset_tickers_names_subcategories.ticker)
 
     def select_tickers(self):

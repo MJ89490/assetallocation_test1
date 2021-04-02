@@ -136,20 +136,12 @@
                     function addfaqs() {
                     html = '<tr id="faqs-row' + faqs_row + '">';
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="asset"></td>';
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="category" ></td>';
-
-
-
-
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="subcategory" ></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker"></td>';
                         html += '<td><select class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times"><option disabled selected value>ticker</option>{% for val in asset_tickers_names_subcategories %}<option>{{val}}</option>{% endfor %}</select></td>';
-
-
-
-
-
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs"></td>';
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="leverage"></td>';
-                        html += '<td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version" onclick="$(\'#faqs-row' + faqs_row + '\').remove();"><i class="fa fa-trash"></i> Delete</button></td>';
+                        html += '<td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version" onclick="$(\'#faqs-row' + faqs_row + '\').remove();">Delete</button></td>';
 
                         html += '</tr>';
 
@@ -157,6 +149,20 @@
 
                     faqs_row++;
                     }
+                </script>
+
+
+                <script>
+                    $(function(){
+                        $('.btn-delete-assets-existing-version').click(function(e){
+                            e.preventDefault();
+                            var row = $(this).closest('tr');
+                            row.addClass("bg-danger");
+                            row.hide(2000, function(){
+                                this.remove();
+                            });
+                        });
+                    });
                 </script>
 
                 <div class="row row-model">
@@ -179,45 +185,144 @@
                                     <table id="faqs" class="table table-assets-existing-version">
                                         <thead>
                                         <tr>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Subcategory</th>
-                                        <th class="text-center">Ticker</th>
-                                        <th class="text-center">Costs</th>
-                                        <th class="text-center">Leverage</th>
-                                        <th></th>
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center">Subcategory</th>
+                                            <th class="text-center">Future ticker</th>
+                                            <th class="text-center">Signal ticker</th>
+                                            <th class="text-center">Costs</th>
+                                            <th class="text-center">Leverage</th>
+                                            <th></th>
                                     </tr>
                                         </thead>
                                         <tbody>
                                         <tr class="rowUpdate">
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value={{name_asset}}></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value={{subcategory_asset}}></td>
-
-                                            <!--<td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="SPXT Index"></td>-->
-
-                                            <td>
-                                                <select class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times">
-                                                    <option disabled selected value>ticker</option>
-                                                    {% for val in asset_tickers_names_subcategories %}
-                                                        <option>{{val}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </td>
-
-
-
-
-
-
-
-
-
-
-
-
-                                            <!--<td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CD1 A:00_0_R Curncy"></td>-->
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="S&P 500 Total Return" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM Equity" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="SPXT Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="SPXT Index" readonly></td>
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
-                                            <td class="mt-10"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="EURO STOXX 50 Total Return" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM Equity" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="SX5T Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="SX5T Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="TOPIX Total Return" readonly ></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM Equity" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="TPXDDVD Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="TPXDDVD Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="Hang Seng Index Future" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM Equity" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="HI1 A:00_0_R Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="HI1 A:00_0_R Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="ML 10y US Treasury Total Return Future" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="Nominal Bond" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="MLT1US10 Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="MLT1US10 Index" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="Gilt Future" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="Nominal Bond" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="G 1 A:00_0_R Comdty" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="G 1 A:00_0_R Comdty" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="Bund Future" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="Nominal Bond" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="RX1 A:00_0_R Comdty" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="RX1 A:00_0_R Comdty" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="Canada 10y Future" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="Nominal Bond" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CN1 A:00_0_R Comdty" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="CN1 A:00_0_R Comdty" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="USD-JPY X-RATE" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM FX" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="JPYUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="JPYUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="EUR-USD X-RATE" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM FX" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="EURUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="EURUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="AUD-USD X-RATE" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM FX" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="AUDUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="AUDUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="USD-CAD X-RATE" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM FX" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CADUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="CADUSD Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
+                                        </tr>
+
+                                        <tr class="rowUpdate">
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_asset_from_times" name="input_asset_from_times" placeholder="asset" value="EUR-GBP X-RATE" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_category_from_times" name="input_category_from_times" placeholder="category" value="DM FX" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="EURGBP Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_signal_ticker_from_times" name="input_signal_ticker_from_times" placeholder="signal ticker" value="EURGBP Curncy" readonly></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -100,9 +100,7 @@ def receive_data_from_times_strategy_page():
         name, subcategory = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
         obj_received_data_times.name_asset, obj_received_data_times.subcategory_asset = name, subcategory
 
-        return jsonify({'data': render_template('times_template.html', name=name)})
-
-
+        # return jsonify({'data': render_template('times_template.html', name=name)})
 
     return json.dumps({'status': 'OK'})
 
