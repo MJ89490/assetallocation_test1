@@ -97,10 +97,10 @@ def receive_data_from_times_strategy_page():
         obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
     elif json_data['type_of_request'] == 'selected_ticker':
         obj_received_data_times.type_of_request = json_data['type_of_request']
-        name, subcategory = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
-        obj_received_data_times.name_asset, obj_received_data_times.subcategory_asset = name, subcategory
+        name, subcategory, future_ticker = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
+        # obj_received_data_times.name_asset, obj_received_data_times.subcategory_asset = name, subcategory
 
-        # return jsonify({'data': render_template('times_template.html', name=name)})
+        return jsonify({'name': name, 'subcategory': subcategory, 'futureTicker': future_ticker})
 
     return json.dumps({'status': 'OK'})
 

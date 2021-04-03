@@ -162,9 +162,6 @@ class ReceivedDataTimes:
 
         asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
 
-        asset_tickers_names_subcategories.to_csv('assets_tickers.csv')
-
-
         return asset_tickers_names_subcategories.set_index(asset_tickers_names_subcategories.ticker)
 
     def select_tickers(self):
@@ -187,9 +184,11 @@ class ReceivedDataTimes:
 
         ticker_selected_data = asset_tickers_names_subcategories.loc[user_ticker]
 
-        name, subcategory = ticker_selected_data.name, ticker_selected_data.subcategory
+        name, subcategory, future_ticker = ticker_selected_data.loc["name"], \
+                                           ticker_selected_data.loc["subcategory"], \
+                                           ticker_selected_data.loc["ticker"]
 
-        return name, subcategory
+        return name, subcategory, future_ticker
 
     def check_in_date_to_existing_version(self):
         apc = TimesProcCaller()

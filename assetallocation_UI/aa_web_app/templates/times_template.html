@@ -135,14 +135,14 @@
                     var faqs_row = 0;
                     function addfaqs() {
                     html = '<tr id="faqs-row' + faqs_row + '">';
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="asset"></td>';
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="subcategory" ></td>';
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker"></td>';
-                        html += '<td><select class="form-control form-control-assets-table text-center" id="select_signal_ticker_from_times" name="select_signal_ticker_from_times" onchange="hello();"><option disabled selected value>ticker</option>{% for val in asset_tickers_names_subcategories %}<option>{{val}}</option>{% endfor %} </select></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" id="input_name_from_times" name="input_name_from_times" placeholder="asset" readonly></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="subcategory" readonly></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" readonly></td>';
+                        html += '<td><select class="form-control form-control-assets-table select_signal_ticker_from_times text-center" id="select_signal_ticker_from_times" name="select_signal_ticker_from_times" onchange="hello(event);"><option disabled selected value>ticker</option>{% for val in asset_tickers_names_subcategories %}<option>{{val}}</option>{% endfor %} </select></td>';
 
 
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs"></td>';
-                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="leverage"></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs" value="0.0002"></td>';
+                        html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="leverage" value="1"></td>';
                         html += '<td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version" onclick="$(\'#faqs-row' + faqs_row + '\').remove();">Delete</button></td>';
 
                         html += '</tr>';
@@ -155,51 +155,53 @@
 
                     function hello(e){
                         alert("hello");
-                         e.preventDefault();
+                        var selValTicker = [];
 
-                             var ticker = document.getElementById('select_signal_ticker_from_times').value;
-    console.log(ticker);
+                         $('.select_signal_ticker_from_times').click(function(){
+                            var currentTicker = $(this).val();
+
+                             var jsonData = JSON.stringify({"input_signal_ticker_from_times": currentTicker,
+                                                            "type_of_request": 'selected_ticker'});
+
+                             $.ajax({
+                                url: "receive_data_from_times_strategy_page",
+                                data: {json_data:jsonData},
+                                type: 'POST',
+                                success: function(data){
+                                    console.log('DATA AJAX');
+                                    console.log(data);
+
+                                    $("#faqs").find('tr').each(function(){
+
+                                        var asset = $(this).find("td:eq(0) input[type='text']").val();
+                                        var subcategory = $(this).find("td:eq(1) input[type='text']").val();
+                                        var futureTicker = $(this).find("td:eq(2) input[type='text']").val();
+
+                                        if (!asset) {
+                                           $(this).find("td:eq(0) input[type='text']").val(data["name"]);
+                                        }
+
+                                        if (!subcategory) {
+                                           $(this).find("td:eq(1) input[type='text']").val(data["subcategory"]);
+                                        }
+
+                                        if (!futureTicker) {
+                                           $(this).find("td:eq(2) input[type='text']").val(data["futureTicker"]);
+                                        }
+
+                                    });
+
+                                },
+                                error: function(error){
+                                    console.log(error);
+                                }
+                            });
+
+                          });
+
+
+                        <!--sessionStorage.setItem("selValTicker", selValTicker);-->
                     }
-
-                    // KEEP THE SELECTED VALUE WHILE RELOADING PAGE
-window.onload = function() {
-    var selItem = sessionStorage.getItem("selValTicker");
-    $('#select_signal_ticker_from_times').val(selItem);
-}
-
-$('#select_signal_ticker_from_times').change(function(e) {
-
-    e.preventDefault();
-    var selValTicker = $(this).val();
-    sessionStorage.setItem("selValTicker", selValTicker);
-
-    var ticker = document.getElementById('select_signal_ticker_from_times').value;
-    console.log(ticker);
-
-    var jsonData = JSON.stringify({"input_signal_ticker_from_times": ticker,
-                                   "type_of_request": 'selected_ticker'});
-
-    $.ajax({
-            url: "receive_data_from_times_strategy_page",
-            data: {json_data:jsonData},
-            type: 'POST',
-            success: function(response){
-                console.log(response);
-                window.location.href = "times_strategy";
-            },
-            error: function(error){
-                console.log(error);
-            }
-        });
-});
-
-
-
-
-
-
-
-
 
                 </script>
 

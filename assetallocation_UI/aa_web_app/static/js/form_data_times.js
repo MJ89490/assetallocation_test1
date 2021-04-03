@@ -1,3 +1,56 @@
+                    $('#select_signal_ticker_from_times').change(function() {
+                        alert("hello");
+
+
+                        var selValTicker = document.getElementById('select_signal_ticker_from_times').value;
+                        sessionStorage.setItem("selValTicker", selValTicker);
+                        console.log(selValTicker);
+
+                        var jsonData = JSON.stringify({"input_signal_ticker_from_times": selValTicker,
+                                                       "type_of_request": 'selected_ticker'});
+
+                        console.log(jsonData);
+
+                        $.ajax({
+                                url: "receive_data_from_times_strategy_page",
+                                data: {json_data:jsonData},
+                                type: 'POST',
+                                success: function(data){
+                                    console.log('DATA AJAX');
+                                    console.log(data["name"]);
+                                    console.log(data);
+
+                                    $("#faqs").find('tr').each(function(){
+
+                                        var asset = $(this).find("td:eq(0) input[type='text']").val();
+
+                                        if (!asset) {
+                                           console.log("asset is empty");
+                                           $(this).find("td:eq(0) input[type='text']").val(data["name"]);
+                                        }
+                                    });
+
+                                },
+                                error: function(error){
+                                    console.log(error);
+                                }
+                            });
+                    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function getDataFromTable()
 {
       var assets = [];
