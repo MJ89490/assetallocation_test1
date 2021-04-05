@@ -77,29 +77,36 @@
                                                     day = "Saturday";
                                                 }
 
-                                                var today = new Date()
-                                                var lastTuesday = new Date(today)
+                                                function mod(n, m) {
+                                                    return ((n % m) + m) % m;
+                                                }
+
+                                                var today = new Date();
+                                                var lastTuesday = new Date(today);
 
                                                 var todayWeekDay = today.getDay()-1;
 
+                                                console.log(today);
+
+
                                                 if(todayWeekDay==-1){
-                                                  todayWeekDay = 6
+                                                  todayWeekDay = 6;
                                                 }
 
 
                                                 if (todayWeekDay==1){
-                                                  var offset = 7
+                                                  var offset = 7;
 
                                                 }
                                                 else{
-                                                  var offset = (todayWeekDay-1) % 7
+                                                  var offset = this.mod(todayWeekDay-1, 7);
                                                 }
 
                                                 lastTuesday.setDate(lastTuesday.getDate() - offset);
 
                                                 var lastTuesdaySplit = lastTuesday.toLocaleString().split(",");
 
-                                                document.getElementById('select-date-to-strategy-page').value = lastTuesdaySplit[0]
+                                                document.getElementById('select-date-to-strategy-page').value = lastTuesdaySplit[0];
                                             </script>
                                         <div class="btn-group-vertical">
                                             <select class="form-control select-form-version" id="select-version-from-strategy-page">
