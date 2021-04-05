@@ -21,16 +21,7 @@ window.onload = function() {
     $('#select-fund-from-strategy-page').val(selItem);
 
     var selItemWeight = sessionStorage.getItem("SelItemWeight");
-    console.log(sessionStorage.getItem("SelItemWeight"));
-    $('#input_weight_fund_strategy').val(selItemWeight);
-
-//    var selValVersion = sessionStorage.getItem("selValVersion");
-//    console.log(sessionStorage.getItem("selValVersion"));
-//    $('#select-version-from-strategy-page').val(selValVersion);
-//
-//    var selValDateTo = sessionStorage.getItem("selValDateTo");
-//    console.log(sessionStorage.getItem("selValDateTo"));
-//    $('#select-date-to-strategy-page').val(selValDateTo);
+    $('#input_weight_strategy').val(selItemWeight);
 }
 
 // SELECT A FUND
@@ -66,13 +57,13 @@ $('#select-fund-from-strategy-page').change(function() {
 
 
 //SELECT THE FUND WEIGHT
-$('#input_weight_fund_strategy').change(function() {
+$('#input_weight_strategy').change(function() {
         var selValWeight = $(this).val();
         sessionStorage.setItem("SelItemWeight", selValWeight);
 
-        weight = document.getElementById("input_weight_fund_strategy").value
+        weight = document.getElementById("input_weight_strategy").value
 
-        weightFund.push(parseFloat(document.getElementById("input_weight_fund_strategy").value))
+        weightFund.push(parseFloat(document.getElementById("input_weight_strategy").value))
 
         var json_data = JSON.stringify({'strategy_weight': weightFund[0],
                                         'type_of_request': 'selected_fund_weight'});
@@ -94,9 +85,6 @@ $('#input_weight_fund_strategy').change(function() {
 
 
 $('#select-version-from-strategy-page').change(function() {
-//        var selValVersion = $(this).val();
-//        sessionStorage.setItem("selValVersion", selValVersion);
-
         version = document.getElementById("select-version-from-strategy-page").value
 
         versionSelectedFromStrategyPage.push(parseInt(version));
@@ -138,50 +126,3 @@ function SelectDateToStrategyPage(){
 
         return dateTo[0]
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-//function sendDataToPython(){
-////    'fund': fundSelectedFromStrategyPage[0],
-//
-//    if (ready_to_send == true){
-//       var json_data = JSON.stringify({
-//                                       'version': versionSelectedFromStrategyPage[0],
-//                                       'fund_weight': weightFund[0],
-//                                       'date_to': dateTo[0],
-//                                       'type_of_request': 'run_existing_version'});
-//
-//        $.ajax({
-//                url: "receive_data_from_times_strategy_page",
-//                data: {json_data: json_data},
-//                type: 'POST',
-//                success: function(response){
-//                    console.log('success');
-//                    window.location.href = "times_strategy";
-//                },
-//                error: function(error){
-//                    console.log(error);
-//                }
-//            });
-//    }
-//}
-
-

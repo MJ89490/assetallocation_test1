@@ -26,24 +26,6 @@ class ReceivedDataTimes:
         self.date_to_sidebar = None
         self.version_description = ''
         self.is_new_strategy = True
-        self.name_asset = None
-        self.subcategory_asset = None
-
-    @property
-    def name_asset(self) -> str:
-        return self._name_asset
-
-    @name_asset.setter
-    def name_asset(self, x) -> None:
-        self._name_asset = x
-
-    @property
-    def subcategory_asset(self) -> str:
-        return self._subcategory_asset
-
-    @subcategory_asset.setter
-    def subcategory_asset(self, x) -> None:
-        self._subcategory_asset = x
 
     @property
     def is_new_strategy(self) -> bool:
@@ -295,8 +277,6 @@ class ReceivedDataTimes:
 
     def call_run_times(self, assets_input_times):
 
-        # self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
-
         long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
                                         self.times_form['input_signal_two_long_times'],
                                         self.times_form['input_signal_three_long_times']]))
@@ -311,10 +291,8 @@ class ReceivedDataTimes:
                       int(self.times_form['input_time_lag_times']),
                       int(self.times_form['input_vol_window_times']))
 
-        # Times.description = self.times_form['input_version_name']
         times.description = self.version_description
 
-        # self.date_to = datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
         self.date_to = self.times_form['input_date_to_new_version_times']
 
         times.asset_inputs = [
@@ -325,7 +303,6 @@ class ReceivedDataTimes:
             )
         ]
 
-        # TODO self.times_form['input_strategy_weight_times'] had been removed from the inputs!!!
         fund_strategy = run_strategy(self.fund_name, float(self.strategy_weight_user),
                                      times, os.environ.get('USERNAME'),
                                      dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
@@ -333,8 +310,6 @@ class ReceivedDataTimes:
                                      is_new_strategy=self.is_new_strategy
                                      )
         self.version_strategy = fund_strategy.strategy_version
-
-        print(self.version_strategy)
 
         return fund_strategy
 

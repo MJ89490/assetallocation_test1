@@ -138,7 +138,7 @@
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" id="input_name_from_times" name="input_name_from_times" placeholder="asset" readonly></td>';
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="subcategory" readonly></td>';
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" readonly></td>';
-                        html += '<td><select class="form-control form-control-assets-table select_signal_ticker_from_times text-center" id="select_signal_ticker_from_times" name="select_signal_ticker_from_times" onchange="hello(event);"><option disabled selected value>ticker</option>{% for val in asset_tickers_names_subcategories %}<option>{{val}}</option>{% endfor %} </select></td>';
+                        html += '<td><select class="form-control form-control-assets-table select_signal_ticker_from_times text-center" id="select_signal_ticker_from_times" name="select_signal_ticker_from_times" onchange="getSignalsTickers();"><option disabled selected value>ticker</option>{% for val in asset_tickers_names_subcategories %}<option>{{val}}</option>{% endfor %} </select></td>';
 
 
                         html += '<td><input type="text" class="form-control form-control-assets-table text-center" placeholder="costs" value="0.0002"></td>';
@@ -153,8 +153,7 @@
                     }
 
 
-                    function hello(e){
-                        alert("hello");
+                    function getSignalsTickers(){
                         var selValTicker = [];
 
                          $('.select_signal_ticker_from_times').click(function(){
@@ -168,9 +167,6 @@
                                 data: {json_data:jsonData},
                                 type: 'POST',
                                 success: function(data){
-                                    console.log('DATA AJAX');
-                                    console.log(data);
-
                                     $("#faqs").find('tr').each(function(){
 
                                         var asset = $(this).find("td:eq(0) input[type='text']").val();
@@ -188,7 +184,6 @@
                                         if (!futureTicker) {
                                            $(this).find("td:eq(2) input[type='text']").val(data["futureTicker"]);
                                         }
-
                                     });
 
                                 },
@@ -198,9 +193,6 @@
                             });
 
                           });
-
-
-                        <!--sessionStorage.setItem("selValTicker", selValTicker);-->
                     }
 
                 </script>

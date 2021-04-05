@@ -1,56 +1,4 @@
-                    $('#select_signal_ticker_from_times').change(function() {
-                        alert("hello");
-
-
-                        var selValTicker = document.getElementById('select_signal_ticker_from_times').value;
-                        sessionStorage.setItem("selValTicker", selValTicker);
-                        console.log(selValTicker);
-
-                        var jsonData = JSON.stringify({"input_signal_ticker_from_times": selValTicker,
-                                                       "type_of_request": 'selected_ticker'});
-
-                        console.log(jsonData);
-
-                        $.ajax({
-                                url: "receive_data_from_times_strategy_page",
-                                data: {json_data:jsonData},
-                                type: 'POST',
-                                success: function(data){
-                                    console.log('DATA AJAX');
-                                    console.log(data["name"]);
-                                    console.log(data);
-
-                                    $("#faqs").find('tr').each(function(){
-
-                                        var asset = $(this).find("td:eq(0) input[type='text']").val();
-
-                                        if (!asset) {
-                                           console.log("asset is empty");
-                                           $(this).find("td:eq(0) input[type='text']").val(data["name"]);
-                                        }
-                                    });
-
-                                },
-                                error: function(error){
-                                    console.log(error);
-                                }
-                            });
-                    })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Get values from model assets table
 function getDataFromTable()
 {
       var assets = [];
@@ -60,29 +8,34 @@ function getDataFromTable()
       var costs = [];
       var leverages = [];
 
+      // Get values from input only
       $("#faqs").find('tr').each(function(){
 
          var asset = $(this).find("td:eq(0) input[type='text']").val();
          var category = $(this).find("td:eq(1) input[type='text']").val();
-         var signalTicker = $(this).find("td:eq(2) input[type='text']").val();
-         var futureTicker = $(this).find("td:eq(3) input[type='text']").val();
+         var futureTicker = $(this).find("td:eq(2) input[type='text']").val();
+         var signalTicker = $(this).find("td:eq(3) input[type='text']").val();
          var cost = $(this).find("td:eq(4) input[type='text']").val();
          var leverage = $(this).find("td:eq(5) input[type='text']").val();
 
-        assets.push(asset);
-        categories.push(category);
-        signalTickers.push(signalTicker);
-        futureTickers.push(futureTicker);
-        costs.push(parseFloat(cost));
-        leverages.push(parseFloat(leverage));
-   });
+        if (typeof asset != 'undefined' || typeof category != 'undefined' || typeof futureTicker != 'undefined' || typeof cost != 'undefined' || typeof leverage != 'undefined') {
+            assets.push(asset);
+            categories.push(category);
+            futureTickers.push(futureTicker);
+            costs.push(parseFloat(cost));
+            leverages.push(parseFloat(leverage));
+        }
 
-    assets.shift();
-    categories.shift();
-    signalTickers.shift();
-    futureTickers.shift();
-    costs.shift();
-    leverages.shift();
+        if (typeof signalTicker != 'undefined'){
+            signalTickers.push(signalTicker);
+        }
+      });
+
+      // Get values from select only
+      $("#faqs" + ' select').each(function(){
+         signalTickers.push($(this).val());
+
+      })
 
     var versionName = $("#input_version_name_strategy").val();
 
@@ -141,6 +94,7 @@ function checkReceivedDataTimes(){
 
 }
 
+// Write the day of the week in the text box of model inputs table
 function selectDateToCalendar() {
     var date_to = document.getElementById("input_date_to_new_version_times").value;
 
@@ -167,17 +121,14 @@ function selectDateToCalendar() {
     document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
 }
 
-
-
-
+// Send the data to Python
 $(function(){
 	$('#contact-form-button-times').click(function(){
 	    var jsonData = getDataFromTable();
-	    console.log(jsonData);
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
 
-        alert("Strategy is running...");
+        alert("Strategy is about to run...");
 
         if (check != 'error'){
             $.ajax({
