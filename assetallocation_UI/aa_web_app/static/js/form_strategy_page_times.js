@@ -111,3 +111,17 @@ $('#select-version-from-strategy-page').change(function() {
                 }
             });
 });
+
+// SELECT THE DATE
+function SelectDateToStrategyPage(){
+
+        dateToPage = document.getElementById("select-date-to-strategy-page").value
+
+        dateTo.push(dateToPage);
+
+        if (dateTo.length != 1){
+            dateTo.splice(0, dateTo.length-1);
+        }
+
+        return dateTo[0]
+};

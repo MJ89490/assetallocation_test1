@@ -57,8 +57,8 @@ function getDataFromTable()
 
     var versionName = $("#input_version_name_strategy").val();
 
-    var jsonData = JSON.stringify({"input_names": names,
-                                   "input_assets": assets,
+    var jsonData = JSON.stringify({"input_name": names,
+                                   "input_asset": assets,
                                    "input_signal_ticker": signalTickers,
                                    "input_future_ticker": futureTickers,
                                    "input_costs": costs,
@@ -143,26 +143,26 @@ function selectDateToCalendar() {
 $(function(){
 	$('#contact-form-button-times').click(function(){
 	    var jsonData = getDataFromTable();
-//        var form_data = $('form').serialize();
-//        var check = checkReceivedDataTimes();
-//
-//        alert("Strategy is about to run...");
-//
-//        if (check != 'error'){
-//            $.ajax({
-//                url: "received_data_times_form",
-//                data: {form_data: form_data, json_data:jsonData},
-//                type: 'POST',
-//                success: function(response){
-//                    console.log(response);
-//                    alert('The strategy has been run successfully!');
-//                    window.location.href = "times_dashboard";
-//                },
-//                error: function(error){
-//                    console.log(error);
-//                }
-//            });
-//
-//		}
+        var form_data = $('form').serialize();
+        var check = checkReceivedDataTimes();
+
+        alert("The strategy is about to run...");
+
+        if (check != 'error'){
+            $.ajax({
+                url: "received_data_times_form",
+                data: {form_data: form_data, json_data:jsonData},
+                type: 'POST',
+                success: function(response){
+                    console.log(response);
+                    alert('The strategy has been run successfully!');
+                    window.location.href = "times_dashboard";
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+
+		}
 	});
 });

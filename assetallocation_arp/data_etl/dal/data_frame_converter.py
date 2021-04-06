@@ -19,7 +19,7 @@ class DataFrameConverter:
     @staticmethod
     def asset_analytics_to_df(asset_analytics: List[Tuple[str, AssetAnalytic]]) -> pd.DataFrame:
         """DataFrame with index of dates and columns named after labels"""
-        data = [[label, i.business_datetime, i.value] for label, i in asset_analytics]
+        data = [[label.name, i.business_datetime, i.value] for label, i in asset_analytics]
         df = pd.DataFrame(data, columns=['label', 'business_datetime', 'value'])
         df = df.drop_duplicates()
         # df = df.sort_values(by='label')
