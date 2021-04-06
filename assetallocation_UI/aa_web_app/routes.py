@@ -1,25 +1,21 @@
 import json
-import pandas as pd
 from flask import render_template
 from flask import request, redirect, url_for, jsonify
 
 from assetallocation_UI.aa_web_app import app
-from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
 from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
-from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
-from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
-
 from assetallocation_UI.aa_web_app.data_import.get_data_times import ReceivedDataTimes
 from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
+from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
+from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
 from assetallocation_UI.aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
+from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
 
-obj_received_data_effect = ProcessDataEffect()
 obj_received_data_times = ReceivedDataTimes()
+obj_received_data_effect = ProcessDataEffect()
 obj_download_data_effect = DownloadDataChartEffect()
 
 obj_times_charts_data = TimesChartsDataComputations()
-
-# https://mdbootstrap.com/snippets/jquery/temp/2856277?action=prism_export#html-tab-view
 
 
 @app.route('/')
@@ -34,7 +30,7 @@ def times_strategy():
     show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets, asset_tickers_names_subcategories = [], []
-    show_calendar, fund_selected, pop_up_message, name_asset, subcategory_asset = '', '', '', '', ''
+    show_calendar, fund_selected, pop_up_message = '', '', ''
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'new-version':
@@ -52,20 +48,11 @@ def times_strategy():
             pop_up_message = 'pop_up_message'
             print(obj_received_data_times.version_strategy)
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
-            # create popup run or dashboard?
-
-        # Write the name and the subcategory to text boxes
-        if obj_received_data_times.type_of_request == 'selected_ticker':
-            run_model_page = 'run_new_version'
-            asset_tickers_names_subcategories = obj_received_data_times.select_tickers()
-            name_asset, subcategory_asset = obj_received_data_times.name_asset, obj_received_data_times.subcategory_asset
 
     return render_template('times_template.html',
                            title='TimesPage',
                            form=form,
                            fund_selected=obj_received_data_times.fund_name,
-                           name_asset=name_asset,
-                           subcategory_asset=subcategory_asset,
                            asset_tickers_names_subcategories=asset_tickers_names_subcategories,
                            version_selected=obj_received_data_times.version_strategy,
                            existing_funds=form.existing_funds,
@@ -97,8 +84,8 @@ def receive_data_from_times_strategy_page():
         obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
     elif json_data['type_of_request'] == 'selected_ticker':
         obj_received_data_times.type_of_request = json_data['type_of_request']
-        name, subcategory, future_ticker = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
-        return jsonify({'name': name, 'subcategory': subcategory, 'futureTicker': future_ticker})
+        name, subcategory = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
+        return jsonify({'name': name, 'subcategory': subcategory})
 
     return json.dumps({'status': 'OK'})
 

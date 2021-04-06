@@ -214,6 +214,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 /* TABLE */
 tr td{padding: 0 !important;
       margin: 0 !important;
+      font-size: 9px;
 }
 
 .table-existing-version > thead > tr {border-top:none !important;}
@@ -224,7 +225,8 @@ tr td{padding: 0 !important;
 
 .table-existing-version{font-size: 14px;}
 
-.table-assets-existing-version > thead > tr {font-size: 14px;}
+.table-assets-existing-version > thead > tr {font-size: 13px;}
+
 
 
 /* FORMS */

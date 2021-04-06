@@ -1,12 +1,11 @@
 import os
 import pandas as pd
-# from datetime import datetime, date
 import datetime as dt
 
 from assetallocation_UI.aa_web_app.service.strategy import run_strategy
-from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
-from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
+from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
+from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
 
 
 class ReceivedDataTimes:
@@ -166,11 +165,9 @@ class ReceivedDataTimes:
 
         ticker_selected_data = asset_tickers_names_subcategories.loc[user_ticker]
 
-        name, subcategory, future_ticker = ticker_selected_data.loc["name"], \
-                                           ticker_selected_data.loc["subcategory"], \
-                                           ticker_selected_data.loc["ticker"]
+        name, subcategory = ticker_selected_data.loc["name"], ticker_selected_data.loc["subcategory"]
 
-        return name, subcategory, future_ticker
+        return name, subcategory
 
     def check_in_date_to_existing_version(self):
         apc = TimesProcCaller()
@@ -201,12 +198,14 @@ class ReceivedDataTimes:
                                               business_date_to=business_date_to
                                               )
         # self.strategy_weight = fs.weight
+        # TODO TO CHANGE IN THE DASHBOARD
         self.strategy_weight = 0.46
 
     def receive_data_existing_versions(self, strategy_version):
         apc = TimesProcCaller()
         self.version_strategy = strategy_version
         self.strategy = apc.select_strategy(strategy_version)
+
         # Inputs
         fs = apc.select_fund_strategy_results(fund_name=self.fund_name,
                                               strategy_name=Name.times,
@@ -215,7 +214,6 @@ class ReceivedDataTimes:
                                               business_date_to=dt.date(self.date_to.year, self.date_to.month, self.date_to.day)
                                               )
 
-        # self.strategy_weight = fs.weight
         try:
             self.strategy_weight = fs.weight
         except AttributeError:

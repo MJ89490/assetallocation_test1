@@ -3,17 +3,15 @@ type_of_request = ''
 dateTo = []
 
 var type_of_request = ''
-// Funds to select from strategy page
+
+// FUNDS TO SELECT FROM STRATEGY PAGE
 fundSelectedFromStrategyPage = []
 
-// Versions to select from strategy page
+// VERSIONS TO SELECT FROM STRATEGY PAGE
 versionSelectedFromStrategyPage = []
 
-// Weight
-weightFund = []
-
-// Calendar
-show_calendar = ''
+// WEIGHT
+weightStrategy = []
 
 // KEEP THE SELECTED VALUE WHILE RELOADING PAGE
 window.onload = function() {
@@ -56,16 +54,16 @@ $('#select-fund-from-strategy-page').change(function() {
 });
 
 
-//SELECT THE FUND WEIGHT
+//SELECT THE STRATEGY WEIGHT
 $('#input_weight_strategy').change(function() {
         var selValWeight = $(this).val();
         sessionStorage.setItem("SelItemWeight", selValWeight);
 
         weight = document.getElementById("input_weight_strategy").value
 
-        weightFund.push(parseFloat(document.getElementById("input_weight_strategy").value))
+        weightStrategy.push(parseFloat(document.getElementById("input_weight_strategy").value))
 
-        var json_data = JSON.stringify({'strategy_weight': weightFund[0],
+        var json_data = JSON.stringify({'strategy_weight': weightStrategy[0],
                                         'type_of_request': 'selected_fund_weight'});
 
         $.ajax({
@@ -83,7 +81,7 @@ $('#input_weight_strategy').change(function() {
 
 });
 
-
+// SELECT THE VERSION OF THE STRATEGY
 $('#select-version-from-strategy-page').change(function() {
         version = document.getElementById("select-version-from-strategy-page").value
 
@@ -113,16 +111,3 @@ $('#select-version-from-strategy-page').change(function() {
                 }
             });
 });
-
-function SelectDateToStrategyPage(){
-
-        dateToPage = document.getElementById("select-date-to-strategy-page").value
-
-        dateTo.push(dateToPage);
-
-        if (dateTo.length != 1){
-            dateTo.splice(0, dateTo.length-1);
-        }
-
-        return dateTo[0]
-};
