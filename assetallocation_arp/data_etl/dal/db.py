@@ -14,6 +14,7 @@ class Db:
         """Call database stored procedure and return results.
         Raises ValueError if stored procedure is not in self.procs
         """
+        print(proc_name)
         if proc_name not in self.procs:
             raise ValueError(f'The stored procedure "{proc_name}" is not defined for class {self.__class__}')
 

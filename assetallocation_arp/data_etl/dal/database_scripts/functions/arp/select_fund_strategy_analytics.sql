@@ -12,7 +12,7 @@ RETURNS TABLE(
   frequency arp.frequency,
   value numeric(32, 16),
   comparator_name varchar,
-  comparator_value varchar
+  comparator_value numeric(32, 16)
 )
 AS
 $$
