@@ -149,9 +149,9 @@ class Times(Strategy):
 
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
         signals, returns, r, positioning = times.calculate_signals_returns_r_positioning(self)
-        ticker_map = {i.asset_subcategory: i.future_ticker for i in self.asset_inputs}
-        asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r, self.frequency, ticker_map)
-        asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning, Frequency.daily, ticker_map)
+        subcategory_map = {i.future_ticker: i.asset_subcategory for i in self.asset_inputs}
+        asset_analytics = TimesDataFrameConverter.create_asset_analytics(signals, returns, r, self.frequency, subcategory_map)
+        asset_weights = TimesDataFrameConverter.df_to_asset_weights(positioning, Frequency.daily, subcategory_map)
         return asset_analytics, asset_weights
     
 

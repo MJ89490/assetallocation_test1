@@ -24,7 +24,7 @@ def calculate_signals_returns_r_positioning(times: 'Times') -> \
 
     signals = arp.momentum(signal_assets, times)
 
-    future_leverage = asset_inputs[['asset_subcategory', 's_leverage']].set_index('asset_subcategory')['s_leverage']
+    future_leverage = asset_inputs[['future_ticker', 's_leverage']].set_index('future_ticker')['s_leverage']
     leverage_data = pc.apply_leverage(future_assets, times.leverage_type, future_leverage)
     leverage_data[asset_inputs['s_leverage'].index[asset_inputs['s_leverage'].isnull()]] = np.nan
     index_df = future_assets.append(pd.DataFrame(index=future_assets.iloc[[-1]].index + BDay(2)), sort=True).index
@@ -32,7 +32,7 @@ def calculate_signals_returns_r_positioning(times: 'Times') -> \
                                                                                                     method='pad')
 
     # calculate leveraged positions and returns
-    cost = asset_inputs[['cost', 'asset_subcategory']].set_index('asset_subcategory')['cost']
+    cost = asset_inputs[['cost', 'future_ticker']].set_index('future_ticker')['cost']
 
     if times.leverage_type == Leverage.s:
         returns, r, positioning = pc.return_ts(signals, future_assets, leverage_data, cost, False)
@@ -58,8 +58,8 @@ def get_asset_data_as_data_frames(
     signal_assets, future_assets = [], []
 
     for i in asset_inputs:
-        signal_assets.append((i.asset_subcategory, i.signal_asset))
-        future_assets.append((i.asset_subcategory, i.future_asset))
+        signal_assets.append((i.future_asset.ticker, i.signal_asset))
+        future_assets.append((i.future_asset.ticker, i.future_asset))
 
     signal_assets = DataFrameConverter.assets_to_df(signal_assets)
     future_assets = DataFrameConverter.assets_to_df(future_assets)
