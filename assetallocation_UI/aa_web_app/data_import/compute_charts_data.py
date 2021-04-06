@@ -46,7 +46,7 @@ class TimesChartsDataComputations(object):
     @positions_sum_start_date.setter
     def positions_sum_start_date(self, value: str) -> None:
         if value is None:
-            value = '14-08-2018'
+            value = '02-12-2000'  #'14-08-2018'
         self._positions_sum_start_date = value
 
     @property
@@ -56,7 +56,7 @@ class TimesChartsDataComputations(object):
     @positions_start_date.setter
     def positions_start_date(self, value: str) -> None:
         if value is None:
-            value = '15/05/2018'
+            value = '02/12/2000'     #'15/05/2018'
         if self.positions is not None:
             value = find_date(self.positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_start_date = value
@@ -68,7 +68,7 @@ class TimesChartsDataComputations(object):
     @positions_end_date.setter
     def positions_end_date(self, value: str) -> None:
         if value is None:
-            value = '25/08/2018'
+            value = '02/07/2001'     #'25/08/2018'
         if self.positions is not None:
             value = find_date(self.positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_end_date = value

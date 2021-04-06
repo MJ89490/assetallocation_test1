@@ -136,6 +136,8 @@ function selectDateToCalendar() {
     var d = new Date(date_from_new);
     var dayName = gsDayNames[d.getDay()];
 
+    console.log(dayName);
+
     document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
 }
 
