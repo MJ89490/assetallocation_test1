@@ -38,18 +38,25 @@ class DataFrameConverter:
         data = [[i.ticker, i.asset_subcategory, i.business_date, i.strategy_weight] for i in asset_weights]
         df = pd.DataFrame(data, columns=['asset_ticker', 'asset_subcategory', 'business_date', 'value'])
         print(df.head())
-        df = df.set_index(['business_date', 'asset_subcategory', 'asset_ticker']).unstack(['asset_ticker'])
+        # df = df.set_index(['business_date'])
         print(df.head())
+        df = df.groupby(by=['business_date', 'asset_subcategory']).sum()
+        df = df.unstack(['asset_subcategory'])
         df.columns = df.columns.droplevel(0)
         print(df.head())
         return df
 
     @staticmethod
     def fund_strategy_asset_analytics_to_df(asset_analytics: List[FundStrategyAssetAnalytic]) -> pd.DataFrame:
-        data = [[i.asset_ticker, i.asset_subcategory,  i.business_date, i.subcategory, i.value] for i in asset_analytics]
-        df = pd.DataFrame(data, columns=['asset_ticker', 'asset_subcategory', 'business_date', 'analytic_subcategory', 'value'])
-        df = df.set_index(['business_date', 'asset_subcategory', 'analytic_subcategory', 'asset_ticker']).unstack(['asset_ticker'])
+        data = [[i.asset_subcategory,  i.business_date, i.subcategory.name, i.value] for i in asset_analytics]
+        df = pd.DataFrame(data, columns=['asset_subcategory', 'business_date', 'analytic_subcategory', 'value'])
+        df.loc[:, 'value'] = df.loc[:, 'value'].apply(pd.to_numeric)
+        df = df.groupby(by=['business_date', 'asset_subcategory', 'analytic_subcategory']).mean()
+        df = df.unstack(['asset_subcategory'])
         df.columns = df.columns.droplevel(0)
+
+        # df = df.set_index(['business_date', 'asset_subcategory', 'analytic_subcategory', 'asset_ticker']).unstack(['asset_ticker'])
+        # df.columns = df.columns.droplevel(0)
         return df
 
     @staticmethod
