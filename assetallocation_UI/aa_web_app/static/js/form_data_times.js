@@ -148,9 +148,8 @@ $(function(){
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
 
-        alert("The strategy is about to run...");
-
         if (check != 'error'){
+            alert("The strategy is about to run...");
             $.ajax({
                 url: "received_data_times_form",
                 data: {form_data: form_data, json_data:jsonData},
