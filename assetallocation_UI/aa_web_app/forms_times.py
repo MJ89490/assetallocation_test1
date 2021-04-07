@@ -13,68 +13,26 @@ class SideBarDataForm(FlaskForm):
     existing_versions = get_strategy_versions(Name.times)
     versions = []
 
-    # for key, value in existing_versions.items():
-    #     if value == '':
-    #         value = 'no description'
-    #     versions.append(str(key) + ": " + value)
-
-    # version_choices = list(zip(versions, versions))
     input_versions_times = format_versions(existing_versions)
-    # version_choices = list(zip(existing_versions, format_versions(existing_versions)))
-
-    # Chart Data
-    # versions_for_charts = SelectField('Versions', choices=format_versions(existing_versions))
-    # submit_ok_versions_data = SubmitField('ok')
 
     # Fund name
     existing_funds = get_fund_names()
     input_fund_name_times = existing_funds
-    # input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
-    # submit_ok_charts_fund_data = SubmitField('ok')
-
-    # Export data
-    # versions_for_export = SelectField('Versions', choices=format_versions(existing_versions))
-    # start_date_export = StringField()
-    # end_date_export = StringField()
-    # submit_ok_export_data = SubmitField('ok')
-    # submit_ok_export_fund_data = SubmitField('ok')
 
 
-class AssetInputForm(FlaskForm):
-    signal_ticker = StringField('signal_ticker')
+# class AssetInputForm(FlaskForm):
+#     signal_ticker = StringField('signal_ticker')
 
 
 class InputsTimesModel(FlaskForm):
     # # Versions TO REMOVE later
-    existing_versions = get_strategy_versions(Name.times)
-    # version_choices = [('New Version', 'New Version')]
-    # versions_dict = {}
-    #
-    # for key, value in existing_versions.items():
-    #     if value == '':
-    #         value = 'no description'
-    #     versions_dict[str(key) + ": " + value] = key
-        # versions.append(str(key) + ": " + value)
-
-
-    # version_choices = list(zip(versions, versions))
-    #
-    # # version_choices.extend(list(zip(versions, format_versions(existing_versions))))
-    # versions = SelectField('Versions', choices=version_choices)
-    # submit_versions = SubmitField('Select this version')
-
-    # Versions of the strategy
     # existing_versions = get_strategy_versions(Name.times)
 
+    # input_versions_times = format_versions(existing_versions)
 
-
-    # version_choices = list(zip(existing_versions, existing_versions))
-    # input_versions_times = existing_versions
-
-    input_versions_times = format_versions(existing_versions)
     # Fund names
-    existing_funds = get_fund_names()
-    input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
+    # existing_funds = get_fund_names()
+    # input_fund_name_times = SelectField('Fund Name', choices=list(zip(existing_funds, existing_funds)))
 
     # Dates for dashboard
     start_date_times_inputs = StringField('Start Date')
@@ -93,4 +51,4 @@ class InputsTimesModel(FlaskForm):
     sig3_short = StringField(u'Sigma3 short', validators=[DataRequired(message="The Sigma3 short is required")])
     sig3_long = StringField(u'Sigma3 long', validators=[DataRequired(message="The Sigma3 long is required")])
 
-    asset_input_set = FieldList(FormField(AssetInputForm), min_entries=0)
+    # asset_input_set = FieldList(FormField(AssetInputForm), min_entries=0)

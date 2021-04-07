@@ -3,7 +3,11 @@ from flask import render_template
 from flask import request, redirect, url_for, jsonify
 
 from assetallocation_UI.aa_web_app import app
+from assetallocation_UI.aa_web_app.service.fund import get_fund_names
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
+from assetallocation_UI.aa_web_app.service.formatter import format_versions
+from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
 from assetallocation_UI.aa_web_app.data_import.get_data_times import ReceivedDataTimes
 from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
@@ -25,12 +29,11 @@ def home():
 
 @app.route('/times_strategy', methods=['GET', 'POST'])
 def times_strategy():
-    form = InputsTimesModel()
-    show_versions = 'show_versions_not_available'
-    show_dashboard = 'show_dashboard_not_available'
     run_model_page = 'not_run_model'
     assets, asset_tickers_names_subcategories = [], []
-    show_calendar, fund_selected, pop_up_message = '', '', ''
+    fund_selected, pop_up_message = '', ''
+    existing_versions_from_db = format_versions(get_strategy_versions(Name.times))
+    existing_funds_from_db = get_fund_names()
 
     if request.method == 'POST':
         if request.form['submit_button'] == 'new-version':
@@ -46,23 +49,18 @@ def times_strategy():
             run_model_page = 'run_existing_version'
         if obj_received_data_times.match_date_db:
             pop_up_message = 'pop_up_message'
-            print(obj_received_data_times.version_strategy)
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
 
     return render_template('times_template.html',
                            title='TimesPage',
-                           form=form,
                            fund_selected=obj_received_data_times.fund_name,
                            asset_tickers_names_subcategories=asset_tickers_names_subcategories,
                            version_selected=obj_received_data_times.version_strategy,
-                           existing_funds=form.existing_funds,
-                           show_calendar=show_calendar,
+                           existing_funds_from_db=existing_funds_from_db,
                            pop_up_message=pop_up_message,
-                           show_versions=show_versions,
                            run_model_page=run_model_page,
-                           show_dashboard=show_dashboard,
                            assets=assets,
-                           versions_list=form.input_versions_times,
+                           existing_versions_from_db=existing_versions_from_db,
                            inputs_versions=obj_received_data_times.inputs_existing_versions_times)
 
 
