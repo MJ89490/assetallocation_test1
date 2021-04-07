@@ -35,7 +35,7 @@ class DataFrameConverter:
 
     @staticmethod
     def fund_strategy_asset_weights_to_df(asset_weights: List[FundStrategyAssetWeight]) -> pd.DataFrame:
-        data = [[i.asset_subcategory, i.business_date, i.strategy_weight] for i in asset_weights]
+        data = [[i.ticker, i.business_date, i.strategy_weight] for i in asset_weights]
         df = pd.DataFrame(data, columns=['asset_subcategory', 'business_date', 'value'])
         df = df.set_index(['business_date', 'asset_subcategory']).unstack(['asset_subcategory'])
         df.columns = df.columns.droplevel(0)
@@ -43,7 +43,7 @@ class DataFrameConverter:
 
     @staticmethod
     def fund_strategy_asset_analytics_to_df(asset_analytics: List[FundStrategyAssetAnalytic]) -> pd.DataFrame:
-        data = [[i.asset_subcategory, i.business_date, i.subcategory, i.value] for i in asset_analytics]
+        data = [[i.asset_ticker, i.business_date, i.subcategory, i.value] for i in asset_analytics]
         df = pd.DataFrame(data, columns=['asset_subcategory', 'business_date', 'analytic_subcategory', 'value'])
         df = df.set_index(['business_date', 'analytic_subcategory', 'asset_subcategory']).unstack(['asset_subcategory'])
         df.columns = df.columns.droplevel(0)
