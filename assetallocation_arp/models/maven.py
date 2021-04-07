@@ -235,7 +235,7 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     equal_risk_long = pc.cap_and_redistribute((vol_long.T / vol_long.sum(axis=1)).T, 0.5).rolling(w_m).mean()
     equal_risk_short = pc.cap_and_redistribute((vol_short.T / vol_short.sum(axis=1)).T, 0.5).rolling(w_m).mean()
     # calculating turnover
-    costs = asset_inputs.groupby('asset').first(keep='first')['transaction_costs'][equal_risk.columns].tolist()
+    costs = asset_inputs.groupby('asset').first('first')['transaction_costs'][equal_risk.columns].tolist()
     sub_equal_risk_long = equal_risk_long - equal_risk_long.shift()
     sub_equal_risk_short = equal_risk_short - equal_risk_short.shift()
     turnover_cost_long = sub_equal_risk_long.abs().mul(costs, axis=1).sum(axis=1) / 10000
@@ -250,7 +250,7 @@ def run_performance_stats(maven_inputs, asset_inputs, maven_returns, volatility,
     returns_maven['maven long net'] = (1 + returns_maven_long.sum(axis=1) - turnover_cost_long).cumprod() * 100
     returns_maven['maven short net'] = (1 + returns_maven_short.sum(axis=1) - turnover_cost_short).cumprod() * 100
     # determining asset class contributions
-    asset_class = asset_inputs.groupby('asset').first(keep='first')['asset_class'][equal_risk.columns].tolist()
+    asset_class = asset_inputs.groupby('asset').first('first')['asset_class'][equal_risk.columns].tolist()
     asset_contribution_long = pd.DataFrame(data=returns_maven_long.T)
     asset_contribution_long.index = asset_class
     asset_contribution_short = pd.DataFrame(data=returns_maven_short.T)

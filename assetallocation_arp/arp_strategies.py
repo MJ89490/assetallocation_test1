@@ -51,9 +51,9 @@ def run_model(model_type, mat_file, input_file, model_date=None):
         # get inputs from excel and matlab data
         fxmodels_inputs, asset_inputs, all_data = gd.extract_inputs_and_mat_data(model_type, mat_file, input_file)
         # create the input series for the signal types
-        spot, carry, cash, ppp, spx = fxmodels.format_data(fxmodels_inputs, asset_inputs, all_data)
+        spot, carry, cash, ppp, spx, all_data_daily = fxmodels.format_data(fxmodels_inputs, asset_inputs, all_data)
         # calculate signals
-        signal, volatility = fxmodels.calculate_signals(fxmodels_inputs, spot, carry, cash, ppp, spx)
+        signal, volatility = fxmodels.calculate_signals(fxmodels_inputs, spot, carry, cash, ppp, spx, all_data_daily)
         # determine exposures
         fx_model, exposure, exposure_agg = fxmodels.determine_sizing(fxmodels_inputs, asset_inputs, signal, volatility)
         # calculate returns
