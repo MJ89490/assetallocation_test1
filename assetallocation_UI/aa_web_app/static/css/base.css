@@ -227,12 +227,7 @@ tr td{padding: 0 !important;
 .table-assets-existing-version > thead > tr {font-size: 13px;}
 
 
-#input_asset_from_times{width: 200px; font-size: 13px;}
-#input_category_from_times{width: 120px; font-size: 13px;}
-#input_future_ticker_from_times{width: 155px; font-size: 13px;}
-#input_signal_ticker_from_times{width: 155px; font-size: 13px;}
-#input_costs_from_times{width: 70px; font-size: 13px;}
-#input_leverage_from_times{width: 80px; font-size: 13px;}
+
 
 /* FORMS */
 #selectVersionFund {color: #005774 !important; border-color: #007faa !important; width: 200px; margin-top: 12px;}
