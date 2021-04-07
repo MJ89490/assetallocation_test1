@@ -93,8 +93,14 @@ class TimesChartsDataComputations(object):
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 
-        self.signals = analytic_df.xs(Signal.momentum, level='analytic_subcategory')
-        self.returns = analytic_df.xs(Performance['excess return'], level='analytic_subcategory')
+        signals = analytic_df.xs('momentum', level='analytic_subcategory')
+        signals.index = pd.to_datetime(signals.index)
+
+        returns = analytic_df.xs('excess return', level='analytic_subcategory')
+        returns.index = pd.to_datetime(returns.index)
+
+        self.signals = signals
+        self.returns = returns
         self.positions = weight_df
 
         if date_to_sidebar is not None:
