@@ -95,7 +95,7 @@ class ArpProcCaller(Db):
             if pd.notna(row['strategy_weight']):
                 aw = FundStrategyAssetWeight(
                     row['asset_subcategory'], row['business_date'], float(row['theoretical_asset_weight']),
-                    row['asset_weight_frequency']
+                    row['asset_weight_frequency'], row['asset_ticker']
                 )
                 aw.implemented_weight = float(row['implemented_asset_weight'])
                 fund_strategy.add_asset_weight(aw)
@@ -825,7 +825,9 @@ class MavenProcCaller(StrategyProcCaller):
 
 
 if __name__ == '__main__':
+    from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
     apc = TimesProcCaller()
-    fs = apc.select_fund_strategy_results('test_fund', Name.times, 96, business_date_from=dt.date(2000, 1, 1),
-                                          business_date_to=dt.date(2020, 8, 12))
+    fs = apc.select_fund_strategy_results('test_fund', Name.times, 827, business_date_from=dt.date(2000, 1, 1),
+                                          business_date_to=dt.date(2001, 8, 7))
     print(fs)
+    DataFrameConverter().fund_strategy_asset_weights_to_df(fs.asset_weights)
