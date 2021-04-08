@@ -91,13 +91,23 @@ def receive_data_from_times_strategy_page():
 @app.route('/received_data_times_form', methods=['POST'])
 def received_data_times_form():
     form_data = request.form['form_data'].split('&')
+
+    print(form_data)
+
     json_data = json.loads(request.form['json_data'])
 
+    print(json_data)
+
     form_data.append('input_version_name=' + json_data['input_version_name_strategy'])
+
+    print(form_data)
 
     obj_received_data_times.version_description = json_data["input_version_name_strategy"]
     obj_received_data_times.received_data_times(form_data)
     obj_received_data_times.call_run_times(json_data)
+
+    print("END OF RECEIVED DATA TIMES FORM")
+
     return json.dumps({'status': 'OK'})
 
 

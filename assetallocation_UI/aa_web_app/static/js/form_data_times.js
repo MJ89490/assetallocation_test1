@@ -166,6 +166,7 @@ $(function(){
                     window.location.href = "times_dashboard";
                 },
                 error: function(error){
+                    console.log("ERROR")
                     console.log(error);
                 }
             });
