@@ -138,7 +138,10 @@ function selectDateToCalendar() {
 
     console.log(dayName);
 
-    document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
+    if (typeof dayName != 'undefined'){
+        document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
+    }
+
 }
 
 // SEND THE DATA TO PYTHON
@@ -147,6 +150,9 @@ $(function(){
 	    var jsonData = getDataFromTable();
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
+
+        console.log(jsonData);
+
 
         if (check != 'error'){
             alert("The strategy is about to run...");
