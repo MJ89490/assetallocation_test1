@@ -82,6 +82,13 @@ class ArpProcCaller(Db):
         and model_instance.business_daterange equals DateRange(business_date_from, business_date_to, '[]')"""
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
         strategy_id = self.call_proc('arp.select_strategy_id', [strategy_name, strategy_version])[0]['strategy_id']
+
+
+        print(fund_name)
+        print(strategy_id)
+        print(business_date_from)
+        print(business_date_to)
+
         fs_weights = self.call_proc(
             'arp.select_fund_strategy_weights', [fund_name, strategy_id, business_date_from, business_date_to]
         )

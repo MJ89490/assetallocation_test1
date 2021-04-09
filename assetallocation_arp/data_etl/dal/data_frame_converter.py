@@ -48,6 +48,13 @@ class DataFrameConverter:
         return df
 
     @staticmethod
+    def fund_strategy_analytics_to_df(strategy_analytics: List[FundStrategyAnalytic]) -> pd.DataFrame:
+        data = [[i.business_date, i.subcategory, i.value] for i in strategy_analytics]
+        df = pd.DataFrame(data, columns=['business_date', 'analytic_subcategory', 'value'])
+        df = df.set_index(['business_date', 'analytic_subcategory'])
+        return df
+
+    @staticmethod
     def df_to_asset_analytics(
             analytics: pd.DataFrame, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
             ticker_map: Dict[str, str], frequency: Union[None, str, Frequency] = None
@@ -290,14 +297,14 @@ class EffectDataFrameConverter(DataFrameConverter):
         # TODO change depending on Simone's input
         analytics = list(
             chain(
-                cls.series_to_strategy_analytics(total_excl_signals, Category.performance,
-                                                 Performance['total return index incl signals'], frequency),
                 cls.series_to_strategy_analytics(total_incl_signals, Category.performance,
+                                                 Performance['total return index incl signals'], frequency),
+                cls.series_to_strategy_analytics(total_excl_signals, Category.performance,
                                                  Performance['total return index excl signals'], frequency),
                 cls.series_to_strategy_analytics(spot_incl_signals, Category.performance,
                                                  Performance['spot index incl signals'], frequency),
                 cls.series_to_strategy_analytics(spot_excl_signals, Category.performance,
-                                                 Performance['spot index excl signals'], frequency)
+                                                 Performance['spot index excl signals'], frequency),
             )
         )
 

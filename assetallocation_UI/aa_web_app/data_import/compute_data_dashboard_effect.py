@@ -1,122 +1,17 @@
-import os
-import pandas as pd
+import datetime
 import numpy as np
-import datetime as dt
+import pandas as pd
 
-from assetallocation_arp.models.effect.main_effect import run_effect
-from assetallocation_arp.data_etl.dal.data_models.strategy import Effect, EffectAssetInput, DayOfWeek
-from assetallocation_UI.aa_web_app.service.strategy import run_strategy
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import AggregationLevel, Signal, Performance
+
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
-from assetallocation_arp.common_libraries.dal_enums.strategy import DayOfWeek
-from assetallocation_arp.models.effect.read_inputs_effect import read_user_date
-from assetallocation_arp.data_etl.dal.data_models.asset_analytic import AssetAnalytic
-
-# TODO add class to another module
+from assetallocation_arp.data_etl.dal.arp_proc_caller import EffectProcCaller
+from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
+from assetallocation_UI.aa_web_app.data_import.receive_data_effect import ReceiveDataEffect
 
 
-class ReceiveDataEffect:
-    def __init__(self):
-        self.effect_outputs = {}
-        self.effect_form = {}
-        self.write_logs = {}
-
-    def receive_data_effect(self, form_data):
-        for idx, val in enumerate(form_data):
-            if idx > 1:
-                self.effect_form[val.split('=', 1)[0]] = val.split('=', 1)[1]
-
-        # Process date under format '12%2F09%2F2000 to 12/09/2000
-        self.effect_form['input_user_date_effect'] = '/'.join(self.effect_form['input_user_date_effect'].split('%2F'))
-        self.effect_form['input_signal_date_effect'] = '/'.join(self.effect_form['input_signal_date_effect'].split('%2F'))
-
-        if 'Total' and 'return' in self.effect_form['input_trend_indicator_effect']:
-            self.effect_form['input_trend_indicator_effect'] = ' '.join(self.effect_form['input_trend_indicator_effect'].split('%20'))
-
-        if 'inverse' in self.effect_form['input_risk_weighting']:
-            self.effect_form['input_risk_weighting'] = ' '.join(self.effect_form['input_risk_weighting'].split('%20'))
-        else:
-            self.effect_form['input_risk_weighting'] = '/'.join(self.effect_form['input_risk_weighting'].split('%2F'))
-
-        return self.effect_form
-
-    def call_run_effect(self, assets_inputs_effect):
-
-        strategy_inputs = pd.DataFrame.from_dict(self.effect_form, orient='index').T
-        asset_inputs = pd.DataFrame.from_dict(assets_inputs_effect, orient='index').T
-
-        effect = Effect(
-            self.effect_form['input_update_imf_effect'].strip().lower() == 'true',
-            read_user_date(pd.to_datetime(self.effect_form['input_user_date_effect'], format='%d/%m/%Y')).date(),
-            pd.to_datetime(self.effect_form['input_signal_date_effect'], format='%d/%m/%Y').date(),
-            float(self.effect_form['input_position_size_effect']) / 100,
-            self.effect_form['input_risk_weighting'].strip(), int(self.effect_form['input_window_effect']),
-            int(self.effect_form['input_bid_ask_effect']), self.effect_form['input_real_nominal_effect'].strip().lower(),
-            float(self.effect_form['input_threshold_effect']), DayOfWeek[self.effect_form['input_signal_day_effect']],
-            self.effect_form['input_frequency_effect'], self.effect_form['input_include_shorts_effect'].strip().lower() == 'yes',
-            float(self.effect_form['input_cut_off_long']), float(self.effect_form['input_cut_off_short']),
-            int(self.effect_form['input_long_term_ma']), int(self.effect_form['input_short_term_ma']),
-            self.effect_form['input_real_time_inf_effect'].strip().lower() == 'yes',
-            self.effect_form['input_trend_indicator_effect'].strip().lower()
-        )
-        # TODO effect asset_subcategory is set as currency. refactor once database is restructured to link via asset_id!
-        effect.asset_inputs = [EffectAssetInput(h, h, i, j, k, float(l), m, n) for h, i, j, k, l, m, n in
-            zip(
-                assets_inputs_effect['input_currency'], assets_inputs_effect['input_implied'],
-                assets_inputs_effect['input_spot_ticker'], assets_inputs_effect['input_carry_ticker'],
-                assets_inputs_effect['input_weight_usd'], assets_inputs_effect['input_usd_eur'],
-                assets_inputs_effect['input_region']
-            )
-        ]
-
-
-        # self.effect_outputs = run_effect(effect)
-
-        # print()
-
-        # float(self.effect_form['input_strategy_weight_effect']
-        fund_strategy = run_strategy(
-            "test_fund", 0.46,
-            effect, os.environ.get('USERNAME'),
-            dt.date(2000, 1, 1),
-            dt.date(2020, 8, 12),
-            True
-        )
-        return fund_strategy.analytics
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # self.effect_outputs, self.write_logs = run_strategy(strategy_inputs, asset_inputs,
-        #                                                     dt.datetime.strptime(
-        #                                                         "01/01/2000",
-        #                                                         '%d/%m/%Y').date(),
-        #                                                     dt.datetime.strptime(
-        #                                                         "12/08/2020",
-        #                                                         '%d/%m/%Y').date(),
-        #                                                     is_new_strategy=True
-        #                                                     )
-
-        # self.effect_outputs = run_strategy("f1",
-        #                                    float(0.46),
-        #                                    effect,
-        #                                    os.environ.get('USERNAME'),
-        #                                    dt.datetime.strptime("01/01/2000", '%d/%m/%Y').date(),
-        #                                    dt.datetime.strptime("12/08/2020",'%d/%m/%Y').date(),
-        #                                    is_new_strategy=True
-        #                              )
-
-
-class ProcessDataEffect(ReceiveDataEffect):
+class ComputeDataDashboardEffect:
 
     def __init__(self):
         super().__init__()
@@ -181,6 +76,85 @@ class ProcessDataEffect(ReceiveDataEffect):
             self._start_year_to_year_contrib_date = '31/12/2019'
         else:
             self._start_year_to_year_contrib_date = value
+
+    def call_effect_proc_caller(self, fund_name: str, version_strategy: int, date_to, date_to_sidebar=None) -> None:
+        """
+        Call Times proc caller to grab the data from the db
+        :param fund_name: name of the current fund (example: f1, f2,...)
+        :param version_strategy: version of the current strategy (version1, version2, ...)
+        :param date_to_sidebar: date to sidebar
+        :return: None
+        """
+        apc = EffectProcCaller()
+        fs = apc.select_fund_strategy_results(fund_name, Name.effect, version_strategy,
+                                              business_date_from=datetime.datetime.strptime('01/01/2000', '%d/%m/%Y').date(),
+                                              business_date_to=date_to
+                                              )
+        weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+
+        strategy_analytics, asset_analytics = [], []
+
+        for analytic in fs.analytics:
+            if analytic.aggregation_level == AggregationLevel.strategy:
+                strategy_analytics.append(analytic)
+            else:
+                asset_analytics.append(analytic)
+
+        strategy_analytic_df = DataFrameConverter.fund_strategy_analytics_to_df(strategy_analytics)
+        asset_analytics_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(asset_analytics)
+
+        trend = asset_analytics_df.xs(Signal.trend, level='analytic_subcategory')
+        carry = asset_analytics_df.xs(Signal.carry, level='analytic_subcategory')
+
+        total_incl_signals = strategy_analytic_df.xs(Performance['total return index incl signals'], level='analytic_subcategory')
+
+        total_excl_signals = strategy_analytic_df.xs(Performance['total return index excl signals'], level='analytic_subcategory')
+
+        # total_excl_signals = strategy_analytic_df.xs(Performance['total return index excl signals'],
+        #                                              # level='analytic_subcategory')
+
+    def get_regions(self, version_strategy: int):
+
+        apc = EffectProcCaller()
+        strategy = apc.select_strategy(version_strategy)
+
+        # strategy.position_size
+
+        asset_inputs = [
+            (
+                i.asset_subcategory, i.asset_3m.ticker, i.spot_asset.ticker, i.carry_asset.ticker, i.usd_weight,
+                i.base.name, i.region
+            ) for i in strategy.asset_inputs
+        ]
+        asset_inputs = pd.DataFrame(
+            asset_inputs,
+            columns=[
+                'currency', 'input_implied', 'input_spot_ticker', 'input_carry_ticker', 'input_weight_usd',
+                'input_usd_eur',
+                'input_region'
+            ]
+        )
+
+        region = {}
+
+        unique_region = np.unique(asset_inputs['input_region'].to_list())
+
+        for reg in unique_region:
+            region_tmp = asset_inputs.loc[asset_inputs['input_region'] == reg]
+            curr = ['Combo_' + val for val in region_tmp['input_spot_ticker'].to_list()]
+            region[reg.lower()] = curr
+
+        return region
+
+
+
+
+
+
+
+
+
+
 
     def draw_regions_charts(self):
         region = self.effect_outputs['region']
@@ -404,3 +378,21 @@ class ProcessDataEffect(ReceiveDataEffect):
                 'effect_data_form': self.effect_form,
                 'effect_outputs': self.effect_outputs,
                 'write_logs': self.write_logs}
+
+
+if __name__ == "__main__":
+    apc = EffectProcCaller()
+    v = apc.engine.connect().execute("SELECT * FROM arp.strategy_analytic")
+
+    for a in v.fetchall():
+        print(a.value)
+
+
+
+    fs = apc.select_fund_strategy_results("test_fund", Name.effect, 55,
+                                          business_date_from=datetime.datetime.strptime('01/01/2000',
+                                                                                        '%d/%m/%Y').date(),
+                                          business_date_to=datetime.date(2020, 8, 12)
+                                          )
+
+    print(fs)

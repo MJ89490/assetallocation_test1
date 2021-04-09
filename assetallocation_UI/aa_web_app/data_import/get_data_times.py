@@ -240,8 +240,6 @@ class ReceivedDataTimes:
 
     def call_run_times(self, assets_input_times):
 
-        # self.strategy_weight = float(self.times_form['input_strategy_weight_times'])
-
         long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
                                         self.times_form['input_signal_two_long_times'],
                                         self.times_form['input_signal_three_long_times']]))
@@ -259,7 +257,6 @@ class ReceivedDataTimes:
         # Times.description = self.times_form['input_version_name']
         times.description = self.version_description
 
-        # self.date_to = datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date()
         self.date_to = self.times_form['input_date_to_new_version_times']
 
         times.asset_inputs = [
@@ -278,8 +275,6 @@ class ReceivedDataTimes:
                                      is_new_strategy=self.is_new_strategy
                                      )
         self.version_strategy = fund_strategy.strategy_version
-
-        print(self.version_strategy)
 
         return fund_strategy
 

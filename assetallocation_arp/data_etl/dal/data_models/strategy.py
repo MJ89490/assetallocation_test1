@@ -1,4 +1,4 @@
-from typing import List, Union, Optional, Tuple
+from typing import List, Union, Optional, Tuple, Dict
 from abc import ABC, abstractmethod
 import datetime as dt
 from pathlib import Path
@@ -475,19 +475,23 @@ class Effect(Strategy):
                   write_logs = {'currency_logs': currency_logs}
         """
         # TODO change depending on Simone's input
-        # trend: pd.DataFrame, carry: pd.DataFrame, frequency: Frequency
         ticker_map = {i.asset_subcategory: i.carry_ticker for i in self.asset_inputs}
         asset_analytics = EffectDataFrameConverter.create_asset_analytics(effect_outputs['trend_curr'], effect_outputs['carry_curr'], ticker_map, self.frequency)
         asset_weights = EffectDataFrameConverter.df_to_asset_weights(effect_outputs['combo'], self.frequency, ticker_map)
+
+        for a in asset_weights:
+            print(a.ticker)
 
 
         total_excl_signals = pd.Series(effect_outputs['total_excl_signals'], index=effect_outputs['agg_dates'])
         total_incl_signals = pd.Series(effect_outputs['total_incl_signals'], index=effect_outputs['agg_dates'])
         spot_incl_signals = pd.Series(effect_outputs['spot_incl_signals'], index=effect_outputs['agg_dates'])
         spot_excl_signals = pd.Series(effect_outputs['spot_excl_signals'], index=effect_outputs['agg_dates'])
+
         strategy_analytics = EffectDataFrameConverter.create_strategy_analytics(
-            total_excl_signals, total_incl_signals,spot_incl_signals, spot_excl_signals, self.frequency
+            total_excl_signals, total_incl_signals, spot_incl_signals, spot_excl_signals, self.frequency
         )
+
         analytics = asset_analytics + strategy_analytics
         return analytics, asset_weights
 

@@ -289,4 +289,5 @@ class ComputeAggregateCurrencies:
                 'agg_total_excl_signals': aggregate_total_excl_signals,
                 'agg_spot_incl_signals': aggregate_spot_incl_signals,
                 'agg_spot_excl_signals': aggregate_spot_excl_signals,
-                'weighted_performance': weighted_performance, 'log_returns_excl_costs': log_returns_excl_costs}
+                'weighted_performance': weighted_performance,
+                'log_returns_excl_costs': log_returns_excl_costs}
