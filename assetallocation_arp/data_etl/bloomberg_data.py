@@ -119,7 +119,7 @@ class Bloomberg:
         if type(startdate) is int:
             startdate = str(startdate)
         if type(enddate) is int:
-            startdate = str(enddate)
+            enddate = str(enddate)
 
         if type(startdate) is not str:
             startdate = startdate.strftime("%Y%m%d")

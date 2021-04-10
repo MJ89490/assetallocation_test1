@@ -23,7 +23,7 @@ class Db:
     def __init__(self) -> None:
         """
         Data base class to connect to the Asset Allocation postgreSQL database.
-        :return: None
+        :return:
         """
         # Get database credentials from .ini file
         user = os.getenv("USER")
@@ -71,7 +71,7 @@ class Db:
         """
         This function writes a pandas data frame to the main asset analytic table.
         :param: Input pandas data frame
-        :return: None
+        :return:
         """
         try:
             logging.info("Writing to Asset Analytic staging table")
@@ -79,6 +79,7 @@ class Db:
             df.to_sql(name="asset_analytic", con=self.engine, schema="staging", if_exists="append", index=False,
                       method='multi', chunksize=10000)
             logging.info("Writing complete for Asset Analytic staging table")
+
             return
         except SQLAlchemyError as e:
             logger.info(e)
@@ -94,12 +95,11 @@ class Db:
                 FROM asset.asset_analytic
                 LEFT JOIN asset.asset
                 ON asset_analytic.asset_id = asset.id
-                WHERE upper(system_tstzrange) = 'infinity';
+                WHERE upper(system_tstzrange) = 'infinity' limit 1000;
                 """
         try:
             chunk_list = []
-            df = pd.DataFrame()
-            i=0
+            i = 0
             logger.info("Reading main Asset Analytic table")
             for chunk in pd.read_sql(query, con=self.engine, chunksize=100000):
                 chunk_list.append(chunk)

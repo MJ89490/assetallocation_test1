@@ -14,34 +14,35 @@ logger = logging.getLogger("sLogger")
 
 
 class ETLProcess:
-    def __init__(self, df):
-        self.df = df
-        self.df_iteration = pd.DataFrame()
+    def __init__(self, df_tickers):
+        """
+        This class extracts ticker data from Bloomberg, transforms this to valid data types and uploads to the
+        postgreSQL database.
+        :param df_tickers: df includes
+        """
+        self.df = df_tickers
         self.df_bbg = pd.DataFrame()
 
     def bbg_data(self) -> None:
         """
         This function gets the data from Bloomberg for each instrument and is stored as a pandas data frame.
-        :return: None
+        :return:
         """
         logger.info("Retrieving Bloomberg data")
-        # Call Bloomberg class
-        # Create empty list to append multiple data frames to
         # Loop through each security and respective fields to get data as a data frame
         bbg = bloomberg_data.Bloomberg()
-        df_list = []
         yday_date = (datetime.today() - timedelta(days=1)).strftime("%Y%m%d")
+        df_list = []
         for index, row in self.df.iterrows():
-            self.df_iteration = bbg.historicalRequest(securities=row["ticker"],
-                                                      fields="PX_LAST",
-                                                      startdate=row["business_datetime"],
-                                                      enddate=yday_date)
+            df_iteration = bbg.historicalRequest(securities=row["ticker"],
+                                                 fields="PX_LAST",
+                                                 startdate=row["business_datetime"],
+                                                 enddate=yday_date)
 
-            # Append data frame to df list
-            df_list.append(self.df_iteration)
+            df_list.append(df_iteration)
             logger.info(f"Loop {index + 1}/{len(self.df.index)} complete - \"{row['ticker']}\" imported")
 
-        # Concat df list into single, large data frame
+        # Concat list of data frames into single data frame
         self.df_bbg = pd.concat(df_list, axis=0, ignore_index=True)
         logger.info(f"Retrieved Bloomberg data for {len(self.df.index)} instruments")
 
@@ -50,7 +51,7 @@ class ETLProcess:
     def clean_data(self) -> pd.DataFrame:
         """
         This function cleans the Bloomberg data and outputs this as a pandas data frame.
-        :return: None
+        :return:
         """
         logger.info("Cleaning Bloomberg data")
         # Rename column headers to match table in database
@@ -66,19 +67,8 @@ class ETLProcess:
             self.df_bbg["ticker"] = self.df_bbg["ticker"].astype(str)
             self.df_bbg["source"] = "Bloomberg"
             self.df_bbg["value"] = self.df_bbg["value"].astype(float)
-            self.df_bbg["value"] = self.df_bbg["value"].fillna(-9999)
             self.df_bbg["business_datetime"] = pd.to_datetime(self.df_bbg["business_datetime"])
-            self.df_bbg["business_datetime"] = self.df_bbg["business_datetime"].fillna(datetime(1900, 1, 1))
             logger.info("Columns converted to respective data types")
-
-            df_null_val = self.df_bbg[self.df_bbg['value'] == -9999]
-            df_null_date = self.df_bbg[self.df_bbg['business_datetime'] == datetime(1900, 1, 1)]
-            logging.info(f"There are {len(df_null_val.index)} null value rows:"
-                         f"{df_null_val}"
-                         f"")
-            logging.info(f"There are {len(df_null_date.index)} null date rows:"
-                         f"{df_null_date}"
-                         f"")
 
             return self.df_bbg
         except ValueError:
@@ -88,7 +78,7 @@ class ETLProcess:
         """
         This function validates the data for the data taken from Bloomberg and performs statistical analysis to find
         outliers and possible incorrect values.
-        :return: None
+        :return:
         """
         logging.info("Data validation started")
         # Create .xlsx file to output to
@@ -113,7 +103,7 @@ class ETLProcess:
         df_value_outliers["value_mean"] = df_value_outliers.groupby("ticker").value.transform('mean')
         df_value_outliers["value_standard_deviation"] = df_value_outliers.groupby("ticker").value.transform('std')
         df_value_outliers["value_z_score"] = (df_value_outliers["value"] - df_value_outliers["value_mean"]) / \
-            df_value_outliers["value_standard_deviation"]
+                                             df_value_outliers["value_standard_deviation"]
         df_value_outliers = df_value_outliers[df_value_outliers["value_z_score"] > 2]
         df_value_outliers.to_excel(xl_writer, sheet_name="daily_value_outliers")
 
@@ -122,11 +112,11 @@ class ETLProcess:
         df_return_outliers = df_return_outliers.assign(log_return=np.log(df_return_outliers.value).groupby(
             df_return_outliers.ticker).diff())
         df_return_outliers["log_return_mean"] = df_return_outliers.groupby("ticker").log_return.transform('mean')
-        df_return_outliers["log_return_standard_deviation"] = df_return_outliers.groupby("ticker")\
+        df_return_outliers["log_return_standard_deviation"] = df_return_outliers.groupby("ticker") \
             .log_return.transform('std')
         df_return_outliers["log_return_z_score"] = (df_return_outliers["log_return"]
                                                     - df_return_outliers["log_return_mean"]) / df_return_outliers[
-            "log_return_standard_deviation"]
+                                                       "log_return_standard_deviation"]
         df_return_outliers = df_return_outliers[df_return_outliers["log_return_z_score"] > 2]
         df_return_outliers.to_excel(xl_writer, sheet_name="daily_log_return_outliers")
 
