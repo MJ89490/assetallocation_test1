@@ -6,6 +6,7 @@ import datetime as dt
 
 import pandas as pd
 from psycopg2.extras import DateTimeTZRange, DateRange
+from sqlalchemy import text
 
 from assetallocation_arp.data_etl.dal.db import Db
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, Effect, Fica, Fx, Strategy, Maven
@@ -319,8 +320,24 @@ class TimesProcCaller(StrategyProcCaller):
 
         return times
 
-    def select_fund_strategy_result_dates(self, fund_name: str, strategy_version: int) -> Dict[str, Optional[bool]]:
-        return {dt.date(2001, 8, 7): True}
+    def select_all_fund_strategy_result_dates(self) -> pd.DataFrame:
+        query = """
+        SELECT DISTINCT
+          f.name as fund_name,
+          t.version as strategy_version,  
+          s.description,
+          upper(mi.business_daterange) as business_date_to
+        FROM
+          arp.times t
+          JOIN arp.strategy s on s.id = t.strategy_id
+          JOIN arp.fund_strategy_weight fsw ON fsw.strategy_id = t.strategy_id
+          JOIN fund.fund f on f.id = fsw.fund_id
+          JOIN arp.strategy_asset_weight saw on saw.strategy_id = t.strategy_id
+          JOIN config.model_instance mi on mi.id = saw.model_instance_id
+        ;
+        """
+        with self.engine.connect() as connection:
+            return pd.read_sql(query, con=connection)
 
 
 class FxProcCaller(StrategyProcCaller):

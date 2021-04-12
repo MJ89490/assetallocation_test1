@@ -171,13 +171,9 @@ class ReceivedDataTimes:
 
     def check_in_date_to_existing_version(self):
         apc = TimesProcCaller()
-        match_date = apc.select_fund_strategy_result_dates(fund_name=self.fund_name,
-                                                           strategy_version=self.version_strategy)
-
-        try:
-            return match_date[dt.date(self.date_to.year, self.date_to.month, self.date_to.day)]
-        except KeyError:
-            return False
+        result_dates = apc.select_all_fund_strategy_result_dates()
+        result_dates = result_dates[(result_dates['fund_name'] == self.fund_name) & (result_dates['strategy_version'] == self.strategy_version)]
+        return dt.date(self.date_to.year, self.date_to.month, self.date_to.day) in result_dates['business_date_to'].values
 
     def receive_data_latest_version_dashboard(self, business_date_to):
         apc = TimesProcCaller()
