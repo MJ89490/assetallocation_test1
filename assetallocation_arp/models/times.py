@@ -28,8 +28,8 @@ def calculate_signals_returns_r_positioning(times: 'Times') -> \
     leverage_data = pc.apply_leverage(future_assets, times.leverage_type, future_leverage)
     leverage_data[asset_inputs['s_leverage'].index[asset_inputs['s_leverage'].isnull()]] = np.nan
     index_df = future_assets.append(pd.DataFrame(index=future_assets.iloc[[-1]].index + BDay(2)), sort=True).index
-    leverage_data = leverage_data.shift(periods=times.time_lag_in_months, freq='D', axis=0).reindex(index_df,
-                                                                                                    method='pad')
+    leverage_data = leverage_data.shift(periods=times.time_lag_in_days, freq='D', axis=0).reindex(index_df,
+                                                                                                  method='pad')
 
     # calculate leveraged positions and returns
     cost = asset_inputs[['cost', 'future_ticker']].set_index('future_ticker')['cost']

@@ -24,7 +24,7 @@ def momentum(index_data: pd.DataFrame, times: 'Times'):
 
     # sig = dm.set_data_frequency(sig, times.frequency, times.day_of_week)
     sig = dm.set_data_frequency(sig, times.frequency, times.day_of_week)
-    sig = sig.shift(times.time_lag_in_months, freq="D")
+    sig = sig.shift(times.time_lag_in_days, freq="D")
     return sig
 
 

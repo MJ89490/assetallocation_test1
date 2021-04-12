@@ -67,7 +67,7 @@ class Strategy(ABC):
 class Times(Strategy):
     def __init__(self, day_of_week: Union[int, DayOfWeek], frequency: Union[str, Frequency],
                  leverage_type: Union[str, Leverage], long_signals: List[float], short_signals: List[float],
-                 time_lag_in_months: int, volatility_window: int) -> None:
+                 time_lag_in_days: int, volatility_window: int) -> None:
         """Times class to hold data from database"""
         super().__init__(Name.times)
         self.day_of_week = day_of_week
@@ -75,7 +75,7 @@ class Times(Strategy):
         self.leverage_type = leverage_type
         self._long_signals = long_signals
         self._short_signals = short_signals
-        self.time_lag_in_months = time_lag_in_months
+        self.time_lag_in_days = time_lag_in_days
         self._volatility_window = volatility_window
         self._asset_inputs = []
 
@@ -89,7 +89,7 @@ class Times(Strategy):
 
     @property
     def time_lag_interval(self) -> str:
-        return ArpTypeConverter.month_lag_int_to_interval(self.time_lag_in_months)
+        return ArpTypeConverter.day_lag_int_to_interval(self.time_lag_in_days)
 
     @property
     def day_of_week(self) -> DayOfWeek:
@@ -132,11 +132,11 @@ class Times(Strategy):
         self._short_signals = x
     
     @property
-    def time_lag_in_months(self) -> int:
+    def time_lag_in_days(self) -> int:
         return self._time_lag_in_months
 
-    @time_lag_in_months.setter
-    def time_lag_in_months(self, x: int) -> None:
+    @time_lag_in_days.setter
+    def time_lag_in_days(self, x: int) -> None:
         self._time_lag_in_months = x
 
     @property

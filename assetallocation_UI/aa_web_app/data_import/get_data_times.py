@@ -220,7 +220,7 @@ class ReceivedDataTimes:
                            'input_date_from_times': '2000-01-01',
                            'input_date_to_times': self.date_to,
                            'input_strategy_weight_times': self.strategy_weight,
-                           'input_time_lag_times': self.strategy.time_lag_in_months,
+                           'input_time_lag_times': self.strategy.time_lag_in_days,
                            'input_leverage_times': self.strategy.leverage_type.name,
                            'input_vol_window_times': self.strategy.volatility_window,
                            'input_frequency_times': self.strategy.frequency.name,

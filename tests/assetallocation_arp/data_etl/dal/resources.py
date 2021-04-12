@@ -6,7 +6,7 @@ from _pytest.fixtures import fixture
 @fixture
 def valid_times():
     TimesInput = namedtuple('TimesInput', ['day_of_week', 'frequency', 'leverage_type', 'long_signals', 'short_signals',
-                                           'time_lag_in_months', 'volatility_window', 'description', 'time_lag_interval'])
+                                           'time_lag_in_days', 'volatility_window', 'description', 'time_lag_interval'])
     return TimesInput(0, 'weekly', 'e', [], [], 1, 1, '', '-1 mons')
 
 

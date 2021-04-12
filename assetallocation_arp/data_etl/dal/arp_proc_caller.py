@@ -285,9 +285,10 @@ class TimesProcCaller(StrategyProcCaller):
             return
 
         row = res[0]
+        print(row['time_lag'])
         t = Times(row['day_of_week'], row['frequency'], row['leverage_type'], [float(i) for i in row['long_signals']],
                   [float(i) for i in row['short_signals']],
-                  -ArpTypeConverter.month_interval_to_int(row['time_lag']), row['volatility_window'])
+                  -ArpTypeConverter.interval_to_int(row['time_lag']), row['volatility_window'])
         t.version = times_version
         t.description = row['description']
         t.business_date_from = row['business_date_from']
@@ -549,7 +550,7 @@ class EffectProcCaller(StrategyProcCaller):
 
         row = res[0]
         e = Effect(row['carry_type'], row['closing_threshold'], row['cost'], row['day_of_week'], row['frequency'],
-                   row['include_shorts'], -ArpTypeConverter.month_interval_to_int(row['inflation_lag']),
+                   row['include_shorts'], -ArpTypeConverter.interval_to_int(row['inflation_lag']),
                    row['interest_rate_cut_off_long'], row['interest_rate_cut_off_short'],
                    row['moving_average_long_term'], row['moving_average_short_term'],
                    row['is_realtime_inflation_forecast'], row['trend_indicator'])
@@ -844,7 +845,4 @@ class MavenProcCaller(StrategyProcCaller):
 if __name__ == '__main__':
     from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
     apc = TimesProcCaller()
-    fs = apc.select_fund_strategy_results('test_fund', Name.times, 827, business_date_from=dt.date(2000, 1, 1),
-                                          business_date_to=dt.date(2001, 8, 7))
-    print(fs)
-    DataFrameConverter().fund_strategy_asset_weights_to_df(fs.asset_weights)
+    s = apc._select_times_strategy(859)

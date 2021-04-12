@@ -18,7 +18,7 @@ class TimesInputs:
                   leverage_type=self.form.leverage_type.data,
                   long_signals=[float(i.data) for i in (self.form.sig1_long, self.form.sig2_long, self.form.sig3_long)],
                   short_signals=[float(i.data) for i in (self.form.sig1_short, self.form.sig2_short, self.form.sig3_short)],
-                  time_lag_in_months=int(self.form.time_lag.data),
+                  time_lag_in_days=int(self.form.time_lag.data),
                   volatility_window=int(self.form.volatility_window.data))
 
         return t
