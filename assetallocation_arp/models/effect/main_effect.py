@@ -19,7 +19,7 @@ from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConve
 def run_effect(strategy: 'Effect'):
     asset_inputs = [
         (
-            i.asset_subcategory, i.asset_3m.ticker, i.spot_asset.ticker, i.carry_asset.ticker, i.usd_weight, i.base.name, i.region
+            i.currency, i.asset_3m.ticker, i.spot_asset.ticker, i.carry_asset.ticker, i.usd_weight, i.base.name, i.region
         ) for i in strategy.asset_inputs
     ]
     asset_inputs = pd.DataFrame(

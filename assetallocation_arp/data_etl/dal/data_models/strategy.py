@@ -454,34 +454,16 @@ class Effect(Strategy):
 
     def run(self) -> Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]:
         """Run effect strategy and return FundStrategyAssetAnalytics and FundStrategyAssetWeights"""
-        # TODO add code to run effect, using Effect object, here
         effect_outputs = main_effect.run_effect(self)
 
-        """
-        {'profit_and_loss': profit_and_loss, - dashboard
-          'signals_overview': signals_overview, - dashboard
-          'trades_overview': trades_overview, - dashboard
-          'rates': rates, - dashboard
-          'risk_returns': risk_returns, - dashboard
-          'combo': currencies_calculations['combo_curr'] - dashboard,
-          'log_ret': agg_currencies['log_returns_excl_costs'] - dashboard,
-          'region': process_usd_eur_data_effect['region_config'] - dashboard,
-          'agg_dates': agg_curr['agg_dates'],
-          'total_excl_signals': agg_curr['agg_total_excl_signals'],
-          'total_incl_signals': agg_curr['agg_total_incl_signals'],
-          'spot_incl_signals': agg_curr['agg_spot_incl_signals'],
-          'spot_excl_signals': agg_curr['agg_spot_excl_signals']}
-                  
-                  write_logs = {'currency_logs': currency_logs}
-        """
-        # TODO change depending on Simone's input
-        ticker_map = {i.asset_subcategory: i.carry_ticker for i in self.asset_inputs}
+        # convert column names to spot tickers, then use ticker map to convert these to carry tickers
+        effect_outputs['trend_curr'].columns = map(lambda x: x.replace('Trend_', ''), effect_outputs['trend_curr'].columns)
+        effect_outputs['carry_curr'].columns = map(lambda x: x.replace('Carry_', ''), effect_outputs['carry_curr'].columns)
+        effect_outputs['combo'].columns = map(lambda x: x.replace('Combo_', ''), effect_outputs['combo'].columns)
+        ticker_map = {i.spot_ticker: i.carry_ticker for i in self.asset_inputs}
+
         asset_analytics = EffectDataFrameConverter.create_asset_analytics(effect_outputs['trend_curr'], effect_outputs['carry_curr'], ticker_map, self.frequency)
         asset_weights = EffectDataFrameConverter.df_to_asset_weights(effect_outputs['combo'], self.frequency, ticker_map)
-
-        for a in asset_weights:
-            print(a.ticker)
-
 
         total_excl_signals = pd.Series(effect_outputs['total_excl_signals'], index=effect_outputs['agg_dates'])
         total_incl_signals = pd.Series(effect_outputs['total_incl_signals'], index=effect_outputs['agg_dates'])
