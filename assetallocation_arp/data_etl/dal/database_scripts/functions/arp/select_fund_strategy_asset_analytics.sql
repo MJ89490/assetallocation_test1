@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy_asset_analytics(
 RETURNS TABLE(
   asset_ticker varchar,
   asset_subcategory text,
+  asset_currency char(3),
   business_date date,
   category varchar,
   subcategory varchar,
@@ -48,6 +49,7 @@ BEGIN
       SELECT DISTINCT
         a.ticker as asset_ticker,
         ag.subcategory as asset_subcategory,
+        lc.currency as asset_currency,
         saa.business_date,
         saa.category,
         saa.subcategory,
@@ -57,6 +59,7 @@ BEGIN
         arp.strategy_asset_analytic saa
         JOIN model_instance_cte mic on mic.model_instance_id = saa.model_instance_id
         JOIN asset.asset a on a.id = saa.asset_id
+        JOIN lookup.currency lc on a.currency_id = lc.id
         JOIN asset.asset_group ag on ag.id = a.asset_group_id
   ;
 END

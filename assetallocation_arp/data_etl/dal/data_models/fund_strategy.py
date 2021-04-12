@@ -6,6 +6,7 @@ from pathlib import Path
 from numpy import nan
 
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name, Frequency
+from assetallocation_arp.common_libraries.dal_enums.currency import Currency
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Performance, Signal, AggregationLevel
 from assetallocation_arp.common_libraries.dal_enums.asset import Subcategory as AssetSubcategory
 
@@ -107,6 +108,15 @@ class FundStrategyAssetWeight:
         self.strategy_weight = theoretical_weight
         self.implemented_weight = nan
         self.ticker = ticker
+        self._currency = None
+
+    @property
+    def currency(self) -> Optional[Currency]:
+        return self._currency
+
+    @currency.setter
+    def currency(self, x: Union[str, Currency]) -> None:
+        self._currency = x if isinstance(x, Currency) else Currency[x]
 
     @property
     def business_date(self) -> date:
@@ -243,6 +253,15 @@ class FundStrategyAssetAnalytic(FundStrategyAnalytic):
         super().__init__(business_date, category, subcategory, value, frequency)
         self.asset_subcategory = asset_subcategory
         self.asset_ticker = asset_ticker
+        self._currency = None
+
+    @property
+    def currency(self) -> Optional[Currency]:
+        return self._currency
+
+    @currency.setter
+    def currency(self, x: Union[str, Currency]) -> None:
+        self._currency = x if isinstance(x, Currency) else Currency[x]
 
     @property
     def asset_ticker(self) -> Optional[str]:

@@ -83,7 +83,6 @@ class ArpProcCaller(Db):
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
         strategy_id = self.call_proc('arp.select_strategy_id', [strategy_name, strategy_version])[0]['strategy_id']
 
-
         print(fund_name)
         print(strategy_id)
         print(business_date_from)
@@ -105,6 +104,7 @@ class ArpProcCaller(Db):
                     row['asset_weight_frequency']
                 )
                 aw.implemented_weight = float(row['implemented_asset_weight'])
+                aw.currency = row['asset_currency']
                 fund_strategy.add_asset_weight(aw)
 
         fs_analytics = self.call_proc(
@@ -131,10 +131,13 @@ class ArpProcCaller(Db):
         )
         asset_analytics = []
         for row in fs_asset_analytics:
-            asset_analytics.append(FundStrategyAssetAnalytic(
+            asset_analytic = FundStrategyAssetAnalytic(
                 row['asset_ticker'], row['asset_subcategory'], row['business_date'], row['category'],
                 row['subcategory'], row['value'], row['frequency']
-            ))
+            )
+            asset_analytic.currency = row['asset_currency']
+            print(asset_analytic.currency)
+            asset_analytics.append(asset_analytic)
 
         fund_strategy.add_analytics(asset_analytics)
 
@@ -866,7 +869,8 @@ class MavenProcCaller(StrategyProcCaller):
 
 
 if __name__ == '__main__':
-    apc = TimesProcCaller()
-    fs = apc.select_fund_strategy_results('test_fund', Name.times, 96, business_date_from=dt.date(2000, 1, 1),
+    apc = EffectProcCaller()
+    fs = apc.select_fund_strategy_results('test_fund', Name.effect, 82, business_date_from=dt.date(2000, 1, 1),
                                           business_date_to=dt.date(2020, 8, 12))
     print(fs)
+# TODO check why all currencies are coming up as USD?!
