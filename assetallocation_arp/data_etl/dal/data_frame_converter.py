@@ -51,7 +51,8 @@ class DataFrameConverter:
     def fund_strategy_analytics_to_df(strategy_analytics: List[FundStrategyAnalytic]) -> pd.DataFrame:
         data = [[i.business_date, i.subcategory, i.value] for i in strategy_analytics]
         df = pd.DataFrame(data, columns=['business_date', 'analytic_subcategory', 'value'])
-        df = df.set_index(['business_date', 'analytic_subcategory'])
+        df = df.set_index(['business_date', 'analytic_subcategory']).unstack(['analytic_subcategory'])
+        df.columns = df.columns.droplevel(0)
         return df
 
     @staticmethod
@@ -309,3 +310,21 @@ class EffectDataFrameConverter(DataFrameConverter):
         )
 
         return analytics
+
+    @staticmethod
+    def fund_strategy_asset_analytics_to_df(asset_analytics: List[FundStrategyAssetAnalytic]) -> pd.DataFrame:
+        data = [[i.asset_ticker, i.business_date, i.subcategory, i.value] for i in asset_analytics]
+        df = pd.DataFrame(data, columns=['asset_ticker', 'business_date', 'analytic_subcategory', 'value'])
+        df = df.set_index(['business_date', 'analytic_subcategory', 'asset_ticker']).unstack(['asset_ticker'])
+        df.columns = df.columns.droplevel(0)
+        df.columns = map(lambda x: x[:3], df.columns)  # first 3 chars of ticker are the currency
+        return df
+
+    @staticmethod
+    def fund_strategy_asset_weights_to_df(asset_weights: List[FundStrategyAssetWeight]) -> pd.DataFrame:
+        data = [[i.ticker, i.business_date, i.strategy_weight] for i in asset_weights]
+        df = pd.DataFrame(data, columns=['asset_ticker', 'business_date', 'value'])
+        df = df.set_index(['business_date', 'asset_ticker']).unstack(['asset_ticker'])
+        df.columns = df.columns.droplevel(0)
+        df.columns = map(lambda x: x[:3], df.columns)  # first 3 chars of ticker are the currency
+        return df

@@ -7,7 +7,7 @@ from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Aggrega
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 from assetallocation_arp.data_etl.dal.arp_proc_caller import EffectProcCaller
-from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
+from assetallocation_arp.data_etl.dal.data_frame_converter import EffectDataFrameConverter
 from assetallocation_UI.aa_web_app.data_import.receive_data_effect import ReceiveDataEffect
 
 
@@ -85,12 +85,13 @@ class ComputeDataDashboardEffect:
         :param date_to_sidebar: date to sidebar
         :return: None
         """
-        apc = EffectProcCaller()
-        fs = apc.select_fund_strategy_results(fund_name, Name.effect, version_strategy,
+        fund_name = 'test_fund'
+        epc = EffectProcCaller()
+        fs = epc.select_fund_strategy_results(fund_name, Name.effect, version_strategy,
                                               business_date_from=datetime.datetime.strptime('01/01/2000', '%d/%m/%Y').date(),
                                               business_date_to=date_to
                                               )
-        weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+        weight_df = EffectDataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
 
         strategy_analytics, asset_analytics = [], []
 
@@ -100,15 +101,18 @@ class ComputeDataDashboardEffect:
             else:
                 asset_analytics.append(analytic)
 
-        strategy_analytic_df = DataFrameConverter.fund_strategy_analytics_to_df(strategy_analytics)
-        asset_analytics_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(asset_analytics)
+        strategy_analytic_df = EffectDataFrameConverter.fund_strategy_analytics_to_df(strategy_analytics)
+        asset_analytics_df = EffectDataFrameConverter.fund_strategy_asset_analytics_to_df(asset_analytics)
 
         trend = asset_analytics_df.xs(Signal.trend, level='analytic_subcategory')
         carry = asset_analytics_df.xs(Signal.carry, level='analytic_subcategory')
+        total_incl_signals = strategy_analytic_df[Performance['total return index incl signals']]
+        total_excl_signals = strategy_analytic_df[Performance['total return index excl signals']]
 
-        total_incl_signals = strategy_analytic_df.xs(Performance['total return index incl signals'], level='analytic_subcategory')
-
-        total_excl_signals = strategy_analytic_df.xs(Performance['total return index excl signals'], level='analytic_subcategory')
+        print('trend', '\n', trend.head())
+        print('carry', '\n', carry.head())
+        print('total_incl_signals', '\n', total_incl_signals.head())
+        print('total_excl_signals', '\n', total_excl_signals.head())
 
         # total_excl_signals = strategy_analytic_df.xs(Performance['total return index excl signals'],
         #                                              # level='analytic_subcategory')

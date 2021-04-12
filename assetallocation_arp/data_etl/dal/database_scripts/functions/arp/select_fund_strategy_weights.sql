@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy_weights(
 RETURNS TABLE(
   python_code_version varchar,
   strategy_weight numeric,
+  asset_ticker varchar,
   asset_subcategory text,
   asset_currency char(3),
   business_date date,
@@ -31,12 +32,13 @@ BEGIN
         AND upper(fsw.system_tstzrange) = 'infinity'
     ),
     fund_strategy_asset_weight_cte (
-          fund_id, model_instance_id, asset_subcategory, currency, business_date, frequency, theoretical_weight,
+          fund_id, model_instance_id, asset_ticker, asset_subcategory, currency, business_date, frequency, theoretical_weight,
           implemented_weight
       ) as (
       SELECT DISTINCT
         fswc.fund_id,
         saw.model_instance_id,
+        a.ticker as asset_ticker,
         ag.subcategory as asset_subcategory,
         lc.currency,
         saw.business_date,
@@ -68,6 +70,7 @@ BEGIN
     SELECT DISTINCT
       model_instance_cte.python_code_version,
       fund_strategy_weight_cte.weight as strategy_weight,
+      fund_strategy_asset_weight_cte.asset_ticker,
       fund_strategy_asset_weight_cte.asset_subcategory,
       fund_strategy_asset_weight_cte.currency as asset_currency,
       fund_strategy_asset_weight_cte.business_date,
