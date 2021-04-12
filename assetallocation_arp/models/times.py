@@ -28,7 +28,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     leverage_type = times_inputs['leverage_type'].item()
 
     # calculate signals
-    signals = arp.momentum(times_data, times_inputs, times_inputs['week_day'].item())
+    signals, sig_chart = arp.momentum(times_data, times_inputs, times_inputs['week_day'].item())
     # apply leverage
     leverage_data = pc.apply_leverage(futures_data, leverage_type, leverage)
     leverage_data[leverage.index[leverage.isnull()]] = np.nan
@@ -43,7 +43,7 @@ def format_data_and_calc(times_inputs, asset_inputs, all_data):
     else:
         (returns, r, positioning) = pc.return_ts(signals, futures_data, leverage_data, costs, 1)
         (returns, r, positioning) = pc.rescale(returns, r, positioning, "Total", 0.01)
-    return signals, returns, r,  positioning
+    return signals, returns, r,  positioning, sig_chart
 
 
 
