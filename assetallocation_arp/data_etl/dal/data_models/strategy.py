@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Tuple
 from decimal import Decimal
 
 from psycopg2.extras import DateTimeTZRange
@@ -323,3 +323,20 @@ class Effect(Strategy):
     @trend_indicator.setter
     def trend_indicator(self, x: Union[str, TrendIndicator]) -> None:
         self._trend_indicator = x if isinstance(x, TrendIndicator) else TrendIndicator[x]
+
+
+# noinspection PyAttributeOutsideInit
+class Comca(Strategy):
+    name = Name.comca.name
+
+    def __init__(self, year, energy, agriculture, indust_metals, prec_metals, nat_gas):
+        """
+        Comca class to hold data from database
+        """
+        super().__init__(self.name)
+        self.asset_inputs = []
+
+    def run(self):
+
+        # to return Tuple[List[FundStrategyAnalytic], List[FundStrategyAssetWeight]]
+

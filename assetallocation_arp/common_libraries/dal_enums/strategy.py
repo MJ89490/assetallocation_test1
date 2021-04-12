@@ -43,3 +43,4 @@ class Name(Enum):
     factor = 5
     comca = 6
     fxmodels = 7
+    long_short = auto()

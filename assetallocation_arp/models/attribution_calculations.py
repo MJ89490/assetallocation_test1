@@ -43,8 +43,8 @@ def factor_att(workbook, input_data, year, strategy_dict):
     :param workbook: Excel workbook used to output to, xlwings function
     :param input_data: Raw data to attribute, pandas data frame
     :param year: User inputs year to attribute, integer
-    :param strategy_dict: Dictionary of lists. Key is type of strategy, position one of value is strategy and position two
-                        is the weight. Note cost does not have a strategy name and is set to None.
+    :param strategy_dict: Dictionary of lists. Key is type of strategy, position one of value is strategy and position
+                          two is the weight. Note cost does not have a strategy name and is set to None.
     :return: Attribution as pandas data frame
     """
     # Filter data for one calender year

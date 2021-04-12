@@ -199,3 +199,15 @@ class EffectAsset(Asset):
     @position_size.setter
     def position_size(self, x: Decimal) -> None:
         self._position_size = x
+
+
+
+# noinspection PyAttributeOutsideInit
+class ComcaAssetInput:
+
+    def __init__(self, BCOM, BCOMF1, BCOMF2, BCOMF6, BCOMRS, contract):
+        """
+        Comca class to hold data from database
+        """
+        self.bcom = BCOM
+        # TODO add all
