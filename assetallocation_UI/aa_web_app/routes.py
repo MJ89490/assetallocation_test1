@@ -208,14 +208,17 @@ def effect_dashboard():
 
     # data_effect = obj_received_data_effect.run_process_data_effect()
 
-    obj = ComputeDataDashboardEffect()
+    obj = ComputeDataDashboardEffect(version_strategy=obj_receive_data_effect.version_strategy)
 
-    obj.call_effect_proc_caller("test_fund", obj_receive_data_effect.version_strategy, datetime.date(2020, 8, 12))
-    #
-    # return render_template('effect_dashboard.html',
-    #                        form=form,
-    #                        data_effect=data_effect,
-    #                        title='Dashboard')
+    obj.call_effect_proc_caller("test_fund", datetime.date(2020, 8, 12))
+
+    data_effect = obj.run_process_data_effect()
+
+    return render_template('effect_dashboard_new.html',
+                           title='Dashboard',
+                           form=form,
+                           data_effect=data_effect
+                           )
 
 
 @app.route('/effect_strategy', methods=['GET', 'POST'])

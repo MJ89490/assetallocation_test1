@@ -12,14 +12,35 @@ from assetallocation_UI.aa_web_app.data_import.receive_data_effect import Receiv
 
 
 class ComputeDataDashboardEffect:
+    EPC = EffectProcCaller()
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, version_strategy):
+        # super().__init__()
         self.quarterly_date_chart = ''
         self.start_quarterly_back_p_and_l_date = ''
         self.end_quarterly_back_p_and_l_date = ''
         self.start_quarterly_live_p_and_l_date = ''
         self.start_year_to_year_contrib_date = ''
+
+        self.combo = None
+        self.total_incl_signals = None
+        self.total_excl_signals = None
+        self.spot_incl_signals = None
+        self.spot_excl_signals = None
+        self.version_strategy = version_strategy
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @property
     def quarterly_date_chart(self):
@@ -77,7 +98,7 @@ class ComputeDataDashboardEffect:
         else:
             self._start_year_to_year_contrib_date = value
 
-    def call_effect_proc_caller(self, fund_name: str, version_strategy: int, date_to, date_to_sidebar=None) -> None:
+    def call_effect_proc_caller(self, fund_name: str, date_to, date_to_sidebar=None) -> None:
         """
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)
@@ -86,12 +107,13 @@ class ComputeDataDashboardEffect:
         :return: None
         """
         fund_name = 'test_fund'
-        epc = EffectProcCaller()
-        fs = epc.select_fund_strategy_results(fund_name, Name.effect, version_strategy,
-                                              business_date_from=datetime.datetime.strptime('01/01/2000', '%d/%m/%Y').date(),
-                                              business_date_to=date_to
-                                              )
-        weight_df = EffectDataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+
+        fs = self.EPC.select_fund_strategy_results(fund_name, Name.effect, self.version_strategy,
+                                                   business_date_from=datetime.datetime.strptime('01/01/2000',
+                                                                                                 '%d/%m/%Y').date(),
+                                                   business_date_to=date_to
+                                                   )
+        self.combo = EffectDataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
 
         strategy_analytics, asset_analytics = [], []
 
@@ -106,23 +128,19 @@ class ComputeDataDashboardEffect:
 
         trend = asset_analytics_df.xs(Signal.trend, level='analytic_subcategory')
         carry = asset_analytics_df.xs(Signal.carry, level='analytic_subcategory')
-        total_incl_signals = strategy_analytic_df[Performance['total return index incl signals']]
-        total_excl_signals = strategy_analytic_df[Performance['total return index excl signals']]
+        self.total_incl_signals = strategy_analytic_df[Performance['total return index incl signals']].astype(float)
+        self.total_excl_signals = strategy_analytic_df[Performance['total return index excl signals']].astype(float)
 
-        print('trend', '\n', trend.head())
-        print('carry', '\n', carry.head())
-        print('total_incl_signals', '\n', total_incl_signals.head())
-        print('total_excl_signals', '\n', total_excl_signals.head())
+        self.spot_incl_signals = strategy_analytic_df[Performance['spot index incl signals']].astype(float)
+        self.spot_excl_signals = strategy_analytic_df[Performance['spot index excl signals']].astype(float)
 
-        # total_excl_signals = strategy_analytic_df.xs(Performance['total return index excl signals'],
-        #                                              # level='analytic_subcategory')
+    def _get_position_size(self):
+        strategy = self.EPC.select_strategy(self.version_strategy)
 
-    def get_regions(self, version_strategy: int):
+        return strategy.position_size
 
-        apc = EffectProcCaller()
-        strategy = apc.select_strategy(version_strategy)
-
-        # strategy.position_size
+    def _get_regions(self):
+        strategy = self.EPC.select_strategy(self.version_strategy)
 
         asset_inputs = [
             (
@@ -130,6 +148,7 @@ class ComputeDataDashboardEffect:
                 i.base.name, i.region
             ) for i in strategy.asset_inputs
         ]
+
         asset_inputs = pd.DataFrame(
             asset_inputs,
             columns=[
@@ -145,34 +164,24 @@ class ComputeDataDashboardEffect:
 
         for reg in unique_region:
             region_tmp = asset_inputs.loc[asset_inputs['input_region'] == reg]
-            curr = ['Combo_' + val for val in region_tmp['input_spot_ticker'].to_list()]
+            curr = [val[:3] for val in region_tmp['input_spot_ticker'].to_list()]
             region[reg.lower()] = curr
 
         return region
 
-
-
-
-
-
-
-
-
-
-
-    def draw_regions_charts(self):
-        region = self.effect_outputs['region']
+    def _draw_regions_charts(self):
+        region = self._get_regions()
 
         region_keys = region.keys()
         region_lst, region_names = [], []
 
         for key in region_keys:
-            region_lst.append(self.effect_outputs['combo'][region[key]].sum(axis=1).to_list())
+            region_lst.append(self.combo[region[key]].sum(axis=1).to_list())
             region_names.append(key)
 
-        total_region = self.effect_outputs['combo'].sum(axis=1).to_list()
+        total_region = self.combo.sum(axis=1).to_list()
         average_region = [sum(total_region) / len(total_region)] * len(total_region)
-        region_dates = [self.effect_outputs['combo'].index.strftime("%Y-%m-%d").to_list()]
+        region_dates = [self.combo.index.strftime("%Y-%m-%d").to_list()]
 
         region_names.append('Total')
         region_lst.append(total_region)
@@ -181,21 +190,21 @@ class ComputeDataDashboardEffect:
 
         return {'regions': region_lst, 'region_dates': region_dates, 'region_names': region_names}
 
-    def draw_drawdown_chart(self):
-        max_drawdown_no_signals_series = \
-            self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series']
-        max_drawdown_with_signals_series = \
-            self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series']
-        max_drawdown_jgenvuug = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_jgenvuug']
-        drawdown_dates = self.effect_outputs['risk_returns']['max_drawdown']['drawdown_dates']
+    # def draw_drawdown_chart(self):
+    #     max_drawdown_no_signals_series = \
+    #         self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series']
+    #     max_drawdown_with_signals_series = \
+    #         self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series']
+    #     max_drawdown_jgenvuug = self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_jgenvuug']
+    #     drawdown_dates = self.effect_outputs['risk_returns']['max_drawdown']['drawdown_dates']
+    #
+    #     return {'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
+    #             'max_drawdown_with_signals_series': max_drawdown_with_signals_series,
+    #             'max_drawdown_jgenvuug': max_drawdown_jgenvuug,
+    #             'drawdown_dates': drawdown_dates}
 
-        return {'max_drawdown_no_signals_series': max_drawdown_no_signals_series,
-                'max_drawdown_with_signals_series': max_drawdown_with_signals_series,
-                'max_drawdown_jgenvuug': max_drawdown_jgenvuug,
-                'drawdown_dates': drawdown_dates}
-
-    def draw_year_to_date_contrib_chart(self):
-        combo_data_tmp = self.effect_outputs['combo'].head(-1).tail(-1)
+    def _draw_year_to_date_contrib_chart(self):
+        combo_data_tmp = self.combo.head(-1).tail(-1)
 
         self.quarterly_date_chart = self.start_year_to_year_contrib_date
         start_year_to_year_contrib_date = self.quarterly_date_chart
@@ -220,7 +229,7 @@ class ComputeDataDashboardEffect:
                 'year_to_date_contrib_sum_prod_total': year_to_date_contrib_sum_prod_total,
                 'names_curr': self.write_logs['currency_logs']}
 
-    def draw_quarterly_profit_and_loss_chart(self):
+    def _draw_quarterly_profit_and_loss_chart(self):
         # Quarterly P&L
         rng = pd.date_range(start=self.effect_outputs['combo'].index[0], end=self.effect_outputs['combo'].index[-1],
                             freq='Q')
@@ -307,7 +316,7 @@ class ComputeDataDashboardEffect:
                 'quarters_live': quarters_live}
 
     @staticmethod
-    def create_backtest(quarterly_currency, quarterly_date, end_quarterly_back_date):
+    def _create_backtest(quarterly_currency, quarterly_date, end_quarterly_back_date):
         start_quarterly_backtest = pd.to_datetime(quarterly_date, format='%d-%m-%Y')
         end_quarterly_backtest = pd.to_datetime(end_quarterly_back_date, format='%d-%m-%Y')
         quarterly_backtest = quarterly_currency.loc[start_quarterly_backtest:end_quarterly_backtest, 'Total live']
@@ -318,7 +327,7 @@ class ComputeDataDashboardEffect:
                 'quarterly_backtest_dates': quarterly_backtest_dates}
 
     @staticmethod
-    def create_livetest(quarterly_currency, start_quarterly_live_date):
+    def _create_livetest(quarterly_currency, start_quarterly_live_date):
         start_quarterly_live = pd.to_datetime(start_quarterly_live_date, format='%d-%m-%Y')
         quarterly_live = quarterly_currency.loc[start_quarterly_live:, 'Total live']
         quarterly_live_dates = quarterly_live.index.strftime("%Y-%m").to_list()
@@ -327,76 +336,65 @@ class ComputeDataDashboardEffect:
                 'quarterly_live_dates': quarterly_live_dates}
 
     @staticmethod
-    def create_quarterly_dates(quarterly_currency):
+    def _create_quarterly_dates(quarterly_currency):
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 3, 'Quarters'] = 'Q1'
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 6, 'Quarters'] = 'Q2'
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 9, 'Quarters'] = 'Q3'
         quarterly_currency.loc[pd.DatetimeIndex(quarterly_currency.index.values).month == 12, 'Quarters'] = 'Q4'
 
-    # TODO to move later to download_data_chart_effect.py when db set up
-    def download_year_to_year_contrib_chart(self):
-        combo = self.effect_outputs['combo'].head(-1).tail(-1)
-        log_ret = self.effect_outputs['log_ret'].head(-1)
-        df = pd.concat([combo, log_ret], ignore_index=False, sort=False, axis=1)
-        # TODO to change to Domino format
-        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\year_to_year_contrib_chart.csv', index=True, header=True)
-
-    def download_regions_charts(self):
-        region = self.effect_outputs['region']
-        latam = self.effect_outputs['combo'][region['latam']]
-        ceema = self.effect_outputs['combo'][region['ceema']]
-        asia = self.effect_outputs['combo'][region['asia']]
-        df = pd.concat([latam, ceema, asia], ignore_index=False, sort=False, axis=1)
-        # TODO to change to Domino format
-        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\region_chart.csv', index=True, header=True)
-
-    def download_drawdown_chart(self):
-        df = pd.DataFrame({'Exclude_shorts': self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series'],
-                           'Include_shorts': self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series'],
-                           'jgenvuug_index':  self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_jgenvuug']})
-        df['Dates'] = self.effect_outputs['risk_returns']['max_drawdown']['drawdown_dates']
-        df = df.set_index(df.Dates)
-        del df['Dates']
-        # TODO to change to Domino format
-        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\drawdown_chart.csv', index=True, header=True)
-
-    def download_quarterly_profit_and_loss_chart(self):
-        pass
-
-    def download_aggregate_chart(self):
-        df = pd.DataFrame({'Total_Excl_Signals': self.effect_outputs['total_excl_signals'],
-                           'Total_Incl_Signals': self.effect_outputs['total_incl_signals'],
-                           'Spot_Incl_Signals': self.effect_outputs['spot_incl_signals'],
-                           'Spot_Excl_Signals': self.effect_outputs['spot_excl_signals']})
-        df['Dates'] = self.effect_outputs['agg_dates']
-        df = df.set_index(df.Dates)
-        del df['Dates']
-        # TODO to change to Domino format
-        df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\aggregate_chart.csv', index=True, header=True)
+    # # TODO to move later to download_data_chart_effect.py when db set up
+    # def download_year_to_year_contrib_chart(self):
+    #     combo = self.effect_outputs['combo'].head(-1).tail(-1)
+    #     log_ret = self.effect_outputs['log_ret'].head(-1)
+    #     df = pd.concat([combo, log_ret], ignore_index=False, sort=False, axis=1)
+    #     # TODO to change to Domino format
+    #     df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\year_to_year_contrib_chart.csv', index=True, header=True)
+    #
+    # def download_regions_charts(self):
+    #     region = self.effect_outputs['region']
+    #     latam = self.effect_outputs['combo'][region['latam']]
+    #     ceema = self.effect_outputs['combo'][region['ceema']]
+    #     asia = self.effect_outputs['combo'][region['asia']]
+    #     df = pd.concat([latam, ceema, asia], ignore_index=False, sort=False, axis=1)
+    #     # TODO to change to Domino format
+    #     df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\region_chart.csv', index=True, header=True)
+    #
+    # def download_drawdown_chart(self):
+    #     df = pd.DataFrame({'Exclude_shorts': self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_no_signals_series'],
+    #                        'Include_shorts': self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_with_signals_series'],
+    #                        'jgenvuug_index':  self.effect_outputs['risk_returns']['max_drawdown']['all_max_drawdown_jgenvuug']})
+    #     df['Dates'] = self.effect_outputs['risk_returns']['max_drawdown']['drawdown_dates']
+    #     df = df.set_index(df.Dates)
+    #     del df['Dates']
+    #     # TODO to change to Domino format
+    #     df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\drawdown_chart.csv', index=True, header=True)
+    #
+    # def download_quarterly_profit_and_loss_chart(self):
+    #     pass
+    #
+    # def download_aggregate_chart(self):
+    #     df = pd.DataFrame({'Total_Excl_Signals': self.effect_outputs['total_excl_signals'],
+    #                        'Total_Incl_Signals': self.effect_outputs['total_incl_signals'],
+    #                        'Spot_Incl_Signals': self.effect_outputs['spot_incl_signals'],
+    #                        'Spot_Excl_Signals': self.effect_outputs['spot_excl_signals']})
+    #     df['Dates'] = self.effect_outputs['agg_dates']
+    #     df = df.set_index(df.Dates)
+    #     del df['Dates']
+    #     # TODO to change to Domino format
+    #     df.to_csv(r'C:\Users\AJ89720\download_data_charts_effect\aggregate_chart.csv', index=True, header=True)
 
     def run_process_data_effect(self):
-        return {'region_chart': self.draw_regions_charts(),
-                'drawdown_chart': self.draw_drawdown_chart(),
-                'year_to_date_contrib_chart': self.draw_year_to_date_contrib_chart(),
-                'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(),
-                'effect_data_form': self.effect_form,
-                'effect_outputs': self.effect_outputs,
-                'write_logs': self.write_logs}
-
-
-if __name__ == "__main__":
-    apc = EffectProcCaller()
-    v = apc.engine.connect().execute("SELECT * FROM arp.strategy_analytic")
-
-    for a in v.fetchall():
-        print(a.value)
+        return {'region_chart': self._draw_regions_charts(),
+                'total_excl_signals': self.total_excl_signals.tolist(),
+                'total_incl_signals': self.total_incl_signals.tolist(),
+                'spot_incl_signals': self.spot_incl_signals.tolist(),
+                'spot_excl_signals': self.spot_excl_signals.tolist(),
+                'agg_dates': self.total_incl_signals.index.strftime("%Y-%m-%d").to_list()
+                }
 
 
 
-    fs = apc.select_fund_strategy_results("test_fund", Name.effect, 55,
-                                          business_date_from=datetime.datetime.strptime('01/01/2000',
-                                                                                        '%d/%m/%Y').date(),
-                                          business_date_to=datetime.date(2020, 8, 12)
-                                          )
+                # 'drawdown_chart': self.draw_drawdown_chart(),
+                # 'year_to_date_contrib_chart': self.draw_year_to_date_contrib_chart(),
+                # 'quarterly_profit_and_loss_chart': self.draw_quarterly_profit_and_loss_chart(),
 
-    print(fs)
