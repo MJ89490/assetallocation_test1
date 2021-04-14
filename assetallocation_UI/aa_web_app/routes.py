@@ -11,7 +11,7 @@ from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
 from assetallocation_UI.aa_web_app.data_import.get_data_times import ReceivedDataTimes
 from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
-from assetallocation_UI.aa_web_app.data_import.compute_charts_data import TimesChartsDataComputations
+from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 from assetallocation_UI.aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
 from assetallocation_UI.aa_web_app.data_import.main_import_data import run_times_charts_data_computations
 
@@ -19,7 +19,7 @@ obj_received_data_times = ReceivedDataTimes()
 obj_received_data_effect = ProcessDataEffect()
 obj_download_data_effect = DownloadDataChartEffect()
 
-obj_times_charts_data = TimesChartsDataComputations()
+obj_times_charts_data = ComputeDataDashboardTimes()
 
 
 @app.route('/')

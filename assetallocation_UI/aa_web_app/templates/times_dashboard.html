@@ -421,55 +421,60 @@
 
                 <!--Positions assets charts-->
                 <div class="row row-positions-assets-charts">
-                    <!--Equities-->
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <h4 class="card-header"><b>Equities</b></h4>
-                            <div class="card-body">
-                                <div id="positions_equities" class="responsive-plot"></div>
-                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_equities.js') }}"></script>
-                                <script type="text/javascript">
-                                    positionsEquities({{positions_assets_sum['equities_pos_sum']|tojson}},
-                                                      {{equities_fifth_percentile|tojson}},
-                                                      {{equities_ninety_five_percentile|tojson}},
-                                                      {{positions_assets_sum['dates_positions_assets']|tojson}})
-                                 </script>
+
+                     {% for id in titles_ids %}
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <h4 class="card-header"><b>{{id}}</b></h4>
+                                <div class="card-body">
+                                    <div id="{{id}}" class="responsive-plot"></div>
+
+                                    <script type="text/javascript">
+                                        POSITIONS_ASSETS = document.getElementById('{{id}}');
+
+                                        var trace1 = {y: {{positions_assets_sum['Equity']|tojson}},
+                                                      x: {{positions_assets_sum['dates_positions_assets']|tojson}},
+                                                      type: 'scatter',
+                                                      name: 'Equities'
+                                                      };
+
+                                         var trace2 = {y: {{equities_fifth_percentile|tojson}},
+                                                       x: {{positions_assets_sum['dates_positions_assets']|tojson}},
+                                                       type: 'scatter',
+                                                       name: '5th percentile',
+                                                       line: {dash: 'dot', width: 4, color: '#87CEFA'}
+                                                       };
+
+                                         var trace3 = {y: {{equities_ninety_five_percentile|tojson}},
+                                                       x: {{positions_assets_sum['dates_positions_assets']|tojson}},
+                                                       type: 'scatter',
+                                                       name: '95th percentile',
+                                                       line: {dash: 'dot', width: 4, color: '#87CEFA'}
+                                                       };
+
+                                        var data = [trace1, trace2, trace3];
+
+                                        var layout = {showlegend: false,
+                                                      legend: { xanchor: 'center', x: 0.5, y: -0.2, orientation: 'h' },
+                                                      yaxis: {tickformat: ',.3%'},
+                                                      margin: {t:5}
+                                                      };
+
+                                        var config = {'displayModeBar': false, 'responsive': true };
+
+                                        Plotly.plot(POSITIONS_ASSETS, data, layout, config);
+
+                                    </script>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--Bonds-->
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <h4 class="card-header"><b>Bonds</b></h4>
-                            <div class="card-body">
-                                <div id="positions_bonds" class="responsive-plot"></div>
-                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_bonds.js') }}"></script>
-                                <script type="text/javascript">
-                                    positionsBonds({{positions_assets_sum['bonds_pos_sum']|tojson}},
-                                                   {{bonds_fifth_percentile|tojson}},
-                                                   {{bonds_ninety_five_percentile|tojson}},
-                                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Forex-->
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <h4 class="card-header"><b>Forex</b></h4>
-                            <div class="card-body">
-                                <div id="positions_forex" class="responsive-plot"></div>
-                                <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_positions_forex.js') }}"></script>
-                                <script type="text/javascript">
-                                    positionsForex({{positions_assets_sum['forex_pos_sum']|tojson}},
-                                                   {{forex_fifth_percentile|tojson}},
-                                                   {{forex_ninety_five_percentile|tojson}},
-                                                   {{positions_assets_sum['dates_positions_assets']|tojson}})
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                     {% endfor %}
+
+                 </div>
+
             </div>
         </div>
     </body>

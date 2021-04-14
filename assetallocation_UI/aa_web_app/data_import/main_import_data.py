@@ -50,14 +50,14 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
     positions_assets_sum = obj_charts_data.compute_sum_positions_assets_charts(strategy_weight, start_date_sum)
 
     # Percentile 95th
-    equities_ninety_five_perc = obj_charts_data.compute_ninety_fifth_percentile(positions_assets_sum['equities_pos_sum'])
-    bonds_ninety_five_perc = obj_charts_data.compute_ninety_fifth_percentile(positions_assets_sum['bonds_pos_sum'])
-    forex_ninety_five_perc = obj_charts_data.compute_ninety_fifth_percentile(positions_assets_sum['forex_pos_sum'])
+    equities_ninety_five_perc = obj_charts_data.compute_ninety_fifth_percentile(positions_assets_sum['Equity'])
+    bonds_ninety_five_perc = obj_charts_data.compute_ninety_fifth_percentile(positions_assets_sum['Fixed Income'])
+    forex_ninety_five_perc = obj_charts_data.compute_ninety_fifth_percentile(positions_assets_sum['FX'])
 
     # Percentile 5th
-    equities_fifth_perc = obj_charts_data.compute_fifth_percentile(positions_assets_sum['equities_pos_sum'])
-    bonds_fifth_perc = obj_charts_data.compute_fifth_percentile(positions_assets_sum['bonds_pos_sum'])
-    forex_fifth_perc = obj_charts_data.compute_fifth_percentile(positions_assets_sum['forex_pos_sum'])
+    equities_fifth_perc = obj_charts_data.compute_fifth_percentile(positions_assets_sum['Equity'])
+    bonds_fifth_perc = obj_charts_data.compute_fifth_percentile(positions_assets_sum['Fixed Income'])
+    forex_fifth_perc = obj_charts_data.compute_fifth_percentile(positions_assets_sum['FX'])
 
     # Build percentile list for positions charts
     equities_ninety_five_percentile = obj_charts_data.build_percentile_list(equities_ninety_five_perc)
@@ -125,7 +125,8 @@ def run_times_charts_data_computations(obj_charts_data: object, strategy_weight:
                      "zip_results_pos": zip_results_pos,
                      "zip_results_pos_overall": zip_results_pos_overall,
                      "zip_results_perf": zip_results_perf,
-                     "zip_results_perf_overall": zip_results_perf_overall
+                     "zip_results_perf_overall": zip_results_perf_overall,
+                     "titles_ids": positions_assets_sum['titles_ids']
                      }
 
     return template_data

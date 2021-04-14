@@ -8,17 +8,16 @@ from typing import Tuple
 import numpy as np
 
 import pandas as pd
-from domino import Domino
-import os
 
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
+from assetallocation_arp.common_libraries.dal_enums.asset import Category
 
 
-class TimesChartsDataComputations(object):
+class ComputeDataDashboardTimes(object):
     """Class doing computations for the data of the times dashboard"""
 
     def __init__(self):
@@ -107,28 +106,6 @@ class TimesChartsDataComputations(object):
             self.signals = self.signals.loc[:date_to_sidebar]
             self.returns = self.returns.loc[:date_to_sidebar]
             self.positions = self.positions.loc[:date_to_sidebar]
-
-    @staticmethod
-    def call_domino_object():
-        domino = Domino(
-            "{domino_username}/{domino_project_name}".format(domino_username=os.environ['DOMINO_STARTING_USERNAME'],
-                                                             domino_project_name=os.environ['DOMINO_PROJECT_NAME']),
-            api_key=os.environ['DOMINO_USER_API_KEY'],
-            host=os.environ['DOMINO_API_HOST'])
-
-        return domino
-
-    def export_times_data_to_csv(self, version):
-        domino = self.call_domino_object()
-
-        domino.files_upload("/signals_times_version{version}.csv".format(version=version), self.signals.to_csv())
-        domino.files_upload("/returns_times_version{version}.csv".format(version=version), self.returns.to_csv())
-        domino.files_upload("/positions_times_version{version}.csv".format(version=version), self.positions.to_csv())
-
-    def export_times_positions_data_to_csv(self):
-
-        domino = self.call_domino_object()
-        domino.files_upload("/positions_charts_times_version.csv", self.positions.to_csv())
 
     @staticmethod
     def sort_by_category_assets(values_dict: dict, category_name: list):
@@ -379,33 +356,32 @@ class TimesChartsDataComputations(object):
         Function which computes the positions of each asset
         :param strategy_weight: weight of te strategy (0.46 as example)
         :param start_date: start date of positions assets
-        :return: a ditionary with positions for each asset
+        :return: a dictionary with positions for each asset
         """
-        equities_names, bonds_names, forex_names = [], [], []
+
+        self.positions_sum_start_date = start_date
+
+        self.positions.columns = [name.replace(name, 'Fixed Income') if name == 'Nominal Bond' else name for name
+                                  in self.positions.columns]
+
         names = self.positions.columns.to_list()
 
-        for name in names:
-            if 'Equity' in name:
-                equities_names.append(name)
-            elif 'Nominal Bond' in name:
-                bonds_names.append(name)
-            else:
-                forex_names.append(name)
+        tmp_category,  category_sort = [], {}
 
-        # Start date of positions
-        self.positions_sum_start_date = start_date
-        equities = self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):, equities_names]
-        bonds = self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):, bonds_names]
-        forex = self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):, forex_names]
+        for category in Category:
+            for name in names:
+                if category.name in name:
+                    tmp_category.append(name)
 
-        dates_positions_assets = equities.index.strftime("%Y-%m-%d").to_list()
+            if len(tmp_category) != 0:
+                category_sort[category.name] = self.positions.loc[pd.to_datetime(self.positions_sum_start_date,
+                                                                                 format='%d-%m-%Y'):, tmp_category].apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
+            tmp_category = []
 
-        equities = equities.apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
-        bonds = bonds.apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
-        forex = forex.apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
+        category_sort['titles_ids'] = [key for key in category_sort.keys()]
+        category_sort['dates_positions_assets'] = self.positions.index.strftime("%Y-%m-%d").to_list()
 
-        return {'equities_pos_sum': equities, 'bonds_pos_sum': bonds, 'forex_pos_sum': forex,
-                "dates_positions_assets": dates_positions_assets}
+        return category_sort
 
     def compute_positions_assets(self, start_date: str, end_date: str) -> Tuple[List[float], List[float], List[float]]:
         """
