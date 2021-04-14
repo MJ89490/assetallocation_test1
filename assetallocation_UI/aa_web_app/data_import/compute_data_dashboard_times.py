@@ -107,36 +107,36 @@ class ComputeDataDashboardTimes(object):
             self.returns = self.returns.loc[:date_to_sidebar]
             self.positions = self.positions.loc[:date_to_sidebar]
 
-    @staticmethod
-    def sort_by_category_assets(values_dict: dict, category_name: list):
-        """
-        Function which sorts the assets by category (Equities, Bonds, Forex)
-        :param values_dict: values of assets
-        :param category_name: Equities or Forex or Bonds
-        :return: a dictionary
-        """
-        df = pd.DataFrame(values_dict.items(), columns=['Assets', 'Values'])
-        df['Category'] = category_name
-        # Assets
-        assets = df.loc[df['Category'] == 'Equity'].Assets.tolist()
-        fx = df.loc[df['Category'] == 'FX'].Assets.tolist()
-        bonds = df.loc[df['Category'] == 'Nominal Bond'].Assets.tolist()
-        assets.extend(fx)
-        assets.extend(bonds)
-        # Category
-        category = df.loc[df['Category'] == 'Equity'].Category.tolist()
-        category_fx = df.loc[df['Category'] == 'FX'].Category.tolist()
-        category_bonds = df.loc[df['Category'] == 'Nominal Bond'].Category.tolist()
-        category.extend(category_fx)
-        category.extend(category_bonds)
-        # Values of these assets
-        values = df.loc[df['Category'] == 'Equity'].Values.tolist()
-        values_fx = df.loc[df['Category'] == 'FX'].Values.tolist()
-        values_bond = df.loc[df['Category'] == 'Nominal Bond'].Values.tolist()
-        values.extend(values_fx)
-        values.extend(values_bond)
-
-        return {'values': [val * 100 for val in values], 'assets': assets, 'category': category}
+    # @staticmethod
+    # def sort_by_category_assets(values_dict: dict, category_name: list):
+    #     """
+    #     Function which sorts the assets by category (Equities, Bonds, Forex)
+    #     :param values_dict: values of assets
+    #     :param category_name: Equities or Forex or Bonds
+    #     :return: a dictionary
+    #     """
+    #     df = pd.DataFrame(values_dict.items(), columns=['Assets', 'Values'])
+    #     df['Category'] = category_name
+    #     # Assets
+    #     assets = df.loc[df['Category'] == 'Equity'].Assets.tolist()
+    #     fx = df.loc[df['Category'] == 'FX'].Assets.tolist()
+    #     bonds = df.loc[df['Category'] == 'Nominal Bond'].Assets.tolist()
+    #     assets.extend(fx)
+    #     assets.extend(bonds)
+    #     # Category
+    #     category = df.loc[df['Category'] == 'Equity'].Category.tolist()
+    #     category_fx = df.loc[df['Category'] == 'FX'].Category.tolist()
+    #     category_bonds = df.loc[df['Category'] == 'Nominal Bond'].Category.tolist()
+    #     category.extend(category_fx)
+    #     category.extend(category_bonds)
+    #     # Values of these assets
+    #     values = df.loc[df['Category'] == 'Equity'].Values.tolist()
+    #     values_fx = df.loc[df['Category'] == 'FX'].Values.tolist()
+    #     values_bond = df.loc[df['Category'] == 'Nominal Bond'].Values.tolist()
+    #     values.extend(values_fx)
+    #     values.extend(values_bond)
+    #
+    #     return {'values': [val * 100 for val in values], 'assets': assets, 'category': category}
 
     @staticmethod
     def compute_trade_positions_all_assets_overview(delta: list) -> List[str]:
@@ -171,7 +171,7 @@ class ComputeDataDashboardTimes(object):
         :param results_performance: dict with all assets performances
         :return: a zip list
         """
-        print(list(zip(*results_performance.values())))
+
         return zip(*results_performance.values())
 
     @staticmethod
@@ -230,12 +230,16 @@ class ComputeDataDashboardTimes(object):
         names_weekly_perf = weekly_perf.index.to_list()
         values_weekly_perf = [float(dec) for dec in weekly_perf.to_list()]
 
-        category_name,  weekly_perf_dict, = self.classify_assets_by_category(names_weekly_perf, values_weekly_perf)
+        # category_name,  weekly_perf_dict = self.classify_assets_by_category(names_weekly_perf, values_weekly_perf)
 
-        sort_weekly_perf = self.sort_by_category_assets(weekly_perf_dict, category_name)
+        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_weekly_perf.values()])
 
-        return {'weekly_performance_all_currencies': self.round_results_all_assets_overview(sort_weekly_perf['values']),
-                'assets': sort_weekly_perf['assets'], 'category': sort_weekly_perf['category']}
+        # sort_weekly_perf = self.sort_by_category_assets(weekly_perf_dict, category_name)
+
+        return {'weekly_performance_all_currencies': weekly_val, 'assets': names_weekly_perf}
+
+        # return {'weekly_performance_all_currencies': self.round_results_all_assets_overview(sort_weekly_perf['values']),
+        #         'assets': sort_weekly_perf['assets'], 'category': category_name}
 
     def compute_ytd_performance_all_assets_overview(self) -> Dict[str,  List[float]]:
         """
@@ -245,6 +249,7 @@ class ComputeDataDashboardTimes(object):
         # Find out the last before last date
         last_date = self.returns.index.get_loc(self.returns.last_valid_index()) - 1
         before_last_date = self.returns.index[last_date]
+
         # Find the first date of the year
         days = []
         first_day_of_year = before_last_date - offsets.YearBegin()
@@ -260,13 +265,16 @@ class ComputeDataDashboardTimes(object):
 
         ytd_perf = (v1 - v2).apply(lambda x: x * 100)
 
-        names_ytd_perf = ytd_perf.index.to_list()
+        # names_ytd_perf = ytd_perf.index.to_list()
         values_ytd_perf = [float(dec) for dec in ytd_perf.to_list()]
 
-        category_name, ytd_perf_dict = self.classify_assets_by_category(names_ytd_perf, values_ytd_perf)
+        # category_name, ytd_perf_dict = self.classify_assets_by_category(names_ytd_perf, values_ytd_perf)
 
-        sort_ytd_perf = self.sort_by_category_assets(ytd_perf_dict, category_name)
-        return {'ytd_performance_all_currencies': self.round_results_all_assets_overview(sort_ytd_perf['values'])}
+        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_ytd_perf.values()])
+
+        # sort_ytd_perf = self.sort_by_category_assets(ytd_perf_dict, category_name)
+
+        return {'ytd_performance_all_currencies': weekly_val}
 
     def compute_mom_signals_all_assets_overview(self) -> List[float]:
         """
