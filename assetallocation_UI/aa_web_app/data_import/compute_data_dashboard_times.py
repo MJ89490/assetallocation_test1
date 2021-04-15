@@ -1,42 +1,47 @@
 import datetime
-# from datetime import datetime, date
-from pandas.tseries import offsets
-from calendar import monthrange
+import numpy as np
+import pandas as pd
 from typing import Dict
 from typing import List
 from typing import Tuple
-import numpy as np
+from calendar import monthrange
+from pandas.tseries import offsets
 
-import pandas as pd
-
-from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
-from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
-from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
-from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 from assetallocation_arp.common_libraries.dal_enums.asset import Category
+from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
+from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
+from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 
-class ComputeDataDashboardTimes(object):
+class ComputeDataDashboardTimes:
     """Class doing computations for the data of the times dashboard"""
 
     def __init__(self):
-        self.signals = None
-        self.positions = None
-        self.returns = None
+        self._signals = None
+        self._positions = None
+        self._returns = None
 
         self._signals_comp = None
         self._positions_comp = None
         self._returns_comp = None
         self._returns_ytd = None
 
-        self.positions_sum_start_date = None
-        self.positions_start_date = None
-        self.positions_end_date = None
+        self._positions_sum_start_date = None
+        self._positions_start_date = None
+        self._positions_end_date = None
 
     @property
-    def signal_as_off(self) -> datetime:
-        return self.signals.last_valid_index().strftime('%d-%m-%Y')
+    def get_names_assets(self)->List[str]:
+        if self._positions is None:
+            pass
+        else:
+            return [name.replace(name, "Fixed Income") if name == "Nominal Bond" else name for name in
+                    self._positions.columns.to_list()]
+
+    @property
+    def get_signal_as_off(self) -> datetime:
+        return self._signals.last_valid_index().strftime('%d-%m-%Y')
 
     @property
     def positions_sum_start_date(self) -> str:
@@ -56,8 +61,8 @@ class ComputeDataDashboardTimes(object):
     def positions_start_date(self, value: str) -> None:
         if value is None:
             value = '02/12/2000'     #'15/05/2018'
-        if self.positions is not None:
-            value = find_date(self.positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
+        if self._positions is not None:
+            value = find_date(self._positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_start_date = value
 
     @property
@@ -68,15 +73,15 @@ class ComputeDataDashboardTimes(object):
     def positions_end_date(self, value: str) -> None:
         if value is None:
             value = '02/07/2001'     #'25/08/2018'
-        if self.positions is not None:
-            value = find_date(self.positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
+        if self._positions is not None:
+            value = find_date(self._positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_end_date = value
 
     @property
     def positions_assets_length(self):
-        return len(self.positions.loc[pd.to_datetime(self.positions_sum_start_date, format='%d-%m-%Y'):])
+        return len(self._positions.loc[pd.to_datetime(self._positions_sum_start_date, format='%d-%m-%Y'):])
 
-    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to, date_to_sidebar=None) -> None:
+    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to: pd.datetime, date_to_sidebar=None) -> None:
         """
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)
@@ -98,45 +103,14 @@ class ComputeDataDashboardTimes(object):
         returns = analytic_df.xs('excess return', level='analytic_subcategory')
         returns.index = pd.to_datetime(returns.index)
 
-        self.signals = signals
-        self.returns = returns
-        self.positions = weight_df
+        self._signals = signals
+        self._returns = returns
+        self._positions = weight_df
 
         if date_to_sidebar is not None:
-            self.signals = self.signals.loc[:date_to_sidebar]
-            self.returns = self.returns.loc[:date_to_sidebar]
-            self.positions = self.positions.loc[:date_to_sidebar]
-
-    # @staticmethod
-    # def sort_by_category_assets(values_dict: dict, category_name: list):
-    #     """
-    #     Function which sorts the assets by category (Equities, Bonds, Forex)
-    #     :param values_dict: values of assets
-    #     :param category_name: Equities or Forex or Bonds
-    #     :return: a dictionary
-    #     """
-    #     df = pd.DataFrame(values_dict.items(), columns=['Assets', 'Values'])
-    #     df['Category'] = category_name
-    #     # Assets
-    #     assets = df.loc[df['Category'] == 'Equity'].Assets.tolist()
-    #     fx = df.loc[df['Category'] == 'FX'].Assets.tolist()
-    #     bonds = df.loc[df['Category'] == 'Nominal Bond'].Assets.tolist()
-    #     assets.extend(fx)
-    #     assets.extend(bonds)
-    #     # Category
-    #     category = df.loc[df['Category'] == 'Equity'].Category.tolist()
-    #     category_fx = df.loc[df['Category'] == 'FX'].Category.tolist()
-    #     category_bonds = df.loc[df['Category'] == 'Nominal Bond'].Category.tolist()
-    #     category.extend(category_fx)
-    #     category.extend(category_bonds)
-    #     # Values of these assets
-    #     values = df.loc[df['Category'] == 'Equity'].Values.tolist()
-    #     values_fx = df.loc[df['Category'] == 'FX'].Values.tolist()
-    #     values_bond = df.loc[df['Category'] == 'Nominal Bond'].Values.tolist()
-    #     values.extend(values_fx)
-    #     values.extend(values_bond)
-    #
-    #     return {'values': [val * 100 for val in values], 'assets': assets, 'category': category}
+            self._signals = self._signals.loc[:date_to_sidebar]
+            self._returns = self._returns.loc[:date_to_sidebar]
+            self._positions = self._positions.loc[:date_to_sidebar]
 
     @staticmethod
     def compute_trade_positions_all_assets_overview(delta: list) -> List[str]:
@@ -147,7 +121,7 @@ class ComputeDataDashboardTimes(object):
         return ['SELL' if val < 0 else 'BUY' for val in delta]
 
     @staticmethod
-    def compute_ninety_fifth_percentile(assets_values: pd.DataFrame) -> float:
+    def compute_ninety_fifth_percentile(assets_values: List[float]) -> float:
         """
         Compute  the 95th percentile
         :param assets_values: positions assets
@@ -156,7 +130,7 @@ class ComputeDataDashboardTimes(object):
         return np.percentile(assets_values, 95)
 
     @staticmethod
-    def compute_fifth_percentile(assets_values: pd.DataFrame) -> float:
+    def compute_fifth_percentile(assets_values: List[float]) -> float:
         """
         Compute the 5th percentile
         :param assets_values: positions of assets
@@ -185,26 +159,26 @@ class ComputeDataDashboardTimes(object):
         return [round(d, 4) for d in results]
 
     @staticmethod
-    def classify_assets_by_category(names_assets: list, values_perf=None) -> Tuple[List[str], Dict[str, float]]:
+    def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:
+        return {keys[key]: results[key] for key in range(len(keys))}
+
+    def classify_assets_by_category(self) -> List[str]:
         """
         Function which classifies the assets per category
         :param names_assets: names of assets (Equities, FX, Bonds)
         :param values_perf: performance of assets in each category
         :return: a sorted list of categories and a dict with perf values depending on the category
         """
-        category_name, perf_dict = [], {}
-        for name in range(len(names_assets)):
-            perf_dict[names_assets[name]] = values_perf[name]
-            if 'Equity' in names_assets[name]:   # TODO improve it with Jess category from db?
-                category_name.append('Equity')
-            elif 'Bond' in names_assets[name]:
-                category_name.append('Nominal Bond')
-            else:
-                category_name.append('FX')
+        category_name = []
 
-        return category_name, perf_dict
+        for name in self.get_names_assets:
+            for category in Category:
+                if category.name in name:
+                    category_name.append(category.name)
 
-    def build_percentile_list(self, assets_percentile: list) -> List[float]:
+        return category_name
+
+    def build_percentile_list(self, assets_percentile: float) -> List[float]:
         """
         Function which build a list of percentile
         :param assets_percentile: percentile result
@@ -218,28 +192,21 @@ class ComputeDataDashboardTimes(object):
         :return:
         """
         # If statement with weekly only weekly?
-        last_date = self.returns.index.get_loc(self.returns.last_valid_index()) - 1
-        before_last_date = self.returns.index[last_date]
+        last_date = self._returns.index.get_loc(self._returns.last_valid_index()) - 1
+        before_last_date = self._returns.index[last_date]
         prev_7_days_date = before_last_date - datetime.timedelta(days=7)
 
-        v1 = self.returns.loc[before_last_date]
-        v2 = self.returns.loc[prev_7_days_date]
+        v1 = self._returns.loc[before_last_date]
+        v2 = self._returns.loc[prev_7_days_date]
 
         weekly_perf = (v1 - v2).apply(lambda x: x * 100)
 
         names_weekly_perf = weekly_perf.index.to_list()
         values_weekly_perf = [float(dec) for dec in weekly_perf.to_list()]
 
-        # category_name,  weekly_perf_dict = self.classify_assets_by_category(names_weekly_perf, values_weekly_perf)
-
-        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_weekly_perf.values()])
-
-        # sort_weekly_perf = self.sort_by_category_assets(weekly_perf_dict, category_name)
+        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_weekly_perf])
 
         return {'weekly_performance_all_currencies': weekly_val, 'assets': names_weekly_perf}
-
-        # return {'weekly_performance_all_currencies': self.round_results_all_assets_overview(sort_weekly_perf['values']),
-        #         'assets': sort_weekly_perf['assets'], 'category': category_name}
 
     def compute_ytd_performance_all_assets_overview(self) -> Dict[str,  List[float]]:
         """
@@ -247,8 +214,8 @@ class ComputeDataDashboardTimes(object):
         :return: a list with ytd performance for each asset
         """
         # Find out the last before last date
-        last_date = self.returns.index.get_loc(self.returns.last_valid_index()) - 1
-        before_last_date = self.returns.index[last_date]
+        last_date = self._returns.index.get_loc(self._returns.last_valid_index()) - 1
+        before_last_date = self._returns.index[last_date]
 
         # Find the first date of the year
         days = []
@@ -260,19 +227,14 @@ class ComputeDataDashboardTimes(object):
             if current_date.weekday() <= 4:
                 days.append(current_date)
 
-        v1 = self.returns.loc[before_last_date]
-        v2 = self.returns.loc[days[0]]
+        v1 = self._returns.loc[before_last_date]
+        v2 = self._returns.loc[days[0]]
 
         ytd_perf = (v1 - v2).apply(lambda x: x * 100)
 
-        # names_ytd_perf = ytd_perf.index.to_list()
         values_ytd_perf = [float(dec) for dec in ytd_perf.to_list()]
 
-        # category_name, ytd_perf_dict = self.classify_assets_by_category(names_ytd_perf, values_ytd_perf)
-
-        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_ytd_perf.values()])
-
-        # sort_ytd_perf = self.sort_by_category_assets(ytd_perf_dict, category_name)
+        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_ytd_perf])
 
         return {'ytd_performance_all_currencies': weekly_val}
 
@@ -282,9 +244,9 @@ class ComputeDataDashboardTimes(object):
         :return: a list with signals for each asset
         """
         # Find out the last date
-        last_date = self.signals.last_valid_index()
+        last_date = self._signals.last_valid_index()
 
-        res = self.round_results_all_assets_overview(self.signals.loc[last_date].values.tolist())
+        res = self.round_results_all_assets_overview(self._signals.loc[last_date].values.tolist())
 
         return [float(dec) for dec in res]
 
@@ -294,11 +256,11 @@ class ComputeDataDashboardTimes(object):
         :return: a list with previous positions for each asset
         """
         # Find out the date of 7 days ago
-        last_date = self.positions.index.get_loc(self.positions.last_valid_index())-1
-        before_last_date = self.returns.index[last_date]
+        last_date = self._positions.index.get_loc(self._positions.last_valid_index())-1
+        before_last_date = self._returns.index[last_date]
         prev_7_days_date = before_last_date - datetime.timedelta(days=7)
 
-        return self.round_results_all_assets_overview(self.positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
+        return self.round_results_all_assets_overview(self._positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
 
     def compute_new_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
         """
@@ -306,18 +268,18 @@ class ComputeDataDashboardTimes(object):
         :return: a list with new positions for each asset
         """
         # Find out the last date
-        last_date = self.positions.last_valid_index()
+        last_date = self._positions.last_valid_index()
 
-        return self.round_results_all_assets_overview(self.positions.loc[last_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
+        return self.round_results_all_assets_overview(self._positions.loc[last_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
 
-    def compute_delta_positions_all_assets_overview(self, prev_positions: pd.DataFrame, new_positions: pd.DataFrame)-> np.ndarray:
+    def compute_delta_positions_all_assets_overview(self, prev_positions: np.ndarray, new_positions: np.ndarray)-> List[float]:
         """
         Compute the delta for each asset
         :return: a list with delta for each asset
         """
         return self.round_results_all_assets_overview(np.subtract(new_positions, prev_positions))
 
-    def compute_size_positions_all_assets_overview(self, values: list, names: list, category_name: list, new_overall: pd.DataFrame) -> np.ndarray:
+    def compute_size_positions_all_assets_overview(self, values: np.ndarray, new_overall: np.ndarray) -> np.ndarray:
         """
         Function computing the size of each assets
         :param values:
@@ -327,20 +289,22 @@ class ComputeDataDashboardTimes(object):
         :return: a list of size for each asset
         """
         df = pd.DataFrame(values, columns=['Values'])
-        df['Assets'] = names
-        df['Category'] = category_name
+        df['Assets'] = self.get_names_assets
+        df['Category'] = self.classify_assets_by_category()
 
-        equities = (df.loc[df['Category'] == 'Equity', 'Values'] / new_overall[0]).tolist()
-        forex = (df.loc[df['Category'] == 'FX', 'Values'] / new_overall[1]).tolist()
-        bonds = (df.loc[df['Category'] == 'Nominal Bond', 'Values'] / new_overall[2]).tolist()
+        # equities = (df.loc[df['Category'] == 'Equity', 'Values'] / new_overall[0]).tolist()
+        # forex = (df.loc[df['Category'] == 'FX', 'Values'] / new_overall[1]).tolist()
+        # bonds = (df.loc[df['Category'] == 'Nominal Bond', 'Values'] / new_overall[2]).tolist()
 
-        size = []
+        # size = []
 
-        size.extend(equities + forex + bonds)
+        # size.extend(equities + forex + bonds)
+
+        size = df.Values / new_overall[0:3]
 
         return self.round_results_all_assets_overview(size)
 
-    def compute_overall_performance_all_assets_overview(self, values: list, names: list, category_name: list) -> List[float]:
+    def compute_overall_performance_all_assets_overview(self, values: np.ndarray) -> List[float]:
         """
         Function whic computes the performance for each asset
         :param values:
@@ -349,15 +313,13 @@ class ComputeDataDashboardTimes(object):
         :return: a list of performance depending on the category
         """
         df = pd.DataFrame(values, columns=['Values'])
-        df['Assets'] = names
-        df['Category'] = category_name
+        df['Assets'] = self.get_names_assets
+        df['Category'] = self.classify_assets_by_category()
 
-        res = self.round_results_all_assets_overview([df.loc[df['Category'] == 'Equity', 'Values'].sum(),
-                                                      df.loc[df['Category'] == 'FX', 'Values'].sum(),
-                                                      df.loc[df['Category'] == 'Nominal Bond', 'Values'].sum(),
-                                                      df.Values.sum()])
+        performance = df.Values.to_list()
+        performance.append(df.Values.sum())
 
-        return [float(dec) for dec in res]
+        return [float(dec) for dec in performance]
 
     def compute_sum_positions_assets_charts(self, strategy_weight: float, start_date: str) -> Dict[str, List[float]]:
         """
@@ -369,29 +331,27 @@ class ComputeDataDashboardTimes(object):
 
         self.positions_sum_start_date = start_date
 
-        self.positions.columns = [name.replace(name, 'Fixed Income') if name == 'Nominal Bond' else name for name
-                                  in self.positions.columns]
-
-        names = self.positions.columns.to_list()
+        self._positions.columns = [name.replace(name, 'Fixed Income') if name == 'Nominal Bond' else name for name
+                                   in self._positions.columns]
 
         tmp_category,  category_sort = [], {}
 
         for category in Category:
-            for name in names:
+            for name in self.get_names_assets:
                 if category.name in name:
                     tmp_category.append(name)
 
             if len(tmp_category) != 0:
-                category_sort[category.name] = self.positions.loc[pd.to_datetime(self.positions_sum_start_date,
-                                                                                 format='%d-%m-%Y'):, tmp_category].apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
+                category_sort[category.name] = self._positions.loc[pd.to_datetime(self._positions_sum_start_date,
+                                                                                  format='%d-%m-%Y'):, tmp_category].apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
             tmp_category = []
 
         category_sort['titles_ids'] = [key for key in category_sort.keys()]
-        category_sort['dates_positions_assets'] = self.positions.index.strftime("%Y-%m-%d").to_list()
+        category_sort['dates_positions_assets'] = self._positions.index.strftime("%Y-%m-%d").to_list()
 
         return category_sort
 
-    def compute_positions_assets(self, start_date: str, end_date: str) -> Tuple[List[float], List[float], List[float]]:
+    def compute_positions_assets(self, start_date: str, end_date: str) -> Tuple[List[float], List[float]]:
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -401,18 +361,12 @@ class ComputeDataDashboardTimes(object):
         positions, sparklines_pos = [], []
 
         # Start and end dates positions
-        self.positions_start_date, self.positions_end_date = start_date, end_date
-        columns = self.positions.columns.tolist()
-        names_pos = self.positions.columns.tolist()
+        self._positions_start_date, self._positions_end_date = start_date, end_date
+        columns = self._positions.columns.tolist()
 
         for col in columns:
-            positions.append(self.positions.loc[self.positions_start_date:self.positions_end_date, col].to_list())
-            sparklines_pos.append(self.positions[col].to_list())
+            positions.append(self._positions.loc[self._positions_start_date:self._positions_end_date, col].to_list())
+            sparklines_pos.append(self._positions[col].to_list())
 
-        dates_pos = [self.positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()]
-        return positions, dates_pos, names_pos
-
-    @staticmethod
-    def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:
-        return {keys[key]: results[key] for key in range(len(keys))}
-
+        dates_pos = [self._positions.loc[self._positions_start_date:self._positions_end_date].index.strftime("%Y-%m-%d").to_list()]
+        return positions, dates_pos

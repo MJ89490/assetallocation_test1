@@ -40,16 +40,19 @@ def times_strategy():
             run_model_page = 'run_new_version'
             asset_tickers_names_subcategories = obj_received_data_times.select_tickers()
         else:
-            obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+            obj_received_data_times.receive_data_existing_versions(strategy_version=
+                                                                   obj_received_data_times.version_strategy)
             obj_received_data_times.run_existing_strategy()
             return redirect(url_for('times_dashboard'))
     else:
         if obj_received_data_times.match_date_db is False:
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
+                                                                            obj_received_data_times.version_strategy)
             run_model_page = 'run_existing_version'
         if obj_received_data_times.match_date_db:
             pop_up_message = 'pop_up_message'
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=obj_received_data_times.version_strategy)
+            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
+                                                                            obj_received_data_times.version_strategy)
 
     return render_template('times_template.html',
                            title='TimesPage',
@@ -127,18 +130,19 @@ def times_dashboard():
     form_side_bar = SideBarDataForm()
     positions_chart = False
     export_data_sidebar = 'not_export_data_sidebar'
+    positions, dates_pos = [], []
 
     if request.method == 'POST':
         if form.submit_ok_positions.data:
             positions_chart = True
             start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
-            positions, dates_pos, names_pos = obj_times_charts_data.compute_positions_assets(start_date=start,
-                                                                                             end_date=end)
+            positions, dates_pos = obj_times_charts_data.compute_positions_assets(start_date=start,
+                                                                                  end_date=end)
         # elif request.form['submit_button'] == 'dashboard':
         #     obj_received_data_times.receive_data_latest_version_dashboard(obj_received_data_times.date_to)
 
-        elif request.form['submit_button'] == 'assets_positions':
-            obj_times_charts_data.export_times_positions_data_to_csv()
+        # elif request.form['submit_button'] == 'assets_positions':
+            # obj_times_charts_data.export_times_positions_data_to_csv()
 
     else:
         # if obj_received_data_times.type_of_request == 'export_data_sidebar':
@@ -158,7 +162,7 @@ def times_dashboard():
                                                        obj_received_data_times.strategy_weight,
                                                        start_date_sum=None, start_date=None, end_date=None)
     if positions_chart:
-        template_data['positions'], template_data['dates_pos'], template_data['names_pos'] = positions, dates_pos, names_pos
+        template_data['positions'], template_data['dates_pos'] = positions, dates_pos
 
     return render_template('times_dashboard.html',
                            title='Dashboard',

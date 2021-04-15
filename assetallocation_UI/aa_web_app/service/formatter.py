@@ -5,7 +5,7 @@ from typing import List, Dict
 #     return [f'Version {i}' for i in versions]
 
 
-def format_versions(versions: List[int]) -> Dict[str, int]:
+def format_versions(versions: Dict[int, str]) -> Dict[str, int]:
     versions_dict = {}
     for key, value in versions.items():
         if value == '':

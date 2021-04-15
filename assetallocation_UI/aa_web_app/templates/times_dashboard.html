@@ -422,32 +422,32 @@
                 <!--Positions assets charts-->
                 <div class="row row-positions-assets-charts">
 
-                     {% for id in titles_ids %}
+                    {% for id_key, id_value in titles_ids.items() %}
 
                         <div class="col-lg-4">
                             <div class="card">
-                                <h4 class="card-header"><b>{{id}}</b></h4>
+                                <h4 class="card-header"><b>{{id_key}}</b></h4>
                                 <div class="card-body">
-                                    <div id="{{id}}" class="responsive-plot"></div>
+                                    <div id="{{id_key}}" class="responsive-plot"></div>
 
                                     <script type="text/javascript">
-                                        POSITIONS_ASSETS = document.getElementById('{{id}}');
+                                        POSITIONS_ASSETS = document.getElementById('{{id_key}}');
 
-                                        var trace1 = {y: {{positions_assets_sum['Equity']|tojson}},
-                                                      x: {{positions_assets_sum['dates_positions_assets']|tojson}},
+                                        var trace1 = {y: {{id_value[0]|tojson}},
+                                                      x: {{id_value[3]|tojson}},
                                                       type: 'scatter',
-                                                      name: 'Equities'
+                                                      name: {{id_key}}
                                                       };
 
-                                         var trace2 = {y: {{equities_fifth_percentile|tojson}},
-                                                       x: {{positions_assets_sum['dates_positions_assets']|tojson}},
+                                         var trace2 = {y: {{id_value[1]|tojson}},
+                                                       x: {{id_value[3]|tojson}},
                                                        type: 'scatter',
                                                        name: '5th percentile',
                                                        line: {dash: 'dot', width: 4, color: '#87CEFA'}
                                                        };
 
-                                         var trace3 = {y: {{equities_ninety_five_percentile|tojson}},
-                                                       x: {{positions_assets_sum['dates_positions_assets']|tojson}},
+                                         var trace3 = {y: {{id_value[2]|tojson}},
+                                                       x: {{id_value[3]|tojson}},
                                                        type: 'scatter',
                                                        name: '95th percentile',
                                                        line: {dash: 'dot', width: 4, color: '#87CEFA'}
