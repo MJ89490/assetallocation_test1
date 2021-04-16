@@ -168,54 +168,42 @@ def data_validation_handle() -> None:
     return
 
 
-def run_plot() -> None:
-    """
-    This function sequentially runs the relevant functions to create the frontend plot.
-    :return:
-    """
+# Open data base connection and read current data as data frame
+# Get list of instruments from data frame as a unique list
+db = Db()
+df_db, instrument_list = db.get_analytic()
 
-    # Open data base connection and read current data as data frame
-    # Get list of instruments from data frame as a unique list
-    db = Db()
-    df_db, instrument_list = db.get_analytic()
+# Create drop down, file input, refresh and stats widgets
+drop_down = Select(options=instrument_list, width=200)
+refresh_button = Button(label="Refresh", width=200)
+data_val_button = Button(label="Data Validation", width=200)
+stats = PreText()
+columns = [TableColumn(field="ticker", title="ticker"),
+           TableColumn(field="description", title="description"),
+           TableColumn(field="value", title="value"),
+           TableColumn(field="log_return", title="log_return"),
+           TableColumn(field="business_datetime", title="business_datetime", formatter=DateFormatter())]
 
-    # Create drop down, file input, refresh and stats widgets
-    drop_down = Select(options=instrument_list, width=200)
-    refresh_button = Button(label="Refresh", width=200)
-    data_val_button = Button(label="Data Validation", width=200)
-    stats = PreText()
-    columns = [TableColumn(field="ticker", title="ticker"),
-               TableColumn(field="description", title="description"),
-               TableColumn(field="value", title="value"),
-               TableColumn(field="log_return", title="log_return"),
-               TableColumn(field="business_datetime", title="business_datetime", formatter=DateFormatter())]
+# Get latest data from database and create plot and data table
+col_data_source = get_data(df=df_db, name=instrument_list[0])
+price_chart, return_chart = make_plot(source=col_data_source)
+data_table = DataTable(source=col_data_source, columns=columns, width=800, height=590)
 
-    # Get latest data from database and create plot and data table
-    col_data_source = get_data(df=df_db, name=instrument_list[0])
-    price_chart, return_chart = make_plot(source=col_data_source)
-    data_table = DataTable(source=col_data_source, columns=columns, width=800, height=590)
+# Register widget attribute change
+drop_down.on_change("value", drop_down_handle)
+refresh_button.on_click(refresh_button_handle)
+data_val_button.on_click(data_validation_handle)
 
-    # Register widget attribute change
-    drop_down.on_change("value", drop_down_handle)
-    refresh_button.on_click(refresh_button_handle)
-    data_val_button.on_click(data_validation_handle)
+# Define layout of dashboard
+widgets = row(drop_down, refresh_button, data_val_button)
+charts = column(price_chart, return_chart)
+charts_with_table = row(charts, data_table)
+layout_with_widgets = column(widgets, charts_with_table, stats)
 
-    # Define layout of dashboard
-    widgets = row(drop_down, refresh_button, data_val_button)
-    charts = column(price_chart, return_chart)
-    charts_with_table = row(charts, data_table)
-    layout_with_widgets = column(widgets, charts_with_table, stats)
-
-    # Create Dashboard with respective layout
-    curdoc().add_root(layout_with_widgets)
-
-    return
+# Create Dashboard with respective layout
+curdoc().add_root(layout_with_widgets)
 
 # bokeh serve assetallocation_arp/data_etl/plot.py
 
 # TODO
 # Log times must be UTC .. not British Summer (or other)! - check .ini file
-
-
-if __name__ == '__main__':
-    run_plot()

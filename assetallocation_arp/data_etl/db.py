@@ -95,7 +95,7 @@ class Db:
                 FROM asset.asset_analytic
                 LEFT JOIN asset.asset
                 ON asset_analytic.asset_id = asset.id
-                WHERE upper(system_tstzrange) = 'infinity' limit 1000;
+                WHERE upper(system_tstzrange) = 'infinity';
                 """
         try:
             chunk_list = []
