@@ -8,7 +8,7 @@ from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
 
 
-class ReceivedDataTimes:
+class ReceiveDataTimes:
     def __init__(self):
         self.times_form = {}
         self.write_logs = {}

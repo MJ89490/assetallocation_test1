@@ -8,16 +8,16 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
 from assetallocation_UI.aa_web_app.service.formatter import format_versions
 from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
-from assetallocation_UI.aa_web_app.data_import.get_data_times import ReceivedDataTimes
+from assetallocation_UI.aa_web_app.data_import.receive_data_times import ReceiveDataTimes
 from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
-from assetallocation_UI.aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
+# from assetallocation_UI.aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
 from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import run_times_charts_data_computations
 
-obj_received_data_times = ReceivedDataTimes()
+obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
-obj_download_data_effect = DownloadDataChartEffect()
+# obj_download_data_effect = DownloadDataChartEffect()
 
 obj_times_charts_data = ComputeDataDashboardTimes()
 
@@ -94,22 +94,12 @@ def receive_data_from_times_strategy_page():
 @app.route('/received_data_times_form', methods=['POST'])
 def received_data_times_form():
     form_data = request.form['form_data'].split('&')
-
-    print(form_data)
-
     json_data = json.loads(request.form['json_data'])
-
-    print(json_data)
-
     form_data.append('input_version_name=' + json_data['input_version_name_strategy'])
-
-    print(form_data)
 
     obj_received_data_times.version_description = json_data["input_version_name_strategy"]
     obj_received_data_times.received_data_times(form_data)
     obj_received_data_times.call_run_times(json_data)
-
-    print("END OF RECEIVED DATA TIMES FORM")
 
     return json.dumps({'status': 'OK'})
 
