@@ -116,21 +116,21 @@
         <div class="content">
             <div class="container-fluid">
                  <!-- NAVBAR -->
-                 <nav class="navbar navbar-expand-lg fixed-top navbar-default py-lg-0 ">
-            <button class="navbar-toggler" type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target=""><b>Support</b></a></li>
-                </ul>
-            </div>
-        </nav>
+                <nav class="navbar navbar-expand-lg fixed-top navbar-default py-lg-0 ">
+                 <button class="navbar-toggler" type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarResponsive"
+                        aria-controls="navbarResponsive"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                 </button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="mailto:NexusQuantDev@lgim.com" target=""><b>Support</b></a></li>
+                        </ul>
+                    </div>
+                </nav>
                  <div class="row">
                     <div class="header-body">
                         <h6 class="header-pretitle">Overview</h6>
@@ -378,21 +378,8 @@
 
                 <!-- Positions bar charts -->
                <div class="row row-positions-assets-charts">
-                   <!--Mom signals-->
-                   <div class="col-lg-4">
-                       <div class="card">
-                           <h4 class="card-header"><b>Mom signals positions</b></h4>
-                           <div class="card-body">
-                               <div id="mom_signals" class="responsive-plot"></div>
-                               <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_mom_signals.js') }}"></script>
-                                <script type="text/javascript">
-                                    momSignalsChart({{mom_signals|tojson}}, {{assets_names|tojson}})
-                                </script>
-                           </div>
-                       </div>
-                   </div>
                    <!--Previous Positions-->
-                   <div class="col-lg-4">
+                   <div class="col-lg-6">
                        <div class="card">
                            <h4 class="card-header"><b>Previous positions</b></h4>
                            <div class="card-body">
@@ -405,7 +392,7 @@
                        </div>
                    </div>
                    <!--New Positions-->
-                   <div class="col-lg-4">
+                   <div class="col-lg-6">
                        <div class="card">
                            <h4 class="card-header"><b>New positions</b></h4>
                            <div class="card-body">
@@ -418,6 +405,23 @@
                        </div>
                    </div>
                </div>
+
+                <div class="row row-positions-assets-charts">
+                    <!--Mom signals-->
+                    <div class="col-lg-12">
+                       <div class="card">
+                           <h4 class="card-header"><b>Mom signals positions</b></h4>
+                           <div class="card-body">
+
+                               <div id="mom_signals" class="responsive-plot"></div>
+                               <script type="text/javascript" src="{{url_for('static', filename='js/times/horizontal_bar_chart_mom_signals.js')}}"></script>
+                               <script type="text/javascript">
+                                    momSignalsChart({{mom_signals|tojson}}, {{assets_names|tojson}})
+                                </script>
+                           </div>
+                       </div>
+                    </div>
+                </div>
 
                 <!--Positions assets charts-->
                 <div class="row row-positions-assets-charts">

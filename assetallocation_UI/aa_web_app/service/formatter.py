@@ -1,8 +1,4 @@
-from typing import List, Dict
-
-
-# def format_versions(versions: List[int]) -> List[str]:
-#     return [f'Version {i}' for i in versions]
+from typing import Dict
 
 
 def format_versions(versions: Dict[int, str]) -> Dict[str, int]:
