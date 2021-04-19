@@ -12,5 +12,5 @@ def format_versions(versions: Dict[int, str]) -> Dict[str, int]:
             value = 'no description'
         versions_dict[str(key) + ": " + value] = key
 
-    return versions_dict
+    return {k: v for k, v in sorted(versions_dict.items(), key=lambda item: item[1], reverse=True)}
 

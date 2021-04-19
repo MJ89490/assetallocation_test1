@@ -35,6 +35,7 @@ class DataFrameConverter:
 
     @staticmethod
     def fund_strategy_asset_weights_to_df(asset_weights: List[FundStrategyAssetWeight]) -> pd.DataFrame:
+        # TODO:
         data = [[i.ticker, i.asset_subcategory, i.business_date, i.strategy_weight] for i in asset_weights]
         df = pd.DataFrame(data, columns=['asset_ticker', 'asset_subcategory', 'business_date', 'value'])
         df = df.groupby(by=['business_date', 'asset_subcategory']).sum()
