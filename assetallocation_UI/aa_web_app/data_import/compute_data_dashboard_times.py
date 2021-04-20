@@ -12,7 +12,7 @@ from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
-
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
 class ComputeDataDashboardTimes:
     """Class doing computations for the data of the times dashboard"""
@@ -95,19 +95,25 @@ class ComputeDataDashboardTimes:
                                               business_date_to=date_to
                                               )
 
-        weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+        self._positions = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
 
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 
-        signals = analytic_df.xs('momentum', level='analytic_subcategory')
-        signals.index = pd.to_datetime(signals.index)
+        # signals = analytic_df.xs('Signal.momentum', level='asset_name')
+        # self._signals = analytic_df.xs(Signal.momentum, level='analytic_subcategory')
+        # signals.index = pd.to_datetime(signals.index)
 
-        returns = analytic_df.xs('excess return', level='analytic_subcategory')
-        returns.index = pd.to_datetime(returns.index)
+        # returns = analytic_df.xs('excess return', level='analytic_subcategory')
+        # returns.index = pd.to_datetime(returns.index)
 
-        self._signals = signals
-        self._returns = returns
-        self._positions = weight_df
+        # self._signals = signals
+        # self._returns = returns
+        # self._positions = weight_df
+
+        self._signals = analytic_df.loc[analytic_df['analytic_subcategory'] == 'momentum']
+        self._signals.index = pd.to_datetime(self._signals['business_date'])
+        self._returns = analytic_df.loc[analytic_df['analytic_subcategory'] == 'excess return']
+        self._returns.index = pd.to_datetime(self._returns['business_date'])
 
         if date_to_sidebar is not None:
             self._signals = self._signals.loc[:date_to_sidebar]
@@ -194,12 +200,15 @@ class ComputeDataDashboardTimes:
         :return:
         """
         # If statement with weekly only weekly?
-        last_date = self._returns.index.get_loc(self._returns.last_valid_index()) - 1
-        before_last_date = self._returns.index[last_date]
-        prev_7_days_date = before_last_date - datetime.timedelta(days=7)
+        # last_date_signals = self._returns.index.get_loc(self._returns.last_valid_index())
+        last_date_signals = self._signals.last_valid_index() - datetime.timedelta(days=2)
+        prev_7_days_date_singals = last_date_signals - datetime.timedelta(days=9)
 
-        v1 = self._returns.loc[before_last_date]
-        v2 = self._returns.loc[prev_7_days_date]
+        # before_last_date = self._returns.index[last_date]
+        # prev_7_days_date = before_last_date - datetime.timedelta(days=7)
+
+        v1 = self._returns.loc[last_date_signals]
+        v2 = self._returns.loc[prev_7_days_date_singals]
 
         weekly_perf = (v1 - v2).apply(lambda x: x * 100)
 

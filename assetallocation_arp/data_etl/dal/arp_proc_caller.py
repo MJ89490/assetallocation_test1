@@ -848,4 +848,18 @@ class MavenProcCaller(StrategyProcCaller):
 if __name__ == '__main__':
     from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
     apc = TimesProcCaller()
-    s = apc._select_times_strategy(859)
+    # s = apc._select_times_strategy(859)
+
+    from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
+
+    f = apc.select_fund_strategy_results("test_fund", "times", 1052, dt.date(2000, 1, 1), dt.date(2001, 8, 8))
+
+    weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(f.asset_weights)
+
+    analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(f.analytics)
+
+    # DataFrameConverter.fund_strategy_asset_weights_to_df(f.asset_weights)
+
+    analytic_df.loc[analytic_df['analytic_subcategory'] == 'excess return']
+
+    analytic_df.xs(Signal.momentum, level='analytic_subcategory')
