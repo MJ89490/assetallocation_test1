@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION arp.select_fund_strategy_asset_analytics(
 )
 RETURNS TABLE(
   asset_ticker varchar,
+  asset_name varchar,
   asset_subcategory text,
   business_date date,
   category varchar,
@@ -47,6 +48,7 @@ BEGIN
       )
       SELECT DISTINCT
         a.ticker as asset_ticker,
+        a.name as asset_name,
         ag.subcategory as asset_subcategory,
         saa.business_date,
         saa.category,

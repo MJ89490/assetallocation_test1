@@ -126,10 +126,12 @@ class ArpProcCaller(Db):
         )
         asset_analytics = []
         for row in fs_asset_analytics:
-            asset_analytics.append(FundStrategyAssetAnalytic(
+            asset_analytic = FundStrategyAssetAnalytic(
                 row['asset_ticker'], row['asset_subcategory'], row['business_date'], row['category'],
                 row['subcategory'], row['value'], row['frequency']
-            ))
+            )
+            asset_analytic.asset_name = row['asset_name']
+            asset_analytics.append(asset_analytic)
 
         fund_strategy.add_analytics(asset_analytics)
 

@@ -244,6 +244,7 @@ class FundStrategyAssetAnalytic(FundStrategyAnalytic):
         super().__init__(business_date, category, subcategory, value, frequency)
         self.asset_subcategory = asset_subcategory
         self.asset_ticker = asset_ticker
+        self.asset_name = None
 
     @property
     def asset_ticker(self) -> Optional[str]:
