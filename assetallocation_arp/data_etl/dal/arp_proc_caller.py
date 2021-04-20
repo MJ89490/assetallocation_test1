@@ -99,6 +99,7 @@ class ArpProcCaller(Db):
                     row['asset_weight_frequency'], row['asset_ticker']
                 )
                 aw.implemented_weight = float(row['implemented_asset_weight'])
+                aw.asset_name = str(row['asset_name'])
                 fund_strategy.add_asset_weight(aw)
 
         fs_analytics = self.call_proc(

@@ -8,6 +8,7 @@ RETURNS TABLE(
   python_code_version varchar,
   strategy_weight numeric,
   asset_ticker varchar,
+  asset_name varchar,
   asset_subcategory text,
   business_date date,
   asset_weight_frequency arp.frequency,
@@ -30,11 +31,12 @@ BEGIN
         AND fsw.strategy_id = _strategy_id
         AND upper(fsw.system_tstzrange) = 'infinity'
     ),
-    fund_strategy_asset_weight_cte (fund_id, model_instance_id, asset_ticker, asset_subcategory, business_date, frequency, theoretical_weight, implemented_weight) as (
+    fund_strategy_asset_weight_cte (fund_id, model_instance_id, asset_ticker, asset_name, asset_subcategory, business_date, frequency, theoretical_weight, implemented_weight) as (
       SELECT DISTINCT
         fswc.fund_id,
         saw.model_instance_id,
         a.ticker as asset_ticker,
+        a.name as asset_name,
         ag.subcategory as asset_subcategory,
         saw.business_date,
         saw.frequency,
@@ -65,6 +67,7 @@ BEGIN
       model_instance_cte.python_code_version,
       fund_strategy_weight_cte.weight as strategy_weight,
       fund_strategy_asset_weight_cte.asset_ticker,
+      fund_strategy_asset_weight_cte.asset_name,
       fund_strategy_asset_weight_cte.asset_subcategory,
       fund_strategy_asset_weight_cte.business_date,
       fund_strategy_asset_weight_cte.frequency as asset_weight_frequency,

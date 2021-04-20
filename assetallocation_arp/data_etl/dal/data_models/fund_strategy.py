@@ -107,6 +107,7 @@ class FundStrategyAssetWeight:
         self.strategy_weight = theoretical_weight
         self.implemented_weight = nan
         self.ticker = ticker
+        self.asset_name = None
 
     @property
     def business_date(self) -> date:

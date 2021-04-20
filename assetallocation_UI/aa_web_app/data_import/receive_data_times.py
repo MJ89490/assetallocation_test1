@@ -169,22 +169,18 @@ class ReceiveDataTimes:
 
         return name, subcategory
 
-    def check_in_date_to_existing_version(self):
+    def check_in_date_to_existing_version(self) -> bool:
         apc = TimesProcCaller()
         result_dates = apc.select_all_fund_strategy_result_dates()
-        result_dates = result_dates[(result_dates['fund_name'] == self.fund_name) & (result_dates['strategy_version'] == self.strategy_version)]
+        result_dates = result_dates[(result_dates['fund_name'] == self.fund_name) & (result_dates['strategy_version'] == self.version_strategy)]
         return dt.date(self.date_to.year, self.date_to.month, self.date_to.day) in result_dates['business_date_to'].values
 
     def receive_data_latest_version_dashboard(self, business_date_to):
         apc = TimesProcCaller()
         self.version_strategy = max(apc.select_strategy_versions(Name.times))
-        # TODO CHANGE DATE TO TO FLEXIBLE DATE
-        # TODO EACH STRATEGY VERSIONS RETURN NONE
-        # for v in apc.select_strategy_versions(Name.times):
         fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
                                               business_date_from=dt.date(2000, 1, 1), business_date_to=business_date_to
                                               )
-        print(fs)
         self.strategy_weight = fs.weight
 
     def receive_data_selected_version_sidebar_dashboard(self, business_date_to):

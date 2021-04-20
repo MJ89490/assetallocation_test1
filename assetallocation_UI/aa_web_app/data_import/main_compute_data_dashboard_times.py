@@ -1,8 +1,8 @@
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 
 
-def run_times_charts_data_computations(obj_charts_data: ComputeDataDashboardTimes, strategy_weight: float,
-                                       start_date_sum: None, start_date: None, end_date: None):
+def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes, strategy_weight: float,
+                                      start_date_sum: None, start_date: None, end_date: None):
     """
     Function main to run the TimesChartsDataComputations class
     :return: dictionary with all the data needed for the Front-End

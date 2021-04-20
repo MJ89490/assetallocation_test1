@@ -12,13 +12,10 @@ from assetallocation_UI.aa_web_app.data_import.receive_data_times import Receive
 from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
-# from assetallocation_UI.aa_web_app.data_import.download_data_chart_effect import DownloadDataChartEffect
-from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import run_times_charts_data_computations
+from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import main_compute_data_dashboard_times
 
 obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
-# obj_download_data_effect = DownloadDataChartEffect()
-
 obj_times_charts_data = ComputeDataDashboardTimes()
 
 
@@ -148,9 +145,9 @@ def times_dashboard():
                                                  date_to=obj_received_data_times.date_to,
                                                  date_to_sidebar=obj_received_data_times.date_to_sidebar)
 
-    template_data = run_times_charts_data_computations(obj_times_charts_data,
-                                                       obj_received_data_times.strategy_weight,
-                                                       start_date_sum=None, start_date=None, end_date=None)
+    template_data = main_compute_data_dashboard_times(obj_times_charts_data,
+                                                      obj_received_data_times.strategy_weight,
+                                                      start_date_sum=None, start_date=None, end_date=None)
     if positions_chart:
         template_data['positions'], template_data['dates_pos'] = positions, dates_pos
 

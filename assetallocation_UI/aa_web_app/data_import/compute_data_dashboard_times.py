@@ -94,7 +94,9 @@ class ComputeDataDashboardTimes:
                                               business_date_from=datetime.datetime.strptime('01/01/2000', '%d/%m/%Y').date(),
                                               business_date_to=date_to
                                               )
+
         weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 
         signals = analytic_df.xs('momentum', level='analytic_subcategory')

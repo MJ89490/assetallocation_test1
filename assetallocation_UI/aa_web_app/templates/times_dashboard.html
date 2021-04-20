@@ -355,7 +355,6 @@
                                 <div id="weekly_performance" class="responsive-plot"></div>
                                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/horizontal_bar_chart_weekly_performance.js') }}"></script>
                                 <script type="text/javascript">
-
                                     weeklyPerformanceChart({{weekly_performance_all_currencies|tojson}}, {{assets_names|tojson}})
                                 </script>
                             </div>
@@ -478,6 +477,32 @@
                      {% endfor %}
 
                  </div>
+
+                <div class="row row-positions-assets-charts">
+
+
+
+
+
+
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+
+                    <div id="sparklines_assets_one" class="responsive-plot"></div>
+                    <script type="text/javascript" src="{{url_for('static', filename='js/sparklines_assets_one.js')}}"></script>
+                               <script type="text/javascript">
+                                   sparklinesAssetsOne()
+                                </script>
+
+                            </div>
+
+                        </div>
+
+                </div>
+
+                </div>
+
 
             </div>
         </div>
