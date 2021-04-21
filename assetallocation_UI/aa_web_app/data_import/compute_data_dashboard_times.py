@@ -28,8 +28,8 @@ class ComputeDataDashboardTimes:
         self._returns_ytd = None
 
         self._positions_sum_start_date = None
-        self._positions_start_date = None
-        self._positions_end_date = None
+        self.positions_start_date = None
+        self.positions_end_date = None
 
     @property
     def get_names_assets(self)->List[str]:
@@ -60,9 +60,9 @@ class ComputeDataDashboardTimes:
     @positions_start_date.setter
     def positions_start_date(self, value: str) -> None:
         if value is None:
-            value = '02/12/2000'     #'15/05/2018'
+            value = '02/12/2000'     # '15/05/2018'
         if self._positions is not None:
-            value = find_date(self._positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
+            value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_start_date = value
 
     @property
@@ -73,15 +73,17 @@ class ComputeDataDashboardTimes:
     def positions_end_date(self, value: str) -> None:
         if value is None:
             value = '02/07/2001'     #'25/08/2018'
+            # value = self._positions.last_valid_index()
         if self._positions is not None:
-            value = find_date(self._positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
+            # value = find_date(self._positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
+            value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_end_date = value
 
     @property
     def positions_assets_length(self):
         return len(self._positions.loc[pd.to_datetime(self._positions_sum_start_date, format='%d-%m-%Y'):])
 
-    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to: pd.datetime, date_to_sidebar=None) -> None:
+    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to: datetime, date_to_sidebar=None) -> None:
         """
         Call Times proc caller to grab the data from the db
         :param fund_name: name of the current fund (example: f1, f2,...)
@@ -98,17 +100,6 @@ class ComputeDataDashboardTimes:
         self._positions = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
 
         analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
-
-        # signals = analytic_df.xs('Signal.momentum', level='asset_name')
-        # self._signals = analytic_df.xs(Signal.momentum, level='analytic_subcategory')
-        # signals.index = pd.to_datetime(signals.index)
-
-        # returns = analytic_df.xs('excess return', level='analytic_subcategory')
-        # returns.index = pd.to_datetime(returns.index)
-
-        # self._signals = signals
-        # self._returns = returns
-        # self._positions = weight_df
 
         self._signals = analytic_df.loc[analytic_df['analytic_subcategory'] == 'momentum']
         self._signals.index = pd.to_datetime(self._signals['business_date'])
@@ -194,43 +185,49 @@ class ComputeDataDashboardTimes:
         """
         return [assets_percentile] * self.positions_assets_length
 
-    def compute_weekly_performance_all_assets_overview(self) -> Dict[str, List[float]]:
+    def compute_weekly_performance_each_asset(self) -> Dict[str, List[float]]:
         """
         Compute the weekly performance for each assets
         :return:
         """
         # If statement with weekly only weekly?
-        # last_date_signals = self._returns.index.get_loc(self._returns.last_valid_index())
-        last_date_signals = self._signals.last_valid_index() - datetime.timedelta(days=2)
-        prev_7_days_date_singals = last_date_signals - datetime.timedelta(days=9)
+        last_day_signals = self._signals.last_valid_index() - datetime.timedelta(days=2)
+        prev_7_days_date_signals = self._signals.last_valid_index() - datetime.timedelta(days=9)
 
-        # before_last_date = self._returns.index[last_date]
-        # prev_7_days_date = before_last_date - datetime.timedelta(days=7)
+        weekly_performance, tmp_weekly_performance = {}, {}
 
-        v1 = self._returns.loc[last_date_signals]
-        v2 = self._returns.loc[prev_7_days_date_singals]
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
 
-        weekly_perf = (v1 - v2).apply(lambda x: x * 100)
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in asset_names_per_category[asset_name]:
+                    tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
+                    v1 = tmp_returns.loc[last_day_signals].value
+                    v2 = tmp_returns.loc[prev_7_days_date_signals].value
+                    weekly_perf = float((v1 - v2) * 100)
 
-        names_weekly_perf = weekly_perf.index.to_list()
-        values_weekly_perf = [float(dec) for dec in weekly_perf.to_list()]
+                    tmp_weekly_performance[asset_name] = round(weekly_perf, 4)
 
-        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_weekly_perf])
+            if bool(tmp_weekly_performance):
+                weekly_performance[category.name] = tmp_weekly_performance
+                tmp_weekly_performance = {}
 
-        return {'weekly_performance_all_currencies': weekly_val, 'assets': names_weekly_perf}
+        return weekly_performance
 
-    def compute_ytd_performance_all_assets_overview(self) -> Dict[str,  List[float]]:
+    def compute_ytd_performance_each_asset(self) -> Dict[str,  List[float]]:
         """
         Compute the YTD performance for each asset
         :return: a list with ytd performance for each asset
         """
-        # Find out the last before last date
-        last_date = self._returns.index.get_loc(self._returns.last_valid_index()) - 1
-        before_last_date = self._returns.index[last_date]
+
+        last_day_signals = self._signals.last_valid_index() - datetime.timedelta(days=2)
+        signal_off = last_day_signals
 
         # Find the first date of the year
         days = []
-        first_day_of_year = before_last_date - offsets.YearBegin()
+        first_day_of_year = signal_off - offsets.YearBegin()
         y, m = first_day_of_year.year, first_day_of_year.month
         for d in range(1, monthrange(y, m)[1] + 1):
             current_date = pd.to_datetime('{:02d}-{:02d}-{:04d}'.format(d, m, y), format='%d-%m-%Y')
@@ -238,57 +235,181 @@ class ComputeDataDashboardTimes:
             if current_date.weekday() <= 4:
                 days.append(current_date)
 
-        v1 = self._returns.loc[before_last_date]
-        v2 = self._returns.loc[days[0]]
+        ytd_performance, tmp_ytd_performance = {}, {}
 
-        ytd_perf = (v1 - v2).apply(lambda x: x * 100)
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
 
-        values_ytd_perf = [float(dec) for dec in ytd_perf.to_list()]
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in asset_names_per_category[asset_name]:
+                    tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
+                    v1 = tmp_returns.loc[last_day_signals].value
+                    v2 = tmp_returns.loc[days[0]].value
+                    weekly_perf = float((v1 - v2) * 100)
 
-        weekly_val = self.round_results_all_assets_overview([value * 100 for value in values_ytd_perf])
+                    tmp_ytd_performance[asset_name] = round(weekly_perf, 4)
 
-        return {'ytd_performance_all_currencies': weekly_val}
+            if bool(tmp_ytd_performance):
+                ytd_performance[category.name] = tmp_ytd_performance
+                tmp_ytd_performance = {}
 
-    def compute_mom_signals_all_assets_overview(self) -> List[float]:
+        return ytd_performance
+
+    def compute_mom_signals_each_asset(self) -> Dict[str,  List[float]]:
         """
         Compute the Mom signals for each asset
         :return: a list with signals for each asset
         """
         # Find out the last date
-        last_date = self._signals.last_valid_index()
+        last_day_signals = self._signals.last_valid_index()
 
-        res = self.round_results_all_assets_overview(self._signals.loc[last_date].values.tolist())
+        mom_signals, tmp_mom_signals = {}, {}
 
-        return [float(dec) for dec in res]
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
 
-    def compute_previous_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in asset_names_per_category[asset_name]:
+                    tmp_signals = self._signals.loc[self._signals.asset_name == asset_name]
+                    tmp_mom_signals[asset_name] = round(float(tmp_signals.loc[last_day_signals].value), 4)
+
+            if bool(tmp_mom_signals):
+                mom_signals[category.name] = tmp_mom_signals
+                tmp_mom_signals = {}
+
+        return mom_signals
+
+    def compute_positions_position_1y_each_asset(self, strategy_weight: float, start_date: None, end_date: None) \
+            -> Tuple[Dict[str, List[float]], List[str]]:
+        """
+        Process positions depending on start and end date, selected by the user on the dashboard
+        :param start_date: start date of positions
+        :param end_date: end date of positions
+        :param strategy_weight: weight of the strategy
+        :return:
+        """
+
+        self._positions.index = pd.to_datetime(self._positions.business_date)
+
+        # Start and end dates positions
+        self.positions_start_date, self.positions_end_date = start_date, end_date
+
+        position_1y, tmp_position_1y = {}, {}
+        dates_position_1y = []
+
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in asset_names_per_category[asset_name]:
+                    tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
+                    tmp_positions.index = pd.to_datetime(tmp_positions.business_date)
+
+                    if len(dates_position_1y) == 0:
+                        dates_position_1y = [tmp_positions.loc[self.positions_start_date:self.positions_end_date].
+                                             index.strftime("%Y-%m-%d").to_list()]
+
+                    tmp_position_1y[asset_name] = tmp_positions.loc[self._positions_start_date:
+                                                                    self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
+
+            if bool(tmp_position_1y):
+                position_1y[category.name] = tmp_position_1y
+                tmp_position_1y = {}
+
+        return position_1y, dates_position_1y
+
+    def compute_previous_positions_each_asset(self, strategy_weight: float) -> Dict[str, List[float]]:
         """
         Compute the previous positions for each asset
         :return: a list with previous positions for each asset
         """
-        # Find out the date of 7 days ago
-        last_date = self._positions.index.get_loc(self._positions.last_valid_index())-1
-        before_last_date = self._returns.index[last_date]
-        prev_7_days_date = before_last_date - datetime.timedelta(days=7)
 
-        return self.round_results_all_assets_overview(self._positions.loc[prev_7_days_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
+        last_day_signals = self._signals.last_valid_index() - datetime.timedelta(days=7)
 
-    def compute_new_positions_all_assets_overview(self, strategy_weight: float) -> np.ndarray:
+        previous_positions, tmp_previous_positions = {}, {}
+
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in asset_names_per_category[asset_name]:
+                    tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
+                    tmp_previous_positions[asset_name] = float(tmp_positions.loc[last_day_signals].value) * \
+                                                          (1 + strategy_weight)
+
+            if bool(tmp_previous_positions):
+                previous_positions[category.name] = tmp_previous_positions
+                tmp_previous_positions = {}
+
+        return previous_positions
+
+    def compute_new_positions_each_asset(self, strategy_weight: float) -> Dict[str, List[float]]:
         """
         Compute the new positions for each asset
         :return: a list with new positions for each asset
         """
-        # Find out the last date
-        last_date = self._positions.last_valid_index()
 
-        return self.round_results_all_assets_overview(self._positions.loc[last_date].apply(lambda x: (x * (1 + strategy_weight)) * 100).tolist())
+        last_day_signals = self._signals.last_valid_index()
 
-    def compute_delta_positions_all_assets_overview(self, prev_positions: np.ndarray, new_positions: np.ndarray)-> List[float]:
+        new_positions, tmp_new_positions = {}, {}
+
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in asset_names_per_category[asset_name]:
+                    tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
+                    tmp_new_positions[asset_name] = float(tmp_positions.loc[last_day_signals].value) * \
+                                                    (1 + strategy_weight)
+
+            if bool(tmp_new_positions):
+                new_positions[category.name] = tmp_new_positions
+                tmp_new_positions = {}
+
+        return new_positions
+
+    def compute_delta_positions_each_asset(self, prev_positions: Dict[str, List[float]], new_positions:
+                                           Dict[str, List[float]])-> List[float]:
         """
         Compute the delta for each asset
         :return: a list with delta for each asset
         """
         return self.round_results_all_assets_overview(np.subtract(new_positions, prev_positions))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def compute_size_positions_all_assets_overview(self, values: np.ndarray, new_overall: np.ndarray) -> np.ndarray:
         """
@@ -362,22 +483,11 @@ class ComputeDataDashboardTimes:
 
         return category_sort
 
-    def compute_positions_assets(self, start_date: str, end_date: str) -> Tuple[List[float], List[float]]:
-        """
-        Process positions depending on start and end date, selected by the user on the dashboard
-        :param start_date: start date of positions
-        :param end_date: end date of positions
-        :return:
-        """
-        positions, sparklines_pos = [], []
 
-        # Start and end dates positions
-        self._positions_start_date, self._positions_end_date = start_date, end_date
-        columns = self._positions.columns.tolist()
 
-        for col in columns:
-            positions.append(self._positions.loc[self._positions_start_date:self._positions_end_date, col].to_list())
-            sparklines_pos.append(self._positions[col].to_list())
 
-        dates_pos = [self._positions.loc[self._positions_start_date:self._positions_end_date].index.strftime("%Y-%m-%d").to_list()]
-        return positions, dates_pos
+if __name__ == "__main__":
+
+    obj = ComputeDataDashboardTimes()
+    obj.call_times_proc_caller("test_fund", 1066, datetime.datetime.strptime('08/08/2001', '%d/%m/%Y'), date_to_sidebar=None)
+

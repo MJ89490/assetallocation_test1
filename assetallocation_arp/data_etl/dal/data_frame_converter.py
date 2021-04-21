@@ -40,6 +40,9 @@ class DataFrameConverter:
         # df = df.set_index(['business_date', 'asset_name', 'asset_subcategory']).unstack(['asset_subcategory', 'asset_name'])
         # df.columns = df.columns.droplevel(0)
 
+        dict(zip(df.asset_name, df.asset_subcategory))
+
+
         return df
 
     @staticmethod
