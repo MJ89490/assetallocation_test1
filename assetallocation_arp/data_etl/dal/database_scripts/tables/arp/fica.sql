@@ -22,7 +22,6 @@ CREATE TABLE "arp"."fica"
 	"coupon" numeric(32,16) NOT NULL,
 	"curve" varchar(50)	 NOT NULL,
 	"trading_cost" integer NOT NULL,
-	"business_tstzrange" tstzrange NOT NULL,
 	"strategy_weights" numeric(32,16) [] NOT NULL,
 	"strategy_id" integer NOT NULL,
 	"execution_state_id" integer NOT NULL,

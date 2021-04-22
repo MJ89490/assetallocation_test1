@@ -1,11 +1,13 @@
-from decimal import Decimal
-from datetime import datetime
-from typing import List, Union
+from datetime import date
+from typing import List, Union, Optional
 import configparser
 from pathlib import Path
 
-from common_libraries.dal_enums.strategy import Name
-from common_libraries.dal_enums.fund_strategy import Category, Performance, Signal
+from numpy import nan
+
+from assetallocation_arp.common_libraries.dal_enums.strategy import Name, Frequency
+from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Category, Performance, Signal, AggregationLevel
+from assetallocation_arp.common_libraries.dal_enums.asset import Subcategory as AssetSubcategory
 
 
 # noinspection PyAttributeOutsideInit
@@ -14,18 +16,17 @@ class FundStrategy:
     _config.read(Path(__file__).parents[4] / '.bumpversion.cfg')
     _python_code_version = _config['bumpversion']['current_version']
 
-    def __init__(self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: Decimal,
-                 fund_strategy_asset_analytics: List['FundStrategyAssetAnalytic'] = None,
-                 fund_strategy_asset_weights: List['FundStrategyAssetWeight'] = None):
+    def __init__(
+            self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, weight: float,
+            analytics: List['FundStrategyAnalytic'] = None, asset_weights: List['FundStrategyAssetWeight'] = None
+    ) -> None:
         """FundStrategy class to hold data from database"""
-        self._fund_name = fund_name
+        self.fund_name = fund_name
         self.strategy_name = strategy_name
-        self._weight = weight
-        self._output_is_saved = True
-        self._business_datetime = datetime.now()
-        self._strategy_version = strategy_version
-        self.asset_weights = fund_strategy_asset_weights or []
-        self.asset_analytics = fund_strategy_asset_analytics or []
+        self.weight = weight
+        self.strategy_version = strategy_version
+        self.asset_weights = asset_weights or []
+        self.analytics = analytics or []
 
     @property
     def fund_name(self) -> str:
@@ -52,12 +53,12 @@ class FundStrategy:
         self._asset_weights = x
 
     @property
-    def asset_analytics(self) -> List['FundStrategyAssetAnalytic']:
-        return self._asset_analytics
+    def analytics(self) -> List['FundStrategyAnalytic']:
+        return self._analytics
 
-    @asset_analytics.setter
-    def asset_analytics(self, x: List['FundStrategyAssetAnalytic']) -> None:
-        self._asset_analytics = x
+    @analytics.setter
+    def analytics(self, x: List['FundStrategyAnalytic']) -> None:
+        self._analytics = x
 
     @property
     def strategy_name(self) -> Name:
@@ -76,77 +77,126 @@ class FundStrategy:
         self._strategy_version = x
 
     @property
-    def business_datetime(self) -> datetime:
-        return self._business_datetime
-
-    @business_datetime.setter
-    def business_datetime(self, x: datetime) -> None:
-        self._business_datetime = x
-
-    @property
-    def output_is_saved(self) -> bool:
-        return self._output_is_saved
-
-    @output_is_saved.setter
-    def output_is_saved(self, x: bool) -> None:
-        self._output_is_saved = x
-
-    @property
-    def weight(self) -> Decimal:
+    def weight(self) -> float:
         return self._weight
 
     @weight.setter
-    def weight(self, x: Decimal) -> None:
+    def weight(self, x: float) -> None:
         self._weight = x
 
-    def add_fund_strategy_asset_analytic(self, fund_strategy_asset_analytic: 'FundStrategyAssetAnalytic') -> None:
-        self._asset_analytics.append(fund_strategy_asset_analytic)
+    def add_analytics(self, asset_analytics: List['FundStrategyAnalytic']) -> None:
+        self._analytics.extend(asset_analytics)
 
-    def add_fund_strategy_asset_weight(self, fund_strategy_asset_weight: 'FundStrategyAssetWeight') -> None:
-        self._asset_weights.append(fund_strategy_asset_weight)
+    def add_analytic(self, asset_analytic: 'FundStrategyAnalytic') -> None:
+        self._analytics.append(asset_analytic)
 
-
-class FundStrategyAssetWeight:
-    def __init__(self, asset_ticker: str, strategy_weight: Decimal):
-        """FundStrategyAssetWeight class to hold data from database"""
-        self._asset_ticker = asset_ticker
-        self._strategy_weight = strategy_weight
-        self._implemented_weight = Decimal(0)
-
-    @property
-    def implemented_weight(self) -> Decimal:
-        return self._implemented_weight
-
-    @implemented_weight.setter
-    def implemented_weight(self, x: Decimal) -> None:
-        self._implemented_weight = x
-
-    @property
-    def strategy_weight(self) -> Decimal:
-        return self._strategy_weight
-
-    @strategy_weight.setter
-    def strategy_weight(self, x: Decimal) -> None:
-        self._strategy_weight = x
-
-    @property
-    def asset_ticker(self) -> str:
-        return self._asset_ticker
-
-    @asset_ticker.setter
-    def asset_ticker(self, x: str) -> None:
-        self._asset_ticker = x
+    def add_asset_weight(self, asset_weight: 'FundStrategyAssetWeight') -> None:
+        self._asset_weights.append(asset_weight)
 
 
 # noinspection PyAttributeOutsideInit
-class FundStrategyAssetAnalytic:
-    def __init__(self,  asset_ticker: str, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
-                 value: Decimal) -> None:
-        """FundStrategyAssetAnalytic class to hold data from database"""
-        self.asset_ticker = asset_ticker
+class FundStrategyAssetWeight:
+    def __init__(
+            self, asset_subcategory: Union[str, AssetSubcategory], business_date: date, theoretical_weight: float,
+            frequency: Union[str, Frequency], ticker: Optional[str] = None
+    ) -> None:
+        """FundStrategyAssetWeight class to hold data from database"""
+        self.asset_subcategory = asset_subcategory
+        self.business_date = business_date
+        self.frequency = frequency
+        self.strategy_weight = theoretical_weight
+        self.implemented_weight = nan
+        self.ticker = ticker
+        self.asset_name = None
+
+    @property
+    def business_date(self) -> date:
+        return self._business_date
+
+    @business_date.setter
+    def business_date(self, x: date) -> None:
+        self._business_date = x
+
+    @property
+    def implemented_weight(self) -> Optional[float]:
+        return self._implemented_weight
+
+    @implemented_weight.setter
+    def implemented_weight(self, x: Optional[float]) -> None:
+        self._implemented_weight = x
+
+    @property
+    def strategy_weight(self) -> float:
+        return self._strategy_weight
+
+    @strategy_weight.setter
+    def strategy_weight(self, x: float) -> None:
+        self._strategy_weight = x
+
+    @property
+    def frequency(self) -> Frequency:
+        return self._frequency
+
+    @frequency.setter
+    def frequency(self, x: Union[str, Frequency]) -> None:
+        self._frequency = x if isinstance(x, Frequency) else Frequency[x]
+
+    @property
+    def asset_subcategory(self) -> str:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Union[str, AssetSubcategory]):
+        self._asset_subcategory = x if isinstance(x, str) else x.name
+
+
+# noinspection PyAttributeOutsideInit
+class FundStrategyAnalytic:
+    def __init__(
+            self,  business_date: date, category: Union[str, Category], subcategory: Union[str, Performance, Signal],
+            value: float, frequency: Union[str, Frequency], aggregation_level: Union[None, str, AggregationLevel] = None,
+            comparator_name: Optional[str] = None
+    ) -> None:
+        """FundStrategyAnalytic class to hold data from database"""
+        self.business_date = business_date
         self.category = category
+        self.frequency = frequency
         self.subcategory = subcategory
         self.value = value
+        self.aggregation_level = aggregation_level
+        self.comparator_name = comparator_name
+
+    @property
+    def comparator_name(self) -> Optional[str]:
+        return self._comparator_name
+
+    @comparator_name.setter
+    def comparator_name(self, x: str) -> None:
+        if self.aggregation_level == AggregationLevel.comparator:
+            self._comparator_name = x
+        else:
+            self._comparator_name = None
+
+
+    @property
+    def aggregation_level(self) -> AggregationLevel:
+        return self._aggregation_level
+
+    @aggregation_level.setter
+    def aggregation_level(self, x: Union[None, str, AggregationLevel]) -> None:
+        """default level of strategy"""
+        if x is None:
+            self._aggregation_level = AggregationLevel.strategy
+        else:
+            self._aggregation_level = x if isinstance(x, AggregationLevel) else AggregationLevel[x]
+
+    @property
+    def business_date(self) -> date:
+        return self._business_date
+
+    @business_date.setter
+    def business_date(self, x: date) -> None:
+        self._business_date = x
 
     @property
     def category(self) -> Category:
@@ -168,17 +218,58 @@ class FundStrategyAssetAnalytic:
             self._subcategory = x if isinstance(x, Signal) else Signal[x]
 
     @property
-    def value(self) -> Decimal:
+    def value(self) -> float:
         return self._value
 
     @value.setter
-    def value(self, x: Decimal):
+    def value(self, x: float):
         self._value = x
 
     @property
-    def asset_ticker(self) -> str:
+    def frequency(self) -> Frequency:
+        return self._frequency
+
+    @frequency.setter
+    def frequency(self, x: Union[str, Frequency]) -> None:
+        self._frequency = x if isinstance(x, Frequency) else Frequency[x]
+
+
+# noinspection PyAttributeOutsideInit
+class FundStrategyAssetAnalytic(FundStrategyAnalytic):
+    def __init__(
+            self, asset_ticker: str, asset_subcategory: Union[str, AssetSubcategory], business_date: date, category: Union[str, Category],
+            subcategory: Union[str, Performance, Signal], value: float, frequency: Union[str, Frequency]
+    ) -> None:
+        """FundStrategyAssetAnalytic class to hold data from database"""
+        super().__init__(business_date, category, subcategory, value, frequency)
+        self.asset_subcategory = asset_subcategory
+        self.asset_ticker = asset_ticker
+        self.asset_name = None
+
+    @property
+    def asset_ticker(self) -> Optional[str]:
         return self._asset_ticker
 
     @asset_ticker.setter
-    def asset_ticker(self, x: str):
+    def asset_ticker(self, x: Optional[str]) -> None:
         self._asset_ticker = x
+
+    @property
+    def asset_subcategory(self) -> str:
+        return self._asset_subcategory
+
+    @asset_subcategory.setter
+    def asset_subcategory(self, x: Union[str, AssetSubcategory]):
+        self._asset_subcategory = x if isinstance(x, str) else x.name
+
+    @property
+    def aggregation_level(self) -> AggregationLevel:
+        return AggregationLevel.asset
+
+    @aggregation_level.setter
+    def aggregation_level(self, x: Union[None, str, AggregationLevel]) -> None:
+        """default level of asset"""
+        if x in (None, AggregationLevel.asset, AggregationLevel.asset.name):
+            self._aggregation_level = AggregationLevel.asset
+        else:
+            raise ValueError(f'FundStrategyAssetAnalytic must have an AggregationLevel of {AggregationLevel.asset.name}')

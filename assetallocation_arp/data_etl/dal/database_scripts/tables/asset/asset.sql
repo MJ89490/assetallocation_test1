@@ -19,21 +19,12 @@ DROP TABLE IF EXISTS "asset"."asset" CASCADE
 CREATE TABLE "asset"."asset"
 (
 	"id" serial NOT NULL,
-	"spot_code" varchar(50)	 NULL,
-	"name" varchar(50)	 NOT NULL,
-	"ndf_code" varchar(50)	 NULL,
-	"cost" numeric(32,16) NULL,
+	"name" varchar(50)	 NULL,
 	"description" varchar(100)	 NULL,
-	"future_ticker" varchar(50)	 NULL,
-	"signal_ticker" varchar(50)	 NULL,
-	"generic_yield_ticker" varchar(50)	 NULL,
-	"s_leverage" integer NULL,
-	"currency_id" integer NOT NULL,
-	"country_id" integer NOT NULL,
-	"category" varchar(50)	 NOT NULL,
-	"execution_state_id" integer NOT NULL,
-	"type" varchar(50)	 NOT NULL,
-	"is_tr" boolean NOT NULL,
+	"currency_id" integer NULL,
+	"country_id" integer NULL,
+	"execution_state_id" integer NULL,
+	"asset_group_id" integer NOT NULL,
 	"ticker" varchar(50)	 NOT NULL
 )
 ;
@@ -47,9 +38,6 @@ ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_pkey"
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_ticker_key" UNIQUE ("ticker")
 ;
 
-ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_category_check" CHECK (category in ('Equity', 'Fixed Income', 'FX', 'Commodity', 'Credit'))
-;
-
 /* Create Foreign Key Constraints */
 
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_country_fkey"
@@ -58,6 +46,10 @@ ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_country_fkey"
 
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_currency_fkey"
 	FOREIGN KEY ("currency_id") REFERENCES "lookup"."currency" ("id") ON DELETE No Action ON UPDATE No Action
+;
+
+ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_asset_group_fkey"
+	FOREIGN KEY ("asset_group_id") REFERENCES "asset"."asset_group" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
 ALTER TABLE "asset"."asset" ADD CONSTRAINT "asset_execution_state_fkey"

@@ -1,79 +1,145 @@
---DROP FUNCTION arp.select_fund_strategy_results(character varying,character varying,timestamp with time zone,timestamp with time zone)
+-- TODO check filtering and test the code below
 CREATE OR REPLACE FUNCTION arp.select_fund_strategy_results(
   fund_name varchar,
   strategy_name varchar,
-  max_business_datetime timestamp with time zone,
-  max_system_datetime timestamp with time zone
+  strategy_version int,
+  business_tstzrange tstzrange
 )
 RETURNS TABLE(
-  strategy_version int,
   python_code_version varchar,
-  business_datetime timestamp with time zone,
-  output_is_saved boolean,
-  weight numeric,
-  asset_ticker varchar,
   strategy_weight numeric,
-  implemented_weight numeric,
-  asset_analytics arp.category_subcategory_value[]
+  asset_subcategory text,
+  business_date date,
+  asset_weight_frequency arp.frequency,
+  theoretical_asset_weight numeric,
+  implemented_asset_weight numeric,
+  strategy_analytics arp.category_subcategory_frequency_value_comp_name_comp_value[],
+  strategy_asset_analytics arp.category_subcategory_frequency_value[]
 )
 AS
 $$
+DECLARE
+  _strategy_id int;
 BEGIN
+  select arp.select_strategy_id(strategy_name, strategy_version) into _strategy_id;
+
   RETURN QUERY
-    WITH fsr (fund_strategy_id, strategy_version, business_datetime, python_code_version, output_is_saved, weight) AS (
+    WITH fund_strategy_weight_cte (fund_id, weight) as (
       SELECT
-        fs.id,
-        COALESCE(t.version, fi.version, e.version) as strategy_version,
-        fs.business_datetime,
-        fs.python_code_version,
-        fs.output_is_saved,
-        fs.weight
+        fsw.fund_id,
+        fsw.weight
       FROM
-        fund.fund fu
-        JOIN arp.fund_strategy fs
-        ON fu.id = fs.fund_id
-        JOIN arp.strategy s
-        ON fs.strategy_id = s.id
-        FULL OUTER JOIN arp.times t on s.id = t.strategy_id
-        FULL OUTER JOIN arp.fica fi on s.id = fi.strategy_id
-        FULL OUTER JOIN arp.effect e on s.id = e.strategy_id
+        fund.fund f
+        JOIN arp.fund_strategy_weight fsw ON fsw.fund_id = f.id
       WHERE
-        fu.name = select_fund_strategy_results.fund_name
-        AND s.name = select_fund_strategy_results.strategy_name
-        AND fs.business_datetime <= select_fund_strategy_results.max_business_datetime
-        AND fs.system_datetime <= select_fund_strategy_results.max_system_datetime
-      ORDER BY
-        fs.system_datetime desc,
-        fs.business_datetime desc
-      LIMIT 1
-    )
+        f.name = select_fund_strategy_results.fund_name
+        AND fsw.strategy_id = _strategy_id
+        AND upper(fsw.system_tstzrange) = 'infinity'
+    ),
+    fund_strategy_asset_weight_cte (fund_id, model_instance_id, asset_subcategory, business_date, frequency, theoretical_weight, implemented_weight) as (
+      SELECT
+        fswc.fund_id,
+        saw.model_instance_id,
+        ag.subcategory as asset_subcategory,
+        saw.business_date,
+        saw.frequency,
+        saw.theoretical_weight,
+        fsaw.implemented_weight
+      FROM
+        fund_strategy_weight_cte fswc
+        JOIN arp.fund_strategy_asset_weight fsaw on fsaw.fund_id = fswc.fund_id
+        JOIN arp.strategy_asset_weight saw on saw.id = fsaw.strategy_asset_weight_id
+        JOIN asset.asset a on a.id = saw.asset_id
+        JOIN asset.asset_group ag on ag.id = a.asset_group_id
+      WHERE
+        upper(fsaw.system_tstzrange) = 'infinity'
+        AND saw.strategy_id = _strategy_id
+    ),
+    model_instance_cte (fund_id, model_instance_id, python_code_version) as (
+      SELECT
+        fsawc.fund_id,
+        fsawc.model_instance_id,
+        mi.python_code_version
+      FROM
+        fund_strategy_asset_weight_cte fsawc
+        JOIN config.model_instance mi ON mi.id = fsawc.model_instance_id
+      WHERE
+        mi.business_tstzrange = select_fund_strategy_results.business_tstzrange
+      ),
+    strategy_analytic_cte (model_instance_id, business_date, category, subcategory, frequency, value, comparator_name, comparator_value) as (
+      SELECT
+        sa.model_instance_id,
+        sa.business_date,
+        sa.category,
+        sa.subcategory,
+        sa.frequency,
+        sa.value,
+        sa.comparator_name,
+        sa.comparator_value
+      FROM
+        arp.strategy_analytic sa
+        JOIN model_instance_cte mic on mic.model_instance_id = sa.model_instance_id
+    ),
+    strategy_asset_analtyic_cte (model_instance_id, asset_subcategory, business_date, category, subcategory, frequency, value) as (
+      SELECT
+        saa.model_instance_id,
+        ag.subcategory as asset_subcategory,
+        saa.business_date,
+        saa.category,
+        saa.subcategory,
+        saa.frequency,
+        saa.value
+      FROM
+        arp.strategy_asset_analytic saa
+        JOIN model_instance_cte mic on mic.model_instance_id = saa.model_instance_id
+        JOIN asset.asset a on a.id = saa.asset_id
+        JOIN asset.asset_group ag on ag.id = a.asset_group_id
+      )
     SELECT
-      fsr.strategy_version,
-      fsr.python_code_version,
-      fsr.business_datetime,
-      fsr.output_is_saved,
-      fsr.weight,
-      a.ticker as asset_ticker,
-      fsaw.strategy_weight,
-      fsaw.implemented_weight,
-      array_agg((fsaa.category, fsaa.subcategory, fsaa.value):: arp.category_subcategory_value) as asset_analytics
-    FROM
-      arp.fund_strategy_asset_weight fsaw
-      JOIN asset.asset a ON fsaw.asset_id = a.id
-      JOIN fsr ON fsaw.fund_strategy_id = fsr.fund_strategy_id
-      JOIN arp.fund_strategy_asset_analytic fsaa
-          ON fsaa.fund_strategy_id = fsr.fund_strategy_id
-          AND fsaa.asset_id = fsaw.asset_id
-          AND fsaa.asset_id = a.id
-    GROUP BY
-      fsr.strategy_version,
-      fsr.business_datetime,
-      fsr.python_code_version,
-      fsr.output_is_saved,
-      fsr.weight,
-      a.ticker,
-      fsaw.strategy_weight,
-      fsaw.implemented_weight
+      model_instance_cte.python_code_version,
+      fund_strategy_weight_cte.weight as strategy_weight,
+      fund_strategy_asset_weight_cte.asset_subcategory,
+      fund_strategy_asset_weight_cte.business_date,
+      fund_strategy_asset_weight_cte.frequency as asset_weight_frequency,
+      fund_strategy_asset_weight_cte.theoretical_weight as theoretical_asset_weight,
+      fund_strategy_asset_weight_cte.implemented_weight as implemented_asset_weight,
+      array_agg(
+          (
+            strategy_analytic_cte.category,
+            strategy_analytic_cte.subcategory,
+            strategy_analytic_cte.frequency,
+            strategy_analytic_cte.value,
+            strategy_analytic_cte.comparator_name,
+            strategy_analytic_cte.comparator_value
+          )
+          :: arp.category_subcategory_frequency_value_comp_name_comp_value
+        ) as strategy_analytics,
+        array_agg(
+          (
+            strategy_asset_analtyic_cte.category,
+            strategy_asset_analtyic_cte.subcategory,
+            strategy_asset_analtyic_cte.frequency,
+            strategy_asset_analtyic_cte.value
+          )
+          :: arp.category_subcategory_frequency_value
+        ) as strategy_asset_analytics
+      FROM
+        fund_strategy_weight_cte
+        JOIN model_instance_cte on fund_strategy_weight_cte.fund_id = model_instance_cte.fund_id
+        JOIN strategy_analytic_cte on strategy_analytic_cte.model_instance_id = model_instance_cte.model_instance_id
+        JOIN fund_strategy_asset_weight_cte on fund_strategy_asset_weight_cte.model_instance_id = model_instance_cte.model_instance_id
+        JOIN strategy_asset_analtyic_cte
+          ON fund_strategy_asset_weight_cte.model_instance_id = fund_strategy_asset_weight_cte.model_instance_id
+          AND fund_strategy_asset_weight_cte.asset_subcategory = fund_strategy_asset_weight_cte.asset_subcategory
+          AND fund_strategy_asset_weight_cte.business_date = fund_strategy_asset_weight_cte.business_date
+      GROUP BY
+        model_instance_cte.python_code_version,
+        fund_strategy_weight_cte.weight,
+        fund_strategy_asset_weight_cte.asset_subcategory,
+        fund_strategy_asset_weight_cte.business_date,
+        fund_strategy_asset_weight_cte.frequency,
+        fund_strategy_asset_weight_cte.theoretical_weight,
+        fund_strategy_asset_weight_cte.implemented_weight
   ;
 END
 $$

@@ -22,10 +22,10 @@ CREATE TABLE "asset"."asset_analytic"
 	"category" varchar(50)	 NOT NULL,
 	"asset_id" integer NOT NULL,
 	"value" numeric(32,16) NOT NULL,
-	"source_id" integer NOT NULL,
-	"business_tstzrange" tstzrange NOT NULL,
+	"source_id" integer NULL,
+	"business_datetime" timestamp with time zone NOT NULL,
 	"system_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)'),
-	"execution_state_id" integer NOT NULL
+	"execution_state_id" integer NULL
 )
 ;
 
@@ -35,14 +35,12 @@ ALTER TABLE "asset"."asset_analytic" ADD CONSTRAINT "asset_analytic_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "asset"."asset_analytic" ADD CONSTRAINT "asset_analytic_category_check" CHECK (category in ('PX_LAST', 'PX_MID', 'DUR_ADJ_MID'))
-;
+CREATE UNIQUE INDEX "asset_analytic_asset_id_business_datetime_category_inf_idx"
+ON "asset"."asset_analytic"(asset_id, business_datetime, category)
+WHERE upper(system_tstzrange) = 'infinity';
 
--- ALTER TABLE "asset"."asset_analytic" ADD CONSTRAINT "asset_analytic_asset_id_type_business_tstzrange_excl" CHECK (EXCLUDE USING GIST (asset_id WITH =, type WITH =, business_tstzrange WITH &&))
---
---
--- ALTER TABLE "asset"."asset_analytic" ADD CONSTRAINT "asset_analytic_asset_id_type_system_tstzrange_excl" CHECK (EXCLUDE USING GIST (asset_id WITH =, type WITH =, system_tstzrange WITH &&))
---
+
+CREATE INDEX "asset_analytic_business_datetime_idx" ON asset.asset_analytic (business_datetime);
 
 /* Create Foreign Key Constraints */
 

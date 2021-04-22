@@ -23,7 +23,7 @@ CREATE TABLE "arp"."times"
 	"volatility_window" integer NOT NULL,
 	"short_signals" numeric(32,16)[] NOT NULL,
 	"long_signals" numeric(32,16)[] NOT NULL,
-	"frequency" frequency NOT NULL,
+	"frequency" arp.frequency NOT NULL,
 	"day_of_week" integer NOT NULL,
 	"execution_state_id" integer NOT NULL,
 	"strategy_id" integer NOT NULL,
@@ -50,5 +50,5 @@ ALTER TABLE "arp"."times" ADD CONSTRAINT "times_execution_state_fkey"
 ;
 
 ALTER TABLE "arp"."times" ADD CONSTRAINT "times_strategy_fkey"
-	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("strategy_id") REFERENCES "arp"."strategy" ("id") ON DELETE CASCADE ON UPDATE No Action
 ;

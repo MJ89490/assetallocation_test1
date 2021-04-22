@@ -2,11 +2,9 @@ from typing import List, Any, Dict
 
 from sqlalchemy import create_engine
 
-from assetallocation_arp.data_etl.dal.proc import Proc
-
 
 class Db:
-    procs = Proc.__members__.keys()
+    procs = []
 
     def __init__(self, conn_str: str) -> None:
         """Db class for interacting with a database"""
@@ -16,6 +14,7 @@ class Db:
         """Call database stored procedure and return results.
         Raises ValueError if stored procedure is not in self.procs
         """
+        print(proc_name)
         if proc_name not in self.procs:
             raise ValueError(f'The stored procedure "{proc_name}" is not defined for class {self.__class__}')
 
@@ -23,9 +22,11 @@ class Db:
 
         try:
             cursor = dbapi_conn.cursor()
+            cursor.itersize = 100
             cursor.callproc(proc_name, proc_params)
             column_names_list = [x[0] for x in cursor.description]
-            results = [dict(zip(column_names_list, row)) for row in cursor.fetchall()]
+            res = cursor.fetchall()
+            results = [dict(zip(column_names_list, row)) for row in res]
             cursor.close()
             dbapi_conn.commit()
 
