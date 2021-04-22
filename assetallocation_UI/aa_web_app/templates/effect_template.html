@@ -26,12 +26,12 @@
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
                 <a href="{{url_for('effect_dashboard')}}"><button type="button" class="btn btn-secondary btn-lg">Dashboard</button></a>
-                <form method="post" action="{{url_for('effect_strategy')}}"  novalidate>
+                <form method="POST" action="{{url_for('effect_strategy')}}"  novalidate>
                      {{ form.hidden_tag() }}
                     <!-- Form: select the version for the model -->
                     <div class="btn-group">
                         {{ form.versions_effect(class="form-control", id="selectVersion")}}
-                        <a href="#"><button type="submit" class="btn btn-secondary btn-lg btn-select">Select a version</button></a>
+                        <button type="submit" class="btn btn-secondary btn-lg btn-select">Select a version</button>
                     </div>
                 </form>
             </div>
