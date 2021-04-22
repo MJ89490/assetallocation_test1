@@ -14,6 +14,7 @@ from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
+
 class ComputeDataDashboardTimes:
     """Class doing computations for the data of the times dashboard"""
 
@@ -112,14 +113,6 @@ class ComputeDataDashboardTimes:
             self._positions = self._positions.loc[:date_to_sidebar]
 
     @staticmethod
-    def compute_trade_positions_all_assets_overview(delta: list) -> List[str]:
-        """
-        Compute the trade for each asset
-        :return: a list with trades for each asset
-        """
-        return ['SELL' if val < 0 else 'BUY' for val in delta]
-
-    @staticmethod
     def compute_ninety_fifth_percentile(assets_values: List[float]) -> float:
         """
         Compute  the 95th percentile
@@ -185,7 +178,7 @@ class ComputeDataDashboardTimes:
         """
         return [assets_percentile] * self.positions_assets_length
 
-    def compute_weekly_performance_each_asset(self) -> Dict[str, List[float]]:
+    def compute_weekly_performance_each_asset(self) -> Dict[str, Dict[str, float]]:
         """
         Compute the weekly performance for each assets
         :return:
@@ -216,7 +209,7 @@ class ComputeDataDashboardTimes:
 
         return weekly_performance
 
-    def compute_ytd_performance_each_asset(self) -> Dict[str,  List[float]]:
+    def compute_ytd_performance_each_asset(self) -> Dict[str, Dict[str, float]]:
         """
         Compute the YTD performance for each asset
         :return: a list with ytd performance for each asset
@@ -257,7 +250,7 @@ class ComputeDataDashboardTimes:
 
         return ytd_performance
 
-    def compute_mom_signals_each_asset(self) -> Dict[str,  List[float]]:
+    def compute_mom_signals_each_asset(self) -> Dict[str, Dict[str, float]]:
         """
         Compute the Mom signals for each asset
         :return: a list with signals for each asset
@@ -284,7 +277,7 @@ class ComputeDataDashboardTimes:
         return mom_signals
 
     def compute_positions_position_1y_each_asset(self, strategy_weight: float, start_date: None, end_date: None) \
-            -> Tuple[Dict[str, List[float]], List[str]]:
+            -> Tuple[Dict[str, Dict[str, float]], List[str]]:
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -324,7 +317,7 @@ class ComputeDataDashboardTimes:
 
         return position_1y, dates_position_1y
 
-    def compute_previous_positions_each_asset(self, strategy_weight: float) -> Dict[str, List[float]]:
+    def compute_previous_positions_each_asset(self, strategy_weight: float) -> Dict[str, Dict[str, float]]:
         """
         Compute the previous positions for each asset
         :return: a list with previous positions for each asset
@@ -351,7 +344,7 @@ class ComputeDataDashboardTimes:
 
         return previous_positions
 
-    def compute_new_positions_each_asset(self, strategy_weight: float) -> Dict[str, List[float]]:
+    def compute_new_positions_each_asset(self, strategy_weight: float) -> Dict[str, Dict[str, float]]:
         """
         Compute the new positions for each asset
         :return: a list with new positions for each asset
@@ -369,6 +362,8 @@ class ComputeDataDashboardTimes:
             for asset_name in asset_names:
                 if category.name in asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
+                    last_day_signals = find_date(list(pd.to_datetime(self._positions.business_date)),
+                                                 pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
                     tmp_new_positions[asset_name] = float(tmp_positions.loc[last_day_signals].value) * \
                                                     (1 + strategy_weight)
 
@@ -378,13 +373,94 @@ class ComputeDataDashboardTimes:
 
         return new_positions
 
-    def compute_delta_positions_each_asset(self, prev_positions: Dict[str, List[float]], new_positions:
-                                           Dict[str, List[float]])-> List[float]:
+    def compute_delta_positions_each_asset(self, prev_positions: Dict[str, Dict[str, float]], new_positions:
+                                           Dict[str, Dict[str, float]])-> Dict[str, Dict[str, float]]:
         """
         Compute the delta for each asset
         :return: a list with delta for each asset
         """
-        return self.round_results_all_assets_overview(np.subtract(new_positions, prev_positions))
+
+        delta, tmp_delta = {}, {}
+
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+
+        for category in Category:
+            try:
+                tmp_previous = prev_positions[category.name]
+                tmp_new = new_positions[category.name]
+                for asset_name in asset_names:
+                    if category.name in asset_names_per_category[asset_name]:
+                        tmp_previous_asset_name = tmp_previous[asset_name]
+                        tmp_new_asset_name = tmp_new[asset_name]
+
+                        tmp_delta[asset_name] = (tmp_new_asset_name - tmp_previous_asset_name) * 100
+
+                if bool(tmp_delta):
+                    delta[category.name] = tmp_delta
+                    tmp_delta = {}
+            except KeyError:
+                continue
+
+        return delta
+
+    def compute_trade_positions_each_asset(self, prev_positions: Dict[str, Dict[str, float]],
+                                           new_positions: Dict[str, Dict[str, float]])-> Dict[str, Dict[str, float]]:
+        """
+        Compute the trade for each asset
+        :return: a dict with trades for each asset
+        """
+
+        trade, tmp_trade = {}, {}
+
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+
+        for category in Category:
+            try:
+                tmp_previous = prev_positions[category.name]
+                tmp_new = new_positions[category.name]
+                for asset_name in asset_names:
+                    if category.name in asset_names_per_category[asset_name]:
+                        tmp_previous_asset_name = tmp_previous[asset_name]
+                        tmp_new_asset_name = tmp_new[asset_name]
+
+                        if (tmp_new_asset_name - tmp_previous_asset_name) * 100 > 0:
+                            tmp_trade[asset_name] = 'BUY'
+                        else:
+                            tmp_trade[asset_name] = 'SELL'
+
+                if bool(tmp_trade):
+                    trade[category.name] = tmp_trade
+                    tmp_trade = {}
+            except KeyError:
+                continue
+
+        return trade
+
+    def compute_positions_per_category(self, positions_per_category: Dict[str, Dict[str, float]]) -> Dict[str, float]:
+
+        positions_category, tmp_positions_category = {}, {}
+
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+
+        for category in Category:
+            try:
+                tmp_positions = positions_per_category[category.name]
+
+                positions_category[category.name] = sum(tmp_positions.values())
+            except KeyError:
+                continue
+
+        return positions_category
+
+
+
+
+
+
 
 
 
@@ -436,22 +512,7 @@ class ComputeDataDashboardTimes:
 
         return self.round_results_all_assets_overview(size)
 
-    def compute_overall_performance_all_assets_overview(self, values: np.ndarray) -> List[float]:
-        """
-        Function whic computes the performance for each asset
-        :param values:
-        :param names:
-        :param category_name:
-        :return: a list of performance depending on the category
-        """
-        df = pd.DataFrame(values, columns=['Values'])
-        df['Assets'] = self.get_names_assets
-        df['Category'] = self.classify_assets_by_category()
 
-        performance = df.Values.to_list()
-        performance.append(df.Values.sum())
-
-        return [float(dec) for dec in performance]
 
     def compute_sum_positions_assets_charts(self, strategy_weight: float, start_date: str) -> Dict[str, List[float]]:
         """
