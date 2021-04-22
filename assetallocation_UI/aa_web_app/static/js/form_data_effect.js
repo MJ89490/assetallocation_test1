@@ -64,7 +64,6 @@ function onAddRow() {
 function onRemoveSelected() {
   var selectedData = gridOptions.api.getSelectedRows();
   var res = gridOptions.api.applyTransaction({ remove: selectedData });
-  printResult(res);
 }
 
 // Get the data from AG grid table
