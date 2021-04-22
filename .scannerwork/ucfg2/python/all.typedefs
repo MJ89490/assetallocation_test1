@@ -1,128 +1,0 @@
-?
-mysql.MySQLConnection&
-cursormysql.MySQLConnection.cursorQ
-pymysql.connections.Connection/
-cursor%pymysql.connections.Connection.cursor;
-psycopg2.Connection$
-cursorpsycopg2.Connection.cursorÂ
-sqlite3.Connection#
-cursorsqlite3.Connection.cursor1
-executescript sqlite3.Connection.executescript%
-executesqlite3.Connection.execute-
-executemanysqlite3.Connection.executemany3
-pgdb.Connection 
-cursorpgdb.Connection.cursora
-psycopg2.Cursor"
-executepsycopg2.Cursor.execute*
-executemanypsycopg2.Cursor.executemanyv
-pymysql.cursors.Cursor)
-executepymysql.cursors.Cursor.execute1
-executemany"pymysql.cursors.Cursor.executemanyí
-&django.db.backends.utils.CursorWrapperE
-executescript4django.db.backends.utils.CursorWrapper.executescript9
-execute.django.db.backends.utils.CursorWrapper.executeA
-executemany2django.db.backends.utils.CursorWrapper.executemanyU
-pgdb.Cursor
-executepgdb.Cursor.execute&
-executemanypgdb.Cursor.executemanyg
-mysql.MySQLCursor$
-executemysql.MySQLCursor.execute,
-executemanymysql.MySQLCursor.executemany
-sqlite3.Cursor-
-executescriptsqlite3.Cursor.executescript!
-executesqlite3.Cursor.execute)
-executemanysqlite3.Cursor.executemany½
-str
-encode
-str.encode
-isalphastr.isalpha
-
-startswithstr.startswith
-	isdecimalstr.isdecimal
-
-format_mapstr.format_map
-upper	str.upper
-replacestr.replace
-swapcasestr.swapcase
-endswithstr.endswith
-title	str.title
-	partitionstr.partition
-split	str.split
-strip	str.strip
-
-splitlinesstr.splitlines
-
-rpartitionstr.rpartition
-findstr.find
-zfill	str.zfill
-joinstr.join
-isdigitstr.isdigit
-rfind	str.rfind
-isasciistr.isascii
-	isnumericstr.isnumeric
-
-expandtabsstr.expandtabs
-rindex
-str.rindex
-isalnumstr.isalnum
-rjust	str.rjust
-center
-str.center
-lower	str.lower
-count	str.count
-isspacestr.isspace
-format
-str.format
-index	str.index
-__eq__
-str.__eq__
-
-capitalizestr.capitalize 
-isidentifierstr.isidentifier
-rstrip
-str.rstrip
-rsplit
-str.rsplit
-lstrip
-str.lstrip
-ljust	str.ljust
-casefoldstr.casefoldK
-django.http.request.HttpRequest"META"headers"COOKIES"POST"GET"FILESƒ
-django.http.request.QueryDict(
-get!django.http.request.QueryDict.get8
-__getitem__)django.http.request.QueryDict.__getitem__'
-list
-__getitem__list.__getitem__'
-dict
-__getitem__dict.__getitem__=
-&assetallocation_UI.app.forms.LoginFormflask_wtf.FlaskFormB
-+assetallocation_UI.app.forms.ExportDataFormflask_wtf.FlaskFormD
--assetallocation_UI.app.forms.InputsTimesModelflask_wtf.FlaskFormC
-6assetallocation_UI.app.data_import.assets_names.Assets	enum.Enumé
-Qassetallocation_UI.app.data_import.cleaning_data_from_excel.CleaningDataFromExcel6app.data_import.read_data_from_excel.ReadDataFromExcelf
-__init__Zassetallocation_UI.app.data_import.cleaning_data_from_excel.CleaningDataFromExcel.__init__t
-data_processingaassetallocation_UI.app.data_import.cleaning_data_from_excel.CleaningDataFromExcel.data_processingø
-"assetallocation_UI.app.models.Userflask_login.UserMixin9
-	is_active,assetallocation_UI.app.models.User.is_activeG
-is_authenticated3assetallocation_UI.app.models.User.is_authenticated7
-__init__+assetallocation_UI.app.models.User.__init__…
-Dassetallocation_UI.app.data_import.import_data_from_form.TimesInputsm
-inputs_times_modelWassetallocation_UI.app.data_import.import_data_from_form.TimesInputs.inputs_times_models
-strategy_times_inputsZassetallocation_UI.app.data_import.import_data_from_form.TimesInputs.strategy_times_inputsY
-__init__Massetallocation_UI.app.data_import.import_data_from_form.TimesInputs.__init__Ã
-Rassetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputationsobjecty
-signals_dates_offdassetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputations.signals_dates_offy
-returns_dates_offdassetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputations.returns_dates_off‡
-returns_dates_weekly_offkassetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputations.returns_dates_weekly_offy
-data_computationsdassetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputations.data_computationsg
-__init__[assetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputations.__init__
-data_computations_sumhassetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputations.data_computations_sum}
-positions_dates_offfassetallocation_UI.app.data_import.charts_data_computations.ChartsDataComputations.positions_dates_off‘
-Iassetallocation_UI.app.data_import.read_data_from_excel.ReadDataFromExceld
-import_dataUassetallocation_UI.app.data_import.read_data_from_excel.ReadDataFromExcel.import_data^
-__init__Rassetallocation_UI.app.data_import.read_data_from_excel.ReadDataFromExcel.__init__1
-/assetallocation_UI.app.config.DevelopmentConfig*
-(assetallocation_UI.app.config.LiveConfigÝ
-Massetallocation_UI.app.data_import.import_data_from_excel.ChartsDataFromExcel>app.data_import.cleaning_data_from_excel.CleaningDataFromExcelb
-__init__Vassetallocation_UI.app.data_import.import_data_from_excel.ChartsDataFromExcel.__init__h
-data_chartsYassetallocation_UI.app.data_import.import_data_from_excel.ChartsDataFromExcel.data_charts
