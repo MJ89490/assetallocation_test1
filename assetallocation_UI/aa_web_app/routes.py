@@ -244,6 +244,8 @@ def effect_strategy():
 def received_data_effect_form():
     form_data = request.form['form_data'].split('&')
 
+    print('RECEIVED DATA EFFECT')
+
     obj_receive_data_effect.receive_data_effect(form_data)
 
     obj_receive_data_effect.call_run_effect(assets_inputs_effect=json.loads(request.form['json_data']))
