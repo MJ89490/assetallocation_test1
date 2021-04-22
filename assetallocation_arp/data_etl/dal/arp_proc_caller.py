@@ -848,4 +848,26 @@ class MavenProcCaller(StrategyProcCaller):
 if __name__ == '__main__':
     from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
     apc = TimesProcCaller()
-    s = apc._select_times_strategy(859)
+    # s = apc._select_times_strategy(859)
+
+    from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
+
+    f = apc.select_fund_strategy_results("test_fund", "times", 1052, dt.date(2000, 1, 1), dt.date(2001, 8, 8))
+
+    weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(f.asset_weights)
+
+    analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(f.analytics)
+
+    # DataFrameConverter.fund_strategy_asset_weights_to_df(f.asset_weights)
+
+    # analytic_df.loc[analytic_df['analytic_subcategory'] == 'excess return']
+
+    # analytic_df.xs(Signal.momentum, level='analytic_subcategory')
+
+    # import datetime
+    # from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
+    #
+    # obj = ComputeDataDashboardTimes()
+    # obj.call_times_proc_caller("test_fund", 1052, datetime.datetime.strptime('08/08/2001', '%d/%m/%Y'))
+    #
+    # obj.compute_weekly_performance_all_assets_overview()

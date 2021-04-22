@@ -9,21 +9,52 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
     """
 
     # Performances
-    weekly_all_perf = obj_charts_data.compute_weekly_performance_all_assets_overview()
-    ytd_all_perf = obj_charts_data.compute_ytd_performance_all_assets_overview()
+    weekly_all_perf = obj_charts_data.compute_weekly_performance_each_asset()
+    ytd_all_perf = obj_charts_data.compute_ytd_performance_each_asset()
+
+    # Positions
+    mom_signals = obj_charts_data.compute_mom_signals_each_asset()
+    positions, dates_pos = obj_charts_data.compute_positions_position_1y_each_asset(strategy_weight,
+                                                                                    start_date,
+                                                                                    end_date)
+
+    previous_positions = obj_charts_data.compute_previous_positions_each_asset(strategy_weight)
+    new_positions = obj_charts_data.compute_new_positions_each_asset(strategy_weight)
+    delta_positions = obj_charts_data.compute_delta_positions_each_asset(previous_positions,
+                                                                         new_positions)
+
+    trade_positions = obj_charts_data.compute_trade_positions_each_asset(previous_positions, new_positions)
+
+    # Positions per category
+    new_positions_per_category = obj_charts_data.compute_positions_per_category(new_positions)
+    previous_positions_per_category = obj_charts_data.compute_positions_per_category(previous_positions)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # Category
     category = obj_charts_data.classify_assets_by_category()
 
-    # Positions
-    positions, dates_pos = obj_charts_data.compute_positions_assets(start_date, end_date)
-    mom_signals = obj_charts_data.compute_mom_signals_all_assets_overview()
 
-    previous_positions = obj_charts_data.compute_previous_positions_all_assets_overview(strategy_weight)
-    implemented_weight = obj_charts_data.compute_new_positions_all_assets_overview(strategy_weight)
 
-    delta_positions = obj_charts_data.compute_delta_positions_all_assets_overview(previous_positions, implemented_weight)
-    trade_positions = obj_charts_data.compute_trade_positions_all_assets_overview(delta_positions)
+
+
+
+
+
+
 
     # Performance overall
     weekly_overall = obj_charts_data.compute_overall_performance_all_assets_overview(
@@ -32,10 +63,8 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
     ytd_overall = obj_charts_data.compute_overall_performance_all_assets_overview(
                                                                    ytd_all_perf['ytd_performance_all_currencies'])
 
-    # Positions overall
-    pre_overall = obj_charts_data.compute_overall_performance_all_assets_overview(previous_positions)
 
-    new_overall = obj_charts_data.compute_overall_performance_all_assets_overview(implemented_weight)
+
 
     # Size
     size_pos = obj_charts_data.compute_size_positions_all_assets_overview(implemented_weight, new_overall)
