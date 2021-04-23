@@ -3,17 +3,12 @@ DECLARE
     audit_row audit.logged_action;
     excluded_cols text[] = ARRAY[]::text[];
 BEGIN
-    IF TG_WHEN <> 'AFTER' THEN
-        RAISE EXCEPTION 'audit.if_modified_func() may only run as an AFTER trigger';
-    END IF;
-
     audit_row.schema_name = TG_TABLE_SCHEMA::text;
     audit_row.table_name = TG_TABLE_NAME::text;
     audit_row.session_user_name = session_user::text;
     audit_row.action_tstamp_tx = current_timestamp;
     audit_row.action_tstamp_stm = statement_timestamp();
     audit_row.transaction_id = txid_current();
-    audit_row.application_name = current_setting('application_name');
     audit_row.action = substring(TG_OP,1,1);
     audit_row.row_data = NULL;
     audit_row.changed_fields = NULL;
@@ -34,7 +29,7 @@ BEGIN
     ELSIF (TG_OP = 'DELETE' AND TG_LEVEL = 'ROW') THEN
         audit_row.row_data = to_jsonb(OLD.*) #- excluded_cols;
     ELSIF (TG_OP = 'INSERT' AND TG_LEVEL = 'ROW') THEN
-        audit_row.row_data = to_jsonb(NEW.*) #- excluded_cols;
+        RETURN NULL;
     ELSIF (TG_LEVEL = 'STATEMENT' AND TG_OP IN ('INSERT','UPDATE','DELETE','TRUNCATE')) THEN
         audit_row.statement_only = 't';
     ELSE
