@@ -412,22 +412,6 @@ class ComputeDataDashboardTimes:
 
         return trade
 
-    def compute_positions_per_category(self, positions_per_category: Dict[str, Dict[str, float]]) -> Dict[str, float]:
-
-        positions_category, tmp_positions_category = {}, {}
-
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-
-        for category in Category:
-            try:
-                tmp_positions = positions_per_category[category.name]
-
-                positions_category[category.name] = sum(tmp_positions.values())
-            except KeyError:
-                continue
-
-        return positions_category
-
     @staticmethod
     def compute_size_positions_each_asset(new_positions: Dict[str, Dict[str, float]], new_positions_per_category:
                                           Dict[str, float]) -> Dict[str, Dict[str, float]]:
@@ -442,6 +426,28 @@ class ComputeDataDashboardTimes:
                 new_positions[category_key][tmp_key] = tmp_value / new_positions_per_category_value
 
         return new_positions
+
+    def compute_positions_performance_per_category(self, positions_performance_per_category: Dict[str, Dict[str, float]],
+                                                   performance=False) -> Dict[str, float]:
+
+        positions_category, tmp_positions_category = {}, {}
+
+        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
+
+        for category in Category:
+            try:
+                tmp_positions = positions_performance_per_category[category.name]
+
+                positions_category[category.name] = sum(tmp_positions.values())
+            except KeyError:
+                continue
+
+        if performance:
+            positions_category['Total'] = sum(positions_category.values())
+
+        return positions_category
+
+
 
 
 

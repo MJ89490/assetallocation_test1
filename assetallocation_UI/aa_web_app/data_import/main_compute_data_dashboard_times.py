@@ -9,8 +9,8 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
     """
 
     # Performances
-    weekly_all_perf = obj_charts_data.compute_weekly_performance_each_asset()
-    ytd_all_perf = obj_charts_data.compute_ytd_performance_each_asset()
+    weekly_performance = obj_charts_data.compute_weekly_performance_each_asset()
+    ytd_performance = obj_charts_data.compute_ytd_performance_each_asset()
 
     # Positions
     mom_signals = obj_charts_data.compute_mom_signals_each_asset()
@@ -26,13 +26,14 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
     trade_positions = obj_charts_data.compute_trade_positions_each_asset(previous_positions, new_positions)
 
     # Positions per category
-    new_positions_per_category = obj_charts_data.compute_positions_per_category(new_positions)
-    previous_positions_per_category = obj_charts_data.compute_positions_per_category(previous_positions)
+    new_positions_per_category = obj_charts_data.compute_positions_performance_per_category(new_positions)
+    previous_positions_per_category = obj_charts_data.compute_positions_performance_per_category(previous_positions)
 
     size_positions = obj_charts_data.compute_size_positions_each_asset(new_positions, new_positions_per_category)
 
-
-
+    # Performance per category
+    weekly_performance_per_category = obj_charts_data.compute_positions_performance_per_category(weekly_performance, True)
+    ytd_performance_per_category = obj_charts_data.compute_positions_performance_per_category(ytd_performance, True)
 
 
 
