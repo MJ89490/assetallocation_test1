@@ -3,20 +3,22 @@ from flask import render_template
 from flask import request, redirect, url_for, jsonify
 
 from assetallocation_UI.aa_web_app import app
+
 from assetallocation_UI.aa_web_app.service.fund import get_fund_names
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_UI.aa_web_app.forms_effect import InputsEffectStrategy
 from assetallocation_UI.aa_web_app.service.formatter import format_versions
 from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
-from assetallocation_UI.aa_web_app.data_import.receive_data_times import ReceiveDataTimes
 from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
+from assetallocation_UI.aa_web_app.data_import.receive_data_times import ReceiveDataTimes
+from assetallocation_UI.aa_web_app.data_import.call_times_proc_caller import call_times_proc_caller
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import main_compute_data_dashboard_times
 
 obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
-obj_times_charts_data = ComputeDataDashboardTimes()
+
 
 
 @app.route('/')
@@ -119,7 +121,14 @@ def times_dashboard():
     export_data_sidebar = 'not_export_data_sidebar'
     positions, dates_pos = [], []
 
+    signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
+                                                         version_strategy=obj_received_data_times.version_strategy,
+                                                         date_to=obj_received_data_times.date_to,
+                                                         date_to_sidebar=obj_received_data_times.date_to_sidebar)
+    obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
+
     if request.method == 'POST':
+
         if form.submit_ok_positions.data:
             positions_chart = True
             start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
@@ -140,10 +149,10 @@ def times_dashboard():
 
         obj_received_data_times.receive_data_selected_version_sidebar_dashboard(obj_received_data_times.date_to)
 
-    obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
-                                                 obj_received_data_times.version_strategy,
-                                                 date_to=obj_received_data_times.date_to,
-                                                 date_to_sidebar=obj_received_data_times.date_to_sidebar)
+    # obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
+    #                                              obj_received_data_times.version_strategy,
+    #                                              date_to=obj_received_data_times.date_to,
+    #                                              date_to_sidebar=obj_received_data_times.date_to_sidebar)
 
     template_data = main_compute_data_dashboard_times(obj_times_charts_data,
                                                       obj_received_data_times.strategy_weight,

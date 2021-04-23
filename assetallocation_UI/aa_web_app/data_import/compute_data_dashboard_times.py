@@ -7,21 +7,21 @@ from typing import Tuple
 from calendar import monthrange
 from pandas.tseries import offsets
 
-from assetallocation_arp.common_libraries.dal_enums.strategy import Name
+
 from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
-from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
-from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
+
+
 from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
 
 class ComputeDataDashboardTimes:
     """Class doing computations for the data of the times dashboard"""
 
-    def __init__(self):
-        self._signals = None
-        self._positions = None
-        self._returns = None
+    def __init__(self, signals, returns, positions):
+        self._signals = signals
+        self._positions = positions
+        self._returns = returns
 
         self._signals_comp = None
         self._positions_comp = None
@@ -83,34 +83,6 @@ class ComputeDataDashboardTimes:
     @property
     def positions_assets_length(self):
         return len(self._positions.loc[pd.to_datetime(self._positions_sum_start_date, format='%d-%m-%Y'):])
-
-    def call_times_proc_caller(self, fund_name: str, version_strategy: int, date_to: datetime, date_to_sidebar=None) -> None:
-        """
-        Call Times proc caller to grab the data from the db
-        :param fund_name: name of the current fund (example: f1, f2,...)
-        :param version_strategy: version of the current strategy (version1, version2, ...)
-        :param date_to_sidebar: date to sidebar
-        :return: None
-        """
-        apc = TimesProcCaller()
-        fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy,
-                                              business_date_from=datetime.datetime.strptime('01/01/2000', '%d/%m/%Y').date(),
-                                              business_date_to=date_to
-                                              )
-
-        self._positions = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
-
-        analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
-
-        self._signals = analytic_df.loc[analytic_df['analytic_subcategory'] == 'momentum']
-        self._signals.index = pd.to_datetime(self._signals['business_date'])
-        self._returns = analytic_df.loc[analytic_df['analytic_subcategory'] == 'excess return']
-        self._returns.index = pd.to_datetime(self._returns['business_date'])
-
-        if date_to_sidebar is not None:
-            self._signals = self._signals.loc[:date_to_sidebar]
-            self._returns = self._returns.loc[:date_to_sidebar]
-            self._positions = self._positions.loc[:date_to_sidebar]
 
     @staticmethod
     def compute_ninety_fifth_percentile(assets_values: List[float]) -> float:
@@ -456,6 +428,20 @@ class ComputeDataDashboardTimes:
 
         return positions_category
 
+    @staticmethod
+    def compute_size_positions_each_asset(new_positions: Dict[str, Dict[str, float]], new_positions_per_category:
+                                          Dict[str, float]) -> Dict[str, Dict[str, float]]:
+
+        for category_key in new_positions.keys():
+            new_positions_per_category_value = new_positions_per_category[category_key]
+
+            tmp_new_positions = new_positions[category_key]
+
+            for tmp_key, tmp_value in tmp_new_positions.items():
+
+                new_positions[category_key][tmp_key] = tmp_value / new_positions_per_category_value
+
+        return new_positions
 
 
 
@@ -487,30 +473,7 @@ class ComputeDataDashboardTimes:
 
 
 
-    def compute_size_positions_all_assets_overview(self, values: np.ndarray, new_overall: np.ndarray) -> np.ndarray:
-        """
-        Function computing the size of each assets
-        :param values:
-        :param names:
-        :param category_name:
-        :param new_overall:
-        :return: a list of size for each asset
-        """
-        df = pd.DataFrame(values, columns=['Values'])
-        df['Assets'] = self.get_names_assets
-        df['Category'] = self.classify_assets_by_category()
 
-        # equities = (df.loc[df['Category'] == 'Equity', 'Values'] / new_overall[0]).tolist()
-        # forex = (df.loc[df['Category'] == 'FX', 'Values'] / new_overall[1]).tolist()
-        # bonds = (df.loc[df['Category'] == 'Nominal Bond', 'Values'] / new_overall[2]).tolist()
-
-        # size = []
-
-        # size.extend(equities + forex + bonds)
-
-        size = df.Values / new_overall[0:3]
-
-        return self.round_results_all_assets_overview(size)
 
 
 

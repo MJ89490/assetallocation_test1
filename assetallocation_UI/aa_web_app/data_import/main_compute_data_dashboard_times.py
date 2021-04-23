@@ -29,9 +29,7 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
     new_positions_per_category = obj_charts_data.compute_positions_per_category(new_positions)
     previous_positions_per_category = obj_charts_data.compute_positions_per_category(previous_positions)
 
-
-
-
+    size_positions = obj_charts_data.compute_size_positions_each_asset(new_positions, new_positions_per_category)
 
 
 
@@ -67,7 +65,7 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
 
 
     # Size
-    size_pos = obj_charts_data.compute_size_positions_all_assets_overview(implemented_weight, new_overall)
+
 
     positions_assets_sum = obj_charts_data.compute_sum_positions_assets_charts(strategy_weight, start_date_sum)
 
