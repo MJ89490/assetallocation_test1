@@ -14,15 +14,11 @@ BEGIN
     audit_row.action_tstamp_stm = statement_timestamp();
     audit_row.transaction_id = txid_current();
     audit_row.application_name = current_setting('application_name');
-    audit_row.client_query = current_query();
     audit_row.action = substring(TG_OP,1,1);
     audit_row.row_data = NULL;
     audit_row.changed_fields = NULL;
     audit_row.statement_only = 'f';
 
-    IF NOT TG_ARGV[0]::boolean IS DISTINCT FROM 'f'::boolean THEN
-        audit_row.client_query = NULL;
-    END IF;
 
     IF TG_ARGV[1] IS NOT NULL THEN
         excluded_cols = TG_ARGV[1]::text[];
@@ -53,7 +49,6 @@ BEGIN
         action_tstamp_stm,
         transaction_id,
         application_name,
-        client_query,
         action,
         row_data,
         changed_fields,
@@ -66,7 +61,6 @@ BEGIN
         audit_row.action_tstamp_stm,
         audit_row.transaction_id,
         audit_row.application_name,
-        audit_row.client_query,
         audit_row.action,
         audit_row.row_data,
         audit_row.changed_fields,
