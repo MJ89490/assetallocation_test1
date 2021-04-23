@@ -6,13 +6,8 @@ from typing import List
 from typing import Tuple
 from calendar import monthrange
 from pandas.tseries import offsets
-
-
 from assetallocation_arp.common_libraries.dal_enums.asset import Category
 from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
-
-
-from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
 
 class ComputeDataDashboardTimes:
@@ -447,7 +442,14 @@ class ComputeDataDashboardTimes:
 
         return positions_category
 
+    def sum_positions_each_asset_into_category(self, positions):
 
+
+        for key_positions in positions.keys():
+            tmp_positions_per_category = positions[key_positions]
+
+            for key_asset in tmp_positions_per_category:
+                tmp_positions_per_asset = 0
 
 
 

@@ -53,21 +53,6 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
 
 
 
-
-
-    # Performance overall
-    weekly_overall = obj_charts_data.compute_overall_performance_all_assets_overview(
-                                                                   weekly_all_perf['weekly_performance_all_currencies'])
-
-    ytd_overall = obj_charts_data.compute_overall_performance_all_assets_overview(
-                                                                   ytd_all_perf['ytd_performance_all_currencies'])
-
-
-
-
-    # Size
-
-
     positions_assets_sum = obj_charts_data.compute_sum_positions_assets_charts(strategy_weight, start_date_sum)
 
     # Percentile
