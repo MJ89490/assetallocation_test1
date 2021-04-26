@@ -27,14 +27,6 @@ class ComputeDataDashboardTimes:
         self.positions_start_date = None
         self.positions_end_date = None
 
-    # @property
-    # def get_names_assets(self)->List[str]:
-    #     if self._positions is None:
-    #         pass
-    #     else:
-    #         return sorted(set([name.replace(name, "Fixed Income") if name == "Nominal Bond" else name for name in
-    #                            self._positions.asset_subcategory.to_list()]))
-
     @property
     def get_signal_as_off(self) -> datetime:
         return self._signals.last_valid_index().strftime('%d-%m-%Y')
@@ -126,22 +118,6 @@ class ComputeDataDashboardTimes:
     @staticmethod
     def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:
         return {keys[key]: results[key] for key in range(len(keys))}
-
-    def classify_assets_by_category(self) -> List[str]:
-        """
-        Function which classifies the assets per category
-        :param names_assets: names of assets (Equities, FX, Bonds)
-        :param values_perf: performance of assets in each category
-        :return: a sorted list of categories and a dict with perf values depending on the category
-        """
-        category_name = []
-
-        for name in self.get_names_assets:
-            for category in Category:
-                if category.name in name:
-                    category_name.append(category.name)
-
-        return category_name
 
     def compute_weekly_performance_each_asset(self) -> Tuple[Dict[str, Dict[str, float]], List[float]]:
         """
@@ -245,13 +221,9 @@ class ComputeDataDashboardTimes:
         position_1y, tmp_position_1y = {}, {}
         dates_position_1y, position_1y_lst = [], []
 
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
-
         for category in Category:
-            for asset_name in asset_names:
-                if category.name in asset_names_per_category[asset_name]:
+            for asset_name in self.get_asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
                     tmp_positions.index = pd.to_datetime(tmp_positions.business_date)
 
@@ -421,7 +393,6 @@ class ComputeDataDashboardTimes:
                 tmp_sum_per_category.append(sum)
                 sum = 0
 
-            # sum_per_category.append(tmp_sum_per_category)
             sum_positions_per_category[key_positions] = tmp_sum_per_category
 
         return sum_positions_per_category
@@ -446,38 +417,3 @@ class ComputeDataDashboardTimes:
             percentile_list_per_category[key_category] = [category_percentile[key_category]] * length_lst
 
         return percentile_list_per_category
-
-
-    # def compute_sum_positions_assets_charts(self, strategy_weight: float, start_date: str) -> Dict[str, List[float]]:
-    #     """
-    #     Function which computes the positions of each asset
-    #     :param strategy_weight: weight of te strategy (0.46 as example)
-    #     :param start_date: start date of positions assets
-    #     :return: a dictionary with positions for each asset
-    #     """
-    #
-    #     self.positions_sum_start_date = start_date
-    #
-    #     self._positions.columns = [name.replace(name, 'Fixed Income') if name == 'Nominal Bond' else name for name
-    #                                in self._positions.columns]
-    #
-    #     tmp_category,  category_sort = [], {}
-    #
-    #     for category in Category:
-    #         for name in self.get_names_assets:
-    #             if category.name in name:
-    #                 tmp_category.append(name)
-    #
-    #         if len(tmp_category) != 0:
-    #             category_sort[category.name] = self._positions.loc[pd.to_datetime(self._positions_sum_start_date,
-    #                                                                               format='%d-%m-%Y'):, tmp_category].apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
-    #         tmp_category = []
-    #
-    #     category_sort['titles_ids'] = [key for key in category_sort.keys()]
-    #     category_sort['dates_positions_assets'] = self._positions.index.strftime("%Y-%m-%d").to_list()
-    #
-    #     return category_sort
-
-
-
-
