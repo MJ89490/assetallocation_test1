@@ -23,6 +23,7 @@ def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datet
                                           )
 
     positions = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
+    positions.loc[(positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
 
     analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 

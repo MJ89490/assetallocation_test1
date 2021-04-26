@@ -18,7 +18,7 @@ function positionsChart(positions, assets_names)
     var data = [trace0];
 
     var config = { 'displayModeBar': false, 'responsive': true };
-    var layout = {margin: {l: 100, t:0}};
+    var layout = {margin: {l: 180, t:0}};
 
     Plotly.newPlot(POSITIONS, data, layout, config);
 }

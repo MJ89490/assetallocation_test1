@@ -19,8 +19,6 @@ from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times
 obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
 
-
-
 @app.route('/')
 def home():
     return render_template('home.html', title='HomePage')
@@ -132,8 +130,8 @@ def times_dashboard():
         if form.submit_ok_positions.data:
             positions_chart = True
             start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
-            positions, dates_pos = obj_times_charts_data.compute_positions_assets(start_date=start,
-                                                                                  end_date=end)
+            # positions, dates_pos = obj_times_charts_data.compute_positions_assets(start_date=start,
+            #                                                                       end_date=end)
         # elif request.form['submit_button'] == 'dashboard':
         #     obj_received_data_times.receive_data_latest_version_dashboard(obj_received_data_times.date_to)
 

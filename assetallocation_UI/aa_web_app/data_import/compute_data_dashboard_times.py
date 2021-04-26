@@ -27,17 +27,45 @@ class ComputeDataDashboardTimes:
         self.positions_start_date = None
         self.positions_end_date = None
 
-    @property
-    def get_names_assets(self)->List[str]:
-        if self._positions is None:
-            pass
-        else:
-            return [name.replace(name, "Fixed Income") if name == "Nominal Bond" else name for name in
-                    self._positions.columns.to_list()]
+    # @property
+    # def get_names_assets(self)->List[str]:
+    #     if self._positions is None:
+    #         pass
+    #     else:
+    #         return sorted(set([name.replace(name, "Fixed Income") if name == "Nominal Bond" else name for name in
+    #                            self._positions.asset_subcategory.to_list()]))
 
     @property
     def get_signal_as_off(self) -> datetime:
         return self._signals.last_valid_index().strftime('%d-%m-%Y')
+
+    @property
+    def get_asset_names(self):
+        asset_names_sorted = []
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
+                    asset_names_sorted.append(asset_name)
+
+        return asset_names_sorted
+
+    @property
+    def get_asset_names_per_category_sorted(self):
+        asset_names_per_category_sorted = []
+        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
+
+        for category in Category:
+            for asset_name in asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
+                    asset_names_per_category_sorted.append(category.name)
+
+        return asset_names_per_category_sorted
+
+    @property
+    def get_asset_names_per_category(self):
+        return dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
 
     @property
     def positions_sum_start_date(self) -> str:
@@ -75,7 +103,6 @@ class ComputeDataDashboardTimes:
             value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_end_date = value
 
-
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance: dict):
         """
@@ -94,7 +121,7 @@ class ComputeDataDashboardTimes:
         :return: rounded list
         """
 
-        return [round(d, 4) for d in results]
+        return [round(d, 3) for d in results]
 
     @staticmethod
     def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:
@@ -116,7 +143,7 @@ class ComputeDataDashboardTimes:
 
         return category_name
 
-    def compute_weekly_performance_each_asset(self) -> Dict[str, Dict[str, float]]:
+    def compute_weekly_performance_each_asset(self) -> Tuple[Dict[str, Dict[str, float]], List[float]]:
         """
         Compute the weekly performance for each assets
         :return:
@@ -126,28 +153,25 @@ class ComputeDataDashboardTimes:
         prev_7_days_date_signals = self._signals.last_valid_index() - datetime.timedelta(days=9)
 
         weekly_performance, tmp_weekly_performance = {}, {}
-
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+        weekly_performance_lst = []
 
         for category in Category:
-            for asset_name in asset_names:
-                if category.name in asset_names_per_category[asset_name]:
+            for asset_name in self.get_asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[prev_7_days_date_signals].value
-                    weekly_perf = float((v1 - v2) * 100)
 
-                    tmp_weekly_performance[asset_name] = round(weekly_perf, 4)
+                    tmp_weekly_performance[asset_name] = round(float((v1 - v2) * 100), 3)
+                    weekly_performance_lst.append(round(float((v1 - v2) * 100), 3))
 
             if bool(tmp_weekly_performance):
                 weekly_performance[category.name] = tmp_weekly_performance
                 tmp_weekly_performance = {}
 
-        return weekly_performance
+        return weekly_performance, weekly_performance_lst
 
-    def compute_ytd_performance_each_asset(self) -> Dict[str, Dict[str, float]]:
+    def compute_ytd_performance_each_asset(self) -> Tuple[Dict[str, Dict[str, float]], List[float]]:
         """
         Compute the YTD performance for each asset
         :return: a list with ytd performance for each asset
@@ -167,55 +191,44 @@ class ComputeDataDashboardTimes:
                 days.append(current_date)
 
         ytd_performance, tmp_ytd_performance = {}, {}
-
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+        ytd_performance_lst = []
 
         for category in Category:
-            for asset_name in asset_names:
-                if category.name in asset_names_per_category[asset_name]:
+            for asset_name in self.get_asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[days[0]].value
-                    weekly_perf = float((v1 - v2) * 100)
+                    weekly_perf = round(float((v1 - v2) * 100), 3)
 
-                    tmp_ytd_performance[asset_name] = round(weekly_perf, 4)
+                    tmp_ytd_performance[asset_name] = weekly_perf
+                    ytd_performance_lst.append(weekly_perf)
 
             if bool(tmp_ytd_performance):
                 ytd_performance[category.name] = tmp_ytd_performance
                 tmp_ytd_performance = {}
 
-        return ytd_performance
+        return ytd_performance, ytd_performance_lst
 
-    def compute_mom_signals_each_asset(self) -> Dict[str, Dict[str, float]]:
+    def compute_mom_signals_each_asset(self) -> List[float]:
         """
         Compute the Mom signals for each asset
         :return: a list with signals for each asset
         """
         # Find out the last date
         last_day_signals = self._signals.last_valid_index()
-
-        mom_signals, tmp_mom_signals = {}, {}
-
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+        mom_signals = []
 
         for category in Category:
-            for asset_name in asset_names:
-                if category.name in asset_names_per_category[asset_name]:
+            for asset_name in self.get_asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_signals = self._signals.loc[self._signals.asset_name == asset_name]
-                    tmp_mom_signals[asset_name] = round(float(tmp_signals.loc[last_day_signals].value), 4)
-
-            if bool(tmp_mom_signals):
-                mom_signals[category.name] = tmp_mom_signals
-                tmp_mom_signals = {}
+                    mom_signals.append(round(float(tmp_signals.loc[last_day_signals].value), 3))
 
         return mom_signals
 
     def compute_positions_position_1y_each_asset(self, strategy_weight: float, start_date: None, end_date: None) \
-            -> Tuple[Dict[str, Dict[str, float]], List[str]]:
+            -> Tuple[Dict[str, Dict[str, float]], List[str], List[List[float]]]:
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -230,7 +243,7 @@ class ComputeDataDashboardTimes:
         self.positions_start_date, self.positions_end_date = start_date, end_date
 
         position_1y, tmp_position_1y = {}, {}
-        dates_position_1y = []
+        dates_position_1y, position_1y_lst = [], []
 
         asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
         self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
@@ -247,14 +260,16 @@ class ComputeDataDashboardTimes:
 
                     tmp_position_1y[asset_name] = tmp_positions.loc[self._positions_start_date:
                                                                     self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
-
+                    position_1y_lst.append(tmp_positions.loc[self._positions_start_date:
+                                                             self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list())
             if bool(tmp_position_1y):
                 position_1y[category.name] = tmp_position_1y
                 tmp_position_1y = {}
 
-        return position_1y, dates_position_1y
+        return position_1y, dates_position_1y, position_1y_lst
 
-    def compute_previous_positions_each_asset(self, strategy_weight: float) -> Dict[str, Dict[str, float]]:
+    def compute_previous_positions_each_asset(self, strategy_weight: float) -> Tuple[Dict[str, Dict[str, float]],
+                                                                                     List[float]]:
         """
         Compute the previous positions for each asset
         :return: a list with previous positions for each asset
@@ -263,25 +278,25 @@ class ComputeDataDashboardTimes:
         last_day_signals = self._signals.last_valid_index() - datetime.timedelta(days=7)
 
         previous_positions, tmp_previous_positions = {}, {}
-
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+        previous_positions_lst = []
 
         for category in Category:
-            for asset_name in asset_names:
-                if category.name in asset_names_per_category[asset_name]:
+            for asset_name in self.get_asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
                     tmp_previous_positions[asset_name] = float(tmp_positions.loc[last_day_signals].value) * \
-                                                          (1 + strategy_weight)
+                                                         (1 + strategy_weight)
+                    previous_positions_lst.append(round(float(tmp_positions.loc[last_day_signals].value) *
+                                                        (1 + strategy_weight), 3))
 
             if bool(tmp_previous_positions):
                 previous_positions[category.name] = tmp_previous_positions
                 tmp_previous_positions = {}
 
-        return previous_positions
+        return previous_positions, previous_positions_lst
 
-    def compute_new_positions_each_asset(self, strategy_weight: float) -> Dict[str, Dict[str, float]]:
+    def compute_new_positions_each_asset(self, strategy_weight: float) -> Tuple[Dict[str, Dict[str, float]],
+                                                                                List[float]]:
         """
         Compute the new positions for each asset
         :return: a list with new positions for each asset
@@ -290,88 +305,58 @@ class ComputeDataDashboardTimes:
         last_day_signals = self._signals.last_valid_index()
 
         new_positions, tmp_new_positions = {}, {}
-
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+        new_positions_lst = []
 
         for category in Category:
-            for asset_name in asset_names:
-                if category.name in asset_names_per_category[asset_name]:
+            for asset_name in self.get_asset_names:
+                if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
                     last_day_signals = find_date(list(pd.to_datetime(self._positions.business_date)),
                                                  pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
                     tmp_new_positions[asset_name] = float(tmp_positions.loc[last_day_signals].value) * \
                                                     (1 + strategy_weight)
+                    new_positions_lst.append(round(float(tmp_positions.loc[last_day_signals].value) *
+                                                   (1 + strategy_weight), 3))
 
             if bool(tmp_new_positions):
                 new_positions[category.name] = tmp_new_positions
                 tmp_new_positions = {}
 
-        return new_positions
+        return new_positions, new_positions_lst
 
-    def compute_delta_positions_each_asset(self, prev_positions: Dict[str, Dict[str, float]], new_positions:
-                                           Dict[str, Dict[str, float]])-> Dict[str, Dict[str, float]]:
+    @staticmethod
+    def compute_delta_positions_each_asset(prev_positions: List[float], new_positions: List[float])-> List[float]:
         """
         Compute the delta for each asset
         :return: a list with delta for each asset
         """
 
-        delta, tmp_delta = {}, {}
+        delta_positions = []
 
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+        for i in range(len(prev_positions)):
+            delta_positions.append(round((prev_positions[i] - new_positions[i]) * 100, 4))
 
-        for category in Category:
-            try:
-                tmp_previous = prev_positions[category.name]
-                tmp_new = new_positions[category.name]
-                for asset_name in asset_names:
-                    if category.name in asset_names_per_category[asset_name]:
-                        tmp_previous_asset_name = tmp_previous[asset_name]
-                        tmp_new_asset_name = tmp_new[asset_name]
-
-                        tmp_delta[asset_name] = (tmp_new_asset_name - tmp_previous_asset_name) * 100
-
-                if bool(tmp_delta):
-                    delta[category.name] = tmp_delta
-                    tmp_delta = {}
-            except KeyError:
-                continue
-
-        return delta
+        return delta_positions
 
     def compute_trade_positions_each_asset(self, prev_positions: Dict[str, Dict[str, float]],
-                                           new_positions: Dict[str, Dict[str, float]])-> Dict[str, Dict[str, float]]:
+                                           new_positions: Dict[str, Dict[str, float]])-> List[str]:
         """
         Compute the trade for each asset
         :return: a dict with trades for each asset
         """
 
-        trade, tmp_trade = {}, {}
-
-        asset_names = sorted(set(self._signals.asset_name.to_list()), key=self._signals.asset_name.to_list().index)
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-        asset_names_per_category = dict(zip(self._positions.asset_name, self._positions.asset_subcategory))
+        trade = []
 
         for category in Category:
             try:
                 tmp_previous = prev_positions[category.name]
                 tmp_new = new_positions[category.name]
-                for asset_name in asset_names:
-                    if category.name in asset_names_per_category[asset_name]:
-                        tmp_previous_asset_name = tmp_previous[asset_name]
-                        tmp_new_asset_name = tmp_new[asset_name]
-
-                        if (tmp_new_asset_name - tmp_previous_asset_name) * 100 > 0:
-                            tmp_trade[asset_name] = 'BUY'
+                for asset_name in self.get_asset_names:
+                    if category.name in self.get_asset_names_per_category[asset_name]:
+                        if (tmp_new[asset_name] - tmp_previous[asset_name]) * 100 > 0:
+                            trade.append('BUY')
                         else:
-                            tmp_trade[asset_name] = 'SELL'
-
-                if bool(tmp_trade):
-                    trade[category.name] = tmp_trade
-                    tmp_trade = {}
+                            trade.append('SELL')
             except KeyError:
                 continue
 
@@ -379,36 +364,36 @@ class ComputeDataDashboardTimes:
 
     @staticmethod
     def compute_size_positions_each_asset(new_positions: Dict[str, Dict[str, float]], new_positions_per_category:
-                                          Dict[str, float]) -> Dict[str, Dict[str, float]]:
+                                          Dict[str, float]) -> List[float]:
+        size_positions = []
 
         for category_key in new_positions.keys():
             new_positions_per_category_value = new_positions_per_category[category_key]
-
             tmp_new_positions = new_positions[category_key]
 
             for tmp_key, tmp_value in tmp_new_positions.items():
 
-                new_positions[category_key][tmp_key] = tmp_value / new_positions_per_category_value
+                size_positions.append(round(tmp_value / new_positions_per_category_value, 3))
 
-        return new_positions
+        return size_positions
 
-    def compute_positions_performance_per_category(self, positions_performance_per_category: Dict[str, Dict[str, float]],
+    @staticmethod
+    def compute_positions_performance_per_category(positions_performance_per_category: Dict[str, Dict[str, float]],
                                                    performance=False) -> Dict[str, float]:
 
         positions_category, tmp_positions_category = {}, {}
-
-        self._positions.loc[(self._positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
 
         for category in Category:
             try:
                 tmp_positions = positions_performance_per_category[category.name]
 
-                positions_category[category.name] = sum(tmp_positions.values())
+                positions_category[category.name] = round(sum(tmp_positions.values()), 3)
+
             except KeyError:
                 continue
 
         if performance:
-            positions_category['Total'] = sum(positions_category.values())
+            positions_category['Total'] = round(sum(positions_category.values()), 3)
 
         return positions_category
 
@@ -424,7 +409,6 @@ class ComputeDataDashboardTimes:
 
             # 1.Add each asset into sublist
             for key_asset in tmp_positions_per_category:
-                print(tmp_positions_per_category[key_asset])
                 tmp_positions_per_asset.append(tmp_positions_per_category[key_asset])
 
             # 2.Compute the sum per asset

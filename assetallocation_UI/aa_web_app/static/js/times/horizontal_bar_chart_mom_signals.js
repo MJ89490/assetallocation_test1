@@ -20,6 +20,6 @@ function momSignalsChart(mom_signals, assets_names)
 
     var config = { 'displayModeBar': false, 'responsive': true };
 
-    var layout = {barmode: 'stack', margin: {l: 100, t:0}};
+    var layout = {barmode: 'stack', margin: {l: 180, t:0}};
     Plotly.newPlot(MOM_SIGNALS, data, layout, config);
 }
