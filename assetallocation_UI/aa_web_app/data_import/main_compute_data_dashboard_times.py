@@ -35,13 +35,18 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
     weekly_performance_per_category = obj_charts_data.compute_positions_performance_per_category(weekly_performance, True)
     ytd_performance_per_category = obj_charts_data.compute_positions_performance_per_category(ytd_performance, True)
 
+    # Sum of the assets
+    sum_positions_per_category = obj_charts_data.sum_positions_each_asset_into_category(positions)
 
+    # Percentile
+    ninety_fifth_percentile_per_category = obj_charts_data.compute_percentile_per_category(
+                                           sum_positions_per_category, percentile=0.95)
 
+    fifth_percentile_per_category = obj_charts_data.compute_percentile_per_category(
+                                    sum_positions_per_category, percentile=5)
 
-
-
-
-
+    ninety_fifth_percentile_per_category_lst = obj_charts_data.build_percentile_list(ninety_fifth_percentile_per_category, len(dates_pos))
+    fifth_percentile_per_category_lst = obj_charts_data.build_percentile_list(fifth_percentile_per_category, len(dates_pos))
 
     # Category
     category = obj_charts_data.classify_assets_by_category()

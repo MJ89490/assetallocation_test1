@@ -75,27 +75,6 @@ class ComputeDataDashboardTimes:
             value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_end_date = value
 
-    @property
-    def positions_assets_length(self):
-        return len(self._positions.loc[pd.to_datetime(self._positions_sum_start_date, format='%d-%m-%Y'):])
-
-    @staticmethod
-    def compute_ninety_fifth_percentile(assets_values: List[float]) -> float:
-        """
-        Compute  the 95th percentile
-        :param assets_values: positions assets
-        :return: a float
-        """
-        return np.percentile(assets_values, 95)
-
-    @staticmethod
-    def compute_fifth_percentile(assets_values: List[float]) -> float:
-        """
-        Compute the 5th percentile
-        :param assets_values: positions of assets
-        :return: a float
-        """
-        return np.percentile(assets_values, 5)
 
     @staticmethod
     def zip_results_performance_all_assets_overview(results_performance: dict):
@@ -136,14 +115,6 @@ class ComputeDataDashboardTimes:
                     category_name.append(category.name)
 
         return category_name
-
-    def build_percentile_list(self, assets_percentile: float) -> List[float]:
-        """
-        Function which build a list of percentile
-        :param assets_percentile: percentile result
-        :return: a list of percentile
-        """
-        return [assets_percentile] * self.positions_assets_length
 
     def compute_weekly_performance_each_asset(self) -> Dict[str, Dict[str, float]]:
         """
@@ -272,8 +243,7 @@ class ComputeDataDashboardTimes:
                     tmp_positions.index = pd.to_datetime(tmp_positions.business_date)
 
                     if len(dates_position_1y) == 0:
-                        dates_position_1y = [tmp_positions.loc[self.positions_start_date:self.positions_end_date].
-                                             index.strftime("%Y-%m-%d").to_list()]
+                        dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()
 
                     tmp_position_1y[asset_name] = tmp_positions.loc[self._positions_start_date:
                                                                     self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
@@ -443,92 +413,87 @@ class ComputeDataDashboardTimes:
         return positions_category
 
     @staticmethod
-    def sum_positions_each_asset_into_category(positions):
+    def sum_positions_each_asset_into_category(positions: Dict[str, Dict[str, float]])->Dict[str, List[float]]:
+
+        sum_positions_per_category = {}
+
         for key_positions in positions.keys():
+            tmp_positions_per_asset = []
+
             tmp_positions_per_category = positions[key_positions]
 
+            # 1.Add each asset into sublist
             for key_asset in tmp_positions_per_category:
-                tmp_positions_per_asset = 0
+                print(tmp_positions_per_category[key_asset])
+                tmp_positions_per_asset.append(tmp_positions_per_category[key_asset])
 
-        a = [[0, 1, 2], [1, 2, 4], [4, 6, 7]]
-        t = []
-        sum = 0
-
-        for j in range(len(a[0])):
-            for i in range(len(a)):
-                sum += a[i][j]
-            t.append(sum)
+            # 2.Compute the sum per asset
+            tmp_sum_per_category = []
             sum = 0
 
-        print()
+            for j in range(len(tmp_positions_per_asset[0])):
+                for i in range(len(tmp_positions_per_asset)):
+                    sum += tmp_positions_per_asset[i][j]
+                tmp_sum_per_category.append(sum)
+                sum = 0
+
+            # sum_per_category.append(tmp_sum_per_category)
+            sum_positions_per_category[key_positions] = tmp_sum_per_category
+
+        return sum_positions_per_category
+
+    @staticmethod
+    def compute_percentile_per_category(sum_category_values: Dict[str, List[float]], percentile: float) -> \
+            Dict[str, float]:
+
+        percentile_per_category = {}
+
+        for key_category in sum_category_values.keys():
+            percentile_per_category[key_category] = np.percentile(sum_category_values[key_category], percentile)
+
+        return percentile_per_category
+
+    @staticmethod
+    def build_percentile_list(category_percentile: Dict[str, float], length_lst: int) -> Dict[str, List[float]]:
+
+        percentile_list_per_category = {}
+
+        for key_category in category_percentile:
+            percentile_list_per_category[key_category] = [category_percentile[key_category]] * length_lst
+
+        return percentile_list_per_category
+
+
+    # def compute_sum_positions_assets_charts(self, strategy_weight: float, start_date: str) -> Dict[str, List[float]]:
+    #     """
+    #     Function which computes the positions of each asset
+    #     :param strategy_weight: weight of te strategy (0.46 as example)
+    #     :param start_date: start date of positions assets
+    #     :return: a dictionary with positions for each asset
+    #     """
+    #
+    #     self.positions_sum_start_date = start_date
+    #
+    #     self._positions.columns = [name.replace(name, 'Fixed Income') if name == 'Nominal Bond' else name for name
+    #                                in self._positions.columns]
+    #
+    #     tmp_category,  category_sort = [], {}
+    #
+    #     for category in Category:
+    #         for name in self.get_names_assets:
+    #             if category.name in name:
+    #                 tmp_category.append(name)
+    #
+    #         if len(tmp_category) != 0:
+    #             category_sort[category.name] = self._positions.loc[pd.to_datetime(self._positions_sum_start_date,
+    #                                                                               format='%d-%m-%Y'):, tmp_category].apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
+    #         tmp_category = []
+    #
+    #     category_sort['titles_ids'] = [key for key in category_sort.keys()]
+    #     category_sort['dates_positions_assets'] = self._positions.index.strftime("%Y-%m-%d").to_list()
+    #
+    #     return category_sort
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def compute_sum_positions_assets_charts(self, strategy_weight: float, start_date: str) -> Dict[str, List[float]]:
-        """
-        Function which computes the positions of each asset
-        :param strategy_weight: weight of te strategy (0.46 as example)
-        :param start_date: start date of positions assets
-        :return: a dictionary with positions for each asset
-        """
-
-        self.positions_sum_start_date = start_date
-
-        self._positions.columns = [name.replace(name, 'Fixed Income') if name == 'Nominal Bond' else name for name
-                                   in self._positions.columns]
-
-        tmp_category,  category_sort = [], {}
-
-        for category in Category:
-            for name in self.get_names_assets:
-                if category.name in name:
-                    tmp_category.append(name)
-
-            if len(tmp_category) != 0:
-                category_sort[category.name] = self._positions.loc[pd.to_datetime(self._positions_sum_start_date,
-                                                                                  format='%d-%m-%Y'):, tmp_category].apply(lambda x: x * strategy_weight).sum(axis=1).tolist()
-            tmp_category = []
-
-        category_sort['titles_ids'] = [key for key in category_sort.keys()]
-        category_sort['dates_positions_assets'] = self._positions.index.strftime("%Y-%m-%d").to_list()
-
-        return category_sort
-
-
-
-
-if __name__ == "__main__":
-
-    obj = ComputeDataDashboardTimes()
-    obj.call_times_proc_caller("test_fund", 1066, datetime.datetime.strptime('08/08/2001', '%d/%m/%Y'), date_to_sidebar=None)
 
