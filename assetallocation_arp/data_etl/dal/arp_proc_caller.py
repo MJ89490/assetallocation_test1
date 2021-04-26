@@ -75,6 +75,31 @@ class ArpProcCaller(Db):
 
         return fund_strategy_id is not None
 
+    def select_fund_strategy_weight(
+            self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int
+    ) -> Optional[float]:
+        """Select the fund strategy weight data data for strategy where name equals strategy_name and version equals
+        strategy version"""
+        strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
+        strategy_id = self.call_proc('arp.select_strategy_id', [strategy_name, strategy_version])[0]['strategy_id']
+
+        query = text("""
+        SELECT DISTINCT
+          fsw.weight
+        FROM
+          fund.fund f
+          JOIN arp.fund_strategy_weight fsw ON fsw.fund_id = f.id
+        WHERE
+          f.name = :fund_name
+          AND fsw.strategy_id = :strategy_id
+          AND upper(fsw.system_tstzrange) = 'infinity';
+        """)
+        with self.engine.connect() as connection:
+            res = connection.execute(query, {'fund_name': fund_name, 'strategy_id': strategy_id}).fetchone()
+
+        if res:
+            return float(res['weight'])
+
     def select_fund_strategy_results(
             self, fund_name: str, strategy_name: Union[str, Name], strategy_version: int, business_date_from: dt.date,
             business_date_to: dt.date

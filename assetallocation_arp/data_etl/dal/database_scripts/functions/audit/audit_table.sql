@@ -11,7 +11,7 @@ BEGIN
         IF array_length(ignored_cols,1) > 0 THEN
             _ignored_cols_snip = ', ' || quote_literal(ignored_cols);
         END IF;
-        _q_txt = 'CREATE TRIGGER audit_trigger_row AFTER INSERT OR UPDATE OR DELETE ON ' ||
+        _q_txt = 'CREATE TRIGGER audit_trigger_row AFTER UPDATE OR DELETE ON ' ||
                  target_table ||
                  ' FOR EACH ROW EXECUTE PROCEDURE audit.if_modified_func(' ||
                  quote_literal(audit_query_text) || _ignored_cols_snip || ');';
@@ -43,6 +43,5 @@ Add auditing support to a table.
 Arguments:
    target_table:     Table name, schema qualified if not on search_path
    audit_rows:       Record each row change, or only audit at a statement level
-   audit_query_text: Record the text of the client query that triggered the audit event?
    ignored_cols:     Columns to exclude from update diffs, ignore updates that change only ignored cols.
 $body$;

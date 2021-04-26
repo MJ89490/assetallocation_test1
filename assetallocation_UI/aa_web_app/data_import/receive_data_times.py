@@ -178,18 +178,12 @@ class ReceiveDataTimes:
     def receive_data_latest_version_dashboard(self, business_date_to):
         apc = TimesProcCaller()
         self.version_strategy = max(apc.select_strategy_versions(Name.times))
-        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
-                                              business_date_from=dt.date(2000, 1, 1), business_date_to=business_date_to
-                                              )
-        self.strategy_weight = fs.weight
+        self.strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, self.version_strategy)
 
     def receive_data_selected_version_sidebar_dashboard(self, business_date_to):
         apc = TimesProcCaller()
-        fs = apc.select_fund_strategy_results(self.fund_name, Name.times, self.version_strategy,
-                                              business_date_from=dt.date(2000, 1, 1),
-                                              business_date_to=business_date_to
-                                              )
-        # self.strategy_weight = fs.weight
+        strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, self.version_strategy)
+        # self.strategy_weight = strategy_weight
         # TODO TO CHANGE IN THE DASHBOARD
         self.strategy_weight = 0.46
 
@@ -199,17 +193,8 @@ class ReceiveDataTimes:
         self.strategy = apc.select_strategy(strategy_version)
 
         # Inputs
-        fs = apc.select_fund_strategy_results(fund_name=self.fund_name,
-                                              strategy_name=Name.times,
-                                              strategy_version=strategy_version,
-                                              business_date_from=dt.date(2000, 1, 1),
-                                              business_date_to=dt.date(self.date_to.year, self.date_to.month, self.date_to.day)
-                                              )
-
-        try:
-            self.strategy_weight = fs.weight
-        except AttributeError:
-            self.strategy_weight = self.strategy_weight_user
+        strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, strategy_version)
+        self.strategy_weight = strategy_weight or self.strategy_weight_user
 
         inputs_versions = {'fund': self.fund_name,
                            'version': strategy_version,
