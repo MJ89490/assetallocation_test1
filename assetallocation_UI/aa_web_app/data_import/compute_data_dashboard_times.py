@@ -398,7 +398,7 @@ class ComputeDataDashboardTimes:
         return positions_category
 
     @staticmethod
-    def sum_positions_each_asset_into_category(positions: Dict[str, Dict[str, float]])->Dict[str, List[float]]:
+    def sum_positions_each_asset_into_category(positions)->Dict[str, List[float]]:
 
         sum_positions_per_category = {}
 

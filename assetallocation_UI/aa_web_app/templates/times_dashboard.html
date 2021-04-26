@@ -425,7 +425,59 @@
                 </div>
 
                 <!--Positions assets charts-->
+                <div class="row row-positions-assets-charts">
 
+                    {% for id_key, id_value in titles_ids.items() %}
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <h4 class="card-header"><b>{{id_key}}</b></h4>
+                                <div class="card-body">
+                                    <div id="{{id_key}}" class="responsive-plot"></div>
+
+                                    <script type="text/javascript">
+                                        POSITIONS_ASSETS = document.getElementById('{{id_key}}');
+
+                                        var trace1 = {y: {{id_value[0]|tojson}},
+                                                      x: {{id_value[3]|tojson}},
+                                                      type: 'scatter',
+                                                      name: '{{id_key}}'
+                                                      };
+
+                                         var trace2 = {y: {{id_value[1]|tojson}},
+                                                       x: {{id_value[3]|tojson}},
+                                                       type: 'scatter',
+                                                       name: '5th percentile',
+                                                       line: {dash: 'dot', width: 4, color: '#87CEFA'}
+                                                       };
+
+                                         var trace3 = {y: {{id_value[2]|tojson}},
+                                                       x: {{id_value[3]|tojson}},
+                                                       type: 'scatter',
+                                                       name: '95th percentile',
+                                                       line: {dash: 'dot', width: 4, color: '#87CEFA'}
+                                                       };
+
+                                        var data = [trace1, trace2, trace3];
+
+                                        var layout = {showlegend: false,
+                                                      legend: { xanchor: 'center', x: 0.5, y: -0.2, orientation: 'h' },
+                                                      yaxis: {tickformat: ',.3%'},
+                                                      margin: {t:5}
+                                                      };
+
+                                        var config = {'displayModeBar': false, 'responsive': true };
+
+                                        Plotly.plot(POSITIONS_ASSETS, data, layout, config);
+
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+
+                     {% endfor %}
+
+                 </div>
 
 
             </div>

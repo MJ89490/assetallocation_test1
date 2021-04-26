@@ -44,13 +44,26 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
 
     # Percentile
     ninety_fifth_percentile_per_category = obj_charts_data.compute_percentile_per_category(
-                                           sum_positions_per_category, percentile=0.95)
+                                           sum_positions_per_category, percentile=95)
 
     fifth_percentile_per_category = obj_charts_data.compute_percentile_per_category(
                                     sum_positions_per_category, percentile=5)
 
     ninety_fifth_percentile_per_category_lst = obj_charts_data.build_percentile_list(ninety_fifth_percentile_per_category, len(dates_pos))
     fifth_percentile_per_category_lst = obj_charts_data.build_percentile_list(fifth_percentile_per_category, len(dates_pos))
+
+    titles_ids = {}
+
+    tmp_cat_positions = []
+
+    for cat in sorted(set(obj_charts_data.get_asset_names_per_category_sorted)):
+        tmp_cat_positions.append(sum_positions_per_category[cat])
+        tmp_cat_positions.append(ninety_fifth_percentile_per_category_lst[cat])
+        tmp_cat_positions.append(fifth_percentile_per_category_lst[cat])
+        tmp_cat_positions.append(dates_pos)
+
+        titles_ids[cat] = tmp_cat_positions
+        tmp_cat_positions = []
 
     # Create a zip to build performance and positions tables in dashboard
     pos_keys = ["category_name", "names_weekly_perf", "mom_signals", "prev_positions", "new_positions",
@@ -108,26 +121,7 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
                      "zip_results_pos_overall": zip_results_pos_overall,
                      "zip_results_perf": zip_results_perf,
                      "zip_results_perf_overall": zip_results_perf_overall,
-                     # "titles_ids": titles_ids
+                     "titles_ids": titles_ids
                      }
 
     return template_data
-
-    # Percentile
-    # titles_ids = {}
-
-    # tmp_cat_positions = []
-    #
-    # for cat in category:
-    #     ninety_fifth_percentile = obj_charts_data.compute_ninety_fifth_percentile(positions_assets_sum[cat])
-    #     percentile_fifth_percentile = obj_charts_data.compute_fifth_percentile(positions_assets_sum[cat])
-    #
-    #     percentile_ninety_five_perc = obj_charts_data.build_percentile_list(ninety_fifth_percentile)
-    #     percentile_fifth_perc = obj_charts_data.build_percentile_list(percentile_fifth_percentile)
-    #
-    #     tmp_cat_positions.append(positions_assets_sum[cat])
-    #     tmp_cat_positions.append(percentile_ninety_five_perc)
-    #     tmp_cat_positions.append(percentile_fifth_perc)
-    #     tmp_cat_positions.append(positions_assets_sum['dates_positions_assets'])
-    #
-    #     titles_ids[cat] = tmp_cat_positions
