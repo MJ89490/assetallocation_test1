@@ -442,16 +442,25 @@ class ComputeDataDashboardTimes:
 
         return positions_category
 
-    def sum_positions_each_asset_into_category(self, positions):
-
-
+    @staticmethod
+    def sum_positions_each_asset_into_category(positions):
         for key_positions in positions.keys():
             tmp_positions_per_category = positions[key_positions]
 
             for key_asset in tmp_positions_per_category:
                 tmp_positions_per_asset = 0
 
+        a = [[0, 1, 2], [1, 2, 4], [4, 6, 7]]
+        t = []
+        sum = 0
 
+        for j in range(len(a[0])):
+            for i in range(len(a)):
+                sum += a[i][j]
+            t.append(sum)
+            sum = 0
+
+        print()
 
 
 
