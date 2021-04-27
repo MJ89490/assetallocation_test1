@@ -19,6 +19,7 @@ from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times
 obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
 
+
 @app.route('/')
 def home():
     return render_template('home.html', title='HomePage')
@@ -42,15 +43,21 @@ def times_strategy():
             obj_received_data_times.run_existing_strategy()
             return redirect(url_for('times_dashboard'))
     else:
+
         if obj_received_data_times.match_date_db is False:
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
                                                                             obj_received_data_times.version_strategy)
             run_model_page = 'run_existing_version'
+            # Reset the match date
+            obj_received_data_times.match_date_db = None
+
         if obj_received_data_times.match_date_db:
             pop_up_message = 'pop_up_message'
             assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
                                                                             obj_received_data_times.version_strategy)
-
+            # Reset the match date
+            obj_received_data_times.match_date_db = None
+            
     return render_template('times_template.html',
                            title='TimesPage',
                            fund_selected=obj_received_data_times.fund_name,
