@@ -204,7 +204,7 @@ class ComputeDataDashboardTimes:
         return mom_signals
 
     def compute_positions_position_1y_each_asset(self, strategy_weight: float, start_date: None, end_date: None) \
-            -> Tuple[Dict[str, Dict[str, float]], List[str], List[List[float]]]:
+            -> Tuple[Dict[str, Dict[str, float]], List[str], Dict[str, float], List[List[float]]]:
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -218,7 +218,7 @@ class ComputeDataDashboardTimes:
         # Start and end dates positions
         self.positions_start_date, self.positions_end_date = start_date, end_date
 
-        position_1y, tmp_position_1y = {}, {}
+        position_1y, tmp_position_1y, position_1y_per_asset = {}, {}, {}
         dates_position_1y, position_1y_lst = [], []
 
         for category in Category:
@@ -232,13 +232,17 @@ class ComputeDataDashboardTimes:
 
                     tmp_position_1y[asset_name] = tmp_positions.loc[self._positions_start_date:
                                                                     self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
+
+                    position_1y_per_asset[asset_name] = tmp_positions.loc[self._positions_start_date:
+                                                             self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
+
                     position_1y_lst.append(tmp_positions.loc[self._positions_start_date:
                                                              self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list())
             if bool(tmp_position_1y):
                 position_1y[category.name] = tmp_position_1y
                 tmp_position_1y = {}
 
-        return position_1y, dates_position_1y, position_1y_lst
+        return position_1y, dates_position_1y, position_1y_per_asset, position_1y_lst
 
     def compute_previous_positions_each_asset(self, strategy_weight: float) -> Tuple[Dict[str, Dict[str, float]],
                                                                                      List[float]]:

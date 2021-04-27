@@ -57,7 +57,7 @@ def times_strategy():
                                                                             obj_received_data_times.version_strategy)
             # Reset the match date
             obj_received_data_times.match_date_db = None
-            
+
     return render_template('times_template.html',
                            title='TimesPage',
                            fund_selected=obj_received_data_times.fund_name,

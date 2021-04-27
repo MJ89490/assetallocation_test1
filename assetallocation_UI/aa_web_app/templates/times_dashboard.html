@@ -479,6 +479,77 @@
 
                  </div>
 
+                <!--Sparklines charts-->
+                <div class="row row-positions-assets-charts">
+
+                    {% for position_key, position_value in position_1y_per_asset.items() %}
+
+                        <div class="col-sm-3 cards-positions-sparklines-charts">
+                            <div class="card" style="height:200px;">
+                                <h4 class="card-header"><b>{{position_key}}</b></h4>
+                                <div class="card-body">
+                                    <div id="{{position_key}}" class="responsive-plot"></div>
+
+                                    <script type="text/javascript">
+
+
+                                    var position_key = '{{position_key}}';
+                                   
+                                    position_key = position_key.replace(/[^a-zA-Z0-9]/g,'');
+
+                                     console.log(position_key);
+
+
+
+
+
+
+                                    SPARKLINES_ASSETS_ONE = document.getElementById('{{position_key}}');
+
+
+
+                                    var trace1 = {fill: 'tozeroy',
+                                                  line: {color: 'rgb(255, 204, 0)', width: 1},
+                                                  fillcolor: 'rgb(255, 204, 0)',
+                                                  mode: 'lines',
+                                                  name: 'US Equities',
+                                                  type: 'scatter',
+                                                  y: {{position_value|tojson}}
+                                    };
+
+                                    var data = [trace1];
+
+                                    var config = {'displayModeBar': false, 'responsive': true};
+
+                                    var layout = {margin: {b:0, t:0, l:0, r:0},
+                                                  height: 100,
+                                      xaxis: {
+                                        autorange: true,
+                                        showgrid: false,
+                                        zeroline: false,
+                                        showline: false,
+                                        autotick: true,
+                                        ticks: '',
+                                        showticklabels: false
+                                      },
+                                      yaxis: {
+                                        autorange: true,
+                                        showgrid: false,
+                                        zeroline: false,
+                                        showline: false,
+                                        autotick: true,
+                                        ticks: '',
+                                        showticklabels: false
+                                      }
+                                    };
+                                    Plotly.newPlot(SPARKLINES_ASSETS_ONE, data, layout, config);
+
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
 
             </div>
         </div>

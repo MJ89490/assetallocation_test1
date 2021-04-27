@@ -14,7 +14,7 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
 
     # Positions
     mom_signals = obj_charts_data.compute_mom_signals_each_asset()
-    position_1y, dates_pos, position_1y_lst = obj_charts_data.compute_positions_position_1y_each_asset(strategy_weight,
+    position_1y, dates_pos, position_1y_per_asset, position_1y_lst = obj_charts_data.compute_positions_position_1y_each_asset(strategy_weight,
                                                                                                        start_date,
                                                                                                        end_date)
 
@@ -106,6 +106,7 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
 
     # Dictionary containing results needed for dashboard
     template_data = {"positions": position_1y_lst,
+                     "position_1y_per_asset": position_1y_per_asset,
                      "dates_pos": dates_pos,
                      "names_pos": obj_charts_data.get_asset_names,
                      "weekly_overall": weekly_performance_per_category,

@@ -4,12 +4,13 @@ SPARKLINES_ASSETS_ONE = document.getElementById('sparklines_assets_one');
 function sparklinesAssetsOne()
 {
 
-    trace1 = {fill: 'tozeroy',
+var trace1 = {fill: 'tozeroy',
               line: {color: 'rgb(255, 204, 0)', width: 1},
+              fillcolor: 'rgb(255, 204, 0)',
               mode: 'lines',
               name: 'US Equities',
               type: 'scatter',
-              y:  [
+              y: [
         0.161489554857074,
         -0.113867625201841,
         -0.0559789488108406,
@@ -119,25 +120,37 @@ function sparklinesAssetsOne()
         1.54688525113056,
         1.7160863883579,
         1.9567446983809,
-        2.40742769578363],
-              xaxis: 'x',
-              yaxis: 'y',
-              fillcolor: 'rgb(255, 204, 0)'
-              };
+        2.40742769578363]
+};
+
+var data = [trace1];
+
+var config = {'displayModeBar': false, 'responsive': true};
+
+var layout = {margin: {b:0, t:0, l:0, r:0},
+              height: 100,
+  xaxis: {
+    autorange: true,
+    showgrid: false,
+    zeroline: false,
+    showline: false,
+    autotick: true,
+    ticks: '',
+    showticklabels: false
+  },
+  yaxis: {
+    autorange: true,
+    showgrid: false,
+    zeroline: false,
+    showline: false,
+    autotick: true,
+    ticks: '',
+    showticklabels: false
+  }
+};
+Plotly.newPlot(SPARKLINES_ASSETS_ONE, data, layout, config);
 
 
-    data = [trace1];
-
-    var config = {'displayModeBar': false, 'responsive': true};
-
-    layout = {showlegend: true,
-              legend: { xanchor: 'center', y:0.40,  x: 0.5, orientation: 'h' },
-              font: {family: 'Arial, serif'}
-
-
-            };
-
-
-
-              Plotly.plot(SPARKLINES_ASSETS_ONE, data, layout, config);
 }
+
+
