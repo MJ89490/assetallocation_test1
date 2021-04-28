@@ -110,6 +110,8 @@ def receive_data_from_times_strategy_form():
     print('--------------------------------------------------------------')
     print(json_data)
 
+    form_data.append('input_version_name=' + json_data['input_version_name_strategy'])
+    
     return json.dumps({'status': 'OK'})
 
 
