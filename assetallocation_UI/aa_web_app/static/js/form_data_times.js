@@ -150,9 +150,6 @@ $('#contact-form-button-times').click(function(){
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
 
-        console.log(jsonData);
-
-
         if (check != 'error'){
             alert("The strategy is about to run...");
             $.ajax({

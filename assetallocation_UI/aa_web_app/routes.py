@@ -101,8 +101,10 @@ def receive_data_from_times_strategy_form():
     print('IN THE NEW URL RECEIVED DATA TIMES FORM')
 
     form_data = request.form['form_data'].split('&')
+    json_data = json.loads(request.form['json_data'])
     print(form_data)
-
+    print(json_data)
+    
     return json.dumps({'status': 'OK'})
 
 
