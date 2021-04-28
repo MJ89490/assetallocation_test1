@@ -156,7 +156,7 @@ $('#contact-form-button-times').click(function(){
         if (check != 'error'){
             alert("The strategy is about to run...");
             $.ajax({
-                url: "received_data_times_form",
+                url: "receive_data_from_times_strategy_page",
                 data: {form_data: form_data, json_data:jsonData},
                 type: 'POST',
                 success: function(response){

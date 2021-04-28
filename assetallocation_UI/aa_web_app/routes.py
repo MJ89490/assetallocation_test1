@@ -73,24 +73,30 @@ def times_strategy():
 
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
 def receive_data_from_times_strategy_page():
-    json_data = json.loads(request.form['json_data'])
-    try:
-        obj_received_data_times.type_of_request = json_data['run_existing-version']
-    except KeyError:
-        pass
 
-    if json_data['type_of_request'] == 'selected_fund':
-        obj_received_data_times.fund_name = json_data['fund']
-    elif json_data['type_of_request'] == 'selected_fund_weight':
-        obj_received_data_times.strategy_weight_user = json_data['strategy_weight']
-    elif json_data['type_of_request'] == 'selected_version_date_to':
-        obj_received_data_times.version_strategy = json_data['version']
-        obj_received_data_times.date_to = json_data['date_to']
-        obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
-    elif json_data['type_of_request'] == 'selected_ticker':
-        obj_received_data_times.type_of_request = json_data['type_of_request']
-        name, subcategory = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
-        return jsonify({'name': name, 'subcategory': subcategory})
+
+    
+
+    print('IN THE URL RECEIVED DATA TIMES FORM')
+
+    # json_data = json.loads(request.form['json_data'])
+    # try:
+    #     obj_received_data_times.type_of_request = json_data['run_existing-version']
+    # except KeyError:
+    #     pass
+    #
+    # if json_data['type_of_request'] == 'selected_fund':
+    #     obj_received_data_times.fund_name = json_data['fund']
+    # elif json_data['type_of_request'] == 'selected_fund_weight':
+    #     obj_received_data_times.strategy_weight_user = json_data['strategy_weight']
+    # elif json_data['type_of_request'] == 'selected_version_date_to':
+    #     obj_received_data_times.version_strategy = json_data['version']
+    #     obj_received_data_times.date_to = json_data['date_to']
+    #     obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
+    # elif json_data['type_of_request'] == 'selected_ticker':
+    #     obj_received_data_times.type_of_request = json_data['type_of_request']
+    #     name, subcategory = obj_received_data_times.select_names_subcategories(json_data['input_signal_ticker_from_times'])
+    #     return jsonify({'name': name, 'subcategory': subcategory})
 
     return json.dumps({'status': 'OK'})
 
@@ -98,7 +104,6 @@ def receive_data_from_times_strategy_page():
 @app.route('/received_data_times_form', methods=['POST'])
 def received_data_times_form():
 
-    print('IN THE URL RECEIVED DATA TIMES FORM')
 
     form_data = request.form['form_data'].split('&')
     json_data = json.loads(request.form['json_data'])
