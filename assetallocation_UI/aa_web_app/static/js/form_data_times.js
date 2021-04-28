@@ -145,8 +145,7 @@ function selectDateToCalendar() {
 }
 
 // SEND THE DATA TO PYTHON
-$(function(){
-	$('#contact-form-button-times').click(function(){
+$('#contact-form-button-times').click(function(){
 	    var jsonData = getDataFromTable();
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
@@ -173,6 +172,3 @@ $(function(){
 
 		}
 	});
-});
-
-
