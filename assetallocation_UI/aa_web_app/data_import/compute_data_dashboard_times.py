@@ -1,3 +1,4 @@
+import re
 import datetime
 import numpy as np
 import pandas as pd
@@ -203,8 +204,7 @@ class ComputeDataDashboardTimes:
 
         return mom_signals
 
-    def compute_positions_position_1y_each_asset(self, strategy_weight: float, start_date: None, end_date: None) \
-            -> Tuple[Dict[str, Dict[str, float]], List[str], Dict[str, float], List[List[float]]]:
+    def compute_positions_position_1y_each_asset(self, strategy_weight: float, start_date: None, end_date: None):
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -219,7 +219,7 @@ class ComputeDataDashboardTimes:
         self.positions_start_date, self.positions_end_date = start_date, end_date
 
         position_1y, tmp_position_1y, position_1y_per_asset = {}, {}, {}
-        dates_position_1y, position_1y_lst = [], []
+        dates_position_1y, position_1y_lst, position_1y_per_asset_lst, position_1y_per_asset_tmp = [], [], [], []
 
         for category in Category:
             for asset_name in self.get_asset_names:
@@ -230,15 +230,20 @@ class ComputeDataDashboardTimes:
                     if len(dates_position_1y) == 0:
                         dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()
 
-                    tmp_position_1y[asset_name] = tmp_positions.loc[self._positions_start_date:
-                                                                    self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
+                    # tmp_position_1y[asset_name] = tmp_positions.loc[self._positions_start_date:
+                    #                                                 self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
 
-                    position_1y_per_asset[asset_name] = tmp_positions.loc[self._positions_start_date:
-                                                             self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
+                    position_1y_per_asset_tmp = tmp_positions.loc[self._positions_start_date: self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list()
 
-                    position_1y_lst.append(tmp_positions.loc[self._positions_start_date:
-                                                             self._positions_end_date].value.apply(lambda x: float(x) * (1 + strategy_weight)).to_list())
-            if bool(tmp_position_1y):
+                    if len(position_1y_per_asset_tmp) != 0:
+                        asset_name_without_special_char = re.sub(r"[^a-zA-Z0-9]", " ", asset_name)
+                        position_1y_per_asset_lst.append(asset_name_without_special_char)
+                        position_1y_per_asset_lst.append(position_1y_per_asset_tmp)
+                        position_1y_per_asset[asset_name] = position_1y_per_asset_lst
+                        position_1y_lst.append(position_1y_per_asset_tmp)
+                        position_1y_per_asset_lst = []
+
+            if len(position_1y_per_asset_tmp) != 0:
                 position_1y[category.name] = tmp_position_1y
                 tmp_position_1y = {}
 
