@@ -107,6 +107,7 @@ def receive_data_from_times_strategy_form():
 
     return json.dumps({'status': 'OK'})
 
+
 @app.route('/receive_sidebar_data_times_form', methods=['POST'])
 def receive_sidebar_data_times_form():
     outputs_sidebar = json.loads(request.form['json_data'])

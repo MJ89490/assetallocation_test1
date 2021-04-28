@@ -226,6 +226,7 @@ class ComputeDataDashboardTimes:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
                     tmp_positions.index = pd.to_datetime(tmp_positions.business_date)
+                    tmp_positions = tmp_positions.sort_index()
 
                     if len(dates_position_1y) == 0:
                         dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()
@@ -234,8 +235,6 @@ class ComputeDataDashboardTimes:
                                                 self._positions_start_date: self._positions_end_date].value.apply(
                         lambda x: float(x) * (1 + strategy_weight)).to_list()
 
-                    tmp_position_1y[asset_name] = position_1y_per_asset_tmp
-
                     if len(position_1y_per_asset_tmp) != 0:
                         asset_name_without_special_char = re.sub(r"[^a-zA-Z0-9]", " ", asset_name)
                         position_1y_per_asset_lst.append(asset_name_without_special_char)
@@ -243,6 +242,7 @@ class ComputeDataDashboardTimes:
                         position_1y_per_asset[asset_name] = position_1y_per_asset_lst
                         position_1y_lst.append(position_1y_per_asset_tmp)
                         position_1y_per_asset_lst = []
+                        tmp_position_1y[asset_name] = position_1y_per_asset_tmp
 
             if len(tmp_position_1y) != 0:
                 position_1y[category.name] = tmp_position_1y
