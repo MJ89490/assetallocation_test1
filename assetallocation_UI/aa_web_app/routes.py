@@ -97,6 +97,9 @@ def receive_data_from_times_strategy_page():
 
 @app.route('/received_data_times_form', methods=['POST'])
 def received_data_times_form():
+
+    print('IN THE URL RECEIVED DATA TIMES FORM')
+    
     form_data = request.form['form_data'].split('&')
     json_data = json.loads(request.form['json_data'])
     form_data.append('input_version_name=' + json_data['input_version_name_strategy'])
