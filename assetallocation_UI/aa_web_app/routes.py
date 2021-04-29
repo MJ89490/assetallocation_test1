@@ -12,9 +12,10 @@ from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
 from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
 from assetallocation_UI.aa_web_app.data_import.receive_data_times import ReceiveDataTimes
-from assetallocation_UI.aa_web_app.data_import.call_times_proc_caller import call_times_proc_caller
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import main_compute_data_dashboard_times
+from assetallocation_UI.aa_web_app.data_import.call_times_proc_caller import call_times_proc_caller, \
+    call_times_select_all_fund_strategy_result_dates
 
 obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
@@ -114,17 +115,54 @@ def receive_sidebar_data_times_form():
     obj_received_data_times.version_strategy = outputs_sidebar['inputs_version']
     obj_received_data_times.fund_name = outputs_sidebar['input_fund']
     obj_received_data_times.type_of_request = outputs_sidebar['type_of_request']
-    obj_received_data_times.date_to_sidebar = outputs_sidebar['inputs_date_to']
+    # obj_received_data_times.date_to_sidebar = outputs_sidebar['inputs_date_to']
     return json.dumps({'status': 'OK'})
 
 
-@app.route('/times_dashboard',  methods=['GET', 'POST'])
-def times_dashboard():
+@app.route('/times_sidebar_dashboard',  methods=['GET', 'POST'])
+def times_sidebar_dashboard():
+    form = InputsTimesModel()
+    form_side_bar = SideBarDataForm()
+    positions_chart = False
+    export_data_sidebar, sidebar_date_to = 'not_export_data_sidebar', ''
+    positions, dates_pos = [], []
+    template_data = {}
+
+    if obj_received_data_times.type_of_request == "charts_data_sidebar":
+        sidebar_date_to = obj_received_data_times.receive_data_sidebar_dashboard(call_times_select_all_fund_strategy_result_dates())
+
+        signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
+                                                             version_strategy=obj_received_data_times.version_strategy,
+                                                             date_to=obj_received_data_times.date_to,
+                                                             date_to_sidebar=sidebar_date_to)
+
+        obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
+
+        template_data = main_compute_data_dashboard_times(obj_times_charts_data,
+                                                          obj_received_data_times.strategy_weight,
+                                                          start_date_sum=None, start_date=None, end_date=None)
+
+    return render_template('times_dashboard.html',
+                           title='Dashboard',
+                           form=form,
+                           existing_date_to=['13/08/2020'],
+                           sidebar_date_to=sidebar_date_to,
+                           export_data_sidebar=export_data_sidebar,
+                           form_side_bar=form_side_bar,
+                           fund_strategy=obj_received_data_times.fund_strategy_dict,
+                           fund_list=form_side_bar.input_fund_name_times,
+                           versions_list=form_side_bar.input_versions_times,
+                           **template_data)
+
+
+@app.route('/times_charts_dashboard',  methods=['GET', 'POST'])
+def times_charts_dashboard():
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
     positions_chart = False
     export_data_sidebar = 'not_export_data_sidebar'
     positions, dates_pos = [], []
+    template_data = {}
 
     signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
                                                          version_strategy=obj_received_data_times.version_strategy,
@@ -133,7 +171,6 @@ def times_dashboard():
     obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
 
     if request.method == 'POST':
-
         if form.submit_ok_positions.data:
             positions_chart = True
             start, end = request.form['start_date_box_times'], request.form['end_date_box_times']
@@ -145,14 +182,24 @@ def times_dashboard():
         # elif request.form['submit_button'] == 'assets_positions':
             # obj_times_charts_data.export_times_positions_data_to_csv()
 
-    else:
+
+    #
+    # else:
+    #     # Sidebar
+    #     if obj_received_data_times.type_of_request == "charts_data_sidebar":
+    #         obj_received_data_times.receive_data_sidebar_dashboard(call_times_select_all_fund_strategy_result_dates())
+
+
+
+
         # if obj_received_data_times.type_of_request == 'export_data_sidebar':
         #     version = obj_received_data_times.version_strategy
         #     obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name, version)
         #     export_data_sidebar = 'export_data_sidebar'
         #     obj_times_charts_data.export_times_data_to_csv(version)
 
-        obj_received_data_times.receive_data_selected_version_sidebar_dashboard(obj_received_data_times.date_to)
+
+        # obj_received_data_times.receive_data_selected_version_sidebar_dashboard(obj_received_data_times.date_to)
 
     # obj_times_charts_data.call_times_proc_caller(obj_received_data_times.fund_name,
     #                                              obj_received_data_times.version_strategy,
@@ -162,6 +209,7 @@ def times_dashboard():
     template_data = main_compute_data_dashboard_times(obj_times_charts_data,
                                                       obj_received_data_times.strategy_weight,
                                                       start_date_sum=None, start_date=None, end_date=None)
+
     if positions_chart:
         template_data['positions'], template_data['dates_pos'] = positions, dates_pos
 

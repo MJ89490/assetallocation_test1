@@ -180,12 +180,21 @@ class ReceiveDataTimes:
         self.version_strategy = max(apc.select_strategy_versions(Name.times))
         self.strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, self.version_strategy)
 
-    def receive_data_selected_version_sidebar_dashboard(self, business_date_to):
-        apc = TimesProcCaller()
-        strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, self.version_strategy)
-        # self.strategy_weight = strategy_weight
-        # TODO TO CHANGE IN THE DASHBOARD
-        self.strategy_weight = 0.46
+    def receive_data_sidebar_dashboard(self, all_fund_strategy_result_dates: pd.DataFrame):
+
+        data = all_fund_strategy_result_dates
+
+        select_fund = data.loc[data['fund_name'] == self.fund_name]
+        select_version = select_fund.loc[select_fund['strategy_version'] == self.version_strategy]
+        select_date_to = select_version.business_date_to.item()
+
+        return select_date_to
+
+        # apc = TimesProcCaller()
+        # strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, self.version_strategy)
+        # # self.strategy_weight = strategy_weight
+        # # TODO TO CHANGE IN THE DASHBOARD
+        # self.strategy_weight = 0.46
 
     def receive_data_existing_versions(self, strategy_version):
         apc = TimesProcCaller()

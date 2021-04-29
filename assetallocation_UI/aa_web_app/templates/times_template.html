@@ -438,7 +438,7 @@
                                     <!--Date to-->
                                     <div class="col-lg-6">
                                         <label class="subtitle-model-input">Date to</label>
-                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg text-center" value="09/08/2001" required oninput="selectDateToCalendar()">
+                                        <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg text-center" value="13/04/2021" required oninput="selectDateToCalendar()">
                                     </div>
                                 </div>
 
@@ -703,7 +703,7 @@
                                             </script>
                                         </form>
 
-                                        <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                                        <form class="center" action="{{url_for('times_charts_dashboard')}}" method="POST" novalidate>
                                             <button class="btn btn-primary btn-sm btn-dashboard-existing-versions-times-pop-up" type="submit" name="submit_button" value="dashboard-strategy-existing-versions">See the dashboard of this version?</button>
                                         </form>
                                     </div>

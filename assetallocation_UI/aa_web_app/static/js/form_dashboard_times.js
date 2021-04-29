@@ -1,7 +1,7 @@
 version_data_to_send_to_python = []
 fund_data_to_send_to_python = []
 ready_to_send = false
-type_of_request = 'charts_data_sidebar'
+type_of_request = ''
 dateTo = []
 
 function sideBarFund() {
@@ -9,6 +9,7 @@ function sideBarFund() {
         var fund = select_box.options[select_box.selectedIndex].value;
 
         fund_data_to_send_to_python.push(fund);
+        console.log(fund);
 
         if (fund_data_to_send_to_python.length != 1){
             fund_data_to_send_to_python.splice(0, fund_data_to_send_to_python.length-1);
@@ -20,10 +21,15 @@ function sideBarVersion() {
         var version = select_box.options[select_box.selectedIndex].value;
 
         version_data_to_send_to_python.push(parseInt(version));
+        console.log(version);
 
         if (version_data_to_send_to_python.length != 1){
             version_data_to_send_to_python.splice(0, version_data_to_send_to_python.length-1);
         }
+
+        ready_to_send = true;
+        type_of_request = 'charts_data_sidebar'
+        this.sendDataToPython();
 }
 
 function sideBarExportFund() {
@@ -51,21 +57,19 @@ function sideBarExportVersion() {
         this.sendDataToPython();
 }
 
-function selectDateTo(){
-    var dateToSidebar =  document.getElementById("input_date_to_side_bar_times").value;
-    ready_to_send = true;
-    dateTo.push(dateToSidebar);
-    this.sendDataToPython();
-}
+//function selectDateTo(){
+//    var dateToSidebar =  document.getElementById("input_date_to_side_bar_times").value;
+//    ready_to_send = true;
+//    dateTo.push(dateToSidebar);
+//    this.sendDataToPython();
+//}
 
 function sendDataToPython(){
 
     if (ready_to_send == true){
-        console.log(dateTo);
 
         var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
                                         "inputs_version": version_data_to_send_to_python[0],
-                                        "inputs_date_to": dateTo[0],
                                         "type_of_request": type_of_request,
                                         });
 
@@ -76,7 +80,7 @@ function sendDataToPython(){
                 data: {json_data: json_data},
                 type: 'POST',
                 success: function(response){
-                    window.location.href = "times_dashboard";
+                    window.location.href = "times_sidebar_dashboard";
                 },
                 error: function(error){
                     console.log(error);
@@ -85,4 +89,6 @@ function sendDataToPython(){
     }
 }
 
+
+//"inputs_date_to": dateTo[0],
 

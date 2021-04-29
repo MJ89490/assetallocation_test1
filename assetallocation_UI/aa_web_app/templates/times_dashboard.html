@@ -61,14 +61,10 @@
 
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
+            <div class="col-lg-6">
+                 <input id="input_date_to_side_bar_times" name="input_date_to_new_version_times" class="form-control selectSideBar" value="{{sidebar_date_to}}" readonly>
+             </div>
 
-            <!--Date to-->
-            <select class="form-control selectSideBar" id="input_date_to_side_bar_times" onchange='selectDateTo()' required>
-                {% for d in existing_date_to %}
-                    <option hidden >Date_to available</option>
-                    <option>{{d}}</option>
-                {% endfor %}
-            </select>
 
         </form>
         <script src="static/js/form_dashboard_times.js"></script>
@@ -97,6 +93,11 @@
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
 
              <!--Date to-->
+             <div class="col-lg-6">
+                 <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg text-center" value="{{sidebar_date_to}}" readonly>
+             </div>
+
+
             <select class="form-control selectSideBar" id="input_date_to_side_bar_export_times" onchange='selectDateToExport()' required>
                 {% for d in existing_date_to %}
                     <option hidden >Date_to available</option>
@@ -309,7 +310,7 @@
                         <div class="card">
                             <h4 class="card-header"><b>Asset allocation over time</b></h4>
                             <div class="card-body">
-                                <form class="center" action="{{url_for('times_dashboard')}}" method="POST" novalidate>
+                                <form class="center" action="{{url_for('times_charts_dashboard')}}" method="POST" novalidate>
                                     <div class="btn-group">
                                         <!--Start date-->
                                         <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
@@ -405,7 +406,7 @@
 
                     {% endfor %}
 
-            </div>
+                </div>
 
                 <!--Performance bar charts-->
                 <div class="row row-positions-assets-charts">
