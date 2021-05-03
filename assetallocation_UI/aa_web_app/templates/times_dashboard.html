@@ -44,6 +44,7 @@
             <!-- Fund name -->
             <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
             <select class="form-control selectFund" id="send_data_fund_from_sidebar" onchange='sideBarFund()'>
+                <option disabled selected value>fund</option>
                 {% for f in fund_list %}
                     <option hidden >Funds available</option>
                     <option>{{f}}</option>
@@ -53,6 +54,7 @@
             <!--Versions-->
             <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
             <select class="form-control selectFund" id="send_data_version_from_sidebar" onchange='sideBarVersion()'>
+                <option disabled selected value>version</option>
                 {% for v in versions_list %}
                     <option hidden >Versions available</option>
                     <option>{{v}}</option>
@@ -61,11 +63,10 @@
 
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
-            <div class="col-lg-6">
-                 <input id="input_date_to_side_bar_times" name="input_date_to_new_version_times" class="form-control selectSideBar" value="{{sidebar_date_to}}" readonly>
-             </div>
+             <select class="form-control selectFund" id="input_date_to_side_bar_times" onchange='sendDateToSidebar()'>
+                 <option disabled selected value>date to</option>
 
-
+             </select>
         </form>
         <script src="static/js/form_dashboard_times.js"></script>
 
@@ -91,19 +92,10 @@
 
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
-
              <!--Date to-->
-             <div class="col-lg-6">
-                 <input id="input_date_to_new_version_times" name="input_date_to_new_version_times" class="form-control form-models-select-times rounded-lg text-center" value="{{sidebar_date_to}}" readonly>
+            <div class="col-lg-6">
+                 <input class="form-control selectFund" placeholder="example 15/01/2021" readonly>
              </div>
-
-
-            <select class="form-control selectSideBar" id="input_date_to_side_bar_export_times" onchange='selectDateToExport()' required>
-                {% for d in existing_date_to %}
-                    <option hidden >Date_to available</option>
-                    <option>{{d}}</option>
-                {% endfor %}
-            </select>
 
             {% if export_data_sidebar == 'export_data_sidebar' %}
                 {% include 'pop_up_success_save_domino.html' %}

@@ -19,7 +19,7 @@ def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datet
     """
 
     if date_to_sidebar is not None:
-        date_to = date_to_sidebar
+        date_to = datetime.date(date_to_sidebar.year, date_to_sidebar.month, date_to_sidebar.day)
     else:
         date_to = date_to
 

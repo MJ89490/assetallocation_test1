@@ -49,6 +49,16 @@ body{background-color: rgb(248, 248, 248) ;}
              height: 33px;
 }
 
+.selectDateToSidebar{color: #005774 !important;
+                     border-color: #005774 !important;
+                     width: 165px;
+                     font-size: 15px;
+                     margin-top: 10px;
+                     margin-right: 14px;
+                     margin-bottom: 10px;
+                     height: 33px;
+}
+
 .selectSideBar {color: #005774 !important;
                 border-color: #005774 !important;
                 width: 170px;

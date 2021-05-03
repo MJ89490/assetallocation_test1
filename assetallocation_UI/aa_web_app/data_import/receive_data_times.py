@@ -135,7 +135,7 @@ class ReceiveDataTimes:
 
     @date_to_sidebar.setter
     def date_to_sidebar(self, value) -> None:
-        self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
+        self._date_to_sidebar = pd.to_datetime(value, format='%Y/%m/%d')
 
     @staticmethod
     def _select_asset_tickers_with_names_and_subcategories_from_db():
@@ -186,15 +186,9 @@ class ReceiveDataTimes:
 
         select_fund = data.loc[data['fund_name'] == self.fund_name]
         select_version = select_fund.loc[select_fund['strategy_version'] == self.version_strategy]
-        select_date_to = select_version.business_date_to.item()
+        select_date_to = [str(d)for d in select_version.business_date_to.values.tolist()]
 
         return select_date_to
-
-        # apc = TimesProcCaller()
-        # strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, self.version_strategy)
-        # # self.strategy_weight = strategy_weight
-        # # TODO TO CHANGE IN THE DASHBOARD
-        # self.strategy_weight = 0.46
 
     def receive_data_existing_versions(self, strategy_version):
         apc = TimesProcCaller()
@@ -276,6 +270,7 @@ class ReceiveDataTimes:
                       int(self.times_form['input_vol_window_times']))
 
         times.description = self.version_description
+        self.strategy = self.strategy_weight_user
 
         self.date_to = self.times_form['input_date_to_new_version_times']
 

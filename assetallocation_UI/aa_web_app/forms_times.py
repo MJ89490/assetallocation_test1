@@ -17,7 +17,6 @@ class SideBarDataForm(FlaskForm):
     existing_funds = get_fund_names()
     input_fund_name_times = existing_funds
 
-
 class InputsTimesModel(FlaskForm):
     # Dates for dashboard
     start_date_times_inputs = StringField('Start Date')
