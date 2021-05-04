@@ -30,7 +30,7 @@ class ComputeDataDashboardTimes:
 
     @property
     def get_signal_as_off(self) -> datetime:
-        return self._signals.last_valid_index().strftime('%d-%m-%Y')
+        return (self._signals.last_valid_index() - datetime.timedelta(days=2)).strftime('%d-%m-%Y')
 
     @property
     def get_asset_names(self):
