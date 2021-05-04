@@ -108,6 +108,7 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
     template_data = {"positions": position_1y_lst,
                      "position_1y_per_asset": position_1y_per_asset,
                      "dates_pos": dates_pos,
+                     "dates_pos_alloc": [dates_pos],
                      "names_pos": obj_charts_data.get_asset_names,
                      "weekly_overall": weekly_performance_per_category,
                      "signal_as_off": obj_charts_data.get_signal_as_off,

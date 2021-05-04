@@ -322,7 +322,9 @@
                                             });
                                         </script>
                                     <!--Submit button-->
-                                    {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
+                                        <form action="{{url_for('times_charts_dashboard')}}" method="POST" novalidate>
+                                            {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
+                                        </form>
                                     <!--Download button-->
                                     <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
                                 </div>
@@ -330,7 +332,7 @@
                                 <div id="asset_allocation_over_time" class="responsive-plot"></div>
                                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
                                 <script type="text/javascript">
-                                    assetAllocationChart({{positions|tojson}}, {{dates_pos|tojson}}, {{names_pos|tojson}})
+                                    assetAllocationChart({{positions|tojson}}, {{dates_pos_alloc|tojson}}, {{names_pos|tojson}})
                                 </script>
                             </div>
                         </div>

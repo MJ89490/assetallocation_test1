@@ -17,3 +17,9 @@ def export_times_data_to_csv(version, signals, returns, positions):
         domino.files_upload("/signals_times_version{version}.csv".format(version=version), signals.to_csv())
         domino.files_upload("/returns_times_version{version}.csv".format(version=version), returns.to_csv())
         domino.files_upload("/positions_times_version{version}.csv".format(version=version), positions.to_csv())
+
+
+def export_times_positions_data_to_csv(positions):
+    domino = call_domino_object()
+    domino.files_upload("/positions_charts_times_version.csv", positions.to_csv())
+

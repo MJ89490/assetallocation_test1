@@ -77,9 +77,11 @@ class ComputeDataDashboardTimes:
     @positions_start_date.setter
     def positions_start_date(self, value: str) -> None:
         if value is None:
-            value = '02/12/2000'     # '15/05/2018'
+            # value = '02/12/2000'     # '15/05/2018'
+            value = pd.to_datetime('15/05/2018', format='%d/%m/%Y')
         if self._positions is not None:
-            value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
+            value = pd.to_datetime(value, format='%d/%m/%Y')
+            # value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_start_date = value
 
     @property
@@ -89,11 +91,9 @@ class ComputeDataDashboardTimes:
     @positions_end_date.setter
     def positions_end_date(self, value: str) -> None:
         if value is None:
-            value = '02/07/2001'     #'25/08/2018'
-            # value = self._positions.last_valid_index()
-        if self._positions is not None:
-            # value = find_date(self._positions.index.tolist(), pd.to_datetime(value, format='%d/%m/%Y'))
-            value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
+            value = pd.to_datetime(self._positions.sort_index().last_valid_index(), format='%d/%m/%Y')
+        elif self._positions is not None:
+            value = pd.to_datetime(value, format='%d/%m/%Y')
         self._positions_end_date = value
 
     @staticmethod
@@ -218,8 +218,8 @@ class ComputeDataDashboardTimes:
         # Start and end dates positions
         self.positions_start_date, self.positions_end_date = start_date, end_date
 
-        positions_start_date = pd.to_datetime('15/05/2018', format='%d/%m/%Y')
-        positions_end_date = pd.to_datetime(self._positions.sort_index().last_valid_index(), format='%d/%m/%Y')
+        # positions_start_date = pd.to_datetime('15/05/2018', format='%d/%m/%Y')
+        # positions_end_date = pd.to_datetime(self._positions.sort_index().last_valid_index(), format='%d/%m/%Y')
 
         position_1y, tmp_position_1y, position_1y_per_asset = {}, {}, {}
         dates_position_1y, position_1y_lst, position_1y_per_asset_lst, position_1y_per_asset_tmp = [], [], [], []
@@ -232,10 +232,10 @@ class ComputeDataDashboardTimes:
                     tmp_positions = tmp_positions.sort_index()
 
                     if len(dates_position_1y) == 0:
-                        dates_position_1y = tmp_positions.loc[positions_start_date:positions_end_date].index.strftime("%Y-%m-%d").to_list()
+                        dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()
 
                     position_1y_per_asset_tmp = tmp_positions.loc[
-                                                positions_start_date: positions_end_date].value.apply(
+                                                self.positions_start_date: self.positions_end_date].value.apply(
                         lambda x: float(x) * (1 + strategy_weight)).to_list()
 
                     if len(position_1y_per_asset_tmp) != 0:
@@ -250,6 +250,7 @@ class ComputeDataDashboardTimes:
             if len(tmp_position_1y) != 0:
                 position_1y[category.name] = tmp_position_1y
                 tmp_position_1y = {}
+
 
         return position_1y, dates_position_1y, position_1y_per_asset, position_1y_lst
 
@@ -430,3 +431,13 @@ class ComputeDataDashboardTimes:
             percentile_list_per_category[key_category] = [category_percentile[key_category]] * length_lst
 
         return percentile_list_per_category
+
+    @staticmethod
+    def convert_dict_to_dataframe(positions):
+        
+        df_positions = []
+
+        for key, value in positions.items():
+            df_positions[positions[key]] = value
+        print()
+
