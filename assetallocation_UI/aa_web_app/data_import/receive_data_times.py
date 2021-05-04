@@ -15,14 +15,17 @@ class ReceiveDataTimes:
         self.inputs_existing_versions_times = {}
         self.assets_existing_versions_times = {}
         self.version_strategy = 0
+        self.version_strategy_export = 0
         self.strategy_weight = 0
         self.strategy_weight_user = 0
         self.match_date_db = None
         self.date_to = None
         self.fund_name = None
+        self.fund_name_export = None
         self.strategy = None
         self.type_of_request = None
         self.date_to_sidebar = None
+        self.date_to_export_sidebar = None
         self.version_description = ''
         self.is_new_strategy = True
 
@@ -86,6 +89,14 @@ class ReceiveDataTimes:
         self._version_strategy = value
 
     @property
+    def version_strategy_export(self):
+        return int(self._version_strategy_export)
+
+    @version_strategy_export.setter
+    def version_strategy_export(self, value):
+        self._version_strategy_export = value
+
+    @property
     def strategy_weight(self):
         return self._strategy_weight
 
@@ -100,6 +111,14 @@ class ReceiveDataTimes:
     @strategy_weight_user.setter
     def strategy_weight_user(self, value):
         self._strategy_weight_user = value
+
+    @property
+    def fund_name_export(self):
+        return self._fund_name_export
+
+    @fund_name_export.setter
+    def fund_name_export(self, value):
+        self._fund_name_export = value
 
     @property
     def fund_name(self):
@@ -135,7 +154,15 @@ class ReceiveDataTimes:
 
     @date_to_sidebar.setter
     def date_to_sidebar(self, value) -> None:
-        self._date_to_sidebar = pd.to_datetime(value, format='%Y/%m/%d')
+        self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
+
+    @property
+    def date_to_export_sidebar(self):
+        return self._date_to_export_sidebar
+
+    @date_to_export_sidebar.setter
+    def date_to_export_sidebar(self, value) -> None:
+        self._date_to_export_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
 
     @staticmethod
     def _select_asset_tickers_with_names_and_subcategories_from_db():
@@ -186,7 +213,8 @@ class ReceiveDataTimes:
 
         select_fund = data.loc[data['fund_name'] == self.fund_name]
         select_version = select_fund.loc[select_fund['strategy_version'] == self.version_strategy]
-        select_date_to = [str(d)for d in select_version.business_date_to.values.tolist()]
+        select_date_to = [str(d.day) + "/" + str(d.month) + "/" + str(d.year) for d in
+                          select_version.business_date_to.values.tolist()]
 
         return select_date_to
 

@@ -11,14 +11,9 @@ def call_domino_object():
     return domino
 
 
-def export_times_data_to_csv(self, version):
-        domino = self.call_domino_object()
+def export_times_data_to_csv(version, signals, returns, positions):
+        domino = call_domino_object()
 
-        domino.files_upload("/signals_times_version{version}.csv".format(version=version), self.signals.to_csv())
-        domino.files_upload("/returns_times_version{version}.csv".format(version=version), self.returns.to_csv())
-        domino.files_upload("/positions_times_version{version}.csv".format(version=version), self.positions.to_csv())
-
-
-def export_times_positions_data_to_csv(self):
-        domino = self.call_domino_object()
-        domino.files_upload("/positions_charts_times_version.csv", self.positions.to_csv())
+        domino.files_upload("/signals_times_version{version}.csv".format(version=version), signals.to_csv())
+        domino.files_upload("/returns_times_version{version}.csv".format(version=version), returns.to_csv())
+        domino.files_upload("/positions_times_version{version}.csv".format(version=version), positions.to_csv())

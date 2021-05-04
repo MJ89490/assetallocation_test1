@@ -64,8 +64,7 @@
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
              <select class="form-control selectFund" id="input_date_to_side_bar_times" onchange='sendDateToSidebar()'>
-                 <option disabled selected value>date to</option>
-
+                 <option disabled selected value>charts date to</option>
              </select>
         </form>
         <script src="static/js/form_dashboard_times.js"></script>
@@ -92,11 +91,9 @@
 
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
-             <!--Date to-->
-            <div class="col-lg-6">
-                 <input class="form-control selectFund" placeholder="example 15/01/2021" readonly>
-             </div>
-
+            <select class="form-control selectFund" id="input_date_to_export_side_bar_times" onchange='sendDateToExportSidebar()'>
+                 <option disabled selected value>export date to</option>
+            </select>
             {% if export_data_sidebar == 'export_data_sidebar' %}
                 {% include 'pop_up_success_save_domino.html' %}
             {% endif %}
@@ -129,7 +126,7 @@
                         <h6 class="header-pretitle">Overview</h6>
                         <h2 class="title-dashboard"><b>TIMES Dashboard</b></h2>
                         <h6 class="sub-title-dashboard"><i>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</i></h6><br>
-                        <h6 class="sub-title-dashboard"><i>Date run: </i></h6>
+                        <h6 class="sub-title-dashboard"><i>Date run: {{date_run}}</i></h6>
                     </div>
                  </div>
 

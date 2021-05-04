@@ -31,18 +31,17 @@ def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datet
 
     positions = DataFrameConverter.fund_strategy_asset_weights_to_df(fs.asset_weights)
     positions.loc[(positions.asset_subcategory == 'Nominal Bond'), 'asset_subcategory'] = 'Fixed Income'
-
+    positions.index = pd.to_datetime(positions['business_date'])
     analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(fs.analytics)
 
     signals = analytic_df.loc[analytic_df['analytic_subcategory'] == 'momentum']
     signals.index = pd.to_datetime(signals['business_date'])
     returns = analytic_df.loc[analytic_df['analytic_subcategory'] == 'excess return']
     returns.index = pd.to_datetime(returns['business_date'])
-    #
-    # if date_to_sidebar is not None:
-    #     signals = signals.loc[:date_to_sidebar]
-    #     returns = returns.loc[:date_to_sidebar]
-    #     positions = positions.loc[:date_to_sidebar]
+
+    signals.sort_index()
+    returns.sort_index()
+    positions.sort_index()
 
     return signals, returns, positions
 
