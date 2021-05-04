@@ -24,7 +24,7 @@ class ReceiveDataTimes:
         self.fund_name_export = None
         self.strategy = None
         self.type_of_request = None
-        self.date_to_sidebar = None
+        self._date_to_sidebar = None
         self.date_to_export_sidebar = None
         self.version_description = ''
         self.is_new_strategy = True
@@ -154,7 +154,8 @@ class ReceiveDataTimes:
 
     @date_to_sidebar.setter
     def date_to_sidebar(self, value) -> None:
-        self._date_to_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
+        if value is not None:
+            self._date_to_sidebar = dt.datetime.strptime(value, '%d/%m/%Y').date()
 
     @property
     def date_to_export_sidebar(self):

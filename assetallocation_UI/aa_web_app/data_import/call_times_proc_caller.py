@@ -5,9 +5,6 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
-APC = TimesProcCaller()
-
-
 def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datetime, date_to_sidebar=None) -> \
         Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
@@ -23,7 +20,9 @@ def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datet
     else:
         date_to = date_to
 
-    fs = APC.select_fund_strategy_results(fund_name, Name.times, version_strategy,
+    apc = TimesProcCaller()
+
+    fs = apc.select_fund_strategy_results(fund_name, Name.times, version_strategy,
                                           business_date_from=datetime.datetime.strptime('01/01/2000',
                                                                                         '%d/%m/%Y').date(),
                                           business_date_to=date_to
@@ -47,5 +46,5 @@ def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datet
 
 
 def call_times_select_all_fund_strategy_result_dates():
-
-    return APC.select_all_fund_strategy_result_dates()
+    apc = TimesProcCaller()
+    return apc.select_all_fund_strategy_result_dates()

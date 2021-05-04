@@ -68,17 +68,11 @@ class ArpProcCaller(Db):
             [
                 fund_strategy.fund_name, fund_strategy.strategy_name.name, fund_strategy.strategy_version,
                 business_date_range, fund_strategy.weight, user_id, fund_strategy.python_code_version,
-                [], [], []
+                asset_weights, strategy_analytics, strategy_asset_analytics
             ]
         )
         fund_strategy_id = res[0].get('fund_strategy_id')
 
-        end = dt.datetime.now()
-        print(end)
-        print((mid - start).total_seconds())
-        print((mid2 - mid).total_seconds())
-        print((end - mid2).total_seconds())
-        print((end - start).total_seconds())
         return fund_strategy_id is not None
 
     def select_fund_strategy_weight(
@@ -883,11 +877,21 @@ if __name__ == '__main__':
 
     from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
-    f = apc.select_fund_strategy_results("test_fund", "times", 1052, dt.date(2000, 1, 1), dt.date(2001, 8, 8))
+    # f = apc.select_fund_strategy_results("test_fund", "times", 1052, dt.date(2000, 1, 1), dt.date(2001, 8, 8))
 
-    weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(f.asset_weights)
+    d = apc.select_fund_strategy_results("test_fund", "times", 1365,
+                                     dt.date(2000, 1, 1),
+                                     dt.date(2001, 8, 8)
+                                     )
+    # print(apc.select_strategy_versions("times"))
 
-    analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(f.analytics)
+    # print(max([d for d in apc.select_strategy_versions("times")]))
+
+
+
+        # weight_df = DataFrameConverter.fund_strategy_asset_weights_to_df(f.asset_weights)
+    # #
+    # analytic_df = DataFrameConverter.fund_strategy_asset_analytics_to_df(f.analytics)
 
     # DataFrameConverter.fund_strategy_asset_weights_to_df(f.asset_weights)
 
