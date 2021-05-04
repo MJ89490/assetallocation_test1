@@ -68,11 +68,17 @@ class ArpProcCaller(Db):
             [
                 fund_strategy.fund_name, fund_strategy.strategy_name.name, fund_strategy.strategy_version,
                 business_date_range, fund_strategy.weight, user_id, fund_strategy.python_code_version,
-                asset_weights, strategy_analytics, strategy_asset_analytics
+                [], [], []
             ]
         )
         fund_strategy_id = res[0].get('fund_strategy_id')
 
+        end = dt.datetime.now()
+        print(end)
+        print((mid - start).total_seconds())
+        print((mid2 - mid).total_seconds())
+        print((end - mid2).total_seconds())
+        print((end - start).total_seconds())
         return fund_strategy_id is not None
 
     def select_fund_strategy_weight(
@@ -355,7 +361,7 @@ class TimesProcCaller(StrategyProcCaller):
           f.name as fund_name,
           t.version as strategy_version,  
           s.description,
-          upper(mi.business_daterange) as business_date_to
+          upper(mi.business_daterange) - 1 as business_date_to
         FROM
           arp.times t
           JOIN arp.strategy s on s.id = t.strategy_id
