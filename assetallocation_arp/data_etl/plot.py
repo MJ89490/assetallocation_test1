@@ -3,6 +3,7 @@ import os
 import logging
 import logging.config
 import numpy as np
+import pandas as pd
 from datetime import datetime, timedelta
 from bokeh.io import curdoc
 from bokeh.plotting import figure
@@ -138,13 +139,12 @@ def refresh_button_handle() -> None:
         # Run data frame through ETL class
         db = Db()
         # Get tickers from database and retrieve latest prices for these
-        df_tickers = db.get_tickers()
-        etl = ETLProcess(df_tickers=df_tickers)
+        non_futures_list, futures_list, non_futures_start_date, futures_start_date = db.get_tickers()
+        etl = ETLProcess(non_futures_list, futures_list, non_futures_start_date, futures_start_date)
         etl.bbg_data()
         df_clean = etl.clean_data()
         db.df_to_staging_asset_analytic(df_clean)
         db.call_proc(proc_name="staging.load_asset_analytics", proc_params=[])
-
     else:
         logging.info("Data is up to date - no refresh is required")
     logger.info("Refresh button handle complete")
@@ -170,8 +170,14 @@ def data_validation_handle() -> None:
 
 # Open data base connection and read current data as data frame
 # Get list of instruments from data frame as a unique list
-db = Db()
-df_db, instrument_list = db.get_analytic()
+# db = Db()
+# df_db, instrument_list = db.get_analytic()
+
+df_db = pd.DataFrame({"ticker": ["N/A", "N/A"],
+                      "value": [0, 0],
+                      "business_datetime": [datetime.today(), datetime.today()],
+                      "description": ["N/A", "N/A"]})
+instrument_list = df_db["ticker"].unique().tolist()
 
 # Create drop down, file input, refresh and stats widgets
 drop_down = Select(options=instrument_list, width=200)
@@ -203,7 +209,7 @@ layout_with_widgets = column(widgets, charts_with_table, stats)
 # Create Dashboard with respective layout
 curdoc().add_root(layout_with_widgets)
 
-# bokeh serve assetallocation_arp/data_etl/plot.py
 
 # TODO
 # Log times must be UTC .. not British Summer (or other)! - check .ini file
+# bokeh serve assetallocation_arp/data_etl/plot.py

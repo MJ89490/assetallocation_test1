@@ -14,13 +14,22 @@ logger = logging.getLogger("sLogger")
 
 
 class ETLProcess:
-    def __init__(self, df_tickers):
+    def __init__(self, non_futures_list, futures_list, non_futures_start_date, futures_start_date):
         """
         This class extracts ticker data from Bloomberg, transforms this to valid data types and uploads to the
         postgreSQL database.
-        :param df_tickers: df includes
+        :param non_futures_list: list of non-futures instruments
+        :param futures_list: df includes
+        :param non_futures_start_date: start date for futures instruments, strftime
+        :param futures_start_date: non_futures_start_date: start date for non-futures instruments, strftime
         """
-        self.df = df_tickers
+        self.non_futures_list = non_futures_list
+        self.futures_list = futures_list
+        self.non_futures_start_date = non_futures_start_date
+        self.futures_start_date = futures_start_date
+
+        self.df_bbg_non_future = pd.DataFrame()
+        self.df_bbg_future = pd.DataFrame()
         self.df_bbg = pd.DataFrame()
 
     def bbg_data(self) -> None:
@@ -30,21 +39,30 @@ class ETLProcess:
         """
         logger.info("Retrieving Bloomberg data")
         # Loop through each security and respective fields to get data as a data frame
-        bbg = bloomberg_data.Bloomberg()
         yday_date = (datetime.today() - timedelta(days=1)).strftime("%Y%m%d")
-        df_list = []
-        for index, row in self.df.iterrows():
-            df_iteration = bbg.historicalRequest(securities=row["ticker"],
-                                                 fields="PX_LAST",
-                                                 startdate=row["business_datetime"],
-                                                 enddate=yday_date)
 
-            df_list.append(df_iteration)
-            logger.info(f"Loop {index + 1}/{len(self.df.index)} complete - \"{row['ticker']}\" imported")
+        # call Bloomberg API and get data for all instruments
+        # combine non-futures and futures data frames
+        bbg = bloomberg_data.Bloomberg()
+        self.df_bbg_non_future = bbg.historicalRequest(securities=self.non_futures_list,
+                                                       fields="PX_LAST",
+                                                       startdate=self.non_futures_start_date,
+                                                       enddate=yday_date)
 
-        # Concat list of data frames into single data frame
-        self.df_bbg = pd.concat(df_list, axis=0, ignore_index=True)
-        logger.info(f"Retrieved Bloomberg data for {len(self.df.index)} instruments")
+        self.df_bbg_future = bbg.historicalRequest(securities=self.futures_list,
+                                                   fields="PX_LAST",
+                                                   startdate=self.futures_start_date,
+                                                   enddate=yday_date)
+
+        self.df_bbg = self.df_bbg_non_future.append(self.df_bbg_future)
+
+        # filter data frame for errors and non-errors
+        df_bbg_error = self.df_bbg[~self.df_bbg["status"].str.contains("DONE")]
+        error_tickers = df_bbg_error["bbergsymbol"].unique()
+        logger.info(f"{len(error_tickers)} tickers not retrieved: {error_tickers}")
+
+        self.df_bbg = self.df_bbg[self.df_bbg["status"].str.contains("DONE")]
+        logger.info(f"{len(self.df_bbg.index)} rows retrieved from Bloomberg")
 
         return
 

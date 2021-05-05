@@ -87,7 +87,7 @@ class Db:
     def get_analytic(self) -> Tuple[pd.DataFrame, List[str]]:
         """
         This function gets asset analytic data from the asset analytic table. Relevant columns are
-        converted to pandas datetime.
+                converted to pandas datetime.
         :return: Pandas data frame of asset analytics, unique list of tickers
         """
         query = """
@@ -101,7 +101,7 @@ class Db:
             chunk_list = []
             i = 0
             logger.info("Reading main Asset Analytic table")
-            for chunk in pd.read_sql(query, con=self.engine, chunksize=100000):
+            for chunk in pd.read_sql(query, con=self.engine, chunksize=10000):
                 chunk_list.append(chunk)
                 i += 1
                 logging.info(f"Chunk: {i} complete")
@@ -126,10 +126,10 @@ class Db:
         except SQLAlchemyError as e:
             logger.info(e)
 
-    def get_tickers(self) -> pd.DataFrame:
+    def get_tickers(self) -> Tuple[List, List, str, str]:
         """
         This function retrieves the latest tickets table as a pandas data frame and respective list.
-        :return: Tickers with latest price as pandas data frame and list
+        :return: Tickers with latest price as pandas data frame and start date as string
         """
         logger.info("Reading tickers from database")
 
@@ -145,19 +145,26 @@ class Db:
         try:
             logger.info("Reading main Asset table")
             # Read given table from database as data frame
-            df = pd.read_sql(query, con=self.engine, chunksize=10000)
+            df = pd.read_sql(query, con=self.engine)
             logger.info("Reading complete for main Asset table")
 
             # Convert date column to python datetime
             # Add 1 day to date column
             df["business_datetime"] = pd.to_datetime(df["business_datetime"], dayfirst=True)
             df["business_datetime"] = df["business_datetime"] + pd.Timedelta(days=1)
-            # Convert to YYMMDD string datetime format
-            # If instruments are futures, then datetime is set to earliest possible date to refresh time series
-            df["business_datetime"] = df["business_datetime"].dt.strftime("%Y%m%d")
-            df['business_datetime'].loc[df['description'].str.contains(r'(?i)\bfuture\b')]\
-                = datetime(1900, 1, 1).strftime("%Y%m%d")
 
-            return df
+            # Filter for futures and non-futures instruments
+            df_non_futures = df.loc[~df['description'].str.contains(r'(?i)\bfuture\b')]
+            df_futures = df.loc[df['description'].str.contains(r'(?i)\bfuture\b')]
+
+            # start date for non futures is the earliest date of all
+            # start date for futures is set to 01/01/1900 to get whole time series
+            non_futures_start_date = min(df_non_futures["business_datetime"]).strftime("%Y%m%d")
+            futures_start_date = datetime(1900, 1, 1).strftime("%Y%m%d")
+
+            non_futures_list = df_non_futures["ticker"]
+            futures_list = df_futures["ticker"]
+
+            return non_futures_list, futures_list, non_futures_start_date, futures_start_date
         except SQLAlchemyError as e:
             logger.info(e)
