@@ -167,6 +167,8 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 
 .cards-positions-sparklines-charts{margin-bottom: 15px;}
 
+.card-margin_bottom{margin-bottom: 40px;}
+
 /* BUTTONS */
 .btn-white {border-color: #fff;
             background-color: #fff;
@@ -299,6 +301,7 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
 .row-tables-positions{margin-left: 187px; margin-bottom: 40px;}
 
 .row-positions-assets-charts{margin-left: 187px; margin-bottom: 40px;}
+
 
 /* AG GRID TABLE: ASSETS WEIGHTS */
 .ag-theme-alpine {/* use theme parameters where possible */
