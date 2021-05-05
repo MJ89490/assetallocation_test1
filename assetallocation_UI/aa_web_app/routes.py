@@ -185,7 +185,6 @@ def times_charts_dashboard():
     form_side_bar = SideBarDataForm()
     positions_chart = False
     export_data_sidebar = 'not_export_data_sidebar'
-    position_1y = {}
     position_1y_lst, positions, dates_pos, position_1y_per_asset = [], [], [], []
 
     signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
@@ -203,16 +202,13 @@ def times_charts_dashboard():
                                                                                start_date,
                                                                                end_date)
 
-        # elif request.form['submit_button'] == 'dashboard':
-        #     obj_received_data_times.receive_data_latest_version_dashboard(obj_received_data_times.date_to)
-
         elif request.form['submit_button'] == 'assets_positions':
             position_1y, dates_pos, position_1y_per_asset, position_1y_lst = \
                 obj_times_charts_data.compute_positions_position_1y_each_asset(obj_received_data_times.strategy_weight,
                                                                                start_date=None,
                                                                                end_date=None)
-            obj_times_charts_data.convert_dict_to_dataframe(position_1y)
-        #     export_times_positions_data_to_csv(position_1y)
+            df_positions = obj_times_charts_data.convert_dict_to_dataframe(position_1y, dates_pos)
+            export_times_positions_data_to_csv(df_positions)
 
     template_data = main_compute_data_dashboard_times(obj_times_charts_data,
                                                       obj_received_data_times.strategy_weight,

@@ -433,11 +433,15 @@ class ComputeDataDashboardTimes:
         return percentile_list_per_category
 
     @staticmethod
-    def convert_dict_to_dataframe(positions):
-        
-        df_positions = []
+    def convert_dict_to_dataframe(positions: Dict[Dict[str, List[float]]], dates_pos: List[str]) -> pd.DataFrame:
+
+        df_positions = pd.DataFrame()
 
         for key, value in positions.items():
-            df_positions[positions[key]] = value
-        print()
+            for sub_key, sub_value in value.items():
+                sub_key = re.sub(r"[^a-zA-Z0-9]", " ", sub_key)
+                df_positions[sub_key] = sub_value
 
+        df_positions = df_positions.set_index(pd.to_datetime(dates_pos, format='%Y-%m-%d'))
+
+        return df_positions
