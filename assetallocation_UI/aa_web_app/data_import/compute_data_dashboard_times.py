@@ -433,7 +433,7 @@ class ComputeDataDashboardTimes:
         return percentile_list_per_category
 
     @staticmethod
-    def convert_dict_to_dataframe(positions: Dict[Dict[str, List[float]]], dates_pos: List[str]) -> pd.DataFrame:
+    def convert_dict_to_dataframe(positions, dates_pos: List[str]) -> pd.DataFrame:
 
         df_positions = pd.DataFrame()
 
