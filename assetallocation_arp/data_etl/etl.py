@@ -92,54 +92,57 @@ class ETLProcess:
         except ValueError:
             logging.info("Invalid data type inside Bloomberg data")
 
-    def data_validation(self) -> None:
-        """
-        This function validates the data for the data taken from Bloomberg and performs statistical analysis to find
-        outliers and possible incorrect values.
-        :return:
-        """
-        logging.info("Data validation started")
-        # Create .xlsx file to output to
-        xl_writer = pd.ExcelWriter("data_validation.xlsx", engine="xlsxwriter", options={'remove_timezone': True})
 
-        # Sort data frame by ticker
-        self.df = self.df.sort_values(by=['ticker', 'business_datetime'], ascending=[False, True])
+def data_validation(df: pd.DataFrame) -> None:
+    """
+    This function validates the data for the data taken from Bloomberg and performs statistical analysis to find
+    outliers and possible incorrect values.
+    :param df: Pandas data frame of data to validate
+    :return:
+    """
+    logging.info("Data validation started")
+    # Create .xlsx file to output to
+    xl_writer = pd.ExcelWriter("data_validation.xlsx", engine="xlsxwriter", options={'remove_timezone': True})
 
-        # Filter for dates that are not consecutive, for each instrument
-        # df_date_diff = self.df.copy()
-        df_date_diff = self.df.assign(date_check=self.df.business_datetime.groupby(self.df.ticker).diff())
-        df_date_diff = df_date_diff[(df_date_diff["date_check"] != timedelta(days=1))]
-        df_date_diff.to_excel(xl_writer, sheet_name="inconsistent_dates")
+    # Sort data frame by ticker
+    df = df.sort_values(by=['ticker', 'business_datetime'], ascending=[False, True])
 
-        # Filter for values that are -9999 i.e. null
-        df_value_zero_null = self.df.copy()
-        df_value_zero_null = df_value_zero_null[df_value_zero_null["value"] == -9999]
-        df_value_zero_null.to_excel(xl_writer, sheet_name="zero_or_null_prices")
+    # Filter for dates that are not consecutive, for each instrument
+    # df_date_diff = df.copy()
+    df_date_diff = df.assign(date_check=df.business_datetime.groupby(df.ticker).diff())
+    df_date_diff = df_date_diff[(df_date_diff["date_check"] != timedelta(days=1))]
+    df_date_diff.to_excel(xl_writer, sheet_name="inconsistent_dates")
 
-        # Filter for values that are more than 2 standard deviations from the mean
-        df_value_outliers = self.df.copy()
-        df_value_outliers["value_mean"] = df_value_outliers.groupby("ticker").value.transform('mean')
-        df_value_outliers["value_standard_deviation"] = df_value_outliers.groupby("ticker").value.transform('std')
-        df_value_outliers["value_z_score"] = (df_value_outliers["value"] - df_value_outliers["value_mean"]) / \
-                                             df_value_outliers["value_standard_deviation"]
-        df_value_outliers = df_value_outliers[df_value_outliers["value_z_score"] > 2]
-        df_value_outliers.to_excel(xl_writer, sheet_name="daily_value_outliers")
+    # Filter for values that are null
+    df_value_zero_null = df.copy()
+    df_value_zero_null = df_value_zero_null[(df_value_zero_null["value"].isna()) |
+                                            (df_value_zero_null["value"] == 0)]
+    df_value_zero_null.to_excel(xl_writer, sheet_name="zero_or_null_prices")
 
-        # Filter for returns (log value) that are more than 2 standard deviations from the mean
-        df_return_outliers = self.df.copy()
-        df_return_outliers = df_return_outliers.assign(log_return=np.log(df_return_outliers.value).groupby(
-            df_return_outliers.ticker).diff())
-        df_return_outliers["log_return_mean"] = df_return_outliers.groupby("ticker").log_return.transform('mean')
-        df_return_outliers["log_return_standard_deviation"] = df_return_outliers.groupby("ticker") \
-            .log_return.transform('std')
-        df_return_outliers["log_return_z_score"] = (df_return_outliers["log_return"]
-                                                    - df_return_outliers["log_return_mean"]) / df_return_outliers[
-                                                       "log_return_standard_deviation"]
-        df_return_outliers = df_return_outliers[df_return_outliers["log_return_z_score"] > 2]
-        df_return_outliers.to_excel(xl_writer, sheet_name="daily_log_return_outliers")
+    # Filter for values that are more than 2 standard deviations from the mean
+    df_value_outliers = df.copy()
+    df_value_outliers["value_mean"] = df_value_outliers.groupby("ticker").value.transform('mean')
+    df_value_outliers["value_standard_deviation"] = df_value_outliers.groupby("ticker").value.transform('std')
+    df_value_outliers["value_z_score"] = (df_value_outliers["value"] - df_value_outliers["value_mean"]) / \
+                                         df_value_outliers["value_standard_deviation"]
+    df_value_outliers = df_value_outliers[df_value_outliers["value_z_score"] > 2]
+    df_value_outliers.to_excel(xl_writer, sheet_name="daily_value_outliers")
 
-        xl_writer.save()
+    # Filter for returns (log value) that are more than 2 standard deviations from the mean
+    df_return_outliers = df.copy()
+    df_return_outliers = df_return_outliers.assign(log_return=np.log(df_return_outliers.value).groupby(
+        df_return_outliers.ticker).diff())
+    df_return_outliers["log_return_mean"] = df_return_outliers.groupby("ticker").log_return.transform('mean')
+    df_return_outliers["log_return_standard_deviation"] = df_return_outliers.groupby("ticker") \
+        .log_return.transform('std')
+    df_return_outliers["log_return_z_score"] = (df_return_outliers["log_return"]
+                                                - df_return_outliers["log_return_mean"]) / df_return_outliers[
+                                                   "log_return_standard_deviation"]
+    df_return_outliers = df_return_outliers[df_return_outliers["log_return_z_score"] > 2]
+    df_return_outliers.to_excel(xl_writer, sheet_name="daily_log_return_outliers")
 
-        logging.info("Data validation complete")
+    xl_writer.save()
 
-        return
+    logging.info("Data validation complete")
+
+    return

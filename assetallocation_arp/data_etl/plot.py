@@ -3,6 +3,7 @@ import os
 import logging
 import logging.config
 import numpy as np
+np.seterr(divide = 'ignore')
 import pandas as pd
 from datetime import datetime, timedelta
 from bokeh.io import curdoc
@@ -11,7 +12,7 @@ from bokeh.layouts import row, column
 from bokeh.models import ColumnDataSource, Select, PreText, HoverTool, Button, TableColumn, DateFormatter, \
     DataTable
 from db import Db
-from etl import ETLProcess
+from etl import ETLProcess, data_validation
 
 # Get logging config from .ini file
 logging.config.fileConfig(f"{os.path.dirname(os.path.abspath(__file__))}/logging.ini", disable_existing_loggers=False)
@@ -41,8 +42,8 @@ def get_data(df, name) -> ColumnDataSource:
     try:
         # Calculate daily return (natural log of today's value / yesterday's value)
         df["log_return"] = np.log(df["value"]).diff()
-    except AttributeError:
-        df["log_return"] = 100
+    except RuntimeWarning:
+        logging.info("Daily return calculation not applicable - log of negative value")
 
     # Get basic stats for value and log return columns
     stats.text = str(df[["value", "log_return"]].describe())
@@ -161,8 +162,7 @@ def data_validation_handle() -> None:
     db = Db()
     # Get analytic data and run data validation against this
     df_analytic, _ = db.get_analytic()
-    etl = ETLProcess(df=df_analytic)
-    etl.data_validation()
+    data_validation(df=df_analytic)
     logger.info("Data validation button handle complete")
 
     return
