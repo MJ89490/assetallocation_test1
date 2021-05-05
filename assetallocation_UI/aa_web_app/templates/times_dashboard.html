@@ -205,10 +205,10 @@
                         <div class="card">
                             <h4 class="card-header"><b>Positions</b></h4>
                             <div class="card-body">
-                                <button type="button" class="btn btn-white card-header" id="export-btn"><span class="badge badge-soft-secondary">save implemented weight</span></button>
-
-                                <div id="table" class="table-editable">
-                                    <table class="table table-editable table-hover" id="table_positions">
+                                <div class="table-responsive">
+                                    <button type="button" class="btn btn-white card-header" id="export-btn"><span class="badge badge-soft-secondary">save implemented weight</span></button>
+                                    <div id="table" class="table-editable">
+                                        <table class="table table-editable table-hover" id="table_positions">
                                         <thead>
                                             <tr>
                                                 <th class="text-muted text-center" scope="col">Category</th>
@@ -250,7 +250,8 @@
                                             {% endfor %}
                                         </tbody>
                                     </table>
-                                 </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -261,15 +262,16 @@
                         <div class="card">
                             <h4 class="card-header"><b>Performance (%)</b></h4>
                             <div class="card-body">
-                                <table class="table table-hover table-performance">
-                             <thead>
-                                <tr>
-                                    <th class="text-muted text-center" scope="col">Weekly </th>
-                                    <th class="text-muted text-center" scope="col">YTD</th>
-                                    <th class="text-muted text-center" scope="col">Asset</th>
-                                </tr>
-                             </thead>
-                             <tbody>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-performance">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-muted text-center" scope="col">Weekly </th>
+                                                <th class="text-muted text-center" scope="col">YTD</th>
+                                                <th class="text-muted text-center" scope="col">Asset</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                 {% for names_assets, weekly, ytd in zip_results_perf %}
                                 <tr>
                                     <td class="text-center text-muted">{{names_assets}}</td>
@@ -287,7 +289,8 @@
                                 </tr>
                                 {% endfor %}
                              </tbody>
-                         </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
