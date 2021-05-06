@@ -167,7 +167,6 @@ class ArpProcCaller(Db):
         strategy_name = strategy_name.name if isinstance(strategy_name, Name) else Name[strategy_name].name
 
         res = self.call_proc('arp.select_strategy_versions', [strategy_name])
-        print(res)
         return {row['version']: row['description'] for row in res}
 
     def select_fund_names(self) -> List[str]:
@@ -313,7 +312,6 @@ class TimesProcCaller(StrategyProcCaller):
             return
 
         row = res[0]
-        print(row['time_lag'])
         t = Times(row['day_of_week'], row['frequency'], row['leverage_type'], [float(i) for i in row['long_signals']],
                   [float(i) for i in row['short_signals']],
                   -ArpTypeConverter.interval_to_int(row['time_lag']), row['volatility_window'])

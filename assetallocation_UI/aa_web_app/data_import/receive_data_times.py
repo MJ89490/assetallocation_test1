@@ -279,7 +279,6 @@ class ReceiveDataTimes:
             tmp['input_date_to_new_version_times'] = '/'.join(tmp['input_date_to_new_version_times'].split('%2F'))
             self.times_form = tmp
 
-        print(self.times_form)
         return self.times_form
 
     def call_run_times(self, assets_input_times):
