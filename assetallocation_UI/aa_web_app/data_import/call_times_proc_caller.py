@@ -5,6 +5,7 @@ from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
+
 def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datetime, date_to_sidebar=None) -> \
         Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """

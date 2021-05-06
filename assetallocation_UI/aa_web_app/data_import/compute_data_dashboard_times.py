@@ -251,7 +251,6 @@ class ComputeDataDashboardTimes:
                 position_1y[category.name] = tmp_position_1y
                 tmp_position_1y = {}
 
-
         return position_1y, dates_position_1y, position_1y_per_asset, position_1y_lst
 
     def compute_previous_positions_each_asset(self, strategy_weight: float) -> Tuple[Dict[str, Dict[str, float]],
@@ -270,10 +269,18 @@ class ComputeDataDashboardTimes:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
-                    tmp_previous_positions[asset_name] = float(tmp_positions.loc[last_day_signals].value) * \
-                                                         (1 + strategy_weight)
-                    previous_positions_lst.append(round(float(tmp_positions.loc[last_day_signals].value) *
-                                                        (1 + strategy_weight), 3))
+
+                    if category.name == 'FX':
+                        value = -float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
+
+                        if asset_name == 'EUR-USD X-RATE':
+                            value = value - self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value
+
+                    else:
+                        value = float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
+
+                    tmp_previous_positions[asset_name] = value * 100
+                    previous_positions_lst.append(round(value * 100, 3))
 
             if bool(tmp_previous_positions):
                 previous_positions[category.name] = tmp_previous_positions
@@ -297,12 +304,16 @@ class ComputeDataDashboardTimes:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
-                    last_day_signals = find_date(list(pd.to_datetime(self._positions.business_date)),
-                                                 pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
-                    tmp_new_positions[asset_name] = float(tmp_positions.loc[last_day_signals].value) * \
-                                                    (1 + strategy_weight)
-                    new_positions_lst.append(round(float(tmp_positions.loc[last_day_signals].value) *
-                                                   (1 + strategy_weight), 3))
+                    # last_day_signals = find_date(list(pd.to_datetime(self._positions.business_date)),
+                    #                              pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
+
+                    print(asset_name)
+                    print((float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)) * 100)
+
+
+
+                    tmp_new_positions[asset_name] = (float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)) * 100
+                    new_positions_lst.append(round((float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)) * 100, 3))
 
             if bool(tmp_new_positions):
                 new_positions[category.name] = tmp_new_positions
