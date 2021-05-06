@@ -307,13 +307,17 @@ class ComputeDataDashboardTimes:
                     # last_day_signals = find_date(list(pd.to_datetime(self._positions.business_date)),
                     #                              pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
 
-                    print(asset_name)
-                    print((float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)) * 100)
+                    if category.name == 'FX':
+                        value = -float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
 
+                        if asset_name == 'EUR-USD X-RATE':
+                            value = value - (-self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value * (1 + strategy_weight))
 
+                    else:
+                        value = float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
 
-                    tmp_new_positions[asset_name] = (float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)) * 100
-                    new_positions_lst.append(round((float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)) * 100, 3))
+                    tmp_new_positions[asset_name] = value * 100
+                    new_positions_lst.append(round(value * 100, 3))
 
             if bool(tmp_new_positions):
                 new_positions[category.name] = tmp_new_positions
