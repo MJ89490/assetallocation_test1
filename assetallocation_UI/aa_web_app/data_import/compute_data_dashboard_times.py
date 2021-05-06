@@ -354,13 +354,11 @@ class ComputeDataDashboardTimes:
                 tmp_new = new_positions[category.name]
                 for asset_name in self.get_asset_names:
                     if category.name in self.get_asset_names_per_category[asset_name]:
-                        print(asset_name)
+
                         if (tmp_new[asset_name] - tmp_previous[asset_name]) * 100 > 0:
                             trade.append('BUY')
-                            print('BUY')
                         else:
                             trade.append('SELL')
-                            print('SELL')
             except KeyError:
                 continue
 
