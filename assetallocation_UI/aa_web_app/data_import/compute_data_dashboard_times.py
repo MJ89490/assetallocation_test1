@@ -274,7 +274,7 @@ class ComputeDataDashboardTimes:
                         value = -float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
 
                         if asset_name == 'EUR-USD X-RATE':
-                            value = value - self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value
+                            value = value - (-self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value * (1 + strategy_weight))
 
                     else:
                         value = float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
