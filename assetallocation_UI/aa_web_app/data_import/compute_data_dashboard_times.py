@@ -139,6 +139,9 @@ class ComputeDataDashboardTimes:
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[prev_7_days_date_signals].value
 
+                    print(asset_name)
+                    print(float((v1 - v2) * 100))
+
                     tmp_weekly_performance[asset_name] = float((v1 - v2) * 100)
                     weekly_performance_lst.append(float((v1 - v2) * 100))
 
@@ -177,6 +180,11 @@ class ComputeDataDashboardTimes:
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[days[0]].value
                     weekly_perf = float((v1 - v2) * 100)
+
+
+                    print(asset_name)
+                    print(weekly_perf)
+
 
                     tmp_ytd_performance[asset_name] = weekly_perf
                     ytd_performance_lst.append(weekly_perf)
@@ -374,8 +382,9 @@ class ComputeDataDashboardTimes:
             tmp_new_positions = new_positions[category_key]
 
             for tmp_key, tmp_value in tmp_new_positions.items():
-
-                size_positions.append(tmp_value / new_positions_per_category_value)
+                print(tmp_key)
+                print((tmp_value / new_positions_per_category_value) * 100)
+                size_positions.append((tmp_value / new_positions_per_category_value) * 100)
 
         return size_positions
 
