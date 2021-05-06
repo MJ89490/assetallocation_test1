@@ -139,8 +139,8 @@ class ComputeDataDashboardTimes:
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[prev_7_days_date_signals].value
 
-                    tmp_weekly_performance[asset_name] = round(float((v1 - v2) * 100), 3)
-                    weekly_performance_lst.append(round(float((v1 - v2) * 100), 3))
+                    tmp_weekly_performance[asset_name] = float((v1 - v2) * 100)
+                    weekly_performance_lst.append(float((v1 - v2) * 100))
 
             if bool(tmp_weekly_performance):
                 weekly_performance[category.name] = tmp_weekly_performance
@@ -176,7 +176,7 @@ class ComputeDataDashboardTimes:
                     tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[days[0]].value
-                    weekly_perf = round(float((v1 - v2) * 100), 3)
+                    weekly_perf = float((v1 - v2) * 100)
 
                     tmp_ytd_performance[asset_name] = weekly_perf
                     ytd_performance_lst.append(weekly_perf)
@@ -200,7 +200,7 @@ class ComputeDataDashboardTimes:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_signals = self._signals.loc[self._signals.asset_name == asset_name]
-                    mom_signals.append(round(float(tmp_signals.loc[last_day_signals].value), 3))
+                    mom_signals.append(float(tmp_signals.loc[last_day_signals].value))
 
         return mom_signals
 
@@ -280,7 +280,7 @@ class ComputeDataDashboardTimes:
                         value = float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
 
                     tmp_previous_positions[asset_name] = value * 100
-                    previous_positions_lst.append(round(value * 100, 3))
+                    previous_positions_lst.append(value * 100)
 
             if bool(tmp_previous_positions):
                 previous_positions[category.name] = tmp_previous_positions
@@ -317,7 +317,7 @@ class ComputeDataDashboardTimes:
                         value = float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
 
                     tmp_new_positions[asset_name] = value * 100
-                    new_positions_lst.append(round(value * 100, 3))
+                    new_positions_lst.append(value * 100)
 
             if bool(tmp_new_positions):
                 new_positions[category.name] = tmp_new_positions
@@ -335,7 +335,7 @@ class ComputeDataDashboardTimes:
         delta_positions = []
 
         for i in range(len(prev_positions)):
-            delta_positions.append(round((new_positions[i] - prev_positions[i]), 5))
+            delta_positions.append(new_positions[i] - prev_positions[i])
 
         return delta_positions
 
@@ -354,10 +354,13 @@ class ComputeDataDashboardTimes:
                 tmp_new = new_positions[category.name]
                 for asset_name in self.get_asset_names:
                     if category.name in self.get_asset_names_per_category[asset_name]:
+                        print(asset_name)
                         if (tmp_new[asset_name] - tmp_previous[asset_name]) * 100 > 0:
                             trade.append('BUY')
+                            print('BUY')
                         else:
                             trade.append('SELL')
+                            print('SELL')
             except KeyError:
                 continue
 
@@ -374,7 +377,7 @@ class ComputeDataDashboardTimes:
 
             for tmp_key, tmp_value in tmp_new_positions.items():
 
-                size_positions.append(round(tmp_value / new_positions_per_category_value, 3))
+                size_positions.append(tmp_value / new_positions_per_category_value)
 
         return size_positions
 
@@ -388,13 +391,13 @@ class ComputeDataDashboardTimes:
             try:
                 tmp_positions = positions_performance_per_category[category.name]
 
-                positions_category[category.name] = round(sum(tmp_positions.values()), 3)
+                positions_category[category.name] = sum(tmp_positions.values())
 
             except KeyError:
                 continue
 
         if performance:
-            positions_category['Total'] = round(sum(positions_category.values()), 3)
+            positions_category['Total'] = sum(positions_category.values())
 
         return positions_category
 
