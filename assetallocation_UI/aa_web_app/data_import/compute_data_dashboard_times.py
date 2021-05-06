@@ -335,7 +335,7 @@ class ComputeDataDashboardTimes:
         delta_positions = []
 
         for i in range(len(prev_positions)):
-            delta_positions.append(round((prev_positions[i] - new_positions[i]) * 100, 4))
+            delta_positions.append(round((new_positions[i] - prev_positions[i]), 5))
 
         return delta_positions
 
