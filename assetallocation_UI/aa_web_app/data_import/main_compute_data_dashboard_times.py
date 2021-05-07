@@ -1,8 +1,8 @@
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 
 
-def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes, strategy_weight: float,
-                                      start_date_sum: None, start_date: None, end_date: None):
+def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes, start_date_sum: None,
+                                      start_date: None, end_date: None):
     """
     Function main to run the TimesChartsDataComputations class
     :return: dictionary with all the data needed for the Front-End
@@ -14,13 +14,13 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
 
     # Positions
     mom_signals = obj_charts_data.compute_mom_signals_each_asset()
-    position_1y, dates_pos, position_1y_per_asset, position_1y_lst = obj_charts_data.compute_positions_position_1y_each_asset(strategy_weight,
+    position_1y, dates_pos, position_1y_per_asset, position_1y_lst = obj_charts_data.compute_positions_position_1y_each_asset(
                                                                                                        start_date,
                                                                                                        end_date)
 
-    previous_positions, previous_positions_lst = obj_charts_data.compute_previous_positions_each_asset(strategy_weight)
+    previous_positions, previous_positions_lst = obj_charts_data.compute_previous_positions_each_asset()
 
-    new_positions, new_positions_lst = obj_charts_data.compute_new_positions_each_asset(strategy_weight)
+    new_positions, new_positions_lst = obj_charts_data.compute_new_positions_each_asset()
 
     delta_positions = obj_charts_data.compute_delta_positions_each_asset(previous_positions_lst,
                                                                          new_positions_lst)

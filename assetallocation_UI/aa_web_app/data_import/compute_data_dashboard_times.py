@@ -19,6 +19,8 @@ class ComputeDataDashboardTimes:
         self._positions = positions
         self._returns = returns
 
+        self.strategy_weight = 0
+
         self._signals_comp = None
         self._positions_comp = None
         self._returns_comp = None
@@ -207,12 +209,15 @@ class ComputeDataDashboardTimes:
         for category in Category:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
+                    print(asset_name)
+
                     tmp_signals = self._signals.loc[self._signals.asset_name == asset_name]
+                    print(float(tmp_signals.loc[last_day_signals].value))
                     mom_signals.append(float(tmp_signals.loc[last_day_signals].value))
 
         return mom_signals
 
-    def compute_positions_position_1y_each_asset(self, strategy_weight: float, start_date: None, end_date: None):
+    def compute_positions_position_1y_each_asset(self, start_date: None, end_date: None):
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -244,7 +249,7 @@ class ComputeDataDashboardTimes:
 
                     position_1y_per_asset_tmp = tmp_positions.loc[
                                                 self.positions_start_date: self.positions_end_date].value.apply(
-                        lambda x: float(x) * (1 + strategy_weight)).to_list()
+                        lambda x: float(x) * (1 + self.strategy_weight)).to_list()
 
                     if len(position_1y_per_asset_tmp) != 0:
                         asset_name_without_special_char = re.sub(r"[^a-zA-Z0-9]", " ", asset_name)
@@ -261,8 +266,7 @@ class ComputeDataDashboardTimes:
 
         return position_1y, dates_position_1y, position_1y_per_asset, position_1y_lst
 
-    def compute_previous_positions_each_asset(self, strategy_weight: float) -> Tuple[Dict[str, Dict[str, float]],
-                                                                                     List[float]]:
+    def compute_previous_positions_each_asset(self) -> Tuple[Dict[str, Dict[str, float]], List[float]]:
         """
         Compute the previous positions for each asset
         :return: a list with previous positions for each asset
@@ -272,20 +276,20 @@ class ComputeDataDashboardTimes:
 
         previous_positions, tmp_previous_positions = {}, {}
         previous_positions_lst = []
-
+        print(self.strategy_weight)
         for category in Category:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
-
+                    print(asset_name)
                     if category.name == 'FX':
-                        value = -float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
+                        value = -float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
 
                         if asset_name == 'EUR-USD X-RATE':
-                            value = value - (-self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value * (1 + strategy_weight))
+                            value = value - (-self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value * (1 + self.strategy_weight))
 
                     else:
-                        value = float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
+                        value = float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
 
                     tmp_previous_positions[asset_name] = value * 100
                     previous_positions_lst.append(value * 100)
@@ -296,8 +300,7 @@ class ComputeDataDashboardTimes:
 
         return previous_positions, previous_positions_lst
 
-    def compute_new_positions_each_asset(self, strategy_weight: float) -> Tuple[Dict[str, Dict[str, float]],
-                                                                                List[float]]:
+    def compute_new_positions_each_asset(self) -> Tuple[Dict[str, Dict[str, float]], List[float]]:
         """
         Compute the new positions for each asset
         :return: a list with new positions for each asset
@@ -316,13 +319,13 @@ class ComputeDataDashboardTimes:
                     #                              pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
 
                     if category.name == 'FX':
-                        value = -float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
+                        value = -float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
 
                         if asset_name == 'EUR-USD X-RATE':
-                            value = value - (-self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value * (1 + strategy_weight))
+                            value = value - (-self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE'].loc[last_day_signals].value * (1 + self.strategy_weight))
 
                     else:
-                        value = float(tmp_positions.loc[last_day_signals].value) * (1 + strategy_weight)
+                        value = float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
 
                     tmp_new_positions[asset_name] = value * 100
                     new_positions_lst.append(value * 100)
