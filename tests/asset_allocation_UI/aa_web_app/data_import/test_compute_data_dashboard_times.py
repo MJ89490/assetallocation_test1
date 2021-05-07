@@ -47,6 +47,18 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         previous_positions, previous_positions_lst = self.dashboard_times.compute_previous_positions_each_asset()
 
-        print()
+        previous_origin = [1.508715927850510,
+                           0.138980268038834,
+                           0.000695877242430,
+                           0.000006024072143,
+                           -9.226836946337930,
+                           -8.799961420557150,
+                           -8.731416433319910,
+                           -7.643345467200080,
+                           -0.460659279689472,
+                           -2.886549157902440,
+                           4.909416862510930,
+                           2.052748377180270,
+                           6.649407048308290]
 
-
+        np.testing.assert_almost_equal(previous_positions_lst, previous_origin, decimal=14)
