@@ -62,3 +62,23 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
                            6.649407048308290]
 
         np.testing.assert_almost_equal(previous_positions_lst, previous_origin, decimal=14)
+
+    def test_compute_new_positions_each_asset(self):
+
+        new_positions, new_positions_lst = self.dashboard_times.compute_new_positions_each_asset()
+
+        new_positions_origin = [1.13838481091723000,
+                                0.01742838121181100,
+                                0.01099132750740320,
+                                0.00017014400554600,
+                                -9.27913403721271000,
+                                -8.56886104603326000,
+                                -10.72822688395760000,
+                                -8.69508128387332000,
+                                0.22606966024410900,
+                                -2.68033008239423000,
+                                5.83143308043204000,
+                                -1.02974219952317000,
+                                7.29237994882077000]
+
+        np.testing.assert_almost_equal(new_positions_lst, new_positions_origin, decimal=13)
