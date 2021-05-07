@@ -141,7 +141,6 @@ class ComputeDataDashboardTimes:
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[prev_7_days_date_signals].value
 
-                    print(asset_name)
                     print(float((v1 - v2) * 100))
 
                     tmp_weekly_performance[asset_name] = float((v1 - v2) * 100)
@@ -183,11 +182,6 @@ class ComputeDataDashboardTimes:
                     v2 = tmp_returns.loc[days[0]].value
                     weekly_perf = float((v1 - v2) * 100)
 
-
-                    print(asset_name)
-                    print(weekly_perf)
-
-
                     tmp_ytd_performance[asset_name] = weekly_perf
                     ytd_performance_lst.append(weekly_perf)
 
@@ -209,10 +203,8 @@ class ComputeDataDashboardTimes:
         for category in Category:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
-                    print(asset_name)
 
                     tmp_signals = self._signals.loc[self._signals.asset_name == asset_name]
-                    print(float(tmp_signals.loc[last_day_signals].value))
                     mom_signals.append(float(tmp_signals.loc[last_day_signals].value))
 
         return mom_signals
@@ -281,7 +273,7 @@ class ComputeDataDashboardTimes:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
-                    print(asset_name)
+
                     if category.name == 'FX':
                         value = -float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
 

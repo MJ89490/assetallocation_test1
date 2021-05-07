@@ -131,3 +131,43 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         np.testing.assert_almost_equal(delta_positions, delta_origin, decimal=13)
 
+    def test_compute_trade_positions_each_asset(self):
+        new_positions_origin = {'Equity': {'Hang Seng Index Future ': 1.13838481091723000,
+                                           'S&P 500 Total Return': 0.01742838121181100,
+                                           'EURO STOXX 50 Total Return': 0.01099132750740320,
+                                           'TOPIX Total Return': 0.00017014400554600},
+
+                                'Fixed Income': {'Canada 10y Future ': -9.27913403721271000,
+                                                 'Gilt Future': -8.56886104603326000,
+                                                 'ML 10y US Treasury Total Return Future': -10.72822688395760000,
+                                                 'Bund Future': -8.69508128387332000},
+
+                                'FX': {'AUD-USD X-RATE': 0.22606966024410900,
+                                       'USD-CAD X-RATE': -2.68033008239423000,
+                                       'EUR-GBP X-RATE': 5.83143308043204000,
+                                       'EUR-USD X-RATE': -1.02974219952317000,
+                                       'USD-JPY X-RATE': 7.29237994882077000}}
+
+        previous_positions_origin = {'Equity': {'Hang Seng Index Future ': 1.50871592785051000,
+                                                'S&P 500 Total Return': 0.13898026803883400,
+                                                'EURO STOXX 50 Total Return': 0.00069587724243040,
+                                                'TOPIX Total Return': 0.00000602407214260},
+
+                                     'Fixed Income': {'Canada 10y Future ': -9.22683694633793000,
+                                                      'Gilt Future': -8.79996142055715000,
+                                                      'ML 10y US Treasury Total Return Future': -8.73141643331991000,
+                                                      'Bund Future': -7.64334546720008000},
+
+                                     'FX': {'AUD-USD X-RATE': -0.46065927968947200,
+                                            'USD-CAD X-RATE': -2.88654915790244000,
+                                            'EUR-GBP X-RATE': 4.90941686251093000,
+                                            'EUR-USD X-RATE': 2.05274837718027000,
+                                            'USD-JPY X-RATE': 6.64940704830829000}}
+
+        trade_origin = ['SELL', 'SELL', 'BUY', 'BUY', 'SELL', 'BUY', 'SELL', 'SELL', 'BUY', 'BUY', 'BUY', 'SELL', 'BUY']
+
+        trade = self.dashboard_times.compute_trade_positions_each_asset(previous_positions_origin, new_positions_origin)
+
+        self.assertEqual(trade, trade_origin)
+
+
