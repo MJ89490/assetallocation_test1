@@ -170,4 +170,85 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         self.assertEqual(trade, trade_origin)
 
+    def test_compute_positions_performance_per_category(self):
+
+        previous_positions_per_category_origin = {'Equity': {'Hang Seng Index Future ': 1.508715927850510,
+                                                    'S&P 500 Total Return': 0.138980268038834,
+                                                    'EURO STOXX 50 Total Return': 0.000695877242430,
+                                                    'TOPIX Total Return': 0.000006024072143},
+
+                                         'Fixed Income': {'Canada 10y Future ': -9.226836946337930,
+                                                          'Gilt Future': -8.799961420557150,
+                                                          'ML 10y US Treasury Total Return Future': -8.731416433319910,
+                                                          'Bund Future': -7.643345467200080},
+
+                                         'FX': {'AUD-USD X-RATE': -0.460659279689472,
+                                                'USD-CAD X-RATE': -2.886549157902440,
+                                                'EUR-GBP X-RATE': 4.909416862510930,
+                                                'EUR-USD X-RATE': 2.052748377180270,
+                                                'USD-JPY X-RATE': 6.649407048308290}}
+
+        pos_perf = self.dashboard_times.compute_positions_performance_per_category(previous_positions_per_category_origin)
+
+        pos_perf_origin = {'Equity': 1.64839809720391,
+                           'Fixed Income': -34.40156026741510,
+                           'FX' : 10.26436385040760}
+
+        np.testing.assert_almost_equal(pos_perf, pos_perf_origin, decimal=14)
+
+
+
+
+
+
+    # def test_compute_size_positions_each_asset(self):
+    #
+    #     new_positions_origin = {'Hang Seng Index Future ': 1.13838481091723000,
+    #                             'S&P 500 Total Return': 0.01742838121181100,
+    #                             'EURO STOXX 50 Total Return': 0.01099132750740320,
+    #                             'TOPIX Total Return': 0.00017014400554600,
+    #                             'Canada 10y Future ': -9.27913403721271000,
+    #                             'Gilt Future': -8.56886104603326000,
+    #                             'ML 10y US Treasury Total Return Future': -10.72822688395760000,
+    #                             'Bund Future': -8.69508128387332000,
+    #                             'AUD-USD X-RATE': 0.22606966024410900,
+    #                             'USD-CAD X-RATE': -2.68033008239423000,
+    #                             'EUR-GBP X-RATE': 5.83143308043204000,
+    #                             'EUR-USD X-RATE': -1.02974219952317000,
+    #                             'USD-JPY X-RATE': 7.29237994882077000
+    #                             }
+    #
+    #     new_positions_per_category_origin = {'Equity': {'Hang Seng Index Future ': 1.13838481091723000,
+    #                                                     'S&P 500 Total Return': 0.01742838121181100,
+    #                                                     'EURO STOXX 50 Total Return': 0.01099132750740320,
+    #                                                     'TOPIX Total Return': 0.00017014400554600},
+    #
+    #                                          'Fixed Income': {'Canada 10y Future ': -9.27913403721271000,
+    #                                                           'Gilt Future': -8.56886104603326000,
+    #                                                           'ML 10y US Treasury Total Return Future': -10.72822688395760000,
+    #                                                           'Bund Future': -8.69508128387332000},
+    #
+    #                                          'FX': {'AUD-USD X-RATE': 0.22606966024410900,
+    #                                                 'USD-CAD X-RATE': -2.68033008239423000,
+    #                                                 'EUR-GBP X-RATE': 5.83143308043204000,
+    #                                                 'EUR-USD X-RATE': -1.02974219952317000,
+    #                                                 'USD-JPY X-RATE': 7.29237994882077000}}
+    #
+    #     size_origin = [97.55008796544610000,
+    #                    1.49346697531711000,
+    #                    0.94186513639469900,
+    #                    0.01457992284211220,
+    #                     24.89618883113410000,
+    #                     22.99050555949010000,
+    #                     28.78414744900990000,
+    #                     23.32915816036590000,
+    #                     2.34516707990809000,
+    #                     -27.80480081109020000,
+    #                     60.49323413919990000,
+    #                     -10.68218311340970000,
+    #                     75.64858270539190000]
+    #
+    #     size = self.dashboard_times.compute_size_positions_each_asset(new_positions_origin, new_positions_per_category_origin)
+    #
+    #     np.testing.assert_almost_equal(size, size_origin, decimal=14)
 
