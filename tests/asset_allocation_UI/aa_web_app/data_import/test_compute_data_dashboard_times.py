@@ -204,25 +204,42 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
                                                 'EUR-USD X-RATE': -1.02974219952317000,
                                                 'USD-JPY X-RATE': 7.29237994882077000}}
 
-        weekly_performance = {'Equity': {'Hang Seng Index Future ': 0.003838237350610,
+        weekly_performance_per_category_origin = {'Equity': {'Hang Seng Index Future ': 0.003838237350610,
                                            'S&P 500 Total Return': 0.000575963785970,
                                            'EURO STOXX 50 Total Return': 0.000000151238820,
                                            'TOPIX Total Return': 0.000000081161990},
 
-                                'Fixed Income': {'Canada 10y Future ': 0.022833079798870,
-                                                 'Gilt Future': -0.003338507041780,
-                                                 'ML 10y US Treasury Total Return Future': 0.005000511745520,
-                                                 'Bund Future': -0.003801280455570 },
+                              'Fixed Income': {'Canada 10y Future ': 0.022833079798870,
+                                               'Gilt Future': -0.003338507041780,
+                                               'ML 10y US Treasury Total Return Future': 0.005000511745520,
+                                               'Bund Future': -0.003801280455570},
 
-                                'FX': {'AUD-USD X-RATE': -0.001633193929370,
-                                       'USD-CAD X-RATE': 0.010824584565110,
-                                       'EUR-GBP X-RATE': 0.037269041737450,
-                                       'EUR-USD X-RATE': -0.026612304382150,
-                                       'USD-JPY X-RATE': 0.005185683077610}}
+                              'FX': {'AUD-USD X-RATE': -0.001633193929370,
+                                     'USD-CAD X-RATE': 0.010824584565110,
+                                     'EUR-GBP X-RATE': 0.037269041737450,
+                                     'EUR-USD X-RATE': -0.026612304382150,
+                                     'USD-JPY X-RATE': 0.005185683077610}}
+
+        ytd_performance_per_category_origin = {'Equity': {'Hang Seng Index Future ': 0.003840595935980,
+                                           'S&P 500 Total Return': 0.000318655936690,
+                                           'EURO STOXX 50 Total Return': 0.000001368335240,
+                                           'TOPIX Total Return': 0.000000109737460},
+
+                           'Fixed Income': {'Canada 10y Future ': -0.006427162968330,
+                                            'Gilt Future':  -0.004289402728430,
+                                            'ML 10y US Treasury Total Return Future': -0.020849375446650,
+                                            'Bund Future': 0.001234473510720},
+
+                           'FX': {'AUD-USD X-RATE': 0.000752914694770,
+                                  'USD-CAD X-RATE': 0.002973867817740,
+                                  'EUR-GBP X-RATE': -0.007909693723330,
+                                  'EUR-USD X-RATE': -0.006922632982750,
+                                  'USD-JPY X-RATE': -0.014132720201350}}
 
         pos_previous_perf = self.dashboard_times.compute_positions_performance_per_category(previous_positions_per_category_origin)
         pos_new_perf = self.dashboard_times.compute_positions_performance_per_category(new_positions_per_category_origin)
-        weekly_performance_per_category = self.dashboard_times.compute_positions_performance_per_category(weekly_performance, True)
+        weekly_performance_per_category = self.dashboard_times.compute_positions_performance_per_category(weekly_performance_per_category_origin, True)
+        ytd_performance_per_category = self.dashboard_times.compute_positions_performance_per_category(ytd_performance_per_category_origin, True)
 
         pos_previous_perf_origin = {'Equity': 1.64839809720391,
                                     'Fixed Income': -34.40156026741510,
@@ -237,11 +254,18 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
                               'FX': 0.02503381106865,
                               'Total': 0.05014204865308}
 
+        ytd_perf_origin = {'Equity': 0.00416072994537,
+                           'Fixed Income': -0.03033146763269,
+                           'FX': -0.02523826439492,
+                           'Total': -0.05140900208224}
+
         np.testing.assert_almost_equal(list(pos_previous_perf_origin.values()), list(pos_previous_perf.values()),
                                        decimal=13)
         np.testing.assert_almost_equal(list(pos_new_perf_origin.values()), list(pos_new_perf.values()),
                                        decimal=13)
         np.testing.assert_almost_equal(list(weekly_perf_origin.values()), list(weekly_performance_per_category.values()),
+                                       decimal=13)
+        np.testing.assert_almost_equal(list(ytd_perf_origin.values()), list(ytd_performance_per_category.values()),
                                        decimal=13)
 
     def test_compute_size_positions_each_asset(self):
