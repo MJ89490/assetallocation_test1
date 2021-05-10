@@ -372,12 +372,43 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
         sum_positions_1y_origin = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
                                               "data_for_test", "sum_positions_one_year.csv")), sep=',', engine='python')
         sum_positions_1y_origin.index = pd.to_datetime(sum_positions_1y_origin['business_date'])
-        del sum_positions_1y_origin['business_date']
-
-        assets_names = list(sum_positions_1y_origin.columns)
 
         sum_positions_per_category = self.dashboard_times.sum_positions_each_asset_into_category(position_1y)
 
         for key_category, value_category in sum_positions_per_category.items():
             tmp_sum_positions = list(sum_positions_1y_origin.loc[:, key_category].values)
             np.testing.assert_almost_equal(tmp_sum_positions, value_category, decimal=14)
+
+    def test_compute_percentile_per_category(self):
+
+        sum_positions_1y_origin = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
+                                              "data_for_test", "sum_positions_one_year.csv")), sep=',', engine='python')
+        sum_positions_1y_origin.index = pd.to_datetime(sum_positions_1y_origin['business_date'])
+
+        assets_names = list(sum_positions_1y_origin.columns)
+
+        sum_positions_per_category = {}
+
+        for asset_name in range(1, len(assets_names)):
+            sum_positions_per_category[assets_names[asset_name]] = list(sum_positions_1y_origin.loc[:,
+                                                                        assets_names[asset_name]].values)
+
+        ninety_fifth_percentile_per_category = self.dashboard_times.compute_percentile_per_category(sum_positions_per_category,
+                                                                                                    percentile=95)
+
+        fifth_percentile_per_category = self.dashboard_times.compute_percentile_per_category(sum_positions_per_category,
+                                                                                             percentile=5)
+
+        ninety_fifth_percentile_per_category_origin = {'Equity': 0.084443668753627,
+                                                       'Fixed Income': 0.348689685421735,
+                                                       'FX': 0.268411750680259}
+
+        fifth_percentile_per_category_origin = {'Equity': -0.054617785185284,
+                                                'Fixed Income': -0.314246914607707,
+                                                'FX': -0.187170324386599}
+
+        np.testing.assert_almost_equal(list(ninety_fifth_percentile_per_category_origin.values()),
+                                       list(ninety_fifth_percentile_per_category.values()), decimal=14)
+
+        np.testing.assert_almost_equal(list(fifth_percentile_per_category_origin.values()),
+                                       list(fifth_percentile_per_category.values()), decimal=14)
