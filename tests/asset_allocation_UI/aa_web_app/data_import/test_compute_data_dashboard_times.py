@@ -280,4 +280,22 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         np.testing.assert_almost_equal(weekly_perf_origin, weekly_performance_lst, decimal=14)
 
+    def test_compute_ytd_performance_each_asset(self):
 
+        ytd_performance, ytd_performance_lst = self.dashboard_times.compute_ytd_performance_each_asset()
+
+        ytd_perf_origin = [0.003840595935980,
+                           0.000318655936690,
+                           0.000001368335240,
+                           0.000000109737460,
+                           -0.006427162968330,
+                           -0.004289402728430,
+                           -0.020849375446650,
+                           0.001234473510720,
+                           0.000752914694770,
+                           0.002973867817740,
+                           -0.007909693723330,
+                           -0.006922632982750,
+                           -0.014132720201350]
+
+        np.testing.assert_almost_equal(ytd_perf_origin, ytd_performance_lst, decimal=14)

@@ -188,8 +188,15 @@ class ComputeDataDashboardTimes:
                     v2 = tmp_returns.loc[days[0]].value
                     weekly_perf = float((v1 - v2) * 100)
 
+                    if category.name == 'FX' and asset_name == 'EUR-USD X-RATE':
+                        tmp_eur_usd = self._returns.loc[self._returns.asset_name == 'EUR-GBP X-RATE']
+                        tmp_eur_usd_v1 = tmp_eur_usd.loc[last_day_signals].value
+                        tmp_eur_usd_v2 = tmp_eur_usd.loc[days[0]].value
+                        weekly_perf = weekly_perf - (tmp_eur_usd_v1 - tmp_eur_usd_v2) * 100
+
                     tmp_ytd_performance[asset_name] = weekly_perf
                     ytd_performance_lst.append(weekly_perf)
+                    print(weekly_perf)
 
             if bool(tmp_ytd_performance):
                 ytd_performance[category.name] = tmp_ytd_performance
