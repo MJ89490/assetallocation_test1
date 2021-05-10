@@ -80,7 +80,7 @@ class ComputeDataDashboardTimes:
     def positions_start_date(self, value: str) -> None:
         if value is None:
             # value = '02/12/2000'     # '15/05/2018'
-            value = pd.to_datetime('15/05/2018', format='%d/%m/%Y')
+            value = pd.to_datetime('10/11/2019', format='%d/%m/%Y')
         if self._positions is not None:
             value = pd.to_datetime(value, format='%d/%m/%Y')
             # value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
@@ -236,9 +236,6 @@ class ComputeDataDashboardTimes:
         # Start and end dates positions
         self.positions_start_date, self.positions_end_date = start_date, end_date
 
-        # positions_start_date = pd.to_datetime('15/05/2018', format='%d/%m/%Y')
-        # positions_end_date = pd.to_datetime(self._positions.sort_index().last_valid_index(), format='%d/%m/%Y')
-
         position_1y, tmp_position_1y, position_1y_per_asset = {}, {}, {}
         dates_position_1y, position_1y_lst, position_1y_per_asset_lst, position_1y_per_asset_tmp = [], [], [], []
 
@@ -249,12 +246,27 @@ class ComputeDataDashboardTimes:
                     tmp_positions.index = pd.to_datetime(tmp_positions.business_date)
                     tmp_positions = tmp_positions.sort_index()
 
-                    if len(dates_position_1y) == 0:
-                        dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()
+                    if category.name == 'FX' and asset_name != 'EUR-GBP X-RATE':
+                        sub = -1
+                    else:
+                        sub = 1
 
                     position_1y_per_asset_tmp = tmp_positions.loc[
                                                 self.positions_start_date: self.positions_end_date].value.apply(
-                        lambda x: float(x) * (1 + self.strategy_weight)).to_list()
+                        lambda x: sub * float(x) * (1 + self.strategy_weight)).to_list()
+
+                    if asset_name == 'EUR-USD X-RATE':
+                        tmp_positions_gbp = self._positions.loc[self._positions.asset_name == 'EUR-GBP X-RATE']
+                        tmp_positions_gbp.index = pd.to_datetime(tmp_positions_gbp.business_date)
+                        tmp_positions_gbp = tmp_positions_gbp.sort_index()
+                        position_1y_gbp_tmp = tmp_positions_gbp.loc[self.positions_start_date:
+                                                                    self.positions_end_date].value.apply(
+                            lambda x: float(x) * (1 + self.strategy_weight)).to_list()
+                        position_1y_per_asset_tmp = [eur - gbp for eur, gbp in
+                                                     zip(position_1y_per_asset_tmp, position_1y_gbp_tmp)]
+
+                    if len(dates_position_1y) == 0:
+                        dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()
 
                     if len(position_1y_per_asset_tmp) != 0:
                         asset_name_without_special_char = re.sub(r"[^a-zA-Z0-9]", " ", asset_name)
