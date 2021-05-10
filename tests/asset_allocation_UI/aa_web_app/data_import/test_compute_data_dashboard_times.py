@@ -355,9 +355,7 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         positions_1y_origin = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data_for_test",
                                                           "positions_one_year.csv")), sep=',', engine='python')
-
         positions_1y_origin.index = pd.to_datetime(positions_1y_origin['business_date'])
-
         del positions_1y_origin['business_date']
 
         assets_names = list(positions_1y_origin.columns)
@@ -365,3 +363,21 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
         for asset_name in range(len(assets_names)):
             tmp_value = list(positions_1y_origin.loc[:, assets_names[asset_name]].values)
             np.testing.assert_almost_equal(tmp_value, position_1y_lst[asset_name], decimal=14)
+
+    def test_sum_positions_per_category(self):
+
+        position_1y, dates_pos, position_1y_per_asset, position_1y_lst = self.dashboard_times.\
+            compute_positions_position_1y_each_asset(start_date=None, end_date=None)
+
+        sum_positions_1y_origin = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
+                                              "data_for_test", "sum_positions_one_year.csv")), sep=',', engine='python')
+        sum_positions_1y_origin.index = pd.to_datetime(sum_positions_1y_origin['business_date'])
+        del sum_positions_1y_origin['business_date']
+
+        assets_names = list(sum_positions_1y_origin.columns)
+
+        sum_positions_per_category = self.dashboard_times.sum_positions_each_asset_into_category(position_1y)
+
+        for key_category, value_category in sum_positions_per_category.items():
+            tmp_sum_positions = list(sum_positions_1y_origin.loc[:, key_category].values)
+            np.testing.assert_almost_equal(tmp_sum_positions, value_category, decimal=14)
