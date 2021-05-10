@@ -137,14 +137,20 @@ class ComputeDataDashboardTimes:
         for category in Category:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
+
                     tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[prev_7_days_date_signals].value
+                    value = (v1 - v2) * 100
 
-                    print(float((v1 - v2) * 100))
+                    if category.name == 'FX' and asset_name == 'EUR-USD X-RATE':
+                        tmp_eur_usd = self._returns.loc[self._returns.asset_name == 'EUR-GBP X-RATE']
+                        tmp_eur_usd_v1 = tmp_eur_usd.loc[last_day_signals].value
+                        tmp_eur_usd_v2 = tmp_eur_usd.loc[prev_7_days_date_signals].value
+                        value = value - (tmp_eur_usd_v1 - tmp_eur_usd_v2) * 100
 
-                    tmp_weekly_performance[asset_name] = float((v1 - v2) * 100)
-                    weekly_performance_lst.append(float((v1 - v2) * 100))
+                    tmp_weekly_performance[asset_name] = float(value)
+                    weekly_performance_lst.append(float(value))
 
             if bool(tmp_weekly_performance):
                 weekly_performance[category.name] = tmp_weekly_performance
@@ -268,7 +274,7 @@ class ComputeDataDashboardTimes:
 
         previous_positions, tmp_previous_positions = {}, {}
         previous_positions_lst = []
-        print(self.strategy_weight)
+
         for category in Category:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
@@ -377,8 +383,6 @@ class ComputeDataDashboardTimes:
             tmp_new_positions = new_positions[category_key]
 
             for tmp_key, tmp_value in tmp_new_positions.items():
-                print(tmp_key)
-                print((tmp_value / new_positions_per_category_value) * 100)
                 size_positions.append((tmp_value / new_positions_per_category_value) * 100)
 
         return size_positions

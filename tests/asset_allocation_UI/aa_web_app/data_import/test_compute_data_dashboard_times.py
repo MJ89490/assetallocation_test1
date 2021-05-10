@@ -222,21 +222,6 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
     def test_compute_size_positions_each_asset(self):
 
-        # new_positions_origin = {'Hang Seng Index Future ': 1.13838481091723000,
-        #                         'S&P 500 Total Return': 0.01742838121181100,
-        #                         'EURO STOXX 50 Total Return': 0.01099132750740320,
-        #                         'TOPIX Total Return': 0.00017014400554600,
-        #                         'Canada 10y Future ': -9.27913403721271000,
-        #                         'Gilt Future': -8.56886104603326000,
-        #                         'ML 10y US Treasury Total Return Future': -10.72822688395760000,
-        #                         'Bund Future': -8.69508128387332000,
-        #                         'AUD-USD X-RATE': 0.22606966024410900,
-        #                         'USD-CAD X-RATE': -2.68033008239423000,
-        #                         'EUR-GBP X-RATE': 5.83143308043204000,
-        #                         'EUR-USD X-RATE': -1.02974219952317000,
-        #                         'USD-JPY X-RATE': 7.29237994882077000
-        #                         }
-
         new_positions_origin = {'Equity': {'Hang Seng Index Future ': 1.13838481091723000,
                                                     'S&P 500 Total Return': 0.01742838121181100,
                                                     'EURO STOXX 50 Total Return': 0.01099132750740320,
@@ -274,4 +259,25 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
         size = self.dashboard_times.compute_size_positions_each_asset(new_positions_origin, pos_new_perf_origin)
 
         np.testing.assert_almost_equal(size, size_origin, decimal=13)
+
+    def test_compute_weekly_performance_each_asset(self):
+
+        weekly_performance, weekly_performance_lst = self.dashboard_times.compute_weekly_performance_each_asset()
+
+        weekly_perf_origin = [0.003838237350610,
+                              0.000575963785970,
+                              0.000000151238820,
+                              0.000000081161990,
+                              0.022833079798870,
+                              -0.003338507041780,
+                              0.005000511745520,
+                              -0.003801280455570,
+                              -0.001633193929370,
+                              0.010824584565110,
+                              0.037269041737450,
+                              -0.026612304382150,
+                              0.005185683077610]
+
+        np.testing.assert_almost_equal(weekly_perf_origin, weekly_performance_lst, decimal=14)
+
 
