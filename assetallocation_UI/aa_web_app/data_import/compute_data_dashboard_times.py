@@ -109,16 +109,6 @@ class ComputeDataDashboardTimes:
         return zip(*results_performance.values())
 
     @staticmethod
-    def round_results_all_assets_overview(results: list) -> List[float]:
-        """
-        Function rounding any results to 4
-        :param results: list of results that should be round up
-        :return: rounded list
-        """
-
-        return [round(d, 3) for d in results]
-
-    @staticmethod
     def build_dict_ready_for_zip(*results, keys: list) -> Dict[str, List[float]]:
         return {keys[key]: results[key] for key in range(len(keys))}
 
@@ -139,6 +129,8 @@ class ComputeDataDashboardTimes:
                 if category.name in self.get_asset_names_per_category[asset_name]:
 
                     tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
+                    tmp_returns = tmp_returns.sort_index()
+
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[prev_7_days_date_signals].value
                     value = (v1 - v2) * 100
@@ -184,6 +176,8 @@ class ComputeDataDashboardTimes:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_returns = self._returns.loc[self._returns.asset_name == asset_name]
+                    tmp_returns = tmp_returns.sort_index()
+
                     v1 = tmp_returns.loc[last_day_signals].value
                     v2 = tmp_returns.loc[days[0]].value
                     weekly_perf = float((v1 - v2) * 100)
@@ -192,11 +186,10 @@ class ComputeDataDashboardTimes:
                         tmp_eur_usd = self._returns.loc[self._returns.asset_name == 'EUR-GBP X-RATE']
                         tmp_eur_usd_v1 = tmp_eur_usd.loc[last_day_signals].value
                         tmp_eur_usd_v2 = tmp_eur_usd.loc[days[0]].value
-                        weekly_perf = weekly_perf - (tmp_eur_usd_v1 - tmp_eur_usd_v2) * 100
+                        weekly_perf = weekly_perf - float((tmp_eur_usd_v1 - tmp_eur_usd_v2)) * 100
 
                     tmp_ytd_performance[asset_name] = weekly_perf
                     ytd_performance_lst.append(weekly_perf)
-                    print(weekly_perf)
 
             if bool(tmp_ytd_performance):
                 ytd_performance[category.name] = tmp_ytd_performance
@@ -298,6 +291,7 @@ class ComputeDataDashboardTimes:
             for asset_name in self.get_asset_names:
                 if category.name in self.get_asset_names_per_category[asset_name]:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
+                    tmp_positions = tmp_positions.sort_index()
 
                     if category.name == 'FX':
                         value = -float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
@@ -334,6 +328,7 @@ class ComputeDataDashboardTimes:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
                     # last_day_signals = find_date(list(pd.to_datetime(self._positions.business_date)),
                     #                              pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
+                    tmp_positions = tmp_positions.sort_index()
 
                     if category.name == 'FX':
                         value = -float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)

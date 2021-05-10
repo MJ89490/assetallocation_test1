@@ -43,10 +43,6 @@ def call_times_proc_caller(fund_name: str, version_strategy: int, date_to: datet
     returns.sort_index()
     positions.sort_index()
 
-    signals.to_csv('signals.csv')
-    returns.to_csv('returns.csv')
-    positions.to_csv('positions.csv')
-
     return signals, returns, positions
 
 

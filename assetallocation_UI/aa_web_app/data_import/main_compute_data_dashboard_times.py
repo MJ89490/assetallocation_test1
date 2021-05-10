@@ -1,8 +1,7 @@
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 
 
-def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes, start_date_sum: None,
-                                      start_date: None, end_date: None):
+def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes, start_date: None, end_date: None):
     """
     Function main to run the TimesChartsDataComputations class
     :return: dictionary with all the data needed for the Front-End
@@ -65,6 +64,20 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
         titles_ids[cat] = tmp_cat_positions
         tmp_cat_positions = []
 
+    # Round results for template data
+    # TODO CREATE A FUNCTION DEPENDING ON THE INSTANCE DICT OR LST
+    previous_positions_per_category = {k: round(v, 3) for k, v in previous_positions_per_category.items()}
+    weekly_performance_per_category = {k: round(v, 3) for k, v in weekly_performance_per_category.items()}
+    new_positions_per_category = {k: round(v, 3) for k, v in new_positions_per_category.items()}
+    mom_signals = [round(v, 3) for v in mom_signals]
+    previous_positions_lst = [round(v, 3) for v in previous_positions_lst]
+    new_positions_lst = [round(v, 3) for v in new_positions_lst]
+    weekly_performance_lst = [round(v, 3) for v in weekly_performance_lst]
+    ytd_performance_lst = [round(v, 3) for v in ytd_performance_lst]
+    delta_positions = [round(v, 3) for v in delta_positions]
+    size_positions = [round(v, 3) for v in size_positions]
+    ytd_performance_per_category = {k: round(v, 3) for k, v in ytd_performance_per_category.items()}
+
     # Create a zip to build performance and positions tables in dashboard
     pos_keys = ["category_name", "names_weekly_perf", "mom_signals", "prev_positions", "new_positions",
                 "delta_positions", "trade_positions", "size_positions", "imp_weight"]
@@ -99,31 +112,32 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
                                                                     keys=perf_overall_keys)
 
     zip_results_pos = obj_charts_data.zip_results_performance_all_assets_overview(results_positions)
-
     zip_results_pos_overall = obj_charts_data.zip_results_performance_all_assets_overview(results_positions_overall)
     zip_results_perf = obj_charts_data.zip_results_performance_all_assets_overview(results_perf)
     zip_results_perf_overall = obj_charts_data.zip_results_performance_all_assets_overview(results_perf_overall)
 
     # Dictionary containing results needed for dashboard
-    template_data = {"positions": position_1y_lst,
-                     "position_1y_per_asset": position_1y_per_asset,
-                     "dates_pos": dates_pos,
-                     "dates_pos_alloc": [dates_pos],
-                     "names_pos": obj_charts_data.get_asset_names,
-                     "weekly_overall": weekly_performance_per_category,
-                     "signal_as_off": obj_charts_data.get_signal_as_off,
+    template_data = {"dates_pos": dates_pos,
+                     "titles_ids": titles_ids,
                      "mom_signals": mom_signals,
-                     "prev_positions": previous_positions_lst,
+                     "positions": position_1y_lst,
+                     "dates_pos_alloc": [dates_pos],
                      "new_positions": new_positions_lst,
-                     "assets_names": obj_charts_data.get_asset_names,
-                     "weekly_performance_all_currencies": weekly_performance_lst,
-                     "ytd_performance_all_currencies": ytd_performance_lst,
-                     "pre_overall": previous_positions_per_category,
                      "zip_results_pos": zip_results_pos,
-                     "zip_results_pos_overall": zip_results_pos_overall,
                      "zip_results_perf": zip_results_perf,
+                     "prev_positions": previous_positions_lst,
+                     "names_pos": obj_charts_data.get_asset_names,
+                     "position_1y_per_asset": position_1y_per_asset,
+                     "pre_overall": previous_positions_per_category,
+                     "assets_names": obj_charts_data.get_asset_names,
+                     "weekly_overall": weekly_performance_per_category,
+                     "zip_results_pos_overall": zip_results_pos_overall,
+                     "signal_as_off": obj_charts_data.get_signal_as_off,
                      "zip_results_perf_overall": zip_results_perf_overall,
-                     "titles_ids": titles_ids
+                     "ytd_performance_all_currencies": ytd_performance_lst,
+                     "weekly_performance_all_currencies": weekly_performance_lst
                      }
+
+    # obj_charts_data.round_results_all_assets_overview(template_data)
 
     return template_data

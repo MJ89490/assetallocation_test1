@@ -163,8 +163,7 @@ def times_sidebar_dashboard():
     obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
     obj_times_charts_data.strategy_weight = obj_received_data_times.strategy_weight
 
-    template_data = main_compute_data_dashboard_times(obj_times_charts_data,
-                                                      start_date_sum=None, start_date=None, end_date=None)
+    template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date=None, end_date=None)
 
     return render_template('times_dashboard.html',
                            title='Dashboard',
@@ -207,8 +206,7 @@ def times_charts_dashboard():
             df_positions = obj_times_charts_data.convert_dict_to_dataframe(position_1y, dates_pos)
             export_times_positions_data_to_csv(df_positions)
 
-    template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date_sum=None, start_date=None,
-                                                      end_date=None)
+    template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date=None, end_date=None)
 
     if positions_chart:
         template_data['positions'], template_data['dates_pos'], template_data['position_1y_per_asset'] = position_1y_lst, dates_pos, position_1y_per_asset
