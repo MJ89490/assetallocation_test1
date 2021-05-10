@@ -188,13 +188,37 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
                                                 'EUR-USD X-RATE': 2.052748377180270,
                                                 'USD-JPY X-RATE': 6.649407048308290}}
 
-        pos_perf = self.dashboard_times.compute_positions_performance_per_category(previous_positions_per_category_origin)
+        new_positions_per_category_origin = {'Equity': {'Hang Seng Index Future ': 1.13838481091723000,
+                                                    'S&P 500 Total Return': 0.01742838121181100,
+                                                    'EURO STOXX 50 Total Return': 0.01099132750740320,
+                                                    'TOPIX Total Return':  0.00017014400554600},
 
-        pos_perf_origin = {'Equity': 1.64839809720391,
-                           'Fixed Income': -34.40156026741510,
-                           'FX': 10.26436385040760}
+                                         'Fixed Income': {'Canada 10y Future ': -9.27913403721271000,
+                                                          'Gilt Future': -8.56886104603326000,
+                                                          'ML 10y US Treasury Total Return Future': -10.72822688395760000,
+                                                          'Bund Future': -8.69508128387332000},
 
-        np.testing.assert_almost_equal(list(pos_perf_origin.values()), list(pos_perf.values()), decimal=13)
+                                         'FX': {'AUD-USD X-RATE': 0.22606966024410900,
+                                                'USD-CAD X-RATE': -2.68033008239423000,
+                                                'EUR-GBP X-RATE': 5.83143308043204000,
+                                                'EUR-USD X-RATE': -1.02974219952317000,
+                                                'USD-JPY X-RATE': 7.29237994882077000}}
+
+        pos_previous_perf = self.dashboard_times.compute_positions_performance_per_category(previous_positions_per_category_origin)
+        pos_new_perf = self.dashboard_times.compute_positions_performance_per_category(new_positions_per_category_origin)
+
+        pos_previous_perf_origin = {'Equity': 1.64839809720391,
+                                    'Fixed Income': -34.40156026741510,
+                                    'FX': 10.26436385040760}
+
+        pos_new_perf_origin = {'Equity': 1.16697466364199,
+                               'Fixed Income': -37.27130325107690,
+                               'FX': 9.63981040757952}
+
+        np.testing.assert_almost_equal(list(pos_previous_perf_origin.values()), list(pos_previous_perf.values()),
+                                       decimal=13)
+        np.testing.assert_almost_equal(list(pos_new_perf_origin.values()), list(pos_new_perf.values()),
+                                       decimal=13)
 
 
 
