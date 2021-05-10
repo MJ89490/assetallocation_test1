@@ -192,9 +192,9 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         pos_perf_origin = {'Equity': 1.64839809720391,
                            'Fixed Income': -34.40156026741510,
-                           'FX' : 10.26436385040760}
+                           'FX': 10.26436385040760}
 
-        np.testing.assert_almost_equal(pos_perf, pos_perf_origin, decimal=14)
+        np.testing.assert_almost_equal(list(pos_perf_origin.values()), list(pos_perf.values()), decimal=13)
 
 
 
