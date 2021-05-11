@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
-from tests.asset_allocation_UI.aa_web_app.data_for_test import data_origin_dashboard as data_origin
+from tests.asset_allocation_UI.aa_web_app.data_for_test import data_origin_dashboard_unit_tests as data_origin
 
 
 class TestComputeDataDashboardTimes(unittest.TestCase):
@@ -40,7 +40,7 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         new_positions, new_positions_lst = self.dashboard_times.compute_new_positions_each_asset()
 
-        np.testing.assert_almost_equal( data_origin.new_positions_origin, new_positions_lst, decimal=13)
+        np.testing.assert_almost_equal(data_origin.new_positions_origin, new_positions_lst, decimal=13)
 
     def test_compute_delta_positions_each_asset(self):
 

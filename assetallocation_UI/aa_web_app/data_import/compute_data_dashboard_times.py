@@ -259,7 +259,7 @@ class ComputeDataDashboardTimes:
                                                      zip(position_1y_per_asset_tmp, position_1y_gbp_tmp)]
 
                     if len(dates_position_1y) == 0:
-                        dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y-%m-%d").to_list()
+                        dates_position_1y = tmp_positions.loc[self.positions_start_date:self.positions_end_date].index.strftime("%Y/%m/%d").to_list()
 
                     if len(position_1y_per_asset_tmp) != 0:
                         asset_name_without_special_char = re.sub(r"[^a-zA-Z0-9]", " ", asset_name)
@@ -274,7 +274,7 @@ class ComputeDataDashboardTimes:
                 position_1y[category.name] = tmp_position_1y
                 tmp_position_1y = {}
 
-        return position_1y, dates_position_1y, position_1y_per_asset, position_1y_lst
+        return position_1y, [date.replace('/', '-') for date in dates_position_1y], position_1y_per_asset, position_1y_lst
 
     def compute_previous_positions_each_asset(self) -> Tuple[Dict[str, Dict[str, float]], List[float]]:
         """

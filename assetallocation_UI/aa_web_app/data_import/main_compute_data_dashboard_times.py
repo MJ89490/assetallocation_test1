@@ -102,13 +102,14 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
                                                             keys=perf_keys)
 
     results_positions_overall = obj_charts_data.build_dict_ready_for_zip(
-                                                            sorted(set(obj_charts_data.get_asset_names_per_category_sorted)) + ['Total'],
-                                                            previous_positions_per_category.values(),
-                                                            new_positions_per_category.values(),
+                                                            # sorted(set(obj_charts_data.get_asset_names_per_category_sorted)) + ['Total'],
+                                                            list(previous_positions_per_category.keys()),
+                                                            list(previous_positions_per_category.values()),
+                                                            list(new_positions_per_category.values()),
                                                             keys=pos_overall_keys)
 
-    results_perf_overall = obj_charts_data.build_dict_ready_for_zip(weekly_performance_per_category.values(),
-                                                                    ytd_performance_per_category.values(),
+    results_perf_overall = obj_charts_data.build_dict_ready_for_zip(list(weekly_performance_per_category.values()),
+                                                                    list(ytd_performance_per_category.values()),
                                                                     keys=perf_overall_keys)
 
     zip_results_pos = obj_charts_data.zip_results_performance_all_assets_overview(results_positions)
@@ -126,7 +127,7 @@ def main_compute_data_dashboard_times(obj_charts_data: ComputeDataDashboardTimes
                      "zip_results_pos": zip_results_pos,
                      "zip_results_perf": zip_results_perf,
                      "prev_positions": previous_positions_lst,
-                     "names_pos": obj_charts_data.get_asset_names,
+                     # "names_pos": obj_charts_data.get_asset_names,
                      "position_1y_per_asset": position_1y_per_asset,
                      "pre_overall": previous_positions_per_category,
                      "assets_names": obj_charts_data.get_asset_names,
