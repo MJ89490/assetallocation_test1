@@ -8,7 +8,6 @@ from typing import Tuple
 from calendar import monthrange
 from pandas.tseries import offsets
 from assetallocation_arp.common_libraries.dal_enums.asset import Category
-from assetallocation_arp.data_etl.inputs_effect.find_date import find_date
 
 
 class ComputeDataDashboardTimes:
@@ -83,7 +82,6 @@ class ComputeDataDashboardTimes:
             value = pd.to_datetime('10/11/2019', format='%d/%m/%Y')
         if self._positions is not None:
             value = pd.to_datetime(value, format='%d/%m/%Y')
-            # value = find_date(list(pd.to_datetime(self._positions.business_date)), pd.to_datetime(value, format='%d/%m/%Y'))
         self._positions_start_date = value
 
     @property
