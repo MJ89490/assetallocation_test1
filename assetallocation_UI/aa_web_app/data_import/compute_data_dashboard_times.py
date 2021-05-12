@@ -483,3 +483,17 @@ class ComputeDataDashboardTimes:
         df_positions = df_positions.set_index(pd.to_datetime(dates_pos, format='%Y-%m-%d'))
 
         return df_positions
+
+    @staticmethod
+    def round_results_all_assets_overview(*results):
+
+        rounded_res = []
+
+        for res in results:
+            if isinstance(res, dict):
+                rounded_res.append({k: round(v, 3) for k, v in res.items()})
+
+            if isinstance(res, list):
+                rounded_res.append([round(v, 3) for v in res])
+
+        return rounded_res

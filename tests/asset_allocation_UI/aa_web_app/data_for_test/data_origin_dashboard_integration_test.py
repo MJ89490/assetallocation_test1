@@ -2,18 +2,18 @@ import os
 import pandas as pd
 
 
-positions = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "positions_one_year.csv")), sep=',',
-                        engine='python')
-
-# position_1y_lst_origin = []
+# positions = pd.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), "positions_one_year.csv")), sep=',',
+#                         engine='python')
 #
-asset_names = list(positions.columns)[1:]
+# # position_1y_lst_origin = []
+# #
+# asset_names = list(positions.columns)[1:]
+# #
+# # for asset in range(1, len(asset_names)):
+# #     position_1y_lst_origin.append(list(positions.loc[:, asset_names[asset]].values))
 #
-# for asset in range(1, len(asset_names)):
-#     position_1y_lst_origin.append(list(positions.loc[:, asset_names[asset]].values))
-
-position_1y_per_asset_origin = {}
-tmp_position_1y_per_asset_origin = []
+# position_1y_per_asset_origin = {}
+# tmp_position_1y_per_asset_origin = []
 
 assets_names_origin = ['Hang Seng Index Future ',
                        'S&P 500 Total Return',
@@ -29,11 +29,11 @@ assets_names_origin = ['Hang Seng Index Future ',
                        'EUR-USD X-RATE',
                        'USD-JPY X-RATE']
 
-for asset in range(len(asset_names)):
-    tmp_position_1y_per_asset_origin.append(assets_names_origin[asset])
-    tmp_position_1y_per_asset_origin.append(list(positions.loc[:, asset_names[asset]].values))
-    position_1y_per_asset_origin[assets_names_origin[asset]] = tmp_position_1y_per_asset_origin
-    tmp_position_1y_per_asset_origin = []
+# for asset in range(len(asset_names)):
+#     tmp_position_1y_per_asset_origin.append(assets_names_origin[asset])
+#     tmp_position_1y_per_asset_origin.append(list(positions.loc[:, asset_names[asset]].values))
+#     position_1y_per_asset_origin[assets_names_origin[asset]] = tmp_position_1y_per_asset_origin
+#     tmp_position_1y_per_asset_origin = []
 
 dates_pos_origin = [
                     '2019-11-10',
@@ -2204,7 +2204,7 @@ template_data_origin = {"dates_pos": dates_pos_origin,
                         # "zip_results_pos": zip_results_pos_origin,
                         # "zip_results_perf": zip_results_perf_origin,
                         "prev_positions": prev_positions_origin,
-                        "position_1y_per_asset": position_1y_per_asset_origin,
+                        # "position_1y_per_asset": position_1y_per_asset_origin,
                         "pre_overall": pre_overall_origin,
                         "assets_names": assets_names_origin,
                         "weekly_overall": weekly_overall_origin,

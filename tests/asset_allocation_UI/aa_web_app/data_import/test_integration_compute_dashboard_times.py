@@ -2,7 +2,6 @@ import os
 import unittest
 import numpy as np
 import pandas as pd
-from typing import List
 
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import main_compute_data_dashboard_times
