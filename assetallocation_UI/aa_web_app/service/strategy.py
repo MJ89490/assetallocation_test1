@@ -11,7 +11,7 @@ def run_strategy(
         fund_name: str, strategy_weight: float, strategy: Strategy, user_id: str,
         business_date_from: dt.date, business_date_to: dt.date, is_new_strategy: bool
 ) -> FundStrategy:
-    """Inserts strategy object data into database. Reads asset analytics from
+    """Inserts strategy object data into database. Reads asset analytics from§
     database to enable running of strategy, producing outputs of
     FundStrategyAnalytics and FundStrategyAssetWeights which are written into
     the database.
