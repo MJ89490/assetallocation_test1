@@ -78,13 +78,13 @@ def times_strategy():
 
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
 def receive_data_from_times_strategy_page():
-    global obj_received_data_times
+    #global obj_received_data_times
     json_data = json.loads(request.form['json_data'])
     try:
         obj_received_data_times.type_of_request = json_data['run_existing-version']
     except KeyError:
         pass
-    print(f"json data fund = {json_data}", flush=True)
+    print(f"receive_data_from_times_strategy_page = {json_data}", flush=True)
     if json_data['type_of_request'] == 'selected_fund':
         obj_received_data_times.fund_name = json_data['fund']
     elif json_data['type_of_request'] == 'selected_fund_weight':
