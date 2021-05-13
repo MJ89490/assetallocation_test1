@@ -19,6 +19,7 @@ from assetallocation_UI.aa_web_app.data_import.call_times_proc_caller import cal
 from assetallocation_UI.aa_web_app.data_import.download_data_strategy_to_domino import export_times_data_to_csv, \
     export_times_positions_data_to_csv
 
+global obj_received_data_times, obj_received_data_effect
 obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
 
