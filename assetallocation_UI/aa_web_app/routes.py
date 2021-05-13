@@ -19,7 +19,7 @@ from assetallocation_UI.aa_web_app.data_import.call_times_proc_caller import cal
 from assetallocation_UI.aa_web_app.data_import.download_data_strategy_to_domino import export_times_data_to_csv, \
     export_times_positions_data_to_csv
 
-global obj_received_data_times, obj_received_data_effect
+
 obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
 
@@ -31,6 +31,7 @@ def home():
 
 @app.route('/times_strategy', methods=['GET', 'POST'])
 def times_strategy():
+    global obj_received_data_times
     run_model_page = 'not_run_model'
     assets, asset_tickers_names_subcategories = [], []
     fund_selected, pop_up_message = '', ''
@@ -77,7 +78,7 @@ def times_strategy():
 
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
 def receive_data_from_times_strategy_page():
-
+    global obj_received_data_times
     json_data = json.loads(request.form['json_data'])
     try:
         obj_received_data_times.type_of_request = json_data['run_existing-version']
@@ -102,6 +103,7 @@ def receive_data_from_times_strategy_page():
 
 @app.route('/receive_data_from_times_strategy_form', methods=['POST'])
 def receive_data_from_times_strategy_form():
+    global obj_received_data_times
     form_data = request.form['form_data'].split('&')
     json_data = json.loads(request.form['json_data'])
     form_data.append('input_version_name=' + json_data['input_version_name_strategy'])
@@ -115,6 +117,7 @@ def receive_data_from_times_strategy_form():
 
 @app.route('/receive_sidebar_data_times_form', methods=['POST'])
 def receive_sidebar_data_times_form():
+    global obj_received_data_times
     outputs_sidebar = json.loads(request.form['json_data'])
 
     if outputs_sidebar['type_of_request'] == 'date_to_data_sidebar':
@@ -144,6 +147,7 @@ def receive_sidebar_data_times_form():
 
 @app.route('/times_sidebar_dashboard',  methods=['GET', 'POST'])
 def times_sidebar_dashboard():
+    global obj_received_data_times
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
     export_data_sidebar, sidebar_date_to = 'not_export_data_sidebar', ''
@@ -181,6 +185,7 @@ def times_sidebar_dashboard():
 
 @app.route('/times_charts_dashboard',  methods=['GET', 'POST'])
 def times_charts_dashboard():
+    global obj_received_data_times
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
     positions_chart = False
@@ -226,6 +231,8 @@ def times_charts_dashboard():
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
 def effect_dashboard():
+    global obj_received_data_effect
+
     form = InputsEffectStrategy()
 
     if request.method == "POST":
@@ -270,6 +277,7 @@ def effect_strategy():
 
 @app.route('/received_data_effect_form', methods=['POST'])
 def received_data_effect_form():
+    global obj_received_data_times
     form_data = request.form['form_data'].split('&')
     obj_received_data_times.is_new_strategy = True
     effect_form = obj_received_data_effect.receive_data_effect(form_data)
