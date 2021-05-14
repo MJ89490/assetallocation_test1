@@ -31,7 +31,7 @@ class ReceiveDataTimes:
         self.domino_username = None
 
     @property
-    def domino_username(self) -> bool:
+    def domino_username(self) -> str:
         return self._domino_username
 
     @domino_username.setter
@@ -334,7 +334,7 @@ class ReceiveDataTimes:
         print(f"self.strategy: {self.strategy}", flush=True)
 
         fund_strategy = run_strategy(self.fund_name, float(self.strategy_weight_user),
-                                     times, os.environ.get('USERNAME'),
+                                     times, self.domino_username,
                                      dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
                                      dt.datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date(),
                                      is_new_strategy=self.is_new_strategy
