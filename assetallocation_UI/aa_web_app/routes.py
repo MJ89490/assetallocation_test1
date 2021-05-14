@@ -26,7 +26,7 @@ obj_received_data_effect = ProcessDataEffect()
 
 
 @app.route('/',  methods=['GET'])
-def index():
+def home():
     r = make_response(render_template('home.html', title='HomePage'))
     if os.sys.platform == 'win32':
         r.set_cookie(key='username', value=os.environ.get('USERNAME'), max_age=None)
