@@ -150,14 +150,14 @@ $('#contact-form-button-times').click(function(){
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
 
-        var dominoUser = $('#dominoUser').text();
-        alert(dominoUser)
+        var dominoUserName = $('#dominoUser').text();
+        alert(dominoUserName)
 
         if (check != 'error'){
             alert("The strategy is about to run...");
             $.ajax({
                 url: "receive_data_from_times_strategy_form",
-                data: {form_data: form_data, json_data:jsonData},
+                data: {form_data: form_data, json_data:jsonData, dominoUserName: dominoUserName},
                 type: 'POST',
                 success: function(response){
                     console.log(response);

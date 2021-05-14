@@ -116,11 +116,17 @@ def receive_data_from_times_strategy_form():
     global obj_received_data_times
     form_data = request.form['form_data'].split('&')
     json_data = json.loads(request.form['json_data'])
+    dominoUserName = request.form['dominoUserName']
+
+
+    print(f"dominoUserName: {dominoUserName}", flush=True)
+
     form_data.append('input_version_name=' + json_data['input_version_name_strategy'])
+    obj_received_data_times.domino_username = dominoUserName
     obj_received_data_times.version_description = json_data["input_version_name_strategy"]
     obj_received_data_times.is_new_strategy = True
     obj_received_data_times.received_data_times(form_data)
-    obj_received_data_times.call_run_times(json_data)
+    # obj_received_data_times.call_run_times(json_data)
 
     return json.dumps({'status': 'OK'})
 

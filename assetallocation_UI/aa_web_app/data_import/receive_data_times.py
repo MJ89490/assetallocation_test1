@@ -28,6 +28,15 @@ class ReceiveDataTimes:
         self.date_to_export_sidebar = None
         self.version_description = ''
         self.is_new_strategy = True
+        self.domino_username = None
+
+    @property
+    def domino_username(self) -> bool:
+        return self._domino_username
+
+    @domino_username.setter
+    def domino_username(self, x) -> None:
+        self._domino_username = x
 
     @property
     def is_new_strategy(self) -> bool:
