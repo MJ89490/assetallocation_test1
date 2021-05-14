@@ -161,7 +161,7 @@ $('#contact-form-button-times').click(function(){
                 type: 'POST',
                 success: function(response){
                     console.log(response);
-                    alert('The strategy has been run successfully!');
+                    alert('The strategy has been run successfully! You will be redirected to the dashboard shortly');
                     window.location.href = "times_charts_dashboard";
                 },
                 error: function(error){
