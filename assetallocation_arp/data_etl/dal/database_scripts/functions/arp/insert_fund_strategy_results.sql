@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_results(
   fund_name varchar,
   strategy_name varchar,
   strategy_version int,
-  business_tstzrange tstzrange,
+  business_daterange daterange,
   weight numeric,
   user_id varchar,
   python_code_version text,
@@ -29,7 +29,7 @@ BEGIN
 
   select config.insert_execution_state('arp.insert_fund_strategy_results') into execution_state_id;
   SELECT
-    config.insert_model_instance('ARP', business_tstzrange, python_code_version, execution_state_id)
+    config.insert_model_instance('ARP', business_daterange, python_code_version, execution_state_id)
   into
     model_instance_id;
   select select_fund.fund_id from fund.select_fund(fund_name) into fund_id;
@@ -78,7 +78,7 @@ BEGIN
     fsw.fund_id = select_current_fund_strategy_weight_id_for_weight.fund_id
     AND fsw.strategy_id = select_current_fund_strategy_weight_id_for_weight.strategy_id
     AND fsw.weight = select_current_fund_strategy_weight_id_for_weight.weight
-    AND upper_inf(fsw.system_tstzrange)
+    AND upper(fsw.system_tstzrange) = 'infinity'
   ;
 END
 $$
@@ -96,21 +96,25 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_weight(
 AS
 $$
 BEGIN
-  INSERT INTO arp.fund_strategy_wieght(
+  INSERT INTO arp.fund_strategy_weight(
     fund_id,
     strategy_id,
     weight,
-    set_by_id,
+    user_id,
     execution_state_id
   )
-  VALUES(
-    fund_id,
-    strategy_id,
-    weight,
-    app_user_id,
-    execution_state_id
-  )
-  RETURNING arp.fund_strategy_wieght.id into fund_strategy_id;
+  SELECT
+    insert_fund_strategy_weight.fund_id,
+    insert_fund_strategy_weight.strategy_id,
+    insert_fund_strategy_weight.weight,
+    au.id,
+    insert_fund_strategy_weight.execution_state_id
+  FROM
+    auth.user au
+  WHERE
+    au.windows_username = app_user_id
+    OR au.domino_username = app_user_id
+  RETURNING arp.fund_strategy_weight.id into fund_strategy_id;
   RETURN;
 END
 $$
@@ -145,7 +149,7 @@ CREATE OR REPLACE FUNCTION arp.insert_fund_strategy_asset_weights(
   fund_id int,
   strategy_id int,
   model_instance_id int,
-  set_by_id int,
+  set_by_id varchar,
   weights arp.ticker_date_frequency_weight[],
   execution_state_id int
 )
@@ -155,11 +159,11 @@ $$
 DECLARE
   id_weights arp.id_weight[];
 BEGIN
-  SELECT arp.insert_strategy_asset_weights(
+  SELECT array_agg((id, theoretical_weight)::arp.id_weight) from arp.insert_strategy_asset_weights(
       strategy_id, model_instance_id, weights, execution_state_id
   ) into id_weights;
   PERFORM arp.insert_fund_asset_weights(
-      fund_id, set_by_id, id_weights, execution_state_id
+      fund_id, strategy_id, id_weights, set_by_id, execution_state_id
   );
 END
 $$
@@ -170,12 +174,16 @@ CREATE OR REPLACE FUNCTION arp.insert_strategy_asset_weights(
     strategy_id int,
     model_instance_id int,
     weights arp.ticker_date_frequency_weight[],
-    execution_state_id int,
-    out id_weights arp.id_weight[]
+    execution_state_id int
 )
+  RETURNS TABLE(
+    id int,
+    theoretical_weight numeric(32,16)
+  )
 AS
 $$
 BEGIN
+  RETURN QUERY
   INSERT INTO arp.strategy_asset_weight(
     strategy_id,
     asset_id,
@@ -196,17 +204,43 @@ BEGIN
   FROM
     unnest(weights) as aw
     JOIN asset.asset a ON a.ticker = (aw).ticker
-  RETURNING array_agg(arp.strategy_asset_weight.id, arp.strategy_asset_weight.theoretical_weight::arp.id_weight) into id_weights;
-  RETURN;
+  ON CONFLICT ON CONSTRAINT strategy_asset_weight_strategy_id_asset_id_business_date_key DO UPDATE
+    SET
+      strategy_id = EXCLUDED.strategy_id,
+      asset_id = EXCLUDED.asset_id,
+      model_instance_id = EXCLUDED.model_instance_id,
+      business_date = EXCLUDED.business_date,
+      theoretical_weight = EXCLUDED.theoretical_weight,
+      frequency = EXCLUDED.frequency
+
+    /* AVOID NET ZERO CHANGES */
+    where exists
+        (
+        SELECT
+          arp.strategy_asset_weight.strategy_id,
+          arp.strategy_asset_weight.asset_id,
+          arp.strategy_asset_weight.business_date,
+          arp.strategy_asset_weight.theoretical_weight,
+          arp.strategy_asset_weight.frequency
+        EXCEPT
+        SELECT
+          EXCLUDED.strategy_id,
+          EXCLUDED.asset_id,
+          EXCLUDED.business_date,
+          EXCLUDED.theoretical_weight,
+          EXCLUDED.frequency
+        )
+  RETURNING arp.strategy_asset_weight.id, arp.strategy_asset_weight.theoretical_weight
+  ;
 END
 $$
 LANGUAGE PLPGSQL;
 
-
 CREATE OR REPLACE FUNCTION arp.insert_fund_asset_weights(
     fund_id int,
+    strategy_id int,
     id_weights arp.id_weight[],
-    set_by_id int,
+    set_by_id varchar,
     execution_state_id int
 )
   RETURNS VOID
@@ -214,8 +248,9 @@ AS
 $$
 DECLARE
   business_date_range daterange;
+  _user_id int;
 BEGIN
-  -- per fund, per strategy, per asset_id per business datetime there should be one value
+--   per fund, per strategy version / id, per asset_id per business datetime there should be one value
   SELECT
     daterange(min(saw.business_date), max(saw.business_date) + 1)
   INTO
@@ -225,30 +260,44 @@ BEGIN
     JOIN unnest(id_weights) as iw ON saw.id = (iw).id
   ;
 
-  UPDATE arp.fund_strategy_asset_weight
-  SET system_tstzrange =  tstzrange(
-        lower(system_tstzrange),
-        now(),
-        '[)'
-    )
+   UPDATE arp.fund_strategy_asset_weight fsaw
+   SET system_tstzrange =  tstzrange(
+         lower(fsaw.system_tstzrange),
+         now(),
+         '[)'
+     )
+   FROM
+     arp.strategy_asset_weight saw
+   WHERE
+     fsaw.strategy_asset_weight_id = saw.id
+     AND saw.business_date <@ business_date_range
+     AND fsaw.fund_id = insert_fund_asset_weights.fund_id
+     AND saw.strategy_id = insert_fund_asset_weights.strategy_id
+     AND upper(fsaw.system_tstzrange) = 'infinity'
+   ;
+
+  select
+    au.id
+  into
+    _user_id
   FROM
-    arp.fund_strategy_asset_weight fsaw
-    JOIN arp.strategy_asset_weight saw ON fsaw.strategy_asset_weight_id = saw.id
+    auth.user au
   WHERE
-    saw.business_date <@ insert_fund_asset_weights.business_date_range
+    au.windows_username = set_by_id
+    OR au.domino_username = set_by_id
   ;
 
   INSERT INTO arp.fund_strategy_asset_weight(
     fund_id,
     strategy_asset_weight_id,
-    set_by_id,
+    user_id,
     implemented_weight,
     execution_state_id
   )
   SELECT
     insert_fund_asset_weights.fund_id,
     (iw).id as strategy_asset_weight_id,
-    insert_fund_asset_weights.set_by_id,
+    _user_id,
     (iw).weight as implemented_weight,
     insert_fund_asset_weights.execution_state_id
   FROM
@@ -294,7 +343,44 @@ BEGIN
     (a).comparator_value,
     insert_strategy_analytics.execution_state_id
   FROM
-    unnest(analytics) as a;
+    unnest(analytics) as a
+  ON CONFLICT ON CONSTRAINT strategy_analytic_strategy_id__business_date_category_subcategory_key DO UPDATE
+  SET
+    strategy_id = EXCLUDED.strategy_id,
+    model_instance_id = EXCLUDED.model_instance_id,
+    business_date = EXCLUDED.business_date,
+    category = EXCLUDED.category,
+    subcategory = EXCLUDED.subcategory,
+    frequency = EXCLUDED.frequency,
+    value = EXCLUDED.value,
+    comparator_name = EXCLUDED.comparator_name,
+    comparator_value = EXCLUDED.comparator_value,
+    execution_state_id = EXCLUDED.execution_state_id
+
+  /* AVOID NET ZERO CHANGES */
+  where exists
+    (
+    SELECT
+      arp.strategy_analytic.strategy_id,
+      arp.strategy_analytic.business_date,
+      arp.strategy_analytic.category,
+      arp.strategy_analytic.subcategory,
+      arp.strategy_analytic.frequency,
+      arp.strategy_analytic.value,
+      arp.strategy_analytic.comparator_name,
+      arp.strategy_analytic.comparator_value
+    EXCEPT
+    SELECT
+      EXCLUDED.strategy_id,
+      EXCLUDED.business_date,
+      EXCLUDED.category,
+      EXCLUDED.subcategory,
+      EXCLUDED.frequency,
+      EXCLUDED.value,
+      EXCLUDED.comparator_name,
+      EXCLUDED.comparator_value
+    )
+  ;
   RETURN;
 END
 $$
@@ -335,6 +421,39 @@ BEGIN
   FROM
     unnest(analytics) as a
     JOIN asset.asset aa on (a).ticker = aa.ticker
+  ON CONFLICT ON CONSTRAINT strategy_asset_analytic_strategy_id_asset_id_business_date_category_subcategory_key DO UPDATE
+  SET
+    strategy_id = EXCLUDED.strategy_id,
+    model_instance_id = EXCLUDED.model_instance_id,
+    asset_id = EXCLUDED.asset_id,
+    business_date = EXCLUDED.business_date,
+    category = EXCLUDED.category,
+    subcategory = EXCLUDED.subcategory,
+    frequency = EXCLUDED.frequency,
+    value = EXCLUDED.value,
+    execution_state_id = EXCLUDED.execution_state_id
+
+  /* AVOID NET ZERO CHANGES */
+  where exists
+    (
+    SELECT
+      arp.strategy_asset_analytic.strategy_id,
+      arp.strategy_asset_analytic.asset_id,
+      arp.strategy_asset_analytic.business_date,
+      arp.strategy_asset_analytic.category,
+      arp.strategy_asset_analytic.subcategory,
+      arp.strategy_asset_analytic.frequency,
+      arp.strategy_asset_analytic.value
+    EXCEPT
+    SELECT
+      EXCLUDED.strategy_id,
+      EXCLUDED.asset_id,
+      EXCLUDED.business_date,
+      EXCLUDED.category,
+      EXCLUDED.subcategory,
+      EXCLUDED.frequency,
+      EXCLUDED.value
+    )
   ;
   RETURN;
 END

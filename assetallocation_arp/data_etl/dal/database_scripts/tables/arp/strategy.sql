@@ -21,7 +21,7 @@ CREATE TABLE "arp"."strategy"
 	"id" serial NOT NULL,
 	"name" varchar(50)	 NOT NULL,
 	"description" varchar(100)	 NULL,
-	"app_user_id" varchar(7)	 NOT NULL,
+	"user_id" id NOT NULL,
 	"system_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)'),
 	"execution_state_id" integer NOT NULL
 )
@@ -44,5 +44,5 @@ ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_execution_state_fkey"
 ;
 
 ALTER TABLE "arp"."strategy" ADD CONSTRAINT "strategy_user_fkey"
-	FOREIGN KEY ("app_user_id") REFERENCES "arp"."app_user" ("id") ON DELETE No Action ON UPDATE No Action
+	FOREIGN KEY ("user_id") REFERENCES "auth"."user" ("id") ON DELETE No Action ON UPDATE No Action
 ;
