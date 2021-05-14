@@ -2179,9 +2179,9 @@ assets_names_origin = ['Hang Seng Index Future ',
                        'EUR-USD X-RATE',
                        'USD-JPY X-RATE']
 
-# zip_results_pos_overall_origin = [('Equity', 1.648, 1.167), ('Fixed Income', -34.402, -37.271), ('FX', 10.264, 9.640)]
+zip_results_pos_overall_origin = [('Equity', 1.648, 1.167), ('Fixed Income', -34.402, -37.271), ('FX', 10.264, 9.640)]
 #
-# zip_results_perf_overall_origin = [(0.004, 0.004), (0.021, -0.030), (0.025, -0.025), (0.050, -0.051)]
+zip_results_perf_overall_origin = [(0.004, 0.004), (0.021, -0.030), (0.025, -0.025), (0.050, -0.051)]
 
 prev_positions_origin = [1.509, 0.139, 0.001, 0.000, -9.227, -8.800, -8.731, -7.643, -0.461, -2.887, 4.909, 2.053, 6.649]
 
@@ -2201,16 +2201,16 @@ template_data_origin = {"dates_pos": dates_pos_origin,
                         # "positions": position_1y_lst_origin,
                         "dates_pos_alloc": [dates_pos_origin],
                         "new_positions": new_positions_origin,
-                        # "zip_results_pos": zip_results_pos_origin,
-                        # "zip_results_perf": zip_results_perf_origin,
+                        "zip_results_pos": zip_results_pos_origin,
+                        "zip_results_perf": zip_results_perf_origin,
                         "prev_positions": prev_positions_origin,
                         # "position_1y_per_asset": position_1y_per_asset_origin,
                         "pre_overall": pre_overall_origin,
                         "assets_names": assets_names_origin,
                         "weekly_overall": weekly_overall_origin,
-                        # "zip_results_pos_overall": zip_results_pos_overall_origin,
+                        "zip_results_pos_overall": zip_results_pos_overall_origin,
                         "signal_as_off": signal_as_off_origin,
-                        # "zip_results_perf_overall": zip_results_perf_overall_origin,
+                        "zip_results_perf_overall": zip_results_perf_overall_origin,
                         "ytd_performance_all_currencies": ytd_performance_all_currencies_origin,
                         "weekly_performance_all_currencies": weekly_performance_all_currencies_origin}
 

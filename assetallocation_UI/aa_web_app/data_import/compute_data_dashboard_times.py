@@ -291,7 +291,7 @@ class ComputeDataDashboardTimes:
                     tmp_positions = self._positions.loc[self._positions.asset_name == asset_name]
                     tmp_positions = tmp_positions.sort_index()
 
-                    if category.name == 'FX':
+                    if category.name == Category.FX.name:
                         value = -float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
 
                         if asset_name == 'EUR-USD X-RATE':

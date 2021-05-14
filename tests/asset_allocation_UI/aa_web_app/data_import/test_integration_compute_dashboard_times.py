@@ -31,6 +31,27 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         template_data_origin = data_origin.template_data_origin
 
+        # zip_results_pos_overall
+        zip_results_pos_overall = list(template_data["zip_results_pos_overall"])
+        # np.testing.assert_equal(template_data_origin["zip_results_pos_overall"], zip_results_pos_overall)
+        print(zip_results_pos_overall)
+
+        # zip_results_perf_overall
+        zip_results_perf_overall = list(template_data["zip_results_perf_overall"])
+        print(zip_results_perf_overall)
+        # np.testing.assert_equal(template_data_origin["zip_results_perf_overall"], zip_results_perf_overall)
+        # print(zip_results_perf_overall)
+
+        # zip_results_perf
+        zip_results_perf = list(template_data["zip_results_perf"])
+        # np.testing.assert_equal(template_data_origin["zip_results_perf"], zip_results_pos_overall)
+        print(zip_results_perf)
+
+        # zip_results_pos
+        zip_results_pos = list(template_data["zip_results_pos"])
+        # np.testing.assert_equal(template_data_origin["zip_results_pos"], zip_results_pos_overall)
+        print(zip_results_pos)
+
         # dates_pos
         np.testing.assert_equal(template_data_origin["dates_pos"], template_data["dates_pos"])
 
