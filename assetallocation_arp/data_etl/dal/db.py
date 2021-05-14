@@ -15,6 +15,7 @@ class Db:
         Raises ValueError if stored procedure is not in self.procs
         """
         print(proc_name)
+        print(f"proc_name: {proc_name}", flush=True)
         if proc_name not in self.procs:
             raise ValueError(f'The stored procedure "{proc_name}" is not defined for class {self.__class__}')
 
