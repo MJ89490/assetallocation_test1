@@ -291,26 +291,22 @@ class ReceiveDataTimes:
                                          self.times_form['input_signal_two_short_times'],
                                          self.times_form['input_signal_three_short_times']]))
 
-
-
-
         times = Times(DayOfWeek[self.times_form['input_weekday_times'].upper()],
                       self.times_form['input_frequency_times'].lower(),
                       self.times_form['input_leverage_times'], long_signals, short_signals,
                       int(self.times_form['input_time_lag_times']),
                       int(self.times_form['input_vol_window_times']))
 
-        print(f"times.business_date_from: {times.business_date_from}", flush=True)
-        print(f"times.description: { times.description}", flush=True)
+        # print(f"times.business_date_from: {times.business_date_from}", flush=True)
+        # print(f"times.description: { times.description}", flush=True)
         print(f"user_id: {os.environ.get('USERNAME')}", flush=True)
-        print(f"times.time_lag_interval: {times.time_lag_interval}", flush=True)
-        print(f"times.leverage_type.name: {times.leverage_type.name}", flush=True)
-        print(f"times.volatility_window: {times.volatility_window}", flush=True)
-        print(f"times.short_signals: {times.short_signals}", flush=True)
-        print(f"times.long_signals: {times.long_signals}", flush=True)
-        print(f"times.frequency.name: {times.frequency.name}", flush=True)
-        print(f"times.day_of_week.value: {times.day_of_week.value}", flush=True)
-
+        # print(f"times.time_lag_interval: {times.time_lag_interval}", flush=True)
+        # print(f"times.leverage_type.name: {times.leverage_type.name}", flush=True)
+        # print(f"times.volatility_window: {times.volatility_window}", flush=True)
+        # print(f"times.short_signals: {times.short_signals}", flush=True)
+        # print(f"times.long_signals: {times.long_signals}", flush=True)
+        # print(f"times.frequency.name: {times.frequency.name}", flush=True)
+        # print(f"times.day_of_week.value: {times.day_of_week.value}", flush=True)
 
         times.description = self.version_description
         self.strategy = self.strategy_weight_user
