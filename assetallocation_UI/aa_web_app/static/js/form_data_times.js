@@ -162,7 +162,7 @@ $('#contact-form-button-times').click(function(){
                 success: function(response){
                     console.log(response);
                     alert('The strategy has been run successfully!');
-//                    window.location.href = "times_charts_dashboard";
+                    window.location.href = "times_charts_dashboard";
                 },
                 error: function(error){
                     console.log("ERROR")
