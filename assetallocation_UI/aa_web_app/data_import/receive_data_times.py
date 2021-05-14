@@ -333,6 +333,8 @@ class ReceiveDataTimes:
         print(f"fund_name: {self.fund_name}, strategy_weight_user = {self.strategy_weight_user}", flush=True)
         print(f"self.strategy: {self.strategy}", flush=True)
 
+        print(f" self.domino_username: { self.domino_username}", flush=True)
+
         fund_strategy = run_strategy(self.fund_name, float(self.strategy_weight_user),
                                      times, self.domino_username,
                                      dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
