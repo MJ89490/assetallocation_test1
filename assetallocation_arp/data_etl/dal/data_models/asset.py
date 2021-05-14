@@ -18,6 +18,7 @@ class Asset:
         self._description = ''
         self._name = None
         self._ticker = ticker
+        self._fee = None
         self._subcategory = None
         self._asset_analytics = []
 
@@ -88,6 +89,14 @@ class Asset:
     @description.setter
     def description(self, x: str) -> None:
         self._description = x
+
+    @property
+    def fee(self) -> Optional[float]:
+        return self._fee
+
+    @fee.setter
+    def fee(self, x: float) -> None:
+        self._fee = x
 
     def add_analytic(self, asset_analytic: AssetAnalytic) -> None:
         if asset_analytic.asset_ticker == self.ticker:
