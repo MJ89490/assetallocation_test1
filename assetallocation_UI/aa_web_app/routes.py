@@ -208,6 +208,7 @@ def times_charts_dashboard():
     export_data_sidebar = 'not_export_data_sidebar'
     position_1y_lst, positions, dates_pos, position_1y_per_asset = [], [], [], []
 
+    print('DASHBOARD')
     signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
                                                          version_strategy=obj_received_data_times.version_strategy,
                                                          date_to=obj_received_data_times.date_to,
