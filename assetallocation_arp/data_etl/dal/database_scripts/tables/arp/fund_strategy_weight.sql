@@ -21,7 +21,7 @@ CREATE TABLE "arp"."fund_strategy_weight"
 	"id" serial NOT NULL,
 	"fund_id" integer NOT NULL,
   "strategy_id" integer NOT NULL,
-  "set_by_id" varchar NOT NULL,
+  "user_id" integer NOT NULL,
 	"system_tstzrange" tstzrange NOT NULL DEFAULT tstzrange(now(), 'infinity', '[)'),
   "weight" numeric(32,16) NOT NULL,
 	"execution_state_id" integer NOT NULL
@@ -42,6 +42,6 @@ ALTER TABLE "arp"."fund_strategy_weight" ADD CONSTRAINT "fund_strategy_weight_ex
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
 ;
 
-ALTER TABLE "arp"."fund_strategy_weight" ADD CONSTRAINT "fund_strategy_weight_set_by_id_fkey"
-	FOREIGN KEY ("set_by_id") REFERENCES "arp"."app_user" ("id") ON DELETE No Action ON UPDATE No Action
+ALTER TABLE "arp"."fund_strategy_weight" ADD CONSTRAINT "fund_strategy_weight_user_id_fkey"
+	FOREIGN KEY ("user_id") REFERENCES "auth"."user" ("id") ON DELETE No Action ON UPDATE No Action
 ;

@@ -16,7 +16,9 @@ VALUES
   ('config.insert_model', 'Insert model into config.model', 't'),
   ('config.insert_asset_analytic', 'Insert asset analytic into config.asset_analytic', 't'),
   ('staging.load_assets', 'Load assets from staging.asset into asset.asset, asset.asset_group and asset.asset_analytic', 't'),
-  ('staging.load_asset_analytics', 'Load asset_analytics from staging.asset_analytic into asset.asset_analytic', 't')
+  ('staging.load_asset_analytics', 'Load asset_analytics from staging.asset_analytic into asset.asset_analytic', 't'),
+  ('auth.insert_user', 'Insert user into auth.user', 't'),
+  ('config.insert_model', 'Insert model into config.model', 't')
 ON CONFLICT DO NOTHING
 ;
 
