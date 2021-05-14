@@ -1,3 +1,4 @@
+-- TODO add more data to country and currency lookup tables!
 INSERT INTO lookup.country(country, region)
 VALUES
   ('CN', 'Asia ex JP'),

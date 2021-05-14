@@ -6,36 +6,36 @@
 
 /* Drop Sequences for Autonumber Columns */
 
-DROP SEQUENCE IF EXISTS "asset"."asset_group_id_seq" CASCADE
+DROP SEQUENCE IF EXISTS "config"."asset_analytic_id_seq" CASCADE
 ;
 
 /* Drop Tables */
 
-DROP TABLE IF EXISTS "asset"."asset_group" CASCADE
+DROP TABLE IF EXISTS "config"."asset_analytic" CASCADE
 ;
 
 /* Create Tables */
 
-CREATE TABLE "asset"."asset_group"
+CREATE TABLE "config"."asset_analytic"
 (
 	"id" serial NOT NULL,
-	"category" text NOT NULL,
-	"execution_state_id" integer NULL,
-	"subcategory" text NOT NULL
+  "ticker" text NOT NULL,
+	"categories" text[]	 NOT NULL,
+	"execution_state_id" integer NOT NULL
 )
 ;
 
 /* Create Primary Keys, Indexes, Uniques, Checks */
 
-ALTER TABLE "asset"."asset_group" ADD CONSTRAINT "asset_group_pkey"
+ALTER TABLE "config"."asset_analytic" ADD CONSTRAINT "asset_analytic_pkey"
 	PRIMARY KEY ("id")
 ;
 
-ALTER TABLE "asset"."asset_group" ADD CONSTRAINT "asset_group_category_subcategory_key"
-	UNIQUE (category, subcategory)
+ALTER TABLE "config"."asset_analytic" ADD CONSTRAINT "asset_analytic_ticker_key" UNIQUE ("ticker")
 ;
 
 /* Create Foreign Key Constraints */
-ALTER TABLE "asset"."asset_group" ADD CONSTRAINT "asset_group_execution_state_fkey"
+
+ALTER TABLE "config"."asset_analytic" ADD CONSTRAINT "asset_analytic_execution_state_fkey"
 	FOREIGN KEY ("execution_state_id") REFERENCES "config"."execution_state" ("id") ON DELETE No Action ON UPDATE No Action
 ;
