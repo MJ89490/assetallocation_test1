@@ -34,8 +34,7 @@ $('.select-fund-from-strategy-page').change(function() {
 //        fund = document.getElementById("select-fund-from-strategy-page").value
 //        var fund = document.getElementById('select-fund-from-strategy-page').fireEvent("onchange");
 
-        console.log(fund);
-
+        console.log(selValFund);
         fundSelectedFromStrategyPage.push(selValFund);
 
         if (fundSelectedFromStrategyPage.length != 1){
