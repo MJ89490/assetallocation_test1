@@ -13,13 +13,25 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
     <!-- Bootstrap Date-Picker Plugin -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
     <link rel="stylesheet" href="static/css/base.css">
 </head>
+
+<!--Get username to be used for authentication-->
+<p hidden id="dominoUser">{{ request.headers.get("domino-username") }}</p>
+<script>
+     let header_value = document.getElementById('dominoUser').innerHTML;
+     if (header_value === "None") {
+         // means we are running locally
+         sessionStorage.setItem("username", document.cookie.split('=')[1]);
+     } else {
+         // we're on Domino
+         sessionStorage.setItem("username", document.getElementById('dominoUser').innerHTML)
+     }
+</script>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top navbar-default py-lg-0 ">

@@ -25,6 +25,18 @@
 
     </head>
 
+    <!--Get username to be used for authentication-->
+<p hidden id="dominoUser">{{ request.headers.get("domino-username") }}</p>
+<script>
+     let header_value = document.getElementById('dominoUser').innerHTML;
+     if (header_value === "None") {
+         // means we are running locally
+         sessionStorage.setItem("username", document.cookie.split('=')[1]);
+     } else {
+         // we're on Domino
+         sessionStorage.setItem("username", document.getElementById('dominoUser').innerHTML)
+     }
+</script>
 
     <body>
 

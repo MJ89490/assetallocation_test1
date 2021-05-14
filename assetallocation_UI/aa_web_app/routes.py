@@ -1,6 +1,7 @@
+import os
 import json
 from flask import render_template
-from flask import request, redirect, url_for, jsonify
+from flask import request, redirect, url_for, jsonify, make_response
 
 from assetallocation_UI.aa_web_app import app
 
@@ -24,9 +25,17 @@ obj_received_data_times = ReceiveDataTimes()
 obj_received_data_effect = ProcessDataEffect()
 
 
-@app.route('/')
-def home():
-    return render_template('home.html', title='HomePage')
+@app.route('/',  methods=['GET'])
+def index():
+    r = make_response(render_template('home.html', title='HomePage'))
+    if os.sys.platform == 'win32':
+        r.set_cookie(key='username', value=os.environ.get('USERNAME'), max_age=None)
+    return r
+
+
+# @app.route('/')
+# def home():
+#     return render_template('home.html', title='HomePage')
 
 
 @app.route('/times_strategy', methods=['GET', 'POST'])
