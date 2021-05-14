@@ -86,6 +86,7 @@ def receive_data_from_times_strategy_page():
         pass
     print(f"receive_data_from_times_strategy_page = {json_data}", flush=True)
     if json_data['type_of_request'] == 'selected_fund':
+        print(json_data['fund'])
         obj_received_data_times.fund_name = json_data['fund']
     elif json_data['type_of_request'] == 'selected_fund_weight':
         obj_received_data_times.strategy_weight_user = json_data['strategy_weight']

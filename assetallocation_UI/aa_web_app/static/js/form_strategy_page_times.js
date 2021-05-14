@@ -36,7 +36,7 @@ $('.select-fund-from-strategy-page').change(function() {
 
         console.log(fund);
 
-        fundSelectedFromStrategyPage.push(fund);
+        fundSelectedFromStrategyPage.push(selValFund);
 
         if (fundSelectedFromStrategyPage.length != 1){
             fundSelectedFromStrategyPage.splice(0, fundSelectedFromStrategyPage.length-1);
