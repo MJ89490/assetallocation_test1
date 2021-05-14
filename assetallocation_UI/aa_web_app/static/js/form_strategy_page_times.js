@@ -22,12 +22,19 @@ window.onload = function() {
     $('#input_weight_strategy').val(selItemWeight);
 }
 
+
+
 // SELECT A FUND
-$('#select-fund-from-strategy-page').change(function() {
+$('.select-fund-from-strategy-page').change(function() {
         var selValFund = $(this).val();
         sessionStorage.setItem("selValFund", selValFund);
 
-        fund = document.getElementById("select-fund-from-strategy-page").value
+          alert(selValFund);
+
+//        fund = document.getElementById("select-fund-from-strategy-page").value
+//        var fund = document.getElementById('select-fund-from-strategy-page').fireEvent("onchange");
+
+        console.log(fund);
 
         fundSelectedFromStrategyPage.push(fund);
 
