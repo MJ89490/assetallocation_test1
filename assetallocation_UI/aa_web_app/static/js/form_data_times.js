@@ -150,6 +150,9 @@ $('#contact-form-button-times').click(function(){
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
 
+        var dominoUser = $('#dominoUser').text();
+        alert(dominoUser)
+
         if (check != 'error'){
             alert("The strategy is about to run...");
             $.ajax({
