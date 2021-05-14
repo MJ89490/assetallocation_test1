@@ -299,7 +299,7 @@ class ReceiveDataTimes:
 
         # print(f"times.business_date_from: {times.business_date_from}", flush=True)
         # print(f"times.description: { times.description}", flush=True)
-        print(f"user_id: {os.environ.get('USERNAME')}", flush=True)
+        # print(f"user_id: {os.environ.get('USERNAME')}", flush=True)
         # print(f"times.time_lag_interval: {times.time_lag_interval}", flush=True)
         # print(f"times.leverage_type.name: {times.leverage_type.name}", flush=True)
         # print(f"times.volatility_window: {times.volatility_window}", flush=True)
