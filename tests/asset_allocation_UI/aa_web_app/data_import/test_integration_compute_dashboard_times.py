@@ -5,7 +5,7 @@ import pandas as pd
 
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import main_compute_data_dashboard_times
-from tests.asset_allocation_UI.aa_web_app.data_for_test import data_expected_dashboard_integration_test as data_origin
+from tests.asset_allocation_UI.aa_web_app.data_for_test import data_expected_dashboard_integration_test as expected_data
 
 
 class TestComputeDataDashboardTimes(unittest.TestCase):
@@ -29,10 +29,11 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
         template_data = main_compute_data_dashboard_times(obj_charts_data=self.dashboard_times, start_date=None,
                                                           end_date=None)
 
-        template_data_origin = data_origin.template_data_origin
+        template_expected_data = expected_data.template_data_origin
 
         # zip_results_pos_overall
         zip_results_pos_overall = list(template_data["zip_results_pos_overall"])
+        z = template_expected_data["zip_results_pos_overall"]
         # np.testing.assert_equal(template_data_origin["zip_results_pos_overall"], zip_results_pos_overall)
         print(zip_results_pos_overall)
 
@@ -53,34 +54,34 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
         print(zip_results_pos)
 
         # dates_pos
-        np.testing.assert_equal(template_data_origin["dates_pos"], template_data["dates_pos"])
+        np.testing.assert_equal(template_expected_data["dates_pos"], template_data["dates_pos"])
 
         # mom_signals
-        np.testing.assert_almost_equal(template_data_origin["mom_signals"], template_data["mom_signals"])
+        np.testing.assert_almost_equal(template_expected_data["mom_signals"], template_data["mom_signals"])
 
         # dates_pos_alloc
-        np.testing.assert_equal(template_data_origin["dates_pos_alloc"], template_data["dates_pos_alloc"])
+        np.testing.assert_equal(template_expected_data["dates_pos_alloc"], template_data["dates_pos_alloc"])
 
         # new_positions
-        np.testing.assert_almost_equal(template_data_origin["new_positions"], template_data["new_positions"])
+        np.testing.assert_almost_equal(template_expected_data["new_positions"], template_data["new_positions"])
 
         # prev_positions
-        np.testing.assert_almost_equal(template_data_origin["prev_positions"], template_data["prev_positions"])
+        np.testing.assert_almost_equal(template_expected_data["prev_positions"], template_data["prev_positions"])
 
         # pre_overall
-        np.testing.assert_almost_equal(list(template_data_origin["pre_overall"].values()), list(template_data["pre_overall"].values()))
+        np.testing.assert_almost_equal(list(template_expected_data["pre_overall"].values()), list(template_data["pre_overall"].values()))
 
         # assets_names
-        np.testing.assert_equal(template_data_origin["assets_names"], template_data["assets_names"])
+        np.testing.assert_equal(template_expected_data["assets_names"], template_data["assets_names"])
 
         # weekly_overall
-        np.testing.assert_almost_equal(list(template_data_origin["weekly_overall"].values()), list(template_data["weekly_overall"].values()))
+        np.testing.assert_almost_equal(list(template_expected_data["weekly_overall"].values()), list(template_data["weekly_overall"].values()))
 
         # signal_as_off
-        np.testing.assert_equal(template_data_origin["signal_as_off"], template_data["signal_as_off"])
+        np.testing.assert_equal(template_expected_data["signal_as_off"], template_data["signal_as_off"])
 
         # ytd_performance_all_currencies
-        np.testing.assert_almost_equal(template_data_origin["ytd_performance_all_currencies"], template_data["ytd_performance_all_currencies"])
+        np.testing.assert_almost_equal(template_expected_data["ytd_performance_all_currencies"], template_data["ytd_performance_all_currencies"])
 
         # weekly_performance_all_currencies
-        np.testing.assert_almost_equal(template_data_origin["weekly_performance_all_currencies"], template_data["weekly_performance_all_currencies"])
+        np.testing.assert_almost_equal(template_expected_data["weekly_performance_all_currencies"], template_data["weekly_performance_all_currencies"])
