@@ -5,7 +5,7 @@ import pandas as pd
 
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import main_compute_data_dashboard_times
-from tests.asset_allocation_UI.aa_web_app.data_for_test import data_origin_dashboard_integration_test as data_origin
+from tests.asset_allocation_UI.aa_web_app.data_for_test import data_expected_dashboard_integration_test as data_origin
 
 
 class TestComputeDataDashboardTimes(unittest.TestCase):
