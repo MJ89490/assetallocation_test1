@@ -133,7 +133,7 @@ class ComputeDataDashboardTimes:
                     v2 = tmp_returns.loc[prev_7_days_date_signals].value
                     value = (v1 - v2) * 100
 
-                    if category.name == 'FX' and asset_name == 'EUR-USD X-RATE':
+                    if category.name == Category.FX.name and asset_name == 'EUR-USD X-RATE':
                         tmp_eur_usd = self._returns.loc[self._returns.asset_name == 'EUR-GBP X-RATE']
                         tmp_eur_usd_v1 = tmp_eur_usd.loc[last_day_signals].value
                         tmp_eur_usd_v2 = tmp_eur_usd.loc[prev_7_days_date_signals].value
@@ -180,7 +180,7 @@ class ComputeDataDashboardTimes:
                     v2 = tmp_returns.loc[days[0]].value
                     weekly_perf = float((v1 - v2) * 100)
 
-                    if category.name == 'FX' and asset_name == 'EUR-USD X-RATE':
+                    if category.name == Category.FX.name and asset_name == 'EUR-USD X-RATE':
                         tmp_eur_usd = self._returns.loc[self._returns.asset_name == 'EUR-GBP X-RATE']
                         tmp_eur_usd_v1 = tmp_eur_usd.loc[last_day_signals].value
                         tmp_eur_usd_v2 = tmp_eur_usd.loc[days[0]].value
@@ -237,7 +237,7 @@ class ComputeDataDashboardTimes:
                     tmp_positions.index = pd.to_datetime(tmp_positions.business_date)
                     tmp_positions = tmp_positions.sort_index()
 
-                    if category.name == 'FX' and asset_name != 'EUR-GBP X-RATE':
+                    if category.name == Category.FX.name and asset_name != 'EUR-GBP X-RATE':
                         sub = -1
                     else:
                         sub = 1
@@ -328,7 +328,7 @@ class ComputeDataDashboardTimes:
                     #                              pd.to_datetime(last_day_signals, format='%d/%m/%Y'))
                     tmp_positions = tmp_positions.sort_index()
 
-                    if category.name == 'FX':
+                    if category.name == Category.FX.name:
                         value = -float(tmp_positions.loc[last_day_signals].value) * (1 + self.strategy_weight)
 
                         if asset_name == 'EUR-USD X-RATE':
