@@ -33,25 +33,23 @@ class TestComputeDataDashboardTimes(unittest.TestCase):
 
         # zip_results_pos_overall
         zip_results_pos_overall = list(template_data["zip_results_pos_overall"])
-        z = template_expected_data["zip_results_pos_overall"]
-        # np.testing.assert_equal(template_data_origin["zip_results_pos_overall"], zip_results_pos_overall)
-        print(zip_results_pos_overall)
+        zip_results_pos_overall_expected = template_expected_data["zip_results_pos_overall"]
+        np.testing.assert_equal(zip_results_pos_overall_expected, zip_results_pos_overall)
 
         # zip_results_perf_overall
         zip_results_perf_overall = list(template_data["zip_results_perf_overall"])
-        print(zip_results_perf_overall)
-        # np.testing.assert_equal(template_data_origin["zip_results_perf_overall"], zip_results_perf_overall)
-        # print(zip_results_perf_overall)
+        zip_results_perf_overall_expected = template_expected_data["zip_results_perf_overall"]
+        np.testing.assert_equal(zip_results_perf_overall_expected, zip_results_perf_overall)
 
         # zip_results_perf
         zip_results_perf = list(template_data["zip_results_perf"])
-        # np.testing.assert_equal(template_data_origin["zip_results_perf"], zip_results_pos_overall)
-        print(zip_results_perf)
+        zip_results_perf_expected = template_expected_data["zip_results_perf"]
+        np.testing.assert_equal(zip_results_perf_expected, zip_results_perf)
 
         # zip_results_pos
         zip_results_pos = list(template_data["zip_results_pos"])
-        # np.testing.assert_equal(template_data_origin["zip_results_pos"], zip_results_pos_overall)
-        print(zip_results_pos)
+        zip_results_pos_expected = template_expected_data["zip_results_pos"]
+        np.testing.assert_equal(zip_results_pos_expected, zip_results_pos)
 
         # dates_pos
         np.testing.assert_equal(template_expected_data["dates_pos"], template_data["dates_pos"])

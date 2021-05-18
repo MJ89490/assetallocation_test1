@@ -547,20 +547,20 @@ zip_results_pos_expected = [('Equity', 'Hang Seng Index Future ', 0.524, 1.509, 
                             ('Equity', 'S&P 500 Total Return', 0.008, 0.139, 0.017, -0.122, 'SELL', 1.493, 0.017),
                             ('Equity', 'EURO STOXX 50 Total Return', 0.005, 0.001, 0.011, 0.010, 'BUY', 0.942, 0.011),
                             ('Equity', 'TOPIX Total Return', 0.000, 0.000, 0.000, 0.000, 'BUY', 0.015, 0.000),
-                            ('Fixed Income', 'Canada 10y Future', -0.987, -9.227, -9.279, -0.052, 'SELL', 24.896, -9.279),
+                            ('Fixed Income', 'Canada 10y Future ', -0.987, -9.227, -9.279, -0.052, 'SELL', 24.896, -9.279),
                             ('Fixed Income', 'Gilt Future', -0.939, -8.800, -8.569, 0.231, 'BUY', 22.991, -8.569),
                             ('Fixed Income', 'ML 10y US Treasury Total Return Future', -0.983, -8.731, -10.728, -1.997, 'SELL', 28.784, -10.728),
                             ('Fixed Income', 'Bund Future', -0.800, -7.643, -8.695, -1.052, 'SELL', 23.329, -8.695),
                             ('FX', 'AUD-USD X-RATE', -0.050, -0.461, 0.226, 0.687, 'BUY', 2.345, 0.226),
                             ('FX', 'USD-CAD X-RATE', 0.399, -2.887, -2.680, 0.206, 'BUY', -27.805, -2.680),
                             ('FX', 'EUR-GBP X-RATE', -0.898, 4.909, 5.831, 0.922, 'BUY', 60.493, 5.831),
-                            ('FX', 'EUR-USD X-RATE', -0.668, 2.053, 0.000, -3.082, 'SELL', -10.682, 0.000),
-                            ('FX', 'USD-JPY X-RATE', 6.649, 0.000, 0.643, 'BUY', 75.649, 0.000)]
+                            ('FX', 'EUR-USD X-RATE', -0.668, 2.053, -1.03, -3.082, 'SELL', -10.682, -1.03),
+                            ('FX', 'USD-JPY X-RATE', -1.0, 6.649, 7.292, 0.643, 'BUY', 75.649, 7.292)]
 
 zip_results_perf_expected = [('Hang Seng Index Future ', 0.004, 0.004),
-                             ('S&P 500 Total Return', 0.001, 0.000),
-                             ('EURO STOXX 50 Total Return', 0.000, 0.000),
-                             ('TOPIX Total Return', 0.000, 0.000),
+                             ('S&P 500 Total Return', 0.001, 0.0),
+                             ('EURO STOXX 50 Total Return', 0.0, 0.0),
+                             ('TOPIX Total Return', 0.0, 0.0),
                              ('Canada 10y Future ', 0.023, -0.006),
                              ('Gilt Future', -0.003, -0.004),
                              ('ML 10y US Treasury Total Return Future', 0.005, -0.021),
@@ -587,7 +587,7 @@ assets_names_expected = ['Hang Seng Index Future ',
 
 zip_results_pos_overall_expected = [('Equity', 1.648, 1.167), ('Fixed Income', -34.402, -37.271), ('FX', 10.264, 9.640)]
 
-zip_results_perf_overall_expected = [(0.004, 0.004), (0.021, -0.030), (0.025, -0.025), (0.050, -0.051)]
+zip_results_perf_overall_expected = [('Equity', 0.004, 0.004), ('Fixed Income', 0.021, -0.030), ('FX', 0.025, -0.025), ('Total', 0.050, -0.051)]
 
 prev_positions_expected = [1.509, 0.139, 0.001, 0.000, -9.227, -8.800, -8.731, -7.643, -0.461, -2.887, 4.909, 2.053, 6.649]
 
