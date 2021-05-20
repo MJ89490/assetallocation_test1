@@ -40,7 +40,6 @@ def home():
 
 @app.route('/times_strategy', methods=['GET', 'POST'])
 def times_strategy():
-    global obj_received_data_times
     run_model_page = 'not_run_model'
     assets, asset_tickers_names_subcategories = [], []
     fund_selected, pop_up_message = '', ''
@@ -113,7 +112,6 @@ def receive_data_from_times_strategy_page():
 
 @app.route('/receive_data_from_times_strategy_form', methods=['POST'])
 def receive_data_from_times_strategy_form():
-    global obj_received_data_times
     form_data = request.form['form_data'].split('&')
     json_data = json.loads(request.form['json_data'])
     dominoUserName = request.form['dominoUserName']
@@ -133,7 +131,6 @@ def receive_data_from_times_strategy_form():
 
 @app.route('/receive_sidebar_data_times_form', methods=['POST'])
 def receive_sidebar_data_times_form():
-    global obj_received_data_times
     outputs_sidebar = json.loads(request.form['json_data'])
 
     if outputs_sidebar['type_of_request'] == 'date_to_data_sidebar':
@@ -201,7 +198,6 @@ def times_sidebar_dashboard():
 
 @app.route('/times_charts_dashboard',  methods=['GET', 'POST'])
 def times_charts_dashboard():
-    global obj_received_data_times
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
     positions_chart = False
@@ -251,7 +247,6 @@ def times_charts_dashboard():
 
 @app.route('/effect_dashboard',  methods=['GET', 'POST'])
 def effect_dashboard():
-    global obj_received_data_effect
 
     form = InputsEffectStrategy()
 
@@ -297,7 +292,6 @@ def effect_strategy():
 
 @app.route('/received_data_effect_form', methods=['POST'])
 def received_data_effect_form():
-    global obj_received_data_times
     form_data = request.form['form_data'].split('&')
     obj_received_data_times.is_new_strategy = True
     effect_form = obj_received_data_effect.receive_data_effect(form_data)
