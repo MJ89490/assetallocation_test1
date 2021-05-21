@@ -124,7 +124,7 @@ def receive_data_from_times_strategy_form():
     times_form = obj_call_run_times.process_data_times(form_data)
     fund_strategy, date_to = obj_call_run_times.call_run_times(json_data, times_form)
 
-    return jsonify({'strategy_version': fund_strategy.strategy_version, 'date_to': date_to})
+    return jsonify({'strategy_version': fund_strategy.strategy_version, 'date_to': date_to.replace('/', 'S')})
     # return json.dumps({'status': 'OK'})
 
 
@@ -195,7 +195,7 @@ def times_sidebar_dashboard():
                            **template_data)
 
 
-@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<path:date_to>',  methods=['GET', 'POST'])
+@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>',  methods=['GET', 'POST'])
 def times_charts_dashboard(fund_name, strategy_version, date_to):
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
@@ -210,6 +210,8 @@ def times_charts_dashboard(fund_name, strategy_version, date_to):
     print(f"----- fund_name ------- = {fund_name}", flush=True)
     print(f"----- strategy_version ----- = {strategy_version}", flush=True)
     print(f"----- date_to ----- = {date_to}", flush=True)
+
+    date_to = date_to.replace('S', '/')
 
     signals, returns, positions = call_times_proc_caller(fund_name=fund_name,
                                                          strategy_version=int(strategy_version),
@@ -243,40 +245,10 @@ def times_charts_dashboard(fund_name, strategy_version, date_to):
                            date_run=date_to,
                            export_data_sidebar=export_data_sidebar,
                            form_side_bar=form_side_bar,
-                           fund_strategy={'fund': fund_name, 'strategy': int(strategy_version), 'date_to': date_to},
+                           fund_strategy={'fund': fund_name, 'strategy_version': strategy_version, 'date_to': date_to},
                            fund_list=form_side_bar.input_fund_name_times,
                            versions_list=form_side_bar.input_versions_times,
                            **template_data)
 
 
-@app.route('/effect_dashboard',  methods=['GET', 'POST'])
-def effect_dashboard():
-
-    form = InputsEffectStrategy()
-
-    if request.method == "POST":
-        if form.submit_ok_quarterly_profit_and_loss.data:
-            obj_received_data_effect.start_quarterly_back_p_and_l_date = form.start_date_quarterly_backtest_profit_and_loss_effect.data
-            obj_received_data_effect.end_quarterly_back_p_and_l_date = form.end_date_quarterly_backtest_profit_and_loss_effect.data
-            obj_received_data_effect.start_quarterly_live_p_and_l_date = form.start_date_quarterly_live_profit_and_loss_effect.data
-        elif form.submit_ok_year_to_year_contrib.data:
-            obj_received_data_effect.start_year_to_year_contrib_date = form.start_year_to_year_contrib.data
-
-        elif request.form['submit_button'] == 'year_to_year_contrib_download':
-            obj_received_data_effect.download_year_to_year_contrib_chart()
-        elif request.form['submit_button'] == 'region_download':
-            obj_received_data_effect.download_regions_charts()
-        elif request.form['submit_button'] == 'agg_download':
-            obj_received_data_effect.download_aggregate_chart()
-        elif request.form['submit_button'] == 'drawdown_download':
-            obj_received_data_effect.download_drawdown_chart()
-        elif request.form['submit_button'] == 'quarterly_download':
-            obj_received_data_effect.download_quarterly_profit_and_loss_chart()
-
-    data_effect = obj_received_data_effect.run_process_data_effect()
-
-    return render_template('effect_dashboard.html',
-                           form=form,
-                           data_effect=data_effect,
-                           title='Dashboard')
 

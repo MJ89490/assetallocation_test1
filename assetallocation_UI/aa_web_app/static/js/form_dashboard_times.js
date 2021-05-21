@@ -74,7 +74,7 @@ function sendDateToSidebar(){
         data: {json_data: json_data},
         type: 'POST',
         success: function(data){
-            window.location.href = "times_sidebar_dashboard";
+//            window.location.href = "times_sidebar_dashboard";
         },
         error: function(error){
             console.log(error);
@@ -151,7 +151,7 @@ function sendDateToExportSidebar(){
         type: 'POST',
         success: function(success){
             console.log(success);
-            window.location.href = "times_sidebar_dashboard";
+//            window.location.href = "times_sidebar_dashboard";
         },
         error: function(error){
             console.log(error);

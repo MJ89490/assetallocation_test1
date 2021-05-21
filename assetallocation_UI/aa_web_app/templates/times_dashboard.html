@@ -21,7 +21,7 @@
 
         <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
 
-        <link rel="stylesheet" href="static/css/times_dashboard.css">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/times_dashboard.css') }}">
 
     </head>
 
@@ -79,7 +79,9 @@
                  <option disabled selected value>charts date to</option>
              </select>
         </form>
-        <script src="static/js/form_dashboard_times.js"></script>
+        <script src="{{ url_for('static', filename='js/form_dashboard_times.js') }}"></script>
+
+
 
         <!-- EXPORT DATA -->
         <a class="sidenav-item" href="#">Export Data</a>
@@ -111,7 +113,7 @@
             {% endif %}
 
         </form>
-        <script src="static/js/form_dashboard_times.js"></script>
+        <script src="{{ url_for('static', filename='js/form_dashboard_times.js') }}"></script>
     </div>
 
         <!-- ============================= CHARTS AREA ============================= -->
@@ -137,7 +139,7 @@
                     <div class="header-body">
                         <h6 class="header-pretitle">Overview</h6>
                         <h2 class="title-dashboard"><b>TIMES Dashboard</b></h2>
-                        <h6 class="sub-title-dashboard"><i><b>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy']}}</b></i></h6><br>
+                        <h6 class="sub-title-dashboard"><i><b>Fund name: {{fund_strategy['fund']}} Strategy version: {{fund_strategy['strategy_version']}}</b></i></h6><br>
                         <h6 class="sub-title-dashboard"><i><b>Date run: {{date_run}}</b></i></h6>
                     </div>
                  </div>
@@ -269,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                     <script src="static/js/times/implemented_weight.js"></script>
+                    <script src="{{ url_for('static', filename='js/times/implemented_weight.js') }}"></script>
 
                     <!--Performance-->
                     <div class="col-lg-4">
@@ -327,7 +329,7 @@
 
 
 
-                                <form class="center" action="{{url_for('times_charts_dashboard/{{fund_strategy['fund']}}/{{fund_strategy['strategy']}}/{{fund_strategy['date_to']}})}}" method="POST" novalidate>
+                                <form class="center" action="{{ url_for('times_charts_dashboard', fund_name=fund_strategy['fund'], strategy_version=fund_strategy['strategy_version'], date_to=fund_strategy['date_to']) }}" method="POST" novalidate>
                                     <div class="btn-group">
                                         <!--Start date-->
                                         <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
@@ -350,11 +352,11 @@
                                             });
                                         </script>
                                     <!--Submit button-->
-                                        <form action="{{url_for('times_charts_dashboard/{{fund_strategy['fund']}}/{{fund_strategy['strategy']}}/{{fund_strategy['date_to']}})}}" method="POST" novalidate>
+                                        <form action="{{ url_for('times_charts_dashboard', fund_name=fund_strategy['fund'], strategy_version=fund_strategy['strategy_version'], date_to=fund_strategy['date_to']) }}" method="POST" novalidate>
                                             {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
                                         </form>
                                     <!--Download button-->
-                                    <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="static/img/icon_download_cloud_two.png" alt="Icon download"></button>
+                                    <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="{{ url_for('static', filename='img/icon_download_cloud_two.png') }}" alt="Icon download"></button>
                                 </div>
                             </form>
                                 <div id="asset_allocation_over_time" class="responsive-plot"></div>
@@ -557,6 +559,7 @@
                      {% endfor %}
 
                  </div>
+            </div>
         </div>
     </body>
 </html>
