@@ -316,7 +316,18 @@
                         <div class="card">
                             <h4 class="card-header"><b>Asset allocation over time</b></h4>
                             <div class="card-body">
-                                <form class="center" action="{{url_for('times_charts_dashboard')}}" method="POST" novalidate>
+
+
+
+
+
+
+
+
+
+
+
+                                <form class="center" action="{{url_for('times_charts_dashboard/{{fund_strategy['fund']}}/{{fund_strategy['strategy']}}/{{fund_strategy['date_to']}})}}" method="POST" novalidate>
                                     <div class="btn-group">
                                         <!--Start date-->
                                         <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
@@ -339,7 +350,7 @@
                                             });
                                         </script>
                                     <!--Submit button-->
-                                        <form action="{{url_for('times_charts_dashboard')}}" method="POST" novalidate>
+                                        <form action="{{url_for('times_charts_dashboard/{{fund_strategy['fund']}}/{{fund_strategy['strategy']}}/{{fund_strategy['date_to']}})}}" method="POST" novalidate>
                                             {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
                                         </form>
                                     <!--Download button-->
