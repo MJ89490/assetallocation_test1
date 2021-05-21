@@ -22,41 +22,10 @@ window.onload = function() {
     $('#select_weight_strategy').val(getStrategyWeight);
 }
 
-
-
 // SELECT A FUND
 $('.select-fund-from-strategy-page').change(function() {
         var fundValue = $(this).val();
         sessionStorage.setItem("sessionFundName", fundValue);
-
-//          alert(selValFund);
-
-//        fund = document.getElementById("select-fund-from-strategy-page").value
-//        var fund = document.getElementById('select-fund-from-strategy-page').fireEvent("onchange");
-
-//        console.log(selValFund);
-//        fundSelectedFromStrategyPage.push(selValFund);
-//
-//        if (fundSelectedFromStrategyPage.length != 1){
-//            fundSelectedFromStrategyPage.splice(0, fundSelectedFromStrategyPage.length-1);
-//        }
-//
-//        var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
-//                                        'type_of_request': 'selected_fund'});
-//
-//        $.ajax({
-//
-//                url: "receive_data_from_times_strategy_page",
-//                data: {json_data: json_data},
-//                type: 'POST',
-//                success: function(response){
-//                    console.log('success');
-//                },
-//                error: function(error){
-//                    console.log(error);
-//                }
-//            });
-
 });
 
 
@@ -64,27 +33,6 @@ $('.select-fund-from-strategy-page').change(function() {
 $('#select_weight_strategy').change(function() {
         var weightValue = $(this).val();
         sessionStorage.setItem("sessionStrategyWeight", weightValue);
-
-//        weight = document.getElementById("input_weight_strategy").value
-//        alert(parseFloat(selValWeight));
-//        weightStrategy.push(parseFloat(selValWeight))
-//
-//        var json_data = JSON.stringify({'strategy_weight': weightStrategy[0],
-//                                        'type_of_request': 'selected_fund_weight'});
-//
-//        $.ajax({
-//
-//                url: "receive_data_from_times_strategy_page",
-//                data: {json_data: json_data},
-//                type: 'POST',
-//                success: function(response){
-//                    console.log('success');
-//                },
-//                error: function(error){
-//                    console.log(error);
-//                }
-//            });
-
 });
 
 // SELECT THE VERSION OF THE STRATEGY
@@ -100,17 +48,23 @@ $('#select-version-from-strategy-page').change(function() {
         // Take the date_to and send it with the version via AJAX
         var date_to = SelectDateToStrategyPage();
 
-        var json_data = JSON.stringify({'version': versionSelectedFromStrategyPage[0],
+        let fundNameValue = sessionStorage.getItem('sessionFundName');
+        let strategyWeightValue = sessionStorage.getItem('sessionStrategyWeight');
+
+        var json_data = JSON.stringify({'strategy_version': versionSelectedFromStrategyPage[0],
                                         'date_to': dateTo[0],
-                                        'type_of_request': 'selected_version_date_to',
+                                        'fund_name': fundNameValue,
+                                        'strategy_weight_user': strategyWeightValue,
+                                        'type_of_request': 'selected_version',
                                         'run_existing-version': true});
 
-        $.ajax({url: "receive_data_from_times_strategy_page",
+        alert(json_data);
+
+        $.ajax({url: "times_strategy_existing_version",
                 data: {json_data: json_data},
                 type: 'POST',
-                success: function(response){
+                success: function(data){
                     console.log('success');
-                    window.location.href = "times_strategy";
                 },
                 error: function(error){
                     console.log(error);

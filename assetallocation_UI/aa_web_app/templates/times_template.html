@@ -19,10 +19,11 @@
                 <div class="col-lg-2"></div>
                 <div class="col-lg-8">
                     <div class="card card-custom-wide">
-                        <img src="static/img/color-background.PNG" height="150px"/>
+                        <img src= "{{ url_for('static', filename='img/color-background.PNG') }}" height="150px"/>
+
                         <div class="card-body">
                             <h4 class="card-title">TIMES Strategy</h4>
-                            <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
+                            <form class="center" action="{{ url_for('times_strategy', strategy_version='None', date_to='None') }}" method="POST" novalidate>
                                 <!--Select a fund-->
                                 <center>
                                     <label class="header-pretitle-card"><b>1. Select a fund</b></label><br>
@@ -134,8 +135,7 @@
                 </div>
                 <div class="col-lg-3"></div>
             </div>
-            <script src="static/js/form_strategy_page_times.js"></script>
-
+            <script src="{{ url_for('static', filename='js/form_strategy_page_times.js') }}"></script>
 
             {% if run_model_page == 'run_new_version' %}
                 <script>
@@ -213,10 +213,12 @@
                 <div class="row row-model">
                     <div class="col-lg-12">
                         <div class="card card-custom-wide">
-                        <img src="static/img/color-background.PNG" height="70px"/>
+                        <img src="{{ url_for('static', filename='img/color-background.PNG') }}" height="70px"/>
+
+
                         <div class="card-body">
                             <center>
-                                <h4 class="card-title-label">Create a new version of the strategy for {{fund_selected}}</h4>
+                                <h4 class="card-title-label">Create a new version of the strategy</h4>
                                 <div class="btn-group version-name-form-btn-group">
                                     <label class="header-pretitle-version-name">Enter a version name</label>
                                     <input type="text" class="form-control input-version-name-form text-center" id="input_version_name_strategy" name="input_version_name_strategy" placeholder="Version name">

@@ -174,37 +174,37 @@ class ReceiveDataTimes:
     def date_to_export_sidebar(self, value) -> None:
         self._date_to_export_sidebar = pd.to_datetime(value, format='%d/%m/%Y')
 
-    @staticmethod
-    def _select_asset_tickers_with_names_and_subcategories_from_db():
-        apc = TimesProcCaller()
+    # @staticmethod
+    # def _select_asset_tickers_with_names_and_subcategories_from_db():
+    #     apc = TimesProcCaller()
+    #
+    #     asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
+    #
+    #     return asset_tickers_names_subcategories.set_index(asset_tickers_names_subcategories.ticker)
 
-        asset_tickers_names_subcategories = apc.select_asset_tickers_names_subcategories()
+    # def select_tickers(self):
+    #     """
+    #     Select all asset tickers with names and subcategories that exist in the database
+    #     :return: all asset tickers with names and subcategories
+    #     """
+    #
+    #     asset_tickers_names_subcategories = self._select_asset_tickers_with_names_and_subcategories_from_db()
+    #
+    #     return asset_tickers_names_subcategories.ticker
 
-        return asset_tickers_names_subcategories.set_index(asset_tickers_names_subcategories.ticker)
-
-    def select_tickers(self):
-        """
-        Select all asset tickers with names and subcategories that exist in the database
-        :return: all asset tickers with names and subcategories
-        """
-
-        asset_tickers_names_subcategories = self._select_asset_tickers_with_names_and_subcategories_from_db()
-
-        return asset_tickers_names_subcategories.ticker
-
-    def select_names_subcategories(self, user_ticker):
-        """
-        Select all asset tickers with names and subcategories that exist in the database
-        :return: all asset tickers with names and subcategories
-        """
-
-        asset_tickers_names_subcategories = self._select_asset_tickers_with_names_and_subcategories_from_db()
-
-        ticker_selected_data = asset_tickers_names_subcategories.loc[user_ticker]
-
-        name, subcategory = ticker_selected_data.loc["name"], ticker_selected_data.loc["subcategory"]
-
-        return name, subcategory
+    # def select_names_subcategories(self, user_ticker):
+    #     """
+    #     Select all asset tickers with names and subcategories that exist in the database
+    #     :return: all asset tickers with names and subcategories
+    #     """
+    #
+    #     asset_tickers_names_subcategories = self._select_asset_tickers_with_names_and_subcategories_from_db()
+    #
+    #     ticker_selected_data = asset_tickers_names_subcategories.loc[user_ticker]
+    #
+    #     name, subcategory = ticker_selected_data.loc["name"], ticker_selected_data.loc["subcategory"]
+    #
+    #     return name, subcategory
 
     def check_in_date_to_existing_version(self) -> bool:
         apc = TimesProcCaller()
@@ -228,37 +228,37 @@ class ReceiveDataTimes:
 
         return select_date_to
 
-    def receive_data_existing_versions(self, strategy_version):
+    def receive_data_existing_versions(self, fund_name, strategy_version, strategy_weight_user, date_to):
         apc = TimesProcCaller()
-        self.version_strategy = strategy_version
-        self.strategy = apc.select_strategy(strategy_version)
+        # self.version_strategy = strategy_version
+        strategy = apc.select_strategy(strategy_version)
 
         # Inputs
-        strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, strategy_version)
-        self.strategy_weight = strategy_weight or self.strategy_weight_user
+        fund_strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, strategy_version)
+        strategy_weight = fund_strategy_weight or strategy_weight_user
 
-        inputs_versions = {'fund': self.fund_name,
+        inputs_versions = {'fund': fund_name,
                            'version': strategy_version,
                            'input_date_from_times': '2000-01-01',
-                           'input_date_to_times': self.date_to,
-                           'input_strategy_weight_times': self.strategy_weight,
-                           'input_time_lag_times': self.strategy.time_lag_in_days,
-                           'input_leverage_times': self.strategy.leverage_type.name,
-                           'input_vol_window_times': self.strategy.volatility_window,
-                           'input_frequency_times': self.strategy.frequency.name,
-                           'input_weekday_times': self.strategy.day_of_week.name,
-                           'input_signal_one_short_times': self.strategy.short_signals[0],
-                           'input_signal_one_long_times': self.strategy.long_signals[0],
-                           'input_signal_two_short_times': self.strategy.short_signals[1],
-                           'input_signal_two_long_times': self.strategy.long_signals[1],
-                           'input_signal_three_short_times': self.strategy.short_signals[2],
-                           'input_signal_three_long_times': self.strategy.long_signals[2]}
+                           'input_date_to_times': date_to,
+                           'input_strategy_weight_times': strategy_weight,
+                           'input_time_lag_times': strategy.time_lag_in_days,
+                           'input_leverage_times': strategy.leverage_type.name,
+                           'input_vol_window_times': strategy.volatility_window,
+                           'input_frequency_times': strategy.frequency.name,
+                           'input_weekday_times': strategy.day_of_week.name,
+                           'input_signal_one_short_times': strategy.short_signals[0],
+                           'input_signal_one_long_times': strategy.long_signals[0],
+                           'input_signal_two_short_times': strategy.short_signals[1],
+                           'input_signal_two_long_times': strategy.long_signals[1],
+                           'input_signal_three_short_times': strategy.short_signals[2],
+                           'input_signal_three_long_times': strategy.long_signals[2]}
 
-        self.inputs_existing_versions_times = inputs_versions
+        # self.inputs_existing_versions_times = inputs_versions
         # Assets
         assets_names, assets, signal, future, costs, leverage = [], [], [], [], [], []
 
-        for asset in self.strategy.asset_inputs:
+        for asset in strategy.asset_inputs:
             assets_names.append(asset.asset_subcategory.name)
             signal.append(asset.signal_ticker)
             future.append(asset.future_ticker)
@@ -267,83 +267,83 @@ class ReceiveDataTimes:
             assets.append([asset.asset_subcategory.name, asset.signal_ticker, asset.future_ticker, asset.cost,
                            asset.s_leverage])
 
-        self.assets_existing_versions_times = {'input_asset': assets_names,
-                                               'input_signal_ticker': signal,
-                                               'input_future_ticker': future,
-                                               'input_costs': costs,
-                                               'input_leverage': leverage}
+        assets_existing_versions_times = {'input_asset': assets_names,
+                                          'input_signal_ticker': signal,
+                                          'input_future_ticker': future,
+                                          'input_costs': costs,
+                                          'input_leverage': leverage}
 
-        self.is_new_strategy = False
+        # self.is_new_strategy = False
 
-        return assets
+        return assets, assets_existing_versions_times
 
-    def received_data_times(self, form_data):
-        if self.is_new_strategy:
-            tmp = {}
-            for idx, val in enumerate(form_data):
-                # if idx > 1:
-                tmp[val.split('=', 1)[0]] = val.split('=', 1)[1]
-            # Process date under format '12%2F09%2F2000 to 01/01/2000
-            tmp['input_date_from_times'] = '/'.join(tmp['input_date_from_times'].split('%2F'))
-            tmp['input_date_to_new_version_times'] = '/'.join(tmp['input_date_to_new_version_times'].split('%2F'))
-            self.times_form = tmp
+    # def received_data_times(self, form_data):
+    #     if self.is_new_strategy:
+    #         tmp = {}
+    #         for idx, val in enumerate(form_data):
+    #             # if idx > 1:
+    #             tmp[val.split('=', 1)[0]] = val.split('=', 1)[1]
+    #         # Process date under format '12%2F09%2F2000 to 01/01/2000
+    #         tmp['input_date_from_times'] = '/'.join(tmp['input_date_from_times'].split('%2F'))
+    #         tmp['input_date_to_new_version_times'] = '/'.join(tmp['input_date_to_new_version_times'].split('%2F'))
+    #         self.times_form = tmp
+    #
+    #     return self.times_form
 
-        return self.times_form
-
-    def call_run_times(self, assets_input_times):
-
-        long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
-                                        self.times_form['input_signal_two_long_times'],
-                                        self.times_form['input_signal_three_long_times']]))
-
-        short_signals = list(map(float, [self.times_form['input_signal_one_short_times'],
-                                         self.times_form['input_signal_two_short_times'],
-                                         self.times_form['input_signal_three_short_times']]))
-
-        times = Times(DayOfWeek[self.times_form['input_weekday_times'].upper()],
-                      self.times_form['input_frequency_times'].lower(),
-                      self.times_form['input_leverage_times'], long_signals, short_signals,
-                      int(self.times_form['input_time_lag_times']),
-                      int(self.times_form['input_vol_window_times']))
-
-        # print(f"times.business_date_from: {times.business_date_from}", flush=True)
-        # print(f"times.description: { times.description}", flush=True)
-        # print(f"user_id: {os.environ.get('USERNAME')}", flush=True)
-        # print(f"times.time_lag_interval: {times.time_lag_interval}", flush=True)
-        # print(f"times.leverage_type.name: {times.leverage_type.name}", flush=True)
-        # print(f"times.volatility_window: {times.volatility_window}", flush=True)
-        # print(f"times.short_signals: {times.short_signals}", flush=True)
-        # print(f"times.long_signals: {times.long_signals}", flush=True)
-        # print(f"times.frequency.name: {times.frequency.name}", flush=True)
-        # print(f"times.day_of_week.value: {times.day_of_week.value}", flush=True)
-
-        times.description = self.version_description
-        self.strategy = self.strategy_weight_user
-
-        self.date_to = self.times_form['input_date_to_new_version_times']
-
-        times.asset_inputs = [
-            TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
-                assets_input_times['input_asset'], assets_input_times['input_leverage'],
-                assets_input_times['input_signal_ticker'],
-                assets_input_times['input_future_ticker'], assets_input_times['input_costs']
-            )
-        ]
-
-        print(f"fund_name: {self.fund_name}, strategy_weight_user = {self.strategy_weight_user}", flush=True)
-        print(f"self.strategy: {self.strategy}", flush=True)
-
-        print(f" self.domino_username: { self.domino_username}", flush=True)
-
-        fund_strategy = run_strategy(self.fund_name, float(self.strategy_weight_user),
-                                     times, self.domino_username,
-                                     dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
-                                     dt.datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date(),
-                                     is_new_strategy=self.is_new_strategy
-                                     )
-        self.version_strategy = fund_strategy.strategy_version
-
-        return fund_strategy
+    # def call_run_times(self, assets_input_times):
+    #
+    #     long_signals = list(map(float, [self.times_form['input_signal_one_long_times'],
+    #                                     self.times_form['input_signal_two_long_times'],
+    #                                     self.times_form['input_signal_three_long_times']]))
+    #
+    #     short_signals = list(map(float, [self.times_form['input_signal_one_short_times'],
+    #                                      self.times_form['input_signal_two_short_times'],
+    #                                      self.times_form['input_signal_three_short_times']]))
+    #
+    #     times = Times(DayOfWeek[self.times_form['input_weekday_times'].upper()],
+    #                   self.times_form['input_frequency_times'].lower(),
+    #                   self.times_form['input_leverage_times'], long_signals, short_signals,
+    #                   int(self.times_form['input_time_lag_times']),
+    #                   int(self.times_form['input_vol_window_times']))
+    #
+    #     # print(f"times.business_date_from: {times.business_date_from}", flush=True)
+    #     # print(f"times.description: { times.description}", flush=True)
+    #     # print(f"user_id: {os.environ.get('USERNAME')}", flush=True)
+    #     # print(f"times.time_lag_interval: {times.time_lag_interval}", flush=True)
+    #     # print(f"times.leverage_type.name: {times.leverage_type.name}", flush=True)
+    #     # print(f"times.volatility_window: {times.volatility_window}", flush=True)
+    #     # print(f"times.short_signals: {times.short_signals}", flush=True)
+    #     # print(f"times.long_signals: {times.long_signals}", flush=True)
+    #     # print(f"times.frequency.name: {times.frequency.name}", flush=True)
+    #     # print(f"times.day_of_week.value: {times.day_of_week.value}", flush=True)
+    #
+    #     times.description = self.version_description
+    #     self.strategy = self.strategy_weight_user
+    #
+    #     self.date_to = self.times_form['input_date_to_new_version_times']
+    #
+    #     times.asset_inputs = [
+    #         TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
+    #             assets_input_times['input_asset'], assets_input_times['input_leverage'],
+    #             assets_input_times['input_signal_ticker'],
+    #             assets_input_times['input_future_ticker'], assets_input_times['input_costs']
+    #         )
+    #     ]
+    #
+    #     print(f"fund_name: {self.fund_name}, strategy_weight_user = {self.strategy_weight_user}", flush=True)
+    #     print(f"self.strategy: {self.strategy}", flush=True)
+    #
+    #     print(f" self.domino_username: { self.domino_username}", flush=True)
+    #
+    #     fund_strategy = run_strategy(self.fund_name, float(self.strategy_weight_user),
+    #                                  times, self.domino_username,
+    #                                  dt.datetime.strptime(self.times_form['input_date_from_times'], '%d/%m/%Y').date(),
+    #                                  dt.datetime.strptime(self.times_form['input_date_to_new_version_times'], '%d/%m/%Y').date(),
+    #                                  is_new_strategy=self.is_new_strategy
+    #                                  )
+    #     self.version_strategy = fund_strategy.strategy_version
+    #
+    #     return fund_strategy
 
     def run_existing_strategy(self):
         fund_strategy = run_strategy(self.fund_name,

@@ -69,6 +69,5 @@ class CallRunTimes:
                                      dt.datetime.strptime(times_form['input_date_to_new_version_times'], '%d/%m/%Y').date(),
                                      is_new_strategy=self.is_new_strategy
                                      )
-        # self.strategy_version = fund_strategy.strategy_version
 
         return fund_strategy, date_to
