@@ -5,6 +5,8 @@
         <title>{{ title }}</title>
     </head>
 
+
+
 <body>
     {% block timespage %}
         <div class="container">
@@ -24,18 +26,20 @@
                                 <!--Select a fund-->
                                 <center>
                                     <label class="header-pretitle-card"><b>1. Select a fund</b></label><br>
-                                    <select class="form-control select-fund-from-strategy-page select-form-fund text-center" id="select-fund-from-strategy-page">
+                                    <select class="form-control select-fund-from-strategy-page select-form-fund text-center" id="select_fund_name">
                                         <option disabled selected value>fund</option>
                                         {% for f in existing_funds_from_db %}
                                             <option>{{f}}</option>
                                         {% endfor %}
                                     </select>
+
+
                                 </center>
 
                                 <!--Choose a weight for the fund-->
                                  <center>
                                      <label class="header-pretitle-card"><b>2. Choose a weight for the strategy</b></label><br>
-                                     <input type="text" class="form-control input-weight-fund-form text-center" id="input_weight_strategy" placeholder="strategy weight">
+                                     <input type="text" class="form-control input-weight-fund-form text-center" placeholder="strategy weight" id="select_weight_strategy" >
                                  </center>
 
                                 <!--Select a version -->

@@ -13,77 +13,77 @@ versionSelectedFromStrategyPage = []
 // WEIGHT
 weightStrategy = []
 
-// KEEP THE SELECTED VALUE WHILE RELOADING PAGE
+// KEEP THE SELECTED VALUE WHILE RELOADING PAGE IN THE SELECT BOX AND TEXT BOX
 window.onload = function() {
-    var selItem = sessionStorage.getItem("selValFund");
-    $('#select-fund-from-strategy-page').val(selItem);
+    const getFundName = sessionStorage.getItem("sessionFundName");
+    $('#select_fund_name').val(getFundName);
 
-    var selItemWeight = sessionStorage.getItem("SelItemWeight");
-    $('#input_weight_strategy').val(selItemWeight);
+    const getStrategyWeight = sessionStorage.getItem("sessionStrategyWeight");
+    $('#select_weight_strategy').val(getStrategyWeight);
 }
 
 
 
 // SELECT A FUND
 $('.select-fund-from-strategy-page').change(function() {
-        var selValFund = $(this).val();
-        sessionStorage.setItem("selValFund", selValFund);
+        var fundValue = $(this).val();
+        sessionStorage.setItem("sessionFundName", fundValue);
 
-          alert(selValFund);
+//          alert(selValFund);
 
 //        fund = document.getElementById("select-fund-from-strategy-page").value
 //        var fund = document.getElementById('select-fund-from-strategy-page').fireEvent("onchange");
 
-        console.log(selValFund);
-        fundSelectedFromStrategyPage.push(selValFund);
-
-        if (fundSelectedFromStrategyPage.length != 1){
-            fundSelectedFromStrategyPage.splice(0, fundSelectedFromStrategyPage.length-1);
-        }
-
-        var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
-                                        'type_of_request': 'selected_fund'});
-
-        $.ajax({
-
-                url: "receive_data_from_times_strategy_page",
-                data: {json_data: json_data},
-                type: 'POST',
-                success: function(response){
-                    console.log('success');
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
+//        console.log(selValFund);
+//        fundSelectedFromStrategyPage.push(selValFund);
+//
+//        if (fundSelectedFromStrategyPage.length != 1){
+//            fundSelectedFromStrategyPage.splice(0, fundSelectedFromStrategyPage.length-1);
+//        }
+//
+//        var json_data = JSON.stringify({'fund': fundSelectedFromStrategyPage[0],
+//                                        'type_of_request': 'selected_fund'});
+//
+//        $.ajax({
+//
+//                url: "receive_data_from_times_strategy_page",
+//                data: {json_data: json_data},
+//                type: 'POST',
+//                success: function(response){
+//                    console.log('success');
+//                },
+//                error: function(error){
+//                    console.log(error);
+//                }
+//            });
 
 });
 
 
 //SELECT THE STRATEGY WEIGHT
-$('#input_weight_strategy').change(function() {
-        var selValWeight = $(this).val();
-        sessionStorage.setItem("SelItemWeight", selValWeight);
+$('#select_weight_strategy').change(function() {
+        var weightValue = $(this).val();
+        sessionStorage.setItem("sessionStrategyWeight", weightValue);
 
 //        weight = document.getElementById("input_weight_strategy").value
-        alert(parseFloat(selValWeight));
-        weightStrategy.push(parseFloat(selValWeight))
-
-        var json_data = JSON.stringify({'strategy_weight': weightStrategy[0],
-                                        'type_of_request': 'selected_fund_weight'});
-
-        $.ajax({
-
-                url: "receive_data_from_times_strategy_page",
-                data: {json_data: json_data},
-                type: 'POST',
-                success: function(response){
-                    console.log('success');
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
+//        alert(parseFloat(selValWeight));
+//        weightStrategy.push(parseFloat(selValWeight))
+//
+//        var json_data = JSON.stringify({'strategy_weight': weightStrategy[0],
+//                                        'type_of_request': 'selected_fund_weight'});
+//
+//        $.ajax({
+//
+//                url: "receive_data_from_times_strategy_page",
+//                data: {json_data: json_data},
+//                type: 'POST',
+//                success: function(response){
+//                    console.log('success');
+//                },
+//                error: function(error){
+//                    console.log(error);
+//                }
+//            });
 
 });
 
