@@ -150,29 +150,27 @@ $('#contact-form-button-times').click(function(){
         var form_data = $('form').serialize();
         var check = checkReceivedDataTimes();
 
-//        var dominoUserName = $('#dominoUser').text();
-//        alert(dominoUserName);
-
-//        var fundName = $('#input_fund_name').text();
-
         let fundNameValue = sessionStorage.getItem('sessionFundName');
         let strategyWeightValue = sessionStorage.getItem('sessionStrategyWeight');
         let userNameValue = sessionStorage.getItem('username');
-
-
-
-        console.log(fundNameValue);
 
         if (check != 'error'){
             alert("The strategy is about to run...");
             $.ajax({
                 url: "receive_data_from_times_strategy_form",
-                data: {form_data: form_data, json_data:jsonData, fundNameValue: fundNameValue, strategyWeightValue: strategyWeightValue, userNameValue: userNameValue},
+                data: {form_data: form_data, json_data:jsonData, fundNameValue: fundNameValue,
+                       strategyWeightValue: strategyWeightValue, userNameValue: userNameValue},
                 type: 'POST',
-                success: function(response){
-                    console.log(response);
+
+                success: function(data){
                     alert('The strategy has been run successfully! You will be redirected to the dashboard shortly');
-//                    window.location.href = "times_charts_dashboard";
+
+                    alert(data['strategy_version']);
+                    alert(data['date_to']);
+
+                    window.location.href = "times_charts_dashboard/" + fundNameValue + "/" + data['strategy_version'] + "/" + data['date_to'];
+//window.location.href = "times_charts_dashboard" + fundNameValue;
+//                    $.redirect('times_charts_dashboard', {'fundNameValue': 'fundNameValue'});
                 },
                 error: function(error){
                     console.log("ERROR")

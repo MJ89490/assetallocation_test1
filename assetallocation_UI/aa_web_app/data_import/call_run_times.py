@@ -47,7 +47,7 @@ class CallRunTimes:
 
         times.description = self.strategy_description
 
-        # self.date_to = self.times_form['input_date_to_new_version_times']
+        date_to = times_form['input_date_to_new_version_times']
 
         times.asset_inputs = [
             TimesAssetInput(h, int(i), j, k, float(l)) for h, i, j, k, l in zip(
@@ -71,4 +71,4 @@ class CallRunTimes:
                                      )
         # self.strategy_version = fund_strategy.strategy_version
 
-        return fund_strategy
+        return fund_strategy, date_to
