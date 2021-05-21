@@ -57,9 +57,9 @@ class CallRunTimes:
             )
         ]
 
-        print(f"fund_name = {self.fund_name}", flush=True)
-        print(f"self.strategy_weight = {self.strategy_weight}", flush=True)
-        print(f"self.user_name = {self.user_name}", flush=True)
+        print(f"----- fund_name ------- = {self.fund_name}", flush=True)
+        print(f"----- self.strategy_weight ----- = {self.strategy_weight}", flush=True)
+        print(f"----- self.user_name ----- = {self.user_name}", flush=True)
 
         fund_strategy = run_strategy(self.fund_name,
                                      float(self.strategy_weight),
