@@ -23,7 +23,7 @@
 
                         <div class="card-body">
                             <h4 class="card-title">TIMES Strategy</h4>
-                            <form class="center" action="{{ url_for('times_strategy', strategy_version='None', date_to='None') }}" method="POST" novalidate>
+                            <form class="center" action="{{ url_for('times_strategy')}}" method="POST" novalidate>
                                 <!--Select a fund-->
                                 <center>
                                     <label class="header-pretitle-card"><b>1. Select a fund</b></label><br>
@@ -525,7 +525,8 @@
                 <div class="row row-model">
                     <div class="col-lg-12">
                         <div class="card card-custom-wide">
-                            <img src="static/img/color-background.PNG" height="70px"/>
+                            <img src="{{ url_for('static', filename='img/color-background.PNG') }}" height="70px"/>
+
                             <div class="card-body">
                                 <center>
                                     <h4 class="card-title-label">Existing version: {{inputs_versions['version']}}</h4>
@@ -581,8 +582,8 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>
-                                                    <td class="text-muted text-center">{{inputs_versions['input_date_to_times']}}</td>
+                                                    <td class="text-muted text-center">{{inputs_versions['input_date_from_times'] | replace("S", "/")}}</td>
+                                                    <td class="text-muted text-center">{{inputs_versions['input_date_to_times'] | replace("S", "/")}}</td>
                                                     <td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>
                                                     <td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>
                                                     <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>
@@ -621,7 +622,8 @@
                                     </div>
                                 </div>
 
-                                 <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
+
+                                 <form class="center" action="{{ url_for('times_strategy_existing_version', version_selected=version_selected, assets=assets, message='call_run_existing_strategy', inputs_existing_versions_times=inputs_versions, userNameValue=userNameValue) }}" method="POST" novalidate>
                                      <div class="text-center"><button class="btn-sm btn-run-model-times" type="submit" name="submit_button" value="run-existing-version" onclick="AlertExistingStratRunning()">Run strategy</button></div>
                                      <script type="text/javascript">
                                         function AlertExistingStratRunning(){
@@ -633,9 +635,9 @@
                         </div>
                     </div>
                 </div>
-                <script src="static/js/form_data_times.js"></script>
+                <script src="{{ url_for('static', filename='js/form_data_times.js') }}"></script>
 
-            {% elif pop_up_message == 'pop_up_message' %}
+            {% elif run_model_page == 'pop_up_message' %}
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" role="dialog">
                     <div class="modal-dialog modal-lg">
@@ -655,7 +657,7 @@
                                     <center>
                                         <!--Date from-->
                                         <div class="btn-group">
-                                            <form class="center" action="{{url_for('times_strategy')}}" method="POST" novalidate>
+                                            <form class="center" action="{{ url_for('times_strategy_existing_version', version_selected=version_selected, assets=assets, message='call_run_existing_strategy', inputs_existing_versions_times=inputs_versions, userNameValue=userNameValue) }}" method="POST" novalidate>
                                                 <button class="btn btn-primary btn-sm btn-run-model-existing-versions-times-pop-up" type="submit" name="submit_button" value="run-strategy-existing-versions" onclick="AlertStratRunning()">Run this version again?</button>
                                                 <script type="text/javascript">
                                                     function AlertStratRunning(){
@@ -665,7 +667,7 @@
                                                 </script>
                                             </form>
 
-                                            <form class="center" action="{{url_for('times_charts_dashboard')}}" method="POST" novalidate>
+                                            <form class="center" action="{{ url_for('times_charts_dashboard', fund_name=inputs_versions['fund_name'], strategy_version=version_selected, date_to=inputs_versions['input_date_to_times']) }}" method="POST" novalidate>
                                                 <button class="btn btn-primary btn-sm btn-dashboard-existing-versions-times-pop-up" type="submit" name="submit_button" value="dashboard-strategy-existing-versions">See the dashboard of this version?</button>
                                             </form>
                                         </div>
@@ -729,8 +731,8 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td class="text-muted text-center">{{inputs_versions['input_date_from_times']}}</td>
-                                                            <td class="text-muted text-center">{{inputs_versions['input_date_to_times']}}</td>
+                                                            <td class="text-muted text-center">{{inputs_versions['input_date_from_times'] | replace("S", "/")}}</td>
+                                                            <td class="text-muted text-center">{{inputs_versions['input_date_to_times'] | replace("S", "/")}}</td>
                                                             <td class="text-muted text-center">{{inputs_versions['input_strategy_weight_times']}}</td>
                                                             <td class="text-muted text-center">{{inputs_versions['input_time_lag_times']}}</td>
                                                             <td class="text-muted text-center" contenteditable="true">{{inputs_versions['input_leverage_times']}}</td>

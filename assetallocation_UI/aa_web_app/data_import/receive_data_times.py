@@ -206,11 +206,12 @@ class ReceiveDataTimes:
     #
     #     return name, subcategory
 
-    def check_in_date_to_existing_version(self) -> bool:
+    def check_in_date_to_existing_version(self, fund_name, version_strategy, selected_date: str) -> bool:
         apc = TimesProcCaller()
+        date_to = dt.datetime.strptime(selected_date, '%d/%m/%Y').date()
         result_dates = apc.select_all_fund_strategy_result_dates()
-        result_dates = result_dates[(result_dates['fund_name'] == self.fund_name) & (result_dates['strategy_version'] == self.version_strategy)]
-        return dt.date(self.date_to.year, self.date_to.month, self.date_to.day) in result_dates['business_date_to'].values
+        result_dates = result_dates[(result_dates['fund_name'] == fund_name) & (result_dates['strategy_version'] == version_strategy)]
+        return dt.date(date_to.year, date_to.month, date_to.day) in result_dates['business_date_to'].values
 
     def receive_data_latest_version_dashboard(self, business_date_to):
         apc = TimesProcCaller()
@@ -228,33 +229,55 @@ class ReceiveDataTimes:
 
         return select_date_to
 
-    def receive_data_existing_versions(self, fund_name, strategy_version, strategy_weight_user, date_to):
+    @staticmethod
+    def receive_data_existing_versions(fund_name, strategy_version, strategy_weight_user, date_to):
         apc = TimesProcCaller()
         # self.version_strategy = strategy_version
         strategy = apc.select_strategy(strategy_version)
 
         # Inputs
-        fund_strategy_weight = apc.select_fund_strategy_weight(self.fund_name, Name.times, strategy_version)
-        strategy_weight = fund_strategy_weight or strategy_weight_user
+        fund_strategy_weight = apc.select_fund_strategy_weight(fund_name, Name.times, strategy_version)
+        strategy_weight = fund_strategy_weight or float(strategy_weight_user)
 
-        inputs_versions = {'fund': fund_name,
-                           'version': strategy_version,
-                           'input_date_from_times': '2000-01-01',
-                           'input_date_to_times': date_to,
-                           'input_strategy_weight_times': strategy_weight,
-                           'input_time_lag_times': strategy.time_lag_in_days,
-                           'input_leverage_times': strategy.leverage_type.name,
-                           'input_vol_window_times': strategy.volatility_window,
-                           'input_frequency_times': strategy.frequency.name,
-                           'input_weekday_times': strategy.day_of_week.name,
-                           'input_signal_one_short_times': strategy.short_signals[0],
-                           'input_signal_one_long_times': strategy.long_signals[0],
-                           'input_signal_two_short_times': strategy.short_signals[1],
-                           'input_signal_two_long_times': strategy.long_signals[1],
-                           'input_signal_three_short_times': strategy.short_signals[2],
-                           'input_signal_three_long_times': strategy.long_signals[2]}
+        # inputs_existing_versions_times = {'fund': fund_name,
+        #                                   'version': strategy_version,
+        #                                   'input_date_from_times': '2000-01-01',
+        #                                   'input_date_to_times': date_to,
+        #                                   'input_strategy_weight_times': strategy_weight,
+        #                                   'input_time_lag_times': strategy.time_lag_in_days,
+        #                                   'input_leverage_times': strategy.leverage_type.name,
+        #                                   'input_vol_window_times': strategy.volatility_window,
+        #                                   'input_frequency_times': strategy.frequency.name,
+        #                                   'input_weekday_times': strategy.day_of_week.name,
+        #                                   'input_signal_one_short_times': strategy.short_signals[0],
+        #                                   'input_signal_one_long_times': strategy.long_signals[0],
+        #                                   'input_signal_two_short_times': strategy.short_signals[1],
+        #                                   'input_signal_two_long_times': strategy.long_signals[1],
+        #                                   'input_signal_three_short_times': strategy.short_signals[2],
+        #                                   'input_signal_three_long_times': strategy.long_signals[2]}
 
-        # self.inputs_existing_versions_times = inputs_versions
+        # inputs_existing_versions_times = inputs_versions
+        inputs_existing_versions_times = [
+                                          ['fund_name', fund_name],
+                                          ['version', strategy_version],
+                                          ['input_date_from_times', '2000S01S01'],
+                                          ['input_date_to_times', date_to.replace('/', 'S')],
+                                          ['input_strategy_weight_times', strategy_weight],
+                                          ['input_time_lag_times', strategy.time_lag_in_days],
+                                          ['input_leverage_times', strategy.leverage_type.name],
+                                          ['input_vol_window_times', strategy.volatility_window],
+                                          ['input_frequency_times', strategy.frequency.name],
+                                          ['input_weekday_times', strategy.day_of_week.name],
+                                          ['input_signal_one_short_times', strategy.short_signals[0]],
+                                          ['input_signal_one_long_times', strategy.long_signals[0]],
+                                          ['input_signal_two_short_times', strategy.short_signals[1]],
+                                          ['input_signal_two_long_times', strategy.long_signals[1]],
+                                          ['input_signal_three_short_times', strategy.short_signals[2]],
+                                          ['input_signal_three_long_times', strategy.long_signals[2]]]
+
+        # inputs_existing_versions_times = [['fund_name', fund_name],
+        #                                   ['version', strategy_version]]
+
         # Assets
         assets_names, assets, signal, future, costs, leverage = [], [], [], [], [], []
 
@@ -275,7 +298,7 @@ class ReceiveDataTimes:
 
         # self.is_new_strategy = False
 
-        return assets, assets_existing_versions_times
+        return assets, inputs_existing_versions_times
 
     # def received_data_times(self, form_data):
     #     if self.is_new_strategy:
@@ -345,16 +368,18 @@ class ReceiveDataTimes:
     #
     #     return fund_strategy
 
-    def run_existing_strategy(self):
-        fund_strategy = run_strategy(self.fund_name,
-                                     float(self.strategy_weight),
-                                     self.strategy,
-                                     os.environ.get('USERNAME'),
-                                     dt.datetime.strptime(self.inputs_existing_versions_times['input_date_from_times'],
-                                                          '%Y-%m-%d').date(),
-                                     self.inputs_existing_versions_times['input_date_to_times'],
-                                     is_new_strategy=self.is_new_strategy
+    @staticmethod
+    def run_existing_strategy(inputs_existing_versions_times, username):
+        apc = TimesProcCaller()
+        strategy = apc.select_strategy(inputs_existing_versions_times['version'])
+
+        fund_strategy = run_strategy(inputs_existing_versions_times['fund_name'],
+                                     float(inputs_existing_versions_times['input_strategy_weight_times']),
+                                     strategy,
+                                     username,
+                                     dt.datetime.strptime(inputs_existing_versions_times['input_date_from_times'].replace('S', '/'), '%Y/%m/%d').date(),
+                                     dt.datetime.strptime(inputs_existing_versions_times['input_date_to_times'].replace('S', '/'), '%d/%m/%Y').date(),
+                                     is_new_strategy=False
                                      )
 
-        self.version_strategy = fund_strategy.strategy_version
         return fund_strategy

@@ -20,11 +20,12 @@ from assetallocation_UI.aa_web_app.data_import.download_data_strategy_to_domino 
     export_times_positions_data_to_csv
 
 
-obj_received_data_times = ReceiveDataTimes()
-obj_received_data_effect = ProcessDataEffect()
+# obj_received_data_times = ReceiveDataTimes()
+# obj_received_data_effect = ProcessDataEffect()
 
 from assetallocation_UI.aa_web_app.data_import.call_run_times import CallRunTimes
-from assetallocation_UI.aa_web_app.data_import.retrieve_tickers_from_db_times import select_tickers, select_names_subcategories
+from assetallocation_UI.aa_web_app.data_import.retrieve_tickers_from_db_times import select_tickers, \
+    select_names_subcategories
 
 
 @app.route('/',  methods=['GET'])
@@ -38,93 +39,92 @@ def home():
 @app.route('/times_strategy', methods=['GET', 'POST'])
 def times_strategy():
     run_model_page = 'not_run_model'
-    assets, asset_tickers_names_subcategories = [], []
-    fund_selected, pop_up_message = '', ''
+    asset_tickers_names_subcategories = []
     existing_versions_from_db = format_versions(get_strategy_versions(Name.times))
     existing_funds_from_db = get_fund_names()
 
+    obj_received_data_times = ReceiveDataTimes()
+
     if request.method == 'POST':
-        if request.form['submit_button'] == 'new-version':
-            run_model_page = 'run_new_version'
-            asset_tickers_names_subcategories = select_tickers()
-        else:
-            # obj_received_data_times.receive_data_existing_versions(strategy_version=
-            #                                                        obj_received_data_times.version_strategy)
-            # obj_received_data_times.receive_data_existing_versions(strategy_version=strategy_version)
 
-            obj_received_data_times.run_existing_strategy()
-            return redirect(url_for('times_charts_dashboard'))
-    else:
+        try:
+            if request.form['submit_button'] == 'new-version':
+                run_model_page = 'run_new_version'
+                asset_tickers_names_subcategories = select_tickers()
 
-        if obj_received_data_times.match_date_db is False:
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
-                                                                            obj_received_data_times.version_strategy)
-            run_model_page = 'run_existing_version'
-            # Reset the match date
-            obj_received_data_times.match_date_db = None
+        except:
 
-        if obj_received_data_times.match_date_db:
-            pop_up_message = 'pop_up_message'
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
-                                                                            obj_received_data_times.version_strategy)
-            # Reset the match date
-            obj_received_data_times.match_date_db = None
+            json_data = json.loads(request.form['json_data'])
+
+            # Check if the selected date is in the database
+            is_date_in_db = obj_received_data_times.check_in_date_to_existing_version(json_data['fund_name'],
+                                                                                      json_data['strategy_version'],
+                                                                                      json_data['date_to'])
+            if is_date_in_db:
+                message = 'pop_up_message'
+
+            else:
+                message = 'run_existing_version'
+
+            assets, inputs_existing_versions_times = obj_received_data_times.receive_data_existing_versions(
+                json_data['fund_name'],
+                json_data['strategy_version'],
+                json_data['strategy_weight_user'],
+                json_data['date_to'])
+
+            return jsonify({'message': message,
+                            'version_selected':  json_data['strategy_version'],
+                            'assets': assets,
+                            'inputs_existing_versions_times': inputs_existing_versions_times})
 
     return render_template('times_template.html',
                            title='TimesPage',
                            asset_tickers_names_subcategories=asset_tickers_names_subcategories,
-                           version_selected=obj_received_data_times.version_strategy,
                            existing_funds_from_db=existing_funds_from_db,
-                           pop_up_message=pop_up_message,
                            run_model_page=run_model_page,
-                           assets=assets,
-                           existing_versions_from_db=existing_versions_from_db,
-                           inputs_versions=obj_received_data_times.inputs_existing_versions_times)
+                           existing_versions_from_db=existing_versions_from_db)
 
 
-@app.route('/times_strategy_existing_version',  methods=['POST'])
-def times_strategy_existing_version():
-    run_model_page = 'not_run_model'
-    assets, asset_tickers_names_subcategories = [], []
-    fund_selected, pop_up_message = '', ''
+@app.route('/times_strategy_existing_version/<version_selected>/<assets>/<message>/<inputs_existing_versions_times>/'
+           '<userNameValue>', methods=['GET', 'POST'])
+def times_strategy_existing_version(version_selected, assets, message, inputs_existing_versions_times, userNameValue):
     existing_versions_from_db = format_versions(get_strategy_versions(Name.times))
     existing_funds_from_db = get_fund_names()
 
-    if request.method == 'POST':
-        json_data = json.loads(request.form['json_data'])
-        obj_received_data_times.receive_data_existing_versions(json_data['fund_name'],
-                                                               json_data['strategy_version'],
-                                                               json_data['strategy_weight_user'],
-                                                               json_data['date_to'])
-
-        obj_received_data_times.run_existing_strategy()
-        # return redirect(url_for('times_charts_dashboard'))
+    if message == 'call_run_existing_strategy':
+        obj_received_data_times = ReceiveDataTimes()
+        inputs = json.loads(inputs_existing_versions_times.split('\\')[0].replace("\'", "\""))
+        fund_strategy = obj_received_data_times.run_existing_strategy(inputs, userNameValue)
+        return redirect(url_for('times_charts_dashboard',
+                                fund_name=fund_strategy.fund_name,
+                                strategy_version=fund_strategy.strategy_version,
+                                date_to=inputs['input_date_to_times'],
+                                **request.args))
     else:
+        # TODO MOVE TO FCT
+        assets_split = assets.split(',')
+        asset_tmp = []
 
-        if obj_received_data_times.match_date_db is False:
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
-                                                                            obj_received_data_times.version_strategy)
-            run_model_page = 'run_existing_version'
-            # Reset the match date
-            obj_received_data_times.match_date_db = None
+        for val in range(0, len(assets_split), 5):
+            tmp = assets_split[val:val + 5]
+            asset_tmp.append(tmp)
 
-        if obj_received_data_times.match_date_db:
-            pop_up_message = 'pop_up_message'
-            assets = obj_received_data_times.receive_data_existing_versions(strategy_version=
-                                                                            obj_received_data_times.version_strategy)
-            # Reset the match date
-            obj_received_data_times.match_date_db = None
+        inputs_split = inputs_existing_versions_times.split(',')
+        inputs_tmp = {}
+
+        for val in range(0, len(inputs_split), 2):
+            tmp = inputs_split[val: val + 2]
+            inputs_tmp[tmp[0]] = tmp[1]
 
     return render_template('times_template.html',
                            title='TimesPage',
-                           asset_tickers_names_subcategories=asset_tickers_names_subcategories,
-                           version_selected=obj_received_data_times.version_strategy,
+                           userNameValue=userNameValue,
+                           version_selected=version_selected,
                            existing_funds_from_db=existing_funds_from_db,
-                           pop_up_message=pop_up_message,
-                           run_model_page=run_model_page,
-                           assets=assets,
+                           run_model_page=message,
+                           assets=asset_tmp,
                            existing_versions_from_db=existing_versions_from_db,
-                           inputs_versions=obj_received_data_times.inputs_existing_versions_times)
+                           inputs_versions=inputs_tmp)
 
 
 @app.route('/receive_data_from_times_strategy_page', methods=['POST'])
@@ -135,12 +135,6 @@ def receive_data_from_times_strategy_page():
         obj_received_data_times.type_of_request = json_data['run_existing-version']
     except KeyError:
         pass
-
-    # if json_data['type_of_request'] == 'selected_version':
-    #     strategy_version = json_data['version']
-    #     date_to = json_data['date_to']
-    #     obj_received_data_times.match_date_db = obj_received_data_times.check_in_date_to_existing_version()
-    #     return jsonify({'strategy_version': strategy_version, 'date_to': date_to.replace('/', 'S')})
 
     if json_data['type_of_request'] == 'selected_ticker':
         obj_received_data_times.type_of_request = json_data['type_of_request']
@@ -255,7 +249,6 @@ def times_charts_dashboard(fund_name, strategy_version, date_to):
                                                          date_to_sidebar=None)
 
     obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
-    obj_times_charts_data.strategy_weight = obj_received_data_times.strategy_weight
 
     if request.method == 'POST':
         if form.submit_ok_positions.data:

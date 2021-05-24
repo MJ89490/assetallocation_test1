@@ -60,11 +60,17 @@ $('#select-version-from-strategy-page').change(function() {
 
         alert(json_data);
 
-        $.ajax({url: "times_strategy_existing_version",
+        $.ajax({url: "times_strategy",
                 data: {json_data: json_data},
                 type: 'POST',
                 success: function(data){
                     console.log('success');
+
+                    let userNameValue = sessionStorage.getItem('username');
+
+                    window.location.href = "times_strategy_existing_version/" + data['version_selected'] + "/" + data['assets'] + "/" + data['message']
+                    + "/" + data['inputs_existing_versions_times'] + "/" + userNameValue;
+
                 },
                 error: function(error){
                     console.log(error);
