@@ -168,7 +168,7 @@ $('#contact-form-button-times').click(function(){
                     alert(data['strategy_version']);
                     alert(data['date_to']);
 
-                    window.location.href = "times_charts_dashboard/" + data['strategy_version'] + "/" + data['date_to'];
+                    window.location.href = "times_charts_dashboard/" + fundNameValue +  "/" + data['strategy_version'] + "/" + data['date_to'];
 
                 },
                 error: function(error){
