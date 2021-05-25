@@ -10,42 +10,45 @@ function sideBarFund() {
         var select_box = document.getElementById("send_data_fund_from_sidebar");
         var fund = select_box.options[select_box.selectedIndex].value;
 
+        alert(fund);
+
         fund_data_to_send_to_python.push(fund);
-        console.log(fund);
 
         if (fund_data_to_send_to_python.length != 1){
             fund_data_to_send_to_python.splice(0, fund_data_to_send_to_python.length-1);
         }
 }
 
-function sideBarVersion() {
+function sideBarChartsVersion() {
         var select_box = document.getElementById("send_data_version_from_sidebar");
         var version = select_box.options[select_box.selectedIndex].value;
 
         version_data_to_send_to_python.push(parseInt(version));
-        console.log(version);
 
         if (version_data_to_send_to_python.length != 1){
             version_data_to_send_to_python.splice(0, version_data_to_send_to_python.length-1);
         }
 
-        var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
+        alert(version);
+
+        var jsonData = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
                                         "inputs_version": version_data_to_send_to_python[0],
                                         "type_of_request": 'charts_data_sidebar',
                                         });
 
         $.ajax({
-                url: "receive_sidebar_data_times_form",
-                data: {json_data: json_data},
-                type: 'POST',
-                success: function(data){
-                    populateChartsDateTo(data['sidebar_date_to']);
-                    alert('You can select a date to to see the new charts!');
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
+            url: '/receive_sidebar_data_times_form',
+            data: {jsonData: jsonData},
+            type: 'POST',
+
+            success: function(data){
+                 populateChartsDateTo(data['sidebar_date_to']);
+                alert('You can select a date to!');
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
 }
 
 function populateChartsDateTo(dates){
@@ -66,15 +69,28 @@ function sendDateToSidebar(){
     console.log(dateToSidebar);
     dateTo.push(dateToSidebar);
 
-    var json_data = JSON.stringify({"inputs_date_to": dateTo[0],
-                                    "type_of_request": 'date_to_data_sidebar'
+    var jsonData = JSON.stringify({"inputs_date_to": dateTo[0],
+                                    "type_of_request": 'date_charts_sidebar'
                                    });
     $.ajax({
-        url: "receive_sidebar_data_times_form",
-        data: {json_data: json_data},
+        url: "/receive_sidebar_data_times_form",
+        data: {jsonData: jsonData},
         type: 'POST',
         success: function(data){
-//            window.location.href = "times_sidebar_dashboard";
+                alert('The charts will be updated shortly...');
+
+                let date = dateTo[0]
+                date_to = date.split("/").join("S");
+
+                console.log(date_to);
+
+
+                'http://127.0.0.1:5000/times_charts_dashboard/test_fund/1684/times_charts_dashboard/test_fund/1684/13S04S2021'
+
+                'CHECK WITH JESS METHOD NOT ALLOWED'
+
+//                window.location.href = "times_charts_dashboard/" + fund_data_to_send_to_python[0] +  "/" + version_data_to_send_to_python[0] + "/" + date_to;
+
         },
         error: function(error){
             console.log(error);
@@ -104,19 +120,21 @@ function sideBarExportVersion() {
             version_data_to_send_to_python.splice(0, version_data_to_send_to_python.length-1);
         }
 
-        var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
+        var jsonData = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
                                         "inputs_version": version_data_to_send_to_python[0],
                                         "type_of_request": 'export_data_sidebar',
                                        });
 
         $.ajax({
-                url: "receive_sidebar_data_times_form",
-                data: {json_data: json_data},
+                url: "/receive_sidebar_data_times_form",
+                data: {jsonData: jsonData},
                 type: 'POST',
+
                 success: function(data){
                     populateExportDateTo(data['sidebar_date_to']);
                     alert('You can select a date to to export the data!');
                 },
+
                 error: function(error){
                     console.log(error);
                 }
@@ -141,13 +159,15 @@ function sendDateToExportSidebar(){
     console.log(dateToSidebar);
     dateTo.push(dateToSidebar);
 
-    var json_data = JSON.stringify({"inputs_date_to": dateTo[0],
-                                    "type_of_request": 'date_to_export_data_sidebar'
+    var jsonData = JSON.stringify({"inputs_date_to": dateToSidebar,
+                                   "input_fund": fund_data_to_send_to_python[0],
+                                   "inputs_version": version_data_to_send_to_python[0],
+                                   "type_of_request": 'date_to_export_data_sidebar'
                                    });
 
     $.ajax({
-        url: "receive_sidebar_data_times_form",
-        data: {json_data: json_data},
+        url: "/receive_sidebar_data_times_form",
+        data: {jsonData: jsonData},
         type: 'POST',
         success: function(success){
             console.log(success);
@@ -158,28 +178,3 @@ function sendDateToExportSidebar(){
         }
     });
 }
-
-//function sendDataToPython(){
-//
-//    if (ready_to_send == true){
-//
-//        var json_data = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
-//                                        "inputs_version": version_data_to_send_to_python[0],
-//                                        "type_of_request": type_of_request,
-//                                        });
-//        console.log(json_data);
-//
-//        $.ajax({
-//                url: "receive_sidebar_data_times_form",
-//                data: {json_data: json_data},
-//                type: 'POST',
-//                success: function(data){
-//                    populateChartsDateTo(data['sidebar_date_to']);
-//                    alert('You can select a date to!');
-//                },
-//                error: function(error){
-//                    console.log(error);
-//                }
-//            });
-//    }
-//}

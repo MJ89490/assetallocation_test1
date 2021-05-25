@@ -136,8 +136,6 @@ function selectDateToCalendar() {
     var d = new Date(date_from_new);
     var dayName = gsDayNames[d.getDay()];
 
-    console.log(dayName);
-
     if (typeof dayName != 'undefined'){
         document.getElementById("input_weekday_times").value = dayName.substring(0,3).toUpperCase();
     }
@@ -157,22 +155,17 @@ $('#contact-form-button-times').click(function(){
         if (check != 'error'){
             alert("The strategy is about to run...");
             $.ajax({
-                url: "receive_data_from_times_strategy_form",
+                url: "call_run_times_new_strategy",
                 data: {form_data: form_data, json_data:jsonData, fundNameValue: fundNameValue,
                        strategyWeightValue: strategyWeightValue, userNameValue: userNameValue},
                 type: 'POST',
 
                 success: function(data){
                     alert('The strategy has been run successfully! You will be redirected to the dashboard shortly');
-
-                    alert(data['strategy_version']);
-                    alert(data['date_to']);
-
                     window.location.href = "times_charts_dashboard/" + fundNameValue +  "/" + data['strategy_version'] + "/" + data['date_to'];
 
                 },
                 error: function(error){
-                    console.log("ERROR")
                     console.log(error);
                 }
             });

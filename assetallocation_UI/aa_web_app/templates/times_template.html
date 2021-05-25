@@ -167,7 +167,7 @@
                                                             "type_of_request": 'selected_ticker'});
 
                              $.ajax({
-                                url: "receive_data_from_times_strategy_page",
+                                url: "receive_assets_from_jquery_table_times_strategy_page",
                                 data: {json_data:jsonData},
                                 type: 'POST',
                                 success: function(data){
@@ -623,7 +623,7 @@
                                 </div>
 
 
-                                 <form class="center" action="{{ url_for('times_strategy_existing_version', version_selected=version_selected, assets=assets, message='call_run_existing_strategy', inputs_existing_versions_times=inputs_versions, userNameValue=userNameValue) }}" method="POST" novalidate>
+                                 <form class="center" action="{{ url_for('times_strategy_existing_version', version_selected=version_selected, assets=assets, message='call_run_existing_strategy', inputs_existing_versions=inputs_versions, userNameValue=userNameValue) }}" method="POST" novalidate>
                                      <div class="text-center"><button class="btn-sm btn-run-model-times" type="submit" name="submit_button" value="run-existing-version" onclick="AlertExistingStratRunning()">Run strategy</button></div>
                                      <script type="text/javascript">
                                         function AlertExistingStratRunning(){
@@ -645,7 +645,7 @@
                       <!-- Modal content-->
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h4 class="modal-title">Existing version: {{inputs_versions['version']}} with the date to {{inputs_versions['input_date_to_times']}}</h4>
+                              <h4 class="modal-title">Existing version: {{inputs_versions['version']}} with the date to {{inputs_versions['input_date_to_times'] | replace("S", "/") }}</h4>
                           </div>
 
                           <div class="modal-body">
@@ -657,7 +657,7 @@
                                     <center>
                                         <!--Date from-->
                                         <div class="btn-group">
-                                            <form class="center" action="{{ url_for('times_strategy_existing_version', version_selected=version_selected, assets=assets, message='call_run_existing_strategy', inputs_existing_versions_times=inputs_versions, userNameValue=userNameValue) }}" method="POST" novalidate>
+                                            <form class="center" action="{{ url_for('times_strategy_existing_version', version_selected=version_selected, assets=assets, message='call_run_existing_strategy', inputs_existing_versions=inputs_versions, userNameValue=userNameValue) }}" method="POST" novalidate>
                                                 <button class="btn btn-primary btn-sm btn-run-model-existing-versions-times-pop-up" type="submit" name="submit_button" value="run-strategy-existing-versions" onclick="AlertStratRunning()">Run this version again?</button>
                                                 <script type="text/javascript">
                                                     function AlertStratRunning(){

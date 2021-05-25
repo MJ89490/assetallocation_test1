@@ -3,7 +3,7 @@ from assetallocation_UI.aa_web_app.service.strategy import run_strategy
 from assetallocation_arp.data_etl.dal.data_models.strategy import Times, TimesAssetInput, DayOfWeek
 
 
-class CallRunTimes:
+class RunNewStrategyTimes:
 
     def __init__(self, fund_name, strategy_weight, user_name, strategy_description, is_new_strategy=True):
 
@@ -29,7 +29,7 @@ class CallRunTimes:
 
         return times_form
 
-    def call_run_times(self, assets_input_times, times_form):
+    def run_times(self, assets_input_times, times_form):
 
         long_signals = list(map(float, [times_form['input_signal_one_long_times'],
                                         times_form['input_signal_two_long_times'],

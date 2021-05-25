@@ -1,6 +1,6 @@
 import os
 import json
-from flask import render_template, session
+from flask import render_template
 from flask import request, redirect, url_for, jsonify, make_response
 
 from assetallocation_UI.aa_web_app import app
@@ -9,9 +9,8 @@ from assetallocation_UI.aa_web_app.service.fund import get_fund_names
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_UI.aa_web_app.service.formatter import format_versions
 from assetallocation_UI.aa_web_app.service.strategy import get_strategy_versions
-from assetallocation_UI.aa_web_app.data_import.get_data_effect import ProcessDataEffect
 from assetallocation_UI.aa_web_app.forms_times import InputsTimesModel, SideBarDataForm
-from assetallocation_UI.aa_web_app.data_import.receive_data_times import ReceiveDataTimes
+from assetallocation_UI.aa_web_app.data_import.process_existing_data_times import ProcessExistingDataTimes
 from assetallocation_UI.aa_web_app.data_import.compute_data_dashboard_times import ComputeDataDashboardTimes
 from assetallocation_UI.aa_web_app.data_import.main_compute_data_dashboard_times import main_compute_data_dashboard_times
 from assetallocation_UI.aa_web_app.data_import.call_times_proc_caller import call_times_proc_caller, \
@@ -20,10 +19,8 @@ from assetallocation_UI.aa_web_app.data_import.download_data_strategy_to_domino 
     export_times_positions_data_to_csv
 
 
-# obj_received_data_times = ReceiveDataTimes()
-# obj_received_data_effect = ProcessDataEffect()
-
-from assetallocation_UI.aa_web_app.data_import.call_run_times import CallRunTimes
+from assetallocation_UI.aa_web_app.data_import.run_new_strategy_times import RunNewStrategyTimes
+from assetallocation_UI.aa_web_app.data_import.run_existing_strategy_times import run_existing_strategy
 from assetallocation_UI.aa_web_app.data_import.retrieve_tickers_from_db_times import select_tickers, \
     select_names_subcategories
 
@@ -43,7 +40,7 @@ def times_strategy():
     existing_versions_from_db = format_versions(get_strategy_versions(Name.times))
     existing_funds_from_db = get_fund_names()
 
-    obj_received_data_times = ReceiveDataTimes()
+    obj_process_existing_data = ProcessExistingDataTimes()
 
     if request.method == 'POST':
 
@@ -57,16 +54,16 @@ def times_strategy():
             json_data = json.loads(request.form['json_data'])
 
             # Check if the selected date is in the database
-            is_date_in_db = obj_received_data_times.check_in_date_to_existing_version(json_data['fund_name'],
-                                                                                      json_data['strategy_version'],
-                                                                                      json_data['date_to'])
+            is_date_in_db = obj_process_existing_data.check_in_date_to_existing_version(json_data['fund_name'],
+                                                                                        json_data['strategy_version'],
+                                                                                        json_data['date_to'])
             if is_date_in_db:
                 message = 'pop_up_message'
 
             else:
                 message = 'run_existing_version'
 
-            assets, inputs_existing_versions_times = obj_received_data_times.receive_data_existing_versions(
+            assets, inputs_existing_versions_times = obj_process_existing_data.receive_data_existing_versions(
                 json_data['fund_name'],
                 json_data['strategy_version'],
                 json_data['strategy_weight_user'],
@@ -85,36 +82,25 @@ def times_strategy():
                            existing_versions_from_db=existing_versions_from_db)
 
 
-@app.route('/times_strategy_existing_version/<version_selected>/<assets>/<message>/<inputs_existing_versions_times>/'
+@app.route('/times_strategy_existing_version/<version_selected>/<assets>/<message>/<inputs_existing_versions>/'
            '<userNameValue>', methods=['GET', 'POST'])
-def times_strategy_existing_version(version_selected, assets, message, inputs_existing_versions_times, userNameValue):
+def times_strategy_existing_version(version_selected, assets, message, inputs_existing_versions, userNameValue):
     existing_versions_from_db = format_versions(get_strategy_versions(Name.times))
     existing_funds_from_db = get_fund_names()
 
     if message == 'call_run_existing_strategy':
-        obj_received_data_times = ReceiveDataTimes()
-        inputs = json.loads(inputs_existing_versions_times.split('\\')[0].replace("\'", "\""))
-        fund_strategy = obj_received_data_times.run_existing_strategy(inputs, userNameValue)
+        inputs = json.loads(inputs_existing_versions.split('\\')[0].replace("\'", "\""))
+        fund_strategy = run_existing_strategy(inputs, userNameValue)
         return redirect(url_for('times_charts_dashboard',
                                 fund_name=fund_strategy.fund_name,
                                 strategy_version=fund_strategy.strategy_version,
                                 date_to=inputs['input_date_to_times'],
                                 **request.args))
     else:
-        # TODO MOVE TO FCT
-        assets_split = assets.split(',')
-        asset_tmp = []
+        obj_process_existing_data = ProcessExistingDataTimes()
 
-        for val in range(0, len(assets_split), 5):
-            tmp = assets_split[val:val + 5]
-            asset_tmp.append(tmp)
-
-        inputs_split = inputs_existing_versions_times.split(',')
-        inputs_tmp = {}
-
-        for val in range(0, len(inputs_split), 2):
-            tmp = inputs_split[val: val + 2]
-            inputs_tmp[tmp[0]] = tmp[1]
+        asset_tmp, inputs_tmp = obj_process_existing_data.preprocess_strategy_existing_data(assets,
+                                                                                            inputs_existing_versions)
 
     return render_template('times_template.html',
                            title='TimesPage',
@@ -127,25 +113,17 @@ def times_strategy_existing_version(version_selected, assets, message, inputs_ex
                            inputs_versions=inputs_tmp)
 
 
-@app.route('/receive_data_from_times_strategy_page', methods=['POST'])
-def receive_data_from_times_strategy_page():
+@app.route('/receive_assets_from_jquery_table_times_strategy_page', methods=['POST'])
+def receive_assets_from_jquery_table_times_strategy_page():
 
     json_data = json.loads(request.form['json_data'])
-    try:
-        obj_received_data_times.type_of_request = json_data['run_existing-version']
-    except KeyError:
-        pass
 
-    if json_data['type_of_request'] == 'selected_ticker':
-        obj_received_data_times.type_of_request = json_data['type_of_request']
-        name, subcategory = select_names_subcategories(json_data['input_signal_ticker_from_times'])
-        return jsonify({'name': name, 'subcategory': subcategory})
-
-    return json.dumps({'status': 'OK'})
+    name, subcategory = select_names_subcategories(json_data['input_signal_ticker_from_times'])
+    return jsonify({'name': name, 'subcategory': subcategory})
 
 
-@app.route('/receive_data_from_times_strategy_form', methods=['POST'])
-def receive_data_from_times_strategy_form():
+@app.route('/call_run_times_new_strategy', methods=['POST'])
+def call_run_times_new_strategy():
     form_data = request.form['form_data'].split('&')
     json_data = json.loads(request.form['json_data'])
     form_data.append('input_version_name=' + json_data['input_version_name_strategy'])
@@ -155,81 +133,93 @@ def receive_data_from_times_strategy_form():
     user_name = request.form['userNameValue']
     strategy_description = json_data["input_version_name_strategy"]
 
-    obj_call_run_times = CallRunTimes(fund_name, strategy_weight, user_name, strategy_description)
+    obj_call_run_times = RunNewStrategyTimes(fund_name, strategy_weight, user_name, strategy_description)
     times_form = obj_call_run_times.process_data_times(form_data)
-    fund_strategy, date_to = obj_call_run_times.call_run_times(json_data, times_form)
+    fund_strategy, date_to = obj_call_run_times.run_times(json_data, times_form)
 
     return jsonify({'strategy_version': fund_strategy.strategy_version, 'date_to': date_to.replace('/', 'S')})
 
 
 @app.route('/receive_sidebar_data_times_form', methods=['POST'])
 def receive_sidebar_data_times_form():
-    outputs_sidebar = json.loads(request.form['json_data'])
+    outputs_sidebar = json.loads(request.form['jsonData'])
 
-    if outputs_sidebar['type_of_request'] == 'date_to_data_sidebar':
-        obj_received_data_times.date_to_sidebar = outputs_sidebar['inputs_date_to']
+    obj_process_existing_data = ProcessExistingDataTimes()
 
-    elif outputs_sidebar['type_of_request'] == 'date_to_export_data_sidebar':
-        obj_received_data_times.date_to_export_sidebar = outputs_sidebar['inputs_date_to']
+    if outputs_sidebar['type_of_request'] == 'date_to_export_data_sidebar':
+
+        signals, returns, positions = call_times_proc_caller(fund_name=outputs_sidebar['input_fund'],
+                                                             strategy_version=int(outputs_sidebar['inputs_version']),
+                                                             date_to=outputs_sidebar['inputs_date_to'],
+                                                             date_to_sidebar=None)
+        export_times_data_to_csv(int(outputs_sidebar['inputs_version']), signals, returns, positions)
+
+        return json.dumps({'status': 'OK'})
 
     elif outputs_sidebar['type_of_request'] == 'export_data_sidebar':
-        obj_received_data_times.version_strategy_export = outputs_sidebar['inputs_version']
-        obj_received_data_times.fund_name_export = outputs_sidebar['input_fund']
-        obj_received_data_times.type_of_request = outputs_sidebar['type_of_request']
-        sidebar_date_to = obj_received_data_times.receive_data_sidebar_dashboard(
-            call_times_select_all_fund_strategy_result_dates())
-        return jsonify({'sidebar_date_to': sidebar_date_to})
+        version_strategy_export = outputs_sidebar['inputs_version']
+        fund_name_export = outputs_sidebar['input_fund']
+        all_fund_strategy_result_dates = call_times_select_all_fund_strategy_result_dates()
+        date_to = obj_process_existing_data.receive_data_sidebar_dashboard(fund_name_export,
+                                                                           version_strategy_export,
+                                                                           all_fund_strategy_result_dates)
+        return jsonify({'sidebar_date_to': date_to})
 
     elif outputs_sidebar['type_of_request'] == 'charts_data_sidebar':
-        obj_received_data_times.version_strategy = outputs_sidebar['inputs_version']
-        obj_received_data_times.fund_name = outputs_sidebar['input_fund']
-        obj_received_data_times.type_of_request = outputs_sidebar['type_of_request']
-        sidebar_date_to = obj_received_data_times.receive_data_sidebar_dashboard(
-            call_times_select_all_fund_strategy_result_dates())
-        return jsonify({'sidebar_date_to': sidebar_date_to})
+        fund_name = outputs_sidebar['input_fund']
+        version_strategy = outputs_sidebar['inputs_version']
+        all_fund_strategy_result_dates = call_times_select_all_fund_strategy_result_dates()
+        date_to = obj_process_existing_data.receive_data_sidebar_dashboard(fund_name,
+                                                                           version_strategy,
+                                                                           all_fund_strategy_result_dates)
+        return jsonify({'sidebar_date_to': date_to,
+                        'version_strategy': version_strategy,
+                        'fund_name': fund_name})
 
-    return json.dumps({'status': 'OK'})
+    elif outputs_sidebar['type_of_request'] == 'date_charts_sidebar':
 
-
-@app.route('/times_sidebar_dashboard',  methods=['GET', 'POST'])
-def times_sidebar_dashboard():
-    global obj_received_data_times
-    form = InputsTimesModel()
-    form_side_bar = SideBarDataForm()
-    export_data_sidebar, sidebar_date_to = 'not_export_data_sidebar', ''
-
-    if obj_received_data_times.type_of_request == 'export_data_sidebar':
-        export_data_sidebar = 'export_data_sidebar'
-        signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name_export,
-                                                             version_strategy=obj_received_data_times.version_strategy_export,
-                                                             date_to=obj_received_data_times.date_to,
-                                                             date_to_sidebar=obj_received_data_times.date_to_export_sidebar)
-        export_times_data_to_csv(obj_received_data_times.version_strategy, signals, returns, positions)
-
-    signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
-                                                         version_strategy=obj_received_data_times.version_strategy,
-                                                         date_to=obj_received_data_times.date_to,
-                                                         date_to_sidebar=obj_received_data_times.date_to_sidebar)
-
-    obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
-    obj_times_charts_data.strategy_weight = obj_received_data_times.strategy_weight
-
-    template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date=None, end_date=None)
-
-    return render_template('times_dashboard.html',
-                           title='Dashboard',
-                           form=form,
-                           date_run=obj_received_data_times.date_to_sidebar.strftime('%d/%m/%Y'),
-                           sidebar_date_to=sidebar_date_to,
-                           export_data_sidebar=export_data_sidebar,
-                           form_side_bar=form_side_bar,
-                           fund_strategy=obj_received_data_times.fund_strategy_dict,
-                           fund_list=form_side_bar.input_fund_name_times,
-                           versions_list=form_side_bar.input_versions_times,
-                           **template_data)
+        return json.dumps({'status': 'OK'})
 
 
-@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>',  methods=['GET', 'POST'])
+# @app.route('/times_sidebar_dashboard',  methods=['GET', 'POST'])
+# def times_sidebar_dashboard():
+#     global obj_received_data_times
+#     form = InputsTimesModel()
+#     form_side_bar = SideBarDataForm()
+#     export_data_sidebar, sidebar_date_to = 'not_export_data_sidebar', ''
+#
+#     if obj_received_data_times.type_of_request == 'export_data_sidebar':
+#         export_data_sidebar = 'export_data_sidebar'
+#         signals, returns, positions = call_times_proc_caller(fund_name=fund_name,
+#                                                              strategy_version=int(strategy_version),
+#                                                              date_to=date_to,
+#                                                              date_to_sidebar=None)
+#         export_times_data_to_csv(obj_received_data_times.version_strategy, signals, returns, positions)
+#
+#     signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
+#                                                          version_strategy=obj_received_data_times.version_strategy,
+#                                                          date_to=obj_received_data_times.date_to,
+#                                                          date_to_sidebar=obj_received_data_times.date_to_sidebar)
+#
+#     obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
+#     obj_times_charts_data.strategy_weight = obj_received_data_times.strategy_weight
+#
+#     template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date=None, end_date=None)
+#
+#     return render_template('times_dashboard.html',
+#                            title='Dashboard',
+#                            form=form,
+#                            date_run=obj_received_data_times.date_to_sidebar.strftime('%d/%m/%Y'),
+#                            sidebar_date_to=sidebar_date_to,
+#                            export_data_sidebar=export_data_sidebar,
+#                            form_side_bar=form_side_bar,
+#                            fund_strategy=obj_received_data_times.fund_strategy_dict,
+#                            fund_list=form_side_bar.input_fund_name_times,
+#                            versions_list=form_side_bar.input_versions_times,
+#                            **template_data)
+
+
+@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>',  methods=['POST'])
 def times_charts_dashboard(fund_name, strategy_version, date_to):
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
