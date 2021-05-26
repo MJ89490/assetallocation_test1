@@ -84,6 +84,14 @@ function sendDateToSidebar(){
 
                 console.log(date_to);
 
+//                construction of the url
+                let pathArr = $PROJECTS_URL.split("/");
+                let projectsPathArr = pathArr.slice(0, pathArr.length - 3);
+                console.log(projectsPathArr);
+                let strategyPathArr = projectsPathArr.concat([fund_data_to_send_to_python[0], version_data_to_send_to_python[0], date_to]);
+                let strategyPathURL = strategyPathArr.join('/');
+
+                window.location.href  = strategyPathURL
 
                 'http://127.0.0.1:5000/times_charts_dashboard/test_fund/1684/times_charts_dashboard/test_fund/1684/13S04S2021'
 

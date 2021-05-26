@@ -219,7 +219,7 @@ def receive_sidebar_data_times_form():
 #                            **template_data)
 
 
-@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>',  methods=['POST'])
+@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>',  methods=['GET', 'POST'])
 def times_charts_dashboard(fund_name, strategy_version, date_to):
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
@@ -233,6 +233,8 @@ def times_charts_dashboard(fund_name, strategy_version, date_to):
 
     date_to = date_to.replace('S', '/')
 
+    #TODO ADD SIDEBAR DATE TO IN THE ROUTE
+    # CHANGE THE BUTTON OK TO JS AND SEND REQUEST HERE
     signals, returns, positions = call_times_proc_caller(fund_name=fund_name,
                                                          strategy_version=int(strategy_version),
                                                          date_to=date_to,
@@ -266,7 +268,8 @@ def times_charts_dashboard(fund_name, strategy_version, date_to):
                            date_run=date_to,
                            export_data_sidebar=export_data_sidebar,
                            form_side_bar=form_side_bar,
-                           fund_strategy={'fund': fund_name, 'strategy_version': strategy_version, 'date_to': date_to},
+                           fund_strategy={'fund': fund_name, 'strategy_version': strategy_version, 'date_to': date_to,
+                                          'date_to_S':  date_to.replace('/', 'S')},
                            fund_list=form_side_bar.input_fund_name_times,
                            versions_list=form_side_bar.input_versions_times,
                            **template_data)

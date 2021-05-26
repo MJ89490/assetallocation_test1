@@ -1,5 +1,14 @@
 <html>
+
+
+
     <head>
+
+
+
+        <script>$PROJECTS_URL="{{ url_for('times_charts_dashboard', fund_name='', strategy_version='', date_to='') }}";</script>
+
+
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -22,6 +31,9 @@
         <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/times_dashboard.css') }}">
+
+
+
 
     </head>
 
@@ -319,7 +331,7 @@
                             <h4 class="card-header"><b>Asset allocation over time</b></h4>
                             <div class="card-body">
 
-                                <form class="center" action="{{ url_for('times_charts_dashboard', fund_name=fund_strategy['fund'], strategy_version=fund_strategy['strategy_version'], date_to=fund_strategy['date_to']) }}" method="POST" novalidate>
+                                <form class="center" action="{{ url_for('times_charts_dashboard', fund_name=fund_strategy['fund'], strategy_version=fund_strategy['strategy_version'], date_to=fund_strategy['date_to_S']) }}" method="POST" novalidate>
                                     <div class="btn-group">
                                         <!--Start date-->
                                         <input id="start_date_box_times" name="start_date_box_times" class="form-control form-models-select-times rounded-lg" value="Start date" required>
@@ -342,7 +354,7 @@
                                             });
                                         </script>
                                     <!--Submit button-->
-                                        <form action="{{ url_for('times_charts_dashboard', fund_name=fund_strategy['fund'], strategy_version=fund_strategy['strategy_version'], date_to=fund_strategy['date_to']) }}" method="POST" novalidate>
+                                        <form action="{{ url_for('times_charts_dashboard', fund_name=fund_strategy['fund'], strategy_version=fund_strategy['strategy_version'], date_to=fund_strategy['date_to_S']) }}" method="POST" novalidate>
                                             {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
                                         </form>
                                     <!--Download button-->

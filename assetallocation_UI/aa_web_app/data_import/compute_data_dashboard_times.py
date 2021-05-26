@@ -314,7 +314,7 @@ class ComputeDataDashboardTimes:
         Compute the new positions for each asset
         :return: a list with new positions for each asset
         """
-
+        # TODO TO DEBUG ERROR WITH TIMESTAMP PPPP VERSION
         last_day_signals = self._signals.last_valid_index()
 
         new_positions, tmp_new_positions = {}, {}
