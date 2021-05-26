@@ -37,7 +37,7 @@ function sideBarChartsVersion() {
                                         });
 
         $.ajax({
-            url: '/receive_sidebar_data_times_form',
+            url: $SIDEBAR_URL,
             data: {jsonData: jsonData},
             type: 'POST',
 
