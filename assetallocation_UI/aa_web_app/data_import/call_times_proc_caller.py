@@ -1,6 +1,6 @@
 import datetime
 import pandas as pd
-from typing import Tuple
+from typing import Tuple, List
 from assetallocation_arp.common_libraries.dal_enums.strategy import Name
 from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
@@ -46,6 +46,7 @@ def call_times_proc_caller(fund_name: str, strategy_version: int, date_to: str, 
     return signals, returns, positions
 
 
-def call_times_select_all_fund_strategy_result_dates():
+def call_times_select_all_fund_strategy_result_dates(fund_name: str, strategy_version: int) -> List[str]:
     apc = TimesProcCaller()
-    return apc.select_all_fund_strategy_result_dates()
+    df = apc.select_fund_strategy_result_dates(fund_name, strategy_version)
+    return [d.strftime('%d/%m/%Y') for d in df.business_date_to.values.tolist()]

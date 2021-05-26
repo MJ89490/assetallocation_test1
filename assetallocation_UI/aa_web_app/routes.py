@@ -159,19 +159,14 @@ def receive_sidebar_data_times_form():
     elif outputs_sidebar['type_of_request'] == 'export_data_sidebar':
         version_strategy_export = outputs_sidebar['inputs_version']
         fund_name_export = outputs_sidebar['input_fund']
-        all_fund_strategy_result_dates = call_times_select_all_fund_strategy_result_dates()
-        date_to = obj_process_existing_data.receive_data_sidebar_dashboard(fund_name_export,
-                                                                           version_strategy_export,
-                                                                           all_fund_strategy_result_dates)
+        date_to = call_times_select_all_fund_strategy_result_dates(fund_name_export, version_strategy_export)
         return jsonify({'sidebar_date_to': date_to})
 
     elif outputs_sidebar['type_of_request'] == 'charts_data_sidebar':
         fund_name = outputs_sidebar['input_fund']
         version_strategy = outputs_sidebar['inputs_version']
-        all_fund_strategy_result_dates = call_times_select_all_fund_strategy_result_dates()
-        date_to = obj_process_existing_data.receive_data_sidebar_dashboard(fund_name,
-                                                                           version_strategy,
-                                                                           all_fund_strategy_result_dates)
+        date_to = call_times_select_all_fund_strategy_result_dates(fund_name, version_strategy)
+        
         return jsonify({'sidebar_date_to': date_to,
                         'version_strategy': version_strategy,
                         'fund_name': fund_name})

@@ -366,6 +366,27 @@ class TimesProcCaller(StrategyProcCaller):
         with self.engine.connect() as connection:
             return pd.read_sql(query, con=connection)
 
+    def select_fund_strategy_result_dates(self, fund_name: str, strategy_version: int) -> pd.DataFrame:
+        query = text("""
+        SELECT DISTINCT
+          upper(mi.business_daterange) - 1 as business_date_to
+        FROM
+          arp.times t
+          JOIN arp.strategy s on s.id = t.strategy_id
+          JOIN arp.fund_strategy_weight fsw ON fsw.strategy_id = t.strategy_id
+          JOIN fund.fund f on f.id = fsw.fund_id
+          JOIN arp.strategy_asset_weight saw on saw.strategy_id = t.strategy_id
+          JOIN config.model_instance mi on mi.id = saw.model_instance_id
+        WHERE
+            f.name = :fund_name
+            AND t.version = :strategy_version            
+        ;
+        """)
+        with self.engine.connect() as connection:
+            return pd.read_sql(query, con=connection, params={'fund_name': fund_name, 'strategy_version': strategy_version})
+
+
+
 
 class FxProcCaller(StrategyProcCaller):
     @property
@@ -871,16 +892,18 @@ class MavenProcCaller(StrategyProcCaller):
 if __name__ == '__main__':
     from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
     apc = TimesProcCaller()
+    df = apc.select_fund_strategy_result_dates('test_fund', 1751)
+    print(df)
     # s = apc._select_times_strategy(859)
 
-    from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
+    # from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
     # f = apc.select_fund_strategy_results("test_fund", "times", 1052, dt.date(2000, 1, 1), dt.date(2001, 8, 8))
 
-    d = apc.select_fund_strategy_results("test_fund", "times", 1365,
-                                     dt.date(2000, 1, 1),
-                                     dt.date(2001, 8, 8)
-                                     )
+    # d = apc.select_fund_strategy_results("test_fund", "times", 1365,
+    #                                  dt.date(2000, 1, 1),
+    #                                  dt.date(2001, 8, 8)
+    #                                  )
     # print(apc.select_strategy_versions("times"))
 
     # print(max([d for d in apc.select_strategy_versions("times")]))
