@@ -73,7 +73,7 @@ function sendDateToSidebar(){
                                     "type_of_request": 'date_charts_sidebar'
                                    });
     $.ajax({
-        url: "/receive_sidebar_data_times_form",
+        url: $SIDEBAR_URL,
         data: {jsonData: jsonData},
         type: 'POST',
         success: function(data){
@@ -134,7 +134,7 @@ function sideBarExportVersion() {
                                        });
 
         $.ajax({
-                url: "/receive_sidebar_data_times_form",
+                url: $SIDEBAR_URL,
                 data: {jsonData: jsonData},
                 type: 'POST',
 
@@ -174,7 +174,7 @@ function sendDateToExportSidebar(){
                                    });
 
     $.ajax({
-        url: "/receive_sidebar_data_times_form",
+        url: $SIDEBAR_URL,
         data: {jsonData: jsonData},
         type: 'POST',
         success: function(success){
