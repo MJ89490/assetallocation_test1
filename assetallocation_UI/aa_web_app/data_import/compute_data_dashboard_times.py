@@ -78,10 +78,12 @@ class ComputeDataDashboardTimes:
     @positions_start_date.setter
     def positions_start_date(self, value: str) -> None:
         if value is None:
+            value = pd.to_datetime(self._positions.sort_index().first_valid_index(), format='%d/%m/%Y')
             # value = '02/12/2000'     # '15/05/2018'
-            value = pd.to_datetime('10/11/2019', format='%d/%m/%Y')
-        if self._positions is not None:
+            # value = pd.to_datetime('10/11/2019', format='%d/%m/%Y')
+        else:
             value = pd.to_datetime(value, format='%d/%m/%Y')
+
         self._positions_start_date = value
 
     @property
@@ -92,8 +94,9 @@ class ComputeDataDashboardTimes:
     def positions_end_date(self, value: str) -> None:
         if value is None:
             value = pd.to_datetime(self._positions.sort_index().last_valid_index(), format='%d/%m/%Y')
-        elif self._positions is not None:
+        else:
             value = pd.to_datetime(value, format='%d/%m/%Y')
+
         self._positions_end_date = value
 
     @staticmethod
@@ -213,7 +216,7 @@ class ComputeDataDashboardTimes:
 
         return mom_signals
 
-    def compute_positions_position_1y_each_asset(self, start_date: None, end_date: None):
+    def compute_positions_position_1y_each_asset(self, start_date, end_date):
         """
         Process positions depending on start and end date, selected by the user on the dashboard
         :param start_date: start date of positions
@@ -225,7 +228,10 @@ class ComputeDataDashboardTimes:
         self._positions.index = pd.to_datetime(self._positions.business_date)
 
         # Start and end dates positions
-        self.positions_start_date, self.positions_end_date = start_date, end_date
+        # start_date = pd.to_datetime(start_date, format='%d/%m/%Y')
+        # end_date = pd.to_datetime(end_date, format='%d/%m/%Y')
+        self.positions_start_date = start_date
+        self.positions_end_date = end_date
 
         position_1y, tmp_position_1y, position_1y_per_asset = {}, {}, {}
         dates_position_1y, position_1y_lst, position_1y_per_asset_lst, position_1y_per_asset_tmp = [], [], [], []

@@ -6,8 +6,8 @@ from assetallocation_arp.data_etl.dal.arp_proc_caller import TimesProcCaller
 from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
 
 
-def call_times_proc_caller(fund_name: str, strategy_version: int, date_to: str, date_to_sidebar=None) -> \
-        Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def call_times_proc_caller(fund_name: str, strategy_version: int, date_to: str) -> Tuple[pd.DataFrame, pd.DataFrame,
+                                                                                         pd.DataFrame]:
     """
     Call Times proc caller to grab the data from the db
     :param fund_name: name of the current fund (example: f1, f2,...)
@@ -16,10 +16,7 @@ def call_times_proc_caller(fund_name: str, strategy_version: int, date_to: str, 
     :return: None
     """
 
-    if date_to_sidebar is not None:
-        date_to = datetime.date(date_to_sidebar.year, date_to_sidebar.month, date_to_sidebar.day)
-    else:
-        date_to = datetime.datetime.strptime(date_to, '%d/%m/%Y').date()
+    date_to = datetime.datetime.strptime(date_to, '%d/%m/%Y').date()
 
     apc = TimesProcCaller()
 

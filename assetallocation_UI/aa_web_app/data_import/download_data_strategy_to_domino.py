@@ -11,15 +11,26 @@ def call_domino_object():
     return domino
 
 
-def export_times_data_to_csv(version, signals, returns, positions):
+def export_times_data_to_csv(version, signals, returns, positions, fund_name, date_to):
         domino = call_domino_object()
 
-        domino.files_upload("/signals_times_version{version}.csv".format(version=version), signals.to_csv())
-        domino.files_upload("/returns_times_version{version}.csv".format(version=version), returns.to_csv())
-        domino.files_upload("/positions_times_version{version}.csv".format(version=version), positions.to_csv())
+        domino.files_upload("/signals_times_version{fund_name}{version}{date_to}.csv".format(fund_name=fund_name,
+                                                                                             version=version,
+                                                                                             date_to=date_to),
+                            signals.to_csv())
+        domino.files_upload("/returns_times_version{fund_name}{version}{date_to}.csv".format(fund_name=fund_name,
+                                                                                             version=version,
+                                                                                             date_to=date_to),
+                            returns.to_csv())
+        domino.files_upload("/positions_times_version{fund_name}{version}{date_to}.csv".format(fund_name=fund_name,
+                                                                                               version=version,
+                                                                                               date_to=date_to),
+                            positions.to_csv())
 
 
-def export_times_positions_data_to_csv(positions):
+def export_times_positions_data_to_csv(positions, fund_name, strategy_version):
     domino = call_domino_object()
-    domino.files_upload("/positions_charts_times_version.csv", positions.to_csv())
-
+    domino.files_upload("/positions_charts_times_version{fund_name}{strategy_version}.csv".format(fund_name=fund_name,
+                                                                                                  strategy_version=
+                                                                                                  strategy_version),
+                        positions.to_csv())

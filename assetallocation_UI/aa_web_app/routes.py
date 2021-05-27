@@ -144,15 +144,15 @@ def call_run_times_new_strategy():
 def receive_sidebar_data_times_form():
     outputs_sidebar = json.loads(request.form['jsonData'])
 
-    obj_process_existing_data = ProcessExistingDataTimes()
-
     if outputs_sidebar['type_of_request'] == 'date_to_export_data_sidebar':
 
         signals, returns, positions = call_times_proc_caller(fund_name=outputs_sidebar['input_fund'],
                                                              strategy_version=int(outputs_sidebar['inputs_version']),
-                                                             date_to=outputs_sidebar['inputs_date_to'],
-                                                             date_to_sidebar=None)
-        export_times_data_to_csv(int(outputs_sidebar['inputs_version']), signals, returns, positions)
+                                                             date_to=outputs_sidebar['inputs_date_to'])
+        export_times_data_to_csv(int(outputs_sidebar['inputs_version']),
+                                 signals, returns, positions,
+                                 outputs_sidebar['input_fund'],
+                                 outputs_sidebar['inputs_date_to'])
 
         return json.dumps({'status': 'OK'})
 
@@ -176,51 +176,12 @@ def receive_sidebar_data_times_form():
         return json.dumps({'status': 'OK'})
 
 
-# @app.route('/times_sidebar_dashboard',  methods=['GET', 'POST'])
-# def times_sidebar_dashboard():
-#     global obj_received_data_times
-#     form = InputsTimesModel()
-#     form_side_bar = SideBarDataForm()
-#     export_data_sidebar, sidebar_date_to = 'not_export_data_sidebar', ''
-#
-#     if obj_received_data_times.type_of_request == 'export_data_sidebar':
-#         export_data_sidebar = 'export_data_sidebar'
-#         signals, returns, positions = call_times_proc_caller(fund_name=fund_name,
-#                                                              strategy_version=int(strategy_version),
-#                                                              date_to=date_to,
-#                                                              date_to_sidebar=None)
-#         export_times_data_to_csv(obj_received_data_times.version_strategy, signals, returns, positions)
-#
-#     signals, returns, positions = call_times_proc_caller(fund_name=obj_received_data_times.fund_name,
-#                                                          version_strategy=obj_received_data_times.version_strategy,
-#                                                          date_to=obj_received_data_times.date_to,
-#                                                          date_to_sidebar=obj_received_data_times.date_to_sidebar)
-#
-#     obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
-#     obj_times_charts_data.strategy_weight = obj_received_data_times.strategy_weight
-#
-#     template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date=None, end_date=None)
-#
-#     return render_template('times_dashboard.html',
-#                            title='Dashboard',
-#                            form=form,
-#                            date_run=obj_received_data_times.date_to_sidebar.strftime('%d/%m/%Y'),
-#                            sidebar_date_to=sidebar_date_to,
-#                            export_data_sidebar=export_data_sidebar,
-#                            form_side_bar=form_side_bar,
-#                            fund_strategy=obj_received_data_times.fund_strategy_dict,
-#                            fund_list=form_side_bar.input_fund_name_times,
-#                            versions_list=form_side_bar.input_versions_times,
-#                            **template_data)
-
-
-@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>',  methods=['GET', 'POST'])
-def times_charts_dashboard(fund_name, strategy_version, date_to):
+@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>', defaults={'start_date_sidebar': None, 'type_of_request': None},  methods=['GET', 'POST'])
+@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>/<start_date_sidebar>/<type_of_request>',  methods=['GET', 'POST'])
+def times_charts_dashboard(fund_name, strategy_version, date_to, start_date_sidebar, type_of_request):
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
-    positions_chart = False
     export_data_sidebar = 'not_export_data_sidebar'
-    position_1y_lst, positions, dates_pos, position_1y_per_asset = [], [], [], []
 
     print(f"----- fund_name ------- = {fund_name}", flush=True)
     print(f"----- strategy_version ----- = {strategy_version}", flush=True)
@@ -228,34 +189,24 @@ def times_charts_dashboard(fund_name, strategy_version, date_to):
 
     date_to = date_to.replace('S', '/')
 
-    #TODO ADD SIDEBAR DATE TO IN THE ROUTE
-    # CHANGE THE BUTTON OK TO JS AND SEND REQUEST HERE
     signals, returns, positions = call_times_proc_caller(fund_name=fund_name,
                                                          strategy_version=int(strategy_version),
-                                                         date_to=date_to,
-                                                         date_to_sidebar=None)
+                                                         date_to=date_to)
 
     obj_times_charts_data = ComputeDataDashboardTimes(signals=signals, returns=returns, positions=positions)
 
-    if request.method == 'POST':
-        if form.submit_ok_positions.data:
-            positions_chart = True
-            start_date, end_date = request.form['start_date_box_times'], request.form['end_date_box_times']
-            position_1y, dates_pos, position_1y_per_asset, position_1y_lst = \
-                obj_times_charts_data.compute_positions_position_1y_each_asset(start_date, end_date)
-
-        elif request.form['submit_button'] == 'assets_positions':
+    if type_of_request == 'download_asset_allocations_charts':
             position_1y, dates_pos, position_1y_per_asset, position_1y_lst = \
                 obj_times_charts_data.compute_positions_position_1y_each_asset(start_date=None, end_date=None)
             df_positions = obj_times_charts_data.convert_dict_to_dataframe(position_1y, dates_pos)
-            export_times_positions_data_to_csv(df_positions)
+            export_times_positions_data_to_csv(df_positions, fund_name, strategy_version)
 
-    template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date=None, end_date=None)
+    if type_of_request == 'asset_alloc_charts':
+        start_date = start_date_sidebar.replace('S', '/')
+    else:
+        start_date = '10/11/2019'
 
-    if positions_chart:
-        template_data['positions'], template_data['dates_pos'], template_data['position_1y_per_asset'] = position_1y_lst, \
-                                                                                                         dates_pos, \
-                                                                                                         position_1y_per_asset
+    template_data = main_compute_data_dashboard_times(obj_times_charts_data, start_date=start_date, end_date=date_to)
 
     return render_template('times_dashboard.html',
                            title='Dashboard',
@@ -270,4 +221,7 @@ def times_charts_dashboard(fund_name, strategy_version, date_to):
                            **template_data)
 
 
+@app.route('/asset_allocations_charts_success', methods=['POST'])
+def asset_allocations_charts_success():
+    return json.dumps({'status': 'OK'})
 

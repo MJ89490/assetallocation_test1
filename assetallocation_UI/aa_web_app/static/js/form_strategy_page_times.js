@@ -39,6 +39,8 @@ $('#select_weight_strategy').change(function() {
 $('#select-version-from-strategy-page').change(function() {
         version = document.getElementById("select-version-from-strategy-page").value
 
+        sessionStorage.setItem("sessionStrategyVersion", version.split(':')[0]);
+
         versionSelectedFromStrategyPage.push(parseInt(version));
 
         if (versionSelectedFromStrategyPage.length != 1){
@@ -57,8 +59,6 @@ $('#select-version-from-strategy-page').change(function() {
                                         'strategy_weight_user': strategyWeightValue,
                                         'type_of_request': 'selected_version',
                                         'run_existing-version': true});
-
-        alert(json_data);
 
         $.ajax({url: "times_strategy",
                 data: {json_data: json_data},
@@ -82,6 +82,7 @@ $('#select-version-from-strategy-page').change(function() {
 function SelectDateToStrategyPage(){
 
         dateToPage = document.getElementById("select-date-to-strategy-page").value
+        sessionStorage.setItem("sessionDateTo", dateToPage);
 
         dateTo.push(dateToPage);
 
@@ -91,3 +92,6 @@ function SelectDateToStrategyPage(){
 
         return dateTo[0]
 };
+
+
+

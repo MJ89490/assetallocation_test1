@@ -241,6 +241,16 @@ div.card {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0,
                 width: 160px;
 }
 
+.form-models-select-end-date-times{margin-right: 10px;}
+
+.btn-ok-asset-alloc-chart{height: 30px;
+                          border-color: #D0D0D0;
+                          margin-right: 15px;
+                          margin-top: 12px;
+
+
+}
+
 /* SIDEBAR */
 .sidenav {height: 100%;
           width: 190px;

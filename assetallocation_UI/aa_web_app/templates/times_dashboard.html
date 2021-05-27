@@ -4,9 +4,8 @@
 
     <head>
 
-
-
         <script>$PROJECTS_URL="{{ url_for('times_charts_dashboard', fund_name='', strategy_version='', date_to='') }}";</script>
+        <script>$UPDATE_ASSET_ALLOC_CHARTS_SUCCESS_URL="{{ url_for('asset_allocations_charts_success') }}";</script>
         <script>$SIDEBAR_URL="{{ url_for('receive_sidebar_data_times_form') }}";</script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,9 +30,6 @@
         <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/times_dashboard.css') }}">
-
-
-
 
     </head>
 
@@ -344,7 +340,7 @@
                                                 });
                                             </script>
                                         <!--End date-->
-                                        <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-times rounded-lg" value="End date" required>
+                                        <input id="end_date_box_times" name="end_date_box_times" class="form-control form-models-select-end-date-times rounded-lg" value="End date" required>
                                             <script type="text/javascript">
                                             $('#end_date_box_times').datepicker({
                                                 uiLibrary: 'bootstrap',
@@ -353,13 +349,85 @@
                                                  format: 'dd/mm/yyyy'
                                             });
                                         </script>
-                                    <!--Submit button-->
-                                        <form action="{{ url_for('times_charts_dashboard', fund_name=fund_strategy['fund'], strategy_version=fund_strategy['strategy_version'], date_to=fund_strategy['date_to_S']) }}" method="POST" novalidate>
-                                            {{form.submit_ok_positions(class="form-control", id="submit_ok_positions")}}
-                                        </form>
-                                    <!--Download button-->
-                                    <button class="btn btn-outline-light icon-download" type="submit" name="submit_button" value="assets_positions"><img width="40px" height="auto" src="{{ url_for('static', filename='img/icon_download_cloud_two.png') }}" alt="Icon download"></button>
-                                </div>
+
+                                        <!--Submit button-->
+                                        <button type="button" class="btn btn-sm btn-ok-asset-alloc-chart rounded" onclick="sendAssetAllocChartDates()">ok</button>
+
+                                        <script type="text/javascript">
+
+                                            function sendAssetAllocChartDates() {
+                                              var start_date_sidebar = document.getElementById("start_date_box_times").value;
+                                              var date_to = document.getElementById("end_date_box_times").value;
+
+                                              var jsonData = JSON.stringify({"start_date_sidebar": start_date_sidebar,
+                                                                             "date_to": date_to});
+
+                                              start_date_sidebar = start_date_sidebar.split("/").join("S");
+                                              date_to = date_to.split("/").join("S");
+
+                                              type_of_request = 'asset_alloc_charts'
+
+
+                                              let fundNameValue = sessionStorage.getItem('sessionFundName');
+                                              let strategyVersionValue = sessionStorage.getItem('sessionStrategyVersion');
+
+
+                                              $.ajax({
+                                                url: $UPDATE_ASSET_ALLOC_CHARTS_SUCCESS_URL,
+                                                data: {jsonData: jsonData},
+                                                type: 'POST',
+                                                success: function(success){
+                                                         console.log(success);
+                                                                   let pathArr = $PROJECTS_URL.split("/");
+                                                                   let projectsPathArr = pathArr.slice(0, pathArr.length - 3);
+
+                                                                   let strategyPathArr = projectsPathArr.concat([fundNameValue, strategyVersionValue, date_to, start_date_sidebar, type_of_request]);
+                                                                   let strategyPathURL = strategyPathArr.join('/');
+
+                                                                    window.location.href  = strategyPathURL;
+                                                },
+                                                error: function(error){
+                                                    console.log(error);
+                                                }
+                                            });
+                                            }
+                                         </script>
+
+                                        <!--Download button-->
+                                        <button class="btn btn-outline-light icon-download" onclick="downloadAssetAllocChartData()"><img width="40px" height="auto" src="{{ url_for('static', filename='img/icon_download_cloud_two.png') }}" alt="Icon download"></button>
+                                        <script type="text/javascript">
+
+                                        function downloadAssetAllocChartData() {
+
+                                              $.ajax({
+                                                url: $UPDATE_ASSET_ALLOC_CHARTS_SUCCESS_URL,
+                                                type: 'POST',
+
+                                                success: function(success){
+                                                         console.log(success);
+                                                         type_of_request = 'download_asset_allocations_charts';
+                                                         start_date_sidebar = 'None';
+                                                         let fundNameValue = sessionStorage.getItem('sessionFundName');
+                                                         let strategyVersionValue = sessionStorage.getItem('sessionStrategyVersion');
+                                                         let dateToValue = sessionStorage.getItem('sessionDateTo');
+                                                         date_to = dateToValue.split("/").join("S");
+
+                                                         let pathArr = $PROJECTS_URL.split("/");
+                                                         let projectsPathArr = pathArr.slice(0, pathArr.length - 3);
+                                                         let strategyPathArr = projectsPathArr.concat([fundNameValue, strategyVersionValue, date_to, start_date_sidebar, type_of_request]);
+                                                         let strategyPathURL = strategyPathArr.join('/');
+
+                                                         window.location.href  = strategyPathURL;
+                                                },
+                                                error: function(error){
+                                                    console.log(error);
+                                                }
+                                            });
+                                        }
+
+
+                                            </script>
+                                    </div>
                             </form>
                                 <div id="asset_allocation_over_time" class="responsive-plot"></div>
                                 <script type="text/javascript" src="{{ url_for('static', filename='js/times/line_chart_asset_allocation_over_time_times.js') }}"></script>
