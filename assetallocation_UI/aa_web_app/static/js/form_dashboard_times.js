@@ -54,10 +54,8 @@ function sideBarChartsVersion() {
 function populateChartsDateTo(dates){
          $("#input_date_to_side_bar_times").append("<option hidden >date to</option>");
         for( var i = 0; i< dates.length; i++){
-            console.log('IN THE LOOP');
             var id = dates[i];
             var name = dates[i];
-            console.log(id);
             $("#input_date_to_side_bar_times").append("<option>"+name+"</option>");
         }
 }
@@ -81,8 +79,6 @@ function sendDateToSidebar(){
 
                 let date = dateTo[0]
                 date_to = date.split("/").join("S");
-
-                console.log(date_to);
 
 //                construction of the url CHANGE THE VARIABLES NAMES
                 let pathArr = $PROJECTS_URL.split("/");
@@ -146,7 +142,7 @@ function sideBarExportVersion() {
 function populateExportDateTo(dates){
          $("#input_date_to_export_side_bar_times").append("<option hidden >date to</option>");
         for( var i = 0; i< dates.length; i++){
-            console.log('IN THE LOOP');
+
             var id = dates[i];
             var name = dates[i];
             console.log(id);
@@ -157,7 +153,6 @@ function populateExportDateTo(dates){
 function sendDateToExportSidebar(){
     var dateToSidebar =  document.getElementById("input_date_to_export_side_bar_times").value;
 
-    console.log(dateToSidebar);
     dateTo.push(dateToSidebar);
 
     var jsonData = JSON.stringify({"inputs_date_to": dateToSidebar,
@@ -172,7 +167,19 @@ function sendDateToExportSidebar(){
         type: 'POST',
         success: function(success){
             console.log(success);
-//            window.location.href = "times_sidebar_dashboard";
+
+            type_of_request = 'export_charts_data';
+            start_date_sidebar = 'None';
+            let fundNameValue = sessionStorage.getItem('sessionFundName');
+            let strategyVersionValue = sessionStorage.getItem('sessionStrategyVersion');
+            let dateToValue = sessionStorage.getItem('sessionDateTo');
+            date_to = dateToValue.split("/").join("S");
+
+            let pathArr = $PROJECTS_URL.split("/");
+            let projectsPathArr = pathArr.slice(0, pathArr.length - 3);
+            let strategyPathArr = projectsPathArr.concat([fundNameValue, strategyVersionValue, date_to, start_date_sidebar, type_of_request]);
+            let strategyPathURL = strategyPathArr.join('/');
+            window.location.href  = strategyPathURL;
         },
         error: function(error){
             console.log(error);

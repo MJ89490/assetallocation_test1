@@ -176,12 +176,15 @@ def receive_sidebar_data_times_form():
         return json.dumps({'status': 'OK'})
 
 
-@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>', defaults={'start_date_sidebar': None, 'type_of_request': None},  methods=['GET', 'POST'])
-@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>/<start_date_sidebar>/<type_of_request>',  methods=['GET', 'POST'])
+@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>', defaults={'start_date_sidebar': None,
+                                                                                         'type_of_request': None},
+           methods=['GET', 'POST'])
+@app.route('/times_charts_dashboard/<fund_name>/<strategy_version>/<date_to>/<start_date_sidebar>/<type_of_request>',
+           methods=['GET', 'POST'])
 def times_charts_dashboard(fund_name, strategy_version, date_to, start_date_sidebar, type_of_request):
     form = InputsTimesModel()
     form_side_bar = SideBarDataForm()
-    export_data_sidebar = 'not_export_data_sidebar'
+    export_data_sidebar, pop_up_success_domino = 'not_export_data_sidebar', ''
 
     print(f"----- fund_name ------- = {fund_name}", flush=True)
     print(f"----- strategy_version ----- = {strategy_version}", flush=True)
@@ -200,6 +203,10 @@ def times_charts_dashboard(fund_name, strategy_version, date_to, start_date_side
                 obj_times_charts_data.compute_positions_position_1y_each_asset(start_date=None, end_date=None)
             df_positions = obj_times_charts_data.convert_dict_to_dataframe(position_1y, dates_pos)
             export_times_positions_data_to_csv(df_positions, fund_name, strategy_version)
+            pop_up_success_domino = 'pop_up_success_domino'
+
+    elif type_of_request == 'export_charts_data':
+        pop_up_success_domino = 'pop_up_success_domino'
 
     if type_of_request == 'asset_alloc_charts':
         start_date = start_date_sidebar.replace('S', '/')
@@ -218,6 +225,7 @@ def times_charts_dashboard(fund_name, strategy_version, date_to, start_date_side
                                           'date_to_S':  date_to.replace('/', 'S')},
                            fund_list=form_side_bar.input_fund_name_times,
                            versions_list=form_side_bar.input_versions_times,
+                           pop_up_success_domino=pop_up_success_domino,
                            **template_data)
 
 
