@@ -64,7 +64,6 @@
             <!-- Fund name -->
             <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
             <select class="form-control selectFund" id="send_data_fund_from_sidebar" onchange='sideBarFund()'>
-                <option disabled selected value>fund</option>
                 {% for f in fund_list %}
                     <option hidden >Funds available</option>
                     <option>{{f}}</option>
@@ -74,7 +73,6 @@
             <!--Versions-->
             <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
             <select class="form-control selectFund" id="send_data_version_from_sidebar" onchange='sideBarChartsVersion()'>
-                <option disabled selected value>version</option>
                 {% for v in versions_list %}
                     <option hidden >Versions available</option>
                     <option>{{v}}</option>
@@ -84,7 +82,7 @@
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
              <select class="form-control selectFund" id="input_date_to_side_bar_times" onchange='sendDateToSidebar()'>
-                 <option disabled selected value>charts date to</option>
+                 <option disabled selected value>Charts date to</option>
              </select>
         </form>
         <script src="{{ url_for('static', filename='js/form_dashboard_times.js') }}"></script>
@@ -114,7 +112,7 @@
             <!--Date to-->
             <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
             <select class="form-control selectFund" id="input_date_to_export_side_bar_times" onchange='sendDateToExportSidebar()'>
-                 <option disabled selected value>export date to</option>
+                 <option disabled selected value>Export date to</option>
             </select>
             {% if export_data_sidebar == 'export_data_sidebar' %}
                 {% include 'pop_up_success_save_domino.html' %}
