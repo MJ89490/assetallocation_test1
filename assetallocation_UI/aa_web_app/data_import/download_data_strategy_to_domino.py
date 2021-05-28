@@ -30,7 +30,6 @@ def export_times_data_to_csv(version, signals, returns, positions, fund_name, da
 
 def export_times_positions_data_to_csv(positions, fund_name, strategy_version):
     domino = call_domino_object()
-    domino.files_upload("/positions_charts_times_version{fund_name}{strategy_version}.csv".format(fund_name=fund_name,
-                                                                                                  strategy_version=
-                                                                                                  strategy_version),
+    domino.files_upload("/positions_asset_allocations_chart_times_version{fund_name}{strategy_version}.csv".format(fund_name=fund_name,
+                                                                                                                   strategy_version=strategy_version),
                         positions.to_csv())
