@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
 
-
 def format_data(fica_inputs, asset_inputs, all_data):
     """
     creating dataframe with yield curve data
@@ -86,7 +85,7 @@ def calculate_carry_roll_down(fica_inputs, asset_inputs, curve):
     return carry_roll, country_returns
 
 
-def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns):
+def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns, alt_weight_method = 'original'):
     """"
     creating dataframe with country signals and contributions and overall model performances
     :param pd.DataFrame fica_inputs: parameter choices for the model
@@ -103,9 +102,7 @@ def calculate_signals_and_returns(fica_inputs, carry_roll, country_returns):
     # ranking the countries
     rank = carry_roll.T.rank()
     signals = rank.T
-    # determining country weights
-    for i in range(m):
-        signals = signals.replace(i + 1, weight[m - i - 1])
+    signals = alternative_weightings(signals=signals, country_returns=country_returns, weight=weight, m=m, std_window=36, method=alt_weight_method)
     # calculating country performance contributions
     contribution = country_returns.sub(country_returns.mean(axis=1), axis=0) * signals.shift()
     cum_contribution = contribution.cumsum()
@@ -173,3 +170,31 @@ def run_daily_attribution(fica_inputs, asset_inputs, all_data, signals):
     return_daily['beta'] = return_daily['fica_10y_return%'].rolling(64).cov(return_daily['G3_10y_return%']) / \
                             return_daily['G3_10y_return%'].rolling(64).var()
     return carry_daily, return_daily
+
+def alternative_weightings(signals, country_returns, weight, m, std_window = 36 , method = 'original'):
+    vol = country_returns.rolling(std_window).std()
+    for i in range(m):
+        signals = signals.replace(i + 1, weight[m - i - 1])
+    latest_signals = signals.iloc[-1]
+    latest_longs = latest_signals[latest_signals>0]
+    latest_shorts = latest_signals[latest_signals < 0]
+    if method == 'legs_neutral':
+        signals = signals.div(vol)
+        # would then want to scale up again but not sure the best way. given i'll vol scale after thats ok, can reassess later if needed
+    if method == 'overall_neutral':
+        # need the vol of the longs to match the vol of shorts
+        short_fx = latest_shorts.keys().to_list()
+        short_returns = country_returns[short_fx].mul(signals).sum(1)
+        long_fx = latest_longs.keys().to_list()
+        long_returns = country_returns[long_fx].mul(signals).sum(1)
+        short_std = short_returns.rolling(std_window).std()
+        long_std = long_returns.rolling(std_window).std()
+        ratio_shorts = short_std.div(long_std)
+        signals_neg = signals.copy()
+        signals_neg[signals_neg >= 0] = 0
+        signals_neg['ratio'] = ratio_shorts
+        signals_neg = signals_neg.div(signals_neg['ratio'], axis=0)
+        signals_pos = signals.copy()
+        signals_pos[signals_pos < 0] = 0
+        signals = (signals_neg + signals_pos).drop(columns = ['ratio'])
+    return signals

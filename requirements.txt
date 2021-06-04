@@ -25,3 +25,4 @@ xlwings==0.15.8
 QuantLib-python==1.16
 bumpversion
 setuptools
+matplotlib==3.2
