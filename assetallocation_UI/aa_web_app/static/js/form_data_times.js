@@ -153,7 +153,7 @@ $('#contact-form-button-times').click(function(){
         let userNameValue = sessionStorage.getItem('username');
 
         if (check != 'error'){
-            alert("The strategy is about to run...");
+            alert("The strategy is running...");
             $.ajax({
                 url: "call_run_times_new_strategy",
                 data: {form_data: form_data, json_data:jsonData, fundNameValue: fundNameValue,

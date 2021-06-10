@@ -9,6 +9,7 @@
 
 <body>
     {% block timespage %}
+
         <div class="container">
             <!--Title-->
             <div class="row">
@@ -157,6 +158,7 @@
                     faqs_row++;
                     }
 
+
                     function getFutureTickers(){
                         var selValTicker = [];
 
@@ -171,6 +173,7 @@
                                 data: {json_data:jsonData},
                                 type: 'POST',
                                 success: function(data){
+
                                     $("#faqs").find('tr').each(function(){
 
                                         var asset = $(this).find("td:eq(0) input[type='text']").val();
@@ -215,7 +218,6 @@
                         <div class="card card-custom-wide">
                         <img src="{{ url_for('static', filename='img/color-background.PNG') }}" height="70px"/>
 
-
                         <div class="card-body">
                             <center>
                                 <h4 class="card-title-label">Create a new version of the strategy</h4>
@@ -233,8 +235,8 @@
                                         <tr>
                                             <th class="text-muted text-center">Name</th>
                                             <th class="text-muted text-center">Asset</th>
-                                            <th class="text-muted text-center">Future ticker</th>
                                             <th class="text-muted text-center">Signal ticker</th>
+                                            <th class="text-muted text-center">Future ticker</th>
                                             <th class="text-muted text-center">Costs</th>
                                             <th class="text-muted text-center">Leverage</th>
                                             <th></th>
@@ -289,7 +291,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="TY1 A:00_0_R Comdty" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="3"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -300,7 +302,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="G 1 A:00_0_R Comdty" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="3"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -311,7 +313,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="RX1 A:00_0_R Comdty" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="3"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -322,7 +324,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CN1 A:00_0_R Comdty" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="3"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -333,7 +335,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="JY1 A:00_0_R Curncy" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="2"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -344,7 +346,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="EC1 A:00_0_R Curncy" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="2"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -355,7 +357,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="AD1 A:00_0_R Curncy" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="2"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -366,7 +368,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="CD1 A:00_0_R Curncy" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="2"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
 
@@ -377,7 +379,7 @@
                                             <td><input type="text" class="form-control form-control-assets-table" id="input_future_ticker_from_times" name="input_future_ticker_from_times" placeholder="future ticker" value="RP1 A:00_0_R Curncy" readonly></td>
 
                                             <td><input type="text" class="form-control form-control-assets-table text-center" id="input_costs_from_times" name="input_costs_from_times" placeholder="costs" value="0.0002"></td>
-                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="1"></td>
+                                            <td><input type="text" class="form-control form-control-assets-table text-center" id="input_leverage_from_times" name="input_leverage_from_times" placeholder="leverage" value="2"></td>
                                             <td class="mt-10"><button class="btn-sm btn-delete-assets-existing-version">Delete</button></td>
                                         </tr>
                                     </tbody>
@@ -521,7 +523,6 @@
                 <script src="static/js/form_data_times.js"></script>
 
             {% elif run_model_page == 'run_existing_version' %}
-
                 <div class="row row-model">
                     <div class="col-lg-12">
                         <div class="card card-custom-wide">
@@ -783,6 +784,10 @@
                 <script>
                     $('#myModal').modal('show');
                 </script>
+
+
+
+
             {% endif %}
         </div>
     {% endblock %}

@@ -10,8 +10,6 @@ function sideBarFund() {
         var select_box = document.getElementById("send_data_fund_from_sidebar");
         var fund = select_box.options[select_box.selectedIndex].value;
 
-        alert(fund);
-
         fund_data_to_send_to_python.push(fund);
 
         if (fund_data_to_send_to_python.length != 1){
@@ -28,8 +26,6 @@ function sideBarChartsVersion() {
         if (version_data_to_send_to_python.length != 1){
             version_data_to_send_to_python.splice(0, version_data_to_send_to_python.length-1);
         }
-
-        alert(version);
 
         var jsonData = JSON.stringify({"input_fund": fund_data_to_send_to_python[0],
                                         "inputs_version": version_data_to_send_to_python[0],

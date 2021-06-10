@@ -38,7 +38,6 @@ $('#select_weight_strategy').change(function() {
 // SELECT THE VERSION OF THE STRATEGY
 $('#select-version-from-strategy-page').change(function() {
         version = document.getElementById("select-version-from-strategy-page").value
-
         sessionStorage.setItem("sessionStrategyVersion", version.split(':')[0]);
 
         versionSelectedFromStrategyPage.push(parseInt(version));
@@ -60,23 +59,34 @@ $('#select-version-from-strategy-page').change(function() {
                                         'type_of_request': 'selected_version',
                                         'run_existing-version': true});
 
-        $.ajax({url: "times_strategy",
-                data: {json_data: json_data},
-                type: 'POST',
-                success: function(data){
+
+
+        $.ajax({
+            type: 'POST',
+            dataType: "JSON",
+            url: "times_strategy",
+            data: {json_data: json_data},
+
+            success: function(data){
                     console.log('success');
 
                     let userNameValue = sessionStorage.getItem('username');
 
                     window.location.href = "times_strategy_existing_version/" + data['version_selected'] + "/" + data['assets'] + "/" + data['message']
                     + "/" + data['inputs_existing_versions_times'] + "/" + userNameValue;
+            },
 
-                },
-                error: function(error){
+            error: function(error){
                     console.log(error);
                 }
             });
 });
+
+
+
+
+
+
 
 // SELECT THE DATE
 function SelectDateToStrategyPage(){

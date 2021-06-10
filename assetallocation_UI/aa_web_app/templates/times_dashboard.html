@@ -1,7 +1,5 @@
 <html>
 
-
-
     <head>
 
         <script>$PROJECTS_URL="{{ url_for('times_charts_dashboard', fund_name='', strategy_version='', date_to='') }}";</script>
@@ -34,93 +32,92 @@
     </head>
 
     <!--Get username to be used for authentication-->
-<p hidden id="dominoUser">{{ request.headers.get("domino-username") }}</p>
-<script>
-     let header_value = document.getElementById('dominoUser').innerHTML;
-     if (header_value === "None") {
-         // means we are running locally
-         sessionStorage.setItem("username", document.cookie.split('=')[1]);
-     } else {
-         // we're on Domino
-         sessionStorage.setItem("username", document.getElementById('dominoUser').innerHTML)
-     }
-</script>
+    <p hidden id="dominoUser">{{ request.headers.get("domino-username") }}</p>
+    <script>
+         let header_value = document.getElementById('dominoUser').innerHTML;
+         if (header_value === "None") {
+             // means we are running locally
+             sessionStorage.setItem("username", document.cookie.split('=')[1]);
+         } else {
+             // we're on Domino
+             sessionStorage.setItem("username", document.getElementById('dominoUser').innerHTML)
+         }
+    </script>
 
     <body>
 
         <!-- ============================= SIDEBAR ============================= -->
         <div class="sidenav">
+            <!-- LGIM Logo-->
+            <a class="content-sidebar" href="{{url_for('home')}}">
+                <img id="logo-lgim" alt="Legal and General" width="70px;" height="70px;" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
+            </a>
 
-        <!-- LGIM Logo-->
-        <a class="content-sidebar" href="{{url_for('home')}}">
-            <img id="logo-lgim" alt="Legal and General" width="70px;" height="70px;" src="https://www.legalandgeneral.com/web_resources/landscape/images/landg-logo.svg">
-        </a>
+            <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
 
-        <a class="sidenav-home" href="{{url_for('home')}}">Home</a>
+            <!-- CHARTS DATA -->
+            <a class="sidenav-item" href="#">Charts Data</a>
+            <form>
+                <!-- Fund name -->
+                <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
+                <select class="form-control selectFund" id="send_data_fund_from_sidebar" onchange='sideBarFund()'>
+                    {% for f in fund_list %}
+                        <option hidden >Funds available</option>
+                        <option>{{f}}</option>
+                    {% endfor %}
+                </select>
 
-        <!-- CHARTS DATA -->
-        <a class="sidenav-item" href="#">Charts Data</a>
-        <form>
-            <!-- Fund name -->
-            <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
-            <select class="form-control selectFund" id="send_data_fund_from_sidebar" onchange='sideBarFund()'>
-                {% for f in fund_list %}
-                    <option hidden >Funds available</option>
-                    <option>{{f}}</option>
-                {% endfor %}
-            </select>
+                <!--Versions-->
+                <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
+                <select class="form-control selectFund" id="send_data_version_from_sidebar" onchange='sideBarChartsVersion()'>
+                    {% for v in versions_list %}
+                        <option hidden >Versions available</option>
+                        <option>{{v}}</option>
+                    {% endfor %}
+                </select>
 
-            <!--Versions-->
-            <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
-            <select class="form-control selectFund" id="send_data_version_from_sidebar" onchange='sideBarChartsVersion()'>
-                {% for v in versions_list %}
-                    <option hidden >Versions available</option>
-                    <option>{{v}}</option>
-                {% endfor %}
-            </select>
-
-            <!--Date to-->
-            <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
-             <select class="form-control selectFund" id="input_date_to_side_bar_times" onchange='sendDateToSidebar()'>
-                 <option disabled selected value>Charts date to</option>
-             </select>
-        </form>
-        <script src="{{ url_for('static', filename='js/form_dashboard_times.js') }}"></script>
-
+                <!--Date to-->
+                <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
+                 <select class="form-control selectFund" id="input_date_to_side_bar_times" onchange='sendDateToSidebar()'>
+                     <option disabled selected value>Charts date to</option>
+                 </select>
+            </form>
+            <script src="{{ url_for('static', filename='js/form_dashboard_times.js') }}"></script>
 
 
-        <!-- EXPORT DATA -->
-        <a class="sidenav-item" href="#">Export Data</a>
-        <form>
-            <!-- Fund name -->
-            <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
-            <select class="form-control selectFund" id="send_data_fund_export_from_sidebar" onchange='sideBarExportFund()'>
-                {% for f in fund_list %}
-                    <option hidden >Funds available</option>
-                    <option>{{f}}</option>
-                {% endfor %}
-            </select>
 
-            <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
-            <select class="form-control selectFund" id="send_data_version_export_from_sidebar" onchange='sideBarExportVersion()'>
-                {% for v in versions_list %}
-                    <option hidden >Versions available</option>
-                    <option>{{v}}</option>
-                {% endfor %}
-            </select>
+            <!-- EXPORT DATA -->
+            <a class="sidenav-item" href="#">Export Data</a>
+            <form>
+                <!-- Fund name -->
+                <label class="label-models-date-sidebar">Step <b>1</b>: select a fund</label>
+                <select class="form-control selectFund" id="send_data_fund_export_from_sidebar" onchange='sideBarExportFund()'>
+                    {% for f in fund_list %}
+                        <option hidden >Funds available</option>
+                        <option>{{f}}</option>
+                    {% endfor %}
+                </select>
 
-            <!--Date to-->
-            <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
-            <select class="form-control selectFund" id="input_date_to_export_side_bar_times" onchange='sendDateToExportSidebar()'>
-                 <option disabled selected value>Export date to</option>
-            </select>
-            {% if export_data_sidebar == 'export_data_sidebar' %}
-                {% include 'pop_up_success_save_domino.html' %}
-            {% endif %}
+                <label class="label-models-date-sidebar">Step <b>2</b>: select a version</label>
+                <select class="form-control selectFund" id="send_data_version_export_from_sidebar" onchange='sideBarExportVersion()'>
+                    {% for v in versions_list %}
+                        <option hidden >Versions available</option>
+                        <option>{{v}}</option>
+                    {% endfor %}
+                </select>
 
-        </form>
-        <script src="{{ url_for('static', filename='js/form_dashboard_times.js') }}"></script>
-    </div>
+                <!--Date to-->
+                <label class="label-models-date-sidebar">Step <b>3</b>: select a date to</label>
+                <select class="form-control selectFund" id="input_date_to_export_side_bar_times" onchange='sendDateToExportSidebar()'>
+                     <option disabled selected value>Export date to</option>
+                </select>
+                {% if export_data_sidebar == 'export_data_sidebar' %}
+                    {% include 'pop_up_success_save_domino.html' %}
+                {% endif %}
+
+            </form>
+            <script src="{{ url_for('static', filename='js/form_dashboard_times.js') }}"></script>
+        </div>
 
         <!-- ============================= CHARTS AREA ============================= -->
         <div class="content">
@@ -636,5 +633,7 @@
 
             </div>
         </div>
+
     </body>
+
 </html>
