@@ -8,6 +8,13 @@ def run_existing_strategy(inputs_existing_versions_times, username):
     apc = TimesProcCaller()
     strategy = apc.select_strategy(inputs_existing_versions_times['version'])
 
+    print("IN THE RUN EXISTING STRATEGY FUNCTION")
+    print(inputs_existing_versions_times['fund_name'], flush=True)
+    print(float(inputs_existing_versions_times['input_strategy_weight_times']), flush=True)
+    print(username, flush=True)
+    print(dt.datetime.strptime(inputs_existing_versions_times['input_date_from_times'].replace('S', '/'), '%Y/%m/%d').date())
+    print(dt.datetime.strptime(inputs_existing_versions_times['input_date_to_times'].replace('S', '/'), '%d/%m/%Y').date())
+
     fund_strategy = run_strategy(inputs_existing_versions_times['fund_name'],
                                  float(inputs_existing_versions_times['input_strategy_weight_times']),
                                  strategy,

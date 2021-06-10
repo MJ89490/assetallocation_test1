@@ -892,13 +892,13 @@ class MavenProcCaller(StrategyProcCaller):
 if __name__ == '__main__':
     from assetallocation_arp.data_etl.dal.data_frame_converter import DataFrameConverter
     apc = TimesProcCaller()
-    df = apc.select_fund_strategy_result_dates('test_fund', 1751)
-    print(df)
+    # df = apc.select_fund_strategy_result_dates('test_fund', 1882)
+    # print(df)
     # s = apc._select_times_strategy(859)
 
     # from assetallocation_arp.common_libraries.dal_enums.fund_strategy import Signal, Performance
 
-    # f = apc.select_fund_strategy_results("test_fund", "times", 1052, dt.date(2000, 1, 1), dt.date(2001, 8, 8))
+    f = apc.select_fund_strategy_results("test_fund", "times", 1882, dt.date(2000, 1, 1), dt.date(2021, 4, 13))
 
     # d = apc.select_fund_strategy_results("test_fund", "times", 1365,
     #                                  dt.date(2000, 1, 1),

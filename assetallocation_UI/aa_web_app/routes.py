@@ -90,7 +90,15 @@ def times_strategy_existing_version(version_selected, assets, message, inputs_ex
 
     if message == 'call_run_existing_strategy':
         inputs = json.loads(inputs_existing_versions.split('\\')[0].replace("\'", "\""))
+        print('RUN EXISTING VERSION')
+        print(inputs, flush=True)
+        print(userNameValue, flush=True)
         fund_strategy = run_existing_strategy(inputs, userNameValue)
+
+        print("CALL THE DASHBOARD")
+        print(fund_strategy.fund_name)
+        print(fund_strategy.strategy_version)
+        print(inputs['input_date_to_times'])
         return redirect(url_for('times_charts_dashboard',
                                 fund_name=fund_strategy.fund_name,
                                 strategy_version=fund_strategy.strategy_version,
