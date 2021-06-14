@@ -9,7 +9,9 @@ BEGIN
         now(),
         '[)'
     )
-  WHERE arp.strategy.name = close_off_strategy.name;
+  WHERE
+    arp.strategy.name = close_off_strategy.name
+    AND upper(arp.strategy.system_tstzrange) = 'infinity';
   RETURN;
 END
 $$
