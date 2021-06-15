@@ -104,7 +104,9 @@ def times_strategy_existing_version(version_selected, assets, message, inputs_ex
                                 fund_name=fund_strategy.fund_name,
                                 strategy_version=fund_strategy.strategy_version,
                                 date_to=inputs['input_date_to_times'],
-                                **request.args))
+                                **request.args,
+                                _external=True,
+                                _scheme='https'))
     else:
         obj_process_existing_data = ProcessExistingDataTimes()
 
