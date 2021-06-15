@@ -83,11 +83,6 @@ $('#select-version-from-strategy-page').change(function() {
 });
 
 
-
-
-
-
-
 // SELECT THE DATE
 function SelectDateToStrategyPage(){
 

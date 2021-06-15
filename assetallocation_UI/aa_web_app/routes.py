@@ -87,6 +87,7 @@ def times_strategy():
 def times_strategy_existing_version(version_selected, assets, message, inputs_existing_versions, userNameValue):
     existing_versions_from_db = format_versions(get_strategy_versions(Name.times))
     existing_funds_from_db = get_fund_names()
+    asset_tmp, inputs_tmp = [] , []
 
     if message == 'call_run_existing_strategy':
         inputs = json.loads(inputs_existing_versions.split('\\')[0].replace("\'", "\""))
