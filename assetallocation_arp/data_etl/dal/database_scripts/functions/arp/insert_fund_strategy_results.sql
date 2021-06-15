@@ -252,7 +252,10 @@ DECLARE
 BEGIN
 --   per fund, per strategy version / id, per asset_id per business datetime there should be one value
   SELECT
-    daterange(min(saw.business_date), max(saw.business_date) + 1)
+    CASE
+      WHEN min(saw.business_date) IS NULL THEN daterange('empty')
+      ELSE daterange(min(saw.business_date), max(saw.business_date) + 1)
+    END
   INTO
     business_date_range
   FROM
