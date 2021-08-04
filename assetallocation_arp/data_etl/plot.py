@@ -3,7 +3,7 @@ import os
 import logging
 import logging.config
 import numpy as np
-np.seterr(divide = 'ignore')
+np.seterr(divide='ignore')
 import pandas as pd
 from datetime import datetime, timedelta
 from bokeh.io import curdoc
