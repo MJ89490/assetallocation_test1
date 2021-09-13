@@ -1,2 +1,4 @@
 INSERT INTO lookup.source (source)
-VALUES ('Bloomberg'), ('IMF');
+VALUES ('Bloomberg'), ('IMF')
+ON CONFLICT DO NOTHING
+;

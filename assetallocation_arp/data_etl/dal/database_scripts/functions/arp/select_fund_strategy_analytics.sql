@@ -1,4 +1,4 @@
-DROP FUNCTION arp.select_fund_strategy_analytics(character varying,integer,date,date);
+DROP FUNCTION IF EXISTS arp.select_fund_strategy_analytics(character varying,integer,date,date);
 CREATE OR REPLACE FUNCTION arp.select_fund_strategy_analytics(
   fund_name varchar,
   _strategy_id int,

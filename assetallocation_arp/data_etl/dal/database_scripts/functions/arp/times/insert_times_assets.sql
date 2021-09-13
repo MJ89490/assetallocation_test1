@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS arp.insert_times_assets(integer,text[]);
 CREATE OR REPLACE FUNCTION arp.insert_times_assets(
   times_version int,
   times_assets text[]

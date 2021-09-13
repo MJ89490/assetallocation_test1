@@ -1,4 +1,4 @@
-DROP FUNCTION arp.select_times_strategy(integer);
+DROP FUNCTION IF EXISTS arp.select_times_strategy(integer);
 CREATE OR REPLACE FUNCTION arp.select_times_strategy(
   strategy_version int,
   OUT business_date_from date,
