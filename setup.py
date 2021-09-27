@@ -18,8 +18,6 @@ setup_requirements = [
 ]
 
 test_requirements = [
-    'pytest',
-    'nbformat'
 ]
 
 setup(
@@ -31,10 +29,10 @@ setup(
     ],
 
     name="assetallocation_arp",
-    version="0.0.24",
+    version="0.0.36",
     #version_config={
     #  "version_format": "{tag}.dev{sha}",
-    #  "starting_version": "0.0.24"
+    #  "starting_version": "0.0.36"
     #},
     description="sist[3~[3~[3~[3~[3~",
     long_description=open('README.md').read(),

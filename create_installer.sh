@@ -7,13 +7,15 @@ python setup.py bdist_wheel
 wheel_file='ls -ll dist/*.whl'
 echo ${wheel_file}
 build_version=`echo $wheel_file | awk -F'[--]' '{print $3}'`
-cp dist/assetallocation_arp-${build_version}-py3-none-any.whl /s/Shared/IT/Nexus/aa_installer/.
+cp dist/assetallocation_arp-${build_version}-py3-none-any.whl /s/Shared/IT/Nexus/aa_installer_win10/.
 cp -f assetallocation_arp/arp_dashboard.xlsm aa_installer/installer_config/.
 cp -f assetallocation_arp/times_model.xls aa_installer/installer_config/.
 cp -f assetallocation_arp/arp_strategies.py aa_installer/installer_config/.
-cp -f aa_installer/installer_config/*.* /s/Shared/IT/Nexus/aa_installer/Scripts/.
-cp -f aa_installer/*.* /s/Shared/IT/Nexus/aa_installer/Scripts/.
-cp -f README.md /s/Shared/IT/Nexus/aa_installer/Scripts/.
-rm -f /s/Shared/IT/Nexus/aa_installer/Scripts/AssetAllocationInstaller.iss
-git commit -m "modify the version in git" setup.py .bumpversion.cfg
-git push
+cp -f aa_installer/installer_config/*.* /s/Shared/IT/Nexus/aa_installer_win10/Scripts/.
+cp -f aa_installer/*.* /s/Shared/IT/Nexus/aa_installer_win10/Scripts/.
+cp -f README.md /s/Shared/IT/Nexus/aa_installer_win10/Scripts/.
+rm -f /s/Shared/IT/Nexus/aa_installer_win10/Scripts/AssetAllocationInstaller.iss
+#git commit -m "modify the version in git" setup.py .bumpversion.cfg
+#git push
+
+

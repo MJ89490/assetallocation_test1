@@ -22,7 +22,7 @@ InfoBeforeFile=S:\Shared\IT\Nexus\aa_installer\Scripts\README.md
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=S:\Shared\IT\Nexus\aa_installer
-OutputBaseFilename=assetallocation_arp-0.0.24
+OutputBaseFilename=assetallocation_arp-0.0.25
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
