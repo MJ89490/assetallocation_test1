@@ -29,7 +29,7 @@ setup(
     ],
 
     name="assetallocation_arp",
-    version="0.1.10",
+    version="0.1.11",
     #version_config={
     #  "version_format": "{tag}.dev{sha}",
     #  "starting_version": "0.0.39"
